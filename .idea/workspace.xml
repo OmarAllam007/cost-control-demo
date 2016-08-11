@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="87a2368d-f2b0-400a-9831-0b3cd4413512" name="Default" comment="" />
+    <ignored path="make.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="make" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="app.blade.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="290">
+              <caret line="39" column="42" selection-start-line="39" selection-start-column="42" selection-end-line="39" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/Make/Console/Command/Scaffold.php" />
+        <option value="$PROJECT_DIR$/Make/MakeServiceProvider.php" />
+        <option value="$PROJECT_DIR$/config/app.php" />
+        <option value="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
+    <package-json value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <gulpfiles>
+      <GulpfileState>
+        <gulpfile-path>$PROJECT_DIR$/gulpfile.js</gulpfile-path>
+      </GulpfileState>
+    </gulpfiles>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpServers">
+    <servers />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="773" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="make" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="make" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="make" />
+              <option name="myItemType" value="com.jetbrains.php.projectView.PhpTreeStructureProvider$1" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run-script" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <envs />
+      <ui />
+      <extra-mocha-options />
+      <test-kind>DIRECTORY</test-kind>
+      <test-directory />
+      <recursive>false</recursive>
+      <method />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="87a2368d-f2b0-400a-9831-0b3cd4413512" name="Default" comment="" />
+      <created>1470912865093</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1470912865093</updated>
+      <workItem from="1470912868235" duration="45000" />
+      <workItem from="1470912938363" duration="1525000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1570000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1280" height="773" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Providers/AppServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="6" column="48" selection-start-line="6" selection-start-column="25" selection-end-line="6" selection-end-column="48" />
+          <folding>
+            <marker date="1470912780000" expanded="true" signature="122:402" ph="{...}" />
+            <marker date="1470912780000" expanded="true" signature="132:208" ph=" Bootstrap any application services. ..." />
+            <marker date="1470912780000" expanded="true" signature="237:260" ph="{...}" />
+            <marker date="1470912780000" expanded="true" signature="269:344" ph=" Register any application services. ..." />
+            <marker date="1470912780000" expanded="true" signature="377:400" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/barryvdh/laravel-ide-helper/src/IdeHelperServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="68" column="39" selection-start-line="68" selection-start-column="39" selection-end-line="68" selection-end-column="39" />
+          <folding>
+            <marker date="1467633168000" expanded="false" signature="9:315" ph=" Laravel IDE Helper Generator ..." />
+            <marker date="1467633168000" expanded="false" signature="361:556" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="612:2489" ph="{...}" />
+            <marker date="1467633168000" expanded="true" signature="623:710" ph=" Indicates if loading of the provider is deferred. ..." />
+            <marker date="1467633168000" expanded="true" signature="750:824" ph=" Bootstrap the application events. ..." />
+            <marker date="1467633168000" expanded="true" signature="853:1302" ph="{...}" />
+            <marker date="1467633168000" expanded="true" signature="1081:1148" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="1156:1228" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="1311:1382" ph=" Register the service provider. ..." />
+            <marker date="1467633168000" expanded="true" signature="1415:2267" ph="{...}" />
+            <marker date="1467633168000" expanded="true" signature="1621:1764" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="1651:1754" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="1836:1946" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="1866:1936" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="2024:2146" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="2054:2136" ph="..." />
+            <marker date="1467633168000" expanded="true" signature="2276:2360" ph=" Get the services provided by the provider. ..." />
+            <marker date="1467633168000" expanded="true" signature="2393:2487" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Post.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1470914020000" expanded="true" signature="88:182" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Make/Console/Command/Scaffold.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
+          <folding>
+            <marker date="1470914992000" expanded="false" signature="9:84" ph=" Created by PhpStorm. ..." />
+            <marker date="1470914992000" expanded="true" signature="184:789" ph="{...}" />
+            <marker date="1470914992000" expanded="true" signature="338:381" ph="{...}" />
+            <marker date="1470914992000" expanded="true" signature="411:787" ph="{...}" />
+            <marker date="1470914992000" expanded="true" signature="437:647" ph="..." />
+            <marker date="1470914992000" expanded="true" signature="730:780" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Container/Container.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="279" column="20" selection-start-line="279" selection-start-column="20" selection-end-line="279" selection-end-column="20" />
+          <folding>
+            <marker date="1470831839000" expanded="false" signature="44:321" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="380:34499" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="390:480" ph=" The current globally available container (if any). ..." />
+            <marker date="1470831839000" expanded="true" signature="523:608" ph=" An array of the types that have been resolved. ..." />
+            <marker date="1470831839000" expanded="true" signature="649:713" ph=" The container's bindings. ..." />
+            <marker date="1470831839000" expanded="true" signature="754:826" ph=" The container's shared instances. ..." />
+            <marker date="1470831839000" expanded="true" signature="868:935" ph=" The registered type aliases. ..." />
+            <marker date="1470831839000" expanded="true" signature="975:1050" ph=" The extension closures for services. ..." />
+            <marker date="1470831839000" expanded="true" signature="1092:1158" ph=" All of the registered tags. ..." />
+            <marker date="1470831839000" expanded="true" signature="1195:1281" ph=" The stack of concretions currently being built. ..." />
+            <marker date="1470831839000" expanded="true" signature="1324:1390" ph=" The contextual binding map. ..." />
+            <marker date="1470831839000" expanded="true" signature="1430:1509" ph=" All of the registered rebound callbacks. ..." />
+            <marker date="1470831839000" expanded="true" signature="1558:1635" ph=" All of the global resolving callbacks. ..." />
+            <marker date="1470831839000" expanded="true" signature="1692:1775" ph=" All of the global after resolving callbacks. ..." />
+            <marker date="1470831839000" expanded="true" signature="1837:1921" ph=" All of the resolving callbacks by class type. ..." />
+            <marker date="1470831839000" expanded="true" signature="1972:2062" ph=" All of the after resolving callbacks by class type. ..." />
+            <marker date="1470831839000" expanded="true" signature="2118:2272" ph=" Define a contextual binding. ..." />
+            <marker date="1470831839000" expanded="true" signature="2310:2435" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="2444:2570" ph=" Determine if the given abstract type has been bound. ..." />
+            <marker date="1470831839000" expanded="true" signature="2609:2788" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="2797:2926" ph=" Determine if the given abstract type has been resolved. ..." />
+            <marker date="1470831839000" expanded="true" signature="2968:3222" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="3065:3126" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="3231:3341" ph=" Determine if a given string is an alias. ..." />
+            <marker date="1470831839000" expanded="true" signature="3378:3453" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="3462:3656" ph=" Register a binding with the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="3729:5413" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="4120:4245" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="4579:4623" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="4921:4995" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="5358:5406" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="5422:5581" ph=" Get the Closure to be used when building a type. ..." />
+            <marker date="1470831839000" expanded="true" signature="5639:5862" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="5721:5854" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="5871:6068" ph=" Add a contextual binding to the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="6150:6283" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="6292:6498" ph=" Register a binding if it hasn't already been registered. ..." />
+            <marker date="1470831839000" expanded="true" signature="6573:6692" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="6620:6685" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="6701:6871" ph=" Register a shared binding in the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="6932:6993" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="7002:7119" ph=" Wrap a Closure such that it is shared. ..." />
+            <marker date="1470831839000" expanded="true" signature="7165:7654" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="7225:7646" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="7546:7607" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="7663:7864" ph=" &quot;Extend&quot; an abstract type in the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="7922:8243" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="8028:8165" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="8173:8236" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="8252:8416" ph=" Register an existing instance as shared in the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="8469:9400" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="8810:8935" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="9345:9393" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="9409:9568" ph=" Assign a set of tags to a given binding. ..." />
+            <marker date="1470831839000" expanded="true" signature="9613:9983" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="9729:9976" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="9775:9828" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="9886:9966" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="9992:10106" ph=" Resolve all of the bindings for a given tag. ..." />
+            <marker date="1470831839000" expanded="true" signature="10141:10375" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="10211:10342" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="10266:10332" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="10384:10521" ph=" Alias a type to a different name. ..." />
+            <marker date="1470831839000" expanded="true" signature="10568:10642" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="10651:10778" ph=" Extract the type and alias from a given definition. ..." />
+            <marker date="1470831839000" expanded="true" signature="10835:10904" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="10913:11075" ph=" Bind a new callback to an abstract's rebind event. ..." />
+            <marker date="1470831839000" expanded="true" signature="11137:11318" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="11259:11311" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="11327:11515" ph=" Refresh an instance on the given target and method. ..." />
+            <marker date="1470831839000" expanded="true" signature="11574:11754" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="11613:11746" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="11693:11745" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="11763:11894" ph=" Fire the &quot;rebound&quot; callbacks for the given abstract type. ..." />
+            <marker date="1470831839000" expanded="true" signature="11938:12133" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="12060:12126" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="12142:12260" ph=" Get the rebound callbacks for a given type. ..." />
+            <marker date="1470831839000" expanded="true" signature="12316:12470" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="12379:12443" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="12479:12674" ph=" Wrap the given closure such that its dependencies will be injected when executed. ..." />
+            <marker date="1470831839000" expanded="true" signature="12744:12881" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="12808:12873" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="12890:13117" ph=" Call the given Closure / class@method and inject its dependencies. ..." />
+            <marker date="1470831839000" expanded="true" signature="13202:13516" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="13280:13366" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="13525:13654" ph=" Determine if the given string is in Class@method syntax. ..." />
+            <marker date="1470831839000" expanded="true" signature="13711:13796" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="13805:13963" ph=" Get all dependencies for a given method. ..." />
+            <marker date="1470831839000" expanded="true" signature="14045:14329" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="14166:14265" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="14338:14502" ph=" Get the proper reflection instance for the given callback. ..." />
+            <marker date="1470831839000" expanded="true" signature="14555:14866" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="14634:14693" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="14730:14808" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="14875:15083" ph=" Get the dependency for the given call parameter. ..." />
+            <marker date="1470831839000" expanded="true" signature="15206:15640" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="15275:15396" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="15431:15513" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="15563:15633" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="15649:15908" ph=" Call a string reference to a class using Class@method syntax. ..." />
+            <marker date="1470831839000" expanded="true" signature="15999:16566" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="16398:16479" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="16575:16727" ph=" Resolve the given type from the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="16789:18588" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="17162:17219" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="17579:17648" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="17656:17724" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="18040:18098" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="18392:18452" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="18597:18727" ph=" Get the concrete type for a given abstract. ..." />
+            <marker date="1470831839000" expanded="true" signature="18775:19306" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="18859:18898" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="19204:19243" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="19315:19455" ph=" Get the contextual concrete binding for the given abstract. ..." />
+            <marker date="1470831839000" expanded="true" signature="19513:19683" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="19594:19676" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="19692:19824" ph=" Normalize the given class name by removing leading slashes. ..." />
+            <marker date="1470831839000" expanded="true" signature="19869:19952" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="19961:20080" ph=" Get the extender callbacks for a given type. ..." />
+            <marker date="1470831839000" expanded="true" signature="20129:20269" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="20185:20242" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="20278:20519" ph=" Instantiate a concrete instance of the given type. ..." />
+            <marker date="1470831839000" expanded="true" signature="20582:22719" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="20873:20932" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="21275:21656" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="21321:21494" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="21502:21585" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="22032:22118" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="22471:22519" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="22567:22615" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="22728:22900" ph=" Resolve all of the dependencies from the ReflectionParameters. ..." />
+            <marker date="1470831839000" expanded="true" signature="22984:23764" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="23065:23726" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="23434:23512" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="23545:23628" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="23636:23716" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="23773:23982" ph=" Resolve a non-class hinted dependency. ..." />
+            <marker date="1470831839000" expanded="true" signature="24055:24635" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="24150:24333" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="24198:24268" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="24276:24323" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="24388:24447" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="24644:24867" ph=" Resolve a class based dependency from the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="24937:25482" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="24957:25028" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="25331:25475" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="25375:25442" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="25491:25677" ph=" If extra parameters are passed by numeric ID, rekey them by argument name. ..." />
+            <marker date="1470831839000" expanded="true" signature="25766:26025" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="25822:25989" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="25858:25979" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="26034:26184" ph=" Register a new resolving callback. ..." />
+            <marker date="1470831839000" expanded="true" signature="26253:26489" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="26325:26383" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="26391:26482" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="26498:26666" ph=" Register a new after resolving callback for all types. ..." />
+            <marker date="1470831839000" expanded="true" signature="26740:26986" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="26812:26875" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="26883:26979" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="26995:27135" ph=" Register a new resolving callback by type of its first argument. ..." />
+            <marker date="1470831839000" expanded="true" signature="27197:27440" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="27284:27357" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="27365:27433" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="27449:27595" ph=" Register a new after resolving callback by type of its first argument. ..." />
+            <marker date="1470831839000" expanded="true" signature="27662:27915" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="27749:27827" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="27835:27908" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="27924:28053" ph=" Get the type hint for this closure's first argument. ..." />
+            <marker date="1470831839000" expanded="true" signature="28113:28433" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="28230:28259" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="28352:28381" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="28442:28583" ph=" Fire all of the resolving callbacks. ..." />
+            <marker date="1470831839000" expanded="true" signature="28651:29168" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="28768:28902" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="28817:28892" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="29021:29160" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="29070:29150" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="29177:29366" ph=" Get all callbacks for a given type. ..." />
+            <marker date="1470831839000" expanded="true" signature="29456:29732" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="29547:29699" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="29614:29689" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="29741:29887" ph=" Fire an array of callbacks with an object. ..." />
+            <marker date="1470831839000" expanded="true" signature="29957:30062" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="30007:30055" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="30071:30181" ph=" Determine if a given type is shared. ..." />
+            <marker date="1470831839000" expanded="true" signature="30223:30531" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="30329:30363" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="30426:30461" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="30540:30692" ph=" Determine if the given concrete is buildable. ..." />
+            <marker date="1470831839000" expanded="true" signature="30751:30835" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="30844:30963" ph=" Get the alias for an abstract if available. ..." />
+            <marker date="1470831839000" expanded="true" signature="31008:31170" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="31064:31103" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="31179:31250" ph=" Get the container's bindings. ..." />
+            <marker date="1470831839000" expanded="true" signature="31286:31330" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="31339:31457" ph=" Drop all of the stale instances and aliases. ..." />
+            <marker date="1470831839000" expanded="true" signature="31512:31595" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="31604:31729" ph=" Remove a resolved instance from the instance cache. ..." />
+            <marker date="1470831839000" expanded="true" signature="31777:31851" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="31860:31947" ph=" Clear all of the instances from the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="31987:32030" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="32039:32139" ph=" Flush the container of all bindings and resolved instances. ..." />
+            <marker date="1470831839000" expanded="true" signature="32169:32301" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="32310:32406" ph=" Set the globally available instance of the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="32449:32495" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="32504:32655" ph=" Set the shared instance of the container. ..." />
+            <marker date="1470831839000" expanded="true" signature="32726:32778" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="32787:32891" ph=" Determine if a given offset exists. ..." />
+            <marker date="1470831839000" expanded="true" signature="32932:32979" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="32988:33090" ph=" Get the value at a given offset. ..." />
+            <marker date="1470831839000" expanded="true" signature="33128:33174" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="33183:33314" ph=" Set the value at a given offset. ..." />
+            <marker date="1470831839000" expanded="true" signature="33360:33790" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="33644:33747" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="33692:33736" ph="..." />
+            <marker date="1470831839000" expanded="true" signature="33799:33902" ph=" Unset the value at a given offset. ..." />
+            <marker date="1470831839000" expanded="true" signature="33942:34079" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="34088:34196" ph=" Dynamically access container services. ..." />
+            <marker date="1470831839000" expanded="true" signature="34230:34270" ph="{...}" />
+            <marker date="1470831839000" expanded="true" signature="34279:34413" ph=" Dynamically set container services. ..." />
+            <marker date="1470831839000" expanded="true" signature="34455:34497" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Make/MakeServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
+          <folding>
+            <marker date="1470915055000" expanded="true" signature="114:372" ph="{...}" />
+            <marker date="1470915055000" expanded="true" signature="148:370" ph="{...}" />
+            <marker date="1470915055000" expanded="true" signature="214:287" ph="..." />
+            <marker date="1470915055000" expanded="true" signature="226:286" ph="..." />
+            <marker date="1470915055000" expanded="true" signature="315:362" ph="..." />
+            <marker date="1470915055000" expanded="true" signature="316:361" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/auth.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1470912780000" expanded="true" signature="15:3527" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="23:447" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="470:533" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="543:1234" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="1255:1459" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="1274:1353" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="1375:1452" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="1469:2159" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="2183:2409" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="2204:2289" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="2301:2404" ph="//..." />
+            <marker date="1470912780000" expanded="true" signature="2419:3310" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="3334:3523" ph="..." />
+            <marker date="1470912780000" expanded="true" signature="3355:3516" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/app.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="116">
+          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+          <folding>
+            <marker date="1470915827000" expanded="true" signature="15:8603" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="51:479" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="533:956" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="1007:1423" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="1483:1907" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="1943:2382" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="2415:2846" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="2888:3309" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="3381:3875" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="3976:4408" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="4432:6273" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="4444:4504" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="5785:5835" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="6010:6064" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="6283:6697" ph="..." />
+            <marker date="1470915827000" expanded="true" signature="6719:8600" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="39" column="42" selection-start-line="39" selection-start-column="42" selection-end-line="39" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
