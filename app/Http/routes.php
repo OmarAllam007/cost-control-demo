@@ -17,6 +17,5 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
-
-Route::resource('project', 'ProjectController');
+require __DIR__ . 'Routes' . 'hazem.php';
+require __DIR__ . 'Routes' . 'omar.php';
