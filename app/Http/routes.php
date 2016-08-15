@@ -17,5 +17,5 @@ Route::get('/', function () {
 
 Route::auth();
 
-require __DIR__ . 'Routes' . 'hazem.php';
-require __DIR__ . 'Routes' . 'omar.php';
+require __DIR__ . 'Routes/hazem.php';
+require __DIR__ . 'Routes/omar.php';
