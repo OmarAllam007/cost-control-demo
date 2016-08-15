@@ -7963,4 +7963,10 @@ button.close {
   margin-top: 0;
   margin-bottom: 0; }
 
+table.table > tbody > tr > td,
+table.table > tbody > tr > th,
+table.table > thead > tr > td,
+table.table > thead > tr > th {
+  vertical-align: middle; }
+
 /*# sourceMappingURL=app.css.map */
