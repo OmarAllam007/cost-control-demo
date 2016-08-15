@@ -24,7 +24,8 @@
         "psr-4": {
             "App\\": "app/",
             "Make\\": "Make/"
-        }
+        },
+        "files": [ "app/Support/helpers.php" ]
     },
     "autoload-dev": {
         "classmap": [
