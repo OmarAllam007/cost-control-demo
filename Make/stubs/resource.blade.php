@@ -27,7 +27,7 @@ class {{$model}}Controller extends Controller
 
     public function store(Request $request)
     {
-        $this->validates($request, 'Could not save {{$humanDown}}');
+        $this->validate($request, $this->rules);
 
         {{$model}}::create($request->all());
 
@@ -48,7 +48,7 @@ class {{$model}}Controller extends Controller
 
     public function update({{$model}} ${{$single}}, Request $request)
     {
-        $this->validates($request, 'Could not save {{$humanDown}}');
+        $this->validate($request, $this->rules);
 
         ${{$single}}->update($request->all());
 
