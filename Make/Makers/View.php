@@ -29,7 +29,7 @@ class View extends Maker
         $viewPrefix = $this->viewPrefix();
         $data = compact('single', 'plural', 'humanUp', 'humanLow', 'viewPrefix');
 
-        foreach (['index', '_form', 'create', 'edit'] as $file) {
+        foreach (['index', '_form', 'create', 'edit', 'show'] as $file) {
             $filename = $path . static::DS . $file . '.blade.php';
             $content = view()->file($stubs . static::DS . $file . '.blade.php', $data)->render();
 

@@ -1,8 +1,8 @@
 {{'@'}}extends('layouts.app')
 
 {{'@'}}section('header')
-    <h4 class="pull-left">{{$humanUp}}</h4>
-    <a href="{{'{{'}} route('{{$viewPrefix}}.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i></a>
+    <h2>{{$humanUp}}</h2>
+    <a href="{{'{{'}} route('{{$viewPrefix}}.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add {{$single}}</a>
 {{'@'}}stop
 
 {{'@'}}section('body')
