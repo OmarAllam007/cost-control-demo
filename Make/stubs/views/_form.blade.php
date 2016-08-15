@@ -4,7 +4,7 @@
         <div class="form-group @{{$errors->first('name', 'has-error')}}">
             @{{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             @{{ Form::text('name', null, ['class' => 'form-control']) }}
-            {{'{!! '}} $errors->first('name', '<div class="help-block"></div>') !!}
+            {{'{' . '!!'}} $errors->first('name', '<div class="help-block"></div>') !!}
         </div>
 
         <!-- Continue working on your fields here -->
