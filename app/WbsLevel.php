@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Behaviors\Tree;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -16,6 +15,8 @@ class WbsLevel extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    protected $path;
+
     public static function options()
     {
         return self::pluck('name', 'id')->prepend('Select Level', '');
@@ -26,5 +27,20 @@ class WbsLevel extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function getPathAttribute()
+    {
+        if ($this->path) {
+            return $this->path;
+        }
+
+        $stack = collect([$this->name]);
+        $parent = $this->parent;
+        while ($parent) {
+            $stack->push($parent->name);
+            $parent = $parent->parent;
+        }
+
+        return $this->path = $stack->reverse()->implode(' » ');
+    }
 
 }

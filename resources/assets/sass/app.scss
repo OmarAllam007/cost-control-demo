@@ -32,12 +32,12 @@ ul.tree  {
     display: block;
     background: #ECF0F1;
     margin-bottom: 5px;
-    padding: 10px;
     @extend .clearfix;
     position: relative;
 
     .tree--item--label {
       display: block;
+      padding: 7px 10px;
     }
 
     .tree--item--actions {
