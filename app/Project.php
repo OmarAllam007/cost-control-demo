@@ -12,4 +12,9 @@ class Project extends Model
     protected $fillable = ['name', 'description'];
 
     protected $dates = ['created_at', 'updated_at'];
+
+    public static function options()
+    {
+        return self::pluck('name', 'id')->prepend('Select Project', '');
+    }
 }
