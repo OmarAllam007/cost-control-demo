@@ -13,10 +13,11 @@ class SurveyController extends Controller
 
     public function index()
     {
+
         $surveys = Survey::paginate();
+        $units = Unit::all();
 
-
-        return view('survey.index', compact('surveys'));
+        return view('survey.index', compact('surveys','units'));
     }
 
     public function create()
@@ -41,12 +42,14 @@ class SurveyController extends Controller
 
     public function show(Survey $survey)
     {
-        return view('survey.show', compact('survey'));
+        $units = Unit::all();
+        return view('survey.show', compact('survey','units'));
     }
 
     public function edit(Survey $survey)
     {
-        return view('survey.edit', compact('survey'));
+        $units = Unit::all();
+        return view('survey.edit', compact('survey','units'));
     }
 
     public function update(Survey $survey, Request $request)

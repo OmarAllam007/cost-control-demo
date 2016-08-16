@@ -32,8 +32,18 @@
                 @if (Auth::check())
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/project') }}">Projects</a></li>
-                    <li><a href="{{ url('/activity') }}">Activities</a></li>
-                    <li><a href="{{ url('/task') }}">Tasks</a></li>
+                    <li><a href="{{ url('/survey') }}">Survey</a></li>
+                    <li><a href="{{ url('/unit') }}">Unit</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{route('resource-type.index')}}">Resources Type</a></li>
+                            <li><a href="{{route('resources.index')}}">Resources</a></li>
+                            <li><a href="{{route('business-partner.index')}}">Business Partner</a></li>
+
+                        </ul>
+                    </li>
                 </ul>
                 @endif
 
@@ -41,6 +51,7 @@
                     @if (Auth::guest())
                     <li><a href="{{ url('/login') }}">Login</a></li>
                     <li><a href="{{ url('/register') }}">Register</a></li>
+
                     @else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
