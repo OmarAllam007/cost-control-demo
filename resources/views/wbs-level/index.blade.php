@@ -7,7 +7,7 @@
 
 @section('body')
     @if ($wbsLevels->total())
-        <table class="table table-condensed table-striped">
+        {{--<table class="table table-condensed table-striped">
             <thead>
             <tr>
                 <th>Name</th>
@@ -28,7 +28,13 @@
                     </tr>
                 @endforeach
             </tbody>
-        </table>
+        </table> --}}
+
+        <ul class="list-unstyled tree">
+            @foreach($wbsLevels as $wbs_level)
+                @include('wbs-level._recursive')
+            @endforeach
+        </ul>
 
         {{ $wbsLevels->links() }}
     @else

@@ -5556,11 +5556,11 @@ button.close {
   .carousel-indicators {
     bottom: 20px; } }
 
-.clearfix:before, .clearfix:after {
+.clearfix:before, ul.tree .tree--item:before, .clearfix:after, ul.tree .tree--item:after {
   content: " ";
   display: table; }
 
-.clearfix:after {
+.clearfix:after, ul.tree .tree--item:after {
   clear: both; }
 
 .center-block {
@@ -7968,5 +7968,21 @@ table.table > tbody > tr > th,
 table.table > thead > tr > td,
 table.table > thead > tr > th {
   vertical-align: middle; }
+
+ul.tree ul {
+  margin-left: 15px; }
+
+ul.tree .tree--item {
+  display: block;
+  background: #ECF0F1;
+  margin-bottom: 5px;
+  padding: 10px;
+  position: relative; }
+  ul.tree .tree--item .tree--item--label {
+    display: block; }
+  ul.tree .tree--item .tree--item--actions {
+    position: absolute;
+    right: 10px;
+    top: 10px; }
 
 /*# sourceMappingURL=app.css.map */

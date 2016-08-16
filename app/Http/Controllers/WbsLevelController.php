@@ -12,7 +12,7 @@ class WbsLevelController extends Controller
 
     public function index()
     {
-        $wbsLevels = WbsLevel::paginate();
+        $wbsLevels = WbsLevel::tree()->paginate();
 
         return view('wbs-level.index', compact('wbsLevels'));
     }

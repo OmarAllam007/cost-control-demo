@@ -22,3 +22,29 @@ table.table>thead>tr>td,
 table.table>thead>tr>th {
   vertical-align: middle;
 }
+
+ul.tree  {
+  ul {
+    margin-left: 15px;
+  }
+
+  .tree--item {
+    display: block;
+    background: #ECF0F1;
+    margin-bottom: 5px;
+    padding: 10px;
+    @extend .clearfix;
+    position: relative;
+
+    .tree--item--label {
+      display: block;
+    }
+
+    .tree--item--actions {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+  }
+
+}
