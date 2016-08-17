@@ -3,14 +3,14 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateResourceTypesTable extends Migration
+class CreateActivityDivisionsTable extends Migration
 {
     public function up()
     {
-        Schema::create('resource_types', function (Blueprint $table) {
+        Schema::create('activity_divisions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('parent_id')->unsigned();
+            $table->integer('parent_id');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -18,6 +18,6 @@ class CreateResourceTypesTable extends Migration
 
     public function down()
     {
-        Schema::drop('resource_types');
+        Schema::drop('activity_divisions');
     }
 }

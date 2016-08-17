@@ -9,15 +9,14 @@ class CreateResourcesTable extends Migration
     {
         Schema::create('resources', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('resource_type_id');
             $table->string('resource_code');
             $table->string('name');
             $table->float('rate');
             $table->string('unit');
             $table->float('waste');
-            $table->integer('business_partner')->unsigned();
-            $table->foreign('business_partner')->references('id')->on('business_partners');
-
-
+            $table->integer('business_partner_id')->unsigned();
+//            $table->foreign('business_partner_id')->references('id')->on('business_partners');
 
             $table->softDeletes();
             $table->timestamps();

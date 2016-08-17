@@ -7,15 +7,16 @@ class CreateSurveysTable extends Migration
 {
     public function up()
     {
-//        Schema::create('qty_surveys', function (Blueprint $table) {
-//            $table->increments('id');
-//            $table->integer('unit_id');
-//            $table->float('budget_qty');
-//            $table->float('eng_qty');
+        Schema::create('qty_surveys', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('cost_account');
+            $table->integer('unit_id')->unsigned();
+            $table->float('budget_qty');
+            $table->float('eng_qty');
 //            $table->foreign('unit_id')->references('id')->on('units');
-//            $table->softDeletes();
-//            $table->timestamps();
-//        });
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     public function down()
