@@ -35,14 +35,15 @@
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('business_partner', 'business partner', ['class' => 'control-label']) }}
 
-            {{  Form::select('business_partner',$partners,1, ['class' => 'form-control']) }}
-            {!! $errors->first('business_partner', '<div class="help-block">:message</div>') !!}
+            {{  Form::select('business_partner_id',$partners,1, ['class' => 'form-control']) }}
+            {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
+
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('resource_type', 'Resource type', ['class' => 'control-label']) }}
 
-            {{  Form::select('resource_type',$resource_types,1, ['class' => 'form-control']) }}
-            {!! $errors->first('resource_type', '<div class="help-block">:message</div>') !!}
+            {{  Form::select('resource_type_id',$resource_types,1, ['class' => 'form-control']) }}
+            {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
         </div>
 
 
@@ -51,5 +52,6 @@
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
+
     </div>
 </div>

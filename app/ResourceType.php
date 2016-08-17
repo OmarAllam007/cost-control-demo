@@ -12,11 +12,7 @@ class ResourceType extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-public function resources()
-{
-    $this->hasMany(Resources::class);
 
-}
 
 //    public function getParent($id)
 //    {

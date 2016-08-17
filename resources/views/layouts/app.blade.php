@@ -41,9 +41,10 @@
                             <li><a href="{{route('resource-type.index')}}">Resources Type</a></li>
                             <li><a href="{{route('resources.index')}}">Resources</a></li>
                             <li><a href="{{route('business-partner.index')}}">Business Partner</a></li>
-
                         </ul>
                     </li>
+                    <li><a href="{{route('productivity.index')}}">Productivity</a></li>
+
                 </ul>
                 @endif
 
