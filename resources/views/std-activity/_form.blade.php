@@ -14,15 +14,20 @@
         </div>
 
         <div class="form-group {{$errors->first('division_id', 'has-error')}}">
-            {{ Form::label('division_id', 'Parent', ['class' => 'control-label']) }}
+            {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
             <p>
-                <a href="#ParentsModal" data-toggle="modal" id="select-division">
-                    {{Form::getValueAttribute('division_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('division_id'))->path : 'Select Parent' }}
+                <a href="#ParentsModal" data-toggle="modal" id="select-parent">
+                    {{Form::getValueAttribute('parent_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Parent' }}
                 </a>
             </p>
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('id_partial', 'has-error')}}">
+            {{ Form::label('id_partial', 'ID Partial', ['class' => 'control-label']) }}
+            {{ Form::text('id_partial', null, ['class' => 'form-control']) }}
+            {!! $errors->first('id_partial', '<div class="help-block">:message</div>') !!}
+        </div>
         <!-- Continue working on your fields here -->
 
         <div class="form-group">
@@ -37,19 +42,18 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select Parent</h4>
+                <h4 class="modal-title">Select Division</h4>
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\ActivityDivision::tree()->get() as $division)
-                        @include('activity-division._recursive_input', compact('division'))
+                        @include('std-activity._recursive_input', compact('division'))
                     @endforeach
                 </ul>
             </div>
         </div>
     </div>
 </div>
-
 
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>

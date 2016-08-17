@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ActivityDivisionController extends Controller
 {
 
-    protected $rules = ['name' => 'required', 'parent_id' => 'sometimes|exists:activity_divisions,id'];
+    protected $rules = ['name' => 'required', 'parent_id' => 'sometimes|exists:activity_divisions,id', 'code' => 'required'];
 
     public function index()
     {
