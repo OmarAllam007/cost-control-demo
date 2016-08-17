@@ -42,7 +42,7 @@
                     <td class="col-md-3">
                         <form action="{{ route('resources.destroy', $resource) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
-                            <a class="btn btn-sm btn-primary" href="{{ route('resources.edit', $resource->id) }} "><i
+                            <a class="btn btn-sm btn-primary" href="{{ route('resources.edit', $resource) }} "><i
                                         class="fa fa-edit"></i> Edit</a>
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                         </form>

@@ -20,12 +20,10 @@
             </thead>
             <tbody>
             @foreach($surveys as $survey)
-                @foreach($units as $unit)
                     <tr>
                         <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}">{{ $survey->cost_name
                         }}</a></td>
-                        <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}">{{ $unit->type
-                        }}</a></td>
+                        <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}"></a></td>
                         <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}">{{ $survey->budget_qty
                         }}</a></td>
                         <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}">{{ $survey->eng_qty
@@ -40,7 +38,7 @@
                         </td>
                     </tr>
 
-                @endforeach
+
             @endforeach
             </tbody>
         </table>

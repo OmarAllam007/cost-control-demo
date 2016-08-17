@@ -12,12 +12,12 @@ class ResourceTypeController extends Controller
 
     public function index()
     {
-
+        $resource_levels = ResourceType::tree()->paginate();
         $resourceTypes = ResourceType::where('id','>',7)->paginate();
         $resources = Resources::lists('id','name')->all();
 
 
-        return view('resource-type.index', compact('resourceTypes','resources'));
+        return view('resource-type.index', compact('resourceTypes','resources','resource_levels'));
     }
 
     public function create()
@@ -55,6 +55,7 @@ class ResourceTypeController extends Controller
 
     public function show(ResourceType $resource_type)
     {
+
         return view('resource-type.show', compact('resource_type'));
     }
 

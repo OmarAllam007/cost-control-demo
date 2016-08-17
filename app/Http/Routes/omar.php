@@ -7,3 +7,8 @@ Route::resource('resources', 'ResourcesController');
 Route::resource('resource-type', 'ResourceTypeController');
 
 
+Route::resource('productivity', 'ProductivityController');
+
+Route::resource('category', 'CategoryController');
+
+

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessPartner;
 use App\Resources;
+use App\ResourceType;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -23,15 +24,15 @@ class ResourcesController extends Controller
     {
         $partners = BusinessPartner::lists('name','id')->all();
         $resources = Resources::all();
+        $resource_types =  ResourceType::lists('name','id')->all();
 
 
-        return view('resources.create',compact('partners','resources'));
+        return view('resources.create',compact('partners','resources','resource_types'));
     }
 
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
-
         Resources::create($request->all());
 
         flash('Resources has been saved', 'success');
@@ -44,28 +45,28 @@ class ResourcesController extends Controller
         return view('resources.show', compact('resource'));
     }
 
-    public function edit($id)
+    public function edit(Resources $resources)
     {
 
         $partners = BusinessPartner::lists('name','id')->all();
-        $resource = Resources::find($id);
-        return view('resources.edit', compact('resource','partners'));
+
+        return view('resources.edit', compact('resources','partners'));
     }
 
-    public function update(Resources $resource, Request $request)
+    public function update(Resources $resources, Request $request)
     {
         $this->validate($request, $this->rules);
 
-        $resource->update($request->all());
+        $resources->update($request->all());
 
         flash('Resources has been saved', 'success');
 
         return \Redirect::route('resources.index');
     }
 
-    public function destroy(Resources $resource)
+    public function destroy(Resources $resources)
     {
-        $resource->delete();
+        $resources->delete();
 
         flash('Resources has been deleted', 'success');
 

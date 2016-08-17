@@ -18,7 +18,6 @@
             {!! $errors->first('resource_id', '<div class="help-block">:message</div>') !!}
         </div>
         <!-- Continue working on your fields here -->
-
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
