@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Tree
 {
+    protected $path;
+
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');

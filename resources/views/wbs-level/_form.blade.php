@@ -15,7 +15,14 @@
 
         <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
             {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
-            {{ Form::select('parent_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
+            <div class="hidden">
+                {{ Form::select('parent_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
+            </div>
+            <p>
+                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
+                    {{Form::getValueAttribute('parent_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Parent' }}
+                </a>
+            </p>
             {!! $errors->first('parent_id', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -32,3 +39,52 @@
         </div>
     </div>
 </div>
+
+
+<div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Parent</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled tree">
+                    @foreach(App\WbsLevel::tree()->get() as $level)
+                        @include('wbs-level._recursive_input', compact('level'))
+                    @endforeach
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('javascript')
+    <script>
+        $(function () {
+            'use strict';
+
+            $('.tree-radio').on('change', function(){
+                if (this.checked) {
+                    var stack = [];
+                    var parent = $(this).closest('.tree--item--label');
+                    var text = parent.find('.node-label').text();
+                    stack.push(text);
+
+                    parent = parent.parents('li').first().parents('li').first();
+                    console.log(parent);
+
+                    while (parent.length) {
+                        text = parent.find('.node-label').first().text();
+                        stack.push(text);
+                        parent = parent.parents('li').first();
+                    }
+
+                    $('#select-parent').html(stack.reverse().join(' &raquo; '));
+                }
+            });
+        })
+    </script>
+@stop

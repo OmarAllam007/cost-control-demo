@@ -7976,10 +7976,10 @@ ul.tree .tree--item {
   display: block;
   background: #ECF0F1;
   margin-bottom: 5px;
-  padding: 10px;
   position: relative; }
   ul.tree .tree--item .tree--item--label {
-    display: block; }
+    display: block;
+    padding: 7px 10px; }
   ul.tree .tree--item .tree--item--actions {
     position: absolute;
     right: 10px;
