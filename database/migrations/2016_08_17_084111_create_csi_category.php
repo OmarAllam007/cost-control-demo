@@ -22,6 +22,6 @@ class CreateCsiCategory extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('csi_categories');
     }
 }

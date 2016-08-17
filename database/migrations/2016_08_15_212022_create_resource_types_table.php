@@ -15,7 +15,7 @@ class CreateResourceTypesTable extends Migration
             $table->timestamps();
         });
     }
-
+    
     public function down()
     {
         Schema::drop('resource_types');
