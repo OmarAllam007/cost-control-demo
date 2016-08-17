@@ -30,4 +30,20 @@ trait Tree
     {
         $query->where('parent_id', 0);
     }
+
+    public function getPathAttribute()
+    {
+        if ($this->path) {
+            return $this->path;
+        }
+
+        $stack = collect([$this->name]);
+        $parent = $this->parent;
+        while ($parent) {
+            $stack->push($parent->name);
+            $parent = $parent->parent;
+        }
+
+        return $this->path = $stack->reverse()->implode(' » ');
+    }
 }
