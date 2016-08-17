@@ -15,8 +15,6 @@ class WbsLevel extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-    protected $path;
-
     public static function options()
     {
         return self::pluck('name', 'id')->prepend('Select Level', '');
