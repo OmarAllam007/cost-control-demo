@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateQtySurveysTable extends Migration
+class UpdateQtySurveyTable2 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class UpdateQtySurveysTable extends Migration
     public function up()
     {
         Schema::table('qty_surveys', function (Blueprint $table) {
-//            $table->integer('cost_id');
+//            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
@@ -24,7 +24,7 @@ class UpdateQtySurveysTable extends Migration
      */
     public function down()
     {
-        Schema::table('qty', function (Blueprint $table) {
+        Schema::table('qty_surveys', function (Blueprint $table) {
             //
         });
     }

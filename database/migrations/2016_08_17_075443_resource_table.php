@@ -3,11 +3,16 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateResourceTypesTable extends Migration
+class ResourceTable extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::table('resource_types', function (Blueprint $table) {
+//        Schema::create('resource_types', function (Blueprint $table) {
 //            $table->increments('id');
 //            $table->string('name');
 //            $table->integer('parent_id')->unsigned();
@@ -19,11 +24,18 @@ class CreateResourceTypesTable extends Migration
 //
 //            $table->softDeletes();
 //            $table->timestamps();
-        });
+//        });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
-        Schema::drop('resource_types');
+        Schema::table('resource_types', function (Blueprint $table) {
+            //
+        });
     }
 }
