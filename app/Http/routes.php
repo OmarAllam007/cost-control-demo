@@ -22,3 +22,5 @@ require __DIR__ . '/Routes/omar.php';
 
 
 
+
+Route::resource('std-activity-resource', 'StdActivityResourceController');
