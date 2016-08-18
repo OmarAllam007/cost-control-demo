@@ -42,7 +42,7 @@
             Add template</a>
     </div>
 
-    @if ($std_activity->breakdowns)
+    @if ($std_activity->breakdowns->count())
         <table class="table table-condensed table-hover table-striped">
             <thead>
             <tr>
