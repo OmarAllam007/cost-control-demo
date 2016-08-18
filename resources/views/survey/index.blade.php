@@ -15,19 +15,22 @@
                 <th>Unit</th>
                 <th>Budget Quantitiy</th>
                 <th>Eng Quantitiy</th>
+                <th>Category</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             @foreach($surveys as $survey)
                     <tr>
-                        <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}">{{ $survey->cost_name
-                        }}</a></td>
-                        <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}"></a></td>
-                        <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}">{{ $survey->budget_qty
-                        }}</a></td>
-                        <td class="col-md-2"><a href="{{ route('survey.edit', $survey) }}">{{ $survey->eng_qty
-                        }}</a></td>
+                        <td class="col-md-2">{{ $survey->cost_account
+                        }}</td>
+                        <td class="col-md-2">{{$survey->unit->type}}</td>
+                        <td class="col-md-2">{{$survey->budget_qty
+                        }}</td>
+                        <td class="col-md-2">{{ $survey->eng_qty
+                        }}</td>
+                        <td class="col-md-2">{{$survey->categories->name
+                        }}</td>
                         <td class="col-md-3">
                             <form action="{{ route('survey.destroy', $survey) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}

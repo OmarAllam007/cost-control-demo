@@ -12,7 +12,10 @@ class ResourceType extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-
+    public function getLabelAttribute()
+    {
+        return $this->id.'# '.$this->name  ;
+    }
 
 //    public function getParent($id)
 //    {

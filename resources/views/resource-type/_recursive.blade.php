@@ -1,6 +1,6 @@
 <li>
     <div class="tree--item">
-        <a href="#children-{{$resource_level->id}}" class="tree--item--label" data-toggle="collapse"><i class="fa fa-chevron-circle-right"></i> {{$resource_level->name}}</a>
+        <a href="#children-{{$resource_level->id}}" class="tree--item--label" data-toggle="collapse"><i class="fa fa-chevron-circle-right"></i> {{$resource_level->label}}</a>
         <span class="tree--item--actions">
             <a href="{{route('resource-type.show', $resource_level)}}" class="label label-info"><i class="fa fa-eye"></i> Show</a>
             <a href="{{route('resource-type.edit', $resource_level)}}" class="label label-primary"><i class="fa fa-pencil"></i> Edit</a>

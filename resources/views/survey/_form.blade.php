@@ -11,7 +11,7 @@
         <div class="form-group {{$errors->first('name', 'has-error')}}">
 
                 {{Form::label('cost_account','Cost Acount ID')}}
-                {Form::text('cost_account',null,['class'=>'form-control'])}}
+            {{Form::text('cost_account',null,['class'=>'form-control'])}}
 
         </div>
 

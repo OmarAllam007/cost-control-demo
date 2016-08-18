@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(ResourceTypeSeed::class);
-
+        $this->call(ResourceSeed::class);
+        $this->call(UnitSeed::class);
+        $this->call(SurveyCategorySeed::class);
+        $this->call(CSICategorySeed::class);
     }
 }

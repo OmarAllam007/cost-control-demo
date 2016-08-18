@@ -12,6 +12,11 @@ class Survey extends Model
 
     public function categories()
     {
-        $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class,'category_id');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class,'unit_id');
     }
 }
