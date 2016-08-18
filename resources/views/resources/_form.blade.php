@@ -2,6 +2,12 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group {{$errors->first('name', 'has-error')}}">
+            {{ Form::label('resource_type', 'Resource type', ['class' => 'control-label']) }}
+            {{  Form::select('resource_type_id',$resource_types,null, ['class' => 'form-control']) }}
+            {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('name', 'has-error')}}">
 
                 {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
                 {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
@@ -22,7 +28,7 @@
         </div>
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
-            {{ Form::text('unit', null, ['class' => 'form-control']) }}
+            {{ Form::select('unit', $units_drop, ['class' => 'form-control']) }}
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -39,12 +45,7 @@
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('name', 'has-error')}}">
-            {{ Form::label('resource_type', 'Resource type', ['class' => 'control-label']) }}
 
-            {{  Form::select('resource_type_id',$resource_types,1, ['class' => 'form-control']) }}
-            {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
-        </div>
 
 
         <!-- Continue working on your fields here -->

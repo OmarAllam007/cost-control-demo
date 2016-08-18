@@ -14,7 +14,7 @@ class ResourceType extends Model
 
     public function getLabelAttribute()
     {
-        return $this->id.'# '.$this->name  ;
+        return '# '.$this->name  ;
     }
 
 //    public function getParent($id)

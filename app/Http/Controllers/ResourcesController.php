@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessPartner;
 use App\Resources;
 use App\ResourceType;
+use App\Unit;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -21,12 +22,14 @@ class ResourcesController extends Controller
 
     public function create()
     {
+        $units_drop = Unit::lists('type', 'id')->all();
         $partners = BusinessPartner::lists('name','id')->all();
         $resources = Resources::all();
         $resource_types =  ResourceType::lists('name','id')->all();
 
 
-        return view('resources.create',compact('partners','resources','resource_types'));
+        return view('resources.create',compact('partners','resources','resource_types','units_drop'));
+        return view('resources.create',compact('partners','resources','resource_types','units_drop'));
     }
 
     public function store(Request $request)
