@@ -18,6 +18,7 @@
 
 @section('body')
     <table class="table table-condensed">
+        <tbody>
         <tr>
             <th>Division</th>
             <td>{{$std_activity->division->path}}</td>
@@ -26,9 +27,51 @@
             <th>Code</th>
             <td>{{$std_activity->code}}</td>
         </tr>
-        <tr>
-            <th>Partial ID</th>
-            <td>{{$std_activity->id_partial}}</td>
-        </tr>
+        @if ($std_activity->id_partial)
+            <tr>
+                <th>Partial ID</th>
+                <td>{{$std_activity->id_partial}}</td>
+            </tr>
+        @endif
+        </tbody>
     </table>
+
+    <h4 class="page-header">Breakdown Templates</h4>
+    <div class="form-group clearfix">
+        <a href="{{route('breakdown-template.create', ['activity' => $std_activity->id])}}" class="btn btn-primary pull-right"><i class="fa fa-plus-circle"></i>
+            Add template</a>
+    </div>
+
+    @if ($std_activity->breakdowns)
+        <table class="table table-condensed table-hover table-striped">
+            <thead>
+            <tr>
+                <td>Code</td>
+                <td>Name</td>
+                <td>Actions</td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($std_activity->breakdowns as $breakdown)
+                <tr>
+                    <td>{{$breakdown->code}}</td>
+                    <td>{{$breakdown->name}}</td>
+                    <td>
+                        {{Form::model($breakdown, ['method' => 'delete', 'route' => ['breakdown-template.destroy', $breakdown]])}}
+                        <a href="{{route('breakdown-template.show', $breakdown)}}" class="btn btn-sm btn-info">
+                            <i class="fa fa-eye"></i> Show
+                        </a>
+                        <a href="{{route('breakdown-template.edit', $breakdown)}}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-pencil"></i> Edit
+                        </a>
+                        <button class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                        {{Form::close()}}
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    @else
+        <div class="alert alert-info"><i class="fa fa-info-circle"></i> No breakdowns added</div>
+    @endif
 @stop

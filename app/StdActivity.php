@@ -10,8 +10,18 @@ class StdActivity extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    public static function options()
+    {
+        return self::orderBy('name')->pluck('name', 'id')->prepend('Select Activity', '');
+    }
+
     public function division()
     {
         return $this->belongsTo(ActivityDivision::class, 'division_id');
+    }
+
+    public function breakdowns()
+    {
+        return $this->hasMany(BreakdownTemplate::class);
     }
 }
