@@ -1,7 +1,7 @@
 <li>
     <div class="tree--item">
         <label class="tree--item--label">
-            <input type="radio" class="tree-radio" name="division_id" value="{{$division->id}}" {{Form::getValueAttribute('parent_id') == $division->id? 'checked' : ''}}>
+            <input type="radio" class="tree-radio" name="division_id" value="{{$division->id}}" {{Form::getValueAttribute('division_id') == $division->id? 'checked' : ''}}>
             <a href="#children-{{$division->id}}" class="node-label" data-toggle="collapse">{{$division->label}}</a>
         </label>
     </div>
