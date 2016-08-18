@@ -52,8 +52,9 @@ class ResourcesController extends Controller
 
         $partners = BusinessPartner::lists('name','id')->all();
         $resource_types =  ResourceType::lists('name','id')->all();
+        $units_drop = Unit::lists('type', 'id')->all();
 
-        return view('resources.edit', compact('resources','partners','resource_types'));
+        return view('resources.edit', compact('resources','partners','resource_types','units_drop'));
     }
 
     public function update(Resources $resources, Request $request)

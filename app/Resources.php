@@ -19,11 +19,11 @@ class Resources extends Model
         return $this->belongsTo(ResourceType::class,'resource_type_id');
 
     }
-    public function partener()
+    public function parteners()
     {
         return $this->belongsTo(BusinessPartner::class,'business_partner_id');
     }
-    public function unit(){
+    public function units(){
         return $this->belongsTo(Unit::class,'unit');
     }
 }

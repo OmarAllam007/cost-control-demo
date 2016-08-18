@@ -23,7 +23,7 @@
 
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'unit', ['class' => 'control-label']) }}
-            {{ Form::text('unit', null, ['class' => 'form-control'],['class' => 'form-control']) }}
+            {{ Form::select('unit', $units_drop, ['class' => 'form-control'],['class' => 'form-control']) }}
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
 

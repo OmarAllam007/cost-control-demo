@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CSI_category;
 use App\Productivity;
+use App\Unit;
 use Illuminate\Http\Request;
 
 class ProductivityController extends Controller
@@ -21,7 +22,9 @@ class ProductivityController extends Controller
     public function create()
     {
         $csi_category = CSI_category::lists('name','id')->all();
-        return view('productivity.create',compact('csi_category'));
+        $units_drop = Unit::lists('type', 'id')->all();
+
+        return view('productivity.create',compact('csi_category','units_drop'));
     }
 
     public function store(Request $request)
@@ -43,8 +46,9 @@ class ProductivityController extends Controller
     public function edit(Productivity $productivity)
     {
         $csi_category = CSI_category::lists('name','id')->all();
+        $units_drop = Unit::lists('type', 'id')->all();
 
-        return view('productivity.edit', compact('productivity','csi_category'));
+        return view('productivity.edit', compact('productivity','units_drop','csi_category'));
     }
 
     public function update(Productivity $productivity, Request $request)

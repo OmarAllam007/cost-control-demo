@@ -31,12 +31,12 @@
                     </td>
                     <td class="col-md-1">{{ $resource->rate }}
                     </td>
-                    <td class="col-md-1">{{ $resource->unit }}
+                    <td class="col-md-1">{{ $resource->units->type }}
                     </td>
                     <td class="col-md-1">{{ $resource->waste }}
                     </td>
                     <td class="col-md-2">
-                        {{$resource->partener->name}}
+                        {{$resource->parteners->name}}
                     </td>
                     <td class="col-md-2">{{$resource->type->name}}</td>
 

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 class SurveyController extends Controller
 {
 
+    protected $rules = ['' => ''];
 
     public function index()
     {
@@ -49,7 +50,10 @@ class SurveyController extends Controller
     public function edit(Survey $survey)
     {
         $units = Unit::all();
-        return view('survey.edit', compact('survey', 'units'));
+        $categories = Category::lists('name', 'id')->all();
+        $units_drop = Unit::lists('type', 'id')->all();
+
+        return view('survey.edit', compact('survey', 'units','categories','units_drop'));
     }
 
     public function update(Survey $survey, Request $request)

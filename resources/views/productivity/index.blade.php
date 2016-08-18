@@ -37,7 +37,7 @@
                     </td>
                     <td class="col-md-1">{{ $productivity->description }}
                     </td>
-                    <td class="col-md-1">{{ $productivity->unit }}
+                    <td class="col-md-1">{{ $productivity->units->type }}
                     </td>
                     <td class="col-md-1">{{ $productivity->crew_structure }}
                     </td>

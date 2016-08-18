@@ -1,10 +1,10 @@
 {{ csrf_field() }}
 <div class="row">
     <div class="col-md-6">
-        <div class="form-group {{$errors->first('name', 'has-error')}}">
-            {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
-            {{ Form::text('name', null, ['class' => 'form-control']) }}
-            <?php echo  $errors->first('name', '<div class="help-block"></div>'); ?>
+        <div class="form-group {{$errors->first('type', 'has-error')}}">
+            {{ Form::label('type', 'Name', ['class' => 'control-label']) }}
+            {{ Form::text('type', null, ['class' => 'form-control']) }}
+            <?php echo  $errors->first('type', '<div class="help-block"></div>'); ?>
 
         </div>
 

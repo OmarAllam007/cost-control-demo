@@ -4,7 +4,7 @@
         <div class="form-group {{$errors->first('name', 'has-error')}}">
 
                 {{Form::label('category_id','Category')}}
-                {{Form::select('category_id',$categories,['class'=>'form-control'])}}
+                {{Form::select('category_id',$categories,['class'=>'form-control'],['class'=>'form-control'])}}
 
         </div>
 
@@ -17,14 +17,16 @@
 
         <div class="form-group {{$errors->first('name', 'has-error')}}">
 
-                {{Form::label('cost_name','Item Name')}}
-                {{Form::text('cost_name',null,['class'=>'form-control'])}}
+            {{Form::label('item','Item Description')}}
+            {{Form::textarea('description',null,['class'=>'form-control'])}}
 
         </div>
+
+
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{Form::label('units','Unit')}}
 
-                {{Form::select('unit_id',$units_drop,['class'=>'form-control'])}}
+                {{Form::select('unit_id',$units_drop,['class'=>'form-control'],['class'=>'form-control'])}}
 
 
         </div>

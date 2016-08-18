@@ -16,5 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SurveyCategorySeed::class);
         $this->call(CSICategorySeed::class);
         $this->call(ProjectSeed::class);
+        $this->call(ProductivitySeed::class);
+        $this->call(BusinessPartnerSeed::class);
     }
 }

@@ -11,6 +11,7 @@
             <thead>
             <tr>
                 <th>Name</th>
+                <th>Description</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -18,7 +19,8 @@
                 @foreach($projects as $project)
                     <tr>
                         <td class="col-md-5"><a href="{{ route('project.edit', $project) }}">{{ $project->name }}</a></td>
-                        <td class="col-md-3">
+                        <td class="col-md-5">{{ $project->description }}</td>
+                        <td class="col-md-2">
                             <form action="{{ route('project.destroy', $project) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
                                 <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i class="fa fa-edit"></i> Edit</a>

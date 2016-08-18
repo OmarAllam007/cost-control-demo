@@ -10,6 +10,7 @@ class CreateSurveysTable extends Migration
         Schema::create('qty_surveys', function (Blueprint $table) {
             $table->increments('id');
             $table->string('cost_account');
+            $table->string('description');
             $table->integer('unit_id')->unsigned();
             $table->float('budget_qty');
             $table->float('eng_qty');

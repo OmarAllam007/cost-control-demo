@@ -12,6 +12,7 @@
             <thead>
             <tr>
                 <th>Name</th>
+                <th>Description</th>
                 <th>Unit</th>
                 <th>Budget Quantitiy</th>
                 <th>Eng Quantitiy</th>
@@ -24,10 +25,12 @@
                     <tr>
                         <td class="col-md-2">{{ $survey->cost_account
                         }}</td>
-                        <td class="col-md-2">{{$survey->unit->type}}</td>
-                        <td class="col-md-2">{{$survey->budget_qty
+                        <td class="col-md-2">{{ $survey->description
                         }}</td>
-                        <td class="col-md-2">{{ $survey->eng_qty
+                        <td class="col-md-1">{{$survey->unit->type}}</td>
+                        <td class="col-md-1">{{$survey->budget_qty
+                        }}</td>
+                        <td class="col-md-1">{{ $survey->eng_qty
                         }}</td>
                         <td class="col-md-2">{{$survey->categories->name
                         }}</td>

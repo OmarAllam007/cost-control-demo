@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class UnitController extends Controller
 {
 
-    protected $rules = ['name' => 'required'];
+    protected $rules = ['type' => 'required'];
 
     public function index()
     {

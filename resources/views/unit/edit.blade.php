@@ -15,7 +15,7 @@
 @section('body')
     {{ Form::model($unit, ['route' => ['unit.update', $unit]]) }}
 
-        {{ method_field('patch') }}
+        {{ method_field('PATCH') }}
 
         @include('unit._form')
 
