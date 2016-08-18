@@ -28,7 +28,7 @@
         </div>
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
-            {{ Form::select('unit', $units_drop, ['class' => 'form-control']) }}
+            {{ Form::select('unit', $units_drop,['class' => 'form-control'], ['class' => 'form-control']) }}
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
 
