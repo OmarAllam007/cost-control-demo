@@ -6,10 +6,10 @@
             {{ Form::text('name', null, ['class' => 'form-control']) }}
             {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
         </div>
-        <div class="form-group {{$errors->first('name', 'has-error')}}">
+        <div class="form-group {{$errors->first('type', 'has-error')}}">
             {{ Form::label('type', 'Type', ['class' => 'control-label']) }}
             {{ Form::text('type', null, ['class' => 'form-control']) }}
-            {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
+            {!! $errors->first('type', '<div class="help-block">:message</div>') !!}
         </div>
 
         <!-- Continue working on your fields here -->

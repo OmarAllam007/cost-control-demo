@@ -7,7 +7,7 @@
             {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('name', 'has-error')}}">
+        <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
             {{ Form::label('parent_id', 'Sub Division', ['class' => 'control-label']) }}
             {{ Form::text('parent_id', '', ['class' => 'form-control']) }}
             {!! $errors->first('parent_id', '<div class="help-block">:message</div>') !!}

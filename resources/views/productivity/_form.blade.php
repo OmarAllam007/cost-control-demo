@@ -52,7 +52,7 @@
                 {{ Form::label('daily_output', 'daily output', ['class' => 'control-label']) }}
                 {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
             </div>
-            <div class="form-group {{$errors->first('daily_output', 'has-error')}}">
+            <div class="form-group {{$errors->first('man_hours', 'has-error')}}">
 
                 {{ Form::label('man_hours', 'man hours', ['class' => 'control-label']) }}
                 {{ Form::text('man_hours', null, ['class' => 'form-control']) }}
