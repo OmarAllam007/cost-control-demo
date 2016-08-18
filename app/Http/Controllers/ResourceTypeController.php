@@ -13,18 +13,17 @@ class ResourceTypeController extends Controller
     public function index()
     {
         $resource_levels = ResourceType::tree()->paginate();
-        $resourceTypes = ResourceType::where('id','>',7)->paginate();
+        //$resourceTypes = ResourceType::where('id','>',7)->paginate();
         $resources = Resources::lists('id','name')->all();
-
-
         return view('resource-type.index', compact('resourceTypes','resources','resource_levels'));
     }
 
     public function create()
     {
-        $resource_types =  ResourceType::lists('name','id');
+        $resource_type =  ResourceType::lists('name','id');
         $resources = Resources::lists('name', 'id')->all();
-        return view('resource-type.create', compact('resources','resource_types'));
+
+        return view('resource-type.create', compact('resources','resource_type'));
     }
     /**
      * condition to get the id of the parent and put it as 0 if not exist
@@ -34,9 +33,6 @@ class ResourceTypeController extends Controller
 
         $this->validate($request, $this->rules);
         if (ResourceType::where('name', '=', Input::get('name'))->exists()) {
-
-            //$parent_id = ResourceType::where('name', '=', Input::get('name'))->value('id');
-           // $request->parent_id = $parent_id;
             ResourceType::create([
                 'name' => $request->parent_id,
                 'parent_id' => $request->name,
@@ -61,6 +57,7 @@ class ResourceTypeController extends Controller
 
     public function edit(ResourceType $resource_type)
     {
+        $this->$resource_type =  ResourceType::lists('name','id');
         return view('resource-type.edit', compact('resource_type'));
     }
 

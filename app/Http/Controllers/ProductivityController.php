@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class ProductivityController extends Controller
 {
 
+    protected $rules = ['' => ''];
 
     public function index()
     {
@@ -41,7 +42,9 @@ class ProductivityController extends Controller
 
     public function edit(Productivity $productivity)
     {
-        return view('productivity.edit', compact('productivity'));
+        $csi_category = CSI_category::lists('name','id')->all();
+
+        return view('productivity.edit', compact('productivity','csi_category'));
     }
 
     public function update(Productivity $productivity, Request $request)

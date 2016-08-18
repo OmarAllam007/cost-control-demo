@@ -6,7 +6,7 @@
 @stop
 
 @section('body')
-    @if ($resourceTypes->total())
+    @if ($resource_levels->total())
         {{--<table class="table table-condensed table-striped">--}}
             {{--<thead>--}}
             {{--<tr>--}}
@@ -44,7 +44,7 @@
                 @include('resource-type._recursive')
             @endforeach
         </ul>
-        {{ $resourceTypes->links() }}
+        {{ $resource_levels->links() }}
     @else
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No resource type found</strong></div>
     @endif
