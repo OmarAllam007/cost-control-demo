@@ -17,6 +17,6 @@ class CreateCategoriesTable extends Migration
 
     public function down()
     {
-        Schema::drop('categories');
+        Schema::drop('survey_categories');
     }
 }

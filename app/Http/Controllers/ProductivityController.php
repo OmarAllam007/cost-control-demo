@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 class ProductivityController extends Controller
 {
 
-    protected $rules = ['name' => 'required'];
 
     public function index()
     {

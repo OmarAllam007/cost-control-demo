@@ -22,6 +22,6 @@ class CreateSurveysTable extends Migration
 
     public function down()
     {
-       Schema::drop('surveys');
+       Schema::drop('qty_surveys');
     }
 }

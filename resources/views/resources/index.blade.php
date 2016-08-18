@@ -18,28 +18,29 @@
                 <th>Unit</th>
                 <th>Waste</th>
                 <th>Business Partner</th>
+                <th>Resource Type</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             @foreach($resources as $resource)
                 <tr>
-                    <td class="col-md-1"><a
-                                href="{{ route('resources.edit', $resource) }}">{{ $resource->resource_code }}</a></td>
+                    <td class="col-md-1">{{ $resource->resource_code }}</td>
 
-                    <td class="col-md-1"><a href="{{ route('resources.edit', $resource) }}">{{ $resource->name }}</a>
+                    <td class="col-md-1">{{ $resource->name }}
                     </td>
-                    <td class="col-md-1"><a href="{{ route('resources.edit', $resource) }}">{{ $resource->rate }}</a>
+                    <td class="col-md-1">{{ $resource->rate }}
                     </td>
-                    <td class="col-md-1"><a href="{{ route('resources.edit', $resource) }}">{{ $resource->unit }}</a>
+                    <td class="col-md-1">{{ $resource->unit }}
                     </td>
-                    <td class="col-md-1"><a href="{{ route('resources.edit', $resource) }}">{{ $resource->waste }}</a>
+                    <td class="col-md-1">{{ $resource->waste }}
                     </td>
-                    <td class="col-md-2"><a href="{{ route('resources.edit', $resource) }}">
-                            {{$resource->businessParteners->name}}
-                        </a></td>
+                    <td class="col-md-2">
+                        {{$resource->partener->name}}
+                    </td>
+                    <td class="col-md-2">{{$resource->type->name}}</td>
 
-                    <td class="col-md-3">
+                    <td class="col-md-2">
                         <form action="{{ route('resources.destroy', $resource) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
                             <a class="btn btn-sm btn-primary" href="{{ route('resources.edit', $resource) }} "><i

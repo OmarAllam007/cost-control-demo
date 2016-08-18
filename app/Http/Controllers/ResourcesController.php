@@ -15,9 +15,8 @@ class ResourcesController extends Controller
     public function index()
     {
         $resources = Resources::paginate();
-        //$partners = BusinessPartner::all();
-
-        return view('resources.index', compact('resources'));
+       // $partners = BusinessPartner::paginate();
+          return view('resources.index', compact('resources'));
     }
 
     public function create()
@@ -49,8 +48,9 @@ class ResourcesController extends Controller
     {
 
         $partners = BusinessPartner::lists('name','id')->all();
+        $resource_types =  ResourceType::lists('name','id')->all();
 
-        return view('resources.edit', compact('resources','partners'));
+        return view('resources.edit', compact('resources','partners','resource_types'));
     }
 
     public function update(Resources $resources, Request $request)
