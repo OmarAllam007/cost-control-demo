@@ -2,18 +2,18 @@
 
 namespace App;
 
+use App\Behaviors\HasOptions;
 use Illuminate\Database\Eloquent\Model;
 
 class StdActivity extends Model
 {
+    use HasOptions;
+
+    protected static $alias = 'Activity';
+
     protected $fillable = ['code', 'name', 'division_id', 'id_partial'];
 
     protected $dates = ['created_at', 'updated_at'];
-
-    public static function options()
-    {
-        return self::orderBy('name')->pluck('name', 'id')->prepend('Select Activity', '');
-    }
 
     public function division()
     {
