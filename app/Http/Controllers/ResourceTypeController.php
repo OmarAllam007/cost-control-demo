@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Input;
 
 class ResourceTypeController extends Controller
 {
-    protected $rules = ['name' => 'required'];
+    protected $rules = [];
 
     public function index()
     {
@@ -19,10 +19,10 @@ class ResourceTypeController extends Controller
 
     public function create()
     {
-        $resource_type =  ResourceType::options();
-        $resources = Resources::lists('name', 'id')->all();
+        $resource_types =  ResourceType::options();
 
-        return view('resource-type.create', compact('resources','resource_type'));
+
+        return view('resource-type.create', compact('resource_types'));
     }
     /**
      * condition to get the id of the parent and put it as 0 if not exist
@@ -31,20 +31,12 @@ class ResourceTypeController extends Controller
     {
 
         $this->validate($request, $this->rules);
-        if (ResourceType::where('name', '=', Input::get('name'))->exists()) {
             ResourceType::create([
                 'name' => $request->parent_id,
                 'parent_id' => $request->name,
-                'resource_id' => $request->resource_id
-            ]);
-        } else {
-            ResourceType::create([
-                'name' => $request->parent_id,
-                'parent_id' => $request->name,
-                'resource_id' => $request->resource_id
             ]);
             flash('Resource type has been saved', 'success');
-        }
+
         return \Redirect::route('resource-type.index');
     }
 
@@ -56,8 +48,8 @@ class ResourceTypeController extends Controller
 
     public function edit(ResourceType $resource_type)
     {
-        $resource_type=ResourceType::options();
-        return view('resource-type.edit', compact('resource_type'));
+        $resource_types=ResourceType::options();
+        return view('resource-type.edit', compact('resource_types','resource_type'));
     }
 
     public function update(ResourceType $resource_type, Request $request)
