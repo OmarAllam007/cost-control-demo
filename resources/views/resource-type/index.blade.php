@@ -2,7 +2,7 @@
 
 @section('header')
     <h2>Resource type</h2>
-    <a href="{{ route('resource-type.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add resource_type</a>
+    <a href="{{ route('resource-type.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add resource type</a>
 @stop
 
 @section('body')

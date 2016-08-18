@@ -13,14 +13,13 @@ class ResourceTypeController extends Controller
     public function index()
     {
         $resource_levels = ResourceType::tree()->paginate();
-        //$resourceTypes = ResourceType::where('id','>',7)->paginate();
         $resources = Resources::lists('id','name')->all();
-        return view('resource-type.index', compact('resourceTypes','resources','resource_levels'));
+        return view('resource-type.index', compact('resources','resource_levels'));
     }
 
     public function create()
     {
-        $resource_type =  ResourceType::lists('name','id');
+        $resource_type =  ResourceType::options();
         $resources = Resources::lists('name', 'id')->all();
 
         return view('resource-type.create', compact('resources','resource_type'));
@@ -57,7 +56,7 @@ class ResourceTypeController extends Controller
 
     public function edit(ResourceType $resource_type)
     {
-        $this->$resource_type =  ResourceType::lists('name','id');
+        $resource_type=ResourceType::options();
         return view('resource-type.edit', compact('resource_type'));
     }
 

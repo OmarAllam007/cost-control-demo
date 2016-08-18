@@ -26,4 +26,6 @@ class Resources extends Model
     public function units(){
         return $this->belongsTo(Unit::class,'unit');
     }
+
+
 }
