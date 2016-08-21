@@ -8,6 +8,7 @@
     <title>{{config('app.name')}}</title>
 
     <link rel="stylesheet" href="{{asset('/css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('/css/font-awesome-4.6.2/')}}">
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
@@ -25,25 +26,31 @@
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('') }}">
                     {{config('app.name')}}
+
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 @if (Auth::check())
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/project') }}">Projects</a></li>
-                    <li><a href="{{ url('/survey') }}">Survey</a></li>
-                    <li><a href="{{ url('/unit') }}">Unit</a></li>
+                    <li><a href="{{ url('/project') }}" class="fa fa-tasks"> Projects</a></li>
+
+                    <li><a href="{{ url('/unit') }}" class="fa fa-star-half-empty"> Unit</a></li>
 
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
+                    <li><a href="{{ url('/survey') }}" class="fa fa-file-text-o "> Survey</a></li>
+
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle fa fa-cogs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" > Resources <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{route('resource-type.index')}}">Resources Type</a></li>
+                            <li><a href="{{route('resource-type.index')}} " >Resources Type</a></li>
                             <li><a href="{{route('resources.index')}}">Resources</a></li>
                             <li><a href="{{route('business-partner.index')}}">Business Partner</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{route('productivity.index')}}">Productivity</a></li>
+                    <li><a href="{{route('productivity.index')}}" class="fa fa-area-chart"> Productivity</a></li>
 
                 </ul>
                 @endif
@@ -55,8 +62,8 @@
 
                     @else
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ Auth::user()->name }} <span class="caret"></span>
+                        <a href="#" class="dropdown-toggle fa fa-user" data-toggle="dropdown" role="button" aria-expanded="false">
+                            {{ Auth::user()->name }} <span class="caret "></span>
                         </a>
 
                         <ul class="dropdown-menu" role="menu">

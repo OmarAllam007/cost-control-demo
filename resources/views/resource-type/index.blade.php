@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Resource type</h2>
-    <a href="{{ route('resource-type.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add resource type</a>
+    <h2>Resource Type</h2>
+    <a href="{{ route('resource-type.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add Resource Type</a>
 @stop
 
 @section('body')
