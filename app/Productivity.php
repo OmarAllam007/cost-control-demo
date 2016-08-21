@@ -20,4 +20,10 @@ class Productivity extends Model
     {
         return  $this->belongsTo(Unit::class,'unit');
     }
+
+    public function productivityAfterReduction(){
+
+       return $this->after_reduction = ($this->reduction_factor * $this->daily_output) + $this->daily_output;
+    }
+
 }

@@ -68,11 +68,7 @@
                 {{ Form::label('reduction_factor', 'reduction factor', ['class' => 'control-label']) }}
                 {{ Form::text('reduction_factor', null, ['class' => 'form-control']) }}
             </div>
-            <div class="form-group {{$errors->first('after_reduction', 'has-error')}}">
 
-                {{ Form::label('after_reduction', 'after reduction', ['class' => 'control-label']) }}
-                {{ Form::text('after_reduction', null, ['class' => 'form-control']) }}
-            </div>
             <div class="form-group {{$errors->first('source', 'has-error')}}">
 
                 {{ Form::label('source', 'source', ['class' => 'control-label']) }}

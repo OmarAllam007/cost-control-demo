@@ -56,7 +56,7 @@
                     <td class="col-md-1">{{ $productivity->reduction_factor }}
                     </td>
 
-                    <td class="col-md-1">{{ $productivity->after_reduction }}
+                    <td class="col-md-1">{{ $productivity->productivityAfterReduction() }}
                     </td>
 
                     <td class="col-md-1">{{ $productivity->source }}
