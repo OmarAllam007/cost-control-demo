@@ -11,7 +11,7 @@
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
 
                 <!-- Collapsed Hamburger -->
@@ -29,24 +29,29 @@
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                @if (Auth::check())
+                {{--@if (Auth::check())--}}
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/project') }}">Projects</a></li>
-                    <li><a href="{{ url('/survey') }}">Survey</a></li>
-                    <li><a href="{{ url('/unit') }}">Unit</a></li>
-
+                    <li><a href="{{ url('/wbs-level') }}">WBS</a></li>
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standard Activity <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{route('activity-division.index')}}">Divisions</a></li>
+                            <li><a href="{{route('std-activity.index')}}">Standard Activities</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{route('resource-type.index')}}">Resources Type</a></li>
+                            <li><a href="{{route('resource-type.index')}}">Resource Types</a></li>
                             <li><a href="{{route('resources.index')}}">Resources</a></li>
-                            <li><a href="{{route('business-partner.index')}}">Business Partner</a></li>
+                            <li><a href="{{route('business-partner.index')}}">Business Partners</a></li>
                         </ul>
                     </li>
                     <li><a href="{{route('productivity.index')}}">Productivity</a></li>
 
                 </ul>
-                @endif
+                {{--@endif--}}
 
                 <ul class="nav navbar-nav navbar-right">
                     @if (Auth::guest())
@@ -69,7 +74,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="panel panel-default" id="main-panel">
             <div class="panel-heading clearfix">
                 @yield('header')
