@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Std activity</h2>
-    <a href="{{ route('std-activity.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add std_activity</a>
+    <h2>Standard activity</h2>
+    <a href="{{ route('std-activity.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add Activity</a>
 @stop
 
 @section('body')

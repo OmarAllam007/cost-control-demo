@@ -19,4 +19,9 @@ class ActivityDivision extends Model
     {
         return $this->code . '.' . $this->name;
     }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class);
+    }
 }

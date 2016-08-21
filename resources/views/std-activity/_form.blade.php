@@ -14,10 +14,10 @@
         </div>
 
         <div class="form-group {{$errors->first('division_id', 'has-error')}}">
-            {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
+            {{ Form::label('division_id', 'Division', ['class' => 'control-label']) }}
             <p>
                 <a href="#ParentsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('parent_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Parent' }}
+                    {{Form::getValueAttribute('division_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('division_id'))->path : 'Select Division' }}
                 </a>
             </p>
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}

@@ -20,4 +20,9 @@ class BreakdownTemplate extends Model
     {
         return $this->belongsTo(StdActivity::class, 'std_activity_id');
     }
+
+    public function resources()
+    {
+        return $this->hasMany(StdActivityResource::class, 'template_id');
+    }
 }

@@ -13,11 +13,11 @@
             {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('division_id', 'has-error')}}">
-            {{ Form::label('division_id', 'Parent', ['class' => 'control-label']) }}
+        <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
+            {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
             <p>
-                <a href="#ParentsModal" data-toggle="modal" id="select-division">
-                    {{Form::getValueAttribute('division_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('division_id'))->path : 'Select Parent' }}
+                <a href="#ParentsModal" data-toggle="modal" id="select-parent">
+                    {{Form::getValueAttribute('parent_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Parent' }}
                 </a>
             </p>
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
