@@ -1,8 +1,8 @@
 {{ csrf_field() }}
 <div class="row">
     <div class="col-md-6">
-        <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
-            {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
+        <div class="form-group {{$errors->first('name', 'has-error')}}">
+            {{ Form::label('name', 'Parent', ['class' => 'control-label']) }}
             {{ Form::select('parent_id', $resource_types,null, ['class' => 'form-control']) }}
             {!! $errors->first('parent_id', '<div class="help-block">:message</div>') !!}
         </div>

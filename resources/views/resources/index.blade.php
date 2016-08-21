@@ -38,7 +38,7 @@
                     <td class="col-md-2">
                         {{$resource->parteners->name}}
                     </td>
-                    <td class="col-md-2">{{$resource->type->name}}</td>
+                    <td class="col-md-2">{{$resource->types->name}}</td>
 
                     <td class="col-md-2">
                         <form action="{{ route('resources.destroy', $resource) }}" method="post">

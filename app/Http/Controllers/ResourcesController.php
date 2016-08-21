@@ -16,20 +16,19 @@ class ResourcesController extends Controller
     public function index()
     {
         $resources = Resources::paginate();
-       // $partners = BusinessPartner::paginate();
-          return view('resources.index', compact('resources'));
+        return view('resources.index', compact('resources'));
     }
 
     public function create()
     {
         $units_drop = Unit::lists('type', 'id')->all();
-        $partners = BusinessPartner::lists('name','id')->all();
+        $partners = BusinessPartner::lists('name', 'id')->all();
         $resources = Resources::all();
-        $resource_types =  ResourceType::lists('name','id')->all();
+        $resource_types = ResourceType::lists('name', 'id')->all();
 
 
-        return view('resources.create',compact('partners','resources','resource_types','units_drop'));
-        return view('resources.create',compact('partners','resources','resource_types','units_drop'));
+        return view('resources.create', compact('partners', 'resources', 'resource_types', 'units_drop'));
+        return view('resources.create', compact('partners', 'resources', 'resource_types', 'units_drop'));
     }
 
     public function store(Request $request)
@@ -50,11 +49,11 @@ class ResourcesController extends Controller
     public function edit(Resources $resources)
     {
 
-        $partners = BusinessPartner::lists('name','id')->all();
-        $resource_types =  ResourceType::lists('name','id')->all();
+        $partners = BusinessPartner::lists('name', 'id')->all();
+        $resource_types = ResourceType::lists('name', 'id')->all();
         $units_drop = Unit::lists('type', 'id')->all();
 
-        return view('resources.edit', compact('resources','partners','resource_types','units_drop'));
+        return view('resources.edit', compact('resources', 'partners', 'resource_types', 'units_drop'));
     }
 
     public function update(Resources $resources, Request $request)

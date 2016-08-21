@@ -14,7 +14,7 @@ class Resources extends Model
     protected $fillable = ['resource_code','name','rate','unit','waste','business_partner_id','resource_type_id'];
     protected $dates = ['created_at', 'updated_at'];
 
-    public function type()
+    public function types()
     {
         return $this->belongsTo(ResourceType::class,'resource_type_id');
 

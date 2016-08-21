@@ -24,6 +24,7 @@ class ProductivityController extends Controller
         $csi_category = CSI_category::lists('name','id')->all();
         $units_drop = Unit::lists('type', 'id')->all();
 
+
         return view('productivity.create',compact('csi_category','units_drop'));
     }
 
@@ -31,6 +32,7 @@ class ProductivityController extends Controller
     {
         $this->validate($request, $this->rules);
 
+        $this->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
         Productivity::create($request->all());
 
         flash('Productivity has been saved', 'success');
@@ -54,7 +56,7 @@ class ProductivityController extends Controller
     public function update(Productivity $productivity, Request $request)
     {
         $this->validate($request, $this->rules);
-
+        $productivity->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
         $productivity->update($request->all());
 
         flash('Productivity has been saved', 'success');
