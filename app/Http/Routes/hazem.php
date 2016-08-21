@@ -5,3 +5,4 @@ Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');
 Route::resource('activity-division', 'ActivityDivisionController');
 Route::resource('breakdown-template', 'BreakdownTemplateController');
+Route::resource('std-activity-resource', 'StdActivityResourceController');
