@@ -44,11 +44,12 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{route('resource-type.index')}}">Resource Types</a></li>
+                            <li><a href="{{route('resource-type.index')}} " >Resources Type</a></li>
                             <li><a href="{{route('resources.index')}}">Resources</a></li>
                             <li><a href="{{route('business-partner.index')}}">Business Partners</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{route('productivity.index')}}">Productivity</a></li>
+                    <li><a href="{{route('productivity.index')}}" class="fa fa-area-chart"> Productivity</a></li>
 
                 </ul>
                 {{--@endif--}}
@@ -60,8 +61,8 @@
 
                     @else
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ Auth::user()->name }} <span class="caret"></span>
+                        <a href="#" class="dropdown-toggle fa fa-user" data-toggle="dropdown" role="button" aria-expanded="false">
+                            {{ Auth::user()->name }} <span class="caret "></span>
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
@@ -74,7 +75,7 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container">
         <div class="panel panel-default" id="main-panel">
             <div class="panel-heading clearfix">
                 @yield('header')

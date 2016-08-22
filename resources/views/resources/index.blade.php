@@ -14,9 +14,9 @@
 
                 <th>Resource Code</th>
                 <th>Name</th>
-                <th>Rate</th>
-                <th>Unit</th>
-                <th>Waste</th>
+                {{--<th>Rate</th>--}}
+                {{--<th>Unit</th>--}}
+                {{--<th>Waste</th>--}}
                 <th>Business Partner</th>
                 <th>Resource Type</th>
                 <th>Actions</th>
@@ -29,12 +29,12 @@
 
                     <td class="col-md-1">{{ $resource->name }}
                     </td>
-                    <td class="col-md-1">{{ $resource->rate }}
-                    </td>
-                    <td class="col-md-1">{{ $resource->units->type }}
-                    </td>
-                    <td class="col-md-1">{{ $resource->waste }}
-                    </td>
+                    {{--<td class="col-md-1">{{ $resource->rate }}--}}
+                    {{--</td>--}}
+                    {{--<td class="col-md-1">{{ $resource->units->type }}--}}
+                    {{--</td>--}}
+                    {{--<td class="col-md-1">{{ $resource->waste }}--}}
+                    {{--</td>--}}
                     <td class="col-md-2">
                         {{$resource->parteners->name}}
                     </td>
