@@ -16,4 +16,14 @@ class Project extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    public function wbs_levels()
+    {
+        return $this->hasMany(WbsLevel::class);
+    }
+
+    public function getWbsTreeAttribute()
+    {
+        return $this->wbs_levels()->tree()->get();
+    }
+
 }
