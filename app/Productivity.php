@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Productivity extends Model
@@ -24,6 +25,11 @@ class Productivity extends Model
     public function productivityAfterReduction(){
 
        return $this->after_reduction = ($this->reduction_factor * $this->daily_output) + $this->daily_output;
+    }
+
+    public function scopeOptions(Builder $query)
+    {
+        return $query->orderBy('csi_code')->pluck('csi_code', 'id')->prepend('Select Productivity Reference', '');
     }
 
 }
