@@ -49,7 +49,7 @@
                             <li><a href="{{route('business-partner.index')}}">Business Partners</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{route('productivity.index')}}" class="fa fa-area-chart"> Productivity</a></li>
+                    <li><a href="{{route('productivity.index')}}"><i class="fa fa-area-chart"></i> Productivity</a></li>
 
                 </ul>
                 {{--@endif--}}
@@ -75,7 +75,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="panel panel-default" id="main-panel">
             <div class="panel-heading clearfix">
                 @yield('header')

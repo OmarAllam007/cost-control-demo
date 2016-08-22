@@ -12,7 +12,7 @@ class ActivityDivisionController extends Controller
 
     public function index()
     {
-        $activityDivisions = ActivityDivision::tree()->paginate();
+        $activityDivisions = ActivityDivision::tree()->appendActivity()->paginate();
 
         return view('activity-division.index', compact('activityDivisions'));
     }

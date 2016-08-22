@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\Tree;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,5 +24,17 @@ class ActivityDivision extends Model
     public function parent()
     {
         return $this->belongsTo(self::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(StdActivity::class, 'division_id');
+    }
+
+    public function scopeAppendActivity(Builder $query)
+    {
+        $query->with('activities')
+            ->with('children.activities')
+            ->with('children.children.activities');
     }
 }

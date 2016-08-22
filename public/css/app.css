@@ -7969,6 +7969,11 @@ table.table > thead > tr > td,
 table.table > thead > tr > th {
   vertical-align: middle; }
 
+ul.tree .tree--child {
+  margin-left: 15px; }
+  ul.tree .tree--child ul.list-unstyled {
+    margin-left: 0; }
+
 ul.tree ul {
   margin-left: 15px; }
 

@@ -24,6 +24,13 @@ table.table>thead>tr>th {
 }
 
 ul.tree  {
+  .tree--child {
+    margin-left: 15px;
+
+    ul.list-unstyled {
+      margin-left: 0;
+    }
+  }
   ul {
     margin-left: 15px;
   }
