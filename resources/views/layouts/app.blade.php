@@ -44,7 +44,6 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{route('resource-type.index')}}">Resource Types</a></li>
-                            <li><a href="{{route('resource-type.index')}} " >Resources Type</a></li>
                             <li><a href="{{route('resources.index')}}">Resources</a></li>
                             <li><a href="{{route('business-partner.index')}}">Business Partners</a></li>
                         </ul>

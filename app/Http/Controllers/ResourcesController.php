@@ -28,7 +28,6 @@ class ResourcesController extends Controller
 
 
         return view('resources.create', compact('partners', 'resources', 'resource_types', 'units_drop'));
-        return view('resources.create', compact('partners', 'resources', 'resource_types', 'units_drop'));
     }
 
     public function store(Request $request)
