@@ -23,6 +23,7 @@ class Resources extends Model
     {
         return $this->belongsTo(BusinessPartner::class,'business_partner_id');
     }
+
     public function units(){
         return $this->belongsTo(Unit::class,'unit');
     }
