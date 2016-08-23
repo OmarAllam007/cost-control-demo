@@ -22,22 +22,52 @@
         </div>
     @endif
 
-    <section class="children">
-        <h3 class="page-header">WBS</h3>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#wbs-structure" data-toggle="tab">WBS</a></li>
+        <li><a href="#breakdown" data-toggle="tab">Breakdown</a></li>
+        <li><a href="#resources" data-toggle="tab">Resources</a></li>
+        <li><a href="#productivity" data-toggle="tab">Productivity</a></li>
+    </ul>
 
-        <div class="form-group clearfix">
-            <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i>
-                Add Level</a>
-        </div>
+    <div class="tab-content">
+        <section class="tab-pane active" id="wbs-structure">
+            <div class="form-group tab-actions clearfix">
+                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+                    <i class="fa fa-plus"></i> Add Level
+                </a>
+            </div>
 
-        @if ($project->wbs_tree)
-            <ul class="list-unstyled tree">
-                @foreach($project->wbs_tree as $wbs_level)
-                    @include('wbs-level._recursive', compact('wbs_level'))
-                @endforeach
-            </ul>
-        @else
-            <div class="alert alert-info"><i class="fa fa-info"></i> No WBS found</div>
-        @endif
-    </section>
+            @if ($project->wbs_tree)
+                <ul class="list-unstyled tree">
+                    @foreach($project->wbs_tree as $wbs_level)
+                        @include('wbs-level._recursive', compact('wbs_level'))
+                    @endforeach
+                </ul>
+            @else
+                <div class="alert alert-info"><i class="fa fa-info"></i> No WBS found</div>
+            @endif
+        </section>
+
+        <section class="tab-pane" id="breakdown">
+            <div class="form-group tab-actions clearfix">
+                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+                    <i class="fa fa-plus"></i> Add Breakdown
+                </a>
+            </div>
+        </section>
+        <section class="tab-pane" id="resources">
+            <div class="form-group tab-actions clearfix">
+                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+                    <i class="fa fa-plus"></i> Add Resource
+                </a>
+            </div>
+        </section>
+        <section class="tab-pane" id="productivity">
+            <div class="form-group tab-actions clearfix">
+                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+                    <i class="fa fa-plus"></i> Add Productivity
+                </a>
+            </div>
+        </section>
+    </div>
 @stop

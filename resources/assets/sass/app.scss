@@ -37,7 +37,7 @@ ul.tree  {
 
   .tree--item {
     display: block;
-    background: #ECF0F1;
+    background: #F7F7F7;
     margin-bottom: 5px;
     @extend .clearfix;
     position: relative;
@@ -54,4 +54,8 @@ ul.tree  {
     }
   }
 
+}
+
+.tab-actions {
+  margin-top: 15px;
 }
