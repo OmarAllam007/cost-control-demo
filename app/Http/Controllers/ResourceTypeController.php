@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Behaviors\HasOptions;
+use App\Behaviors\Tree;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Http\Request;
@@ -8,6 +10,8 @@ use Illuminate\Support\Facades\Input;
 
 class ResourceTypeController extends Controller
 {
+
+    use Tree , HasOptions;
     protected $rules = [];
 
     public function index()
@@ -43,7 +47,8 @@ class ResourceTypeController extends Controller
     public function show(ResourceType $resource_type)
     {
 
-        return view('resource-type.show', compact('resource_type'));
+        $resource_types = ResourceType::options();
+        return view('resource-type.show', compact('resource_type','resource_types'));
     }
 
     public function edit(ResourceType $resource_type)

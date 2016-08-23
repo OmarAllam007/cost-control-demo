@@ -11,19 +11,19 @@
         <table class="table table-condensed table-striped">
             <thead>
             <tr>
-                <th>csi_code</th>
-                <th>csi category</th>
-                <th>description</th>
-                <th>unit</th>
-                <th>crew structure</th>
-                <th>crew hours</th>
-                <th>crew equip</th>
-                <th>daily output</th>
-                <th>man hours</th>
-                <th>equip hours</th>
-                <th>reduction factor</th>
-                <th>after reduction</th>
-                <th>source</th>
+                <th>Csi Code</th>
+                <th>Csi Category</th>
+                <th>Description</th>
+                {{--<th>unit</th>--}}
+                {{--<th>crew structure</th>--}}
+                {{--<th>crew hours</th>--}}
+                {{--<th>crew equip</th>--}}
+                {{--<th>daily output</th>--}}
+                {{--<th>man hours</th>--}}
+                {{--<th>equip hours</th>--}}
+                {{--<th>reduction factor</th>--}}
+                {{--<th>after reduction</th>--}}
+                {{--<th>source</th>--}}
                 <th>Actions</th>
             </tr>
             </thead>
@@ -37,30 +37,30 @@
                     </td>
                     <td class="col-md-1">{{ $productivity->description }}
                     </td>
-                    <td class="col-md-1">{{ $productivity->units->type }}
-                    </td>
-                    <td class="col-md-1">{{ $productivity->crew_structure }}
-                    </td>
+                    {{--<td class="col-md-1">{{ $productivity->units->type }}--}}
+                    {{--</td>--}}
+                    {{--<td class="col-md-1">{{ $productivity->crew_structure }}--}}
+                    {{--</td>--}}
 
-                    <td class="col-md-1">{{ $productivity->crew_hours }}
-                    </td>
-                    <td class="col-md-1">{{ $productivity->crew_equip }}
-                    </td>
-                    <td class="col-md-1">{{ $productivity->daily_output }}
-                    </td>
+                    {{--<td class="col-md-1">{{ $productivity->crew_hours }}--}}
+                    {{--</td>--}}
+                    {{--<td class="col-md-1">{{ $productivity->crew_equip }}--}}
+                    {{--</td>--}}
+                    {{--<td class="col-md-1">{{ $productivity->daily_output }}--}}
+                    {{--</td>--}}
 
-                    <td class="col-md-1">{{ $productivity->man_hours }}
-                    </td>
-                    <td class="col-md-1">{{ $productivity->equip_hours }}
-                    </td>
-                    <td class="col-md-1">{{ $productivity->reduction_factor }}
-                    </td>
+                    {{--<td class="col-md-1">{{ $productivity->man_hours }}--}}
+                    {{--</td>--}}
+                    {{--<td class="col-md-1">{{ $productivity->equip_hours }}--}}
+                    {{--</td>--}}
+                    {{--<td class="col-md-1">{{ $productivity->reduction_factor }}--}}
+                    {{--</td>--}}
 
-                    <td class="col-md-1">{{ $productivity->productivityAfterReduction() }}
-                    </td>
+                    {{--<td class="col-md-1">{{ $productivity->productivityAfterReduction() }}--}}
+                    {{--</td>--}}
 
-                    <td class="col-md-1">{{ $productivity->source }}
-                    </td>
+                    {{--<td class="col-md-1">{{ $productivity->source }}--}}
+                    {{--</td>--}}
 
                     <td class="col-md-2">
                         <form action="{{ route('productivity.destroy', $productivity) }}" method="post">

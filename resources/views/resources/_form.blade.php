@@ -38,14 +38,18 @@
             {!! $errors->first('waste', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('reference', 'has-error')}}">
+            {{ Form::label('reference', 'Reference', ['class' => 'control-label']) }}
+            {{ Form::text('reference', null, ['class' => 'form-control']) }}
+            {!! $errors->first('reference', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
             {{ Form::label('business_partner', 'business partner', ['class' => 'control-label']) }}
 
             {{  Form::select('business_partner_id',$partners,1, ['class' => 'form-control']) }}
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
-
-
 
 
         <!-- Continue working on your fields here -->

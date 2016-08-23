@@ -11,7 +11,7 @@ class Resources extends Model
     use SoftDeletes, HasOptions;
 
     protected $table = 'resources';
-    protected $fillable = ['resource_code','name','rate','unit','waste','business_partner_id','resource_type_id'];
+    protected $fillable = ['resource_code','name','rate','unit','waste','business_partner_id','resource_type_id','reference'];
     protected $dates = ['created_at', 'updated_at'];
 
     public function types()
@@ -23,6 +23,7 @@ class Resources extends Model
     {
         return $this->belongsTo(BusinessPartner::class,'business_partner_id');
     }
+
     public function units(){
         return $this->belongsTo(Unit::class,'unit');
     }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Survey</h2>
+    <h2>Quantity Survey</h2>
     <a href="{{ route('survey.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add
         survey</a>
 @stop
@@ -23,17 +23,12 @@
             <tbody>
             @foreach($surveys as $survey)
                     <tr>
-                        <td class="col-md-2">{{ $survey->cost_account
-                        }}</td>
-                        <td class="col-md-2">{{ $survey->description
-                        }}</td>
+                        <td class="col-md-2">{{ $survey->cost_account }}</td>
+                        <td class="col-md-2">{{ $survey->description }}</td>
                         <td class="col-md-1">{{$survey->unit->type}}</td>
-                        <td class="col-md-1">{{$survey->budget_qty
-                        }}</td>
-                        <td class="col-md-1">{{ $survey->eng_qty
-                        }}</td>
-                        <td class="col-md-2">{{$survey->categories->name
-                        }}</td>
+                        <td class="col-md-1">{{$survey->budget_qty }}</td>
+                        <td class="col-md-1">{{ $survey->eng_qty }}</td>
+                        <td class="col-md-2">{{$survey->categories->name}}</td>
                         <td class="col-md-3">
                             <form action="{{ route('survey.destroy', $survey) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
