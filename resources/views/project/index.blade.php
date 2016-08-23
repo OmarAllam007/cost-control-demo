@@ -12,19 +12,18 @@
         <table class="table table-condensed table-striped">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
+                <th class="col-sm-8">Name</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
                 @foreach($projects as $project)
                     <tr>
-                        <td class="col-md-5" contenteditable="true"><a href="{{ route('project.edit', $project) }}">{{ $project->name }}</a></td>
-                        <td class="col-md-5" contenteditable="true">{{ $project->description }}</td>
-                        <td class="col-md-2">
+                        <td><a href="{{ route('project.show', $project) }}">{{ $project->name }}</a></td>
+                        <td>
                             <form action="{{ route('project.destroy', $project) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
+                                <a class="btn btn-sm btn-info" href="{{ route('project.show', $project) }} "><i class="fa fa-edit"></i> Show</a>
                                 <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i class="fa fa-edit"></i> Edit</a>
                                 <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                             </form>

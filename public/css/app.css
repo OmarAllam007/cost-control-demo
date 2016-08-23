@@ -7979,7 +7979,7 @@ ul.tree ul {
 
 ul.tree .tree--item {
   display: block;
-  background: #ECF0F1;
+  background: #F7F7F7;
   margin-bottom: 5px;
   position: relative; }
   ul.tree .tree--item .tree--item--label {
@@ -7989,5 +7989,18 @@ ul.tree .tree--item {
     position: absolute;
     right: 7px;
     top: 7px; }
+
+.container-row {
+  overflow-x: auto; }
+  .container-row .table {
+    width: auto; }
+  .container-row td .form-control {
+    width: 150px; }
+
+.panel-sm .panel-body {
+  padding: 10px; }
+
+.tab-actions {
+  margin-top: 15px; }
 
 /*# sourceMappingURL=app.css.map */

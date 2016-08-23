@@ -18,7 +18,9 @@ class CreateBreakdownResourcesTable extends Migration
             $table->integer('std_activity_resource_id');
             $table->float('budget_qty');
             $table->float('eng_qty');
-            $table->integer('remarks');
+            $table->integer('remarks')->nullable();
+            $table->float('labor_count')->nullable();
+            $table->float('productivity_id')->nullable();
             $table->timestamps();
         });
     }

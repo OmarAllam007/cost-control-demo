@@ -14,9 +14,10 @@ class CreateBreakdownsTable extends Migration
     {
         Schema::create('breakdowns', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('activity_id')->unsigned();
-            $table->integer('breakdown_template_id')->unsigned();
-            $table->string('name');
+            $table->integer('wbs_level_id')->unsigned();
+            $table->integer('project_id')->unsigned();
+            $table->integer('template_id')->unsigned();
+            $table->integer('std_activity_id')->unsigned();
             $table->string('cost_account');
             $table->timestamps();
         });

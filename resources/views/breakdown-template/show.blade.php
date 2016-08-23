@@ -35,7 +35,7 @@
             Add Resource</a>
     </div>
 
-    @if ($breakdown_template->resources)
+    @if ($breakdown_template->resources->count())
         <table class="table table-condensed table-striped">
             <thead>
             <tr>

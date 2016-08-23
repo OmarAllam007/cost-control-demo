@@ -9,7 +9,7 @@
 
         <div class="form-group {{$errors->first('project_id', 'has-error')}}">
             {{ Form::label('project_id', 'Project', ['class' => 'control-label']) }}
-            {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control']) }}
+            {{ Form::select('project_id', App\Project::options(), request('project'), ['class' => 'form-control']) }}
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
         </div>
 
