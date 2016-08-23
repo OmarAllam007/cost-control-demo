@@ -50,7 +50,7 @@
 
         <section class="tab-pane" id="breakdown">
             <div class="form-group tab-actions clearfix">
-                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+                <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
                     <i class="fa fa-plus"></i> Add Breakdown
                 </a>
             </div>

@@ -7990,6 +7990,9 @@ ul.tree .tree--item {
     right: 7px;
     top: 7px; }
 
+.panel-sm .panel-body {
+  padding: 10px; }
+
 .tab-actions {
   margin-top: 15px; }
 

@@ -6,3 +6,10 @@ Route::resource('std-activity', 'StdActivityController');
 Route::resource('activity-division', 'ActivityDivisionController');
 Route::resource('breakdown-template', 'BreakdownTemplateController');
 Route::resource('std-activity-resource', 'StdActivityResourceController');
+
+Route::resource('breakdown', 'BreakdownController');
+
+Route::group(['prefix' => 'api'], function(){
+    Route::get('breakdown-template', 'Api\BreakdownTemplateController@index');
+    Route::get('std-activity-resource', 'Api\StdActivityResourceController@index');
+});
