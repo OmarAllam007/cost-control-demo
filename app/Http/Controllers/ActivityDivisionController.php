@@ -62,4 +62,46 @@ class ActivityDivisionController extends Controller
 
         return \Redirect::route('activity-division.index');
     }
+
+    public function import()
+    {
+
+        //ActivityDivision::truncate();
+        $path = storage_path('app\division.csv');
+        $handle = fopen($path, "r");
+        $parent_id = 0;
+
+        if ($handle !== FALSE) {
+            fgetcsv($handle);
+            while (($row = fgetcsv($handle)) !== FALSE) {
+
+                $levels = count(array_filter($row));
+                for ($counter = 0; $counter < $levels; $counter++) {
+                    $division_name = ActivityDivision::where('name', $row[$counter])->first();
+                    if (is_null($division_name)) {
+
+                        $division_name = ActivityDivision::create([
+                            'name' => $row[$counter],
+                            'parent_id' => $parent_id,
+                        ]);
+
+                        $parent_id = $division_name->id;
+
+                    } else {
+
+                        $parent_id = $division_name->id;
+
+                    }
+
+
+                }
+
+                $parent_id = 0;
+            }
+
+        }
+        fclose($handle);
+        return \Redirect::route('activity-division.index');
+    }
+
 }

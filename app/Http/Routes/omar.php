@@ -11,4 +11,9 @@ Route::resource('productivity', 'ProductivityController');
 
 Route::resource('category', 'CategoryController');
 
+Route::get('/import',
+    ['uses'=>'ActivityDivisionController@import'
+    ,'as'=>'division.import'
+    ]);
+
 
