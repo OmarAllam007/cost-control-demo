@@ -44,41 +44,50 @@
 <template id="resourcesError"><div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> Error loading breakdown resources</div></template>
 <template id="resourceTemplate">
     <div class="container-row">
-        <div class="panel panel-primary panel-sm">
-            <div class="panel-body">
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <label for="resourceType##">Resource Type</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Resource Type</th>
+                    <th>Resource Name</th>
+                    <th>Budget Qty</th>
+                    <th>Eng Qty</th>
+                    <th>Resource Waste</th>
+                    <th>Labors Count</th>
+                    <th>Productivity Ref</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
                         <input class="form-control input-sm" type="text" name="resources[##][resource_type]" id="resourceType##" j-model="resource_type" readonly>
-                    </div>
+                    </td>
 
-                    <div class="form-group col-sm-3">
-                        <label for="resourceName##">Resource Name</label>
+                    <td>
                         <input class="form-control input-sm" type="text" name="resources[##][resource_name]" id="resourceType##" j-model="resource_name" readonly>
-                    </div>
+                    </td>
 
-                    <div class="form-group col-sm-3">
-                        <label for="budgetQuantity##">Budget Qty</label>
+                    <td>
                         <input class="form-control input-sm" type="text" name="resources[##][budget_quantity]" id="budgetQuantity##" j-model="budget_quantity">
-                    </div>
+                    </td>
 
-                    <div class="form-group col-sm-3">
-                        <label for="engQuantity##">Eng Qty</label>
+                    <td>
                         <input class="form-control input-sm" type="text" name="resources[##][eng_quantity]" id="engQuantity##" j-model="eng_quantity">
-                    </div>
+                    </td>
 
-                    <div class="form-group col-sm-3">
-                        <label for="resourceWaste##">Resource Waste</label>
+                    <td>
                         <input class="form-control input-sm" type="text" name="resources[##][resource_waste]" id="resourceWastete##" j-model="resource_waste">
-                    </div>
+                    </td>
 
-                    <div class="form-group col-sm-3">
-                        <label for="laborsCount##">Labors Count</label>
+                    <td>
                         <input class="form-control input-sm" type="text" name="resources[##][labors_count]" id="laborsCount##" j-model="labors_count">
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </td>
+
+                    <td>
+                        <input class="form-control input-sm" type="text" name="resources[##][productivity_id]" id="laborsCount##" j-model="productivity_id">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 

@@ -56,6 +56,18 @@ ul.tree  {
 
 }
 
+.container-row {
+  overflow-x: auto;
+
+  .table {
+    width: auto;
+  }
+
+  td .form-control {
+    width: 150px;
+  }
+}
+
 .panel-sm {
   .panel-body {
     padding: 10px;
