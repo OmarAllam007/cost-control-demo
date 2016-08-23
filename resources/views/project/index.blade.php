@@ -6,6 +6,7 @@
 @stop
 
 @section('body')
+    <?php echo asset('storage/test.csv');?>
     @if ($projects->total())
         <table class="table table-condensed table-striped">
             <thead>
