@@ -14,13 +14,13 @@
 
         var showLoader = function () {
             hideError();
-            templateInput.after(loader);
+            templateInput.before(loader);
         };
 
         var showError = function (message) {
             hideLoader();
             errorMessage.find('span').text(message);
-            templateInput.after(errorMessage);
+            templateInput.before(errorMessage);
         };
 
         var hideError = function() {
@@ -68,7 +68,8 @@
     var emptyAlert = $('#resourcesEmptyAlert').html();
     var resourcesLoading = $('#resourcesLoading').html();
     var resourcesError = $('#resourcesError').html();
-    var resourceRowTemplate = $('#resourceTemplate').html();
+    var containerTemplate = $('#containerTemplate').html();
+    var resourceRowTemplate = $('#resourceRowTemplate').html();
 
     templateInput.on('change', function(){
         var value = this.value;
@@ -93,7 +94,6 @@
     }
 
     function showError() {
-        console.log('called');
         resourcesContainer.html(resourcesError);
     }
 
@@ -107,7 +107,7 @@
         var counter = 0;
         var key;
 
-        resourcesContainer.html('');
+        var table = $(containerTemplate);
 
         for (res in resources) {
             var rowObject = $(resourceRowTemplate.replace(/##/g, counter));
@@ -117,11 +117,11 @@
                 input.val(resources[res][key]);
             }
 
-            resourcesContainer.append(rowObject);
+            table.find('tbody').append(rowObject);
             counter++;
         }
 
-        
+        resourcesContainer.html('').append(table);
     }
 }(window, document, jQuery));
 //# sourceMappingURL=breakdown.js.map

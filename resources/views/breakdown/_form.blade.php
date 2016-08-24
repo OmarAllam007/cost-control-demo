@@ -17,6 +17,15 @@
 
         <div class="row">
             <div class="col-sm-6">
+                <div class="form-group {{$errors->first('cost_account', 'has-errors')}}">
+                    {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
+                    {{Form::text('cost_account', null, ['class' => 'form-control'])}}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
                 <div class="form-group {{$errors->first('std_activity_id', 'has-errors')}}">
                     {{Form::label('std_activity_id', 'Standard Activity', ['class' => 'control-label'])}}
                     {{Form::select('std_activity_id', App\StdActivity::options(), null, ['class' => 'form-control', 'id' => 'ActivityID'])}}
@@ -29,6 +38,9 @@
                 </div>
             </div>
         </div>
+
+        
+        
     </div>
 </div>
 
@@ -42,9 +54,9 @@
 <template id="resourcesEmptyAlert"><div class="alert alert-info"><i class="fa fa-info-circle"></i> Please select breakdown template</div></template>
 <template id="resourcesLoading"><div class="alert alert-info"><i class="fa fa-spinner fa-spin"></i> Please select breakdown template</div></template>
 <template id="resourcesError"><div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> Error loading breakdown resources</div></template>
-<template id="resourceTemplate">
+<template id="containerTemplate">
     <div class="container-row">
-        <table class="table">
+        <table class="table" id="resourcesTable">
             <thead>
                 <tr>
                     <th>Resource Type</th>
@@ -57,38 +69,42 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <input class="form-control input-sm" type="text" name="resources[##][resource_type]" id="resourceType##" j-model="resource_type" readonly>
-                    </td>
-
-                    <td>
-                        <input class="form-control input-sm" type="text" name="resources[##][resource_name]" id="resourceType##" j-model="resource_name" readonly>
-                    </td>
-
-                    <td>
-                        <input class="form-control input-sm" type="text" name="resources[##][budget_quantity]" id="budgetQuantity##" j-model="budget_quantity">
-                    </td>
-
-                    <td>
-                        <input class="form-control input-sm" type="text" name="resources[##][eng_quantity]" id="engQuantity##" j-model="eng_quantity">
-                    </td>
-
-                    <td>
-                        <input class="form-control input-sm" type="text" name="resources[##][resource_waste]" id="resourceWastete##" j-model="resource_waste">
-                    </td>
-
-                    <td>
-                        <input class="form-control input-sm" type="text" name="resources[##][labors_count]" id="laborsCount##" j-model="labors_count">
-                    </td>
-
-                    <td>
-                        <input class="form-control input-sm" type="text" name="resources[##][productivity_id]" id="laborsCount##" j-model="productivity_id">
-                    </td>
-                </tr>
+                
             </tbody>
         </table>
     </div>
+</template>
+
+<template id="resourceRowTemplate">
+    <tr>
+        <td>
+            <input class="form-control input-sm" type="text" name="resources[##][resource_type]" id="resourceType##" j-model="resource_type" readonly>
+        </td>
+
+        <td>
+            <input class="form-control input-sm" type="text" name="resources[##][resource_name]" id="resourceType##" j-model="resource_name" readonly>
+        </td>
+
+        <td>
+            <input class="form-control input-sm" type="text" name="resources[##][budget_quantity]" id="budgetQuantity##" j-model="budget_quantity">
+        </td>
+
+        <td>
+            <input class="form-control input-sm" type="text" name="resources[##][eng_quantity]" id="engQuantity##" j-model="eng_quantity">
+        </td>
+
+        <td>
+            <input class="form-control input-sm" type="text" name="resources[##][resource_waste]" id="resourceWastete##" j-model="resource_waste">
+        </td>
+
+        <td>
+            <input class="form-control input-sm" type="text" name="resources[##][labors_count]" id="laborsCount##" j-model="labors_count">
+        </td>
+
+        <td>
+            <input class="form-control input-sm" type="text" name="resources[##][productivity_id]" id="laborsCount##" j-model="productivity_id">
+        </td>
+    </tr>
 </template>
 
 
