@@ -66,38 +66,34 @@ class ActivityDivisionController extends Controller
     public function import()
     {
 
+        $time = microtime(1);
         //ActivityDivision::truncate();
-        $path = storage_path('app\division.csv');
+        $path = storage_path('files/division.csv');
         $handle = fopen($path, "r");
-        $parent_id = 0;
 
         if ($handle !== FALSE) {
             fgetcsv($handle);
+            $divisions = ActivityDivision::query()->pluck('id', 'name')->toArray();
+
             while (($row = fgetcsv($handle)) !== FALSE) {
-
-                $levels = count(array_filter($row));
-                for ($counter = 0; $counter < $levels; $counter++) {
-                    $division_name = ActivityDivision::where('name', $row[$counter])->first();
-                    if (is_null($division_name)) {
-
-                        $division_name = ActivityDivision::create([
-                            'name' => $row[$counter],
+                $levels = array_filter($row);
+                $parent_id = 0;
+                foreach ($levels as $level) {
+                    if (!isset($divisions[$level])) {
+                        $division = ActivityDivision::create([
+                            'name' => $level,
                             'parent_id' => $parent_id,
                         ]);
 
-                        $parent_id = $division_name->id;
-
+                        $divisions[$level] = $parent_id = $division->id;
                     } else {
-
-                        $parent_id = $division_name->id;
-
+                        $parent_id = $divisions[$level];
                     }
-
-
                 }
-
-                $parent_id = 0;
             }
+
+            dump(microtime(1) - $time);
+            dd($divisions);
 
         }
         fclose($handle);
