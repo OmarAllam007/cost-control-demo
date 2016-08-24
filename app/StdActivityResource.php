@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StdActivityResource extends Model
 {
-    protected $fillable = ['template_id', 'resource_id', 'equation', 'default_value', 'allow_override', 'project_id', 'labors_count', 'productivity_id', 'remarks'];
+    protected $fillable = ['template_id', 'resource_id', 'equation', 'default_value', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -33,12 +33,18 @@ class StdActivityResource extends Model
             ->with('resource.types');
     }
 
+    function productivity()
+    {
+        return $this->belongsTo(Productivity::class);
+    }
+
     function morphForJSON()
     {
         return [
             'equation' => $this->equation,
-            'labors_count' => $this->labors_count,
+            'labor_count' => $this->labor_count,
             'productivity_id' => $this->productivity_id,
+            'productivity_red' => $this->productivity->csi_code,
             'resource_id' => $this->resource->id,
             'resource_name' => $this->resource->name,
             'resource_waste' => $this->resource->waste,

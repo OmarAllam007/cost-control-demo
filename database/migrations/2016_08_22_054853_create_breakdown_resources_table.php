@@ -21,6 +21,7 @@ class CreateBreakdownResourcesTable extends Migration
             $table->integer('remarks')->nullable();
             $table->float('labor_count')->nullable();
             $table->float('productivity_id')->nullable();
+            $table->float('resource_waste')->nullable();
             $table->timestamps();
         });
     }

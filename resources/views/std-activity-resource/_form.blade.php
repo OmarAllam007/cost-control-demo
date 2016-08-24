@@ -27,10 +27,10 @@
             {!! $errors->first('default_value', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('labors_count', 'has-error')}}">
-            {{ Form::label('labors_count', 'Labors Count', ['class' => 'control-label']) }}
-            {{ Form::text('labors_count', null, ['class' => 'form-control']) }}
-            {!! $errors->first('labors_count', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('labor_count', 'has-error')}}">
+            {{ Form::label('labor_count', 'Labor Count', ['class' => 'control-label']) }}
+            {{ Form::text('labor_count', null, ['class' => 'form-control']) }}
+            {!! $errors->first('labor_count', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('productivity_id', 'has-error')}}">
@@ -41,7 +41,7 @@
 
         <div class="form-group {{$errors->first('remarks', 'has-error')}}">
             {{ Form::label('remarks', 'Remarks', ['class' => 'control-label']) }}
-            {{ Form::textarea('remarks', null, ['class' => 'form-control']) }}
+            {{ Form::text('remarks', null, ['class' => 'form-control']) }}
             {!! $errors->first('remarks', '<div class="help-block">:message</div>') !!}
         </div>
 

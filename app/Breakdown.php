@@ -12,4 +12,9 @@ class Breakdown extends Model
     {
         return $this->hasMany(BreakdownResource::class, 'breakdown_id');
     }
+
+    function wbs_level()
+    {
+        return $this->belongsTo(WbsLevel::class);
+    }
 }
