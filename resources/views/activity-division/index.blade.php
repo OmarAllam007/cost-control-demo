@@ -3,6 +3,8 @@
 @section('header')
     <h2>Activity Divisions</h2>
     <a href="{{ route('activity-division.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add Division</a>
+
+    <a href="{{ route('division.import') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Upload project</a>
 @stop
 
 @section('body')

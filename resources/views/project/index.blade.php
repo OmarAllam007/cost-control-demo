@@ -1,12 +1,14 @@
 @extends('layouts.app')
-
 @section('header')
     <h2>Project</h2>
     <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add project</a>
+
+
+
 @stop
 
 @section('body')
-    @if ($projects->total())
+@if ($projects->total())
         <table class="table table-condensed table-striped">
             <thead>
             <tr>

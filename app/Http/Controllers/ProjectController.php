@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActivityDivision;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -62,4 +63,7 @@ class ProjectController extends Controller
 
         return \Redirect::route('project.index');
     }
+
+
+
 }
