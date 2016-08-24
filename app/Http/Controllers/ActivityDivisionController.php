@@ -65,9 +65,8 @@ class ActivityDivisionController extends Controller
 
     public function import()
     {
-
         //ActivityDivision::truncate();
-        $path = storage_path('app\division.csv');
+        $path = storage_path('\files\division.csv');
         $handle = fopen($path, "r");
         $parent_id = 0;
 
@@ -84,13 +83,9 @@ class ActivityDivisionController extends Controller
                             'name' => $row[$counter],
                             'parent_id' => $parent_id,
                         ]);
-
                         $parent_id = $division_name->id;
-
                     } else {
-
                         $parent_id = $division_name->id;
-
                     }
 
 
@@ -100,7 +95,10 @@ class ActivityDivisionController extends Controller
             }
 
         }
+
         fclose($handle);
+
+
         return \Redirect::route('activity-division.index');
     }
 
