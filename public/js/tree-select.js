@@ -9,7 +9,6 @@ $(function () {
             stack.push(text);
 
             parent = parent.parents('li').first().parents('li').first();
-            console.log(parent);
 
             while (parent.length) {
                 text = parent.find('.node-label').first().text();

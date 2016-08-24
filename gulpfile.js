@@ -20,4 +20,6 @@ elixir(function(mix) {
                  'breakdown/load-templates.js', 
                  'breakdown/load-resources.js'
                  ], 'public/js/breakdown.js');
+
+    mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
 });
