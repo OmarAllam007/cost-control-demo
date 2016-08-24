@@ -14,13 +14,13 @@
 
         var showLoader = function () {
             hideError();
-            templateInput.after(loader);
+            templateInput.before(loader);
         };
 
         var showError = function (message) {
             hideLoader();
             errorMessage.find('span').text(message);
-            templateInput.after(errorMessage);
+            templateInput.before(errorMessage);
         };
 
         var hideError = function() {

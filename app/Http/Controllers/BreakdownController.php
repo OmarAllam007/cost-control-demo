@@ -16,7 +16,7 @@ class BreakdownController extends Controller
 
     public function store(Request $request)
     {
-
+        return $request->all();
     }
 
     public function edit(Breakdown $breakdown)

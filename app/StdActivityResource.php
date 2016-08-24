@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StdActivityResource extends Model
 {
-    protected $fillable = ['template_id', 'resource_id', 'equation', 'default_value', 'allow_override', 'project_id'];
+    protected $fillable = ['template_id', 'resource_id', 'equation', 'default_value', 'allow_override', 'project_id', 'labors_count', 'productivity_id', 'remarks'];
 
     protected $dates = ['created_at', 'updated_at'];
 
