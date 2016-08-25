@@ -36,6 +36,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        $project->load(['wbs_levels', 'breakdown_resources']);
         return view('project.show', compact('project'));
     }
 

@@ -31,4 +31,9 @@ class Project extends Model
         return $this->hasMany(Breakdown::class);
     }
 
+    function breakdown_resources()
+    {
+        return $this->hasManyThrough(BreakdownResource::class, Breakdown::class);
+    }
+
 }

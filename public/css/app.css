@@ -7997,6 +7997,11 @@ ul.tree .tree--item {
   .container-row td .form-control {
     width: 150px; }
 
+.scrollpane {
+  overflow-x: auto; }
+  .scrollpane table.table th, .scrollpane table.table td {
+    white-space: nowrap; }
+
 .panel-sm .panel-body {
   padding: 10px; }
 

@@ -27,6 +27,11 @@ class Productivity extends Model
        return $this->after_reduction = ($this->reduction_factor * $this->daily_output) + $this->daily_output;
     }
 
+    public function getAfterReductionAttribute(){
+
+        return  $this->daily_output * (1 - $this->reduction_factor);
+    }
+
     public function scopeOptions(Builder $query)
     {
         return $query->orderBy('csi_code')->pluck('csi_code', 'id')->prepend('Select Productivity Reference', '');

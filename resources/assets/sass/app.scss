@@ -68,6 +68,14 @@ ul.tree  {
   }
 }
 
+.scrollpane {
+  overflow-x: auto;
+
+  table.table th,table.table td {
+    white-space: nowrap;
+  }
+}
+
 .panel-sm {
   .panel-body {
     padding: 10px;

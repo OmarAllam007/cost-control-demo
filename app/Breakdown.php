@@ -17,4 +17,14 @@ class Breakdown extends Model
     {
         return $this->belongsTo(WbsLevel::class);
     }
+
+    function std_activity()
+    {
+        return $this->belongsTo(StdActivity::class);
+    }
+
+    function template()
+    {
+        return $this->belongsTo(BreakdownTemplate::class, 'template_id');
+    }
 }

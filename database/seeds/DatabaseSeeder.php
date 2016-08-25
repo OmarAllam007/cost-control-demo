@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductivitySeed::class);
         $this->call(BusinessPartnerSeed::class);
         $this->call(ActivityDivisionSeeder::class);
-
+        $this->call(WBSLevelSeeder::class);
     }
 
 }
