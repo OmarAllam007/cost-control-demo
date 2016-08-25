@@ -21,10 +21,16 @@
             {!! $errors->first('equation', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('default_value', 'has-error')}}">
-            {{ Form::label('default_value', 'Default Value', ['class' => 'control-label']) }}
-            {{ Form::text('default_value', null, ['class' => 'form-control']) }}
-            {!! $errors->first('default_value', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('budget_qty', 'has-error')}}">
+            {{ Form::label('budget_qty', 'Default Budget Qty', ['class' => 'control-label']) }}
+            {{ Form::text('budget_qty', null, ['class' => 'form-control']) }}
+            {!! $errors->first('budget_qty', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('eng_qty', 'has-error')}}">
+            {{ Form::label('eng_qty', 'Default Eng Qty', ['class' => 'control-label']) }}
+            {{ Form::text('eng_qty', null, ['class' => 'form-control']) }}
+            {!! $errors->first('eng_qty', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('labor_count', 'has-error')}}">

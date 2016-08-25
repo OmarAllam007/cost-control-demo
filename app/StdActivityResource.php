@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StdActivityResource extends Model
 {
-    protected $fillable = ['template_id', 'resource_id', 'equation', 'default_value', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks'];
+    protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -50,7 +50,8 @@ class StdActivityResource extends Model
             'resource_waste' => $this->resource->waste,
             'unit' => $this->resource->units->type,
             'resource_type' => $this->resource->types->name,
-            'budget_quantity' => $this->default_value
+            'budget_qty' => $this->budget_qty,
+            'eng_qty' => $this->eng_qty,
         ];
     }
 }

@@ -34,11 +34,11 @@
         </td>
 
         <td>
-            <input class="form-control input-sm" type="text" name="resources[##][budget_quantity]" id="budgetQuantity##" j-model="budget_quantity">
+            <input class="form-control input-sm" type="text" name="resources[##][budget_qty]" id="budgetQuantity##" j-model="budget_qty">
         </td>
 
         <td>
-            <input class="form-control input-sm" type="text" name="resources[##][eng_quantity]" id="engQuantity##" j-model="eng_quantity">
+            <input class="form-control input-sm" type="text" name="resources[##][eng_qty]" id="engQuantity##" j-model="eng_qty">
         </td>
 
         <td>
