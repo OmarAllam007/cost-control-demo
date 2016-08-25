@@ -28,10 +28,18 @@
         };
 
         var fillBreakdowns = function (options) {
+            var oldValue = templateInput.val();
+
             var optionsHtml = '<option value="">' + breakdownEmptyText + '</option>';
+
             for (var key in options) {
-                optionsHtml += '<option value="' + key + '">' + options[key] + '</option>';
+                var selected = '';
+                if (key == oldValue) {
+                    selected = ' selected="selected"';
+                }
+                optionsHtml += '<option value="' + key + '"' + selected +'>' + options[key] + '</option>';
             }
+
             templateInput.html(optionsHtml);
         };
 
@@ -46,7 +54,7 @@
                     .then(function(response){
                         fillBreakdowns(response);
                         hideLoader();
-                    }, function(response){
+                    }, function(){
                         showError('Cannot load breakdowns');
                         fillBreakdowns([]);
                     });
@@ -81,13 +89,13 @@
                 dataType: 'json'
             }).done(function(response){
                 buildResources(response);
-            }).error(function(response){
+            }).error(function(){
                 showError();
             });
         } else {
             showEmpty();
         }
-    }).change();
+    });
 
     function showLoading() {
         resourcesContainer.html(resourcesLoading);
@@ -110,6 +118,7 @@
         var table = $(containerTemplate);
 
         for (res in resources) {
+            console.log(res);
             var rowObject = $(resourceRowTemplate.replace(/##/g, counter));
 
             for (key in resources[res]) {

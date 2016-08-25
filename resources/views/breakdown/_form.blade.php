@@ -43,9 +43,16 @@
 
 <section id="resource">
     <h4 class="page-header">Resources</h4>
-    <div id="resourcesContainer">
-        <div class="alert alert-info"><i class="fa fa-info-circle"></i> Please select breakdown template</div>
-    </div>
+    @if (old('resources'))
+        @include('breakdown._resource_container', ['include' => true])
+    @else
+        <div id="resourcesContainer">
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i> Please select breakdown template
+            </div>
+        </div>
+    @endif
+
 </section>
 
 @include('breakdown._template')
@@ -56,24 +63,24 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Select Parent</h4>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-unstyled tree">
-                        @foreach(App\WbsLevel::tree()->get() as $level)
+                <h4 class="modal-title">Select Parent</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled tree">
+                    @foreach(App\WbsLevel::tree()->get() as $level)
                         @include('wbs-level._recursive_input', ['level' => $level, 'input' => 'wbs_level_id'])
-                        @endforeach
-                    </ul>
-                </div>
+                    @endforeach
+                </ul>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
-    </div>
+<div class="form-group">
+    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
+</div>
 
-    @section('javascript')
+@section('javascript')
     <script src="/js/tree-select.js"></script>
     <script src="/js/breakdown.js"></script>
-    @stop
+@stop

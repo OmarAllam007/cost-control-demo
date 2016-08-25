@@ -21,13 +21,13 @@
                 dataType: 'json'
             }).done(function(response){
                 buildResources(response);
-            }).error(function(response){
+            }).error(function(){
                 showError();
             });
         } else {
             showEmpty();
         }
-    }).change();
+    });
 
     function showLoading() {
         resourcesContainer.html(resourcesLoading);
@@ -50,6 +50,7 @@
         var table = $(containerTemplate);
 
         for (res in resources) {
+            console.log(res);
             var rowObject = $(resourceRowTemplate.replace(/##/g, counter));
 
             for (key in resources[res]) {

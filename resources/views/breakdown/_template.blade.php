@@ -2,60 +2,9 @@
 <template id="resourcesLoading"><div class="alert alert-info"><i class="fa fa-spinner fa-spin"></i> Loading...</div></template>
 <template id="resourcesError"><div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> Error loading breakdown resources</div></template>
 <template id="containerTemplate">
-    <div class="container-row">
-        <table class="table" id="resourcesTable">
-            <thead>
-            <tr>
-                <th>Resource Type</th>
-                <th>Resource Name</th>
-                <th>Budget Qty</th>
-                <th>Eng Qty</th>
-                <th>Resource Waste</th>
-                <th>Labors Count</th>
-                <th>Productivity Ref</th>
-                <th>Remarks</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-    </div>
+    @include('breakdown._resource_container', ['include' => false])
 </template>
 
 <template id="resourceRowTemplate">
-    <tr>
-        <td>
-            <input class="form-control input-sm" type="hidden" name="resources[##][std_activity_resource_id]" id="resourceId##" j-model="std_activity_resource_id" readonly>
-            <input class="form-control input-sm" type="text" name="resources[##][resource_type]" id="resourceType##" j-model="resource_type" readonly>
-        </td>
-
-        <td>
-            <input class="form-control input-sm" type="text" name="resources[##][resource_name]" id="resourceType##" j-model="resource_name" readonly>
-        </td>
-
-        <td>
-            <input class="form-control input-sm" type="text" name="resources[##][budget_qty]" id="budgetQuantity##" j-model="budget_qty">
-        </td>
-
-        <td>
-            <input class="form-control input-sm" type="text" name="resources[##][eng_qty]" id="engQuantity##" j-model="eng_qty">
-        </td>
-
-        <td>
-            <input class="form-control input-sm" type="text" name="resources[##][resource_waste]" id="resourceWastete##" j-model="resource_waste">
-        </td>
-
-        <td>
-            <input class="form-control input-sm" type="text" name="resources[##][labor_count]" id="laborsCount##" j-model="labor_count">
-        </td>
-
-        <td>
-            {{Form::select('resources[##][productivity_id]', App\Productivity::options(), null, ['class' => 'form-control input-sm', 'j-model' => 'productivity_id', 'id' => "laborsCount##"])}}
-        </td>
-
-        <td>
-            <input class="form-control input-sm" type="text" name="resources[##][remarks]" id="laborsCount##" j-model="remarks">
-        </td>
-    </tr>
+    @include('breakdown._resource_template', ['index' => '##'])
 </template>

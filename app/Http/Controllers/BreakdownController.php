@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Breakdown;
+use App\Http\Requests\BreakdownRequest;
 use Illuminate\Http\Request;
 
 class BreakdownController extends Controller
@@ -14,7 +15,7 @@ class BreakdownController extends Controller
         return view('breakdown.create');
     }
 
-    public function store(Request $request)
+    public function store(BreakdownRequest $request)
     {
         $breakdown = Breakdown::create($request->all());
         $breakdown->resources()->createMany($request->get('resources'));
