@@ -51,7 +51,7 @@
         </td>
 
         <td>
-            <input class="form-control input-sm" type="text" name="resources[##][productivity_id]" id="laborsCount##" j-model="productivity_id">
+            {{Form::select('resources[##][productivity_id]', App\Productivity::options(), null, ['class' => 'form-control input-sm', 'j-model' => 'productivity_id', 'id' => "laborsCount##"])}}
         </td>
 
         <td>

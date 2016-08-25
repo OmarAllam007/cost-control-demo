@@ -16,7 +16,7 @@ class AddLaboursProductivityRemarksToResource extends Migration
             $table->float('resource_waste')->nullable();
             $table->float('labor_count')->nullable();
             $table->integer('productivity_id')->unsigned()->nullable();
-            $table->text('remarks')->nullable();
+            $table->string('remarks')->nullable();
         });
     }
 
