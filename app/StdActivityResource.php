@@ -41,6 +41,7 @@ class StdActivityResource extends Model
     function morphForJSON()
     {
         return [
+            'std_activity_resource_id' => $this->id,
             'equation' => $this->equation,
             'labor_count' => $this->labor_count,
             'productivity_id' => $this->productivity_id,
@@ -52,6 +53,7 @@ class StdActivityResource extends Model
             'resource_type' => $this->resource->types->name,
             'budget_qty' => $this->budget_qty,
             'eng_qty' => $this->eng_qty,
+            'remarks' => $this->remarks
         ];
     }
 }

@@ -34,7 +34,11 @@ class BreakdownResource extends Model
     function getBudgetUnitAttribute()
     {
         if ($this->productivity) {
-            $result = $this->resource_qty * $this->labor_count / $this->productivity->after_reduction;
+            if (!$this->productivity->reduction_factor) {
+                return 0;
+            }
+
+            $result = $this->resource_qty * $this->labor_count / $this->productivity->reduction_factor;
             return $result > 0.25 ? round($result, 2) : 0.25;
         } else {
             return $this->resource_qty * (1 + $this->resource_waste);
@@ -48,6 +52,9 @@ class BreakdownResource extends Model
 
     function getBoqUnitRateAttribute()
     {
+        if (!$this->eng_qty) {
+            return 0;
+        }
         return $this->budget_cost / $this->eng_qty;
     }
 }

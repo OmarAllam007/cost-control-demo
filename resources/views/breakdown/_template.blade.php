@@ -26,6 +26,7 @@
 <template id="resourceRowTemplate">
     <tr>
         <td>
+            <input class="form-control input-sm" type="hidden" name="resources[##][std_activity_resource_id]" id="resourceId##" j-model="std_activity_resource_id" readonly>
             <input class="form-control input-sm" type="text" name="resources[##][resource_type]" id="resourceType##" j-model="resource_type" readonly>
         </td>
 

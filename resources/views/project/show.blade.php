@@ -100,9 +100,9 @@
                             <td>{{$resource->resource->resource->units->type}}</td>
                             <td>{{number_format($resource->budget_unit, 2)}}</td>
                             <td>{{number_format($resource->budget_cost, 2)}}</td>
-                            <td>{{$resource->boq_unit_rate}}</td>
+                            <td>{{number_format($resource->boq_unit_rate, 2)}}</td>
                             <td>{{$resource->labor_count or ''}}</td>
-                            <td>{{$resource->productivity->after_reduction or ''}}</td>
+                            <td>{{$resource->productivity->reduction_factor or ''}}</td>
                             <td>{{$resource->productivity->csi_code or ''}}</td>
                             <td>{{$resource->remarks}}</td>
                         </tr>
