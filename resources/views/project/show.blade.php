@@ -88,20 +88,20 @@
                             <td>{{$resource->breakdown->std_activity->name}}</td>
                             <td>{{$resource->breakdown->template->name}}</td>
                             <td>{{$resource->breakdown->cost_account}}</td>
-                            <td>{{$resource->eng_qty}}</td>
-                            <td>{{$resource->budget_qty}}</td>
-                            <td>{{$resource->resource_qty}}</td>
-                            <td>{{$resource->resource_waste}}</td>
+                            <td>{{number_format($resource->eng_qty, 2)}}</td>
+                            <td>{{number_format($resource->budget_qty, 2)}}</td>
+                            <td>{{number_format($resource->resource_qty, 2)}}</td>
+                            <td>{{$resource->resource_waste * 100}}%</td>
                             <td>{{$resource->resource->resource->types->name}}</td>
                             <td>{{$resource->resource->resource->resource_code}}</td>
                             <td>{{$resource->resource->resource->name}}</td>
                             <td>{{$resource->resource->resource->rate}}</td>
                             <td>{{$resource->resource->resource->units->type}}</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>{{$resource->labor_count}}</td>
-                            <td>{{$resource->productivity->after_reduction}}</td>
-                            <td>{{$resource->productivity->description}}</td>
+                            <td>{{number_format($resource->budget_unit, 2)}}</td>
+                            <td>{{number_format($resource->budget_cost, 2)}}</td>
+                            <td>{{$resource->labor_count or ''}}</td>
+                            <td>{{$resource->productivity->after_reduction or ''}}</td>
+                            <td>{{$resource->productivity->description or ''}}</td>
                             <td>{{$resource->remarks}}</td>
                         </tr>
                     @endforeach

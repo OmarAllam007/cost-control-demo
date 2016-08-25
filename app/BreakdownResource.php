@@ -28,17 +28,21 @@ class BreakdownResource extends Model
         $v = $this->budget_qty;
         $result = '';
         eval('$result=' . $this->resource->equation.';');
-
         return $result;
     }
 
     function getBudgetUnitAttribute()
     {
-
+        if ($this->productivity) {
+            $result = $this->resource_qty * $this->labor_count / $this->productivity->after_reduction;
+            return $result > 0.25 ? round($result, 2) : 0.25;
+        } else {
+            return $this->resource_qty * (1 + $this->resource_waste);
+        }
     }
 
     function getBudgetCostAttribute()
     {
-
+        return $this->budget_unit * $this->resource->resource->rate;
     }
 }
