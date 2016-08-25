@@ -60,25 +60,26 @@
                 <table class="table table-condensed table-striped table-hover table-bordered">
                     <thead>
                     <tr>
-                        <th>WBS</th>
-                        <th>Activity</th>
-                        <th>Breakdown</th>
-                        <th>Cost Account</th>
-                        <th>Eng. Qty.</th>
-                        <th>Budget Qty.</th>
-                        <th>Resource Qty.</th>
-                        <th>Resource Waste</th>
-                        <th>Resource Type</th>
-                        <th>Resource Code</th>
-                        <th>Resource Name</th>
-                        <th>Price/Unit</th>
-                        <th>Unit of measure</th>
-                        <th>Budget Unit</th>
-                        <th>Budget Cost</th>
-                        <th>No. Of Labors</th>
-                        <th>Productivity (Unit/Day)</th>
-                        <th>Productivity Ref</th>
-                        <th>Remarks</th>
+                        <th class="bg-black">WBS</th>
+                        <th class="bg-primary">Activity</th>
+                        <th class="bg-black">Work Package Name</th>
+                        <th class="bg-primary">Cost Account</th>
+                        <th class="bg-success">Eng. Qty.</th>
+                        <th class="bg-success">Budget Qty.</th>
+                        <th class="bg-primary">Resource Qty.</th>
+                        <th class="bg-success">Resource Waste</th>
+                        <th class="bg-success">Resource Type</th>
+                        <th class="bg-success">Resource Code</th>
+                        <th class="bg-success">Resource Name</th>
+                        <th class="bg-success">Price/Unit</th>
+                        <th class="bg-success">Unit of measure</th>
+                        <th class="bg-success">Budget Unit</th>
+                        <th class="bg-success">Budget Cost</th>
+                        <th class="bg-black">BOQ Equivalent Unit Rate</th>
+                        <th class="bg-primary">No. Of Labors</th>
+                        <th class="bg-success">Productivity (Unit/Day)</th>
+                        <th class="bg-primary">Productivity Ref</th>
+                        <th class="bg-success">Remarks</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -99,9 +100,10 @@
                             <td>{{$resource->resource->resource->units->type}}</td>
                             <td>{{number_format($resource->budget_unit, 2)}}</td>
                             <td>{{number_format($resource->budget_cost, 2)}}</td>
+                            <td>{{$resource->boq_unit_rate}}</td>
                             <td>{{$resource->labor_count or ''}}</td>
                             <td>{{$resource->productivity->after_reduction or ''}}</td>
-                            <td>{{$resource->productivity->description or ''}}</td>
+                            <td>{{$resource->productivity->csi_code or ''}}</td>
                             <td>{{$resource->remarks}}</td>
                         </tr>
                     @endforeach

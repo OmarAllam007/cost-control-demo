@@ -45,4 +45,9 @@ class BreakdownResource extends Model
     {
         return $this->budget_unit * $this->resource->resource->rate;
     }
+
+    function getBoqUnitRateAttribute()
+    {
+        return $this->budget_cost / $this->eng_qty;
+    }
 }

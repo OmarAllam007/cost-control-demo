@@ -8008,4 +8008,8 @@ ul.tree .tree--item {
 .tab-actions {
   margin-top: 15px; }
 
+.bg-black {
+  background: #222;
+  color: #fff; }
+
 /*# sourceMappingURL=app.css.map */
