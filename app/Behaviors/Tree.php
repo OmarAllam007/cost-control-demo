@@ -10,12 +10,12 @@ trait Tree
 
     public function parent()
     {
-        return $this->belongsTo(self::class, 'parent_id');
+        return $this->belongsTo(static::class, 'parent_id');
     }
 
     public function children()
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasMany(static::class, 'parent_id');
     }
 
     public function scopeTree(Builder $query)

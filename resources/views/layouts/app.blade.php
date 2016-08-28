@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{config('app.name')}}</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="{{asset('/css/app.css')}}">
 </head>
@@ -24,7 +23,7 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('') }}">
+                <a class="navbar-brand" href="{{ url('/') }}">
                     {{config('app.name')}}
                 </a>
             </div>
@@ -34,6 +33,13 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/project') }}">Projects</a></li>
                     <li><a href="{{ url('/wbs-level') }}">WBS</a></li>
+                    <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{url('/survey')}}">Quantity Survey <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{route('survey.index')}}">Quantity Survey</a></li>
+                            <li><a href="{{route('category.index')}}">Quantity Survey Categories</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standard Activity <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -47,10 +53,10 @@
                             <li><a href="{{route('resource-type.index')}}">Resource Types</a></li>
                             <li><a href="{{route('resources.index')}}">Resources</a></li>
                             <li><a href="{{route('business-partner.index')}}">Business Partners</a></li>
-                            <li><a href="{{route('unit.index')}}">Units</a></li>
+                            <li><a href="{{route('unit.index')}}">Units of measure</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{route('productivity.index')}}"><i class="fa fa-area-chart"></i> Productivity</a></li>
+                    <li><a href="{{route('productivity.index')}}">Productivity</a></li>
 
                 </ul>
                 {{--@endif--}}
