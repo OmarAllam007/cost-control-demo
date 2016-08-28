@@ -33,8 +33,8 @@
             <tr>
                 <th>Name </th>
                 <th></th>
-                {{--<th>unit</th>--}}
                 <th>crew structure</th>
+                <th>unit</th>
                 {{--<th>crew hours</th>--}}
                 {{--<th>crew equip</th>--}}
                 {{--<th>daily output</th>--}}
@@ -51,13 +51,13 @@
                 <tr>
 
 
-                    <td class="col-md-1">{{ $productivity->category->name }}
+                    <td class="col-md-1">{{ isset($productivity->category->name)?$productivity->category->name:'' }}
 
                     <td class="col-md-1">{{ $productivity->description }}
                     </td>
-                    {{--<td class="col-md-1">{{ $productivity->units->type }}--}}
-                    {{--</td>--}}
                     <td class="col-md-1">{{ $productivity->crew_structure }}
+                    </td>
+                    <td class="col-md-1">{{ isset($productivity->units->type)?$productivity->units->type:'' }}
                     </td>
 
                     <td class="col-md-2">
