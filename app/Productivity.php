@@ -24,7 +24,7 @@ class Productivity extends Model
 
     public function productivityAfterReduction(){
 
-       return $this->after_reduction = ($this->reduction_factor * $this->daily_output) + $this->daily_output;
+       return $this->after_reduction = (1 - $this->reduction_factor) * $this->daily_output;
     }
 
     public function getAfterReductionAttribute(){
