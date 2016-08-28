@@ -45,7 +45,7 @@ class StdActivityResource extends Model
             'equation' => $this->equation,
             'labor_count' => $this->labor_count,
             'productivity_id' => $this->productivity_id,
-            'productivity_red' => $this->productivity->csi_code,
+            'productivity_ref' => $this->productivity ? $this->productivity->csi_code : '',
             'resource_id' => $this->resource->id,
             'resource_name' => $this->resource->name,
             'resource_waste' => $this->resource->waste,

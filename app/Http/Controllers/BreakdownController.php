@@ -20,7 +20,7 @@ class BreakdownController extends Controller
         $breakdown = Breakdown::create($request->all());
         $breakdown->resources()->createMany($request->get('resources'));
 
-        return $breakdown;
+        return \Redirect::route('project.show', $breakdown->project_id);
     }
 
     public function edit(Breakdown $breakdown)
