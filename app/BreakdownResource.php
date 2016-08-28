@@ -26,6 +26,7 @@ class BreakdownResource extends Model
     function getResourceQtyAttribute()
     {
         $v = $this->budget_qty;
+        $V = $this->budget_qty;
         $result = '';
         eval('$result=' . $this->resource->equation.';');
         return $result;
