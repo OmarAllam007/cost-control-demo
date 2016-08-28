@@ -10,18 +10,6 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use PHPExcel;
 
-class MyReadFilter implements \PHPExcel_Reader_IReadFilter
-{
-    public function readCell($column, $row, $worksheetName = '')
-    {
-        if ($row >= 1 && $row <= 7) {
-            if (in_array($column, range('A', 'E'))) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
 
 class ProjectController extends Controller
 {
