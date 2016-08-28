@@ -9,12 +9,12 @@ trait HasOptions
 
     public static function options()
     {
-        if (empty(self::$alias)) {
+        if (empty(static::$alias)) {
             $alias = Str::title(basename(str_replace('\\', '/', self::class)));
         } else {
             $alias = self::$alias;
         }
 
-        return self::orderBy('name')->pluck('name', 'id')->prepend('Select ' . $alias, '');
+        return static::orderBy('name')->pluck('name', 'id')->prepend('Select ' . $alias, '');
     }
 }

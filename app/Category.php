@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\HasOptions;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    use HasOptions;
+
     protected $table = 'survey_categories';
     protected $fillable = ['name'];
 
