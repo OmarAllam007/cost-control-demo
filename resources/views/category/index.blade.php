@@ -3,6 +3,7 @@
 @section('header')
     <h2>Category</h2>
     <a href="{{ route('category.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add category</a>
+    <a href="{{ route('category.importcategory') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> import categories</a>
 @stop
 
 @section('body')

@@ -10,6 +10,7 @@ class CreateCsiCategory extends Migration
         Schema::create('csi_categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('parent_id');
             $table->softDeletes();
             $table->timestamps();
         });

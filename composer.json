@@ -8,7 +8,9 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "laravelcollective/html": "^5.2",
-        "barryvdh/laravel-ide-helper": "^2.2"
+        "barryvdh/laravel-ide-helper": "^2.2",
+        "phpexcel/phpexcel": "dev-master"
+
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -5,9 +5,27 @@ namespace App\Http\Controllers;
 use App\ActivityDivision;
 use App\Project;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
+use PHPExcel;
+
+class MyReadFilter implements \PHPExcel_Reader_IReadFilter
+{
+    public function readCell($column, $row, $worksheetName = '')
+    {
+        if ($row >= 1 && $row <= 7) {
+            if (in_array($column, range('A', 'E'))) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
 
 class ProjectController extends Controller
 {
+
 
     protected $rules = ['name' => 'required'];
 
@@ -66,5 +84,56 @@ class ProjectController extends Controller
     }
 
 
+    public function upload(Request $request)
+    {
+
+        try {
+//upload file
+            $original_name = $request->file('file')->getClientOriginalName();
+            $request->file('file')->move(
+                base_path() . '/storage/files/', $original_name
+            );
+//EO-Upload File
+
+//Read file .....
+            $input = base_path() . '/storage/files/' . $original_name;
+            $inputFileType = \PHPExcel_IOFactory::identify($input);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($input);
+        } //if file not found
+        catch (Exception $e) {
+            die('Error loading file "' . pathinfo($input, PATHINFO_BASENAME) . '": ' . $e->getMessage());
+        }
+
+        //iterate over sheet
+
+
+        /**@var \PHPExcel_Worksheet $objWorksheet */
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+
+        Project::truncate();
+
+
+        foreach ($objWorksheet->getRowIterator(2) as $row) {
+
+            /** @var \PHPExcel_Worksheet_Row $row */
+            $cellIterator = $row->getCellIterator();
+
+            $cellIterator->setIterateOnlyExistingCells(false);
+            $inputs = [];
+
+            foreach ($cellIterator as $cell) {
+                $inputs[] = $cell->getValue();
+            }
+
+            Project::create([
+                'name' => $inputs[1],
+                'description' => $inputs[2]
+            ]);
+
+        }
+
+        return redirect()->back();
+    }
 
 }

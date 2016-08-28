@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{config('app.name')}}</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="{{asset('/css/app.css')}}">
 </head>
@@ -46,6 +47,7 @@
                             <li><a href="{{route('resource-type.index')}}">Resource Types</a></li>
                             <li><a href="{{route('resources.index')}}">Resources</a></li>
                             <li><a href="{{route('business-partner.index')}}">Business Partners</a></li>
+                            <li><a href="{{route('unit.index')}}">Units</a></li>
                         </ul>
                     </li>
                     <li><a href="{{route('productivity.index')}}"><i class="fa fa-area-chart"></i> Productivity</a></li>

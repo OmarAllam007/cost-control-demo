@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Productivity extends Model
 {
-    protected $fillable = ['csi_code', 'csi_category_id', 'description',
+    protected $fillable = ['csi_category_id',
         'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
         'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source'];
 

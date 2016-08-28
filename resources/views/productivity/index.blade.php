@@ -4,18 +4,37 @@
     <h2>Productivity</h2>
     <a href="{{ route('productivity.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i>
         Add productivity</a>
+    <button href="" class="btn btn-sm btn-primary pull-right" id="prod_upload_file"><i class="fa fa-plus"></i>
+        Upload Productivity</button>
+
 @stop
 
 @section('body')
+    <div class="form-group upload_productivity pull-right" style="display: none;">
+        {!! Form::open(array('action' => 'ProductivityController@upload', 'files' => true,'class'=>'form-inline')) !!}
+        {!! Form::file('file',['class'=>'form-control']) !!}
+        {!! Form::token() !!}
+        {!! Form::submit('Upload',['class'=>'btn btn-primary']) !!}
+        {!! Form::close() !!}
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#prod_upload_file").click(function () {
+                $(".upload_productivity").toggle("fast", function () {
+                });
+            });
+        });
+
+    </script>
+
     @if ($productivities->total())
         <table class="table table-condensed table-striped">
             <thead>
             <tr>
-                <th>Csi Code</th>
-                <th>Csi Category</th>
-                <th>Description</th>
+                <th>Name </th>
+                <th></th>
                 {{--<th>unit</th>--}}
-                {{--<th>crew structure</th>--}}
+                <th>crew structure</th>
                 {{--<th>crew hours</th>--}}
                 {{--<th>crew equip</th>--}}
                 {{--<th>daily output</th>--}}
@@ -30,37 +49,16 @@
             <tbody>
             @foreach($productivities as $productivity)
                 <tr>
-                    <td class="col-md-1">{{ $productivity->csi_code }}
-                    </td>
+
 
                     <td class="col-md-1">{{ $productivity->category->name }}
-                    </td>
+
                     <td class="col-md-1">{{ $productivity->description }}
                     </td>
                     {{--<td class="col-md-1">{{ $productivity->units->type }}--}}
                     {{--</td>--}}
-                    {{--<td class="col-md-1">{{ $productivity->crew_structure }}--}}
-                    {{--</td>--}}
-
-                    {{--<td class="col-md-1">{{ $productivity->crew_hours }}--}}
-                    {{--</td>--}}
-                    {{--<td class="col-md-1">{{ $productivity->crew_equip }}--}}
-                    {{--</td>--}}
-                    {{--<td class="col-md-1">{{ $productivity->daily_output }}--}}
-                    {{--</td>--}}
-
-                    {{--<td class="col-md-1">{{ $productivity->man_hours }}--}}
-                    {{--</td>--}}
-                    {{--<td class="col-md-1">{{ $productivity->equip_hours }}--}}
-                    {{--</td>--}}
-                    {{--<td class="col-md-1">{{ $productivity->reduction_factor }}--}}
-                    {{--</td>--}}
-
-                    {{--<td class="col-md-1">{{ $productivity->productivityAfterReduction() }}--}}
-                    {{--</td>--}}
-
-                    {{--<td class="col-md-1">{{ $productivity->source }}--}}
-                    {{--</td>--}}
+                    <td class="col-md-1">{{ $productivity->crew_structure }}
+                    </td>
 
                     <td class="col-md-2">
                         <form action="{{ route('productivity.destroy', $productivity) }}" method="post">

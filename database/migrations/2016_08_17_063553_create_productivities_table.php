@@ -9,9 +9,7 @@ class CreateProductivitiesTable extends Migration
     {
         Schema::create('productivities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('csi_code');
             $table->integer('csi_category_id');
-            $table->string('description');
             $table->string('unit');
             $table->string('crew_structure');
             $table->float('crew_hours');

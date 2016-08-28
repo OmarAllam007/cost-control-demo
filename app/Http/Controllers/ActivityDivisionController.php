@@ -66,7 +66,6 @@ class ActivityDivisionController extends Controller
     public function import()
     {
 
-        $time = microtime(1);
         //ActivityDivision::truncate();
         $path = storage_path('files/division.csv');
         $handle = fopen($path, "r");
@@ -92,8 +91,6 @@ class ActivityDivisionController extends Controller
                 }
             }
 
-            dump(microtime(1) - $time);
-            dd($divisions);
 
         }
         fclose($handle);

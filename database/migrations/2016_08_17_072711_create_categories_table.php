@@ -10,6 +10,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('survey_categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('parent_id');
             $table->softDeletes();
             $table->timestamps();
         });
