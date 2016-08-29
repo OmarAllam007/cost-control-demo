@@ -8012,4 +8012,11 @@ ul.tree .tree--item {
   background: #222;
   color: #fff; }
 
+.autocomplete-panel {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: scroll; }
+
 /*# sourceMappingURL=app.css.map */
