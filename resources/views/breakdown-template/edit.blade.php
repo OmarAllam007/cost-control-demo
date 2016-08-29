@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Edit Breakdown template</h2>
+    <h2>Edit template</h2>
 
     <form action="{{ route('breakdown-template.destroy', $breakdown_template)}}" class="pull-right" method="post">
         {{csrf_field()}} {{method_field('delete')}}

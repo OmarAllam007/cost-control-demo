@@ -45,6 +45,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{route('activity-division.index')}}">Divisions</a></li>
                             <li><a href="{{route('std-activity.index')}}">Standard Activities</a></li>
+                            <li><a href="{{route('breakdown-template.index')}}">Breakdown Templates</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

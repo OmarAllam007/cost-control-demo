@@ -4,13 +4,22 @@
     <h2>Breakdown template - {{$breakdown_template->name}}</h2>
 
     <form action="{{ route('breakdown-template.destroy', $breakdown_template)}}" class="pull-right" method="post">
-        {{csrf_field()}} {{method_field('delete')}}
+        {{csrf_field()}}
+        {{method_field('delete')}}
 
-        <a href="{{ route('breakdown-template.edit', $breakdown_template)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
-            Edit</a>
+        <a href="{{ route('breakdown-template.create', ['activity' => $breakdown_template->std_activity_id])}}" class="btn btn-sm btn-primary">
+            <i class="fa fa-plus"></i> Add template
+        </a>
+        <a href="{{ route('breakdown-template.edit', $breakdown_template)}}" class="btn btn-sm btn-primary">
+            <i class="fa fa-edit"></i> Edit
+        </a>
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
-        <a href="{{ route('std-activity.show', $breakdown_template->activity)}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i>
-            Back</a>
+        <a href="{{ route('std-activity.show', $breakdown_template->activity)}}" class="btn btn-sm btn-default">
+            <i class="fa fa-chevron-left"></i> Activity
+        </a>
+        <a href="{{ route('breakdown-template.index')}}" class="btn btn-sm btn-default">
+            <i class="fa fa-chevron-left"></i> Template List
+        </a>
     </form>
 @stop
 

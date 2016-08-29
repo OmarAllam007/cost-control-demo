@@ -30,7 +30,7 @@ class BreakdownTemplateController extends Controller
 
         flash('Breakdown template has been saved', 'success');
 
-        return \Redirect::route('std-activity.show', $template->activity);
+        return \Redirect::route('breakdown-template.show', $template);
     }
 
     public function show(BreakdownTemplate $breakdown_template)
@@ -51,7 +51,7 @@ class BreakdownTemplateController extends Controller
 
         flash('Breakdown template has been saved', 'success');
 
-        return \Redirect::route('std-activity.show', $breakdown_template->activity);
+        return \Redirect::route('breakdown-template.show', $breakdown_template);
     }
 
     public function destroy(BreakdownTemplate $breakdown_template)
