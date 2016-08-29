@@ -17,6 +17,8 @@ class CostAccountController extends Controller
             $query->where('cost_account', 'like', '%' . $request->get('term') . '%');
         }
 
-        return $query->orderBy('cost_account')->pluck('cost_account');
+        return $query->orderBy('cost_account')
+            ->take(20)
+            ->pluck('cost_account');
     }
 }

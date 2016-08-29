@@ -66,14 +66,20 @@
                 }
             };
 
+            var ticks = 0;
             $element.on('focus', function () {
                 loadOptions();
                 $list.show();
             }).on('blur', function () {
-                setTimeout(function() {
+                setTimeout(function () {
                     $list.hide();
                 }, 100);
-            }).on('keyup', function(e){
+            }).on('keyup', function (e) {
+                if (e.keyCode != 13 && e.keyCode != 38 && e.keyCode != 40) {
+                    console.log('tick');
+                    loadOptions();
+                }
+            }).on('keydown', function (e) {
                 if (e.key.toLowerCase() == 'arrowdown') {
                     if ($list.find('a.active').length == 0) {
                         $list.find('a').first().addClass('active');
@@ -90,10 +96,8 @@
                             $list.find('a.active').removeClass('active').prev('a').addClass('active');
                         }
                     }
-                } else {
-                    loadOptions();
                 }
-            }).on('keyup keydown keypress', function(e) {
+            }).on('keyup keydown keypress', function (e) {
                 if (e.keyCode == 13) {
                     e.preventDefault();
                     var text = $list.find('a.active').text();
