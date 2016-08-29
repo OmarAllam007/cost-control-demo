@@ -220,7 +220,7 @@ class ProductivityController extends Controller
                 $parent_id = $create_category->id;
             }
 
-            $productivity = Productivity::where('csi_category_id', isset($category->id)?$category->id:0)->first();
+            $productivity = Productivity::where('csi_category_id', isset($category->id) ? $category->id : 0)->first();
 
 
             if (is_null($productivity)) {
@@ -237,6 +237,7 @@ class ProductivityController extends Controller
                     'after_reduction' => isset($inputs[10]) ? $inputs[10] : 0,
                     'source' => isset($inputs[11]) ? $inputs[11] : '',
                 ]);
+                
             } else {
 
                 continue;

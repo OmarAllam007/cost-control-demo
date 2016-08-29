@@ -13,17 +13,17 @@
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
-            {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
+        <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
+            {{ Form::label('wbs_id', 'Parent', ['class' => 'control-label']) }}
             <div class="hidden">
-                {{ Form::select('parent_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
+                {{ Form::select('wbs_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
                 <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('parent_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Parent' }}
+                    {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Parent' }}
                 </a>
             </p>
-            {!! $errors->first('parent_id', '<div class="help-block">:message</div>') !!}
+            {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">

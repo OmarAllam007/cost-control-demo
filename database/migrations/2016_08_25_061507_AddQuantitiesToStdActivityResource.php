@@ -15,7 +15,7 @@ class AddQuantitiesToStdActivityResource extends Migration
         Schema::table('std_activity_resources', function (Blueprint $table) {
             $table->float('budget_qty')->nullable();
             $table->float('eng_qty')->nullable();
-            $table->dropColumn('default_value');
+
         });
     }
 
@@ -29,6 +29,7 @@ class AddQuantitiesToStdActivityResource extends Migration
         Schema::table('std_activity_resources', function (Blueprint $table) {
             $table->dropColumn('budget_qty');
             $table->dropColumn('eng_qty');
+            $table->dropColumn('default_value');
         });
     }
 }
