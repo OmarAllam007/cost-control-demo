@@ -6,9 +6,9 @@
     <form action="{{ route('wbs-level.destroy', $wbs_level)}}" class="pull-right" method="post">
         {{csrf_field()}} {{method_field('delete')}}
 
-        <a href="{{ route('wbs-level.show', $wbs_level)}}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Show</a>
+        {{--<a href="{{ route('wbs-level.show', $wbs_level)}}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Show</a>--}}
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
-        <a href="{{ route('wbs-level.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+        <a href="{{ route('project.show', $wbs_level->project_id)}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
     </form>
 @stop
 

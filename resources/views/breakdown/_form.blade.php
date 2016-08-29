@@ -19,7 +19,7 @@
             <div class="col-sm-6">
                 <div class="form-group {{$errors->first('cost_account', 'has-errors')}}">
                     {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
-                    {{Form::text('cost_account', null, ['class' => 'form-control'])}}
+                    {{Form::text('cost_account', null, ['class' => 'form-control', 'id' => 'CostAccount'])}}
                 </div>
             </div>
         </div>
@@ -81,6 +81,12 @@
 </div>
 
 @section('javascript')
-    <script src="/js/tree-select.js"></script>
     <script src="/js/breakdown.js"></script>
+    <script>
+        jQuery(function($){
+            $('#CostAccount').completeList({
+                url: '/api/cost-accounts'
+            });
+        });
+    </script>
 @stop

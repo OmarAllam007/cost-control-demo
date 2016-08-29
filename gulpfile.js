@@ -11,15 +11,16 @@ var elixir = require('laravel-elixir');
  |
  */
 
-elixir(function(mix) {
-    mix.sass('app.scss')
-        
-    
-    mix.scripts('tree-select.js')
-        .scripts([
-                 'breakdown/load-templates.js', 
-                 'breakdown/load-resources.js'
-                 ], 'public/js/breakdown.js');
+elixir(function (mix) {
+    mix.sass('app.scss');
 
     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
+
+    mix.scripts('tree-select.js')
+        .scripts([
+            'breakdown/load-templates.js',
+            'breakdown/load-resources.js',
+            'autocomplete.js',
+            'tree-select.js'
+        ], 'public/js/breakdown.js');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Project;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,19 @@ class WbsLevelController extends Controller
         return view('wbs-level.index', compact('wbsLevels'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        if (!$request->has('project')) {
+            flash('Project not found');
+            return redirect()->route('project.index');
+        } else {
+            $project = Project::find($request->get('project'));
+            if (!$project) {
+                flash('Project not found');
+                return redirect()->route('project.index');
+            }
+        }
+
         return view('wbs-level.create');
     }
 
@@ -26,11 +38,11 @@ class WbsLevelController extends Controller
     {
         $this->validate($request, $this->rules);
 
-        WbsLevel::create($request->all());
+        $wbs_level = WbsLevel::create($request->all());
 
         flash('WBS level has been saved', 'success');
 
-        return \Redirect::route('wbs-level.index');
+        return \Redirect::route('project.show', $wbs_level->project_id);
     }
 
     public function show(WbsLevel $wbs_level)
@@ -51,7 +63,7 @@ class WbsLevelController extends Controller
 
         flash('WBS level has been saved', 'success');
 
-        return \Redirect::route('wbs-level.index');
+        return \Redirect::route('project.show', $wbs_level->project_id);
     }
 
     public function destroy(WbsLevel $wbs_level)
@@ -60,6 +72,6 @@ class WbsLevelController extends Controller
 
         flash('WBS level has been deleted', 'success');
 
-        return \Redirect::route('wbs-level.index');
+        return \Redirect::route('project.show', $wbs_level->project_id);
     }
 }
