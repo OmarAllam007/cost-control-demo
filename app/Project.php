@@ -12,7 +12,8 @@ class Project extends Model
 
     protected static $alias = 'Project';
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name','project_code','client_name','project_location'
+        ,'project_contract_value','project_start_date','project_duration', 'description'];
 
     protected $dates = ['created_at', 'updated_at'];
 

@@ -33,7 +33,7 @@
                 {{--@if (Auth::check())--}}
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/project') }}">Projects</a></li>
-                    <li><a href="{{route('category.index')}}">Quantity Survey Categories</a></li>
+                    {{--<li><a href="{{route('category.index')}}">Quantity Survey Categories</a></li>--}}
                     {{--<li>
                         <a class="dropdown-toggle" data-toggle="dropdown" href="{{url('/survey')}}">Quantity Survey <span class="caret"></span></a>
                         <ul class="dropdown-menu">

@@ -45,7 +45,7 @@
         </div>
 
         <div class="form-group {{$errors->first('waste', 'has-error')}}">
-            {{ Form::label('waste', 'waste', ['class' => 'control-label']) }}
+            {{ Form::label('waste', 'Waste(%)', ['class' => 'control-label']) }}
             {{ Form::text('waste', null, ['class' => 'form-control']) }}
             {!! $errors->first('waste', '<div class="help-block">:message</div>') !!}
         </div>
