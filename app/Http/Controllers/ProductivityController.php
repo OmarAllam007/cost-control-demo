@@ -194,8 +194,9 @@ class ProductivityController extends Controller
         /**@var \PHPExcel_Worksheet $objWorksheet */
         $objWorksheet = $objPHPExcel->getActiveSheet();
 
-//        Productivity::truncate();
-        set_time_limit(60);
+        Productivity::truncate();
+        set_time_limit(60);// time for upload as max
+
 
         foreach ($objWorksheet->getRowIterator(2) as $row) {
             /** @var \PHPExcel_Worksheet_Row $row */
@@ -206,21 +207,20 @@ class ProductivityController extends Controller
                 $inputs[] = $cell->getValue();
 
             }
-            $category = CSI_category::where('name', $inputs[1])->first();
+            $category = CSI_category::where('name', 'LIKE', $inputs[1])->first();
 
             $unit = Unit::where('type', $inputs[2])->first();
 
-
             if (is_null($category)) {
                 $create_category = CSI_category::create([
-                    'name' =>$inputs[1],
-                    'parent_id'=>$parent_id
+                    'name' => $inputs[1],
+                    'parent_id' => $parent_id
                 ]);
 
-                $parent_id=$create_category->id;
+                $parent_id = $create_category->id;
             }
 
-            $productivity = Productivity::where('csi_category_id', $category->id)->first();
+            $productivity = Productivity::where('csi_category_id', isset($category->id)?$category->id:0)->first();
 
 
             if (is_null($productivity)) {
