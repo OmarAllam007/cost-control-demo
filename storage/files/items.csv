@@ -1,0 +1,1315 @@
+ITEM DESCRIPTION,UNIT,"CREW 
+STRUCTURE","CREW
+HOURS","CREW
+EQUIP.","DAILY
+OUTPUT","MAN 
+HOURS","EQUIP.
+HOURS","PRODUCTIVITY
+REDUCTION FACTOR","PRDODUCTIVITY
+AFTER REDUCTION",SOURCE
+SCAFFOLLDING ERECTION UP TO 2 STORY BUILDING FOR EXTERINAL WORK,SQM,"1 SCAFFOLDER
+1 HELPER",,, 78.80 ,,,, -   , E. SABER 
+SCAFFOLLDING LOOSENING UP TO 2 STORY BUILDING  FOR EXTERINAL WORK,SQM,"1 SCAFFOLDER
+1 HELPER",,, 131.33 ,,,, 78.80 , E. SABER 
+SCAFFOLLDING ERECTION UP TO 5 STORY BUILDING FOR EXXTERINAL WORK,SQM,"1 SCAFFOLDER
+1 HELPER",,, 52.53 ,,,, 131.33 , E. SABER 
+SCAFFOLLDING LOOSENING UP TO 5 STORY BUILDING FOR EXXTERINAL WORK,SQM,"1 SCAFFOLDER
+1 HELPER",,, 87.56 ,,,, 52.53 , E. SABER 
+"Compacting,vibrating roller,  600 mm wide,150 mm lifts, 4 passes",CUM,"1.00 Equip. Operator
+1.00 Truck Driver
+0.50 Building laborer
+1.00 Sheepfoot Roller, 300 HP
+1.00 Water Tanker, 25M3", 20.00 , 16.00 , 800.00 , 0.03 , 0.02 , (0.10), 87.56 , INDEX 
+"Excavating hand pits, to 2 Meter Deep, Sandy Soil",CUM,"1 Common Laborer
+1 Tool set", 8.00 , 8.00 , 4.50 , 1.78 , 1.78 , (0.10), -   , INDEX 
+"Spread fill dumped material from a stockpile with dozer, 300 HP, 90 m haul",,"1 Equip. Operator 
+.5 Labor
+1  Dozer, 300HP (224KW)", 12.00 , 8.00 , 666.00 , 0.02 , 0.01 , 0.95 , 880.00 , E. SABER 
+"Spread fill dumped material, by hand, no compaction",CUM,"1 Common Laborer
+1 Tool set", 8.00 , 8.00 , 6.50 , 1.23 , 1.23 , 0.20 , 4.95 , E. SABER 
+"Gravel fill compacted under floor slabs, 100 mm deep",CUM,"1 Labor Foreman
+4 Laborers
+1 Equip. Operator
+1 Tandem Roller 4.5 Ton", 48.00 , 8.00 , 750.00 , 0.06 , 0.01 , (0.10), 33.30 , INDEX 
+"Base course, 20 mm Stone,compacted, for paved & large areas,150 mm deep",SQM,"0.250 Labor Foreman
+0.125 Surveyor
+2.000 Laborer
+3.000 Equipment Operator
+1.000 Aggregate Spreader
+1.000 Tandem Roller, 9 ton
+1.000 Dozer 225 HP
+1.000 Water Tanker", 43.00 , 32.00 ," 2,084.11 ", 0.02 , 0.02 , (0.10), 5.20 , INDEX 
+"Wheel stops, fixed",LM,"0.125 Skilled Foreman
+1.000 Skilled Worker ""Railman""
+4.000 Common laborers
+1.000 Equip. operator
+1.000 Backhoe, 50 HP", 49.00 , 8.00 , 55.00 , 0.89 , 0.15 , (0.20), 825.00 , KARIM 
+"Fine grade granular base 200 mm thick for slab on grade,in confined area,hand grading",SQM,"2 Laborers
+1 Vibrating Compactor", 16.00 , 8.00 , 95.00 , 0.17 , 0.08 , (0.10)," 2,292.52 ", INDEX 
+"Sidewalk,limestone pavers, 75 mm thick",SQM,"0.125 Labor Foreman
+1.000 Brick Layer
+1.000 Common Laborer
+1.000 Tools Set", 17.00 , 8.00 , 5.00 , 3.40 , 1.60 , (0.10), 66.00 , INDEX 
+"Interlock pavers,100 mm x 200 mm x 57 mm laid flat on 100 mm thick sand bed",SQM,"0.125 Foreman
+1.000 Tile Layer
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 13.00 , 1.06 , 0.50 , -   , 104.50 , E. SABER 
+Precast Curb stone 150*300*500MM,LM,"1.000 MASION
+1.000 HELPER", 41.00 , 8.00 , 18.00 , 0.27 , 0.05 , -   , 5.50 , E. SABER 
+"Cast in place including forms & steel, Spread footings, spread over  4 m3",CUM,"1.000  Skilled Foreman
+5.000  Carpenters & 
+        Steel Fixers (reinf
+0.25 Cement Finisher
+4.000  Laborers
+0.250  Equip.Operators
+0.375  Gas Enginge Vibrator
+0.25  Crane 35 Ton
+0.125  Truck
+0.125  Concrete Pump
+2.00  Power Tool", 84.00 , 23.00 , 18.00 , 4.67 , 1.28 , (0.10), 13.00 , INDEX 
+"Cast in place Lightweight concrete, ready mix 1:3:2,for roof decks, including screed finish only, not including forms or reinforcing",SQM,"0.50  Skilled foreman
+1.00  Laborers
+3.00  Cement Fisnishers
+0.25  Concrete Pump (small)
+0.25  Gas engine vibrator
+3.00  Gas Finishing Machine", 34.00 , 28.00 , 75.00 , 1.13 , 0.93 , (0.20), 18.00 , C32 
+"Finishing concrete floors monolithic,screed finish",SQM,1 Cement Finisher, 8.00 , -   , 70.00 , 0.11 , -   , (0.10), -   , INDEX 
+"Concrete Block, Back-up, Reinforced, alternate courses, bar spacing 1.2 meter, 200 mm x 400 mm, 100 mm thick ",SQM,"0.250 Foreman
+4.000 Bricklayers
+2.000 Bricklayer Helpers
+0.250 Equip. Operator
+0.125 Mixer 0.28 m3
+0.500 Power Tools
+0.250 Crane 
+0.125 Fork Lift
+0.125 Truck
+0.500 Hodcarrier", 52.00 , 13.00 , 38.12 , 1.36 , 0.34 , (0.10), 19.80 , INDEX 
+"Concrete Block, Back-up, Reinforced, alternate courses, bar spacing 1.2 meter, 200 mm x 400 mm, 150 mm thick ",SQM,"0.250 Foreman
+4.000 Bricklayers
+2.000 Bricklayer Helpers
+0.250 Equip. Operator
+0.125 Mixer 0.28 m3
+0.500 Power Tools
+0.250 Crane 
+0.125 Fork Lift
+0.125 Truck
+0.500 Hodcarrier", 52.00 , 13.00 , 33.75 , 1.54 , 0.39 , (0.10), 90.00 , INDEX 
+"Concrete Block, Back-up, Reinforced, alternate courses, bar spacing 1.2 meter, 200 mm x 400 mm, 200 mm thick ",SQM,"0.250 Foreman
+4.000 Bricklayers
+2.000 Bricklayer Helpers
+0.250 Equip. Operator
+0.125 Mixer 0.28 m3
+0.500 Power Tools
+0.250 Crane 
+0.125 Fork Lift
+0.125 Truck
+0.500 Hodcarrier", 52.00 , 13.00 , 28.49 , 1.83 , 0.46 , (0.10), 77.00 , INDEX 
+"Concrete Block Bond Beam, including grout and 2 x 20 mm bars reinforcing regular block 200 mm high, 200 mm thick",LM,"0.250 Foreman
+4.000 Bricklayers
+2.000 Bricklayer Helpers
+0.250 Equip. Operator
+0.250 Mixer 0.28 m3
+0.500 Power Tools
+0.125 Crane 
+0.125 Fork Lift
+0.125 Truck
+0.500 Hodcarrier", 52.00 , 13.00 , 55.39 , 0.94 , 0.23 , (0.10), -   , INDEX 
+"Concrete Block, Lintels, including grout and reinforcing, 200 mm x 400 mm x 200 mm, 2 x10 mm bar",LM,"0.250 Foreman
+4.000 Bricklayers
+2.000 Bricklayer Helpers
+0.250 Equip. Operator
+0.250 Mixer 0.28 m3
+0.500 Power Tools
+0.125 Crane 
+0.125 Fork Lift
+0.125 Truck
+0.500 Hodcarrier", 52.00 , 13.00 , 14.00 , 0.81 , 0.20 , (0.10), 41.93 , E. Emad Omar 
+"Concrete Block, Lintels, including grout and reinforcing, 300 mm x 200 mm x 200 mm, 2x16 mm bar",LM,"0.250 Foreman
+4.000 Bricklayers
+2.000 Bricklayer Helpers
+0.250 Equip. Operator
+0.250 Mixer 0.28 m3
+0.500 Power Tools
+0.125 Crane 
+0.125 Fork Lift
+0.125 Truck
+0.500 Hodcarrier", 52.00 , 13.00 , 13.00 , 0.87 , 0.22 , (0.10), 37.13 , E. Emad Omar
+"Wall insulation rigid Extruded or expanded polystyrene, 1.75 kg/cm2 50 mm thick or 76 mm thick",SQM,"0.125 Labor Forman
+1.000 Carpenter
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 75.00 , 0.23 , 0.11 , (0.10), 31.34 , INDEX 
+"Roof deck insulation,Extruded Polystyrene 1.05 kg/cm2 compressive strength, 100mm thick,",SQM,"0.125 Labour Foreman
+1.000 Roofer,Composition
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 100.00 , 0.17 , 0.08 , (0.10), 60.93 , INDEX 
+"Concrete tile, 400 mm x 400 mm,morter bed",SQM,"0.125 Labour Foreman
+1.000 Tile roofer 
+1.000 Helper
+1.000 Tools Set", 25.00 , 8.00 , 12.00 , 2.08 , 0.67 , (0.10), 15.40 , INDEX 
+"Commercial Steel Door,flush,insulated, 44 mm thick,full panel, 18 ga, 915mm x 2135 mm,hardware & frame not included",EA,"0.125 Skilled Foreman
+2.00 Carpenters
+1.00 Helper
+2.00 Power Tools                              ", 25.00 , 16.00 , 14.00 , 1.79 , 1.14 , (0.10), 14.30 , INDEX 
+"Commercial Steel Door,flush,insulated, 44 mm thick,full panel, 18 ga, 1220 mm x 2440 mm,hardware & frame not included",EA,"0.125 Skilled Foreman
+2.00 Carpenters
+1.00 Helper
+2.00 Power Tools                              ", 25.00 , 16.00 , 12.00 , 2.08 , 1.33 , (0.10), -   , INDEX 
+"Door frames,150 mm steel channels 12 kg/m, with anchors and bar stops, 915 mm x 2135 mm door, weighs 91 kg",EA,"1.00 Struc. Foreman
+3.00 Struc. Steel Workers 
+2.00 Helpers
+1.00 Gas Welding Machine
+2.00 Power Tools", 48.00 , 24.00 , 12.00 , 4.00 , 2.00 , 0.20 , 82.50 , KARIM 
+"Door frames, 200 mm steel channels 17 kg/m, with anchors and bar stops, 1830 mm x 2440 mm door, weighs 136 kg",EA,"1.00 Struc. Foreman
+3.00 Struc. Steel Workers 
+2.00 Helpers
+1.00 Gas Welding Machine
+2.00 Power Tools", 48.00 , 24.00 , 8.00 , 6.00 , 3.00 , 0.20 , 110.00 , KARIM 
+"Door frames & trim,only,brushwork, finish coat exterior latex",LM,"1 Painter,ordinary
+1 Set Consumable Tools", 8.00 , 8.00 , 180.00 , 0.04 , 0.04 , 0.20 , 13.20 , KARIM 
+"Wood doors,residential, exterior,combination storm & screen,pine,full lite,
+2055 mm x 815 mm wide,hardware & frame not included",EA,"0.125 Skilled Foreman
+2.00 Carpenters
+1.00  Helper
+2.00 Power Tools", 25.00 , 16.00 , 9.00 , 2.78 , 1.78 , (0.10), -   , INDEX 
+"Wood doors,interior,closet bi-fold,w/hardware,no frame or trim included,
+flush, 1980 mm or 2035 mm high  x 1220 mm wide",EA,"0.125 Skilled Foreman
+2.00 Carpenters
+1.00  Helper
+2.00 Power Tools", 25.00 , 16.00 , 11.00 , 2.27 , 1.45 , 0.10 , -   , KARIM 
+"Wood doors,residential, exterior,combination storm & screen,pine,full lite,
+2135 mm x 915 mm wide,hardware & frame not included",EA,"0.125 Skilled Foreman
+2.00 Carpenters
+1.00  Helper
+2.00 Power Tools", 25.00 , 16.00 , 8.00 , 3.13 , 2.00 , (0.10), 15.40 , INDEX 
+"Wood doors,interior closet,bi-fold,w/hardware,no frame or trim included,
+flush, 1980 mm or 2035 mm  high  x 1525 mm wide",EA,"0.125 Skilled Foreman
+2.00 Carpenters
+1.00  Helper
+2.00 Power Tools", 25.00 , 16.00 , 10.00 , 2.50 , 1.60 , (0.10), 13.20 , INDEX 
+"Sliding vinyl clad door, 25 mm insulated glass, 1836 mm x 2440 mm high",EA,"0.125 Skilled Foreman
+2.00 Carpenters
+1.00  Helper
+2.00 Power Tools", 25.00 , 16.00 , 3.00 , 8.33 , 5.33 , (0.10), -   , INDEX 
+"Complete hardware set for exterior door including 3 hinges,keyed lockset,with handle,weather stripping &exterior pull  bar",EA,"0.125 Skilled Foreman
+1.000 Carpenter
+1.000 Power Tools", 9.00 , 2.00 , 10.00 , 0.90 , 0.20 , (0.10), 9.60 , INDEX 
+"Complete hardware set,interior door including 6 hinges,lockset keyed with handles and floor door stop",EA,"0.125 Skilled Foreman
+1.000 Carpenter
+1.000 Power Tools", 9.00 , 8.00 , 2.00 , 4.50 , 4.00 , (0.10), 6.40 , INDEX 
+"Cement plaster on exterior concrete or masonry walls, 3 coats including accessories & GROOVES",SQM,"0.125 Foreman
+1.000 Plasterer
+1.000 Common Laborer
+0.500 Mixer 0.17 m3
+1.000 Tools Set
+1.000 Scafolding set", 17.00 , 20.00 , 13.49 , 1.26 , 1.48 , 0.20 , -   , E. SABER 
+"Cement plaster on exterior concrete or masonry walls, 3 coats including accessories WITHOUT GROOVES",SQM,"0.125 Foreman
+1.000 Plasterer
+1.000 Common Laborer
+0.500 Mixer 0.17 m3
+1.000 Tools Set
+1.000 Scafolding set", 17.00 , 20.00 , 13.49 , 1.26 , 1.48 , 0.15 , 144.00 , E. SABER 
+"PLASTERING FOR PAINT
+Cement plaster on interior concrete or masonry walls, 3 coats including accessories",SQM,"0.125 Foreman
+1.000 Plasterer
+1.000 Common Laborer
+0.500 Mixer 0.17 m3
+1.000 Tools Set
+1.000 Scafolding set", 17.00 , 20.00 , 8.10 , 1.45 , 1.70 , (0.50), -   , E. SABER 
+"PLASTERING UNDER CERAMIC
+Cement plaster on interior concrete or masonry walls, 3 coats including accessories",SQM,"0.125 Foreman
+1.000 Plasterer
+1.000 Common Laborer
+0.500 Mixer 0.17 m3
+1.000 Tools Set
+1.000 Scafolding set", 17.00 , 20.00 , 10.57 , 1.45 , 1.70 , (0.20), 9.90 , C32 
+"Ceramic tile base 300 mm x 100 mm high, thin set",LM,"0.125 Foreman
+1.000  Tile Layer
+1.000 Tile Layer Helper
+1.000 Tools Set", 17.00 , 8.00 , 30.00 , 0.57 , 0.27 , (0.10), 9.90 , INDEX 
+"Ceramic tile interior wall,with thin set 200 x 200 mm glazed",SQM,"0.125 Foreman
+1.000  Tile Layer
+1.000 Tile Layer Helper
+1.000 Tools Set", 17.00 , 8.00 , 7.80 , 1.82 , 0.86 , (0.20), 8.80 , C32 
+"Flooring,ceramic,100 mm x 200 mm x 13 mm thick,unglazed, morter bed",SQM,"0.125 Foreman
+1.000 Tile Layer
+1.000 Tiler Layer Helper
+1.000 Hodcarrier
+1.000 Power Tools", 17.00 , 16.00 , 9.30 , 1.83 , 1.72 , (0.10), 11.00 , INDEX 
+"Terrazzo,precast,cove, 150 mm high",LM,"0.125 Labor Foreman
+1.000 Tile Layer
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 17.00 , 1.00 , 0.47 , (0.10), -   , INDEX 
+"Terrazzo,precast,cove, 200 mm high",LM,"0.125 Labor Foreman
+1.000 Tile Layer
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 17.00 , 1.00 , 0.47 , 0.10 , 3.30 , KARIM 
+"Terrazzo,floor tiles,non-slip 25 mm thick, 300 mmx 300 mm",SQM,"0.125 Foreman
+3.000 Tile Layer
+2.000 Tile Layer Helper
+0.125 Equip. Operator
+0.125 Crane 11 Ton
+2.000 Tools Set
+1.000 Grinding Machine", 42.00 , 25.00 , 16.30 , 2.58 , 1.53 , (0.35), -   , E. SABER 
+"Ceilings,gypsum drywall,fire rated,finished,screwed to grid channel or joists, 13 mm or 16 mm thick",SQM,"0.125 Labor Foreman
+2.000 Finishing Carpenters
+1.000 Common Laborer
+1.000 Power Tool", 25.00 , 8.00 , 78.00 , 0.32 , 0.10 , 0.75 , 11.00 , INDEX 
+"Ceilings,grid suspension system,direct hung, 3 8 mm or 90 mm cold rolled channel, with 22 mm hi hat furring channel, 610 mm O.C.",SQM,"0.125 Labor Foreman
+2.000 Finishing Carpenters
+1.000 Common Laborer
+1.000 Power Tool", 25.00 , 8.00 , 36.00 , 0.69 , 0.22 , 0.50 , 2.20 , E. SABER 
+"Suspended ceilings complete,mineral fiber,cement binder,T bar suspension 610 mm x 1220 mm x 16 mm board",SQM,"0.125 Labor Foreman
+1.000 Finishing Carpenter
+1.000 Helper
+1.000 Power Tools", 17.00 , 8.00 , 6.60 , 0.74 , 0.35 , (0.20), -   , C32 
+Gypsum Cornice with paint,LM,"0.125 Labor Foreman
+1.000 Finishing Carpenter
+1.000 Helper
+1.000 Power Tools",,, 54.00 ,,,, -   ,
+"Suspended ceilings complete,metal pan with acoustic pad,steel, Aluminium or stainless steel.",SQM,"0.125 Labor Foreman
+1.000 Finishing Carpenter
+1.000 Helper
+1.000 Power Tools", 17.00 , 8.00 , 6.60 , 1.70 , 0.80 , (0.20), 10.79 , C32 
+"Marble tile 400 mm x 400 mm x 20 mm , morter set",SQM,"0.375 Foreman
+2.000 Tile Layer
+3.000 Tiler Layer Helper
+0.625 Equip. Operator
+0.625 Crane 11 Ton
+0.500 Power Tools
+0.125 Hodcarrier
+0.500  Grinding Machine ", 48.00 , 14.00 , 16.40 , 2.93 , 0.85 , (0.10), 11.47 , INDEX 
+"Marble tile Thersholds , morter set",SQM,"0.375 Foreman
+2.000 Tile Layer
+3.000 Tiler Layer Helper
+0.625 Equip. Operator
+0.625 Crane 11 Ton
+0.500 Power Tools
+0.125 Hodcarrier
+0.500  Grinding Machine ", 48.00 , 14.00 , 16.40 , 2.93 , 0.85 ,, 12.15 , INDEX 
+"Granite floor, 300 mm x 300 mm x 20 mm thick.",SQM,"0.375 Foreman
+2.000 Tile Layer
+3.000 Tiler Layer Helper
+0.625 Equip. Operator
+0.625 Crane 11 Ton
+0.500 Power Tools
+0.125 Hodcarrier
+0.500  Grinding Machine ", 48.00 , 14.00 , 13.00 , 3.69 , 1.08 , (0.29), 12.68 , E. SABER 
+"Granite floor, 400 mm x 400 mm x 30 mm thick.",SQM,"0.375 Foreman
+2.000 Tile Layer
+3.000 Tiler Layer Helper
+0.625 Equip. Operator
+0.625 Crane 11 Ton
+0.500 Power Tools
+0.125 Hodcarrier
+0.500  Grinding Machine ", 48.00 , 14.00 , 12.00 , 4.00 , 1.17 , (0.30), -   , E. SABER 
+"Marble stair tread 300 mm & riser 160 mm high, from 1.2 meter up to 1.8 meter long.",LM,"0.375 Foreman
+2.000 Tile Layer
+3.000 Tiler Layer Helper
+0.625 Equip. Operator
+0.625 Crane 11 Ton
+0.500 Power Tools
+0.125 Hodcarrier
+0.500  Grinding Machine ", 48.00 , 14.00 , 25.87 , 1.86 , 0.54 , (0.10), 33.00 , INDEX 
+"Granite stair tread 300 mm & riser 160 mm high, up to 1 meter long.",LM,"0.375 Foreman
+2.000 Tile Layer
+3.000 Tiler Layer Helper
+0.625 Equip. Operator
+0.625 Crane 11 Ton
+0.500 Power Tools
+0.125 Hodcarrier
+0.500  Grinding Machine ", 48.00 , 14.00 , 17.00 , 2.82 , 0.82 , (0.10), 9.36 , INDEX 
+"Granite stair tread 300 mm, up to 1 meter long.",LM,"0.1875 Foreman
+1.000 Tile Layer
+1.5.000 Tiler Layer Helper
+0.3125 Equip. Operator
+0.3125 Crane 11 Ton
+0.250 Power Tools
+0.0625 Hodcarrier
+0.250  Grinding Machine ", 48.00 , 14.00 , 17.00 , 2.82 , 0.82 , (0.40), 10.23 , E. SABER 
+"Granite stair riser 160 mm high, up to 1 meter long.",LM,"0.1875 Foreman
+1.000 Tile Layer
+1.5.000 Tiler Layer Helper
+0.3125 Equip. Operator
+0.3125 Crane 11 Ton
+0.250 Power Tools
+0.0625 Hodcarrier
+0.250  Grinding Machine ", 48.00 , 14.00 , 17.00 , 2.82 , 0.82 , (0.60), -   , E. SABER 
+"Granite stair tread 300 mm & riser 160 mm high, from 1.2 meter up to 1.8 meter long.",LM,"0.375 Foreman
+2.000 Tile Layer
+3.000 Tiler Layer Helper
+0.625 Equip. Operator
+0.625 Crane 11 Ton
+0.500 Power Tools
+0.125 Hodcarrier
+0.500  Grinding Machine ", 48.00 , 14.00 , 22.00 , 2.18 , 0.64 , (0.10), 18.70 , INDEX 
+"Granite stair tread 300 mm, from 1.2 meter up to 1.8 meter long.",LM,"0.1875 Foreman
+1.000 Tile Layer
+1.5.000 Tiler Layer Helper
+0.3125 Equip. Operator
+0.3125 Crane 11 Ton
+0.250 Power Tools
+0.0625 Hodcarrier
+0.250  Grinding Machine ", 48.00 , 14.00 , 22.00 , 2.18 , 0.64 , (0.40), 15.30 , E. SABER 
+"Granite stair riser 160 mm high, from 1.2 meter up to 1.8 meter long.",LM,"0.1875 Foreman
+1.000 Tile Layer
+1.5.000 Tiler Layer Helper
+0.3125 Equip. Operator
+0.3125 Crane 11 Ton
+0.250 Power Tools
+0.0625 Hodcarrier
+0.250  Grinding Machine ", 48.00 , 14.00 , 22.00 , 2.18 , 0.64 , (0.60), 22.01 , E. SABER 
+"Resilient base,cove,rubber or vinyl,  to 3 mm thick,standard colors,upto 
+150 mm high",LM,"0.125 Foreman
+1.000 Tile Layer
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 110.00 , 0.15 , 0.07 , 0.50 , -   , E. SABER 
+"Carpet,commercial grade,direct cement, Nylon, plush,upto 1700 gram, 
+avg size room ",SQM,"0.125 Foreman
+1.000 Tile Layer
+1.000 Helper", 17.00 , 8.00 , 27.00 , 0.25 , 0.12 , (0.20), 19.50 , C32 
+"Walls,masonry paint,roll,latex,paint, first coat EXTERNAL",SQM,"1 Painter,ordinary
+1 Set Consumable Tools", 8.00 , 8.00 , 60.00 , 0.04 , 0.04 , -   , 18.00 , E. SABER 
+"Walls,masonry paint,roll,latex,paint, second coat EXTERNAL",SQM,"1 Painter,ordinary
+1 Set Consumable Tools", 8.00 , 8.00 , 50.00 , 0.03 , 0.03 , -   , 7.92 , E. SABER 
+"Walls,masonry paint,roll,latex,paint, first coat INTERNAL",SQM,"1 Painter,ordinary
+1 Set Consumable Tools", 8.00 , 8.00 , 60.00 , 0.04 , 0.04 , (0.20), 54.00 , C32 
+"Walls,masonry paint,roll,latex,paint, second coat INTERNAL",SQM,"1 Painter,ordinary
+1 Set Consumable Tools", 8.00 , 8.00 , 50.00 , 0.03 , 0.03 , (0.20), 7.92 , C32 
+"Paint concrete,dry wall or plaster,paint  2 coats, smooth finish,roller",SQM,"1 Painter,ordinary
+1 Set Consumable Tools", 8.00 , 8.00 , 22.50 , 0.16 , 0.16 , (0.20), -   , C32 
+"Concrete, dry wall or plaster, paint 3 coats, smooth finish, roller",SQM,"1 Painter,ordinary
+1 Set Consumable Tools", 8.00 , 8.00 , 15.00 , 0.16 , 0.16 , (0.20), 18.04 , C32 
+"Curtain rod, stainless steel, 1.5 m long,  32 mm diameter",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 17.00 , 1.00 , 0.47 , (0.10), 16.40 , INDEX 
+"Grab bar, straight, 32 mm dia., stainless steel, 610 mm long",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 28.00 , 0.61 , 0.29 , (0.10), 16.77 , INDEX 
+"Mirror with stainless steel frame, 457 mm x 610 mm",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 20.00 , 0.85 , 0.40 , (0.10), 15.60 , INDEX 
+"Mirror with stainless steel frame, 1220 mm x 610 mm",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 10.00 , 1.70 , 0.80 , (0.10), 28.46 , INDEX 
+"Mirror with stainless steel frame, 1830 mm x 610 mm",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 6.00 , 2.83 , 1.33 , (0.10), 18.70 , INDEX 
+"Robe hook, single, heavy duty, concealed mounting",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 40.00 , 0.43 , 0.20 , (0.10), 23.80 , INDEX 
+"Soap dispenser, chrome, surface mounted, liquid or powder",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 24.00 , 0.71 , 0.33 , (0.10), 27.20 , INDEX 
+"Soap dish chrome,surface mounted",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 36.00 , 0.47 , 0.22 , (0.10), 24.20 , INDEX 
+"Toilet tissue dispenser, surface mounted, stainless steel, single roll",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 30.00 , 0.57 , 0.27 , (0.10), 30.80 , INDEX 
+"Towel bar, stainless steel, 760 mm long",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 22.00 , 0.77 , 0.36 , (0.10), 35.20 , INDEX 
+"Towel dispenser, stainless steel, surface mounted",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 20.00 , 0.85 , 0.40 , (0.10), -   , INDEX 
+"Waste receptacles, stainless steel, with top, 50 liter",EA,"0.125 Labor Foreman
+1.000 Carpenter
+1.000 Laborer
+1.000 Power Tool", 17.00 , 8.00 , 12.00 , 1.42 , 0.67 , (0.10), 55.00 , INDEX 
+CABLE TRAY LADDER:,,,,,,,,, -   ,
+"Cable tray ladder,galv.steel,With fittings & supports, 100 mm deep, 100 mm rung spacing, 300 mm wide; 2 floors building, 4.6 m floor to floor",LM,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 14.72 , 1.15 , 0.54 , (0.10), 32.40 ,
+"Cable tray ladder,galv.steel,With fittings & supports, 100 mm deep, 100 mm rung spacing, 450 mm wide; 2 floors building, 4.6 m floor to floor",,, 17.00 , 8.00 , 12.88 , 1.32 , 0.62 , (0.10), -   ,
+"Cable tray ladder,galv.steel,With fittings & supports, 100 mm deep, 100 mm rung spacing, 600 mm wide; 2 floors building., 4.6 m floor to floor",,, 17.00 , 8.00 , 11.78 , 1.44 , 0.68 , (0.10), 60.00 ,
+"Circuit Breakers in NEMA 1 enclosure; 600V, 3 pole, 100A",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power Tools", 17.00 , 8.00 , 3.50 , 4.86 , 2.29 , (0.10), 50.00 ,Nema lockable enclosure
+"Panel board 3 Phase 4 Wire, 225 Amps Main lugs only (M.L.O); 220/380 Including  30 branches, bolt-on type circuit breakers, 1P-20A",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Power Tool", 17.00 , 8.00 , 0.75 , 22.76 , 10.71 , (0.40), 72.00 ,Flat panel boards
+"Testing for mdp panel board , on off test conductivity",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 2.00 ,,, (0.20), 60.00 ,MDP
+"Testing for small panel board , on off test conductivity",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 6.00 ,,, (0.20), 27.00 ,Flat panel boards
+"Testing for Low voltage cable (Conductivity , megger testing )",M.L,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 500.00 ,,, (0.20), 18.00 ,
+"Testing for Wiring devices ( on- off , Normal Operation , Sequence)",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 300.00 ,,, (0.20), -   ,
+"Testing for lighting fixture ( on- off , Normal Operation , emergency operation , photocell if any )",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 200.00 ,,, (0.20), 18.70 ,
+"Testing for fire alarm system ( cable continently , sequence , walk through test )",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 70.00 ,,, (0.20), 30.80 ,
+Testing for intercom system,Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 32.00 ,,, (0.20), 22.00 ,
+Testing for T.V,Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 80.00 ,,, (0.20), 11.00 ,
+Testing for Lightinng protection and grounding system by Rod (rod to earth resistance ?..etc),Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common Laborer
+1.000 Test Tool", 17.00 , 8.00 , 6.00 ,,, (0.20), 6.60 ,
+"Testing for lighting pole (manual-auto operation , grounding ?.)",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Test Tool", 17.00 , 8.00 , 17.00 ,,, (0.20), 44.00 ,
+"Testing for lighting Control Panel  (manual-auto operation ,Termination , C.B and grounding )",Each,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Test Tool", 17.00 , 8.00 , 8.00 ,,, (0.20), 26.40 ,
+"Switchboard incoming main service section, copper bus bars, including CT's  with compartments and Main Air Circuit Breaker draw out Type;127/220 V, 3 Phase 4 Wire, 1600 Amp.",Each,"0.125 Electrical Foreman
+1.000 Electrician
+2.000 Common Laborer
+1.000 Hydraulic Jacks
+1.000 Tools Set", 25.00 , 16.00 , 0.66 , 37.88 , 24.24 , (0.20), 39.60 ,MDP
+"Wire connectors, screw -on type, insulated, from  1 to 6 mm2",,, 8.00 , -   , 190.00 , 0.04 , -   , (0.20), 33.00 ,
+"Wire connectors, screw -on type, insulated, from 2 to 10 mm2",,, 8.00 , -   , 180.00 , 0.04 , -   , (0.20), 24.20 ,
+"Wire connectors, screw -on type, insulated, from 4 to 16 mm2",,, 8.00 , -   , 150.00 , 0.05 , -   , (0.20), 22.00 ,
+"Terminal lugs, solder less for wires, 6 to 25 mm2",,, 8.00 , -   , 40.00 , 0.20 , -   , (0.20), 13.20 ,
+"Terminal lugs, solder less for wires, 50 to 70 mm2",,, 8.00 , -   , 36.00 , 0.22 , -   , (0.20), -   ,
+"Terminal lugs, solderless for wires, 150 mm2",,, 8.00 , -   , 20.00 , 0.40 , -   , (0.20), -   ,
+"Terminal lugs, solderless for wires, 185 mm2",,, 8.00 , -   , 15.00 , 0.53 , -   , (0.20), 16.19 ,
+"Terminal lugs, solderless for wires, 240 mm2",,, 8.00 , -   , 10.00 , 0.80 , -   , (0.20), 14.17 ,
+"Terminal lugs, solderless for wires, 300 mm2",,, 8.00 , -   , 8.00 , 1.00 , -   , (0.20), 12.96 ,
+"Conduit in concrete slab;PVC Sch 40; With terminations,fittings & supports, 20 mm diameter (3/4"")",LM,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Conduit Power Tools", 17.00 , 8.00 , 110.00 , 0.38 , 0.18 , (0.20), -   ,
+"Conduit in concrete slab;PVC Sch 40; With terminations, fittings & supports, 25 mm diameter ( 1"")", ,, 17.00 , 8.00 , 100.00 , 0.45 , 0.21 , (0.20), -   ,
+"Conduit in concrete slab;PVC Sch 40; With terminations, fittings & supports, 32 mm diameter (1-1/4"")",,, 17.00 , 8.00 , 90.00 , 0.51 , 0.24 , (0.20), 3.85 ,
+"Conduit in concrete slab;PVC Sch 40; With terminations, fittings & supports, 38 mm  diameter (1-1/2"")",,, 17.00 , 8.00 , 80.00 , 0.64 , 0.30 , (0.20), -   ,
+"Conduit in concrete slab;PVC Sch 40; With terminations, fittings & supports, 50 mm  diameter (2"")",,, 17.00 , 8.00 , 60.00 , 0.64 , 0.30 , (0.20), 1.05 ,
+"Conduit in concrete slab;PVC Sch 40; With terminations, fittings & supports, 63 mm  diameter (2-1/2"")",,, 17.00 , 8.00 , 40.00 , 0.64 , 0.30 , (0.20), -   ,
+"Conduit in concrete slab;PVC Sch 40; With terminations, fittings & supports, 75 mm  diameter (3"")",,, 17.00 , 8.00 , 30.00 , 0.64 , 0.30 , (0.20), 2.40 ,
+"Conduit,galvanized rigid steel in trench underground with fittings & terminations,no excavation or backfill, 32 mm diameter (1.5"")",LM,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Conduit Power Tools", 17.00 , 8.00 , 50.00 , 0.34 , 0.16 , -   , 7.20 ,
+"Conduit,galvanized rigid steel in trench underground with fittings & terminations,no excavation or backfill, 50 mm diameter (2"")",LM,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Conduit Power Tools", 17.00 , 8.00 , 49.80 , 0.34 , 0.16 , -   , 600.00 ,
+"Conduit,galvanized rigid steel in trench underground with fittings & terminations,no excavation or backfill, 76 mm diameter (3"")",,, 17.00 , 8.00 , 32.48 , 0.52 , 0.25 , -   , 360.00 ,
+"Conduit,galvanized rigid steel in trench underground with fittings & terminations,no excavation or backfill, 100 mm diameter (4"")",,, 17.00 , 8.00 , 22.34 , 0.76 , 0.36 , -   , 240.00 ,
+"Conduit Electric Metallic Tubing (EMT), exposed,in 2 story building,includes 1 termination,1elbow every 6 meters & 1 clamp every 2.75 m., 20 mm diameter ( 3/4"")",,, 17.00 , 8.00 , 48.90 , 0.35 , 0.16 , -   , 84.00 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 4*6 + 6 mm2, including 2 terminations every 30 m run, conduit length up to 30 meter, conduits not included",LM,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 34.00 , 8.00 , 130.00 , 0.33 , 0.08 , (0.20), 38.40 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 3 x 25 + 16 mm2, including 2 terminations every 30 m run, conduit length up to 30 meter, conduits not included",,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 34.00 , 8.00 , 102.00 , 0.33 , 0.08 , (0.20), 96.00 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 4 x 50  mm2, including 2 terminations every 30 m run, conduit length up to 30 meter, conduits not included", ,, 34.00 , 8.00 , 70.00 , 0.61 , 0.14 , (0.20), 7.20 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 3 x 70 + 35 mm2, including 2 terminations every 30 m run, conduit length up to 30 meter, conduits not included", ,, 34.00 , 8.00 , 56.00 , 0.61 , 0.14 , (0.20), 20.40 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 3 x 95 + 50 mm2, including 2 terminations every 30 m run, conduit length up to 30 meter, conduits not included", ,, 34.00 , 8.00 , 52.00 , 0.61 , 0.14 , (0.20), 9.60 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 3 x 150 + 70 mm2",,, 34.00 , 8.00 , 51.00 , 0.67 , 0.16 , (0.20), -   ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 3 x 240 + 120 mm2",,, 34.00 , 8.00 , 39.00 , 0.87 , 0.21 , (0.20), 0.79 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in c0nduit, copper; 3 x 300 + 150 mm2, including 2 terminations, conduits not included",,, 34.00 , 8.00 , 31.00 , 1.10 , 0.26 , (0.20), -   ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 1 x 70 mm2, including 4 terminations per 100 meter",LM,"0.250 Electrical Foreman
+1.000 Electrician
+3.000 Electrician Helper
+1.000 Tools Set", 34.00 , 8.00 , 131.00 , 0.26 , 0.06 , (0.20), -   ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 1 x 185 mm2, including 2 terminations per 100 meter",,, 34.00 , 8.00 , 109.00 , 0.31 , 0.07 , (0.20), 240.00 ,
+"1 KV cable, PVC insulated, PVC Sheath, installed in conduit, copper; 1 x 300 mm2, including 2 terminations per 100 meter",,, 34.00 , 8.00 , 95.00 , 0.36 , 0.08 , (0.20), 228.00 ,
+"For cables pulled in more than 30 meter run, add for every extra meter",,, 34.00 , 8.00 ,, 0.05 , 0.05 , (0.20), 216.00 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,    4 mm2",LM,"1 Electrician
+2 Common Laborers
+1 Tools Set", 16.00 , 8.00 , 450.00 , 0.04 , 0.02 , (0.20), 180.00 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,    6 mm2",,, 16.00 , 8.00 , 360.00 , 0.04 , 0.02 , (0.20), 48.00 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,   10 mm2",,, 16.00 , 8.00 , 294.00 , 0.05 , 0.03 , (0.20), 43.20 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,   16 mm2",,, 16.00 , 8.00 , 204.00 , 0.08 , 0.04 , (0.20), 24.00 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,   25 mm2",,, 16.00 , 8.00 , 159.00 , 0.10 , 0.05 , (0.20), 18.00 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,   95 mm2",,, 24.00 , 8.00 , 90.00 , 0.27 , 0.09 , (0.20), 12.00 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,  150 mm2",,, 24.00 , 8.00 , 69.00 , 0.35 , 0.12 , (0.20), 9.60 ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,  240 mm2",,, 24.00 , 8.00 , 60.00 , 0.40 , 0.13 , (0.20), -   ,
+"0.6 To 1 KV, copper wire, THW or THHN, pulled in conduits,  300 mm2",,, 24.00 , 8.00 , 54.00 , 0.44 , 0.15 , (0.20), 132.00 ,
+"Lighting switch,toggle,single pole,15A",EA,1 Electrician, 8.00 , -   , 32.00 , 0.25 , -   , (0.20), 120.00 ,
+"Lighting switch,toggle,single pole 2 Way,15A",,, 8.00 , -   , 25.00 , 0.25 , -   , (0.20), 108.00 ,
+"Lighting switch,toggle,  3 Way, 15A",,, 8.00 , -   , 20.00 , 0.40 , -   , (0.20), 96.00 ,
+"Lighting switch, toggle, 4 Way, 15A",,, 8.00 , -   , 13.00 , 0.62 , -   , (0.20), 72.00 ,
+"Lighting switch, toggle, 2 gange ,2 Way, 15A",,, 8.00 , -   , 13.00 , 0.62 , -   , (0.20), 48.00 ,
+"Lighting switch, toggle,0 A,  230 V,  intermediate",,, 8.00 , -   , 8.00 , 0.62 , -   , (0.20), 36.00 ,
+Water Heater switch 2 pole 1 way 20A,,, 8.00 , -   , 13.00 , 0.62 , -   , (0.20), -   ,
+Fan motor switch with overload protection/Fan regulator,,,,, 4.00 , 0.62 , -   , (0.20), 50.00 ,
+"Dimmer switch, 120V, 1000 watt incandescent, 1 pole",,, 8.00 , -   , 20.00 , 0.40 , -   , (0.20), 49.80 ,
+"Dimmer switch, 120 V, 2000 watt incandescent, 1 pole",,, 8.00 , -   , 12.00 , 0.67 , -   , (0.20), 32.48 ,
+"Duplex  receptacle, 120 or 220 V, grounded, 20 A",,, 8.00 , -   , 32.00 , 0.25 , -   , -   , 22.34 ,
+"Duplex receptacle, 120 or 220 V, grounded fault interrupting, ""GFI"", 20 A",,, 8.00 , -   , 24.00 , 0.33 , -   , (0.20), 48.90 ,
+"Receptacle, single, 250 V, grounded, 30A",,, 8.00 , -   , 20.00 , 0.40 , -   , -   , -   ,
+"receptacle, single, 250 V, grounded, 50A",, , 8.00 , -   , 16.00 , 0.50 , -   , (0.20), 156.00 ,
+"Single interlocking receptacle, ceiling mounted, 120 or 220 V, grounded, 15 A",,, 8.00 , -   , 18.00 , 0.44 , -   , (0.20), 122.40 ,
+"Receptacle, corrosion resistant, 20 A, 250 V",,, 8.00 , -   , 18.00 , 0.44 , -   , (0.20), 84.00 ,
+Receptacle/ switch cover plate,,, 8.00 , -   , 80.00 , 0.10 , -   , (0.20), 67.20 ,
+Plug  straight or angle  20 A,,, 8.00 , -   , 30.00 , 0.27 , -   , (0.20), 62.40 ,
+Plug  straight or angle  30 A,,, 8.00 , -   , 28.00 , 0.29 , -   , (0.20), 61.20 ,
+Plug  straight or angle  50 A,,, 8.00 , -   , 20.00 , 0.40 , -   , (0.20), 46.80 ,
+"Connector computer, 3 pole, 4 wire, 20 A",,, 8.00 , -   , 32.00 , 0.25 , -   , (0.20), 37.20 ,
+"Connector computer, 3 pole, 4 wire, 60 A",,, 8.00 , -   , 16.00 , 0.50 , -   , (0.20), 157.20 ,
+"Connector computer, 3 pole, 4 wire,100 A",,, 8.00 , -   , 8.00 , 1.00 , -   , (0.20), 130.80 ,
+"Lampholder,keyless",,, 8.00 , -   , 20.00 , 0.40 , -   , (0.20), 114.00 ,
+"Safety switch, general duty or heavy duty, 600 V, 2P-  30 A,NON Fused.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power Tools", 17.00 , 8.00 , 12.00 , 5.67 , 2.67 , (0.20), -   ,
+"Safety switch, general duty or heavy duty, 600 V, 3P-  60 A,fused.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power Tools", 17.00 , 8.00 , 3.00 , 5.67 , 2.67 , (0.20), -   ,
+"Safety switch, general duty or heavy duty, 600 V, 3P-  30 A,NON ,fused.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power Tools", 17.00 , 8.00 , 5.00 , 5.67 , 2.67 , (0.20), 540.00 ,
+"Safety switch, general duty or heavy duty, 600 V, 3P- 100 A,fused.",,, 17.00 , 8.00 , 2.75 , 6.18 , 2.91 , (0.20), 432.00 ,
+"Safety switch, general duty or heavy duty, 600 V, 3P- 200 A,fused.",,, 17.00 , 8.00 , 1.90 , 8.95 , 4.21 , (0.20), 352.80 ,
+"Safety switch, general duty or heavy duty, 600 V, 3P- 400 A,fused.", , , 17.00 , 8.00 , 1.25 , 13.60 , 6.40 , (0.20), 244.80 ,
+"Safety switch, general duty or heavy duty, 600 V, 3P- 600 A,fused.",,, 17.00 , 8.00 , 0.90 , 18.89 , 8.89 , (0.20), 190.80 ,
+"Emergency lighting fixture, battery operated, twin sealed beam lights, 25W, 6V  each.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 8.00 , 2.13 , 1.00 , (0.20), 108.00 ,
+"Exterior lighting fixture with lamp wall mounted, incandescent, 100 W",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 25.00 , 0.68 , 0.32 , (0.20), 82.80 ,
+"Exterior lighting fixture, wall pack, discharge lamp up to 250 Watt.",EA, , 17.00 , 8.00 , 10.00 , 1.70 , 0.80 , (0.20), 72.00 ,
+"Exterior fixture, floodlights with ballast and lamp, pole mounted, pole not included
+Mercury Vapor, metal halide or sodium, 175 W",EA,, 17.00 , 8.00 , 6.00 , 2.83 , 1.33 , (0.20), 64.80 ,
+"Exterior fixture, floodlights with ballast and lamp, pole mounted, pole not included
+Mercury Vapor, metal halide or sodium, 250 W",EA,, 17.00 , 8.00 , 6.00 , 2.83 , 1.33 , (0.20), -   ,
+"Exterior fixture, floodlights with ballast and lamp, pole mounted, pole not included
+Mercury Vapor, metal halide or sodium, 400 W",EA,, 17.00 , 8.00 , 5.00 , 3.40 , 1.60 , (0.20), 38.40 ,
+"Exterior fixture, floodlights with ballast and lamp, pole mounted, pole not included
+Mercury Vapor, metal halide or sodium, 1000 W",EA,, 17.00 , 8.00 , 4.00 , 2.13 , 1.00 , (0.20), 30.00 ,
+"Exterior fixture, floodlights with ballast and lamp, pole mounted, pole not included
+Mercury Vapor, metal halide or sodium, 2000 W",EA,, 17.00 , 8.00 , 3.00 , 2.13 , 1.00 , -   , 24.00 ,
+Fuse box installation  for all type of lighting pole include gland and termination ,EA,, 17.00 , 8.00 , 8.00 , 2.13 , 1.00 , -   , 15.60 ,
+"Exterior Light Pole,Aluminium, anchor base without concrete,  2.5 meter  high",EA, , 17.00 , 8.00 , 7.00 , 2.43 , 1.14 , (0.20), 15.60 ,
+"Exterior Light Pole,Aluminium, anchor base without concrete,  6.0 meter  high",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Equip. Operator
+1.000 Truck Crane 11 Ton
+1.000 Tools Set", 25.00 , 16.00 , 6.00 , 4.17 , 2.67 , (0.20), 9.60 ,
+"Exterior Light Pole,Aluminium, anchor base without concrete,  9.0 meter  high",EA,, 25.00 , 16.00 , 4.50 , 5.56 , 3.56 , (0.20), 15.60 ,
+"Exterior Light Pole,Aluminium, anchor base without concrete,   12 meter  high",EA,, 25.00 , 16.00 , 3.50 , 7.14 , 4.57 , (0.20), 4.80 ,
+"Exterior Light pole bracket arms, 1 arm,  Steel or Aluminium",EA,, 25.00 , 16.00 , 10.00 , 2.50 , 1.60 , (0.20), 24.00 ,
+"Exterior Light pole bracket arms, 2 arms, Steel or aluminium",EA,, 25.00 , 16.00 , 9.00 , 2.78 , 1.78 , (0.20), 14.40 ,
+"Exterior Light pole bracket arms, 4 arms, Steel or Aluminium",EA,, 25.00 , 16.00 , 7.00 , 3.57 , 2.29 , (0.20), 32.00 ,
+"Exterior Light Pole, Steel, anchor base without concrete,  2.5 meter  high",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 6.00 , 2.83 , 1.33 , (0.20), 28.80 ,
+"Exterior Light Pole, Steel, anchor base without concrete,  6.0 meter  high",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Equip. Operator
+1.000 Truck Crane 11 Ton
+1.000 Tools Set", 25.00 , 16.00 , 5.00 , 5.00 , 3.20 , (0.20), 20.00 ,
+"Exterior Light Pole, Steel, anchor base without concrete,  9.0 meter  high",EA,, 25.00 , 16.00 , 4.00 , 6.25 , 4.00 , (0.20), 19.20 ,
+"Exterior Light Pole, Steel, anchor base without concrete,   12 meter  high",EA,, 25.00 , 16.00 , 3.00 , 8.33 , 5.33 , (0.20), 21.60 ,
+"Interior fluorescent fixture recessed mounted, with lens 300 x 1200 mm, 2 x 40 watt",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 9.00 , 1.89 , 0.89 , -   , 21.60 ,
+"Interior fluorescent fixture recessed mounted, with lens 600 x 1200 mm , 2 x 40 watt",,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 8.00 , 2.13 , 1.00 , 0.10 , 96.00 ,
+"Interior fluorescent fixture recessed mounted, with lens 600 x 1200 mm, 4 x 40 watt",,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 7.00 , 2.43 , 1.14 , -   , 36.00 ,
+"Interior fluorescent fixture recessed mounted, with lens 600 x 600 mm,  4 x 20 watt",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 9.00 , 1.89 , 0.89 , (0.20), 33.60 ,
+"Interior fluorescent fixture recessed mounted, with lens 190 mm Dia 4 x 20 watt",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 18.00 , 1.89 , 0.89 , (0.20), 24.00 ,
+"Interior fluorescent fixture recessed mounted, with lens 1200 x 1200 mm , 8 x 40 watt",,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 4.50 , 3.78 , 1.78 , -   , 38.40 ,
+"Interior fluorescent fixture surface mounted, with lens & latched door frame, 300 x 1200 mm, 2 x 40 W                                                  ",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 11.00 , 1.55 , 0.73 , (0.20), 19.20 ,
+"Interior fluorescent fixture surface mounted, with lens & latched door frame, 600 x 600 mm,  4 x 20 W                                                  ",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 10.00 , 1.70 , 0.80 , (0.20), 9.60 ,
+"Interior fluorescent fixture surface mounted, with lens & latched door frame, 272 mm dia ",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 20.00 , 1.70 , 0.80 , (0.20), 24.00 ,
+"Air terminal, copper, 20 mm installed on roofs 24 meter high above grade",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 14.00 , 1.21 , 0.57 , (0.20), -   ,
+"Cable, Copper 70 mm2 fixed with clamps every 2 meter spacing",KG,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 125.00 , 0.14 , 0.06 , (0.20), 14.40 ,
+"Ground rod,copper clad, 2.4 m long, 20 mm diameter (3/4""), driven in standard soil.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common laborer
+1.000 Power tool", 17.00 , 8.00 , 10.00 , 1.70 , 0.80 , (0.20), 3.60 ,
+Lighting pole /outdoor panel grounding rod with cable and welding (complete set ONE ROD ONLY ),EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common laborer
+1.000 Power tool", 17.00 , 6.00 , 7.00 , 1.70 , 0.80 , (0.20), 6.00 ,
+"Ground rod,copper clad, 3.0 m long, 20 mm diameter (3/4""), driven in hard/standerd soil.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common laborer
+1.000 Power tool", 17.00 , 8.00 , 7.00 , 1.70 , 0.80 , (0.20), 3.30 ,
+"Ground rod,copper clad, 3.0 m long, 20 mm diameter (3/4""), driven in hard soil.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Common laborer
+1.000 Power tool", 17.00 , 8.00 , 4.00 , 4.25 , 2.00 , (0.20), 2.28 ,
+"Groundwire,bare copper,  35 mm2",EA,, 17.00 , 8.00 , 500.00 , 0.03 , 0.02 , (0.20), 1.50 ,
+"Groundwire,bare copper,  50 mm2",EA,, 17.00 , 8.00 , 190.00 , 0.03 , 0.02 , (0.20), 1.08 ,
+"Groundwire,bare copper,  95 mm2",EA,, 17.00 , 8.00 , 175.00 , 0.10 , 0.05 , (0.20), -   ,
+"Groundwire,bare copper,  120 mm2",EA,, 17.00 , 8.00 , 120.00 , 0.10 , 0.05 , (0.20), -   ,
+"Grounding,brazed connections,  16 mm2 cable",EA,, 17.00 , 8.00 , 16.00 , 0.85 , 0.40 , (0.20), 9.60 ,
+"Grounding,brazed connections,  95 mm2 cable",EA,, 17.00 , 8.00 , 12.00 , 1.42 , 0.67 , (0.20), -   ,
+"Detection system, indicating panels, 10 channel",EA,"0.125 Electrical Foreman
+1.000 Special Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 2.50 , 6.80 , 3.20 , (0.20), 30.00 ,
+"Detection system, indicating panels, Main Panel 4 Loop channel",EA,"0.125 Electrical Foreman
+1.000 Special Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 1.00 , 6.80 , 3.20 , (0.10), 12.00 ,
+"Fire alarm, break glass alarm switch",EA,, 17.00 , 8.00 , 15.00 , 1.13 , 0.53 , (0.20), 7.20 ,
+"Fire alarm, alarm bell",EA,, 17.00 , 8.00 , 15.00 , 1.13 , 0.53 , (0.20), 7.20 ,
+"Fire alarm heat detector,rate of rise",EA,, 17.00 , 8.00 , 15.00 , 1.13 , 0.53 , (0.20), 6.00 ,
+"Fire alarm smoke detector,ceiling type",EA,, 17.00 , 8.00 , 12.00 , 1.42 , 0.67 , (0.20), 4.80 ,
+"Fire alarm smoke detector,duct type",EA,, 17.00 , 8.00 , 5.00 , 3.40 , 1.60 , (0.20), 3.00 ,
+Fire alarm horn,EA, , 17.00 , 8.00 , 12.00 , 1.42 , 0.67 , (0.20), 8.00 ,
+"Sound system,Master station for intercom of 25 stations.",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 2.00 , 8.50 , 4.00 , (0.20), 8.40 ,
+"Sound system,intercom outlet, in rigid steel conduit",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 3.67 , 4.63 , 2.18 , (0.20), 7.20 ,
+"Telephone cabinet, indoor 25 pair",EA,"1.000 Electrician
+1.000 Helper
+1.000 Power Tools", 16.00 , 8.00 , 3.00 , 5.33 , 2.67 , (0.20), 5.40 ,
+"Telephone cabinet, indoor 50 pair",,, 16.00 , 8.00 , 2.00 , 8.00 , 4.00 , (0.10), 4.20 ,
+"Telephone cabinet, indoor 100 pair",,, 16.00 , 8.00 , 1.00 , 16.00 , 8.00 , (0.20), 12.00 ,
+"Telephone cabinet, outdoor 50 pair",,, 16.00 , 8.00 , 2.00 , 8.00 , 4.00 , (0.20), 10.80 ,
+"Telephone cabinet, outdoor 100 pair",,, 16.00 , 8.00 , 1.00 , 16.00 , 8.00 , (0.20), 8.40 ,
+"Telephone cabinet, outdoor 200 pair",,, 16.00 , 8.00 , 0.50 , 32.00 , 16.00 , (0.20), 7.20 ,
+"Telephone cabinet, outdoor 300 pair",,, 16.00 , 8.00 , 0.50 , 32.00 , 16.00 , (0.20), 6.00 ,
+"Telephone cabinet, outdoor 400 pair",,, 16.00 , 8.00 , 0.50 , 32.00 , 16.00 , (0.20), 4.80 ,
+"Telephone cabinet, outdoor 600 pair",,, 16.00 , 8.00 , 0.20 , 32.00 , 16.00 , (0.20), 3.60 ,
+"Telephone cable, 2 pair ,pulled in conduits.",LM,"1.000 Electrician
+1.000 Helper
+1.000 Power Tools", 16.00 , 8.00 , 800.00 , 0.02 , 0.01 , (0.10), -   ,
+"Telephone cable, 4 pair",,, 16.00 , 8.00 , 700.00 , 0.02 , 0.01 , (0.10), 9.00 ,
+"Telephone cable, 6 pair",,, 16.00 , 8.00 , 550.00 , 0.03 , 0.01 , (0.10), 7.20 ,
+"Telephone cable, 15 pair",,, 16.00 , 8.00 , 400.00 , 0.04 , 0.02 , (0.10), 7.00 ,
+"Telephone cable, 25 pair",,, 16.00 , 8.00 , 325.00 , 0.05 , 0.02 , (0.10), 10.80 ,
+"Telephone cable, 50 pair",,, 16.00 , 8.00 , 250.00 , 0.06 , 0.03 , (0.10), 21.60 ,
+"Telephone cable, 80 pair",,, 16.00 , 8.00 , 200.00 , 0.08 , 0.04 , (0.10), 4.50 ,
+"Telephone cable, 100 pair",,, 16.00 , 8.00 , 175.00 , 0.09 , 0.05 , (0.10), 13.20 ,
+Telephone cableCAble termination up to 4000 Pair ,Pair,"0.5 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 16.00 , 8.00 , 40.00 , 0.09 , 0.05 , (0.10), 12.00 ,
+"Public address system, commercial buildings, speaker including wiring 
+rigid steel conduits & head end equip.. average",SPEAKER,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 1.58 , 10.76 , 5.06 , (0.10), 24.00 ,
+"Sound system Speakers,ceiling or wall",,, 17.00 , 8.00 , 14.00 , 1.21 , 0.57 ,, -   ,
+"Sound system Amplifier, 250W",,, 17.00 , 8.00 , 6.00 , 2.83 , 1.33 ,, 16.80 ,
+TV System distribution pedestal including splitter,EA,"0.125 Electrical Foreman
+1.000 Special Electrician
+1.000 Helper
+1.000 Tools Set", 17.00 , 8.00 , 4.00 , 4.25 , 2.00 , (0.20), 150.00 ,
+"Closed circuit TV system, surveillance,one station(camera & monitor)",,, 17.00 , 8.00 , 1.00 , 5.67 , 2.67 ,, -   ,
+"Closed circuit TV system, Add for each added camera...",,, 17.00 , 8.00 , 5.00 , 3.40 , 1.60 ,, 12.00 ,
+"Closed circuit TV system, surveillance,one station, monitor & weatherproof camera",,, 17.00 , 8.00 , 2.00 , 8.50 , 4.00 ,, 8.40 ,
+"Closed circuit TV system, surveillance,one station, monitor & 1 pan & tilt camera",,, 17.00 , 8.00 , 2.00 , 8.50 , 4.00 ,, 8.40 ,
+"Closed circuit TV system;Industrial quality,for zoom lens-remote control,add Average.",,, 17.00 , 8.00 , 2.00 , 8.50 , 4.00 ,, 4.80 ,
+"Pull box,sheet metal,NEMA 1, 200 mm x 200 mm, 100 mm deep",EA,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power & Tools Set", 17.00 , 8.00 , 11.00 , 1.55 , 0.73 , (0.20), 600.00 ,
+"Pull box,sheet metal,NEMA 1, 400 mm x 500 mm, 200 mm deep",,, 17.00 , 8.00 , 5.50 , 3.09 , 1.45 , (0.20), 228.00 ,
+"Power transformers, 11 to 33 KV",KVA,"1.000 skilled Foreman
+4.000 Electrician, Specialist
+1.000 Equip. Operator
+1.000 Driver
+2.000 Common Laborer
+1.000 Crew Truck
+1.000 Crane,11 metric ton", 72.00 , 16.00 , 0.75 , 96.00 , 21.33 , -   , 210.00 ,
+"Fiber optic cable,labor depends on fiber type & type of connectors; Average labor",LM,"0.125 Electrical Foreman
+1.000 Special Electrician
+1.000 Helper
+1.000 Special Tools Set", 17.00 , 8.00 , 250.00 , 0.07 , 0.03 , -   , 144.00 ,
+Fiber optic cable connector,EA,"1 Electrician
+1 Tools Set", 8.00 , 8.00 , 20.00 , 0.40 , 0.40 , -   , 19.20 ,
+Fiber optic cable finger splice,,, 8.00 , 8.00 , 25.00 , 0.32 , 0.32 , -   , 14.40 ,
+"Multi-channel rack enclosure, ( 10 Modules )",,, 8.00 , 8.00 , 1.50 , 5.33 , 5.33 , -   , -   ,
+Fiber optic patch panel ( 12 points),,, 8.00 , 8.00 , 4.00 , 2.00 , 2.00 , -   , 3.00 ,
+"Handholes,precast concrete with concrete cover,not including excavation & backfill, 1.2 x 1.2 meters, 1.2 meter deep",EA,"0.125 Forman
+1.000 Skilled Laborer
+2.000 Helper
+0.250 Equipment Operator
+0.250 Truck Crane 11 Ton", 27.00 , 2.00 , 3.50 , 7.71 , 0.57 ,, 1.10 ,
+"Manhole,precast concrete with iron racks,pulling irons,cast iron frame & cover, not including excavation & backfill, 1.2 x 1.8 meters, 2.1 meter deep.",EA,"0.125 Forman
+1.000 Skilled Laborer
+2.000 Helper
+0.250 Equipment Operator
+0.250 Truck Crane 11 Ton", 27.00 , 2.00 , 2.00 , 13.50 , 1.00 ,, 18.00 ,
+"Underground duct bank,PVC type,concrete encased,180 mm O.C.; 2 duct  40 mm diameter ",LM,"0.125 Foreman
+3.000 Electricians
+2.000 Common Laborers
+0.250 Light Equip. Oper.
+0.125 concrete mixer
+0.125 Wheeled Engine Cart
+1 Heat Bender
+0.250 Backhoe", 43.00 , 12.00 , 35.00 , 1.48 , 0.41 ,, 18.00 ,
+"Underground duct bank,PVC type,concrete encased,180 mm O.C.; 2 duct  50 mm diameter ",LM,"0.125 Foreman
+3.000 Electricians
+2.000 Common Laborers
+0.250 Light Equip. Oper.
+0.125 concrete mixer
+0.125 Wheeled Engine Cart
+1 Heat Bender
+0.250 Backhoe", 43.00 , 12.00 , 29.10 , 1.48 , 0.41 ,, 18.00 ,
+"Underground duct bank,PVC type,concrete encased,180 mm O.C.; 4 duct  50 mm diameter, complete including handling, excavation, fill, concrete & conduit laying",,, 43.00 , 12.00 , 21.56 , 1.99 , 0.56 ,, 14.40 ,
+"Underground duct bank,PVC type,concrete encased,180 mm O.C.; 4 duct 100 mm diameter, complete including handling, excavation, fill, concrete & conduit laying",,, 43.00 , 12.00 , 19.16 , 2.24 , 0.63 ,, 6.00 ,
+"Underground duct bank,PVC type,concrete encased, 250 mm O.C.; 4 duct 150 mm diameter, complete including handling, excavation, fill, concrete & conduit laying",,, 43.00 , 12.00 , 14.36 , 2.99 , 0.84 ,, 14.40 ,
+"Underground duct bank,Fiber type,concrete encased, 180 mm O.C.; 2 duct  50 mm diameter,  complete with excavation, concrete, fill & conduit laying",LM,"0.125 Forman
+3.000 Electricians
+2.000 Common Laborers
+0.250 Light Equip. Oper.
+0.125 Concrete mixer
+0.125 Wheeled Engine Cart
+1.000 Heat Bender
+0.250 Backhoe", 43.00 , 12.00 , 37.46 , 1.15 , 0.32 ,, -   ,
+"Underground duct bank,Fiber type,concrete encased, 180 mm O.C.; 2 duct 100 mm diameter ",,, 43.00 , 12.00 , 24.66 , 1.74 , 0.49 ,, 2.40 ,
+"MV equipment Pad Sleeves installation for Substation Packaged Type, RMU, Switching station",EA,"0.50 skilled Foreman
+1.000 Electrician, 
+2.000 Helper,           1.000 Power & Tools Set", 28.00 , 8.00 , 2.00 , 96.00 , 21.33 , -   , 4.40 ,
+"Installation of Switching Station , SF-6 type, 13.8kV, 3 Ph, 60 Hz, fault level = 500 MVA, (1sec), weatherproof (outdoor type).1.000 Truck provided by others",EA,"1.000 skilled Foreman
+4.000 Electrician, Specialist
+1.000 Equip. Operator
+2.000 Helper
+2.000 Common Laborer
+1.000 Crane,11 metric ton", 64.00 , 16.00 , 2.00 , 96.00 , 21.33 , -   , -   ,
+" Insallation of Substation Packaged Type (Pad mounted)  include Ring Main Unit (RMU) SF-6 type (with fuse/with circuit breaker) 13.8 KV, 3 PH, 60Hz, fault level 500MVA,  Oil immersed type transformer 100 - 2000 KVA, 13.8 KV-400Y/230 V, 3 PH,  4W, 60Hz  and LV switchgear panel. Truck provided by others",EA,"1.000 skilled Foreman
+4.000 Electrician, Specialist
+1.000 Equip. Operator
+2.000 Helper
+2.000 Common Laborer
+1.000 Crane,11 metric ton", 64.00 , 16.00 , 1.50 , 96.00 , 21.33 , -   , 3.60 ,
+" L.V Cable termination for LV switchgear panel Substation Packaged Type (Pad mounted) 100 KVA, 13.8 KV-400Y/230 V, 3 PH,  4W, 60Hz with cable gland and all accessories (Plate Punshing Excluded)",EA,"0.50 Electrical Foreman
+1.000 Electrician
+2.000 Helper     
+1.000 Tools Set 
+1 Crimping Tool", 64.00 , 16.00 , 0.50 , 96.00 , 21.33 , -   , 2.20 ,
+" L.V Cable termination for LV switchgear panel Substation Packaged Type (Pad mounted) 300 KVA, 13.8 KV-400Y/230 V, 3 PH,  4W, 60Hz with cable gland and all accessories (Plate Punshing Excluded)",EA,"0.50 Electrical Foreman
+1.000 Electrician
+2.000 Helper     
+1.000 Tools Set 
+1 Crimping Tool", 64.00 , 16.00 , 0.25 , 96.00 , 21.33 , -   , 1.20 ,
+" L.V Cable termination for LV switchgear panel Substation Packaged Type (Pad mounted) 1500 KVA, 13.8 KV-400Y/230 V, 3 PH,  4W, 60Hz with cable gland and all accessories (Plate Punshing Excluded)",EA,"0.50 Electrical Foreman
+1.000 Electrician
+2.000 Helper     
+1.000 Tools Set 
+1 Crimping Tool", 64.00 , 16.00 , 0.20 , 96.00 , 21.33 , -   , 2.40 ,
+ Installation of Lighting control panel including pad Sleeves and cable gland and all accessories,EA,"1.000 skilled Foreman
+4.000 Electrician, Specialist
+1.000 Equip. Operator
+2.000 Helper
+2.000 Common Laborer
+1.000 Crane,11 metric ton", 64.00 , 16.00 , 1.50 , 96.00 , 21.33 , -   , 1.20 ,
+"ARMORED CABLE DB , Duct bank ('EXCAVATION AND BACKFILL EXCLUDED         See division 022-204&254)",,,,,,,,, 0.60 ,
+"1 - 4 + 4 N - 4 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 160.00 ,,,, 0.60 ,
+"4 - 4 + 4 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 150.00 ,,,, 0.60 ,
+"4 - 6 + 4 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 140.00 ,,,, 0.24 ,
+"4 - 10 + 6 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 130.00 ,,,, -   ,
+"4 - 16 + 10 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 120.00 ,,,, 880.00 ,
+"4 - 25 + 10 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 110.00 ,,,, 770.00 ,
+"4 - 35 + 16 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 95.00 ,,,, 605.00 ,
+"4 - 50 + 16 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",L.M,"1 Electrical Foreman
+2.000 Special Electrician
+2.000 Helper
+2.000Common labor
+1.000 Cable pull Tools Set", 32.00 , 32.00 , 150.00 ,,,, 440.00 ,
+"4 - 70 + 16 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 140.00 ,,,, 357.50 ,
+"4 - 95 + 25 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 130.00 ,,,, 275.00 ,
+"4 - 120 + 35 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 120.00 ,,,, 220.00 ,
+"4 - 150 + 35 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 110.00 ,,,, 192.50 ,
+"4 - 240 + 70 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 100.00 ,,,, 44.00 ,
+"3 - 120 + 70 N - 35 G mm2 Cu / XLPE / RSWA / PVC, D.B.,  600/1000 V",,, 32.00 , 32.00 , 110.00 ,,,, -   ,
+"3 - 50 mm2 Cu / XLPE / SWA / PVC, D.B., 15kV",,, 32.00 , 32.00 , 85.00 ,,,, 1.74 ,
+"3 - 185 mm2 Cu / XLPE / SWA / PVC, D.B., 15kV",,, 32.00 , 32.00 , 60.00 ,,,, 14.00 ,
+"3 - 300 mm2 Cu / XLPE / SWA / PVC, D.B., 15kV",,, 32.00 , 32.00 , 40.00 ,,,, 6.00 ,
+Control Cable (3 - 2.5 mm2  Cu/PVC/PVC. 600/ 1000 V  ),L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 180.00 ,,,, -   ,
+"2 nos. - 1.5 mm2 Cu / XLPE / RSWA / PVC shielded fire alarm cable, D.B., at  105 deg. Celsius with Grounding cable",L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 100.00 ,,,, 4.80 ,
+"2 nos. - 2.5 mm2 Cu / XLPE / RSWA / PVC shielded fire alarm cable, D.B., at  105 deg. Celsius with Grounding cable",L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 90.00 ,,,, 1.00 ,
+"TELPHONE CABLE 10P-0.90, multi-core, polyethelene insulated, WP (jelly-filled), DB, ",L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 120.00 ,,,, 5.00 ,
+"TELPHONE CABLE 30P-0.90, multi-core, polyethelene insulated, WP (jelly-filled), DB, ",L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 110.00 ,,,, 2.00 ,
+"TELPHONE CABLE 200 P-0.90, multi-core, polyethelene insulated, WP (jelly-filled), DB, ",L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 90.00 ,,,, 2.00 ,
+"TELPHONE CABLE 300P-0.90, multi-core, polyethelene insulated, WP (jelly-filled), DB, ",L.M,".125 Electrical Foreman
+1.000 Special Electrician
+2.000 Helper
+1.000 power Tools Set", 32.00 , 32.00 , 80.00 ,,,, 2.00 ,
+400*400*5 mm red cement tiles,L.M,"0.125 Electrical Foreman
+2.000 common labor", 32.00 , 32.00 , 165.00 ,,,, -   ,
+"plastic Warning tape installation  (for fiber ,tel, fire, L.V, M.V cable )",L.M,1.000 common labor, 32.00 , 32.00 , 165.00 ,,,, 13.20 ,
+"Uninterruptible Power Supply - (UPS) @ 1 KVA, 230V,  1 PH,  60 Hz with 20 Minutes Maintenance Free Back-up Batteries",EA,"0.5 Electrical Foreman
+1.000 Special Electrician
+1.000 Helper
+1.000 power Tools Set",,, 1.66 ,,,, 6.60 ,
+"Uninterruptible Power Supply - (UPS) @ 2 KVA, 230V,  1 PH,  60 Hz with 20 Minutes Maintenance Free Back-up Batteries",EA,"0.5 Electrical Foreman
+1.000 Special Electrician
+1.000 Helper
+1.000 power Tools Set",,, 1.16 ,,,, -   ,
+"Uninterruptible Power Supply - (UPS) @ 15 KVA, 230V,  1 PH,  60 Hz with 20 Minutes Maintenance Free Back-up Batteries",EA,"0.5 Electrical Foreman
+1.000 Special Electrician
+1.000 Helper
+1.000 power Tools Set",,, 0.47 ,,,, 0.75 ,
+"Generator set,diesel engine,including battery,charger,muffler,transfer switch & daily fuel tank, 3 Phase, 4 Wire Up to 220/380 V; Capacity   150 KW",EA,"1.000 Skilled Forman
+3.000 Skilled Workers
+0.250 Equip. Operator
+2.000 Common Laborer
+0.250 Crane 11 Ton
+2.000 Power Tools, Hydraulic
+1.000 Tools Set", 50.00 , 26.00 , 0.28 , 181.82 , 94.55 ,, -   ,
+"Suppy of OMS-846 Optical Modem at Station L which includes rack mounted DDF, 16xE1 circuits, coaxial cables and connectors and other required accessories to make the system fully operational, refer to note 4c of Dwg 1-XE-E-28 and note-4 of Dwg 1-XE-E-29.",Set,"25 Electrical Foreman
+100 Electrician
+1000 Helper
+1.000 Power & Tools Set",,, 0.95 ,,, -   , -   ,
+"Suppy of OMS-846 Optical Modem at Military Work Office which includes rack mounted Optical Distribution Frame (ODF), rack mounted DDF, wall mounted cabinet, 16xE1 circuits, coaxial and connectors and other required accessories to make the system fully operational, refer to note 4d of Dwg 1-XE-E-28 and note-4 of Dwg 1-XE-E-29.",Set,"50 Electrical Foreman
+200 Electrician
+2000 Helper
+1.000 Power & Tools Set",,, 0.95 ,,, -   , 250.00 ,
+"Suppy of Network Materials at Military Work Office and Station L, refer to note-5 of Dwg 1-XE-E-29.",Set,"25 Electrical Foreman
+100 Electrician
+1000 Helper
+1.000 Power & Tools Set",,, 0.95 ,,, -   , 20.00 ,
+"Provision of Automatic Transfer Scheme (ATS), Central Monitoring and Control System for 13.8KV Switchgear, refer to note 19 of dwg. 4-12-E-01.",Set,"0.25 Electrical Foreman
+2.000 Electrician
+2.000 Helper
+1.000 Power & Tools Set",,, 0.01 ,,, -   , 25.00 ,
+#REF!,Set,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power & Tools Set",,, 0.05 ,,, -   , 1.50 ,
+"Provision of electrical work ?(wiring , containment required outside the machine room and the shaft , emergancy light , back boxes and wiring .",Set,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power & Tools Set",,, 0.20 ,,, -   , 4.00 ,
+"Installation and connection from the proposed S/S-2A up to proposed LPA at Fac. (4-19),  which includes the following; 4-50+16G-63 Cu/XLPE/RSWA/PVC, D.B. LV cable, uPVC sleeves, excavation, backfilling and all pertinent accessories. Refer to note-14 on Dwg. no. 1-XE-E-25. ",Set,"0.25 Electrical Foreman
+2.000 Electrician
+2.000 Helper
+1.000 Power & Tools Set", 8.00 , 8.00 , 0.02 , 8.00 , 8.00 , -   , -   ,
+"Termination of Proposed Telephone Cables from MDF at facility 2-28 to existing MDF, refer to Note 9 of Dwg 1-XE-E-19.",Set,"0.25 Electrical Foreman
+2.000 Electrician
+2.000 Helper
+1.000 Power & Tools Set", 8.00 , 8.00 , 0.12 , 8.00 , 8.00 , -   , 3.50 ,
+"Installation and connection from the proposed FACP at WTP up to proposed FAPB at Fac. (4-19),  which includes the following;  2 nos.-1.5 mm2 Cu / XLPE / RSWA / PVC shielded fire alarm cable, D.B., at  105 deg. Celsius with Grounding cable, uPVC sleeves, excavation, backfilling and all pertinent accessories. Refer to note-13 on Dwg. no. 1-XE-E-25. ",Set,"0.25 Electrical Foreman
+2.000 Electrician
+2.000 Helper
+1.000 Power & Tools Set", 8.00 , 8.00 , 0.10 , 8.00 , 8.00 , -   , 2.00 ,
+"Provision for required Equipment/materials at the Telephone Tapping Point, refer to Notes 3, 4 & 4a of Drwg. No. 1-XE-E-09",Set,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power & Tools Set", 8.00 , 8.00 , 0.01 , 8.00 , 8.00 , -   , 35.00 ,
+"Termination of existing FACP located at existing Fac. 5-02  to the proposed Fire Alarm Network of CFACP-2, refer to Note 7 of Dwg 1-XE-E-22.",Set,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power & Tools Set", 8.00 , 8.00 , 0.02 , 8.00 , 8.00 , -   , 29.10 ,
+"Provision for required Equipment/materials at the Power Tapping Point, refer to Notes 3 & 4 of Draw. No. 1-XE-E-05",Set,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power & Tools Set", 8.00 , 8.00 , 0.12 , 8.00 , 8.00 , -   , 21.56 ,
+"Provision  of  Digital Prayer Time Display Clock System which includes wires, conduit, testing, commissioning, all pertinent accessories to make the system operational. Refer to note no. 14 of Dwg 3-04-E-02. ",Set,"0.125 Electrical Foreman
+1.000 Electrician
+1.000 Helper
+1.000 Power & Tools Set", 8.00 , 8.00 , 1.28 , 8.00 , 8.00 , -   , 19.16 ,
+Backfill by hand light soil,CUM C.T M.L ,"1.00 Common Laborer
+1.00 Tool Set", 8.00 , 8.00 , 16.67 , 0.80 , 0.80 , (0.20), 14.36 ,
+Backfill by hand heavy soil,CUM,"1.00 Common Laborer
+1.00 Tool Set", 8.00 , 8.00 , 7.00 , 1.14 , 1.14 , (0.20), -   ,
+"Backfill light soil by hand & compaction in 150 mm layers, hand tamp, soft soil",,"""", 8.00 , 8.00 , 5.83 , 1.37 , 1.37 , (0.20), 37.46 ,
+Backfill light soil by hand & compaction by roller,,"1.00 Common Laborer
+1.00 Equip. operator
+1.00 Tools Set
+1.00 Roller Compact, 1000 kg.", 16.00 , 16.00 , 15.56 , 1.03 , 1.03 , (0.20), 24.66 ,
+Backfill light soil by hand & compaction by vibrating pate,,"1.000 Common laborer
+1.000 Equip. operator
+1.000 Tools set
+1.000 Gas engine vibrating plate", 16.00 , 16.00 , 13.33 , 1.20 , 1.20 , (0.20), 2.00 ,
+"Excavating trench up to 1.2 meter deep, 0.57 M3 hydraulic backhoe,common earth",CUM C.T M.L ,"1 Equip. Operator 
+1 Hydraulic Excavator 0.57 CUM", 8.00 , 8.00 , 386.67 , 0.03 , 0.03 , (0.20), 2.00 ,
+"Excavating trench by hand with pick & shovel, 2 meter deep, light soil.",CUM C.T M.L ,"1 Common Laborer
+1 Tool set", 8.00 , 8.00 , 7.50 , 1.78 , 1.78 , (0.20), 1.50 ,
+"Backfill trench, F.E. loader, wheel Mtd. 0.76 M3 bucket,
+average haul area 30 meters",CUM C.T M.L ,"1 Equip. Operator 
+1 F.E. Loader, W.M 0.76 CUM", 8.00 , 8.00 , 418.33 , 0.03 , 0.03 , (0.20), 0.50 ,
+"Bedding for utility lines,not including compaction,crushed run gravel",CUM C.T M.L ,"1 Laborers 
+1.000 Helper
+1 Equip.Oper.(light)
+1 Backhoe Loader,50HP", 24.00 , 8.00 , 333.33 , 0.12 , 0.04 , (0.20), 0.25 ,
+"Bedding for utility lines ( cables ) sleeves cleaning ..etc ,not including compaction,crushed run gravel",CUM C.T M.L ,"1 Laborers 
+1.000 Helper
+1 Equip.Oper.(light)
+1 Backhoe Loader,50HP", 24.00 , 8.00 , 250.00 , 0.12 , 0.04 , -   , 0.20 ,
+"Hand excavate and trim for pipe bells after trench excavation,pipe size 200 mm",LM,"1.000 Common Laborer
+1.000 Tool Set", 8.00 , 8.00 , 36.00 , 0.22 , 0.22 , (0.20), 1.50 ,
+"Backfill from existing stockpile,no compaction,by 75 Hp dozer; 15 Lm haul, sand & gravel",CUM,"1.00 Equip. Operator
+0.05 Building Laborer
+1.00 Dozer, 75 HP", 12.00 , 8.00 , 373.00 , 0.03 , 0.02 , 0.10 , -   ,INDEX
+"Compaction by rammer tamper, 300 to  450 mm, 200 mm lifts, 2 passes", ,"1.00 Building Labor
+1.00 Gas Engine, Power Tool", 8.00 , 8.00 , 100.00 , 0.08 , 0.08 , 0.10 , 160.00 ,INDEX
+"Manhole without frame & covers, concrete cast in place 1.2 m x 1.2 m x 0.2 m thick & 1.2 m deep",EA,"0.250 Skilled Foreman
+5.000  carpenters
+1.000 Steel Fixer
+0.125 Cement Finisher
+3.000 Common Laborers
+0.500 Equip. Operator
+0.125 Gas Engine Vibrator
+0.125 Concrete Pump small & transit mixer
+0.375 Crane 23 ton
+0.125 Bed Truck
+4.000 Power Tools", 79.00 , 38.00 , 1.65 , 47.88 , 23.03 , (0.10), 150.00 ,INDEX
+"Manhole without frame & covers, concrete cast in place 1.2 m x 1.2 m x 0.2 m 
+thick & 2.4 m deep",EA,"0.250 Skilled Foreman
+5.000  carpenters
+1.000 Steel Fixer
+0.125 Cement Finisher
+3.000 Common Laborers
+0.500 Equip. Operator
+0.125 Gas Engine Vibrator
+0.125 Concrete Pump small & transit mixer
+0.375 Crane 23 ton
+0.125 Bed Truck
+4.000 Power Tools", 79.00 , 38.00 , 1.10 , 71.82 , 34.55 , (0.10), 140.00 ,INDEX
+"Excavating trench up to 1.2 meter deep, 0.57 M3 hydraulic backhoe,common earth",CUM,"1 Equip. Operator 
+1 Hydraulic Excavator 0.57 CUM", 8.00 , 8.00 , 232.00 , 0.03 , 0.03 , 0.10 , 130.00 ,e.saber
+"Excavating trench 2 to 3.00 meter deep, 0.57 M3 hydraulic backhoe,common earth",CUM,"1 Equip. Operator 
+1 Hydraulic Excavator 0.57 CUM", 8.00 , 8.00 , 140.00 , 0.06 , 0.06 , 0.10 , 120.00 ,INDEX
+"Manhole frames & covers, C.I., 600 mm square, 227 kg",EA,"0.125 Skilled Foreman
+2.000 Common Laborers
+0.500 Equip.Operator
+.5000 Backhoe Loader, 50 HP", 21.00 , 4.00 , 5.50 , 3.82 , 0.73 , 0.10 , 110.00 ,INDEX
+"Cast in place including forms & steel, Spread footings, spread under  0.75 m3",CUM,"1.000  Skilled Foreman
+5.000  Carpenters & 
+        Steel Fixers (reinf
+0.25 Cement Finisher
+4.000  Laborers
+0.250  Equip.Operators
+0.375  Gas Enginge Vibrator
+0.25  Crane 35 Ton
+0.125  Truck
+0.125  Concrete Pump
+2.00  Power Tool", 84.00 , 23.00 , 15.00 , 5.60 , 1.53 , (0.10), 95.00 ,INDEX
+"Rough-in, supply, waste, vent & carrier for wall hung water closet; plastic piping, approximaterun of 10 m each for both supply and DWV",EACH,"0.125  Plumber Foreman                      1 Plumber
+1 Plumber Apprentice
+1 Tool set",,,2.5,,,, 150.00 ,
+"Water closet, bowl only, With flush valve, seat; wall hung or floor mounted.","""","""",,,5,,,, 140.00 ,
+"Lavatory,Vanity top, Cultured marble, single bowl, 635 mm x 482 mm, single bowl","""","""",,,5,,,, 130.00 ,
+"Rough-in, supply, waste and vent for all Vanity top lavatories; plastic piping, approximate run of 18 m each for both supply & DWV","""","""",,,2.5,,, (0.20), 120.00 ,
+"Kitchen sink with faucets and drain , counter top, Porcelain enamel on C.I., 
+760 mm x 530 mm single bowl","""","""",,,4.8,,, (0.20), 110.00 ,
+"Rough in, supply, waste and vent for countertop sink; plastic piping, approximate run of
+18 m each for both supply & DWV","""","""",,,3,,, (0.20), 100.00 ,
+"Kitchen sink with faucets and drain, raised deck, Porcelain enamel on C.I.,
+ 813 mm x 533 mm dual level, double bowl","""","""",,,2.15,,, (0.20), 110.00 ,
+"Rough-in, supply, waste and vent for wall service sink; plastic piping,approximate run of
+18 m each for both supply & DWV","""","""",,,2,,, (0.20), 85.00 ,
+"Drinking fountain, wall mounted, Bronze,cast aluminium or fiberglass,  
+300 mm back, single bubller unit","""","""",,,5,,, (0.20), 60.00 ,
+"Rough-in, Supply, vent & waste for drinking fountain, at 20 m, plastic supply piping and 20 m of DWV plastic piping","""","""",,,2.5,,, (0.20), 40.00 ,
+"Showers, Stall, with door and trim, fiberglass, one piece, 3 walls, 910 mm x 910 mm","""","""",,,2.3,,, (0.20), 180.00 ,
+"Rough-in, supply, waste and vent for shower stall; plastic piping, approximate run of 18 m each for both supply & DWV",,"""",,,2.75,,, (0.20), 100.00 ,
+"Pressure booster pump system,with diaphragm tank, control & pressure switch 10HP","""","0.50 Steamfitter Foreman
+2.00 Steamfitters
+0.50 Electrician
+1.00 Steamfitter Apprentice
+2.00 Tools Set
+1.00 Chain Winch
+1.00 Gas Welding M/C",,,0.74,,,, 90.00 ,
+"Bath tubs, recessed porcelain enamel on cast iron, with trim 1829 mm x
+914 mm",EA,"0.125 Plumber Foreman
+1.000 Plumber
+1.000 Plumber Apprentice
+1.000 Tools Set",,,2.5,,,, 120.00 ,
+"Lavatory faucet,centerset, without drain",EA,"1 Plumber
+1 Tool set",,,8,,,, 110.00 ,
+"Rough-in, supply, waste and vent for all Vanity top lavatories; plastic piping, approximate run of 18 m each for both supply & DWV","""","""",,,2.5,,, (0.20), 90.00 ,
+"Pipe, PVC, couplings, 3 m O.C., hangers 90 mm schedule 40, 25 mm diameter [1""]",M,"0.125 Plumber Foreman
+1.000 Plumber
+1.000 Plumber Apprentice
+0.375 Tools Set
+1.000 Power & Pipe Power Tools",,,20.08,,, (0.20), 80.00 ,
+"Pipe, PVC, couplings, 3 m O.C., hangers 90 mm schedule 40, 38 mm diameter [1-1/2""]",M,"""",,,17.52173913,,, (0.20), -   ,
+"Pipe, PVC, couplings, 3 m O.C., hangers 90 mm schedule 40, 78 mm diameter [3""]",M,"""",,,12.44595429,,, (0.20), 165.00 ,
+"Insulating, Pipe  with flexible Rubber tubing, 10 mm wall,  25 mm iron pipe size",M,"0.125 Labor Foreman
+1.000 Asbestos Worker
+1.000 Asbestos Apprentice
+1.000 Tools set",,,38,,,, -   ,
+"Insulating, Pipe  with flexible Rubber tubing, 13 mm wall,  38 mm iron pipe size",M,"0.125 Labor Foreman
+1.000 Asbestos Worker
+1.000 Asbestos Apprentice
+1.000 Tools set",,,30,,,, 165.00 ,
+"Insulating, Pipe  with flexible Rubber tubing, 13 mm wall,  50 mm iron pipe size",M,"0.125 Labor Foreman
+1.000 Asbestos Worker
+1.000 Asbestos Apprentice
+1.000 Tools set",,,29,,,, 1.66 ,
+"Insulating, Pipe  with flexible Rubber tubing, 13 mm wall,  76 mm iron pipe size",M,"0.125 Labor Foreman
+1.000 Asbestos Worker
+1.000 Asbestos Apprentice
+1.000 Tools set",,,28,,,, 1.16 ,
+"Valves, bronze, Angle or Ball, 1034 kPa, rising stem, threaded   25 mm size ",each,"1 Plumber
+1 Tool set",,,11.36164948,,, (0.20), 0.47 ,
+"Residential, water heater, electric, glass lined tank, 38 liter, single element",EA,"0.125 Plumber Foreman
+1.000  Plumber
+0.250  Electrician
+1.000  Plumber Apprentice
+1.000  Tool Set",,,5,,,, -   ,
+"Residential, water heater, electric, glass lined tank, 100 liter, double element",,,,,4.5,,,, 0.28 ,
+"Steel tank, liquid expansion, painted, rubber diaphragm, 500 galon capcity",,"0.125 Foreman
+1.000 Steamfitter
+1.000 Steamfitter apprentice
+0.250 Gas welding M/c
+1.000 Tools set",,,2,,, 0.67 , 0.95 ,
+"Pipe, PVC, couplings, 3 m O.C., hangers 90 mm schedule 40, 50 mm diameter [2""]",M,"0.125  Plumber Foreman
+1.000  Plumber
+1.000  Plumber Apprentice
+1.000  Tool Set",,,14.5,,, (0.20), 0.95 ,
+"Pipe, PVC, couplings, 3 m O.C., hangers 90 mm schedule 40, 75 mm diameter [2-1/2""]",M,"""",,,12.155,,, (0.20), 0.95 ,
+"Sewer piping, no excav. or fill, plastic reinforced, general strength 100 mm diameter",M,"""",,,7.48,,, (0.30), 0.01 ,
+"Sewer piping, no excav. or fill, plastic reinforced, general strength 75 mm diameter",M,"""",,,10,,, (0.20), 0.05 ,
+"Drains, heavy duty, wiht sediment bucket, C.I., 300 mm loose grate,  from 76 mm to  150 mm pipe ",,,,,7,,,, 0.20 ,
+"Drains, floor, medium  duty, C.I., double flange, 178 mm top, from 50 mm to 76 mm pipe size. ",,"""",,,9,,, (0.20), 0.02 ,
+"Copper, drainage, P trap, standard pattern,90 mm pipe size ",,"1 Plumber
+1 Tool set",,,6,,,, 0.12 ,
+"Cleanout floor type round or square, nickel bronze top 100 mm pipe
+size [4""]",EACH,"""",,,3.7,,, (0.20), 0.10 ,
+"Cleanout floor type round or square, nickel bronze top 76 mm pipe
+size [3""]",EACH,"""",,,5.6,,,, 0.01 ,
+"Pipe, plastic, fiberglass reinforced, couplings 3 m O.C. hangers 90 mm, high 
+strength, 100 mm diameter [4""]","""","""",,,9.209323583,,, (0.20), 0.02 ,
+"Sewer piping, no excav. or fill, plastic reinforced, general strength 150 mm diameter",M,"0.125  Plumber Foreman
+2.000  Plumber
+1.000  Plumber Apprentice
+1.000  Tool Set",,,5.5,,, (0.30), 0.12 ,
+"Fan, residential, bath exhaust, grille, back draft damper (110 CFM), 0.052 CUM/s",,"0.125 Foreman
+1.000 Sheet Metal Worker
+1.000 Sheet Metal Apprentice
+0.250 Electrician
+1.000 Tools Set",,,16,,, 0.06 , 1.28 ,
+"Pipe, Steel black to  A-53, schedule 40,or Galvanized, threaded with couplings, clevis type hangers, 3 m O.C., black, 100 mm diameter ",",,","0.125 Plumber Foreman (ins)
+2.000 Plumbers
+1.000 Plumber Helper
+0.375 Tools Set
+1.000 Power & Pipe Power Tools",??  ??????  ??  11   ?  8 ,,8,,, (0.20), -   ,
+"Pipe, stainless steel, threaded, couplings and hangers 3 m, O.C., 
+schedule 40, type 304/316, 50 mm diameter ",",,","0.125 Plumber Foreman (ins)
+1.000 Plumbers
+1.000 Plumber Helper
+0.375 Tools Set
+1.000 Power & Pipe Power
+         Tools",,,7,,, (0.20), -   ,
+"Pipe, stainless steel, threaded, couplings and hangers 3 m, O.C., 
+schedule 40, type 304/316, 25 mm diameter ",M,"0.125 Plumber Foreman (ins)
+1.000 Plumbers
+1.000 Plumber Helper
+0.375 Tools Set
+1.000 Power & Pipe Power
+         Tools",,,13.09016166,,, (0.20), 20.00 ,
+"Sprinkler,  Foam-water,pendant or upright, 13 mm NPT, 13 mm orifice",",,","1 Sprinkler Installer
+1 Tool set",,,6.9,,, (0.20), 8.40 ,
+"Fire, standpipe connections, wall, w/plugs & chains, single or double, flush, polished brass
+64 mm x 64 m x 67 mm x 150 mm.",",,","0.125 Plumber Foreman (ins)
+1.000 Plumbers
+1.000 Plumber Helper
+0.375 Tools Set
+1.000 Power & Pipe Power
+         Tools",,,3.36,,, (0.20), 7.00 ,
+,EA,"1 Plumber
+1 Tool Set",,,8.7,,, (0.20), 18.67 ,
+"Valve, iron body, Swing check, 862 kPa, Flanged, 100 mm size ","""","0.125  Plumber Foreman
+1.000  Plumber
+1.000  Plumber Apprentice
+1.000  Tool Set",,,2.5,,, (0.20), 16.00 ,
+"Valve, iron body, Swing check, 862 kPa, Flanged,  76 mm size ","""","0.125  Plumber Foreman
+1.000  Plumber
+1.000  Plumber Apprentice
+1.000  Tool Set",,,2.945,,, (0.20), -   ,
+"Fire valve, wheel handle, 2068 kPa, 64 mm",",,","1 Sprinkler Installer
+1 Tool set",,,4,,,, 464.00 ,
+"Fire hydrants, wall, with caps, single, flush, polished brass 64 mm x 76 mm",EA,"0.125 Foreman
+1 .000 Sprinkler Installer
+1 .000 Sprinkler Apprentice
+1 .000 Tool Set",,,3.37,,, (0.20), 9.00 ,
+"Automatic air vent Cast iron  body, stainless steel internals, float type 13 mm inlet, 2068 kPa ",EA,"1 Pipe Fitter
+1 Tool set",,,5,,,, 502.00 ,
+"Pipe, plastic, fiberglass reinforced, couplings 3 m O.C. hangers 90 mm, high 
+strength,400 mm diameter [16""]",,"0.125  Plumber Foreman                      1 Plumber
+1 Plumber Apprentice
+1 Tool set",,,3.7,,, (0.30), -   ,
+"Pipe, plastic, fiberglass reinforced, couplings 3 m O.C. hangers 90 mm, high 
+strength, 315 mm diameter [12""]","""",,,,3.7,,, (0.30), -   ,
+"Pipe, plastic, fiberglass reinforced, couplings 3 m O.C. hangers 90 mm, high 
+strength, 250 mm diameter [10""]","""",,,,4.6,,, (0.30), 400.00 ,
+"Pipe, plastic, fiberglass reinforced, couplings 3 m O.C. hangers 90 mm, high 
+strength, 225 mm diameter ","""","""",,,5.5,,, (0.25), 250.00 ,
+"Pipe, plastic, fiberglass reinforced, couplings 3 m O.C. hangers 90 mm, high 
+strength, 100 mm diameter [4""]","""","""",,,9.209323583,,, (0.30), -   ,
+"Fire hydrants,two way mechanical joints,excavation and backfill
+not included.133 mm valve size, 3 m depth",EA,"0.125 Skilled Foreman
+1.000 Skilled Worker
+1.000 Common Laborer
+
+1.000 Tools Set",,,3,,, 0.50 , 43.20 ,
+"Valves, bronze, Angle or Ball, 1034 kPa, rising stem, threaded   32 mm size ","""","""",,,6.47,,, (0.20), 335.70 ,
+"Piping valve,gate,flanged,300mm diameter",,"0.125  Plumber Foreman
+1.000  Plumber
+1.000  Plumber Apprentice
+1.000  Tool Set",,,1.75,,, 0.25 , 90.00 ,
+"Piping valve,gate,flanged,300mm diameter",,"0.125  Plumber Foreman
+1.000  Plumber
+1.000  Plumber Apprentice
+1.000  Tool Set",,,1.75,,,, 1.82 ,
+"Piping valve,gate,flanged with boxes,size 150 mm diameter",,",,",,,2,,,, 1.21 ,
+"Valves, bronze, Angle or Ball, 1034 kPa, rising stem, threaded   50 mm size ","""","""",,,6.47,,, (0.20), 208.80 ,
+"Fittings,ductile iron,mechanical joint, 90 deg. bend 400 mm diameter (16"")",,,,,8,,,, 126.00 ,
+"Fittings,ductile iron,mechanical joint, 90 deg. bend 200 mm diameter (8"")",,,,,12,,, 0.17 , 4.95 ,
+"Pipe, stainless steel, threaded, couplings and hangers 3 m, O.C., 
+schedule 40, type 304/316, 80 mm diameter ",",,",,,,7.012586605,,, (0.10), 16.50 ,
+"Pump, general utility, single stage, double suction, 150 mm discharge x 200 mm suction, 60 HP",,"0.50 Steamfitter Foreman
+2.00 Steamfitters
+0.50 Electrician
+1.00 Steamfitter Apprentice
+2.00 Tools Set
+1.00 Chain Winch
+1.00 Gas Welding M/C",,,0.25,,,, -   ,
+"Steel tank, liquid expansion, painted, rubber diaphragm, 150 galon capcity",,"0.125 Foreman
+1.000 Steamfitter
+1.000 Steamfitter apprentice
+0.250 Gas welding M/c
+1.000 Tools set",,,3,,,, 2.50 ,
+"Fan, propeller exhaust, wall shutter, 6 mm S.P., direct drive two speed, (1000 CFM,1/8 HP), 0.472 CUM/s, 93 W",,"0.125 Foreman
+1.000 Sheet Metal Worker
+1.000 Sheet Metal Apprentice
+0.250 Electrician
+1.000 Tools Set",,,6,,,, 5.00 ,
+"Fire pump with controller, fittings and relief valve, diesel 47 L/s, 345 kPa, 40 HP, 127 mm pump [5""]",EA,"0.50 Steamfitter Foreman
+2.00 Steamfitters
+0.50 Electrician
+1.00 Steamfitter Apprentice
+2.00 Tools Set
+1.00 Chain Winch
+1.00 Gas Welding M/C",,,0.45,,, 0.50 , 5.00 ,
+"FCU, cabinet mounted, with controls and filter, direct expansion, 17.6 kW cooling for use with/air cooled condensing.",EA,"0.125 Skilled Foreman
+2.000 Steam Fitter (HVAC)
+0.125 Equip. Operator
+0.500 Welder
+0.500 Electrician
+1.000 Steam Fitter Apprentice
+0.125 Crane 11 ton
+0.500 Welding M/C
+2.000 Standard Tools",,,5,,, 0.40 , 3.00 ,
+"Shower built-in, head, arm,252 mL/s valve",EA,"0.125  Plumber Foreman                      1 Plumber
+1 Plumber Apprentice
+1 Tool set",,,6.5,,,, 5.76 ,
+"Pipe, copper solder joints type L tubing, coupling, & hangers 3 m O.C. 20 mm diameter [3/4""]",M,"0.125 Plumber Foreman
+1.000 Plumber
+1.000 Plumber Apprentice
+0.375 Tools Set
+1.000 Power & Pipe Power 
+    Tools",,,28.61,,,, 3.60 ,
+pipe test ,,"0.125  Plumber Foreman                      1 Plumber
+1 Plumber Apprentice
+",,,110,,,, 2.58 ,
+"Manhole frames & covers, C.I., 600 mm square, 227 kg",,"0.125 Skilled Foreman
+2.000 Common Laborers
+0.500 Equip.Operator
+.5000 Backhoe Loader, 50 HP",,,4.25,,,, 2.40 ,
+"Roof exhauster, centrifugal, aluminum housing, 300 mm galvanized curb, bird screen, back draft damper, 6 mm S.P. direct drive (2050 CFM), 0.968 CUM/s, 0.165 SQM damper",,"0.125 Foreman
+1.000 Sheet Metal Worker
+1.000 Sheet Metal Apprentice
+0.250 Electrician
+1.000 Tools Set",,,3.25,,, (1.00), 6.00 ,
+"Duct galvanized steel, fabricated & installed",M2,"0.125 Labor Foreman
+2.000 Sheet Metal Worker
+1.000 Sheet Metal Apprentice
+1.000 Tools Set
+1.000 Power Tools",,,30,,,, 3.00 ,
+Capped Lines (for Future Use),,"0.125  Plumber Foreman
+1.000  Plumber
+1.000  Plumber Apprentice
+1.000  Tool Set",,,0.37,,,, 2.76 ,
+"FCU, cabinet mounted, with controls and filter, direct expansion, 17.6 kW cooling for use with/air cooled condensing.",EA,"0.125 Skilled Foreman
+2.000 Steam Fitter (HVAC)
+0.125 Equip. Operator
+0.500 Welder
+0.500 Electrician
+1.000 Steam Fitter Apprentice
+0.125 Crane 11 ton
+0.500 Welding M/C
+2.000 Standard Tools",,,5,,, 0.60 , 3.30 ,
+"electric work for elevator ( back box , piping , e- light )",EA,,,,1,,,, 0.74 ,
