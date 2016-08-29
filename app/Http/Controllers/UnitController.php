@@ -26,7 +26,7 @@ class UnitController extends Controller
     {
         $this->validate($request, $this->rules);
 
-        Unit::create(['type'=>$request->name]);
+        Unit::create(['type'=>$request->type]);
 
         flash('Unit has been saved', 'success');
 
