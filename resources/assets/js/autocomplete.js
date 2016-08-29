@@ -66,7 +66,6 @@
                 }
             };
 
-            var ticks = 0;
             $element.on('focus', function () {
                 loadOptions();
                 $list.show();
@@ -76,7 +75,6 @@
                 }, 100);
             }).on('keyup', function (e) {
                 if (e.keyCode != 13 && e.keyCode != 38 && e.keyCode != 40) {
-                    console.log('tick');
                     loadOptions();
                 }
             }).on('keydown', function (e) {
@@ -110,7 +108,6 @@
 
             $body.on('click', '.option-link', function (e) {
                 e.preventDefault();
-                console.log($(this));
                 $element.val($(this).data('val'));
             });
 
