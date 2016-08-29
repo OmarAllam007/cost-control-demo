@@ -99,8 +99,6 @@ class ProjectController extends Controller
         /**@var \PHPExcel_Worksheet $objWorksheet */
         $objWorksheet = $objPHPExcel->getActiveSheet();
 
-        Project::truncate();
-
 
         foreach ($objWorksheet->getRowIterator(2) as $row) {
 
@@ -113,11 +111,18 @@ class ProjectController extends Controller
             foreach ($cellIterator as $cell) {
                 $inputs[] = $cell->getValue();
             }
+            $project = Project::where('name', $inputs[1])->first();
 
-            Project::create([
-                'name' => $inputs[1],
-                'description' => $inputs[2]
-            ]);
+            if (is_null($project)) {//if project is exist
+                Project::create([
+                    'name' => $inputs[1],
+                    'description' => $inputs[2]
+                ]);
+            } else {
+
+                continue;
+            }
+
 
         }
 

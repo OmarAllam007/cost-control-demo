@@ -10,4 +10,6 @@ class CSI_category extends Model
     protected $fillable = ['name','parent_id'];
 
     protected $dates = ['created_at', 'updated_at'];
+
+
 }

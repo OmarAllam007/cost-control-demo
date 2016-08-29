@@ -170,6 +170,7 @@ class ProductivityController extends Controller
 
     public function upload(Request $request)
     {
+        $parent_id = 0;
 
         try {
 //upload file
@@ -190,47 +191,60 @@ class ProductivityController extends Controller
         }
 
         //iterate over sheet
-
-
         /**@var \PHPExcel_Worksheet $objWorksheet */
         $objWorksheet = $objPHPExcel->getActiveSheet();
 
-        Productivity::truncate();
+//        Productivity::truncate();
         set_time_limit(60);
 
         foreach ($objWorksheet->getRowIterator(2) as $row) {
-
             /** @var \PHPExcel_Worksheet_Row $row */
             $cellIterator = $row->getCellIterator();
-
             $cellIterator->setIterateOnlyExistingCells(false);
             $inputs = [];
-
             foreach ($cellIterator as $cell) {
                 $inputs[] = $cell->getValue();
 
             }
             $category = CSI_category::where('name', $inputs[1])->first();
-            $unit = Unit::where('type', $inputs[2])->first();
-            Productivity::create([
 
-                'csi_category_id' => isset($category->id) ? $category->id : 0,
-                'unit' => isset($unit->id) ? $unit->id : '',
-                'crew_structure' => isset($inputs[3]) ? $inputs[3] : '',
-                'crew_hours' => isset($inputs[4]) ? $inputs[4] : 0,
-                'crew_equip' => isset($inputs[5]) ? $inputs[5] : 0,
-                'daily_output' => isset($inputs[6]) ? $inputs[6] : 0,
-                'man_hours' => isset($inputs[7]) ? $inputs[7] : 0,
-                'equip_hours' => isset($inputs[8]) ? $inputs[8] : 0,
-                'reduction_factor' => isset($inputs[9]) ? $inputs[9] : 0,
-                'after_reduction' => isset($inputs[10]) ? $inputs[10] : 0,
-                'source' => isset($inputs[11]) ? $inputs[11] : '',
-            ]);
+            $unit = Unit::where('type', $inputs[2])->first();
+
+
+            if (is_null($category)) {
+                $create_category = CSI_category::create([
+                    'name' =>$inputs[1],
+                    'parent_id'=>$parent_id
+                ]);
+
+                $parent_id=$create_category->id;
+            }
+
+            $productivity = Productivity::where('csi_category_id', $category->id)->first();
+
+
+            if (is_null($productivity)) {
+                Productivity::create([
+                    'csi_category_id' => isset($category->id) ? $category->id : 0,
+                    'unit' => isset($unit->id) ? $unit->id : '',
+                    'crew_structure' => isset($inputs[3]) ? $inputs[3] : '',
+                    'crew_hours' => isset($inputs[4]) ? $inputs[4] : 0,
+                    'crew_equip' => isset($inputs[5]) ? $inputs[5] : 0,
+                    'daily_output' => isset($inputs[6]) ? $inputs[6] : 0,
+                    'man_hours' => isset($inputs[7]) ? $inputs[7] : 0,
+                    'equip_hours' => isset($inputs[8]) ? $inputs[8] : 0,
+                    'reduction_factor' => isset($inputs[9]) ? $inputs[9] : 0,
+                    'after_reduction' => isset($inputs[10]) ? $inputs[10] : 0,
+                    'source' => isset($inputs[11]) ? $inputs[11] : '',
+                ]);
+            } else {
+
+                continue;
+
+            }
+
 
         }
-
         return redirect()->back();
     }
-
-
 }
