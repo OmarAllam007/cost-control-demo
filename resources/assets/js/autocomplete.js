@@ -100,7 +100,7 @@
                     e.preventDefault();
                     var text = $list.find('a.active').text();
                     if (text) {
-                        $(this).val(text);
+                        $(this).val(text).change();
                         $list.hide();
                     }
                 }
@@ -108,7 +108,7 @@
 
             $body.on('click', '.option-link', function (e) {
                 e.preventDefault();
-                $element.val($(this).data('val'));
+                $element.val($(this).data('val')).change();
             });
 
             $element.after($list.hide());

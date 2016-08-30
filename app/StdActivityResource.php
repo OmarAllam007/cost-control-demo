@@ -38,9 +38,9 @@ class StdActivityResource extends Model
         return $this->belongsTo(Productivity::class);
     }
 
-    function morphForJSON()
+    function morphForJSON($account)
     {
-        return [
+        $attributes = [
             'std_activity_resource_id' => $this->id,
             'equation' => $this->equation,
             'labor_count' => $this->labor_count,
@@ -51,9 +51,17 @@ class StdActivityResource extends Model
             'resource_waste' => $this->resource->waste,
             'unit' => $this->resource->units->type,
             'resource_type' => $this->resource->types->name,
-            'budget_qty' => $this->budget_qty,
-            'eng_qty' => $this->eng_qty,
+            'budget_qty' => '',
+            'eng_qty' => '',
             'remarks' => $this->remarks
         ];
+
+        $costAccount = Survey::where('cost_account', $account)->first();
+        if ($costAccount) {
+            $attributes['budget_qty'] = $costAccount->budget_qty;
+            $attributes['eng_qty'] = $costAccount->eng_qty;
+        }
+
+        return $attributes;
     }
 }

@@ -21,4 +21,21 @@ class CostAccountController extends Controller
             ->take(20)
             ->pluck('cost_account');
     }
+
+    function show(Request $request)
+    {
+        if (!$request->has('account')) {
+            return [];
+        }
+
+        $account = $request->get('account', 0);
+        /** @var Survey $costAccount */
+        $costAccount = Survey::where('cost_account', $account)->first();
+
+        if (!$costAccount) {
+            return [];
+        }
+
+        return ['budget_qty' => $costAccount->budget_qty, 'eng_qty' => $costAccount->eng_qty];
+    }
 }

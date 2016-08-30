@@ -21,18 +21,6 @@
             {!! $errors->first('equation', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('budget_qty', 'has-error')}}">
-            {{ Form::label('budget_qty', 'Default Budget Qty', ['class' => 'control-label']) }}
-            {{ Form::text('budget_qty', null, ['class' => 'form-control']) }}
-            {!! $errors->first('budget_qty', '<div class="help-block">:message</div>') !!}
-        </div>
-
-        <div class="form-group {{$errors->first('eng_qty', 'has-error')}}">
-            {{ Form::label('eng_qty', 'Default Eng Qty', ['class' => 'control-label']) }}
-            {{ Form::text('eng_qty', null, ['class' => 'form-control']) }}
-            {!! $errors->first('eng_qty', '<div class="help-block">:message</div>') !!}
-        </div>
-
         <div class="form-group {{$errors->first('labor_count', 'has-error')}}">
             {{ Form::label('labor_count', 'Labor Count', ['class' => 'control-label']) }}
             {{ Form::text('labor_count', null, ['class' => 'form-control']) }}
@@ -50,9 +38,6 @@
             {{ Form::text('remarks', null, ['class' => 'form-control']) }}
             {!! $errors->first('remarks', '<div class="help-block">:message</div>') !!}
         </div>
-
-
-        <!-- Continue working on your fields here -->
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>

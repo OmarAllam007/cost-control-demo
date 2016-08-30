@@ -3,6 +3,7 @@
     //Cache important elements
     var templateInput = $('#TemplateID');
     var resourcesContainer = $('#resourcesContainer');
+    var costInput = $('#CostAccount');
 
     //Get templates contents
     var emptyAlert = $('#resourcesEmptyAlert').html();
@@ -12,12 +13,18 @@
     var resourceRowTemplate = $('#resourceRowTemplate').html();
 
     templateInput.on('change', function(){
-        var value = this.value;
-        if (value) {
+        loadResources();
+    });
+
+    function loadResources()
+    {
+        var value = templateInput.val();
+        var costAccount = costInput.val();
+        if (value && costAccount) {
             showLoading();
             $.ajax({
                 url: '/api/std-activity-resource',
-                data: {template: value},
+                data: {template: value, cost_account: costAccount},
                 dataType: 'json'
             }).done(function(response){
                 buildResources(response);
@@ -27,7 +34,7 @@
         } else {
             showEmpty();
         }
-    });
+    }
 
     function showLoading() {
         resourcesContainer.html(resourcesLoading);
@@ -42,7 +49,6 @@
     }
 
     function buildResources(resources) {
-        var html = '';
         var res;
         var counter = 0;
         var key;
@@ -50,7 +56,6 @@
         var table = $(containerTemplate);
 
         for (res in resources) {
-            console.log(res);
             var rowObject = $(resourceRowTemplate.replace(/##/g, counter));
 
             for (key in resources[res]) {
@@ -64,4 +69,32 @@
 
         resourcesContainer.html('').append(table);
     }
+
+    var costAccountsCache = {};
+    costInput.on('change', function(){
+        var val = $(this).val();
+        if (val && $('[j-model="budget_qty"]').length == 0) {
+            loadResources();
+        }
+
+        if (costAccountsCache.hasOwnProperty(val)) {
+            var account = costAccountsCache[val];
+            $('[j-model="budget_qty"]').val(account.budget_qty);
+            $('[j-model="eng_qty"]').val(account.eng_qty);
+        } else {
+            resourcesContainer.prepend(resourcesLoading);
+            $.ajax({
+                url: '/api/cost-accounts/account',
+                data: {account: val},
+                dataType: 'json'
+            }).then(function(account){
+                costAccountsCache[val] = account;
+                $('[j-model="budget_qty"]').val(account.budget_qty);
+                $('[j-model="eng_qty"]').val(account.eng_qty);
+                resourcesContainer.find('#resourcesLoading').remove();
+            }, function() {
+                resourcesContainer.find('#resourcesLoading').remove();
+            });
+        }
+    });
 }(window, document, jQuery));

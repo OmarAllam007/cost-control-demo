@@ -19,7 +19,7 @@ class StdActivityResourceController extends Controller
         }
 
         return $template->resources()->recursive()->get()->map(function($resource) {
-            return $resource->morphForJSON();
+            return $resource->morphForJSON(request('cost_account'));
         });
     }
 }
