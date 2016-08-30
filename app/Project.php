@@ -3,12 +3,13 @@
 namespace App;
 
 use App\Behaviors\HasOptions;
+use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use SoftDeletes, HasOptions;
+    use SoftDeletes, HasOptions,Tree;
 
     protected static $alias = 'Project';
 

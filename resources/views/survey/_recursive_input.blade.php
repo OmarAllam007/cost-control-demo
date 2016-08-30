@@ -8,7 +8,7 @@
     @if ($level->children && $level->children->count())
         <ul class="list-unstyled collapse" id="children-{{$level->id}}">
             @foreach($level->children as $child)
-                @include('resources._recursive_input', ['level' => $child, 'input' => isset($input)? $input : 'parent_id'])
+                @include('survey._recursive_input', ['level' => $child, 'input' => isset($input)? $input : 'parent_id'])
             @endforeach
         </ul>
     @endif
