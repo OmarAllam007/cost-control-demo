@@ -24,4 +24,4 @@ require __DIR__ . '/Routes/omar.php';
 
 Route::resource('?', '?Controller');
 
-Route::resource('boq', 'BoqController');
+

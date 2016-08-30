@@ -25,6 +25,7 @@ Route::get('/importproductivity',
     ['uses'=>'ProductivityController@importProductivity'
         ,'as'=>'productivity.importProductivity'
     ]);
+
 Route::get('/importcategory',
     ['uses'=>'CategoryController@importcategory'
         ,'as'=>'category.importcategory'
@@ -40,6 +41,7 @@ Route::post('productivity/upload',
         ,'as'=>'productivity.upload'
     ]);
 
+Route::resource('boq-division', 'BoqDivisionController');
 
 
 

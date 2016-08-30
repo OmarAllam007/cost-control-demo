@@ -15,7 +15,7 @@ class ProjectController extends Controller
 {
 
 
-    protected $rules = ['' => ''];
+    protected $rules = ['name' => 'unique:projects|required'];
 
     public function index()
     {

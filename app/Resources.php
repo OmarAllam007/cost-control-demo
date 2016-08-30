@@ -3,12 +3,14 @@
 namespace App;
 
 use App\Behaviors\HasOptions;
+use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Resources extends Model
 {
-    use SoftDeletes, HasOptions;
+    use SoftDeletes, HasOptions,Tree;
+
 
     protected $table = 'resources';
     protected $fillable = ['resource_code','name','rate','unit','waste','business_partner_id','resource_type_id','reference'];

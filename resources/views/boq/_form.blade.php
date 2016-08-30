@@ -3,13 +3,13 @@
     <div class="col-md-6">
 
         <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
-            {{ Form::label('wbs_id', 'Parent', ['class' => 'control-label']) }}
+            {{ Form::label('wbs_id', 'Wbs Level', ['class' => 'control-label']) }}
             <div class="hidden">
                 {{ Form::select('wbs_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
-                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Parent' }}
+                <a href="#LevelsModal"  data-toggle="modal" id="select-parent">
+                    {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
                 </a>
             </p>
             {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
@@ -25,6 +25,19 @@
             {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}
             {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('division_id', 'has-error')}}">
+            {{ Form::label('division_id', 'Division Level', ['class' => 'control-label']) }}
+            <div class="hidden">
+                {{ Form::select('division_id', App\BoqDivision::options(), null, ['class' => 'form-control']) }}
+            </div>
+            <p>
+                <a href="#LevelsModal2" data-toggle="modal" id="select-parent">
+                    {{Form::getValueAttribute('division_id')? App\BoqDivision::with('parent')->find(Form::getValueAttribute('division_id'))->path : 'Select BOQ Division' }}
+                </a>
+            </p>
+            {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('type', 'has-error')}}">
@@ -90,6 +103,28 @@
         </div>
     </div>
 </div>
+
+
+<div id="LevelsModal2" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Division</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled tree">
+                    @foreach(App\BoqDivision::tree()->get() as $division)
+                        @include('boq-division._recursive_input', compact('division'))
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @stop

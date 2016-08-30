@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Input;
 class ResourceTypeController extends Controller
 {
 
-    use Tree , HasOptions;
+
     protected $rules = [];
 
     public function index()

@@ -30,10 +30,12 @@ class SurveyController extends Controller
 
     public function store(Request $request)
     {
+
         $this->validate($request, [
             'budget_qty' => 'required',
             'eng_qty' => 'required'
         ]);
+        $request['wbs_level_id'] = $request->parent_id;
         Survey::create($request->all());
 
         flash('Survey has been saved', 'success');
@@ -49,6 +51,7 @@ class SurveyController extends Controller
 
     public function edit(Survey $survey)
     {
+
         $units = Unit::all();
         $categories = Category::lists('name', 'id')->all();
         $units_drop = Unit::lists('type', 'id')->all();
@@ -58,9 +61,13 @@ class SurveyController extends Controller
 
     public function update(Survey $survey, Request $request)
     {
-        $this->validate($request, $this->rules);
 
+
+
+        $this->validate($request, $this->rules);
+        $request['wbs_level_id'] = $request->parent_id;
         $survey->update($request->all());
+
 
         flash('Survey has been saved', 'success');
 

@@ -10,10 +10,10 @@
                 </div>
                 <p>
                     <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Parent' }}
+                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Resource Type' }}
                     </a>
                 </p>
-                {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
+                {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
             </div>
 
             {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
