@@ -1,9 +1,14 @@
 <div class="row">
     <div class="col-md-6">
-        <div class="form-group {{$errors->first('category_id', 'has-error')}}">
-            {{Form::label('category_id','Category')}}
-            {{Form::select('category_id', App\Category::options(), null, ['class'=>'form-control'])}}
+
+        <div class="form-group {{$errors->first('project_id', 'has-error')}}">
+            {{ Form::label('project_id', 'Project Name', ['class' => 'control-label']) }}
+            <div >
+                {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control']) }}
+            </div>
+            {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
         </div>
+
 
         <div class="form-group {{$errors->first('wbs_level_id', 'has-error')}}">
             {{ Form::label('wbs_level_id', 'Wbs Level', ['class' => 'control-label']) }}
@@ -18,12 +23,9 @@
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('project_id', 'has-error')}}">
-            {{ Form::label('project_id', 'Project Name', ['class' => 'control-label']) }}
-            <div >
-                {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control']) }}
-            </div>
-            {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('category_id', 'has-error')}}">
+            {{Form::label('category_id','Category')}}
+            {{Form::select('category_id', App\Category::options(), null, ['class'=>'form-control'])}}
         </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">
