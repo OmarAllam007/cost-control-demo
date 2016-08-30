@@ -15,7 +15,7 @@ class ProjectController extends Controller
 {
 
 
-    protected $rules = ['name' => 'required'];
+    protected $rules = ['' => ''];
 
     public function index()
     {
@@ -32,7 +32,6 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
-
         Project::create($request->all());
 
         flash('Project has been saved', 'success');

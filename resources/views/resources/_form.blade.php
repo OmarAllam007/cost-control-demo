@@ -3,7 +3,19 @@
     <div class="col-md-6">
         <div class="form-group {{$errors->first('resource_type_id', 'has-error')}}">
             {{ Form::label('resource_type', 'Resource type', ['class' => 'control-label']) }}
-            {{  Form::select('resource_type_id',$resource_types,null, ['class' => 'form-control']) }}
+            {{--{{  Form::select('resource_type_id',$resource_types,null, ['class' => 'form-control']) }}--}}
+            <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
+                <div class="hidden">
+                    {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
+                </div>
+                <p>
+                    <a href="#LevelsModal" data-toggle="modal" id="select-parent">
+                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Parent' }}
+                    </a>
+                </p>
+                {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
+            </div>
+
             {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -33,7 +45,7 @@
         </div>
 
         <div class="form-group {{$errors->first('waste', 'has-error')}}">
-            {{ Form::label('waste', 'waste', ['class' => 'control-label']) }}
+            {{ Form::label('waste', 'Waste(%)', ['class' => 'control-label']) }}
             {{ Form::text('waste', null, ['class' => 'form-control']) }}
             {!! $errors->first('waste', '<div class="help-block">:message</div>') !!}
         </div>
@@ -58,5 +70,34 @@
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
 
+
+
+
+    </div>
+
+
+</div>
+
+
+<div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Parent</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled tree">
+                    @foreach(App\ResourceType::tree()->get() as $level)
+                        @include('resources._recursive_input', compact('level'))
+                    @endforeach
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
+
+@section('javascript')
+    <script src="{{asset('/js/tree-select.js')}}"></script>
+@stop

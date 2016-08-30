@@ -5,6 +5,7 @@ Route::resource('survey','SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');
 Route::resource('resources', 'ResourcesController');
 Route::resource('resource-type', 'ResourceTypeController');
+Route::resource('boq', 'BoqController');
 
 
 Route::resource('productivity', 'ProductivityController');
@@ -38,6 +39,8 @@ Route::post('productivity/upload',
     ['uses'=>'ProductivityController@upload'
         ,'as'=>'productivity.upload'
     ]);
+
+
 
 
 

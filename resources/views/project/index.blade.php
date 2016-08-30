@@ -5,7 +5,7 @@
     <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add
         project</a>
 
-    <button href="" class="btn btn-sm btn-primary pull-right" id="upload_button"><i class="fa fa-upload"></i> Upload
+    <button href="" class="btn btn-sm btn-primary pull-right" id="upload_button"><i class="fa fa-upload"></i> Add Project's Names
         project
     </button>
     </div>
@@ -15,15 +15,6 @@
 
 @section('body')
 
-    <script>
-        $(document).ready(function () {
-            $("#upload_button").click(function () {
-                $(".upload").toggle("fast", function () {
-                });
-            });
-        });
-
-    </script>
     <div class="form-group upload pull-right" style="display: none;">
         {!! Form::open(array('action' => 'ProjectController@upload', 'files' => true,'class'=>'form-inline')) !!}
         {!! Form::file('file',['class'=>'form-control']) !!}

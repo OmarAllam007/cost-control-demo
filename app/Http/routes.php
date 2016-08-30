@@ -11,10 +11,17 @@
 |
 */
 
-Route::get('/', 'ProjectController@index');
+Route::get('/', function () {
+    $projects = \App\Project::paginate();
+    return view('project.index',['projects'=>$projects]);
+});
 
 Route::auth();
 
 require __DIR__ . '/Routes/hazem.php';
 require __DIR__ . '/Routes/omar.php';
 
+
+Route::resource('?', '?Controller');
+
+Route::resource('boq', 'BoqController');
