@@ -44,7 +44,7 @@
         </div>
 
         <div class="form-group {{$errors->first('unit_id', 'has-error')}}">
-            {{Form::label('units','Unit of measure')}}
+            {{Form::label('units','Unit Of Measure')}}
             {{Form::select('unit_id',App\Unit::options(),['class'=>'form-control'],['class'=>'form-control'])}}
         </div>
 
