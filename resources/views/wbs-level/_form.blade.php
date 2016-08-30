@@ -11,6 +11,7 @@
             {{ Form::label('project_id', 'Project', ['class' => 'control-label']) }}
             @if (request('project'))
                 <p><em>{{App\Project::find(request('project'))->name}}</em></p>
+                {{Form::hidden('project_id', request('project'))}}
             @else
                 {{ Form::select('project_id', App\Project::options(), request('project'), ['class' => 'form-control']) }}
             @endif
