@@ -37,4 +37,9 @@ class Project extends Model
         return $this->hasManyThrough(BreakdownResource::class, Breakdown::class);
     }
 
+    function quantity()
+    {
+        return $this->hasMany(Survey::class);
+    }
+
 }
