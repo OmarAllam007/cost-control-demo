@@ -15,7 +15,7 @@ class UpdateSurveysTable extends Migration
         Schema::table('qty_surveys', function (Blueprint $table) {
             $table->integer('wbs_level_id');
             $table->integer('project_id');
-            $table->text('cost_account');
+            $table->string('cost_account');
         });
     }
 
@@ -29,7 +29,7 @@ class UpdateSurveysTable extends Migration
         Schema::table('qty_surveys', function (Blueprint $table) {
             $table->dropColumn('wbs_level_id');
             $table->dropColumn('project_id');
-            $table->drop('cost_account');
+            $table->dropColumn('cost_account');
         });
     }
 }

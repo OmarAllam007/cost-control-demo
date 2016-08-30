@@ -3,20 +3,25 @@
 
         <div class="form-group {{$errors->first('project_id', 'has-error')}}">
             {{ Form::label('project_id', 'Project Name', ['class' => 'control-label']) }}
-            <div >
-                {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control']) }}
-            </div>
+
+            @if (request('project'))
+                <p><em>{{App\Project::find(request('project'))->name}}</em></p>
+                {{Form::hidden('project_id', request('project'), ['id' => 'ProjectInput'])}}
+            @else
+                {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control', 'id' => 'ProjectInput']) }}
+            @endif
+
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
         </div>
 
 
         <div class="form-group {{$errors->first('wbs_level_id', 'has-error')}}">
             {{ Form::label('wbs_level_id', 'Wbs Level', ['class' => 'control-label']) }}
-            <div class="hidden">
-                {{ Form::select('wbs_level_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
-            </div>
+            {{--<div class="hidden">--}}
+                {{--{{ Form::select('wbs_level_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}--}}
+            {{--</div>--}}
             <p>
-                <a href="#LevelsModal"  data-toggle="modal" id="select-parent">
+                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
                     {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select Wbs Level' }}
                 </a>
             </p>
@@ -60,9 +65,6 @@
 </div>
 
 
-
-
-
 <div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -74,7 +76,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\WbsLevel::tree()->get() as $level)
-                        @include('survey._recursive_input', compact('level'))
+                        @include('survey._recursive_input', ['level' => $level, 'input' => 'wbs_level_id'])
                     @endforeach
                 </ul>
             </div>

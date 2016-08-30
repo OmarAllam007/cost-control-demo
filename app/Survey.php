@@ -19,7 +19,12 @@ class Survey extends Model
     {
         return $this->belongsTo(Unit::class,'unit_id');
     }
+
     public function wbsLevel(){
         return $this->belongsTo(WbsLevel::class,'wbs_level_id');
+    }
+
+    public function project(){
+        return $this->belongsTo(Project::class,'project_id');
     }
 }

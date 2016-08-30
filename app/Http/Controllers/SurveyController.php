@@ -3,84 +3,76 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Project;
 use App\Survey;
 use App\Unit;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
 {
-
-    protected $rules = ['' => ''];
+    protected $rules = [
+        'description' => 'required', 'cost_account' => 'required',
+        'project_id' => 'required', 'wbs_level_id' => 'required',
+        'budget_qty' => 'required', 'eng_qty' => 'required'
+    ];
 
     public function index()
     {
-
         $surveys = Survey::paginate();
-        $units_drop = Unit::lists('type', 'id')->all();
-        return view('survey.index', compact('surveys', 'units_drop', 'units'));
+        return view('survey.index', compact('surveys'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $units_drop = Unit::lists('type', 'id')->all();
-        $categories = Category::lists('name', 'id')->all();
-        return view('survey.create', ['units_drop' => $units_drop
-            ,'categories'=>$categories]);
+        if (!$request->has('project')) {
+            return \Redirect::route('project.index');
+        }
+
+        if (!Project::find($request->get('project'))) {
+            return \Redirect::route('project.index');
+        }
+
+        return view('survey.create');
     }
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->rules);
 
-        $this->validate($request, [
-            'budget_qty' => 'required',
-            'eng_qty' => 'required'
-        ]);
+        $survey = Survey::create($request->all());
 
-        $request['wbs_level_id'] = $request->parent_id;
-        Survey::create($request->all());
+        flash('Quantity survey has been saved', 'success');
 
-        flash('Survey has been saved', 'success');
-
-        return \Redirect::route('survey.index');
+        return \Redirect::route('project.show', $survey->project_id);
     }
 
     public function show(Survey $survey)
     {
-        $units = Unit::all();
         return view('survey.show', compact('survey', 'units'));
     }
 
     public function edit(Survey $survey)
     {
-
-        $units = Unit::all();
-        $categories = Category::lists('name', 'id')->all();
-        $units_drop = Unit::lists('type', 'id')->all();
-
-        return view('survey.edit', compact('survey', 'units','categories','units_drop'));
+        return view('survey.edit', compact('survey'));
     }
 
     public function update(Survey $survey, Request $request)
     {
-
-
-
         $this->validate($request, $this->rules);
-        $request['wbs_level_id'] = $request->parent_id;
+
         $survey->update($request->all());
 
+        flash('Quantity survey has been saved', 'success');
 
-        flash('Survey has been saved', 'success');
-
-        return \Redirect::route('survey.index');
+        return \Redirect::route('project.show', $survey->project_id);
     }
 
     public function destroy(Survey $survey)
     {
         $survey->delete();
 
-        flash('Survey has been deleted', 'success');
+        flash('Quantity survey has been deleted', 'success');
 
-        return \Redirect::route('survey.index');
+        return \Redirect::route('project.show', $survey->project_id);
     }
 }

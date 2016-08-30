@@ -1,27 +1,20 @@
 @extends('layouts.app')
 @section('header')
     <h2>Project</h2>
-    <div >
-    <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add
-        project</a>
-
-    <button href="" class="btn btn-sm btn-primary pull-right" id="upload_button"><i class="fa fa-upload"></i> Add Project's Names
-        project
-    </button>
-    </div>
-
-
+    <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right">
+        <i class="fa fa-plus"></i> Add Project
+    </a>
 @stop
 
 @section('body')
 
-    <div class="form-group upload pull-right" style="display: none;">
+    {{--<div class="form-group upload pull-right" style="display: none;">
         {!! Form::open(array('action' => 'ProjectController@upload', 'files' => true,'class'=>'form-inline')) !!}
         {!! Form::file('file',['class'=>'form-control']) !!}
         {!! Form::token() !!}
         {!! Form::submit('Upload',['class'=>'btn btn-primary']) !!}
         {!! Form::close() !!}
-    </div>
+    </div>--}}
     @if ($projects->total())
         <table class="table table-condensed table-striped">
             <thead>
