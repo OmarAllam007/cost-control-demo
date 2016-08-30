@@ -23,6 +23,11 @@
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('cost_account', 'has-error')}}">
+            {{Form::label('cost_account','Cost Account')}}
+            {{Form::text('cost_account',null,['class'=>'form-control'])}}
+        </div>
+
         <div class="form-group {{$errors->first('category_id', 'has-error')}}">
             {{Form::label('category_id','Category')}}
             {{Form::select('category_id', App\Category::options(), null, ['class'=>'form-control'])}}
