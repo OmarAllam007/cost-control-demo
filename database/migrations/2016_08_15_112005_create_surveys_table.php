@@ -15,7 +15,6 @@ class CreateSurveysTable extends Migration
             $table->float('budget_qty');
             $table->float('eng_qty');
 
-//            $table->foreign('unit_id')->references('id')->on('units');
             $table->softDeletes();
             $table->timestamps();
         });
