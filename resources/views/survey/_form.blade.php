@@ -18,6 +18,14 @@
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('project_id', 'has-error')}}">
+            {{ Form::label('project_id', 'Project Name', ['class' => 'control-label']) }}
+            <div >
+                {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control']) }}
+            </div>
+            {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('description', 'has-error')}}">
             {{Form::label('item','Item Description')}}
             {{Form::textarea('description',null,['class'=>'form-control'])}}
@@ -59,13 +67,15 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\WbsLevel::tree()->get() as $level)
-                        @include('wbs-level._recursive_input', compact('level'))
+                        @include('survey._recursive_input', compact('level'))
                     @endforeach
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
+
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @stop

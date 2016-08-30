@@ -14,6 +14,7 @@ class UpdateSurveysTable extends Migration
     {
         Schema::table('qty_surveys', function (Blueprint $table) {
             $table->integer('wbs_level_id');
+            $table->integer('project_id');
         });
     }
 
@@ -25,7 +26,8 @@ class UpdateSurveysTable extends Migration
     public function down()
     {
         Schema::table('qty_surveys', function (Blueprint $table) {
-            $table->integer('wbs_level_id');
+            $table->dropColumn('wbs_level_id');
+            $table->dropColumn('project_id');
         });
     }
 }

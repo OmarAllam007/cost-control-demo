@@ -35,6 +35,7 @@ class SurveyController extends Controller
             'budget_qty' => 'required',
             'eng_qty' => 'required'
         ]);
+
         $request['wbs_level_id'] = $request->parent_id;
         Survey::create($request->all());
 
