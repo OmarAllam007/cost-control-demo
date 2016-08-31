@@ -9,12 +9,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use SoftDeletes, HasOptions,Tree;
+    use SoftDeletes, HasOptions, Tree;
 
     protected static $alias = 'Project';
 
-    protected $fillable = ['name','project_code','client_name','project_location'
-        ,'project_contract_value','project_start_date','project_duration', 'description'];
+    protected $fillable = [
+        'name',
+        'project_code',
+        'client_name',
+        'project_location'
+        ,
+        'project_contract_value',
+        'project_start_date',
+        'project_duration',
+        'description'
+    ];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -41,6 +50,12 @@ class Project extends Model
     function quantities()
     {
         return $this->hasMany(Survey::class);
+    }
+
+    function getPlainResourcesAttribute()
+    {
+        return $this->breakdown_resources->load('resource.resource')
+            ->pluck('resource.resource')->unique();
     }
 
 }
