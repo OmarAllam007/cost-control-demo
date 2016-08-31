@@ -23,7 +23,7 @@
             <tbody>
             @foreach($surveys as $survey)
                     <tr>
-                        <td class="col-md-2">{{ isset($survey->wbsLevel->name)?$survey->wbsLevel->name:0 }}</td>
+                        <td class="col-md-2">{{ isset($survey->wbsLevel->name)?$survey->wbsLevel->name:'' }}</td>
                         <td class="col-md-2">{{ $survey->description }}</td>
                         <td class="col-md-1">{{isset($survey->unit->type)?$survey->unit->type:0}}</td>
                         <td class="col-md-1">{{$survey->budget_qty }}</td>
