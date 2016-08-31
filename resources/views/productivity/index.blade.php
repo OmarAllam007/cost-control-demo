@@ -11,22 +11,22 @@
 @stop
 
 @section('body')
-    <div class="form-group upload_productivity pull-right" style="display: none;">
-        {!! Form::open(array('action' => 'ProductivityController@upload', 'files' => true,'class'=>'form-inline')) !!}
-        {!! Form::file('file',['class'=>'form-control']) !!}
-        {!! Form::token() !!}
-        {!! Form::submit('Upload',['class'=>'btn btn-primary']) !!}
-        {!! Form::close() !!}
-    </div>
-    <script>
-        $(document).ready(function () {
-            $("#prod_upload_file").click(function () {
-                $(".upload_productivity").toggle("fast", function () {
-                });
-            });
-        });
+    {{--<div class="form-group upload_productivity pull-right" style="display: none;">--}}
+        {{--{!! Form::open(array('action' => 'ProductivityController@upload', 'files' => true,'class'=>'form-inline')) !!}--}}
+        {{--{!! Form::file('file',['class'=>'form-control']) !!}--}}
+        {{--{!! Form::token() !!}--}}
+        {{--{!! Form::submit('Upload',['class'=>'btn btn-primary']) !!}--}}
+        {{--{!! Form::close() !!}--}}
+    {{--</div>--}}
+    {{--<script>--}}
+        {{--$(document).ready(function () {--}}
+            {{--$("#prod_upload_file").click(function () {--}}
+                {{--$(".upload_productivity").toggle("fast", function () {--}}
+                {{--});--}}
+            {{--});--}}
+        {{--});--}}
 
-    </script>
+    {{--</script>--}}
 
     @if ($productivities->total())
         <table class="table table-condensed table-striped">

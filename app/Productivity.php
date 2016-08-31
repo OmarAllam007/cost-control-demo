@@ -15,7 +15,7 @@ class Productivity extends Model
 
     public function category()
     {
-      return  $this->belongsTo(CSI_category::class,'csi_category_id');
+      return  $this->belongsTo(CsiCategory::class,'csi_category_id');
     }
     public function units()
     {

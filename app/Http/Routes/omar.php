@@ -6,11 +6,9 @@ Route::resource('business-partner', 'BusinessPartnerController');
 Route::resource('resources', 'ResourcesController');
 Route::resource('resource-type', 'ResourceTypeController');
 Route::resource('boq', 'BoqController');
-
-
 Route::resource('productivity', 'ProductivityController');
-
 Route::resource('category', 'CategoryController');
+
 
 Route::get('/import',
     ['uses'=>'ActivityDivisionController@import'
@@ -42,6 +40,8 @@ Route::post('productivity/upload',
     ]);
 
 Route::resource('boq-division', 'BoqDivisionController');
+
+Route::resource('csi-category', 'CsiCategoryController');
 
 
 

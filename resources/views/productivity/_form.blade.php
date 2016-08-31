@@ -3,10 +3,17 @@
     <div class="col-md-6">
 
 
-        <div class="form-group {{$errors->first('category', 'has-error')}}">
-            {{ Form::label('csi_category_id', 'Csi Category', ['class' => 'control-label']) }}
-            {{ Form::select('csi_category_id', $csi_category,['class' => 'form-control'], ['class' => 'form-control']) }}
-            {!! $errors->first('category', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('csi_category_id', 'has-error')}}">
+            {{ Form::label('csi_category_id', 'CSI Category', ['class' => 'control-label']) }}
+            <div class="hidden">
+                {{ Form::select('csi_category_id', App\CsiCategory::options(), null, ['class' => 'form-control']) }}
+            </div>
+            <p>
+                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
+                    {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select Division' }}
+                </a>
+            </p>
+            {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('csi_code', 'has-error')}}">
@@ -84,3 +91,25 @@
         </div>
     </div>
 </div>
+
+<div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select CSI Category</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled tree">
+                    @foreach(App\CsiCategory::tree()->get() as $level)
+                        @include('productivity._recursive_input', ['input'=>'csi_category_id'])
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+@section('javascript')
+    <script src="{{asset('/js/tree-select.js')}}"></script>
+@stop

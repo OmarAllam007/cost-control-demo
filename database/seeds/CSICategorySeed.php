@@ -18,14 +18,14 @@ class CSICategorySeed extends Seeder
 
         if ($handle !== FALSE) {
             fgetcsv($handle);
-            $productivity_category = \App\CSI_category::query()->pluck('name', 'id')->toArray();
+            $productivity_category = \App\CsiCategory::query()->pluck('name', 'id')->toArray();
 
             while (($row = fgetcsv($handle)) !== FALSE) {
                 $levels = array_filter($row);
                 $parent_id = 0;
                 foreach ($levels as $level) { //fill categories
                     if (!isset($productivity_category[$level])) {
-                        $category = \App\CSI_category::create([
+                        $category = \App\CsiCategory::create([
                             'name' => $level,
                             'parent_id' => $parent_id,
                         ]);
