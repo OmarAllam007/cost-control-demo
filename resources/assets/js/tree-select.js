@@ -16,7 +16,9 @@ $(function () {
                 parent = parent.parents('li').first();
             }
 
-            $('#select-parent').html(stack.reverse().join(' &raquo; '));
+            var selector = '#' + $(this).parents('.modal').attr('id');
+            var trigger = $('[href="' + selector +'"]');
+            trigger.html(stack.reverse().join(' &raquo; '));
         }
     });
 });
