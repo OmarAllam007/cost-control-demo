@@ -6,7 +6,6 @@
     <form action="{{ route('boq-division.destroy', $boq_division)}}" class="pull-right" method="post">
         {{csrf_field()}} {{method_field('delete')}}
 
-        <a href="{{ route('boq-division.show', $boq_division)}}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Show</a>
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
         <a href="{{ route('boq-division.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
     </form>

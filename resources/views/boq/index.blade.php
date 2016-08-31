@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Boq</h2>
+    <h2>Boq Items</h2>
     <a href="{{ route('boq.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add boq</a>
 @stop
 

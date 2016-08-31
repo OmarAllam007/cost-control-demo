@@ -33,6 +33,11 @@ class ResourcesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
+        if ($request['waste'] <= 1)
+            $request['waste'] = $request->waste;
+        else
+            $request['waste'] = ($request->waste / 100);
+
         Resources::create($request->all());
 
         flash('Resources has been saved', 'success');
@@ -58,6 +63,11 @@ class ResourcesController extends Controller
     public function update(Resources $resources, Request $request)
     {
         $this->validate($request, $this->rules);
+
+        if ($request['waste'] <= 1)
+            $request['waste'] = $request->waste;
+        else
+            $request['waste'] = ($request->waste / 100);
 
         $resources->update($request->all());
 
