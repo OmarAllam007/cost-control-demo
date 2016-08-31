@@ -3,8 +3,8 @@
         <a href="#children-{{$category->id}}" class="tree--item--label" data-toggle="collapse"><i
                     class="fa fa-chevron-circle-right"></i> {{$category->name}}</a>
         <span class="tree--item--actions">
-            <a href="{{route('productivity.show', $category)}}" class="label label-info"><i class="fa fa-eye"></i> Show</a>
-            <a href="{{route('productivity.edit', $category)}}" class="label label-primary"><i class="fa fa-pencil"></i> Edit</a>
+
+            <a href="{{route('csi-category.edit', $category)}}" class="label label-primary"><i class="fa fa-pencil"></i> Edit</a>
         </span>
     </div>
     <article id="children-{{$category->id}}" class="tree--child collapse">
@@ -17,7 +17,7 @@
                 @endforeach
             </ul>
         @endif
-        @if($category->productivity)
+        @if($category->productivity->count())
             <table class="table table-condensed table-striped">
                 <thead>
                 <tr>
