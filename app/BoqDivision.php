@@ -13,4 +13,10 @@ class BoqDivision extends Model
     protected $fillable = ['name','parent_id'];
 
     protected $dates = ['created_at', 'updated_at'];
+
+    public function items()
+    {
+
+        return $this->hasMany(Boq::class,'division_id');
+    }
 }
