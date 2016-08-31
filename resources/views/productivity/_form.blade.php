@@ -40,7 +40,7 @@
             {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
         </div>
 
-        {{----}}
+
         <div class="form-group">
 
             <div class="form-group {{$errors->first('crew_hours', 'has-error')}}">
