@@ -96,7 +96,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\WbsLevel::tree()->get() as $level)
-                        @include('boq._recursive_input', compact('level'))
+                        @include('boq._recursive_input', ['level' => $level, 'input' => 'wbs_id']))
                     @endforeach
                 </ul>
             </div>
