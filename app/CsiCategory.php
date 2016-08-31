@@ -14,4 +14,9 @@ class CsiCategory extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    public function productivity()
+    {
+
+        return $this->hasMany(Productivity::class,'csi_category_id');
+    }
 }

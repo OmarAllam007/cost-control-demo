@@ -15,8 +15,9 @@ class ProductivityController extends Controller
     public function index()
     {
         $productivities = Productivity::paginate();
+        $categories = CsiCategory::tree()->paginate();
 
-        return view('productivity.index', compact('productivities'));
+        return view('productivity.index', compact('productivities','categories'));
     }
 
     public function create()
