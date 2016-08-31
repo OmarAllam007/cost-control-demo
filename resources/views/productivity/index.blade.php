@@ -4,9 +4,9 @@
     <h2>Productivity</h2>
     <a href="{{ route('productivity.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i>
         Add productivity</a>
-    <button href="" class="btn btn-sm btn-primary pull-right" id="prod_upload_file"><i class="fa fa-plus"></i>
-        Upload Productivity
-    </button>
+    {{--<button href="" class="btn btn-sm btn-primary pull-right" id="prod_upload_file"><i class="fa fa-plus"></i>--}}
+        {{--Upload Productivity--}}
+    {{--</button>--}}
 
 @stop
 

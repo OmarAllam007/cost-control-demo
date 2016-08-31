@@ -15,6 +15,7 @@
         {!! Form::submit('Upload',['class'=>'btn btn-primary']) !!}
         {!! Form::close() !!}
     </div>--}}
+
     @if ($projects->total())
         <table class="table table-condensed table-striped">
             <thead>

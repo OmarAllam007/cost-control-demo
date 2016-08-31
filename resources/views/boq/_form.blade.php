@@ -8,7 +8,7 @@
                 {{ Form::select('wbs_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
-                <a href="#LevelsModal"  data-toggle="modal" id="select-parent">
+                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
                     {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
                 </a>
             </p>
@@ -96,7 +96,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\WbsLevel::tree()->get() as $level)
-                        @include('boq._recursive_input', ['level' => $level, 'input' => 'wbs_id']))
+                        @include('boq._recursive_input', ['level' => $level, 'input' => 'wbs_id'])
                     @endforeach
                 </ul>
             </div>
@@ -116,7 +116,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\BoqDivision::tree()->get() as $division)
-                        @include('boq-division._recursive_input', compact('division'))
+                        @include('boq-division._recursive_input', compact('division_id'))
                     @endforeach
                 </ul>
             </div>
