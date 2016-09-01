@@ -16,14 +16,14 @@
             {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('csi_code', 'has-error')}}">
-            {{ Form::label('csi_code', 'Code', ['class' => 'control-label']) }}
-            {{ Form::text('csi_code', null, ['class' => 'form-control']) }}
-            {!! $errors->first('csi_code', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('code', 'has-error')}}">
+            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
+            {{ Form::text('code', null, ['class' => 'form-control']) }}
+            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">
-            {{ Form::label('dDescription', 'Description', ['class' => 'control-label']) }}
+            {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}
             {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
         </div>
@@ -40,7 +40,7 @@
             {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
         </div>
 
-        {{----}}
+
         <div class="form-group">
 
             <div class="form-group {{$errors->first('crew_hours', 'has-error')}}">

@@ -11,7 +11,7 @@ class WbsLevel extends Model
     use SoftDeletes;
     use Tree;
 
-    protected $fillable = ['name', 'project_id', 'parent_id', 'comments'];
+    protected $fillable = ['name', 'project_id', 'parent_id', 'comments','code'];
 
     protected $dates = ['created_at', 'updated_at'];
 

@@ -57,7 +57,14 @@
                             <li><a href="{{route('unit.index')}}">Units of measure</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{route('productivity.index')}}">Productivity</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Productivity<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{route('csi-category.index')}}">CSI Category</a></li>
+                            <li><a href="{{route('productivity.index')}}">Productivity</a></li>
+                        </ul>
+                    </li>
 
                 </ul>
                 {{--@endif--}}

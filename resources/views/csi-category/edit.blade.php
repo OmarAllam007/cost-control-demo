@@ -6,7 +6,6 @@
     <form action="{{ route('csi-category.destroy', $csi_category)}}" class="pull-right" method="post">
         {{csrf_field()}} {{method_field('delete')}}
 
-        <a href="{{ route('csi-category.show', $csi_category)}}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Show</a>
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
         <a href="{{ route('csi-category.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
     </form>
