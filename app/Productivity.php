@@ -39,7 +39,7 @@ class Productivity extends Model
 
     public static function options()
     {
-        return static::orderBy('csi_code')->pluck('code', 'id')->prepend('Select Reference', '');
+        return static::orderBy('code')->pluck('code', 'id')->prepend('Select Reference', '');
     }
 
 }
