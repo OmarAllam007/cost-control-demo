@@ -13,7 +13,7 @@ class UpdateWasteResourcesTable extends Migration
     public function up()
     {
         Schema::table('resources', function (Blueprint $table) {
-            $sql = 'UPDATE `resources` SET `waste` = CASE WHEN `waste` < 1 THEN `waste` * 100 WHEN `waste` > 1 THEN `waste` * 1 END';
+            $sql = 'UPDATE `resources` SET `waste` =  `waste` * 100 WHERE `waste` < 1';
             DB::connection()->update($sql);
         });
     }

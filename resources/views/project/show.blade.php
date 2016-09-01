@@ -48,11 +48,7 @@
         </section>
 
         <section class="tab-pane" id="productivity">
-            <div class="form-group tab-actions clearfix">
-                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
-                    <i class="fa fa-plus"></i> Add Productivity
-                </a>
-            </div>
+            @include('project.tabs._productivity')
         </section>
     </div>
 @stop

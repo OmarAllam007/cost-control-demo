@@ -55,7 +55,13 @@ class Project extends Model
     function getPlainResourcesAttribute()
     {
         return $this->breakdown_resources->load('resource.resource')
-            ->pluck('resource.resource')->unique();
+            ->pluck('resource.resource')->unique()->filter();
+    }
+
+    function getProductivitiesAttribute()
+    {
+        return $this->breakdown_resources->load('productivity.category')
+            ->pluck('productivity')->unique()->filter();
     }
 
 }
