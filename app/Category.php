@@ -10,7 +10,7 @@ class Category extends Model
     use HasOptions;
 
     protected $table = 'survey_categories';
-    protected $fillable = ['name'];
+    protected $fillable = ['name','code'];
 
     protected $dates = ['created_at', 'updated_at'];
 }

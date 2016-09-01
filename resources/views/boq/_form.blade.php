@@ -75,6 +75,12 @@
             {!! $errors->first('arabic_description', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('code', 'has-error')}}">
+            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
+            {{ Form::text('code', null, ['class' => 'form-control']) }}
+            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
+        </div>
+
 
         <!-- Continue working on your fields here -->
 

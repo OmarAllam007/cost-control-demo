@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class ResourceType extends Model
 {
     use Tree,HasOptions;
-    protected $fillable = ['name','parent_id'];
+    protected $fillable = ['name','parent_id','code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
