@@ -16,4 +16,33 @@ class Boq extends Model
     {
         return $this->belongsTo(Unit::class,'unit_id');
     }
+
+    public function getAllQuantity($quantity)
+    {
+        return $quantity*16 ;
+    }
+
+    public function getDryForBuilding($quantity,$dry)
+    {
+        return $dry*$quantity;
+    }
+
+    public function getPriceForBuilding($price,$quantity)
+    {
+        return $price*$quantity;
+    }
+
+    public function getDryForAllBuilding($quantity,$dry)
+    {
+        return $dry*$quantity*16;
+    }
+
+    public function getPriceForAllBuilding($quantity,$price)
+    {
+        return $price*$quantity*16;
+    }
+
+
+
+
 }

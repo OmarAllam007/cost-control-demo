@@ -1,4 +1,5 @@
 <div class="row">
+<div class="row">
     <div class="col-md-6 col-sm-9">
         <div class="form-group {{$errors->first('project_id', 'has-errors')}}">
             {{Form::label('project_id', 'Project', ['class' => 'control-label'])}}

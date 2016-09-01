@@ -21,8 +21,8 @@ class ResourcesController extends Controller
 
     public function create()
     {
-        $units_drop = Unit::lists('type', 'id')->all();
-        $partners = BusinessPartner::lists('name', 'id')->all();
+        $units_drop = Unit::options();
+        $partners = BusinessPartner::options();
         $resources = Resources::all();
         $resource_types = ResourceType::lists('name', 'id')->all();
 
@@ -53,9 +53,9 @@ class ResourcesController extends Controller
     public function edit(Resources $resources)
     {
 
-        $partners = BusinessPartner::lists('name', 'id')->all();
+        $partners = BusinessPartner::options();
         $resource_types = ResourceType::lists('name', 'id')->all();
-        $units_drop = Unit::lists('type', 'id')->all();
+        $units_drop = Unit::options();
 
         return view('resources.edit', compact('resources', 'partners', 'resource_types', 'units_drop'));
     }

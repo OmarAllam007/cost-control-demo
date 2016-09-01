@@ -62,8 +62,7 @@
 
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
             {{ Form::label('business_partner', 'business partner', ['class' => 'control-label']) }}
-            {{ Form::label('business_partner', 'business partner', ['class' => 'control-label']) }}
-            {{  Form::select('business_partner_id',$partners,1, ['class' => 'form-control']) }}
+            {{  Form::select('business_partner_id',$partners,['class' => 'form-control'], ['class' => 'form-control']) }}
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
 

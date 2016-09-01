@@ -45,15 +45,17 @@
 
         <section class="tab-pane" id="resources">
             <div class="form-group tab-actions clearfix">
-                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+                <a href="{{route('resources.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
                     <i class="fa fa-plus"></i> Add Resource
                 </a>
+
             </div>
+
         </section>
 
         <section class="tab-pane" id="productivity">
             <div class="form-group tab-actions clearfix">
-                <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+                <a href="{{route('productivity.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
                     <i class="fa fa-plus"></i> Add Productivity
                 </a>
             </div>

@@ -23,7 +23,7 @@ class ProductivityController extends Controller
     public function create()
     {
         $csi_category = CsiCategory::lists('name', 'id')->all();
-        $units_drop = Unit::lists('type', 'id')->all();
+        $units_drop = Unit::options();
 
 
         return view('productivity.create', compact('csi_category', 'units_drop'));

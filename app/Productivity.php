@@ -12,7 +12,7 @@ class Productivity extends Model
     use Tree,HasOptions;
     protected $fillable = ['csi_category_id',
         'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
-        'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source'];
+        'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source','code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
