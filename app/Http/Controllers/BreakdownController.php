@@ -5,13 +5,23 @@ namespace App\Http\Controllers;
 
 use App\Breakdown;
 use App\Http\Requests\BreakdownRequest;
+use App\Project;
 use Illuminate\Http\Request;
 
 class BreakdownController extends Controller
 {
 
-    public function create()
+    public function create(Request $request)
     {
+        if (!$request->has('project')) {
+            return \Redirect::route('project.index');
+        }
+
+        $project = Project::find($request->get('project'));
+        if (!$project) {
+            flash('Project not found');
+            return \Redirect::route('project.index');
+        }
         return view('breakdown.create');
     }
 

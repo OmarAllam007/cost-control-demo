@@ -37,9 +37,9 @@ class Productivity extends Model
         return  $this->daily_output * (1 - $this->reduction_factor);
     }
 
-    public function scopeOptions(Builder $query)
+    public static function options()
     {
-        return $query->orderBy('csi_code')->pluck('csi_code', 'id')->prepend('Select Productivity Reference', '');
+        return static::orderBy('csi_code')->pluck('code', 'id')->prepend('Select Reference', '');
     }
 
 }

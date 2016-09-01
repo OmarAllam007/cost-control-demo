@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\Tree;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,5 +24,10 @@ class WbsLevel extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function scopeForProject(Builder $query, $project_id)
+    {
+        $query->where('project_id', $project_id);
     }
 }
