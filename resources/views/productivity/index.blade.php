@@ -36,9 +36,10 @@
             <thead>
             <tr>
                 <th>Code</th>
-                <th>Name</th>
-                <th>Unit</th>
-                <th>source</th>
+                <th>Category</th>
+                <th>Daily Output</th>
+                <th>After Reduction</th>
+                <th>Unit of Measure</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -49,12 +50,10 @@
                     <td class="col-md-1">{{ $productivity->code }}
                     </td>
                     <td class="col-md-1">{{ isset($productivity->category->name)?$productivity->category->name:'' }}</td>
-
-
-
+                    <td class="col-md-1">{{ isset($productivity->daily_output)?$productivity->daily_output:'' }}</td>
+                    <td class="col-md-1">{{ isset($productivity->after_reduction)?$productivity->after_reduction:'' }}</td>
                     <td class="col-md-1">{{ isset($productivity->units->type)?$productivity->units->type:'' }}
                     </td>
-                    <td class="col-md-1">{{ isset($productivity->category->name)?$productivity->source:'' }}</td>
                     <td class="col-md-2">
                         <form action="{{ route('productivity.destroy', $productivity) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
