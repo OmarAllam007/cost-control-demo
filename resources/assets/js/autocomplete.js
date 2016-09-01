@@ -54,7 +54,6 @@
                         url: options.url,
                         dataType: 'json'
                     }).then(function (result) {
-                        $body.data('options', result);
                         lastValue = val;
                         optionsHtml = buildOptions(result);
                         $body.html(optionsHtml);

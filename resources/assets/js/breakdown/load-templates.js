@@ -43,7 +43,7 @@
             templateInput.html(optionsHtml);
         };
 
-        $('#ActivityID').on('change', function(){
+        $('.activity-input').on('change', function(){
             var value = this.value;
             if (value) {
                 if (breakdowns[value]) {

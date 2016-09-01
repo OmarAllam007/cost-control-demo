@@ -43,7 +43,7 @@
             templateInput.html(optionsHtml);
         };
 
-        $('#ActivityID').on('change', function(){
+        $('.activity-input').on('change', function(){
             var value = this.value;
             if (value) {
                 if (breakdowns[value]) {
@@ -222,7 +222,6 @@
                         url: options.url,
                         dataType: 'json'
                     }).then(function (result) {
-                        $body.data('options', result);
                         lastValue = val;
                         optionsHtml = buildOptions(result);
                         $body.html(optionsHtml);
