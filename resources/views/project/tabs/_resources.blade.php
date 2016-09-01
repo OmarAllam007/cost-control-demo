@@ -1,7 +1,26 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 8/31/16
- * Time: 3:14 PM
- */
+@if ($project->plain_resources)
+    <table class="table table-condensed table-striped">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Resource</th>
+            <th>Type</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach ($project->plain_resources as $resource)
+        <tr>
+            <td>{{$resource->resource_code}}</td>
+            <td>{{$resource->name}}</td>
+            <td>{{$resource->types->name}}</td>
+            <td>
+                <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
+            </td>
+        </tr>
+        @endforeach
+        </tbody>
+    </table>
+@else
+    <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No resources found</div>
+@endif
