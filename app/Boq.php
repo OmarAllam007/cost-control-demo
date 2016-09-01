@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Boq extends Model
 {
     protected $fillable = [
-        'wbs_id','item','description','type','unit_id','quantity','dry_ur','price_ur','arabic_description'
+        'wbs_id','item','description','type','unit_id','quantity','dry_ur','price_ur','arabic_description','code'
     ];
 
     protected $dates = ['created_at', 'updated_at'];

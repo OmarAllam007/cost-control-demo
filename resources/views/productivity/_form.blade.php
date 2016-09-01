@@ -1,8 +1,6 @@
 {{ csrf_field() }}
 <div class="row">
     <div class="col-md-6">
-
-
         <div class="form-group {{$errors->first('csi_category_id', 'has-error')}}">
             {{ Form::label('csi_category_id', 'CSI Category', ['class' => 'control-label']) }}
             <div class="hidden">

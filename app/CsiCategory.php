@@ -10,7 +10,7 @@ class CsiCategory extends Model
 {
     use Tree,HasOptions;
     protected $table = 'csi_categories';
-    protected $fillable = ['name','parent_id'];
+    protected $fillable = ['name','parent_id','code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
