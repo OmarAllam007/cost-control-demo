@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group form-group-sm">
-                        <input type="search" v-model="term" placeholder="Type here to search" class="form-control" debounce="500" autofocus autocomplete="off">
+                        <input type="text" v-model="term" placeholder="Type here to search" class="form-control search" debounce="500" autocomplete="off">
                     </div>
                     <div class="alert alert-info text-center" v-if="loading"><i class="fa fa-spinner fa-spin"></i>
                         Loading
@@ -65,12 +65,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group form-group-sm">
-                        <input type="search" v-model="term" placeholder="Type here to search" class="form-control" autofocus autocomplete="off">
+                        <input type="text" v-model="term" placeholder="Type here to search" class="form-control search" autocomplete="off">
                     </div>
                     <table class="table table-condensed table-hover table-striped" v-if="productivities.length">
                         <thead>
                         <tr>
-                            <th></th>
+
                             <th>Code</th>
                             <th>Daily Output</th>
                             <th>Reduction factor</th>
@@ -79,15 +79,20 @@
                         </thead>
                         <tbody v-for="productivity in productivities">
                         <tr>
-                            <td><input type="radio" name="productivity_id" value="@{{ productivity.id }}"></td>
-                            <td>@{{ productiity.code }}</td>
-                            <td>@{{ productiity.daily_output }}</td>
-                            <td>@{{ productiity.code }}</td>
+                            <td>
+                                <label>
+                                    <input type="radio" name="productivity_id" :value="productivity.id" v-on:change="setProductivity(productivity)" :checked="productivity.id == selected.id" debounce="500">
+                                    @{{ productivity.code }}
+                                </label>
+                            </td>
+                            <td>@{{ productivity.daily_output }}</td>
+                            <td>@{{ productivity.reduction }}</td>
+                            <td>@{{ productivity.after_reduction }}</td>
                         </tr>
                         </tbody>
                     </table>
-                    <div class="alert alert-warning" v-else><i class="fa fa-exclamation-triangle"></i> No productivity
-                        found
+                    <div class="alert alert-warning" v-else>
+                        <i class="fa fa-exclamation-triangle"></i> No productivity found
                     </div>
                 </div>
             </div>

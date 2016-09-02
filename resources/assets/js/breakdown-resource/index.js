@@ -3,8 +3,7 @@ var App = new Vue({
 
     data: {
         resource: resource,
-
-        productivity_code: ''
+        productivity: productivity
     },
 
     computed: {
@@ -24,6 +23,17 @@ var App = new Vue({
     events: {
         'resource-changed': function (resource) {
             this.resource = resource;
+        },
+
+        'productivity-changed': function (productivity) {
+            this.productivity = productivity;
         }
     }
+});
+
+
+$(function(){
+    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
+        $(this).find('input.search').focus();
+    });
 });

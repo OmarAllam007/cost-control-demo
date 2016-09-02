@@ -42,4 +42,24 @@ class Productivity extends Model
         return static::orderBy('code')->pluck('code', 'id')->prepend('Select Reference', '');
     }
 
+    function scopeFilter(Builder $query, $term = '')
+    {
+        $query->take(20)
+            ->orderBy('code');
+
+        if (trim($term)) {
+            $query->where('code', 'like', "%{$term}%");
+        }
+    }
+
+    function morphToJSON()
+    {
+        return [
+            'id' => $this->id,
+            'code' => $this->code,
+            'daily_output' => $this->daily_output,
+            'reduction' => $this->reduction_factor,
+            'after_reduction' => $this->after_reduction
+        ];
+    }
 }

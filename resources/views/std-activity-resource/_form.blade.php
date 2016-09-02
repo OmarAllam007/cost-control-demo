@@ -40,7 +40,12 @@
         <section id="productivity-fields" v-show="show_productivity">
             <div class="form-group {{$errors->first('productivity_id', 'has-error')}}">
                 {{ Form::label('productivity_id', 'Productivity', ['class' => 'control-label']) }}
-                {{ Form::select('productivity_id', \App\Productivity::options(), null, ['class' => 'form-control']) }}
+                <p>
+                    <a href="#ProductivityModal" data-toggle="modal">
+                        @{{ productivity.code || "Select Productivity Reference" }}
+                    </a>
+                </p>
+{{--                {{ Form::select('productivity_id', \App\Productivity::options(), null, ['class' => 'form-control']) }}--}}
                 {!! $errors->first('productivity_id', '<div class="help-block">:message</div>') !!}
             </div>
 
@@ -70,6 +75,11 @@
         var resource = {};
         @if (Form::getValueAttribute('resource_id'))
             resource = {!! json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) !!}
+        @endif
+
+        var productivity = {};
+        @if (Form::getValueAttribute('productivity_id'))
+                productivity = {!! json_encode(\App\Productivity::find(Form::getValueAttribute('productivity_id'))->morphToJSON()) !!}
         @endif
     </script>
     <script src="{{asset('/js/breakdown-resource.js')}}"></script>

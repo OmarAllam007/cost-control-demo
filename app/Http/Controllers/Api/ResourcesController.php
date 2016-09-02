@@ -13,7 +13,7 @@ class ResourcesController extends Controller
     {
         return Resources::filter($request->get('term'))
             ->get()->map(function (Resources $resource) {
-                return $resource->morphToJson();
+                return $resource->morphToJSON();
             });
     }
 }

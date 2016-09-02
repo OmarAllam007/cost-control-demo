@@ -10071,23 +10071,49 @@ var template = Object.freeze({
   return Vue;
 
 }));
-var Productivity = {
-    template: '#ProductivityTemplate',
-    data : function() {
+var Productivity = Vue.extend({
+    template: document.getElementById('ProductivityTemplate').innerHTML,
+
+    data: function () {
         return {
             productivities: [],
-            loading: true
+            loading: false,
+            term: '',
+            selected: productivity
         };
     },
 
-    watch: {
+    ready: function () {
+        this.load();
+    },
 
+    watch: {
+        term: function () {
+            this.load();
+        }
     },
 
     methods: {
+        setProductivity: function (resource) {
+            this.selected = resource;
+            this.$dispatch('productivity-changed', resource);
+        },
 
+        load: function () {
+            var self = this;
+            if (!this.loading) {
+                self.loading = true;
+                $.ajax({
+                    url: '/api/productivity',
+                    type: 'get', data: {term: self.term}, dataType: 'json', cache: false
+                }).success(function (response) {
+                    self.productivities = response;
+                    self.loading = false;
+                });
+            }
+        }
     }
-};
+});
 
 var Resources = Vue.extend({
     template: document.getElementById('ResourcesTemplate').innerHTML,
@@ -10137,8 +10163,7 @@ var App = new Vue({
 
     data: {
         resource: resource,
-
-        productivity_code: ''
+        productivity: productivity
     },
 
     computed: {
@@ -10158,8 +10183,19 @@ var App = new Vue({
     events: {
         'resource-changed': function (resource) {
             this.resource = resource;
+        },
+
+        'productivity-changed': function (productivity) {
+            this.productivity = productivity;
         }
     }
+});
+
+
+$(function(){
+    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
+        $(this).find('input.search').focus();
+    });
 });
 
 //# sourceMappingURL=breakdown-resource.js.map

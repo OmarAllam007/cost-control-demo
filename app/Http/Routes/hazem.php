@@ -15,4 +15,5 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('cost-accounts', 'Api\CostAccountController@index');
     Route::get('cost-accounts/account', 'Api\CostAccountController@show');
     Route::get('resources', 'Api\ResourcesController@index');
+    Route::get('productivity', 'Api\ProductivityController@index');
 });
