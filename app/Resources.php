@@ -4,6 +4,7 @@ namespace App;
 
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -31,4 +32,26 @@ class Resources extends Model
     }
 
 
+    function scopeFilter(Builder $query, $term = '')
+    {
+        $query->with(['units', 'types'])
+            ->take(20)
+            ->orderBy('name');
+
+        if (trim($term)) {
+            $query->where('name', 'like', "%{$term}%");
+        }
+    }
+
+    function morphToJSON()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'type' => $this->types->name,
+            'unit' => $this->units->type,
+            'rate' => $this->rate,
+            'root_type' => $this->types->root->name
+        ];
+    }
 }

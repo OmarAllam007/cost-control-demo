@@ -14,4 +14,5 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('std-activity-resource', 'Api\StdActivityResourceController@index');
     Route::get('cost-accounts', 'Api\CostAccountController@index');
     Route::get('cost-accounts/account', 'Api\CostAccountController@show');
+    Route::get('resources', 'Api\ResourcesController@index');
 });
