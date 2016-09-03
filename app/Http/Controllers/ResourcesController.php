@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessPartner;
+use App\Jobs\ResourcesImportJob;
 use App\Resources;
 use App\ResourceType;
 use App\Unit;
@@ -83,5 +84,24 @@ class ResourcesController extends Controller
         flash('Resources has been deleted', 'success');
 
         return \Redirect::route('resources.index');
+    }
+
+    function import()
+    {
+        return view('resources.import');
+    }
+
+    function postImport(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+
+        $this->dispatch(new ResourcesImportJob($file->path()));
+
+        flash('Resources have been imported', 'success');
+        return redirect()->route('resources.index');
     }
 }

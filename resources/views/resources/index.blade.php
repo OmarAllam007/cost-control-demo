@@ -2,8 +2,16 @@
 
 @section('header')
     <h2>Resources</h2>
-    <a href="{{ route('resources.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add
-        resource</a>
+
+    <div class="btn-toolbar pull-right">
+        <a href="{{ route('resources.create') }} " class="btn btn-sm btn-primary">
+            <i class="fa fa-plus"></i> Add resource
+        </a>
+
+        <a href="{{ route('resources.import') }} " class="btn btn-sm btn-success">
+            <i class="fa fa-cloud-upload"></i> Import
+        </a>
+    </div>
 @stop
 
 @section('body')
@@ -14,11 +22,10 @@
 
                 <th>Resource Code</th>
                 <th>Name</th>
-                {{--<th>Rate</th>--}}
-                {{--<th>Unit</th>--}}
-                {{--<th>Waste</th>--}}
-                <th>Business Partner</th>
                 <th>Resource Type</th>
+                <th>Rate</th>
+                <th>Unit</th>
+                <th>Waste</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -26,19 +33,11 @@
             @foreach($resources as $resource)
                 <tr>
                     <td class="col-md-1">{{ $resource->resource_code }}</td>
-
-                    <td class="col-md-1">{{ $resource->name }}
-                    </td>
-                    {{--<td class="col-md-1">{{ $resource->rate }}--}}
-                    {{--</td>--}}
-                    {{--<td class="col-md-1">{{ $resource->units->type }}--}}
-                    {{--</td>--}}
-                    {{--<td class="col-md-1">{{ $resource->waste }}--}}
-                    {{--</td>--}}
-                    <td class="col-md-2">
-                        {{$resource->parteners->name}}
-                    </td>
+                    <td class="col-md-1">{{ $resource->name }}</td>
                     <td class="col-md-2">{{$resource->types->name}}</td>
+                    <td class="col-md-1">{{ $resource->rate }}</td>
+                    <td class="col-md-1">{{ $resource->units->type or ''}}</td>
+                    <td class="col-md-1">{{ $resource->waste }}</td>
 
                     <td class="col-md-2">
                         <form action="{{ route('resources.destroy', $resource) }}" method="post">

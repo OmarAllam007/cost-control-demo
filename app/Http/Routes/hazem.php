@@ -22,3 +22,8 @@ Route::group(['prefix' => 'wbs-level'], function () {
     Route::get('import/{project}', ['as' => 'wbs-level.import', 'uses' => 'WbsLevelController@import']);
     Route::post('import/{project}', ['as' => 'wbs-level.post-import', 'uses' => 'WbsLevelController@postImport']);
 });
+
+Route::group(['prefix' => 'resources'], function () {
+    Route::get('import', ['as' => 'resources.import', 'uses' => 'ResourcesController@import']);
+    Route::post('import', ['as' => 'resources.post-import', 'uses' => 'ResourcesController@postImport']);
+});
