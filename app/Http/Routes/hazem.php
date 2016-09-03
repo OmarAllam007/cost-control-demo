@@ -17,3 +17,8 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('resources', 'Api\ResourcesController@index');
     Route::get('productivity', 'Api\ProductivityController@index');
 });
+
+Route::group(['prefix' => 'wbs-level'], function () {
+    Route::get('import/{project}', ['as' => 'wbs-level.import', 'uses' => 'WbsLevelController@import']);
+    Route::post('import/{project}', ['as' => 'wbs-level.post-import', 'uses' => 'WbsLevelController@postImport']);
+});

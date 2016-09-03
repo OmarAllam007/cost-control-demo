@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\WbsImportJob;
 use App\Project;
 use App\WbsLevel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class WbsLevelController extends Controller
 {
@@ -73,5 +75,24 @@ class WbsLevelController extends Controller
         flash('WBS level has been deleted', 'success');
 
         return \Redirect::route('project.show', $wbs_level->project_id);
+    }
+
+    function import(Project $project)
+    {
+        return view('wbs-level.import', compact('project'));
+    }
+
+    function postImport(Project $project, Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+
+        $this->dispatch(new WbsImportJob($project, $file->path()));
+
+        flash('WBS has been imported to ' . $project->name, 'success');
+        return redirect()->route('project.show', $project);
     }
 }

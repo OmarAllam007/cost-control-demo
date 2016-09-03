@@ -46,4 +46,20 @@ trait Tree
 
         return $this->path = $stack->reverse()->implode(' » ');
     }
+
+    public function getCanonicalAttribute()
+    {
+//        if ($this->canonical) {
+//            return $this->canonical;
+//        }
+
+        $stack = collect([strtolower($this->name)]);
+        $parent = $this->parent;
+        while ($parent) {
+            $stack->push(strtolower($parent->name));
+            $parent = $parent->parent;
+        }
+
+        return $this->path = $stack->reverse()->implode('/');
+    }
 }

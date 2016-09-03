@@ -96,6 +96,10 @@
             </div>
 
             <div class="panel-body">
+                @if (session()->has('flash-message'))
+                    <div class="alert alert-{{session('flash-type')}}">{{session('flash-message')}}</div>
+                @endif
+
                 @yield('body')    
             </div>
         </div>

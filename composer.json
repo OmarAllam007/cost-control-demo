@@ -9,7 +9,7 @@
         "laravel/framework": "5.2.*",
         "laravelcollective/html": "^5.2",
         "barryvdh/laravel-ide-helper": "^2.2",
-        "phpexcel/phpexcel": "dev-master"
+        "phpoffice/phpexcel": "^1.8"
 
     },
     "require-dev": {

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5f8285b0986416dbe104192f30ef795c",
-    "content-hash": "c2dea6490dd826367ef9a4deb90bcf20",
+    "hash": "bbc5af7793e45761a15dd997e9a68f51",
+    "content-hash": "9971605308a47406c6b32208fd715e58",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -957,36 +957,61 @@
             "time": "2016-03-18 20:34:03"
         },
         {
-            "name": "phpexcel/phpexcel",
-            "version": "dev-master",
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ddeboer/phpexcel.git",
-                "reference": "656336f53bcd0d11abba40db6c9f8553d320434c"
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ddeboer/phpexcel/zipball/656336f53bcd0d11abba40db6c9f8553d320434c",
-                "reference": "656336f53bcd0d11abba40db6c9f8553d320434c",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
                 "shasum": ""
             },
             "require": {
-                "php": ">5.2.0"
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "PHPExcel": "Classes"
+                    "PHPExcel": "Classes/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GNU"
+                "LGPL"
             ],
-            "description": "DEPRECATED! Use phpoffice/phpexcel instead.",
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
             "homepage": "http://phpexcel.codeplex.com",
-            "abandoned": "phpoffice/phpexcel",
-            "time": "2014-02-06 05:54:09"
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2015-05-01 07:00:55"
         },
         {
             "name": "psr/log",
@@ -3412,9 +3437,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "phpexcel/phpexcel": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
