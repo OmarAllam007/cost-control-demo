@@ -24,6 +24,11 @@ Route::group(['prefix' => 'std-activity'], function () {
     Route::post('import', ['as' => 'std-activity.post-import', 'uses' => 'StdActivityController@postImport']);
 });
 
+Route::group(['prefix' => 'survey'], function () {
+    Route::get('import/{project}', ['as' => 'survey.import', 'uses' => 'SurveyController@import']);
+    Route::post('import/{project}', ['as' => 'survey.post-import', 'uses' => 'SurveyController@postImport']);
+});
+
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');

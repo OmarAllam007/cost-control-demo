@@ -7,7 +7,7 @@ use App\BreakdownTemplate;
 use App\StdActivity;
 use Illuminate\Support\Collection;
 
-class ActivityImportJob extends Job
+class ActivityImportJob extends ImportJob
 {
     protected $file;
     /**
@@ -39,16 +39,6 @@ class ActivityImportJob extends Job
 
             BreakdownTemplate::create(['name' => $data[4], 'code' => $data[5], 'std_activity_id' => $activity_id]);
         }
-    }
-
-    protected function getDataFromCells(\PHPExcel_Worksheet_CellIterator $cells)
-    {
-        $data = [];
-        /** @var \PHPExcel_Cell $cell */
-        foreach ($cells as $cell) {
-            $data[] = $cell->getValue();
-        }
-        return $data;
     }
 
     protected function getDivisionId($data)

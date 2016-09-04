@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Jobs\QuantitySurveyImportJob;
 use App\Project;
 use App\Survey;
 use App\Unit;
@@ -74,5 +75,24 @@ class SurveyController extends Controller
         flash('Quantity survey has been deleted', 'success');
 
         return \Redirect::route('project.show', $survey->project_id);
+    }
+
+    function import(Project $project)
+    {
+        return view('survey.import', compact('project'));
+    }
+
+    function postImport(Project $project, Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+
+        $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
+
+        flash('Quantity survey has been imported', 'success');
+        return redirect()->route('project.show', $project);
     }
 }

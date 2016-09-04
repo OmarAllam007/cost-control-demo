@@ -1,7 +1,13 @@
 <div class="form-group tab-actions clearfix">
-    <a href="{{route('survey.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
-        <i class="fa fa-plus"></i> Add Quantity Survey
-    </a>
+    <div class="pull-right">
+        <a href="{{route('survey.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
+            <i class="fa fa-plus"></i> Add Quantity Survey
+        </a>
+
+        <a href="{{route('survey.import', ['project' => $project->id])}}" class="btn btn-success btn-sm">
+            <i class="fa fa-cloud-upload"></i> Import
+        </a>
+    </div>
 </div>
 
 @if ($project->quantities->count())
@@ -20,11 +26,11 @@
         @foreach($project->quantities as $quantity)
             <tr>
                 <td>{{$quantity->cost_account}}</td>
-                <td>{{$quantity->wbsLevel->path}}</td>
-                <td>{{$quantity->description}}</td>
+                <td>{{$quantity->wbsLevel->code or ''}}</td>
+                <td class="col-md-4">{{$quantity->description}}</td>
                 <td>{{$quantity->budget_qty}}</td>
                 <td>{{$quantity->eng_qty}}</td>
-                <td>
+                <td class="col-md-2">
                     {{Form::open(['route' => ['survey.destroy', $quantity], 'method' => 'delete'])}}
                     <a href="{{route('survey.edit', $quantity)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
                     <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>

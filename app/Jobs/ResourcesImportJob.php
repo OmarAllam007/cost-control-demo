@@ -5,10 +5,9 @@ namespace App\Jobs;
 use App\BusinessPartner;
 use App\Resources;
 use App\ResourceType;
-use App\Unit;
 use Illuminate\Support\Collection;
 
-class ResourcesImportJob extends Job
+class ResourcesImportJob extends ImportJob
 {
 
     /**
@@ -20,11 +19,6 @@ class ResourcesImportJob extends Job
      * @var Collection
      */
     protected $types;
-
-    /**
-     * @var Collection
-     */
-    protected $units;
 
     /**
      * @var Collection
@@ -86,48 +80,10 @@ class ResourcesImportJob extends Job
         return $type_id;
     }
 
-    protected function getDataFromCells($cells)
-    {
-        $data = [];
-        /** @var \PHPExcel_Cell $cell */
-        foreach ($cells as $cell) {
-            if ($cell->getFormattedValue()) {
-                $data[] = $cell->getFormattedValue();
-            } else {
-                $data[] = $cell->getValue();
-            }
-        }
-        return $data;
-    }
-
     protected function getWaste($waste)
     {
         $waste = floatval($waste);
         return $waste < 1 ? $waste * 100 : $waste;
-    }
-
-    protected function getUnit($unit)
-    {
-        if (!$this->units) {
-            $this->units = collect();
-            Unit::all()->each(function($unit){
-                $this->units->put(mb_strtolower($unit->type), $unit->id);
-            });
-        }
-        $unit = trim($unit);
-
-        if (!$unit) {
-            return 0;
-        }
-
-        $key = mb_strtolower($unit);
-        if ($this->units->has($key)) {
-            return $this->units->get($key);
-        }
-
-        $unitObject = Unit::create(['type' => $unit]);
-        $this->units->put(mb_strtolower($unit), $unitObject->id);
-        return $unitObject->id;
     }
 
     protected function getPartner($partner)
