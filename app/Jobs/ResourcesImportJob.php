@@ -3,13 +3,9 @@
 namespace App\Jobs;
 
 use App\BusinessPartner;
-use App\Jobs\Job;
 use App\Resources;
 use App\ResourceType;
 use App\Unit;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 
 class ResourcesImportJob extends Job

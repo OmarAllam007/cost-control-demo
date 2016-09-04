@@ -49,7 +49,7 @@ class Resources extends Model
             'id' => $this->id,
             'name' => $this->name,
             'type' => $this->types->name,
-            'unit' => $this->units->type,
+            'unit' => isset($this->units->type) ? $this->units->type : '',
             'rate' => $this->rate,
             'root_type' => $this->types->root->name
         ];

@@ -1,14 +1,5 @@
 <?php
 
-Route::resource('project', 'ProjectController');
-Route::resource('wbs-level', 'WbsLevelController');
-Route::resource('std-activity', 'StdActivityController');
-Route::resource('activity-division', 'ActivityDivisionController');
-Route::resource('breakdown-template', 'BreakdownTemplateController');
-Route::resource('std-activity-resource', 'StdActivityResourceController');
-
-Route::resource('breakdown', 'BreakdownController');
-
 Route::group(['prefix' => 'api'], function(){
     Route::get('breakdown-template', 'Api\BreakdownTemplateController@index');
     Route::get('std-activity-resource', 'Api\StdActivityResourceController@index');
@@ -27,3 +18,17 @@ Route::group(['prefix' => 'resources'], function () {
     Route::get('import', ['as' => 'resources.import', 'uses' => 'ResourcesController@import']);
     Route::post('import', ['as' => 'resources.post-import', 'uses' => 'ResourcesController@postImport']);
 });
+
+Route::group(['prefix' => 'std-activity'], function () {
+    Route::get('import', ['as' => 'std-activity.import', 'uses' => 'StdActivityController@import']);
+    Route::post('import', ['as' => 'std-activity.post-import', 'uses' => 'StdActivityController@postImport']);
+});
+
+Route::resource('project', 'ProjectController');
+Route::resource('wbs-level', 'WbsLevelController');
+Route::resource('std-activity', 'StdActivityController');
+Route::resource('activity-division', 'ActivityDivisionController');
+Route::resource('breakdown-template', 'BreakdownTemplateController');
+Route::resource('std-activity-resource', 'StdActivityResourceController');
+
+Route::resource('breakdown', 'BreakdownController');
