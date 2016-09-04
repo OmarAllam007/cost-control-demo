@@ -46,7 +46,7 @@
                     <td>{{$resource->resource->resource->resource_code}}</td>
                     <td>{{$resource->resource->resource->name}}</td>
                     <td>{{$resource->resource->resource->rate}}</td>
-                    <td>{{$resource->resource->resource->units->type}}</td>
+                    <td>{{$resource->resource->resource->units->type or ''}}</td>
                     <td>{{number_format($resource->budget_unit, 2)}}</td>
                     <td>{{number_format($resource->budget_cost, 2)}}</td>
                     <td>{{number_format($resource->boq_unit_rate, 2)}}</td>
