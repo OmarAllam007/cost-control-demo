@@ -28,6 +28,7 @@
         <li class="active"><a href="#breakdown" data-toggle="tab">Breakdown</a></li>
         <li><a href="#resources" data-toggle="tab">Resources</a></li>
         <li><a href="#productivity" data-toggle="tab">Productivity</a></li>
+        <li><a href="#boq" data-toggle="tab">BOQs</a></li>
     </ul>
 
     <div class="tab-content">
@@ -49,6 +50,9 @@
 
         <section class="tab-pane" id="productivity">
             @include('project.tabs._productivity')
+        </section>
+        <section class="tab-pane" id="boq">
+            @include('project.tabs._boq')
         </section>
     </div>
 @stop

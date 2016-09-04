@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Boq;
+use App\Jobs\BoqImportJob;
+use App\Project;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -18,9 +20,20 @@ class BoqController extends Controller
         return view('boq.index', compact('boqs'));
     }
 
-    public function create()
+    public function create(Request $request)
 
     {
+
+        if (!$request->has('project')) {
+            flash('Project not found');
+            return redirect()->route('project.index');
+        } else {
+            $project = Project::find($request->get('project'));
+            if (!$project) {
+                flash('Project not found');
+                return redirect()->route('project.index');
+            }
+        }
         $wbsLevels = WbsLevel::tree()->paginate();
 
         return view('boq.create',compact('wbsLevels'));
@@ -63,5 +76,23 @@ class BoqController extends Controller
         flash('Boq has been deleted', 'success');
 
         return \Redirect::route('boq.index');
+    }
+
+    function import(Project $project)
+    {
+        return view('boq.import',compact('project'));
+    }
+
+    function postImport(Project $project,Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+
+        $this->dispatch(new BoqImportJob($project,$file->path()));
+
+        return redirect()->route('project.show', $project);
     }
 }

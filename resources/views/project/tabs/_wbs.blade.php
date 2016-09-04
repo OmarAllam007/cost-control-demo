@@ -7,6 +7,8 @@
         <i class="fa fa-plus"></i> Add Level
     </a>
 </div>
+
+
 <div class="clearfix"></div>
 
 @if ($project->wbs_tree->count())
