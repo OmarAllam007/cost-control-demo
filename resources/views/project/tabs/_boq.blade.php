@@ -1,32 +1,36 @@
-@extends('layouts.app')
+<div class="form-group tab-actions pull-right">
+    <a href="{{route('boq.import', $project->id)}}" class="btn btn-success btn-sm">
+        <i class="fa fa-cloud-upload"></i> Import
+    </a>
 
-@section('header')
-    <h2>Boq Items</h2>
-    <a href="{{ route('boq.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add boq</a>
+    <a href="{{route('boq.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
+        <i class="fa fa-plus"></i> Add Level
+    </a>
+</div>
+<div class="clearfix"></div>
 
+<div class="clearfix"></div>
 
-@stop
+@if ($project->boqs->count())
+    <table class="table table-condensed table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Quantity(All)</th>
+            <th>DRY U.R.</th>
+            <th>PRICE U.R.</th>
+            <th>Unit</th>
+            <th>DRY (1 BLDG.)</th>
+            <th>PRICE (1 BLDG.)</th>
+            <th>DRY (ALL BLDG.)</th>
+            <th>PRICE (ALL BLDG.)</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
 
-@section('body')
-    @if ($boqs->total())
-        <table class="table table-condensed table-striped">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Quantity(All)</th>
-                <th>DRY U.R.</th>
-                <th>PRICE U.R.</th>
-                <th>Unit</th>
-                <th>DRY (1 BLDG.)</th>
-                <th>PRICE (1 BLDG.)</th>
-                <th>DRY (ALL BLDG.)</th>
-                <th>PRICE (ALL BLDG.)</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-                @foreach($boqs as $boq)
+        @foreach($project->boqs as $boq)
                     <tr>
                         <td class="col-md-2">{{ $boq->item }}</td>
                         <td class="col-md-1">{{ $boq->quantity }}</td>
@@ -46,12 +50,12 @@
                             </form>
                         </td>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+        @endforeach
+        </tbody>
+    </table>
 
-        {{ $boqs->links() }}
-    @else
-        <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No boq found</strong></div>
-    @endif
-@stop
+@else
+    <div class="alert alert-info"><i class="fa fa-info-circle"></i> No Boq found</div>
+@endif
+
+

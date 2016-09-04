@@ -15,7 +15,6 @@
 
         <div class="form-group {{$errors->first('std_activity_id', 'has-errors')}}">
             {{Form::label('std_activity_id', 'Standard Activity', ['class' => 'control-label'])}}
-            {{--{{Form::select('std_activity_id', App\StdActivity::options(), null, ['class' => 'form-control', 'id' => 'ActivityID'])}}--}}
             <p>
                 <a href="#ActivitiesModal" data-toggle="modal" id="select-activity">
                     {{Form::getValueAttribute('std_activity_id')? App\StdActivity::find(Form::getValueAttribute('std_activity_id'))->path : 'Select Activity' }}

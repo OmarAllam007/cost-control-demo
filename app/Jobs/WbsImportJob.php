@@ -25,7 +25,6 @@ class WbsImportJob extends Job
      */
     public function __construct(Project $project, $file)
     {
-        //
         $this->project = $project;
         $this->file = $file;
     }
@@ -48,7 +47,6 @@ class WbsImportJob extends Job
 
         $rows = $sheet->getRowIterator();
         foreach ($rows as $row) {
-
             $cells = $row->getCellIterator();
             $parent = 0;
             /** @var \PHPExcel_Cell $cell */
