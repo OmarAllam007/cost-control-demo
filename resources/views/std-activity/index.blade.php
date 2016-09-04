@@ -2,7 +2,10 @@
 
 @section('header')
     <h2>Standard activity</h2>
-    <a href="{{ route('std-activity.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add Activity</a>
+    <div class="pull-right">
+        <a href="{{ route('std-activity.create') }} " class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Add Activity</a>
+        <a href="{{ route('std-activity.import') }} " class="btn btn-sm btn-success"><i class="fa fa-cloud-upload"></i> Import</a>
+    </div>
 @stop
 
 @section('body')

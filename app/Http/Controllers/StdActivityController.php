@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ActivityImportJob;
 use App\StdActivity;
 use Illuminate\Http\Request;
 
@@ -61,5 +62,24 @@ class StdActivityController extends Controller
         flash('Std activity has been deleted', 'success');
 
         return \Redirect::route('std-activity.index');
+    }
+
+    function import()
+    {
+        return view('std-activity.import');
+    }
+
+    function postImport(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+
+        $this->dispatch(new ActivityImportJob($file->path()));
+
+        flash('Activities have been imported', 'success');
+        return redirect()->route('std-activity.index');
     }
 }
