@@ -21,9 +21,9 @@
 
         <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
 
-                {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-                {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
-                {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
+            {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
+            {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
+            {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
 
         </div>
 
@@ -40,7 +40,7 @@
         </div>
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
-            {{ Form::select('unit', $units_drop,['class' => 'form-control'], ['class' => 'form-control']) }}
+            {{ Form::select('unit', $units_drop,null, ['class' => 'form-control']) }}
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -62,7 +62,7 @@
 
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
             {{ Form::label('business_partner', 'business partner', ['class' => 'control-label']) }}
-            {{  Form::select('business_partner_id',$partners,['class' => 'form-control'], ['class' => 'form-control']) }}
+            {{  Form::select('business_partner_id',$partners,null,['class' => 'form-control']) }}
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -72,8 +72,6 @@
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
-
-
 
 
     </div>
