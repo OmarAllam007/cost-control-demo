@@ -4316,10 +4316,10 @@ a.thumbnail.active {
   border-color: #3097D1; }
 
 .alert {
-  padding: 15px;
+  padding: 10px;
   margin-bottom: 20px;
   border: 1px solid transparent;
-  border-radius: 4px; }
+  border-radius: 0; }
   .alert h4 {
     margin-top: 0;
     color: inherit; }
@@ -4333,7 +4333,7 @@ a.thumbnail.active {
 
 .alert-dismissable,
 .alert-dismissible {
-  padding-right: 35px; }
+  padding-right: 30px; }
   .alert-dismissable .close,
   .alert-dismissible .close {
     position: relative;

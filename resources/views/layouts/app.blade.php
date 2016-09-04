@@ -97,7 +97,7 @@
 
             <div class="panel-body">
                 @if (session()->has('flash-message'))
-                    <div class="alert alert-{{session('flash-type')}}">{{session('flash-message')}}</div>
+                    @include("partials/alert/" . session('flash-type'), ['message' => session('flash-message')])
                 @endif
 
                 @yield('body')    
