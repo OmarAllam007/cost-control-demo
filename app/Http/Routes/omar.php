@@ -49,6 +49,11 @@ Route::group(['prefix' => 'boq'], function () {
     Route::post('import/{project}', ['as' => 'boq.post-import', 'uses' => 'BoqController@postImport']);
 });
 
+Route::group(['prefix' => 'productivity'], function () {
+    Route::get('import/{project}', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
+    Route::post('import/{project}', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
+});
+
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ActivityDivision;
+use App\Productivity;
 use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -41,8 +42,9 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $project->load(['wbs_levels', 'breakdown_resources']);
-        return view('project.show', compact('project'));
+        $productivity = Productivity::where('project_id',$project->id)->get();
+        $project->load(['wbs_levels','breakdown_resources']);
+        return view('project.show', compact('project','productivity'));
     }
 
     public function edit(Project $project)
@@ -68,64 +70,6 @@ class ProjectController extends Controller
         flash('Project has been deleted', 'success');
 
         return \Redirect::route('project.index');
-    }
-
-
-    public function upload(Request $request)
-    {
-
-        try {
-//upload file
-            $original_name = $request->file('file')->getClientOriginalName();
-            $request->file('file')->move(
-                base_path() . '/storage/files/', $original_name
-            );
-//EO-Upload File
-
-//Read file .....
-            $input = base_path() . '/storage/files/' . $original_name;
-            $inputFileType = \PHPExcel_IOFactory::identify($input);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($input);
-        } //if file not found
-        catch (Exception $e) {
-            die('Error loading file "' . pathinfo($input, PATHINFO_BASENAME) . '": ' . $e->getMessage());
-        }
-
-        //iterate over sheet
-
-
-        /**@var \PHPExcel_Worksheet $objWorksheet */
-        $objWorksheet = $objPHPExcel->getActiveSheet();
-
-
-        foreach ($objWorksheet->getRowIterator(2) as $row) {
-
-            /** @var \PHPExcel_Worksheet_Row $row */
-            $cellIterator = $row->getCellIterator();
-
-            $cellIterator->setIterateOnlyExistingCells(false);
-            $inputs = [];
-
-            foreach ($cellIterator as $cell) {
-                $inputs[] = $cell->getValue();
-            }
-            $project = Project::where('name', $inputs[1])->first();
-
-            if (is_null($project)) {//if project is exist
-                Project::create([
-                    'name' => $inputs[1],
-                    'description' => $inputs[2]
-                ]);
-            } else {
-
-                continue;
-            }
-
-
-        }
-
-        return redirect()->back();
     }
 
 

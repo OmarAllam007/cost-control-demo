@@ -23,7 +23,6 @@ class BoqController extends Controller
     public function create(Request $request)
 
     {
-
         if (!$request->has('project')) {
             flash('Project not found');
             return redirect()->route('project.index');

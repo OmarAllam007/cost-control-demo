@@ -7,7 +7,6 @@
         <i class="fa fa-plus"></i> Add Level
     </a>
 </div>
-<div class="clearfix"></div>
 
 <div class="clearfix"></div>
 

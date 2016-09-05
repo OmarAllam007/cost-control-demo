@@ -9,37 +9,43 @@ use Illuminate\Database\Eloquent\Model;
 
 class Productivity extends Model
 {
-    use Tree,HasOptions;
+    use Tree, HasOptions;
     protected $fillable = ['csi_category_id',
         'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
-        'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source','code'];
+        'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source', 'code', 'project_id'];
 
     protected $dates = ['created_at', 'updated_at'];
-
-    public function category()
-    {
-      return  $this->belongsTo(CsiCategory::class,'csi_category_id');
-    }
-    public function units()
-    {
-        return  $this->belongsTo(Unit::class,'unit');
-    }
-
-
-
-    public function productivityAfterReduction(){
-
-       return $this->after_reduction = (1 - $this->reduction_factor) * $this->daily_output;
-    }
-
-    public function getAfterReductionAttribute(){
-
-        return  $this->daily_output * (1 - $this->reduction_factor);
-    }
 
     public static function options()
     {
         return static::orderBy('code')->pluck('code', 'id')->prepend('Select Reference', '');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(CsiCategory::class, 'csi_category_id');
+    }
+
+    public function units()
+    {
+        return $this->belongsTo(Unit::class, 'unit');
+    }
+
+    public function project()
+    {
+    return $this->belongsTo(Project::class,'id');
+    }
+
+    public function productivityAfterReduction()
+    {
+
+        return $this->after_reduction = (1 - $this->reduction_factor) * $this->daily_output;
+    }
+
+    public function getAfterReductionAttribute()
+    {
+
+        return $this->daily_output * (1 - $this->reduction_factor);
     }
 
     function scopeFilter(Builder $query, $term = '')

@@ -1,4 +1,14 @@
-@if ($project->productivities->count())
+<div class="form-group tab-actions pull-right">
+    <a href="{{route('productivity.import', $project->id)}}" class="btn btn-success btn-sm">
+        <i class="fa fa-cloud-upload"></i> Import
+    </a>
+
+    <a href="{{route('productivity.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
+        <i class="fa fa-plus"></i> Add Productivity
+    </a>
+</div>
+<div class="clearfix"></div>
+@if ($project->productivity->count())
 
     <table class="table table-condensed table-striped">
         <thead>
@@ -12,9 +22,9 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($project->productivities as $productivity)
+        @foreach($project->productivity as $productivity)
             <tr>
-                <td>{{$productivity->csi_code}}</td>
+                <td>{{$productivity->code}}</td>
                 <td>{{$productivity->category->name}}</td>
                 <td>{{$productivity->daily_output}}</td>
                 <td>{{$productivity->after_reduction}}</td>
