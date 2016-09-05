@@ -13,6 +13,10 @@
 
             {{Form::open(['route' => 'std-activity.post-import', 'files' => true])}}
 
+            <p class="text-info">
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/activity.xlsx')}}">click here</a> to download a sample template
+            </p>
+
             <div class="form-group {{$errors->first('file', 'has-errors')}}">
                 {{Form::label('file', null, ['class' => 'control-label'])}}
                 {{Form::file('file', ['class' => 'form-control'])}}

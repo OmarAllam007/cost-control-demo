@@ -45,7 +45,7 @@ class WbsImportJob extends Job
             $levels->put($level->canonical, $level->id);
         });
 
-        $rows = $sheet->getRowIterator();
+        $rows = $sheet->getRowIterator(2);
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $parent = 0;

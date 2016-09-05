@@ -1,14 +1,4 @@
-<div class="form-group tab-actions pull-right">
-
-
-    <a href="{{route('productivity.create')}}" class="btn btn-primary btn-sm">
-        <i class="fa fa-plus"></i> Add Productivity
-    </a>
-</div>
-<div class="clearfix"></div>
-
-
-@if ($project->productivity)
+@if ($project->productivities->count())
     <table class="table table-condensed table-striped">
         <thead>
         <tr>
@@ -21,7 +11,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($project->productivity as $productivity)
+        @foreach($project->productivities as $productivity)
             <tr>
                 <td>{{$productivity->code}}</td>
                 <td>{{$productivity->category->name}}</td>

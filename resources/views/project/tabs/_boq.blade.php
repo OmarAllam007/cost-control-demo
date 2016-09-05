@@ -4,7 +4,7 @@
     </a>
 
     <a href="{{route('boq.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
-        <i class="fa fa-plus"></i> Add Level
+        <i class="fa fa-plus"></i> Add item
     </a>
 </div>
 
@@ -54,7 +54,7 @@
     </table>
 
 @else
-    <div class="alert alert-info"><i class="fa fa-info-circle"></i> No Boq found</div>
+    <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No Boq found</div>
 @endif
 
 
