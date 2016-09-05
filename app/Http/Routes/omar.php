@@ -1,13 +1,5 @@
 <?php
 
-Route::resource('unit', 'UnitController');
-Route::resource('survey', 'SurveyController');
-Route::resource('business-partner', 'BusinessPartnerController');
-Route::resource('resources', 'ResourcesController');
-Route::resource('resource-type', 'ResourceTypeController');
-Route::resource('boq', 'BoqController');
-Route::resource('productivity', 'ProductivityController');
-Route::resource('category', 'CategoryController');
 
 
 Route::get('/import',
@@ -50,13 +42,21 @@ Route::group(['prefix' => 'boq'], function () {
 });
 
 Route::group(['prefix' => 'productivity'], function () {
-    Route::get('import/{project}', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
-    Route::post('import/{project}', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
+    Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
+    Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
 });
 
 
 
 
+Route::resource('unit', 'UnitController');
+Route::resource('survey', 'SurveyController');
+Route::resource('business-partner', 'BusinessPartnerController');
+Route::resource('resources', 'ResourcesController');
+Route::resource('resource-type', 'ResourceTypeController');
+Route::resource('boq', 'BoqController');
+Route::resource('productivity', 'ProductivityController');
+Route::resource('category', 'CategoryController');
 
 
 

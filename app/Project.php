@@ -30,10 +30,7 @@ class Project extends Model
     {
         return $this->wbs_levels()->tree()->get();
     }
-    function productivity()
-    {
-        return $this->hasMany(Productivity::class);
-    }
+
     function wbs_levels()
     {
         return $this->hasMany(WbsLevel::class);

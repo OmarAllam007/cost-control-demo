@@ -42,7 +42,6 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $productivity = Productivity::where('project_id',$project->id)->get();
         $project->load(['wbs_levels','breakdown_resources']);
         return view('project.show', compact('project','productivity'));
     }

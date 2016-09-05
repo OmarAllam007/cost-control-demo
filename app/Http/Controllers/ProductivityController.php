@@ -76,12 +76,12 @@ class ProductivityController extends Controller
         return \Redirect::route('productivity.index');
     }
 
-    function import(Project $project)
+    function import()
     {
-        return view('productivity.import',compact('project'));
+        return view('productivity.import');
     }
 
-    function postImport(Project $project,Request $request)
+    function postImport(Request $request)
     {
         $this->validate($request, [
             'file' => 'required|file|mimes:xls,xlsx'
@@ -89,8 +89,8 @@ class ProductivityController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new ProductivityImportJob($project,$file->path()));
+        $this->dispatch(new ProductivityImportJob($file->path()));
 
-        return redirect()->route('project.show', $project);
+        return redirect()->route('productivity.index');
     }
 }

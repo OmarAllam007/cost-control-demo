@@ -12,7 +12,7 @@ class Productivity extends Model
     use Tree, HasOptions;
     protected $fillable = ['csi_category_id',
         'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
-        'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source', 'code', 'project_id'];
+        'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source', 'code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -31,10 +31,7 @@ class Productivity extends Model
         return $this->belongsTo(Unit::class, 'unit');
     }
 
-    public function project()
-    {
-    return $this->belongsTo(Project::class,'id');
-    }
+
 
     public function productivityAfterReduction()
     {
@@ -57,6 +54,8 @@ class Productivity extends Model
             $query->where('code', 'like', "%{$term}%");
         }
     }
+
+
 
     function morphToJSON()
     {

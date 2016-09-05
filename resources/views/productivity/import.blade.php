@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2 class="panel-title">Import Productivity -  {{$project->name}} </h2>
+    <h2 class="panel-title">Import Productivity</h2>
 
     <a href="{{route('productivity.index')}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-right"></i> Back</a>
 @endsection
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-6 col-sm-9">
 
-            {{Form::open(['route' => ['productivity.post-import',$project], 'files' => true])}}
+            {{Form::open(['route' => ['productivity.post-import'], 'files' => true])}}
             {{csrf_field()}}
             <div class="form-group {{$errors->first('file', 'has-error')}}">
                 {{Form::label('file', null, ['class' => 'control-label'])}}

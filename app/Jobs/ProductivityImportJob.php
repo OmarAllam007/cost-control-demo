@@ -18,10 +18,10 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
     protected $division;
     protected $project_id;
 
-    public function __construct($project, $file)
+    public function __construct($file)
     {
 
-        $this->project_id = $project->id;
+
         $this->file = $file;
     }
 
@@ -32,7 +32,6 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-        $ids = Productivity::query()->pluck('project_id')->toArray();
         $productivities = Productivity::query()->pluck('code')->toArray();
 
         foreach ($rows as $row) {
@@ -41,7 +40,7 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
             /** @var \PHPExcel_Cell $cell */
             $data = $this->getDataFromCells($cells);
 
-            if (!(in_array($data[0], $productivities) && in_array($this->project_id, $ids)) || (in_array($data[0], $productivities) && !in_array($this->project_id, $ids))) {
+            if (!(in_array($data[0], $productivities))) {
 
                 Productivity::create([
                     'code' => $data[0],
@@ -56,7 +55,7 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
                     'reduction_factor' => $data[11],
                     'after_reduction' => $this->getAfterFactor($data[11], $data[8]),
                     'source' => $data[12],
-                    'project_id' => $this->project_id,
+
                 ]);
 
             }

@@ -2,11 +2,15 @@
 
 @section('header')
     <h2>Productivity</h2>
-    <a href="{{ route('productivity.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i>
-        Add productivity</a>
-    {{--<button href="" class="btn btn-sm btn-primary pull-right" id="prod_upload_file"><i class="fa fa-plus"></i>--}}
-        {{--Upload Productivity--}}
-    {{--</button>--}}
+    <div class="btn-toolbar pull-right">
+        <a href="{{ route('productivity.create') }} " class="btn btn-sm btn-primary">
+            <i class="fa fa-plus"></i> Add Productivity
+        </a>
+
+        <a href="{{ route('productivity.import') }} " class="btn btn-sm btn-success">
+            <i class="fa fa-cloud-upload"></i> Import
+        </a>
+    </div>
 
 @stop
 
@@ -35,7 +39,7 @@
         <table class="table table-condensed table-striped">
             <thead>
             <tr>
-                <th>Code</th>
+                <th>CSI Code</th>
                 <th>Category</th>
                 <th>Daily Output</th>
                 <th>After Reduction</th>

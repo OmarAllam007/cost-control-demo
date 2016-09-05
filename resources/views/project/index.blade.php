@@ -8,14 +8,6 @@
 
 @section('body')
 
-    {{--<div class="form-group upload pull-right" style="display: none;">
-        {!! Form::open(array('action' => 'ProjectController@upload', 'files' => true,'class'=>'form-inline')) !!}
-        {!! Form::file('file',['class'=>'form-control']) !!}
-        {!! Form::token() !!}
-        {!! Form::submit('Upload',['class'=>'btn btn-primary']) !!}
-        {!! Form::close() !!}
-    </div>--}}
-
     @if ($projects->total())
         <table class="table table-condensed table-striped">
             <thead>

@@ -1,15 +1,14 @@
 <div class="form-group tab-actions pull-right">
-    <a href="{{route('productivity.import', $project->id)}}" class="btn btn-success btn-sm">
-        <i class="fa fa-cloud-upload"></i> Import
-    </a>
 
-    <a href="{{route('productivity.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
+
+    <a href="{{route('productivity.create')}}" class="btn btn-primary btn-sm">
         <i class="fa fa-plus"></i> Add Productivity
     </a>
 </div>
 <div class="clearfix"></div>
-@if ($project->productivity->count())
 
+
+@if ($project->productivity)
     <table class="table table-condensed table-striped">
         <thead>
         <tr>
@@ -29,7 +28,7 @@
                 <td>{{$productivity->daily_output}}</td>
                 <td>{{$productivity->after_reduction}}</td>
                 <td>{{$productivity->units->type}}</td>
-                <td><a href="#" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a></td>
+                <td><a href="#" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i>Override</a></td>
             </tr>
         @endforeach
         </tbody>
