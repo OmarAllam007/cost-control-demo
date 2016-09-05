@@ -12,20 +12,20 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class BoqImportJob extends Job implements ShouldQueue
+class BoqImportJob extends ImportJob implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
     protected $units;
     protected $file;
-    protected $types;
+    protected $division;
     protected $project_id;
 
 
-    public function __construct($project,$file)
+    public function __construct($project, $file)
     {
         $this->file = $file;
-        $this->project_id = $project;
+        $this->project_id = $project->id;
     }
 
     public function handle()
@@ -34,134 +34,90 @@ class BoqImportJob extends Job implements ShouldQueue
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
-
         $rows = $sheet->getRowIterator(2);
+
+        $boqs = Boq::query()->pluck('item_code')->toArray();
+
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
-            foreach ($cells as $index => $cell) {
-                $data = $this->getDataFromCells($cells);
-                $item = Boq::where('item_code',$data[0])->first();
-                dump($data);
-                if(!$item) {
-                    Boq::create([
-                        'item_code' => $data[0],
-                        'cost_account' => $data[1],
-                        'wbs_id' => $this->getWbsId($data[2]),
-                        'item' => $data[3],
-                        'description' => $data[4],
-                        'type' => $data[5],
-                        'unit_id' => $this->getUnit($data[6]),
-                        'quantity' => $data[7],
-                        'dry_ur' => $data[8],
-                        'price_ur' => $data[9],
-                        'arabic_description' => $data[10],
-                        'division_id' => $this->getDivisionId($data),
-                        'kcc_qty' => $data[14],
-                        'subcon' => $data[15],
-                        'materials' => $data[16],
-                        'manpower' => $data[17],
-                        'project_id'=>$this->getProjectId($data[2]),
-                    ]);
-                }
-                else{
-                    continue;
-                }
+            $data = $this->getDataFromCells($cells);
+
+            $key = in_array($data[0], $boqs);
+            if (!$key) {
+                Boq::create([
+                    'item_code' => $data[0],
+                    'cost_account' => $data[1],
+                    'wbs_id' => $this->getWbsId($data[2]),
+                    'item' => $data[3],
+                    'description' => $data[4],
+                    'type' => $data[5],
+                    'unit_id' => $this->getUnit($data[6]),
+                    'quantity' => $data[7],
+                    'dry_ur' => $data[8],
+                    'price_ur' => $data[9],
+                    'arabic_description' => $data[10],
+                    'division_id' => $this->getDivisionId($data),
+                    'kcc_qty' => $data[14],
+                    'subcon' => $data[15],
+                    'materials' => $data[16],
+                    'manpower' => $data[17],
+                    'project_id' => $this->project_id,
+                ]);
             }
+
+
         }
 
         unlink($this->file);
     }
 
+
+    protected function getWbsId($wbs_code)
+    {
+        $level = WbsLevel::where('code', $wbs_code)->first();
+        return $level->id;
+
+    }
+
     protected function getDivisionId($data)
     {
-        $this->loadTypes();
+        $this->loadDivision();
 
         $levels = array_filter(array_slice($data, 11, 3));
-        $type_id = 0;
+        $division_id = 0;
         $path = [];
         foreach ($levels as $level) {
             $path[] = mb_strtolower($level);
             $key = implode('/', $path);
 
-            if ($this->types->has($key)) {
-                $type_id = $this->types->get($key);
+            if ($this->division->has($key)) {
+                $division_id = $this->division->get($key);
             } else {
                 $division = BoqDivision::create([
                     'name' => $level,
-                    'parent_id' => $type_id
+                    'parent_id' => $division_id
                 ]);
-                $type_id = $division->id;
-                $this->types->put($key, $type_id);
+                $division_id = $division->id;
+                $this->division->put($key, $division_id);
             }
         }
 
-        return $type_id;
+        return $division_id;
     }
 
-    protected function getProjectId($wbs_level){
-        $level = WbsLevel::where('code','LIKE',$wbs_level.'%')->first();
-        return $level->project_id;
-    }
-
-    protected function getDataFromCells($cells)
+    private function loadDivision()
     {
-        $data = [];
-        /** @var \PHPExcel_Cell $cell */
-        foreach ($cells as $cell) {
-            if ($cell->getFormattedValue()) {
-                $data[] = $cell->getFormattedValue();
-            } else {
-                $data[] = $cell->getValue();
-            }
-        }
-        return $data;
-    }
-
-    protected function getWbsId($wbs_code)
-    {
-        $level = WbsLevel::where('code','LIKE',$wbs_code.'%')->first();
-
-        return $level->id;
-
-    }
-
-    protected function getUnit($unit)
-    {
-        if (!$this->units) {
-            $this->units = collect();
-            Unit::all()->each(function ($unit) {
-                $this->units->put(mb_strtolower($unit->type), $unit->id);
-            });
-        }
-        $unit = trim($unit);
-
-        if (!$unit) {
-            return 0;
+        if ($this->division) {
+            return $this->division;
         }
 
-        $key = mb_strtolower($unit);
-        if ($this->units->has($key)) {
-            return $this->units->get($key);
-        }
-
-        $unitObject = Unit::create(['type' => $unit]);
-        $this->units->put(mb_strtolower($unit), $unitObject->id);
-        return $unitObject->id;
-    }
-
-    private function loadTypes()
-    {
-        if ($this->types) {
-            return $this->types;
-        }
-
-        $this->types = collect();
-        BoqDivision::all()->each(function($type) {
-            $this->types->put(mb_strtolower($type->canonical), $type->id);
+        $this->division = collect();
+        BoqDivision::all()->each(function ($division) {
+            $this->division->put(mb_strtolower($division->canonical), $division->id);
         });
 
-        return $this->types;
+        return $this->division;
     }
 
 }
