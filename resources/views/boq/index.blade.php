@@ -12,8 +12,8 @@
         <table class="table table-condensed table-striped">
             <thead>
             <tr>
-                <th>Name</th>
                 <th>Cost Account</th>
+                <th>Name</th>
                 <th>Quantity</th>
                 <th>Quantity(All)</th>
                 <th>DRY U.R.</th>

@@ -14,8 +14,8 @@
     <table class="table table-condensed table-striped">
         <thead>
         <tr>
-            <th>Name</th>
             <th>Cost Account</th>
+            <th>Name</th>
             <th>Quantity</th>
             <th>Quantity(All)</th>
             <th>DRY U.R.</th>
@@ -31,8 +31,8 @@
 
         @foreach($project->boqs as $boq)
                     <tr>
-                        <td class="col-md-2">{{ isset($boq->description)? $boq->description:''}}</td>
                         <td class="col-md-1">{{ $boq->cost_account?:'' }}</td>
+                        <td class="col-md-2">{{ isset($boq->description)? $boq->description:''}}</td>
                         <td class="col-md-1">{{ isset($boq->quantity)?$boq->quantity:'' }}</td>
                         <td class="col-md-1">{{ $boq->getAllQuantity($boq->quantity)?:'' }}</td>
                         <td class="col-md-1">{{ $boq->getDry($boq->subcon,$boq->materials,$boq->manpower)?:''  }}</td>
