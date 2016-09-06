@@ -13,6 +13,7 @@
             <thead>
             <tr>
                 <th>Name</th>
+                <th>Cost Account</th>
                 <th>Quantity</th>
                 <th>Quantity(All)</th>
                 <th>DRY U.R.</th>
@@ -28,6 +29,7 @@
             <tbody>
                 @foreach($boqs as $boq)
                     <tr>
+                        <td class="col-md-2">{{ $boq->cost_account?:'' }}</td>
                         <td class="col-md-2">{{ $boq->description?:'' }}</td>
                         <td class="col-md-1">{{ $boq->quantity?:'' }}</td>
                         <td class="col-md-1">{{ $boq->getAllQuantity($boq->quantity)?:'' }}</td>

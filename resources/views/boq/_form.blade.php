@@ -21,6 +21,12 @@
             {!! $errors->first('item', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('cost_account', 'has-error')}}">
+            {{ Form::label('cost_account', 'Cost Account', ['class' => 'control-label']) }}
+            {{ Form::text('cost_account', null, ['class' => 'form-control']) }}
+            {!! $errors->first('cost_account', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('description', 'has-error')}}">
             {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}

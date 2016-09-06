@@ -52,14 +52,13 @@
             @foreach($productivities as $productivity)
 
                 <tr>
-
                     <td class="col-md-1">{{ $productivity->code }}
+                    </td>
+
                     </td>
                     <td>
                         {{$productivity->category->path}}
-
                     </td>
-
                     {{--<td>--}}
                         {{--{{$productivity->category->name}}--}}
                     {{--</td>--}}
