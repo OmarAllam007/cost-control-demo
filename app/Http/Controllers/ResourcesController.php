@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessPartner;
 use App\Jobs\ResourcesImportJob;
+use App\Project;
 use App\Resources;
 use App\ResourceType;
 use App\Unit;
@@ -41,7 +42,7 @@ class ResourcesController extends Controller
 
         Resources::create($request->all());
 
-        flash('Resources has been saved', 'success');
+        flash('Resource has been saved', 'success');
 
         return \Redirect::route('resources.index');
     }
@@ -72,7 +73,7 @@ class ResourcesController extends Controller
 
         $resources->update($request->all());
 
-        flash('Resources has been saved', 'success');
+        flash('Resource has been saved', 'success');
 
         return \Redirect::route('resources.index');
     }
@@ -101,7 +102,37 @@ class ResourcesController extends Controller
 
         $this->dispatch(new ResourcesImportJob($file->path()));
 
-        flash('Resources have been imported', 'success');
+        flash('Resource have been imported', 'success');
         return redirect()->route('resources.index');
+    }
+
+    function override(Resources $resources, Project $project)
+    {
+        $overwrote = Resources::version($project->id, $resources->id)->first();
+
+        if (!$overwrote) {
+            $overwrote = $resources;
+        }
+
+        return view('resources.override', ['resource' => $overwrote, 'project' => $project]);
+    }
+
+    function postOverride(Resources $resources, Project $project, Request $request)
+    {
+        $this->validate($request, $this->rules);
+
+        $newResource = Resources::version($project->id, $resources->id)->first();
+
+        if (!$newResource) {
+            $newResource = new Resources($request->all());
+            $newResource->project_id = $project->id;
+            $newResource->resource_id = $resources->id;
+            $newResource->save();
+        } else {
+            $newResource->update($request->all());
+        }
+
+        flash('Resource has been updated successfully', 'success');
+        return redirect()->route('project.show', $project);
     }
 }
