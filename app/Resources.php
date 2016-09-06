@@ -57,6 +57,7 @@ class Resources extends Model
 
     function scopeVersion(Builder $query, $project_id, $resource_id)
     {
-        $resource = $query->where('resource_id', $resource_id)->where('project_id', $project_id);
+        $query->where('resource_id', $resource_id)
+            ->where('project_id', $project_id);
     }
 }

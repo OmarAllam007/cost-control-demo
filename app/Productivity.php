@@ -81,4 +81,10 @@ class Productivity extends Model
             'after_reduction' => $this->after_reduction
         ];
     }
+
+    function scopeVersion(Builder $query, $project_id, $productivity)
+    {
+        $query->where('productivity_id', $productivity)
+            ->where('project_id', $project_id);
+    }
 }
