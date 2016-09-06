@@ -15,7 +15,7 @@
             <td>{{$resource->name}}</td>
             <td>{{$resource->types->name}}</td>
             <td>
-                <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
+                <a href="{{route('resources.override', $project)}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
             </td>
         </tr>
         @endforeach
