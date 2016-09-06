@@ -41,7 +41,6 @@ class BoqController extends Controller
     public function store(Request $request)
     {
 
-
         Boq::create($request->all());
 
         flash('Boq has been saved', 'success');
