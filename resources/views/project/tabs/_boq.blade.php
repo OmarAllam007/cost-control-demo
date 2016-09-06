@@ -31,10 +31,10 @@
 
         @foreach($project->boqs as $boq)
                     <tr>
-                        <td class="col-md-2">{{ $boq->item }}</td>
-                        <td class="col-md-1">{{ $boq->quantity }}</td>
+                        <td class="col-md-2">{{ isset($boq->item)? $boq->item:''}}</td>
+                        <td class="col-md-1">{{ isset($boq->quantity)?$boq->quantity:0 }}</td>
                         <td class="col-md-1">{{ $boq->getAllQuantity($boq->quantity) }}</td>
-                        <td class="col-md-1">{{ $boq->dry_ur }}</td>
+                        <td class="col-md-1">{{ isset($boq->dry_ur)? $boq->dry_ur : 0  }}</td>
                         <td class="col-md-1">{{ $boq->price_ur }}</td>
                         <td class="col-md-1">{{ $boq->unit->type }}</td>
                         <td class="col-md-1">{{$boq->getDryForBuilding($boq->dry_ur,$boq->quantity)  }}</td>

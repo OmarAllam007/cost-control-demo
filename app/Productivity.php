@@ -31,7 +31,22 @@ class Productivity extends Model
         return $this->belongsTo(Unit::class, 'unit');
     }
 
+    public function divisionParent($name)
+    {
+        $path = array();
+        $div = CsiCategory::where('name', $name)->first();
+        array_push($path, $name);
+        $path = implode('/', $path);
+        $parent_id = $div->parent_id;
 
+        if ($parent_id != 0) {
+            $name = CsiCategory::where('id', $parent_id)->first();
+            $this->divisionParent($name->name);
+        }
+
+        print_r('/'.$path);
+
+    }
 
     public function productivityAfterReduction()
     {
@@ -54,7 +69,6 @@ class Productivity extends Model
             $query->where('code', 'like', "%{$term}%");
         }
     }
-
 
 
     function morphToJSON()
