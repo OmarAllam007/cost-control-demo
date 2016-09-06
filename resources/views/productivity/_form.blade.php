@@ -14,6 +14,8 @@
             {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
         </div>
 
+
+
         <div class="form-group {{$errors->first('code', 'has-error')}}">
             {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
             {{ Form::text('code', null, ['class' => 'form-control']) }}

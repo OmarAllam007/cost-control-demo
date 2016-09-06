@@ -31,7 +31,6 @@ class BoqImportJob extends ImportJob implements ShouldQueue
     public function handle()
     {
 
-        Boq::truncate();
         ini_set('max_execution_time', 300);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);

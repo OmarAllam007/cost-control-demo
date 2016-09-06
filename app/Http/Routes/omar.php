@@ -47,8 +47,6 @@ Route::group(['prefix' => 'productivity'], function () {
 });
 
 
-
-
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

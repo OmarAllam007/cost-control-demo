@@ -14,12 +14,12 @@
     <table class="table table-condensed table-striped">
         <thead>
         <tr>
+            <th>Cost Account</th>
             <th>Name</th>
             <th>Quantity</th>
             <th>Quantity(All)</th>
             <th>DRY U.R.</th>
             <th>PRICE U.R.</th>
-            <th>Unit</th>
             <th>DRY (1 BLDG.)</th>
             <th>PRICE (1 BLDG.)</th>
             <th>DRY (ALL BLDG.)</th>
@@ -31,12 +31,12 @@
 
         @foreach($project->boqs as $boq)
                     <tr>
+                        <td class="col-md-1">{{ $boq->cost_account?:'' }}</td>
                         <td class="col-md-2">{{ isset($boq->description)? $boq->description:''}}</td>
                         <td class="col-md-1">{{ isset($boq->quantity)?$boq->quantity:'' }}</td>
                         <td class="col-md-1">{{ $boq->getAllQuantity($boq->quantity)?:'' }}</td>
                         <td class="col-md-1">{{ $boq->getDry($boq->subcon,$boq->materials,$boq->manpower)?:''  }}</td>
                         <td class="col-md-1">{{ $boq->price_ur?:'' }}</td>
-                        <td class="col-md-1">{{ isset($boq->unit->type)?$boq->unit->type:'' }}</td>
                         <td class="col-md-1">{{$boq->getDryForBuilding($boq->dry_ur,$boq->quantity)?:''  }}</td>
                         <td class="col-md-1">{{$boq->getPriceForBuilding($boq->price_ur,$boq->quantity)?:'' }}</td>
                         <td class="col-md-1">{{ $boq->getDryForAllBuilding($boq->quantity,$boq->dry_ur)?:'' }}</td>

@@ -52,17 +52,16 @@
             @foreach($productivities as $productivity)
 
                 <tr>
-
                     <td class="col-md-1">{{ $productivity->code }}
                     </td>
-                    {{--<td>--}}
-                        {{--{{$productivity->divisionParent($productivity->category->name)}}--}}
 
-                    {{--</td>--}}
-
-                    <td>
-                        {{$productivity->category->name}}
                     </td>
+                    <td>
+                        {{$productivity->category->path}}
+                    </td>
+                    {{--<td>--}}
+                        {{--{{$productivity->category->name}}--}}
+                    {{--</td>--}}
                     {{--<td class="col-md-1">{{ isset($productivity->category->name)?$productivity->category->name:'' }}</td>--}}
                     <td class="col-md-1">{{ isset($productivity->daily_output)?$productivity->daily_output:'' }}</td>
                     <td class="col-md-1">{{ isset($productivity->after_reduction)?$productivity->after_reduction:'' }}</td>
