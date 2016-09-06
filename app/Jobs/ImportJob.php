@@ -24,12 +24,9 @@ class ImportJob extends Job
     {
         $data = [];
         /** @var \PHPExcel_Cell $cell */
+        /** @var \PHPExcel_Worksheet_CellIterator $cells*/
         foreach ($cells as $cell) {
-            if ($cell->getFormattedValue()) {
-                $data[] = $cell->getFormattedValue();
-            } else {
                 $data[] = $cell->getValue();
-            }
         }
         return $data;
     }

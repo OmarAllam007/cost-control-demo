@@ -31,6 +31,8 @@ class BoqImportJob extends ImportJob implements ShouldQueue
     public function handle()
     {
 
+        Boq::truncate();
+        ini_set('max_execution_time', 300);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
@@ -42,26 +44,24 @@ class BoqImportJob extends ImportJob implements ShouldQueue
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
             $data = $this->getDataFromCells($cells);
-
             $key = in_array($data[0], $boqs);
             if (!$key) {
                 Boq::create([
-                    'item_code' => $data[0],
-                    'cost_account' => $data[1],
-                    'wbs_id' => $this->getWbsId($data[2]),
-                    'item' => $data[3],
-                    'description' => $data[4],
-                    'type' => $data[5],
-                    'unit_id' => $this->getUnit($data[6]),
-                    'quantity' => $data[7],
-                    'dry_ur' => $data[8],
-                    'price_ur' => $data[9],
-                    'arabic_description' => $data[10],
-                    'division_id' => $this->getDivisionId($data),
-                    'kcc_qty' => $data[14],
-                    'subcon' => $data[15],
-                    'materials' => $data[16],
-                    'manpower' => $data[17],
+                    'item_code' => $data[0] ?: '',
+                    'cost_account' => $data[1] ?:'',
+                    'wbs_id' => $this->getWbsId($data[2]) ?: 0,
+                    'item' => $data[3] ?: '',
+                    'description' => $data[4] ?: '',
+                    'type' => $data[5] ?: '',
+                    'unit_id' => $this->getUnit($data[6])?: 0,
+                    'quantity' => $data[7]?: 0,
+                    'price_ur' => $data[9] ?: 0,
+                    'arabic_description' => $data[10]?: '',
+                    'division_id' => $this->getDivisionId($data)?:'',
+                    'kcc_qty' => $data[14] ?: '',
+                    'subcon' => $data[15]?: '',
+                    'materials' => $data[16]?: '',
+                    'manpower' => $data[17]?: '',
                     'project_id' => $this->project_id,
                 ]);
             }
@@ -76,6 +76,10 @@ class BoqImportJob extends ImportJob implements ShouldQueue
     protected function getWbsId($wbs_code)
     {
         $level = WbsLevel::where('code', $wbs_code)->first();
+
+        if(!$level){
+            return 0;
+        }
         return $level->id;
 
     }
