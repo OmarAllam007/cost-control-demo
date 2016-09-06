@@ -17,6 +17,10 @@ class Boq extends Model
     {
         return $this->belongsTo(Unit::class,'unit_id');
     }
+    public function getDry($subcon,$material,$man_power)
+    {
+        return  $subcon+$material+$man_power;
+    }
 
     public function getAllQuantity($quantity)
     {

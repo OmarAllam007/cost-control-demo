@@ -61,7 +61,6 @@ class BoqController extends Controller
 
     public function update(Boq $boq, Request $request)
     {
-        //$this->validate($request, $this->rules);
         $boq->update($request->all());
         flash('Boq has been saved', 'success');
 
