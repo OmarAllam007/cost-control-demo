@@ -18,5 +18,5 @@
         @endforeach
     </ul>
 @else
-    <div class="alert alert-info"><i class="fa fa-info-circle"></i> No WBS found</div>
+    <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No WBS found</div>
 @endif

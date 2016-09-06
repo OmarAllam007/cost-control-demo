@@ -33,7 +33,7 @@ class QuantitySurveyImportJob extends ImportJob
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
 
-        $rows = $excel->getSheet(0)->getRowIterator();
+        $rows = $excel->getSheet(0)->getRowIterator(2);
         foreach ($rows as $row) {
             $data = $this->getDataFromCells($row->getCellIterator());
 

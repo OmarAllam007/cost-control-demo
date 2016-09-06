@@ -41,5 +41,5 @@
         </tbody>
     </table>
 @else
-    <div class="alert alert-info"><i class="fa fa-info-circle"></i> No Quantity Survey</div>
+    <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No Quantity Survey</div>
 @endif

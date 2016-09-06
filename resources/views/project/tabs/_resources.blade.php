@@ -1,4 +1,4 @@
-@if ($project->plain_resources)
+@if ($project->plain_resources->count())
     <table class="table table-condensed table-striped">
         <thead>
         <tr>

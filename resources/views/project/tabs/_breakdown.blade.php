@@ -60,5 +60,5 @@
         </table>
     </div>
 @else
-    <div class="alert alert-warning"><i class="fa fa-info-circle"></i> No breakdowns added</div>
+    <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No breakdowns added</div>
 @endif
