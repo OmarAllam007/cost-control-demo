@@ -7,7 +7,7 @@
 @stop
 
 @section('body')
-    {{ Form::model($productivity, ['route' => ['productivity.post-override', $productivity, $project]]) }}
+    {{ Form::model($productivity, ['route' => ['productivity.post-override', $baseProductivity, $project]]) }}
 
     @include('productivity._form')
 

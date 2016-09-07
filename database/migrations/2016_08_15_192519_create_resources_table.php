@@ -14,8 +14,8 @@ class CreateResourcesTable extends Migration
             $table->string('name');
             $table->float('rate');
             $table->string('unit');
-            $table->float('waste');
-            $table->string('reference');
+            $table->float('waste')->nullable();
+            $table->string('reference')->nullable();
             $table->integer('business_partner_id')->unsigned();
 //            $table->foreign('business_partner_id')->references('id')->on('business_partners');
 

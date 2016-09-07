@@ -102,7 +102,7 @@ class ProductivityController extends Controller
             $overwrote = $productivity;
         }
 
-        return view('productivity.override', ['productivity' => $overwrote, 'project' => $project]);
+        return view('productivity.override', ['productivity' => $overwrote, 'baseProductivity' => $productivity, 'project' => $project]);
     }
 
     function postOverride(Request $request, Productivity $productivity, Project $project)

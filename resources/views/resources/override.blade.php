@@ -7,7 +7,7 @@
 @stop
 
 @section('body')
-    {{ Form::model($resource, ['route' => ['resources.post-override', $resource, $project]]) }}
+    {{ Form::model($resource, ['route' => ['resources.post-override', $baseResource, $project]]) }}
 
         @include('resources._form')
 

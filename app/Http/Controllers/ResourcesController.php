@@ -114,7 +114,7 @@ class ResourcesController extends Controller
             $overwrote = $resources;
         }
 
-        return view('resources.override', ['resource' => $overwrote, 'project' => $project]);
+        return view('resources.override', ['resource' => $overwrote, 'baseResource' => $resources, 'project' => $project]);
     }
 
     function postOverride(Resources $resources, Project $project, Request $request)
