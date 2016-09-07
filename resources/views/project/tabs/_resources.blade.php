@@ -13,7 +13,7 @@
         <tr>
             <td>{{$resource->resource_code}}</td>
             <td>{{$resource->name}}</td>
-            <td>{{$resource->types->name}}</td>
+            <td>{{$resource->types->name or ''}}</td>
             <td>
                 <a href="{{route('resources.override', ['resources' => $resource, 'project' => $project])}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
             </td>
