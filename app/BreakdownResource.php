@@ -10,17 +10,17 @@ class BreakdownResource extends Model
 
     function breakdown()
     {
-        return $this->belongsTo(Breakdown::class);
+        return $this->belongsTo(Breakdown::class)->withTrashed();
     }
 
     function resource()
     {
-        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id');
+        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id')->withTrashed();
     }
 
     function productivity()
     {
-        return $this->belongsTo(Productivity::class);
+        return $this->belongsTo(Productivity::class)->withTrashed();
     }
 
     function getProjectResourceAttribute()

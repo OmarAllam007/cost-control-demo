@@ -18,7 +18,7 @@ class StdActivityResource extends Model
 
     public function resource()
     {
-        return $this->belongsTo(Resources::class);
+        return $this->belongsTo(Resources::class)->withTrashed();
     }
 
     public function project()

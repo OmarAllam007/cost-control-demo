@@ -15,12 +15,12 @@ class Breakdown extends Model
 
     function wbs_level()
     {
-        return $this->belongsTo(WbsLevel::class);
+        return $this->belongsTo(WbsLevel::class)->withTrashed();
     }
 
     function std_activity()
     {
-        return $this->belongsTo(StdActivity::class);
+        return $this->belongsTo(StdActivity::class)->withTrashed();
     }
 
     function template()
