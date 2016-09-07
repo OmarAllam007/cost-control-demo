@@ -2,6 +2,17 @@
 <div class="row">
     <div class="col-md-6">
 
+        <div class="form-group {{$errors->first('project_id', 'has-error')}}">
+            {{ Form::label('project_id', 'Project', ['class' => 'control-label']) }}
+            @if (request('project'))
+                <p><em>{{App\Project::find(request('project'))->name}}</em></p>
+                {{Form::hidden('project_id', request('project'))}}
+            @else
+                {{ Form::select('project_id', App\Project::options(), request('project'), ['class' => 'form-control']) }}
+            @endif
+            {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
             {{ Form::label('wbs_id', 'Wbs Level', ['class' => 'control-label']) }}
             <div class="hidden">
@@ -87,9 +98,6 @@
             {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
         </div>
 
-
-        <!-- Continue working on your fields here -->
-
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
@@ -107,7 +115,7 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\WbsLevel::tree()->get() as $level)
+                    @foreach(App\WbsLevel::forProject(request('project', Form::getValueAttribute('project_id')))->tree()->get() as $level)
                         @include('boq._recursive_input', ['level' => $level, 'input' => 'wbs_id'])
                     @endforeach
                 </ul>

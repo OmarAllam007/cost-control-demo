@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Productivity extends Model
 {
     use Tree, HasOptions;
-    protected $path = [];
+
     protected $fillable = ['csi_category_id',
         'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
         'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source', 'code'];
@@ -30,22 +30,6 @@ class Productivity extends Model
     public function units()
     {
         return $this->belongsTo(Unit::class, 'unit');
-    }
-
-    public function divisionParent($id = false)
-    {
-        if (!$id) {
-            $this->path = [];
-            $id = $this->csi_category_id;
-        }
-
-        $div = CsiCategory::find($id);
-        $this->path[] = $div->name;
-
-        if ($div->parent_id != 0) {
-            $this->divisionParent($div->parent_id);
-        }
-        return implode('/',$this->path);
     }
 
     public function productivityAfterReduction()

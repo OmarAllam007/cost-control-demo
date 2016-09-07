@@ -3,7 +3,7 @@
 @section('header')
     <h2 class="panel-title">Import BOQ -  {{$project->name}} </h2>
 
-    <a href="{{route('boq.index')}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-right"></i> Back</a>
+    <a href="{{route('project.show', $project)}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-right"></i> Back</a>
 @endsection
 
 @section('body')
@@ -12,7 +12,11 @@
         <div class="col-md-6 col-sm-9">
 
             {{Form::open(['route' => ['boq.post-import',$project], 'files' => true])}}
-            {{csrf_field()}}
+
+            <p class="text-info">
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/boq.xlsx')}}">click here</a> to download a sample template
+            </p>
+
             <div class="form-group {{$errors->first('file', 'has-error')}}">
                 {{Form::label('file', null, ['class' => 'control-label'])}}
                 {{Form::file('file', ['class' => 'form-control'])}}
@@ -20,7 +24,6 @@
             </div>
 
             <div class="form-group">
-
                 <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Upload</button>
             </div>
 

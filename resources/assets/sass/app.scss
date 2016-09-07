@@ -98,3 +98,51 @@ ul.tree  {
   max-height: 300px;
   overflow-y: scroll;
 }
+
+.btn-outline {
+  background: none;
+}
+
+.btn-primary.btn-outline {
+  color: $brand-primary;
+
+  &:focus, &:hover {
+    color: $btn-primary-color;
+  }
+}
+
+.btn-success.btn-outline {
+  color: $brand-success;
+
+  &:focus, &:hover {
+    color: $btn-success-color;
+  }
+}
+
+.btn-warning.btn-outline {
+  color: $brand-warning;
+
+  &:focus, &:hover {
+    color: $btn-warning-color;
+  }
+}
+
+.btn-danger.btn-outline {
+  color: $brand-danger;
+
+  &:focus, &:hover {
+    color: $btn-danger-color;
+  }
+}
+
+a, .btn {
+  outline: none;
+}
+
+.autocomplete-panel {
+  border-radius: 0;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
