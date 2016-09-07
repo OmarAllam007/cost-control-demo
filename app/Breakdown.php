@@ -25,6 +25,6 @@ class Breakdown extends Model
 
     function template()
     {
-        return $this->belongsTo(BreakdownTemplate::class, 'template_id');
+        return $this->belongsTo(BreakdownTemplate::class, 'template_id')->withTrashed();
     }
 }
