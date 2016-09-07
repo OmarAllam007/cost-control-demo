@@ -10,25 +10,36 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Resources extends Model
 {
-    use SoftDeletes, HasOptions,Tree;
+    use SoftDeletes, HasOptions, Tree;
 
 
     protected $table = 'resources';
-    protected $fillable = ['resource_code','name','rate','unit','waste','business_partner_id','resource_type_id','reference'];
+    protected $fillable = [
+        'resource_code',
+        'name',
+        'rate',
+        'unit',
+        'waste',
+        'business_partner_id',
+        'resource_type_id',
+        'reference'
+    ];
     protected $dates = ['created_at', 'updated_at'];
 
     public function types()
     {
-        return $this->belongsTo(ResourceType::class,'resource_type_id');
+        return $this->belongsTo(ResourceType::class, 'resource_type_id');
 
     }
+
     public function parteners()
     {
-        return $this->belongsTo(BusinessPartner::class,'business_partner_id');
+        return $this->belongsTo(BusinessPartner::class, 'business_partner_id');
     }
 
-    public function units(){
-        return $this->belongsTo(Unit::class,'unit');
+    public function units()
+    {
+        return $this->belongsTo(Unit::class, 'unit');
     }
 
 
@@ -59,5 +70,15 @@ class Resources extends Model
     {
         $query->where('resource_id', $resource_id)
             ->where('project_id', $project_id);
+    }
+
+    function rateForProject(Project $project)
+    {
+        $projectResource = $project->resources->where('resource_id', $this->id)->first();
+        if ($projectResource) {
+            return $projectResource->rate;
+        }
+
+        return $this->rate;
     }
 }

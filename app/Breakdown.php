@@ -27,4 +27,9 @@ class Breakdown extends Model
     {
         return $this->belongsTo(BreakdownTemplate::class, 'template_id')->withTrashed();
     }
+
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

@@ -4,9 +4,13 @@ namespace App;
 
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property Collection $resources
+ */
 class Project extends Model
 {
     use SoftDeletes, HasOptions, Tree;
@@ -67,6 +71,13 @@ class Project extends Model
             ->pluck('productivity')->unique()->filter();
     }
 
+    function getResourcesAttribute()
+    {
+        if (empty($this->projectResources)) {
+            $this->projectResources = Resources::where('project_id', $this->id)->get();
+        }
 
+        return $this->projectResources;
+    }
 
 }
