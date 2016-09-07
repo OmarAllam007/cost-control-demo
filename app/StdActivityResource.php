@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StdActivityResource extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks','code'];
 
     protected $dates = ['created_at', 'updated_at'];
