@@ -42,7 +42,7 @@
                     <td>{{number_format($resource->budget_qty, 2)}}</td>
                     <td>{{number_format($resource->resource_qty, 2)}}</td>
                     <td>{{$resource->resource_waste}}%</td>
-                    <td>{{$resource->project_resource->types->name}}</td>
+                    <td>{{$resource->project_resource->types->name or ''}}</td>
                     <td>{{$resource->project_resource->resource_code}}</td>
                     <td>{{$resource->project_resource->name}}</td>
                     <td>{{$resource->project_resource->rateForProject($project)}}</td>
