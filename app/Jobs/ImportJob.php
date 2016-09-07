@@ -24,9 +24,9 @@ class ImportJob extends Job
     {
         $data = [];
         /** @var \PHPExcel_Cell $cell */
-        /** @var \PHPExcel_Worksheet_CellIterator $cells*/
+        /** @var \PHPExcel_Worksheet_CellIterator $cells */
         foreach ($cells as $cell) {
-                $data[] = $cell->getValue();
+            $data[] = $cell->getValue() ?: '';
         }
         return $data;
     }
