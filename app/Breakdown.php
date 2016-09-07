@@ -20,7 +20,7 @@ class Breakdown extends Model
 
     function std_activity()
     {
-        return $this->belongsTo(StdActivity::class)->withTrashed();
+        return $this->belongsTo(StdActivity::class);
     }
 
     function template()
