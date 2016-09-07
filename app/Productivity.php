@@ -6,10 +6,11 @@ use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Productivity extends Model
 {
-    use Tree, HasOptions;
+    use SoftDeletes, Tree, HasOptions;
 
     protected $fillable = ['csi_category_id',
         'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
