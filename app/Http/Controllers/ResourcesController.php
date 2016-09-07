@@ -17,7 +17,7 @@ class ResourcesController extends Controller
 
     public function index()
     {
-        $resources = Resources::paginate();
+        $resources = Resources::paginate(50);
         return view('resources.index', compact('resources'));
     }
 

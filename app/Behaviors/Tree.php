@@ -62,4 +62,5 @@ trait Tree
 
         return $this->path = $stack->reverse()->implode('/');
     }
+
 }
