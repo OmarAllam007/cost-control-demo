@@ -83,7 +83,11 @@ class BreakdownResource extends Model
 
     function getBudgetCostAttribute()
     {
-        return $this->budget_unit * $this->project_resource->rate;
+        if (isset($this->project_resource->rate)) {
+            return $this->budget_unit * $this->project_resource->rate;
+        }
+
+        return 0;
     }
 
     function getBoqUnitRateAttribute()
