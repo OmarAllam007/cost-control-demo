@@ -27,6 +27,10 @@ class BreakdownResource extends Model
     {
         $resource = $this->resource->resource;
 
+        if (!$resource) {
+            return null;
+        }
+
         $projectResource = Resources::where('resource_id', $resource->id)
             ->where('project_id', $this->breakdown->project->id)->first();
         if ($projectResource) {
