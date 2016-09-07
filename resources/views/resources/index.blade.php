@@ -33,8 +33,8 @@
             @foreach($resources as $resource)
                 <tr>
                     <td class="col-md-1">{{ $resource->resource_code }}</td>
-                    <td class="col-md-1">{{ $resource->name }}</td>
-                    <td class="col-md-2">{{$resource->types->root->name or ''}}</td>
+                    <td class="col-md-3">{{ $resource->name }}</td>
+                    <td class="col-md-3">{{$resource->types->root->name or ''}}</td>
                     <td class="col-md-1">{{ $resource->rate }}</td>
                     <td class="col-md-1">{{ $resource->units->type or ''}}</td>
                     <td class="col-md-1">{{ $resource->waste }}</td>
