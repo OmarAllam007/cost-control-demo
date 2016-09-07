@@ -10,7 +10,7 @@ class BreakdownResource extends Model
 
     function breakdown()
     {
-        return $this->belongsTo(Breakdown::class)->withTrashed();
+        return $this->belongsTo(Breakdown::class);
     }
 
     function resource()
