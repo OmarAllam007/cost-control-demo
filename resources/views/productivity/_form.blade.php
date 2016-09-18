@@ -1,6 +1,17 @@
 {{ csrf_field() }}
 <div class="row">
     <div class="col-md-6">
+        <div class="form-group {{$errors->first('code', 'has-error')}}">
+            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
+            @if($edit)
+                {{ Form::text('code', null, ['class' => 'form-control','disabled' => 'disabled']) }}
+                {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
+            @else
+                {{ Form::text('code', null, ['class' => 'form-control']) }}
+
+            @endif
+        </div>
+
         <div class="form-group {{$errors->first('csi_category_id', 'has-error')}}">
             {{ Form::label('csi_category_id', 'CSI Category', ['class' => 'control-label']) }}
             <div class="hidden">
@@ -16,16 +27,17 @@
 
 
 
-        <div class="form-group {{$errors->first('code', 'has-error')}}">
-            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
-            {{ Form::text('code', null, ['class' => 'form-control']) }}
-            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
-        </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">
             {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}
             {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('crew_structure', 'has-error')}}">
+            {{ Form::label('crew_structure', 'Crew Structure', ['class' => 'control-label']) }}
+            {{ Form::textarea('crew_structure',null, ['class' => 'form-control']) }}
+            {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
@@ -34,11 +46,7 @@
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('crew_structure', 'has-error')}}">
-            {{ Form::label('crew_structure', 'Crew Structure', ['class' => 'control-label']) }}
-            {{ Form::textarea('crew_structure',null, ['class' => 'form-control']) }}
-            {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
-        </div>
+
 
 
         <div class="form-group">
@@ -49,7 +57,6 @@
             </div>
 
             <div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
-
                 {{ Form::label('crew_equip', 'Crew equipment', ['class' => 'control-label']) }}
                 {{ Form::text('crew_equip', null, ['class' => 'form-control']) }}
             </div>

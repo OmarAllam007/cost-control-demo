@@ -26,9 +26,10 @@ class ProductivityController extends Controller
     {
         $csi_category = CsiCategory::lists('name', 'id')->all();
         $units_drop = Unit::options();
+        $edit = false;
 
 
-        return view('productivity.create', compact('csi_category', 'units_drop'));
+        return view('productivity.create', compact('csi_category', 'units_drop','edit'));
     }
 
     public function store(Request $request)
@@ -52,8 +53,8 @@ class ProductivityController extends Controller
     {
         $csi_category = CsiCategory::lists('name', 'id')->all();
         $units_drop = Unit::lists('type', 'id')->all();
-
-        return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category'));
+        $edit = true;
+        return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category','edit'));
     }
 
     public function update(Productivity $productivity, Request $request)

@@ -71,7 +71,7 @@
                         <form action="{{ route('productivity.destroy', $productivity) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
                             <a class="btn btn-sm btn-primary" href="{{ route('productivity.edit', $productivity) }} "><i
-                                        class="fa fa-edit"></i> Edit</a>
+                                        class="fa fa-edit" id="edit-productivity"></i> Edit</a>
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                         </form>
                     </td>
