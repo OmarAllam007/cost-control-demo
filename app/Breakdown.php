@@ -15,7 +15,7 @@ class Breakdown extends Model
 
     function wbs_level()
     {
-        return $this->belongsTo(WbsLevel::class);
+        return $this->belongsTo(WbsLevel::class)->withTrashed();
     }
 
     function std_activity()
@@ -25,6 +25,11 @@ class Breakdown extends Model
 
     function template()
     {
-        return $this->belongsTo(BreakdownTemplate::class, 'template_id');
+        return $this->belongsTo(BreakdownTemplate::class, 'template_id')->withTrashed();
+    }
+
+    function project()
+    {
+        return $this->belongsTo(Project::class);
     }
 }

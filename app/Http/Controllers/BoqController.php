@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class BoqController extends Controller
 {
 
-    protected $rules = ['name' => 'required'];
+    protected $rules = ['project_id' => 'required', 'wbs_id' => 'required', 'cost_account' => 'required'];
 
     public function index()
     {
@@ -40,12 +40,12 @@ class BoqController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, $this->rules);
 
-        Boq::create($request->all());
+        $boq = Boq::create($request->all());
 
         flash('Boq has been saved', 'success');
-
-        return \Redirect::route('boq.index');
+        return \Redirect::route('project.show', $boq->project_id);
     }
 
     public function show(Boq $boq)
@@ -60,10 +60,11 @@ class BoqController extends Controller
 
     public function update(Boq $boq, Request $request)
     {
+        $this->validate($request, $this->rules);
         $boq->update($request->all());
-        flash('Boq has been saved', 'success');
 
-        return \Redirect::route('boq.index');
+        flash('Boq has been saved', 'success');
+        return \Redirect::route('project.show', $boq->project_id);
     }
 
     public function destroy(Boq $boq)
@@ -71,8 +72,7 @@ class BoqController extends Controller
         $boq->delete();
 
         flash('Boq has been deleted', 'success');
-
-        return \Redirect::route('boq.index');
+        return \Redirect::route('project.show', $boq->project_id);
     }
 
     function import(Project $project)
@@ -80,7 +80,7 @@ class BoqController extends Controller
         return view('boq.import',compact('project'));
     }
 
-    function postImport(Project $project,Request $request)
+    function postImport(Project $project, Request $request)
     {
         $this->validate($request, [
             'file' => 'required|file|mimes:xls,xlsx'

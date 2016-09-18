@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResourceType extends Model
 {
-    use Tree,HasOptions;
+    use Tree, HasOptions;
 
     protected $fillable = ['name','parent_id','code'];
 

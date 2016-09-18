@@ -1,10 +1,12 @@
 <div class="form-group tab-actions pull-right">
-    <a href="{{route('boq.import', $project->id)}}" class="btn btn-success btn-sm">
-        <i class="fa fa-cloud-upload"></i> Import
-    </a>
-
     <a href="{{route('boq.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
         <i class="fa fa-plus"></i> Add item
+    </a>
+
+    <a href="{{route('boq-division.index')}}" class="btn btn-primary btn-sm">Manage Divisions</a>
+
+    <a href="{{route('boq.import', $project->id)}}" class="btn btn-success btn-sm">
+        <i class="fa fa-cloud-upload"></i> Import
     </a>
 </div>
 

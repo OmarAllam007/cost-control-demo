@@ -16,6 +16,7 @@ class ProductivityController extends Controller
 
     public function index()
     {
+
         $productivities = Productivity::paginate();
         $categories = CsiCategory::tree()->paginate();
 
@@ -93,5 +94,35 @@ class ProductivityController extends Controller
         $this->dispatch(new ProductivityImportJob($file->path()));
 
         return redirect()->route('productivity.index');
+    }
+
+    function override(Productivity $productivity, Project $project)
+    {
+        $overwrote = Productivity::version($project->id, $productivity->id)->first();
+        $edit = true ;
+        if (!$overwrote) {
+            $overwrote = $productivity;
+        }
+
+        return view('productivity.override', ['productivity' => $overwrote, 'baseProductivity' => $productivity, 'project' => $project,'edit'=>$edit]);
+    }
+
+    function postOverride(Request $request, Productivity $productivity, Project $project)
+    {
+        $this->validate($request, $this->rules);
+
+        $newProductivity = Productivity::version($project->id, $productivity->id)->first();
+
+        if (!$newProductivity) {
+            $newProductivity = new Productivity($request->all());
+            $newProductivity->project_id = $project->id;
+            $newProductivity->productivity_id = $productivity->id;
+            $newProductivity->save();
+        } else {
+            $newProductivity->update($request->all());
+        }
+
+        flash('Productivity has been updated successfully', 'success');
+        return redirect()->route('project.show', $project);
     }
 }

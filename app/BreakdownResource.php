@@ -15,12 +15,46 @@ class BreakdownResource extends Model
 
     function resource()
     {
-        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id');
+        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id')->withTrashed();
     }
 
     function productivity()
     {
-        return $this->belongsTo(Productivity::class);
+        return $this->belongsTo(Productivity::class)->withTrashed();
+    }
+
+    function getProjectResourceAttribute()
+    {
+        $resource = $this->resource->resource;
+
+        if (!$resource) {
+            return null;
+        }
+
+        $projectResource = Resources::where('resource_id', $resource->id)
+            ->where('project_id', $this->breakdown->project->id)->first();
+        if ($projectResource) {
+            return $projectResource;
+        }
+
+        return $resource;
+    }
+
+    function getProjectProductivityAttribute()
+    {
+        $productivity = $this->productivity;
+
+        if ($productivity) {
+            $projectProductivity = Productivity::where('productivity_id', $productivity->id)
+                ->where('project_id', $this->breakdown->project->id)->first();
+            if ($projectProductivity) {
+                return $projectProductivity;
+            }
+
+            return $productivity;
+        }
+
+        return null;
     }
 
     function getResourceQtyAttribute()
@@ -34,12 +68,13 @@ class BreakdownResource extends Model
 
     function getBudgetUnitAttribute()
     {
-        if ($this->productivity) {
-            if (!$this->productivity->reduction_factor) {
+        if ($this->project_productivity) {
+            $reductionFactor = $this->project_productivity->reduction_factor;
+            if (!$reductionFactor) {
                 return 0;
             }
 
-            $result = $this->resource_qty * $this->labor_count / $this->productivity->reduction_factor;
+            $result = $this->resource_qty * $this->labor_count / $reductionFactor;
             return $result > 0.25 ? round($result, 2) : 0.25;
         } else {
             return $this->resource_qty * (1 + $this->resource_waste);
@@ -48,7 +83,11 @@ class BreakdownResource extends Model
 
     function getBudgetCostAttribute()
     {
-        return $this->budget_unit * $this->resource->resource->rate;
+        if (isset($this->project_resource->rate)) {
+            return $this->budget_unit * $this->project_resource->rate;
+        }
+
+        return 0;
     }
 
     function getBoqUnitRateAttribute()

@@ -12,6 +12,7 @@ class ActivityDivisionController extends Controller
 
     public function index()
     {
+
         $activityDivisions = ActivityDivision::tree()->appendActivity()->paginate(25);
 
         return view('activity-division.index', compact('activityDivisions'));
@@ -78,15 +79,15 @@ class ActivityDivisionController extends Controller
                 $levels = array_filter($row);
                 $parent_id = 0;
                 foreach ($levels as $level) {
-                    if (!isset($divisions[$level])) {
+                    if (!isset($divisions[ $level ])) {
                         $division = ActivityDivision::create([
                             'name' => $level,
                             'parent_id' => $parent_id,
                         ]);
 
-                        $divisions[$level] = $parent_id = $division->id;
+                        $divisions[ $level ] = $parent_id = $division->id;
                     } else {
-                        $parent_id = $divisions[$level];
+                        $parent_id = $divisions[ $level ];
                     }
                 }
             }

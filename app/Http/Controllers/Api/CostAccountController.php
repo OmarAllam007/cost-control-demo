@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Boq;
 use App\Survey;
 use Illuminate\Http\Request;
 
@@ -11,10 +12,18 @@ class CostAccountController extends Controller
 {
     function index(Request $request)
     {
-        $query = Survey::query();
+        $query = Boq::query();
 
         if ($request->has('term')) {
             $query->where('cost_account', 'like', '%' . $request->get('term') . '%');
+        }
+
+        if ($request->has('project')) {
+            $query->where('project_id', $request->get('project_id'));
+        }
+
+        if ($request->has('wbs')) {
+            $query->where('wbs_id', $request->get('wbs_id'));
         }
 
         return $query->orderBy('cost_account')

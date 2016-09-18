@@ -8019,4 +8019,36 @@ ul.tree .tree--item {
   max-height: 300px;
   overflow-y: scroll; }
 
+.btn-outline {
+  background: none; }
+
+.btn-primary.btn-outline {
+  color: #3097D1; }
+  .btn-primary.btn-outline:focus, .btn-primary.btn-outline:hover {
+    color: #fff; }
+
+.btn-success.btn-outline {
+  color: #8CC152; }
+  .btn-success.btn-outline:focus, .btn-success.btn-outline:hover {
+    color: #fff; }
+
+.btn-warning.btn-outline {
+  color: #F6BB42; }
+  .btn-warning.btn-outline:focus, .btn-warning.btn-outline:hover {
+    color: #fff; }
+
+.btn-danger.btn-outline {
+  color: #DA4453; }
+  .btn-danger.btn-outline:focus, .btn-danger.btn-outline:hover {
+    color: #fff; }
+
+a, .btn {
+  outline: none; }
+
+.autocomplete-panel {
+  border-radius: 0; }
+
+.form-control:focus {
+  box-shadow: none; }
+
 /*# sourceMappingURL=app.css.map */

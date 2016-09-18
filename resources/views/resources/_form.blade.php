@@ -22,8 +22,12 @@
         <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
 
             {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-            {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
-            {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
+            @if($edit)
+                {{ Form::text('resource_code',null, ['class' => 'form-control','disabled'=>'disabled']) }}
+            @else
+                {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
+            @endif
+                {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
 
         </div>
 
@@ -35,21 +39,20 @@
 
         <div class="form-group {{$errors->first('rate', 'has-error')}}">
             {{ Form::label('rate', 'Rate', ['class' => 'control-label']) }}
-            {{ Form::text('rate', null, ['class' => 'form-control']) }}
+            {{ Form::number('rate', null, ['class' => 'form-control']) }}
             {!! $errors->first('rate', '<div class="help-block">:message</div>') !!}
         </div>
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
-            {{ Form::select('unit', $units_drop,null, ['class' => 'form-control']) }}
+            {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control']) }}
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('waste', 'has-error')}}">
             {{ Form::label('waste', 'Waste', ['class' => 'control-label']) }}
             <div class="input-group">
-                <span class="input-group-addon">%</span>
                 {{ Form::text('waste', null, ['class' => 'form-control']) }}
-
+                <span class="input-group-addon">%</span>
             </div>
             {!! $errors->first('waste', '<div class="help-block">:message</div>') !!}
         </div>
@@ -61,8 +64,8 @@
         </div>
 
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
-            {{ Form::label('business_partner', 'business partner', ['class' => 'control-label']) }}
-            {{  Form::select('business_partner_id',$partners,null,['class' => 'form-control']) }}
+            {{ Form::label('business_partner', 'Business Partner', ['class' => 'control-label']) }}
+            {{  Form::select('business_partner_id',App\BusinessPartner::options(),null,['class' => 'form-control']) }}
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
 

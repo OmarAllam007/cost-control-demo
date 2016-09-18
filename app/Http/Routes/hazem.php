@@ -17,6 +17,14 @@ Route::group(['prefix' => 'wbs-level'], function () {
 Route::group(['prefix' => 'resources'], function () {
     Route::get('import', ['as' => 'resources.import', 'uses' => 'ResourcesController@import']);
     Route::post('import', ['as' => 'resources.post-import', 'uses' => 'ResourcesController@postImport']);
+
+    Route::get('override/{resources}/{project}', ['as' => 'resources.override', 'uses' => 'ResourcesController@override']);
+    Route::post('override/{resources}/{project}', ['as' => 'resources.post-override', 'uses' => 'ResourcesController@postOverride']);
+});
+
+Route::group(['prefix' => 'productivity'], function () {
+    Route::get('override/{productivity}/{project}', ['as' => 'productivity.override', 'uses' => 'ProductivityController@override']);
+    Route::post('override/{productivity}/{project}', ['as' => 'productivity.post-override', 'uses' => 'ProductivityController@postOverride']);
 });
 
 Route::group(['prefix' => 'std-activity'], function () {
