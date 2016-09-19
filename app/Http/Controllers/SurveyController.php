@@ -90,9 +90,34 @@ class SurveyController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
+        $result = $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
+
+        if ($result) {
+            $key = 'qs_import_' . time();
+            \Cache::add($key, $result, 180);
+            flash('We could not import the following items. Please fix.', 'warning');
+            return redirect()->route('survey.fix-import', $key);
+        }
 
         flash('Quantity survey has been imported', 'success');
         return redirect()->route('project.show', $project);
+    }
+
+    function fixImport($key)
+    {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return redirect()->route('survey.import');
+        }
+
+        $result = \Cache::get($key);
+        $project = Project::find($result['project_id']);
+        $items = $result['failed'];
+        return view('survey.fix-import', compact('items', 'key', 'project'));
+    }
+
+    function postFixImport($key)
+    {
+
     }
 }
