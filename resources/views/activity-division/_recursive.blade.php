@@ -8,14 +8,6 @@
         </span>
     </div>
     <article id="children-{{$division->id}}" class="tree--child collapse">
-        @if ($division->children && $division->children->count())
-            <ul class="list-unstyled">
-                @foreach($division->children as $child)
-                    @include('activity-division._recursive', ['division' => $child])
-                @endforeach
-            </ul>
-        @endif
-
         @if ($division->activities->count())
             <table class="table table-striped table-hover table-condensed">
                 <thead>
@@ -47,5 +39,15 @@
                 </tbody>
             </table>
         @endif
+
+        @if ($division->children && $division->children->count())
+            <ul class="list-unstyled">
+                @foreach($division->children as $child)
+                    @include('activity-division._recursive', ['division' => $child])
+                @endforeach
+            </ul>
+        @endif
+
+
     </article>
 </li>
