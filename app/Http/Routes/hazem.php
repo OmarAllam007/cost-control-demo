@@ -35,6 +35,8 @@ Route::group(['prefix' => 'std-activity'], function () {
 Route::group(['prefix' => 'survey'], function () {
     Route::get('import/{project}', ['as' => 'survey.import', 'uses' => 'SurveyController@import']);
     Route::post('import/{project}', ['as' => 'survey.post-import', 'uses' => 'SurveyController@postImport']);
+    Route::get('fix-import/{code}', ['as' => 'survey.fix-import', 'uses' => 'SurveyController@fixImport']);
+    Route::post('fix-import/{code}', ['as' => 'survey.post-fix-import', 'uses' => 'SurveyController@postFixImport']);
 });
 
 Route::resource('project', 'ProjectController');

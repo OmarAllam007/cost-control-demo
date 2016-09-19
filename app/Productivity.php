@@ -12,7 +12,7 @@ class Productivity extends Model
 {
     use SoftDeletes, Tree, HasOptions;
 
-    protected $fillable = ['csi_category_id',
+    protected $fillable = ['csi_category_id', 'description',
         'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
         'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source', 'code'];
 

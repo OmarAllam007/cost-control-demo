@@ -39,19 +39,10 @@ class ImportJob extends Job
                 $this->units->put(mb_strtolower($unit->type), $unit->id);
             });
         }
+
         $unit = trim($unit);
 
-        if (!$unit) {
-            return 0;
-        }
-
         $key = mb_strtolower($unit);
-        if ($this->units->has($key)) {
-            return $this->units->get($key);
-        }
-
-        $unitObject = Unit::create(['type' => $unit]);
-        $this->units->put(mb_strtolower($unit), $unitObject->id);
-        return $unitObject->id;
+        return $this->units->get($key, 0);
     }
 }

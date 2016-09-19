@@ -90,9 +90,52 @@ class SurveyController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
+        $result = $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
+
+        if ($result) {
+            $key = 'qs_import_' . time();
+            \Cache::add($key, $result, 180);
+            flash('Could not import the following items. Please fix.', 'warning');
+            return redirect()->route('survey.fix-import', $key);
+        }
 
         flash('Quantity survey has been imported', 'success');
         return redirect()->route('project.show', $project);
+    }
+
+    function fixImport($key)
+    {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return redirect()->route('project.index');
+        }
+
+        $result = \Cache::get($key);
+        $project = Project::find($result['project_id']);
+        $items = $result['failed'];
+        return view('survey.fix-import', compact('items', 'key', 'project'));
+    }
+
+    function postFixImport($key, Request $request)
+    {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return redirect()->route('project.index');
+        }
+
+        $result = \Cache::get($key);
+        $project = Project::find($result['project_id']);
+        $data = $request->get('data');
+
+        $errors = Survey::checkImportData($data);
+        if (!$errors) {
+            /** @var Project $project */
+            $project->quantities()->createMany($data);
+            flash('Quantities have been imported', 'success');
+            return redirect()->route('project.show', $project);
+        }
+
+        flash('Could not import the following items. Please fix errors below', 'warning');
+        return \Redirect::back()->withErrors($errors)->withInput(compact('data'));
     }
 }

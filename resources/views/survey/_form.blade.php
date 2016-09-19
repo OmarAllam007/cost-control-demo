@@ -35,7 +35,7 @@
 
         <div class="form-group {{$errors->first('category_id', 'has-error')}}">
             {{Form::label('discipline','Discipline')}}
-            {{Form::select('discipline', ['Civil' => 'Civil', 'Arch' => 'Arch', 'Mechanical' => 'Mechanical', 'Electrical' => 'Electrical'], null, ['class'=>'form-control'])}}
+            {{Form::select('discipline', ['' => 'Select Discipline', 'Civil' => 'Civil', 'Arch' => 'Arch', 'Mechanical' => 'Mechanical', 'Electrical' => 'Electrical'], null, ['class'=>'form-control'])}}
         </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">
@@ -45,7 +45,7 @@
 
         <div class="form-group {{$errors->first('unit_id', 'has-error')}}">
             {{Form::label('units','Unit Of Measure')}}
-            {{Form::select('unit_id',App\Unit::options(),['class'=>'form-control'],['class'=>'form-control'])}}
+            {{Form::select('unit_id',App\Unit::options(),null,['class'=>'form-control'])}}
         </div>
 
         <div class="form-group {{$errors->first('budget_qty', 'has-error')}}">
@@ -75,7 +75,7 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\WbsLevel::tree()->get() as $level)
+                    @foreach(App\WbsLevel::forProject(request('project', isset($survey)? $survey->project_id : 0))->tree()->get() as $level)
                         @include('survey._recursive_input', ['level' => $level, 'input' => 'wbs_level_id'])
                     @endforeach
                 </ul>
