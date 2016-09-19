@@ -38,7 +38,7 @@
 
         <div class="form-group {{$errors->first('rate', 'has-error')}}">
             {{ Form::label('rate', 'Rate', ['class' => 'control-label']) }}
-            {{ Form::number('rate', null, ['class' => 'form-control']) }}
+            {{ Form::number('rate', null, ['class' => 'form-control','step'=>'any']) }}
             {!! $errors->first('rate', '<div class="help-block">:message</div>') !!}
         </div>
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
@@ -68,7 +68,7 @@
             <p>
 
                 <a href="#ParentsModal2" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id')) : 'Select Business Partner' }}
+                    {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id'))->path : 'Select Business Partner' }}
                 </a>
             </p>
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}

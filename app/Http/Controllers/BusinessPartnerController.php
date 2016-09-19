@@ -12,7 +12,8 @@ class BusinessPartnerController extends Controller
 
     public function index()
     {
-        $businessPartners = BusinessPartner::paginate();
+        $businessPartners = BusinessPartner::select('id','name','type')->groupBy('name')
+            ->paginate();
 
         return view('business-partner.index', compact('businessPartners'));
     }
