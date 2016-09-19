@@ -28,7 +28,7 @@
         </thead>
         <tbody>
         @foreach ($items as $idx => $item)
-            <tr>
+            <tr class="{{$errors->first($idx, 'danger')}}">
                 <td>
                     {{$item['cost_account']}}
                     {{Form::hidden("data[$idx][cost_account]", $item['cost_account'])}}
@@ -41,7 +41,10 @@
                         {{$item['wbs_code']}}
                         {{Form::hidden("data[$idx][wbs_level_id]", $item['wbs_level_id'])}}
                     @else
-                        <a href="#" class="select-wbs">Select WBS</a>
+                        <a href="#" class="select-wbs">
+
+                            {{old("data.$idx.wbs_level_id")? App\WbsLevel::find(old("data.$idx.wbs_level_id"))->code : 'Select WBS'}}
+                        </a>
                         {{Form::hidden("data[$idx][wbs_level_id]")}}
                     @endif
                 </td>
