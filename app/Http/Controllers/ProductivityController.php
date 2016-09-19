@@ -16,6 +16,7 @@ class ProductivityController extends Controller
 
     public function index()
     {
+
         $productivities = Productivity::paginate();
         $categories = CsiCategory::tree()->paginate();
 
@@ -26,9 +27,10 @@ class ProductivityController extends Controller
     {
         $csi_category = CsiCategory::lists('name', 'id')->all();
         $units_drop = Unit::options();
+        $edit = false;
 
 
-        return view('productivity.create', compact('csi_category', 'units_drop'));
+        return view('productivity.create', compact('csi_category', 'units_drop','edit'));
     }
 
     public function store(Request $request)
@@ -52,8 +54,8 @@ class ProductivityController extends Controller
     {
         $csi_category = CsiCategory::lists('name', 'id')->all();
         $units_drop = Unit::lists('type', 'id')->all();
-
-        return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category'));
+        $edit = true;
+        return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category','edit'));
     }
 
     public function update(Productivity $productivity, Request $request)
@@ -97,12 +99,12 @@ class ProductivityController extends Controller
     function override(Productivity $productivity, Project $project)
     {
         $overwrote = Productivity::version($project->id, $productivity->id)->first();
-
+        $edit = true ;
         if (!$overwrote) {
             $overwrote = $productivity;
         }
 
-        return view('productivity.override', ['productivity' => $overwrote, 'baseProductivity' => $productivity, 'project' => $project]);
+        return view('productivity.override', ['productivity' => $overwrote, 'baseProductivity' => $productivity, 'project' => $project,'edit'=>$edit]);
     }
 
     function postOverride(Request $request, Productivity $productivity, Project $project)

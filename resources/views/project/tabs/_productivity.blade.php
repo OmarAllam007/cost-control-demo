@@ -1,3 +1,4 @@
+
 @if ($project->productivities->count())
     <table class="table table-condensed table-striped">
         <thead>

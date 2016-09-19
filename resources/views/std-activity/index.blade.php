@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Standard activity</h2>
+    <h2>Standard Activity</h2>
     <div class="pull-right">
         <a href="{{ route('std-activity.create') }} " class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Add Activity</a>
         <a href="{{ route('std-activity.import') }} " class="btn btn-sm btn-success"><i class="fa fa-cloud-upload"></i> Import</a>

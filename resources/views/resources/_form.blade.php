@@ -22,8 +22,12 @@
         <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
 
             {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-            {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
-            {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
+            @if($edit)
+                {{ Form::text('resource_code',null, ['class' => 'form-control','disabled'=>'disabled']) }}
+            @else
+                {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
+            @endif
+                {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
 
         </div>
 
@@ -35,7 +39,7 @@
 
         <div class="form-group {{$errors->first('rate', 'has-error')}}">
             {{ Form::label('rate', 'Rate', ['class' => 'control-label']) }}
-            {{ Form::text('rate', null, ['class' => 'form-control']) }}
+            {{ Form::number('rate', null, ['class' => 'form-control']) }}
             {!! $errors->first('rate', '<div class="help-block">:message</div>') !!}
         </div>
         <div class="form-group {{$errors->first('unit', 'has-error')}}">

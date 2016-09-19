@@ -21,15 +21,26 @@ class ResourcesController extends Controller
         return view('resources.index', compact('resources'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        if (!$request->has('project')) {
+            flash('Project not found');
+            return redirect()->route('project.index');
+        } else {
+            $project = Project::find($request->get('project'));
+            if (!$project) {
+                flash('Project not found');
+                return redirect()->route('project.index');
+            }
+
+        }
         $units_drop = Unit::options();
         $partners = BusinessPartner::options();
         $resources = Resources::all();
         $resource_types = ResourceType::lists('name', 'id')->all();
+        $edit = false;
 
-
-        return view('resources.create', compact('partners', 'resources', 'resource_types', 'units_drop'));
+        return view('resources.create', compact('partners', 'resources', 'resource_types', 'units_drop', 'edit'));
     }
 
     public function store(Request $request)
@@ -58,8 +69,9 @@ class ResourcesController extends Controller
         $partners = BusinessPartner::options();
         $resource_types = ResourceType::lists('name', 'id')->all();
         $units_drop = Unit::options();
+        $edit = true;
 
-        return view('resources.edit', compact('resources', 'partners', 'resource_types', 'units_drop'));
+        return view('resources.edit', compact('resources', 'partners', 'resource_types', 'units_drop', 'edit'));
     }
 
     public function update(Resources $resources, Request $request)
@@ -95,7 +107,7 @@ class ResourcesController extends Controller
     function postImport(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx'
+            'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');

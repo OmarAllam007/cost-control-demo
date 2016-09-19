@@ -1,3 +1,10 @@
+<div class="form-group tab-actions pull-right">
+    <a href="{{ route('resources.create',['project' => $project->id]) }} " class="btn btn-sm btn-primary">
+    <i class="fa fa-plus"></i> Add resource
+</a>
+</div>
+<div class="clearfix"></div>
+
 @if ($project->plain_resources->count())
     <table class="table table-condensed table-striped">
         <thead>
