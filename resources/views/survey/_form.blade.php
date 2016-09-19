@@ -35,7 +35,7 @@
 
         <div class="form-group {{$errors->first('category_id', 'has-error')}}">
             {{Form::label('discipline','Discipline')}}
-            {{Form::select('discipline', ['Civil' => 'Civil', 'Arch' => 'Arch', 'Mechanical' => 'Mechanical', 'Electrical' => 'Electrical'], null, ['class'=>'form-control'])}}
+            {{Form::select('discipline', ['' => 'Select Discipline', 'Civil' => 'Civil', 'Arch' => 'Arch', 'Mechanical' => 'Mechanical', 'Electrical' => 'Electrical'], null, ['class'=>'form-control'])}}
         </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">
