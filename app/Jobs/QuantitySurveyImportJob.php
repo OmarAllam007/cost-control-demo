@@ -47,7 +47,8 @@ class QuantitySurveyImportJob extends ImportJob
                 'description' => $data[2],
                 'unit_id' => $unit_id,
                 'budget_qty' => $data[3],
-                'eng_qty' => $data[4]
+                'eng_qty' => $data[4],
+                'discipline' => isset($data[6])? $data[6] : ''
             ]);
         }
     }
