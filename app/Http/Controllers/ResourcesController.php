@@ -23,17 +23,7 @@ class ResourcesController extends Controller
 
     public function create(Request $request)
     {
-        if (!$request->has('project')) {
-            flash('Project not found');
-            return redirect()->route('project.index');
-        } else {
-            $project = Project::find($request->get('project'));
-            if (!$project) {
-                flash('Project not found');
-                return redirect()->route('project.index');
-            }
 
-        }
         $units_drop = Unit::options();
         $partners = BusinessPartner::options();
         $resources = Resources::all();
