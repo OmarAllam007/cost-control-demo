@@ -17,9 +17,7 @@ trait Tree
     {
         $relation = $this->hasMany(static::class, 'parent_id');
         if(isset($this->orderByCode)&&isset($this->orderByName)) {
-
-            $relation->orderBy($this->orderByName)->orderBy($this->orderByCode);
-
+            $relation->orderBy($this->orderByCode)->orderBy($this->orderByName);
         }
         return $relation;
     }
@@ -31,7 +29,7 @@ trait Tree
             ->with('children.children')
             ->with('children.children.children');
         if(isset($this->orderByCode)&&isset($this->orderByName)){
-            $query->orderBy($this->orderByName)->orderBy($this->orderByCode);
+            $query->orderBy($this->orderByCode)->orderBy($this->orderByName);
         }
     }
 
