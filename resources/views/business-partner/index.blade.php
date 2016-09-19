@@ -2,7 +2,7 @@
 
 @section('header')
     <h2>Business partner</h2>
-    <a href="{{ route('business-partner.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add business_partner</a>
+    <a href="{{ route('business-partner.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add Business Partner</a>
 @stop
 
 @section('body')
@@ -16,6 +16,7 @@
             </thead>
             <tbody>
                 @foreach($businessPartners as $business_partner)
+
                     <tr>
                         <td class="col-md-5"><a href="{{ route('business-partner.edit', $business_partner) }}">{{ $business_partner->name }}</a></td>
                         <td class="col-md-3">

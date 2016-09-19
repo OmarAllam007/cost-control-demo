@@ -23,17 +23,7 @@ class ResourcesController extends Controller
 
     public function create(Request $request)
     {
-        if (!$request->has('project')) {
-            flash('Project not found');
-            return redirect()->route('project.index');
-        } else {
-            $project = Project::find($request->get('project'));
-            if (!$project) {
-                flash('Project not found');
-                return redirect()->route('project.index');
-            }
 
-        }
         $units_drop = Unit::options();
         $partners = BusinessPartner::options();
         $resources = Resources::all();
@@ -65,7 +55,6 @@ class ResourcesController extends Controller
 
     public function edit(Resources $resources)
     {
-
         $partners = BusinessPartner::options();
         $resource_types = ResourceType::lists('name', 'id')->all();
         $units_drop = Unit::options();
@@ -76,6 +65,7 @@ class ResourcesController extends Controller
 
     public function update(Resources $resources, Request $request)
     {
+
         $this->validate($request, $this->rules);
 
         if ($request['waste'] <= 1)
@@ -120,13 +110,14 @@ class ResourcesController extends Controller
 
     function override(Resources $resources, Project $project)
     {
+        $override = true;
         $overwrote = Resources::version($project->id, $resources->id)->first();
 
         if (!$overwrote) {
             $overwrote = $resources;
         }
 
-        return view('resources.override', ['resource' => $overwrote, 'baseResource' => $resources, 'project' => $project]);
+        return view('resources.override', ['resource' => $overwrote, 'baseResource' => $resources, 'project' => $project,'override'=>$override]);
     }
 
     function postOverride(Resources $resources, Project $project, Request $request)

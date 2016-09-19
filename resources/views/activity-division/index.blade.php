@@ -10,6 +10,7 @@
     @if ($activityDivisions->total())
         <ul class="list-unstyled tree">
             @foreach($activityDivisions as $division)
+
                 @include('activity-division._recursive', compact('division'))
             @endforeach
         </ul>

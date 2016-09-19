@@ -8,11 +8,12 @@ use Illuminate\Http\Request;
 class BusinessPartnerController extends Controller
 {
 
-    protected $rules = ['name' => 'required'];
+    protected $rules = ['name' => 'required|unique:business_partners'];
 
     public function index()
     {
-        $businessPartners = BusinessPartner::paginate();
+        $businessPartners = BusinessPartner::select('id','name','type')->groupBy('name')
+            ->paginate();
 
         return view('business-partner.index', compact('businessPartners'));
     }

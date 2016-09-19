@@ -28,12 +28,6 @@
 
 
 
-        <div class="form-group {{$errors->first('code', 'has-error')}}">
-            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
-            {{ Form::text('code', null, ['class' => 'form-control']) }}
-            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
-        </div>
-
         <div class="form-group {{$errors->first('description', 'has-error')}}">
             {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}
@@ -59,7 +53,6 @@
             {{ Form::text('crew_hours', null, ['class' => 'form-control']) }}
         </div>
 
-<<<<<<< HEAD
         <div class="form-group">
 
             <div class="form-group {{$errors->first('crew_hours', 'has-error')}}">
@@ -82,10 +75,8 @@
                 {{ Form::label('man_hours', 'Man Hours', ['class' => 'control-label']) }}
                 {{ Form::text('man_hours', null, ['class' => 'form-control']) }}
             </div>
-            <div class="form-group {{$errors->first('equip_hours', 'has-error')}}">
-=======
-        <div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
->>>>>>> 1f97d2849c74cd50be4e15f8412310e15339d10e
+            <div class="form-group {{$errors->first('equip_hours', 'has-error')}}"><div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
+
 
             {{ Form::label('crew_equip', 'Crew equipment', ['class' => 'control-label']) }}
             {{ Form::text('crew_equip', null, ['class' => 'form-control']) }}
@@ -134,7 +125,7 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\CsiCategory::tree()->get() as $level)
+                    @foreach(App\CsiCategory::tree() as $level)
                         @include('productivity._recursive_input', ['input'=>'csi_category_id'])
                     @endforeach
                 </ul>

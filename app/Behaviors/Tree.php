@@ -15,7 +15,11 @@ trait Tree
 
     public function children()
     {
-        return $this->hasMany(static::class, 'parent_id');
+        $relation = $this->hasMany(static::class, 'parent_id');
+        if(isset($this->orderBy)) {
+            $relation->orderBy($this->orderBy);
+        }
+        return $relation;
     }
 
     public function scopeTree(Builder $query)
@@ -24,6 +28,9 @@ trait Tree
             ->with('children')
             ->with('children.children')
             ->with('children.children.children');
+        if (isset($this->orderBy)) {
+            $query->orderBy($this->orderBy);
+        }
     }
 
     public function scopeParents(Builder $query)

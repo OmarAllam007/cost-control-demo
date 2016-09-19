@@ -7,7 +7,7 @@
     </div>
     @if ($division->children && $division->children->count())
         <ul class="list-unstyled collapse" id="children-{{$division->id}}">
-            @foreach($division->children as $child)
+            @foreach($division->children->sortBy('name') as $child)
                 @include('std-activity._recursive_input', ['division' => $child])
             @endforeach
         </ul>
