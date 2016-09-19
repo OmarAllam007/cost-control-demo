@@ -75,7 +75,7 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\WbsLevel::tree()->get() as $level)
+                    @foreach(App\WbsLevel::forProject(request('project', isset($survey)? $survey->project_id : 0))->tree()->get() as $level)
                         @include('survey._recursive_input', ['level' => $level, 'input' => 'wbs_level_id'])
                     @endforeach
                 </ul>
