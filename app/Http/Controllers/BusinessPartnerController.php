@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class BusinessPartnerController extends Controller
 {
 
-    protected $rules = ['name' => 'required'];
+    protected $rules = ['name' => 'required|unique:business_partners'];
 
     public function index()
     {

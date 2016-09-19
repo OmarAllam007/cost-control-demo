@@ -16,7 +16,6 @@
                 {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
             </div>
 
-            {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
@@ -27,7 +26,7 @@
             @else
                 {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
             @endif
-                {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
+            {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
 
         </div>
 
@@ -63,19 +62,23 @@
             {!! $errors->first('reference', '<div class="help-block">:message</div>') !!}
         </div>
 
+
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
-            {{ Form::label('business_partner', 'Business Partner', ['class' => 'control-label']) }}
-            {{  Form::select('business_partner_id',App\BusinessPartner::options(),null,['class' => 'form-control']) }}
+            {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
+            <p>
+
+                <a href="#ParentsModal2" data-toggle="modal" id="select-parent">
+                    {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id')) : 'Select Business Partner' }}
+                </a>
+            </p>
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
-
 
         <!-- Continue working on your fields here -->
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
-
 
     </div>
 
@@ -101,6 +104,28 @@
         </div>
     </div>
 </div>
+
+
+<div id="ParentsModal2" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Business Partner</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled tree">
+                    @foreach(App\BusinessPartner::select('id','name')->groupBy('name')
+            ->get() as $partner)
+                        @include('business-partner._recursive_input', compact('partner'))
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>
