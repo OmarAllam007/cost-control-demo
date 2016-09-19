@@ -26,8 +26,6 @@
         </div>
 
 
-
-
         <div class="form-group {{$errors->first('description', 'has-error')}}">
             {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}
@@ -42,10 +40,9 @@
 
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'Unit', ['class' => 'control-label']) }}
-            {{ Form::select('unit', App\Unit::options(), ['class' => 'form-control'],['class' => 'form-control']) }}
+            {{ Form::select('unit', App\Unit::options(), null, ['class' => 'form-control']) }}
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
-
 
 
         <div class="form-group {{$errors->first('crew_hours', 'has-error')}}">
@@ -53,31 +50,28 @@
             {{ Form::text('crew_hours', null, ['class' => 'form-control']) }}
         </div>
 
-        <div class="form-group">
 
-            <div class="form-group {{$errors->first('crew_hours', 'has-error')}}">
-                {{ Form::label('crew_hours', 'Crew Hours', ['class' => 'control-label']) }}
-                {{ Form::text('crew_hours', null, ['class' => 'form-control']) }}
-            </div>
+        <div class="form-group {{$errors->first('crew_hours', 'has-error')}}">
+            {{ Form::label('crew_hours', 'Crew Hours', ['class' => 'control-label']) }}
+            {{ Form::text('crew_hours', null, ['class' => 'form-control']) }}
+        </div>
 
-            <div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
-                {{ Form::label('crew_equip', 'Crew equipment', ['class' => 'control-label']) }}
-                {{ Form::text('crew_equip', null, ['class' => 'form-control']) }}
-            </div>
+        <div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
+            {{ Form::label('crew_equip', 'Crew equipment', ['class' => 'control-label']) }}
+            {{ Form::text('crew_equip', null, ['class' => 'form-control']) }}
+        </div>
 
-            <div class="form-group {{$errors->first('daily_output', 'has-error')}}">
+        <div class="form-group {{$errors->first('daily_output', 'has-error')}}">
 
-                {{ Form::label('daily_output', 'Daily Output', ['class' => 'control-label']) }}
-                {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
-            </div>
-            <div class="form-group {{$errors->first('man_hours', 'has-error')}}">
+            {{ Form::label('daily_output', 'Daily Output', ['class' => 'control-label']) }}
+            {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
+        </div>
+        <div class="form-group {{$errors->first('man_hours', 'has-error')}}">
 
-                {{ Form::label('man_hours', 'Man Hours', ['class' => 'control-label']) }}
-                {{ Form::text('man_hours', null, ['class' => 'form-control']) }}
-            </div>
-            <div class="form-group {{$errors->first('equip_hours', 'has-error')}}"><div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
-
-
+            {{ Form::label('man_hours', 'Man Hours', ['class' => 'control-label']) }}
+            {{ Form::text('man_hours', null, ['class' => 'form-control']) }}
+        </div>
+        <div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
             {{ Form::label('crew_equip', 'Crew equipment', ['class' => 'control-label']) }}
             {{ Form::text('crew_equip', null, ['class' => 'form-control']) }}
         </div>
