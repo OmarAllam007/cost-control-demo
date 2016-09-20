@@ -37,7 +37,7 @@
         </section>
 
         <section class="tab-pane" id="quantity-survey">
-            @include('project.tabs._quantity-survey')
+            {{--@include('project.tabs._quantity-survey')--}}
         </section>
 
         <section class="tab-pane active" id="breakdown">
@@ -45,14 +45,14 @@
         </section>
 
         <section class="tab-pane" id="resources">
-            @include('project.tabs._resources')
+            {{--@include('project.tabs._resources')--}}
         </section>
 
         <section class="tab-pane" id="productivity">
-            @include('project.tabs._productivity')
+            {{--@include('project.tabs._productivity')--}}
         </section>
         <section class="tab-pane" id="boq">
-            @include('project.tabs._boq')
+            {{--@include('project.tabs._boq')--}}
         </section>
     </div>
 @stop

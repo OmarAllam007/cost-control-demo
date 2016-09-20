@@ -42,6 +42,8 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        set_time_limit(1800);
+        ini_set('memory_limit', '4G');
         $project->load(['wbs_levels','breakdown_resources']);
         return view('project.show', compact('project','productivity'));
     }
