@@ -8,6 +8,7 @@ trait Tree
 {
     protected $path;
 
+
     public function parent()
     {
         return $this->belongsTo(static::class, 'parent_id');
@@ -16,7 +17,7 @@ trait Tree
     public function children()
     {
         $relation = $this->hasMany(static::class, 'parent_id');
-        if(isset($this->orderByCode)&&isset($this->orderByName)) {
+        if (isset($this->orderByCode) && isset($this->orderByName)) {
             $relation->orderBy($this->orderByCode)->orderBy($this->orderByName);
         }
         return $relation;
@@ -28,7 +29,7 @@ trait Tree
             ->with('children')
             ->with('children.children')
             ->with('children.children.children');
-        if(isset($this->orderByCode)&&isset($this->orderByName)){
+        if (isset($this->orderByCode) && isset($this->orderByName)) {
             $query->orderBy($this->orderByCode)->orderBy($this->orderByName);
         }
     }
@@ -37,6 +38,7 @@ trait Tree
     {
         $query->where('parent_id', 0);
     }
+
 
     public function getPathAttribute()
     {
@@ -56,9 +58,6 @@ trait Tree
 
     public function getCanonicalAttribute()
     {
-//        if ($this->canonical) {
-//            return $this->canonical;
-//        }
 
         $stack = collect([strtolower($this->name)]);
         $parent = $this->parent;

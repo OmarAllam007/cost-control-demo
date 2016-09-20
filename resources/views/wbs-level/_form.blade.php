@@ -9,9 +9,10 @@
 
         <div class="form-group {{$errors->first('code', 'has-error')}}">
             {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
-            {{ Form::text('code', null, ['class' => 'form-control']) }}
-            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
+            {{ Form::text('code', null, ['class' => 'form-control code-generator']) }}
+
         </div>
+
 
         <div class="form-group {{$errors->first('project_id', 'has-error')}}">
             {{ Form::label('project_id', 'Project', ['class' => 'control-label']) }}

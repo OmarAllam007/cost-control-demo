@@ -11,6 +11,7 @@ class CreateProductivitiesTable extends Migration
             $table->increments('id');
             $table->integer('csi_category_id');
             $table->string('unit');
+            $table->string('description');
             $table->string('crew_structure');
             $table->float('crew_hours');
             $table->float('crew_equip');

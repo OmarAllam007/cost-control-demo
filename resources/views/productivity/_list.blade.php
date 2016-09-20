@@ -1,9 +1,10 @@
 <table class="table table-condensed table-striped">
     <thead>
     <tr>
+        <th>CSI CODE</th>
         <th>Description</th>
-        <th>Unit</th>
         <th>Crew Structure</th>
+        <th>Unit</th>
         <th>Daily Output</th>
         <th>Actions</th>
     </tr>
@@ -11,6 +12,7 @@
     <tbody>
     @foreach($productivities as $productivity)
         <tr>
+            <td>{!! nl2br(e($productivity->category->code)) !!}</td>
             <td>{!! nl2br(e($productivity->description)) !!}</td>
             <td>{!! nl2br(e($productivity->crew_structure)) !!}</td>
             <td>{{ isset($productivity->units->type)?$productivity->units->type:'' }}</td>

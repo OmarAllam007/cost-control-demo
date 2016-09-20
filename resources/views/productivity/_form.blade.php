@@ -51,11 +51,6 @@
         </div>
 
 
-        <div class="form-group {{$errors->first('crew_hours', 'has-error')}}">
-            {{ Form::label('crew_hours', 'Crew Hours', ['class' => 'control-label']) }}
-            {{ Form::text('crew_hours', null, ['class' => 'form-control']) }}
-        </div>
-
         <div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
             {{ Form::label('crew_equip', 'Crew equipment', ['class' => 'control-label']) }}
             {{ Form::text('crew_equip', null, ['class' => 'form-control']) }}
@@ -70,16 +65,6 @@
 
             {{ Form::label('man_hours', 'Man Hours', ['class' => 'control-label']) }}
             {{ Form::text('man_hours', null, ['class' => 'form-control']) }}
-        </div>
-        <div class="form-group {{$errors->first('crew_equip', 'has-error')}}">
-            {{ Form::label('crew_equip', 'Crew equipment', ['class' => 'control-label']) }}
-            {{ Form::text('crew_equip', null, ['class' => 'form-control']) }}
-        </div>
-
-        <div class="form-group {{$errors->first('daily_output', 'has-error')}}">
-
-            {{ Form::label('daily_output', 'Daily Output', ['class' => 'control-label']) }}
-            {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
         </div>
 
         <div class="form-group {{$errors->first('man_hours', 'has-error')}}">
