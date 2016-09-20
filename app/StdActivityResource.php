@@ -52,7 +52,7 @@ class StdActivityResource extends Model
             'resource_id' => $this->resource->id,
             'resource_name' => $this->resource->name,
             'resource_waste' => $this->resource->waste,
-            'unit' => $this->resource->units->type,
+            'unit' => isset($this->resource->units->type)? $this->resource->units->type : '',
             'resource_type' => $this->resource->types->name,
             'budget_qty' => '',
             'eng_qty' => '',

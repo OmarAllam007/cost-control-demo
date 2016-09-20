@@ -168,3 +168,9 @@ a, .btn {
   float: left;
   border-bottom-width: 0;
 }
+
+.table-fixed tr:after {
+  content: ' ';
+  display: block;
+  clear: both;
+}

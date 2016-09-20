@@ -68,7 +68,7 @@ class BreakdownResource extends Model
 
     function getBudgetUnitAttribute()
     {
-        if ($this->project_productivity) {
+        if ($this->productivity) {
             $reductionFactor = $this->project_productivity->reduction_factor;
             if (!$reductionFactor) {
                 return 0;
@@ -77,7 +77,7 @@ class BreakdownResource extends Model
             $result = $this->resource_qty * $this->labor_count / $reductionFactor;
             return $result > 0.25 ? round($result, 2) : 0.25;
         } else {
-            return $this->resource_qty * (1 + $this->resource_waste);
+            return $this->resource_qty * (1 + ($this->resource_waste /100));
         }
     }
 
