@@ -16,7 +16,8 @@ class ActivityDivision extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-    protected $orderBy = 'name';
+    protected $orderByName = 'name';
+    protected $orderByCode = 'code';
 
     public function getLabelAttribute()
     {
