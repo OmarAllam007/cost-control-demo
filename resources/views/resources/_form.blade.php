@@ -21,8 +21,8 @@
         <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
 
             {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-            @if($edit)
-                {{ Form::text('resource_code',null, ['class' => 'form-control','disabled'=>'disabled']) }}
+            @if(!empty($edit))
+                {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
             @else
                 {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
             @endif
