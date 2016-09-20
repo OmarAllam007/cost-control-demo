@@ -13,37 +13,37 @@
 <div class="clearfix"></div>
 
 @if ($project->boqs->count())
-    <table class="table table-condensed table-striped">
+    <table class="table table-condensed table-striped table-fixed">
         <thead>
         <tr>
-            <th>Cost Account</th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Quantity(All)</th>
-            <th>DRY U.R.</th>
-            <th>PRICE U.R.</th>
-            <th>DRY (1 BLDG.)</th>
-            <th>PRICE (1 BLDG.)</th>
-            <th>DRY (ALL BLDG.)</th>
-            <th>PRICE (ALL BLDG.)</th>
-            <th>Actions</th>
+            <th class="col-xs-1">Cost Account</th>
+            <th class="col-xs-2">Name</th>
+            <th class="col-xs-1">Quantity</th>
+            <th class="col-xs-1">Quantity(All)</th>
+            <th class="col-xs-1">DRY U.R.</th>
+            <th class="col-xs-1">PRICE U.R.</th>
+            <th class="col-xs-1">DRY (1 BLDG.)</th>
+            <th class="col-xs-1">PRICE (1 BLDG.)</th>
+            {{--<th class="col-xs-1">DRY (ALL BLDG.)</th>--}}
+            <th class="col-xs-1">PRICE (ALL BLDG.)</th>
+            <th class="col-xs-2">Actions</th>
         </tr>
         </thead>
         <tbody>
 
         @foreach($project->boqs as $boq)
                     <tr>
-                        <td class="col-md-1">{{ $boq->cost_account?:'' }}</td>
-                        <td class="col-md-2">{{ isset($boq->description)? $boq->description:''}}</td>
-                        <td class="col-md-1">{{ isset($boq->quantity)?$boq->quantity:'' }}</td>
-                        <td class="col-md-1">{{ $boq->getAllQuantity($boq->quantity)?:'' }}</td>
-                        <td class="col-md-1">{{ $boq->getDry($boq->subcon,$boq->materials,$boq->manpower)?:''  }}</td>
-                        <td class="col-md-1">{{ $boq->price_ur?:'' }}</td>
-                        <td class="col-md-1">{{$boq->getDryForBuilding($boq->getDry($boq->subcon,$boq->materials,$boq->manpower),$boq->quantity)?:''  }}</td>
-                        <td class="col-md-1">{{$boq->getPriceForBuilding($boq->price_ur,$boq->quantity)?:'' }}</td>
-                        <td class="col-md-1">{{ $boq->getDryForAllBuilding($boq->quantity,$boq->getDry($boq->subcon,$boq->materials,$boq->manpower))?:'' }}</td>
-                        <td class="col-md-1">{{ $boq->getPriceForAllBuilding($boq->quantity,$boq->price_ur)?:''}}</td>
-                        <td class="col-md-3">
+                        <td class="col-xs-1">{{ $boq->cost_account?:'' }}</td>
+                        <td class="col-xs-2">{{ isset($boq->description)? $boq->description:''}}</td>
+                        <td class="col-sm-1">{{ isset($boq->quantity)?$boq->quantity:'' }}</td>
+                        <td class="col-xs-1">{{ $boq->getAllQuantity($boq->quantity)?:'' }}</td>
+                        <td class="col-xs-1">{{ $boq->getDry($boq->subcon,$boq->materials,$boq->manpower)?:''  }}</td>
+                        <td class="col-xs-1">{{ $boq->price_ur?:'' }}</td>
+                        <td class="col-xs-1">{{$boq->getDryForBuilding($boq->getDry($boq->subcon,$boq->materials,$boq->manpower),$boq->quantity)?:''  }}</td>
+                        <td class="col-xs-1">{{$boq->getPriceForBuilding($boq->price_ur,$boq->quantity)?:'' }}</td>
+                        {{--<td class="col-xs-1">{{ $boq->getDryForAllBuilding($boq->quantity,$boq->getDry($boq->subcon,$boq->materials,$boq->manpower))?:'' }}</td>--}}
+                        <td class="col-xs-1">{{ $boq->getPriceForAllBuilding($boq->quantity,$boq->price_ur)?:''}}</td>
+                        <td class="col-xs-2">
                             <form action="{{ route('boq.destroy', $boq) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
                                 <a class="btn btn-sm btn-primary" href="{{ route('boq.edit', $boq) }} "><i class="fa fa-edit"></i> Edit</a>

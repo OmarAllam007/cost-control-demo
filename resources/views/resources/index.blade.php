@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('header')
     <h2>Resources</h2>
 
@@ -23,7 +22,7 @@
                 <th class="col-xs-3">Resource Name</th>
                 <th class="col-xs-3">Resource Type</th>
                 <th class="col-xs-1">Rate</th>
-                <th class="col-xs-1">Unit</th>
+                <th class="col-xs-2">Unit</th>
                 <th class="col-xs-1">Waste</th>
                 <th class="col-xs-2">Actions</th>
             </tr>

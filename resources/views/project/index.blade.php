@@ -9,18 +9,18 @@
 @section('body')
 
     @if ($projects->total())
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <th class="col-sm-8">Name</th>
-                <th>Actions</th>
+                <th class="col-xs-8">Name</th>
+                <th class="col-xs-4">Actions</th>
             </tr>
             </thead>
             <tbody>
             @foreach($projects as $project)
                 <tr>
-                    <td><a href="{{ route('project.show', $project) }}">{{ $project->name }}</a></td>
-                    <td>
+                    <td class="col-xs-8"><a href="{{ route('project.show', $project) }}">{{ $project->name }}</a></td>
+                    <td class="col-xs-4">
                         <form action="{{ route('project.destroy', $project) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
                             <a class="btn btn-sm btn-info" href="{{ route('project.show', $project) }} "><i

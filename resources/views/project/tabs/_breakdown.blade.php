@@ -6,7 +6,7 @@
 
 @if ($project->breakdown_resources->count())
     <div class="scrollpane">
-        <table class="table table-condensed table-striped table-hover table-bordered">
+        <table class="table table-condensed table-striped table-hover table-bordered table-fixed">
             <thead>
             <tr>
                 <th class="bg-black">WBS</th>

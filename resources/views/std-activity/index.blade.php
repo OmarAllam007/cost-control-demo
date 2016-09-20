@@ -10,20 +10,20 @@
 
 @section('body')
     @if ($stdActivities->total())
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <th>Division</th>
-                <th>Name</th>
-                <th>Actions</th>
+                <th class="col-xs-4">Division</th>
+                <th class="col-xs-4">Name</th>
+                <th class="col-xs-4">Actions</th>
             </tr>
             </thead>
             <tbody>
                 @foreach($stdActivities as $std_activity)
                     <tr>
-                        <td class="col-md-5">{{ $std_activity->division->path }}</td>
-                        <td class="col-md-4"><a href="{{ route('std-activity.edit', $std_activity) }}">{{ $std_activity->name }}</a></td>
-                        <td class="col-md-3">
+                        <td class="col-xs-4">{{ $std_activity->division->path }}</td>
+                        <td class="col-xs-4"><a href="{{ route('std-activity.edit', $std_activity) }}">{{ $std_activity->name }}</a></td>
+                        <td class="col-xs-4">
                             <form action="{{ route('std-activity.destroy', $std_activity) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
                                 <a class="btn btn-sm btn-info" href="{{ route('std-activity.show', $std_activity) }} "><i class="fa fa-eye"></i> View</a>

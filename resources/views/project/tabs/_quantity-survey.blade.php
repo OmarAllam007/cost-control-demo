@@ -11,26 +11,26 @@
 </div>
 
 @if ($project->quantities->count())
-    <table class="table table-condensed table-striped">
+    <table class="table table-condensed table-striped table-fixed">
         <thead>
         <tr>
-            <th>Cost Account</th>
-            <th>WBS</th>
-            <th>Description</th>
-            <th>Budget Quantity</th>
-            <th>Eng Quantity</th>
-            <th>&nbsp;</th>
+            <th class="col-xs-2">Cost Account</th>
+            <th class="col-xs-2">WBS</th>
+            <th class="col-xs-2">Description</th>
+            <th class="col-xs-2">Budget Quantity</th>
+            <th class="col-xs-2">Eng Quantity</th>
+            <th class="col-xs-2">Action</th>
         </tr>
         </thead>
         <tbody>
         @foreach($project->quantities as $quantity)
             <tr>
-                <td>{{$quantity->cost_account}}</td>
-                <td>{{$quantity->wbsLevel->code or ''}}</td>
-                <td class="col-md-4">{{$quantity->description}}</td>
-                <td>{{$quantity->budget_qty}}</td>
-                <td>{{$quantity->eng_qty}}</td>
-                <td class="col-md-2">
+                <td class="col-xs-2">{{$quantity->cost_account}}</td>
+                <td class="col-xs-2">{{$quantity->wbsLevel->code or ''}}</td>
+                <td class="col-xs-2">{{$quantity->description}}</td>
+                <td class="col-xs-2">{{$quantity->budget_qty}}</td>
+                <td class="col-xs-2">{{$quantity->eng_qty}}</td>
+                <td class="col-xs-2">
                     {{Form::open(['route' => ['survey.destroy', $quantity], 'method' => 'delete'])}}
                     <a href="{{route('survey.edit', $quantity)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
                     <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>
