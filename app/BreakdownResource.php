@@ -68,7 +68,7 @@ class BreakdownResource extends Model
 
     function getBudgetUnitAttribute()
     {
-        if ($this->project) {
+        if ($this->productivity) {
             $reductionFactor = $this->project_productivity->reduction_factor;
             if (!$reductionFactor) {
                 return 0;
