@@ -16,7 +16,6 @@ class ResourceTypeController extends Controller
 
     public function index()
     {
-
         $resource_levels = ResourceType::tree()->paginate();
         $resources = Resources::lists('id', 'name')->all();
 
@@ -38,7 +37,7 @@ class ResourceTypeController extends Controller
         $this->validate($request, $this->rules);
         ResourceType::create([
             'name' => $request->name,
-            'parent_id' => $request->parent_id,
+            'parent_id' => $request->parent_id?:0,
         ]);
         flash('Resource type has been saved', 'success');
 
