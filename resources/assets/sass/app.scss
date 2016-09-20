@@ -146,3 +146,25 @@ a, .btn {
 .form-control:focus {
   box-shadow: none;
 }
+
+// Table with fixed headers
+.table-fixed thead {
+  width: 100%;
+}
+
+.table-fixed tbody {
+  height: 400px;
+  overflow-y: auto;
+  width: 100%;
+  border-top: 2px solid #ddd;
+}
+
+.table-fixed thead, .table-fixed tbody,
+.table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}

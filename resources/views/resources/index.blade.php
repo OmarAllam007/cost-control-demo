@@ -16,30 +16,28 @@
 
 @section('body')
     @if ($resources->total())
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-
-                <th>Resource Code</th>
-                <th>Resource Name</th>
-                <th>Resource Type</th>
-                <th>Rate</th>
-                <th>Unit</th>
-                <th>Waste</th>
-                <th>Actions</th>
+                <th class="col-xs-1">Resource Code</th>
+                <th class="col-xs-3">Resource Name</th>
+                <th class="col-xs-3">Resource Type</th>
+                <th class="col-xs-1">Rate</th>
+                <th class="col-xs-1">Unit</th>
+                <th class="col-xs-1">Waste</th>
+                <th class="col-xs-2">Actions</th>
             </tr>
             </thead>
             <tbody>
             @foreach($resources as $resource)
                 <tr>
-                    <td class="col-md-1">{{ $resource->resource_code }}</td>
-                    <td class="col-md-3">{{ $resource->name }}</td>
-                    <td class="col-md-3">{{$resource->types->root->name or ''}}</td>
-                    <td class="col-md-1">{{ $resource->rate }}</td>
-                    <td class="col-md-1">{{ $resource->units->type or ''}}</td>
-                    <td class="col-md-1">{{ $resource->waste }}</td>
-
-                    <td class="col-md-2">
+                    <td class="col-xs-1">{{ $resource->resource_code }}</td>
+                    <td class="col-xs-3">{{ $resource->name }}</td>
+                    <td class="col-xs-3">{{$resource->types->root->name or ''}}</td>
+                    <td class="col-xs-1">{{ $resource->rate }}</td>
+                    <td class="col-xs-1">{{ $resource->units->type or ''}}</td>
+                    <td class="col-xs-1">{{ $resource->waste }}</td>
+                    <td class="col-xs-2">
                         <form action="{{ route('resources.destroy', $resource) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
                             <a class="btn btn-sm btn-primary" href="{{ route('resources.edit', $resource) }} "><i
