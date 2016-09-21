@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StdActivity extends Model
 {
     use HasOptions;
-
+    protected $orderBy = ['name','code'];
     protected static $alias = 'Activity';
 
     protected $fillable = ['code', 'name', 'division_id', 'id_partial'];
