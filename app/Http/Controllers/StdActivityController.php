@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filter\StdActivityFilter;
 use App\Jobs\ActivityImportJob;
 use App\StdActivity;
 use Illuminate\Http\Request;
@@ -13,7 +14,9 @@ class StdActivityController extends Controller
 
     public function index()
     {
-        $stdActivities = StdActivity::paginate();
+        $filter  = new StdActivityFilter(StdActivity::query(), session('filters.std-activity'));
+        $stdActivities = $filter->filter()->paginate(100);
+
         return view('std-activity.index', compact('stdActivities'));
     }
 
@@ -80,5 +83,13 @@ class StdActivityController extends Controller
 
         flash('Activities have been imported', 'success');
         return redirect()->route('std-activity.index');
+    }
+
+    function filters(Request $request)
+    {
+        $data = $request->only(['name', 'division_id']);
+        \Session::set('filters.std-activity', $data);
+
+        return \Redirect::back();
     }
 }

@@ -9,20 +9,23 @@
 @stop
 
 @section('body')
+
+    @include('std-activity._filters')
+
     @if ($stdActivities->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <th class="col-xs-4">Division</th>
                 <th class="col-xs-4">Name</th>
+                <th class="col-xs-4">Division</th>
                 <th class="col-xs-4">Actions</th>
             </tr>
             </thead>
             <tbody>
                 @foreach($stdActivities as $std_activity)
                     <tr>
-                        <td class="col-xs-4">{{ $std_activity->division->path }}</td>
                         <td class="col-xs-4"><a href="{{ route('std-activity.edit', $std_activity) }}">{{ $std_activity->name }}</a></td>
+                        <td class="col-xs-4">{{ $std_activity->division->path }}</td>
                         <td class="col-xs-4">
                             <form action="{{ route('std-activity.destroy', $std_activity) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
@@ -41,3 +44,7 @@
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No std activity found</strong></div>
     @endif
 @stop
+
+@section('javascript')
+    <script src="{{asset('/js/tree-select.js')}}"></script>
+@endsection
