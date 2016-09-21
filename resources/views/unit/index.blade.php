@@ -7,18 +7,18 @@
 
 @section('body')
     @if ($units->total())
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Actions</th>
+                <th class="col-xs-8">Name</th>
+                <th class="col-xs-4">Actions</th>
             </tr>
             </thead>
             <tbody>
             @foreach($units as $unit)
                 <tr>
-                    <td class="col-md-5"><a href="{{ route('unit.edit', $unit) }}">{{ $unit->type }}</a></td>
-                    <td class="col-md-3">
+                    <td class="col-xs-8"><a href="{{ route('unit.edit', $unit) }}">{{ $unit->type }}</a></td>
+                    <td class="col-xs-4">
                         <form action="{{ route('unit.destroy', $unit) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
                             <a class="btn btn-sm btn-primary" href="{{ route('unit.edit', $unit) }} "><i
