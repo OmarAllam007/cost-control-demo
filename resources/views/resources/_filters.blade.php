@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div class="col-sm-3">
+<div class="col-sm-2">
     <div class="form-group-sm">
         <label for="ResourceType">Resource Type</label>
         <p>
@@ -22,7 +22,14 @@
     </div>
 </div>
 
-<div class="col-sm-3">
+<div class="col-sm-2">
+    <div class="form-group-sm">
+        <label class="control-label" for="resourceCode">Resource Code</label>
+        <input type="text" id="resourceCode" name="resource_code" class="form-control" value="{{session('filters.resources.code')}}">
+    </div>
+</div>
+
+<div class="col-sm-2">
     <div class="form-group-sm">
         <label class="control-label" for="resourceUnit">Unit</label>
         {{Form::select('unit', App\Unit::options(), session('filters.resources.unit'), ['class' => 'form-control', 'id' => 'resourceUnit'])}}

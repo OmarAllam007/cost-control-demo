@@ -143,9 +143,8 @@ class ResourcesController extends Controller
 
     function filter(Request $request)
     {
-        $data = $request->only(['name', 'unit', 'resource_type_id']);
+        $data = $request->only(['name', 'unit', 'resource_type_id','resource_code']);
         \Session::set('filters.resources', $data);
-
 
         return \Redirect::back();
     }
