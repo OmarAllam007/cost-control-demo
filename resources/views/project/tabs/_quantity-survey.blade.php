@@ -26,7 +26,7 @@
         @foreach($project->quantities as $quantity)
             <tr>
                 <td class="col-xs-2">{{$quantity->cost_account}}</td>
-                <td class="col-xs-2">{{$quantity->wbsLevel->code or ''}}</td>
+                <td class="col-xs-2"><abbr title="{{$quantity->wbsLevel->path}}">{{$quantity->wbsLevel->code or ''}}</abbr></td>
                 <td class="col-xs-2">{{$quantity->description}}</td>
                 <td class="col-xs-2">{{$quantity->budget_qty}}</td>
                 <td class="col-xs-2">{{$quantity->eng_qty}}</td>
