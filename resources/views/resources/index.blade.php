@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('header')
     <h2>Resources</h2>
 
@@ -21,9 +20,9 @@
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <th class="col-xs-1">Resource Code</th>
+                <th class="col-xs-2">Resource Code</th>
                 <th class="col-xs-3">Resource Name</th>
-                <th class="col-xs-3">Resource Type</th>
+                <th class="col-xs-1">Resource Type</th>
                 <th class="col-xs-1">Rate</th>
                 <th class="col-xs-1">Unit</th>
                 <th class="col-xs-1">Waste</th>
@@ -33,9 +32,9 @@
             <tbody>
             @foreach($resources as $resource)
                 <tr>
-                    <td class="col-xs-1">{{ $resource->resource_code }}</td>
+                    <td class="col-xs-2">{{ $resource->resource_code }}</td>
                     <td class="col-xs-3">{{ $resource->name }}</td>
-                    <td class="col-xs-3">{{$resource->types->root->name or ''}}</td>
+                    <td class="col-xs-1">{{$resource->types->root->name or ''}}</td>
                     <td class="col-xs-1">{{ $resource->rate }}</td>
                     <td class="col-xs-1">{{ $resource->units->type or ''}}</td>
                     <td class="col-xs-1">{{ $resource->waste }}</td>

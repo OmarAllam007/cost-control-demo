@@ -16,7 +16,6 @@
 
 
 
-
 @section('body')
     @if ($productivities->total())
         @include('productivity._list')

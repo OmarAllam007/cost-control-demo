@@ -45,20 +45,20 @@
     </div>
 
     @if ($breakdown_template->resources->count())
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <td class="col-md-7">Resource</td>
-                <td>Equation</td>
-                <td>Action</td>
+                <td class="col-xs-6">Resource</td>
+                <td class="col-xs-3">Equation</td>
+                <td class="col-xs-3">Action</td>
             </tr>
             </thead>
             <tbody>
             @foreach($breakdown_template->resources as $resource)
                 <tr>
-                    <td>{{$resource->resource->name}}</td>
-                    <td>{{$resource->equation}}</td>
-                    <td>
+                    <td class="col-xs-6">{{$resource->resource->name}}</td>
+                    <td class="col-xs-3">{{$resource->equation}}</td>
+                    <td class="col-xs-3">
                         {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}
                         <a href="{{route('std-activity-resource.edit', $resource)}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
                         <button class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Remove</button>

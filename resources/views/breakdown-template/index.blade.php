@@ -7,18 +7,18 @@
 
 @section('body')
     @if ($breakdownTemplates->total())
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Actions</th>
+                <th class="col-xs-8">Name</th>
+                <th class="col-xs-4">Actions</th>
             </tr>
             </thead>
             <tbody>
                 @foreach($breakdownTemplates as $breakdown_template)
                     <tr>
-                        <td class="col-md-5"><a href="{{ route('breakdown-template.show', $breakdown_template) }}">{{ $breakdown_template->name }}</a></td>
-                        <td class="col-md-3">
+                        <td class="col-xs-8"><a href="{{ route('breakdown-template.show', $breakdown_template) }}">{{ $breakdown_template->name }}</a></td>
+                        <td class="col-xs-4">
                             <form action="{{ route('breakdown-template.destroy', $breakdown_template) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
                                 <a href="{{route('breakdown-template.show', $breakdown_template)}}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> Show</a>

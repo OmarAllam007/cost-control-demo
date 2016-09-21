@@ -14,7 +14,6 @@ class StdActivityController extends Controller
     public function index()
     {
         $stdActivities = StdActivity::paginate();
-
         return view('std-activity.index', compact('stdActivities'));
     }
 

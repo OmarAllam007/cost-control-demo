@@ -104,7 +104,7 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\CsiCategory::tree() as $level)
+                    @foreach(App\CsiCategory::tree()->get() as $level)
                         @include('productivity._recursive_input', ['input'=>'csi_category_id'])
                     @endforeach
                 </ul>

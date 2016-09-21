@@ -6,22 +6,22 @@
 <div class="clearfix"></div>
 
 @if ($project->plain_resources->count())
-    <table class="table table-condensed table-striped">
+    <table class="table table-condensed table-striped table-fixed">
         <thead>
         <tr>
-            <th>Code</th>
-            <th>Resource</th>
-            <th>Type</th>
-            <th>Actions</th>
+            <th class="col-xs-3">Code</th>
+            <th class="col-xs-3">Resource</th>
+            <th class="col-xs-3">Type</th>
+            <th class="col-xs-3">Actions</th>
         </tr>
         </thead>
         <tbody>
         @foreach ($project->plain_resources as $resource)
         <tr>
-            <td>{{$resource->resource_code}}</td>
-            <td>{{$resource->name}}</td>
-            <td>{{$resource->types->root->name or ''}}</td>
-            <td>
+            <td class="col-xs-3">{{$resource->resource_code}}</td>
+            <td class="col-xs-3">{{$resource->name}}</td>
+            <td class="col-xs-3">{{$resource->types->root->name or ''}}</td>
+            <td class="col-xs-3">
                 <a href="{{route('resources.override', ['resources' => $resource, 'project' => $project])}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
             </td>
         </tr>
