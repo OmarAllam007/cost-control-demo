@@ -56,7 +56,7 @@ abstract class AbstractFilter
             $this->query->where($name, $arguments[0]);
         }
 
-        if (isset($this->fields['name']) && $this->fields['name'] == 'like') {
+        if (isset($this->fields[$name]) && $this->fields[$name] == 'like') {
             $this->query->where($name, 'like', "%{$arguments[0]}%");
         }
     }

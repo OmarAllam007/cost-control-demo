@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\ActivityDivision;
 use App\CsiCategory;
+use App\Filter\ProductivityFilter;
 use App\Jobs\ProductivityImportJob;
 use App\Productivity;
 use App\Project;
@@ -17,10 +18,9 @@ class ProductivityController extends Controller
     public function index()
     {
 
-        $productivities = Productivity::paginate();
-        $categories = CsiCategory::tree()->paginate();
-
-        return view('productivity.index', compact('productivities','categories'));
+        $filter = new ProductivityFilter(Productivity::query(), session('filters.productivity'));
+        $productivities = $filter->filter()->paginate(100);
+        return view('productivity.index', compact('productivities'));
     }
 
     public function create()
@@ -30,7 +30,7 @@ class ProductivityController extends Controller
         $edit = false;
 
 
-        return view('productivity.create', compact('csi_category', 'units_drop','edit'));
+        return view('productivity.create', compact('csi_category', 'units_drop', 'edit'));
     }
 
     public function store(Request $request)
@@ -55,7 +55,7 @@ class ProductivityController extends Controller
         $csi_category = CsiCategory::lists('name', 'id')->all();
         $units_drop = Unit::lists('type', 'id')->all();
         $edit = true;
-        return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category','edit'));
+        return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category', 'edit'));
     }
 
     public function update(Productivity $productivity, Request $request)
@@ -86,7 +86,7 @@ class ProductivityController extends Controller
     function postImport(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx'
+            'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
@@ -99,12 +99,12 @@ class ProductivityController extends Controller
     function override(Productivity $productivity, Project $project)
     {
         $overwrote = Productivity::version($project->id, $productivity->id)->first();
-        $edit = true ;
+        $edit = true;
         if (!$overwrote) {
             $overwrote = $productivity;
         }
 
-        return view('productivity.override', ['productivity' => $overwrote, 'baseProductivity' => $productivity, 'project' => $project,'edit'=>$edit]);
+        return view('productivity.override', ['productivity' => $overwrote, 'baseProductivity' => $productivity, 'project' => $project, 'edit' => $edit]);
     }
 
     function postOverride(Request $request, Productivity $productivity, Project $project)
@@ -124,5 +124,12 @@ class ProductivityController extends Controller
 
         flash('Productivity has been updated successfully', 'success');
         return redirect()->route('project.show', $project);
+    }
+
+    public function filter(Request $request)
+    {
+        $data = $request->only('code', 'description', 'crew_structure', 'unit', 'source');
+        \Session::set('filters.productivity', $data);
+        return \Redirect::back();
     }
 }

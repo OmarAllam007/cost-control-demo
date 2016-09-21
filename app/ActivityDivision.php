@@ -16,12 +16,13 @@ class ActivityDivision extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-    protected $orderByName = 'name';
-    protected $orderByCode = 'code';
+    protected $orderBy = ['name','code'];
+
 
     public function getLabelAttribute()
     {
         return $this->code . '.' . $this->name;
+
     }
 
     public function parent()

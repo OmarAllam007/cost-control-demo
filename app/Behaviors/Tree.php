@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait Tree
 {
     protected $path;
+
     public function parent()
     {
         return $this->belongsTo(static::class, 'parent_id');
@@ -15,9 +16,8 @@ trait Tree
     public function children()
     {
         $relation = $this->hasMany(static::class, 'parent_id');
-        if($this->orderBy)
-        {
-            foreach ($orderBy as $order){
+        if (isset($this->orderBy)) {
+            foreach ($this->orderBy as $order) {
                 $relation->orderBy($order);
             }
         }
@@ -31,8 +31,11 @@ trait Tree
             ->with('children')
             ->with('children.children')
             ->with('children.children.children');
-        if (isset($this->orderByCode) && isset($this->orderByName)) {
-            $query->orderBy($this->orderByCode)->orderBy($this->orderByName);
+
+        if (isset($this->orderBy)) {
+            foreach ($this->orderBy as $order) {
+                $query->orderBy($order);
+            }
         }
     }
 
