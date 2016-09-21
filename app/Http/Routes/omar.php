@@ -23,6 +23,9 @@ Route::group(['prefix' => 'productivity'], function () {
 Route::group(['prefix' => 'business-partner'], function () {
     Route::post('/filter',['as'=>'business-partner.filter','uses'=>'BusinessPartnerController@filter']);
 });
+Route::group(['prefix' => 'productivity'], function () {
+    Route::post('/filter',['as'=>'productivity.filter','uses'=>'ProductivityController@filter']);
+});
 
 
 Route::resource('unit', 'UnitController');

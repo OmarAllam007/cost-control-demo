@@ -1,6 +1,7 @@
 $(function () {
     'use strict';
 
+
     $('.tree-radio').on('change', function(){
         if (this.checked) {
             var selector = '#' + $(this).parents('.modal').attr('id');
@@ -26,7 +27,10 @@ $(function () {
                 trigger.html(stack.reverse().join(' &raquo; '));
             }
 
+
         }
+
     });
+
 });
 //# sourceMappingURL=tree-select.js.map

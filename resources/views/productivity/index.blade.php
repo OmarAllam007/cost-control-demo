@@ -17,6 +17,7 @@
 
 
 @section('body')
+    @include('productivity._filters')
     @if ($productivities->total())
         @include('productivity._list')
         {{ $productivities->links() }}
