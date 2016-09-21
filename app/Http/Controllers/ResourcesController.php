@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessPartner;
+use App\Filter\ResourcesFilter;
 use App\Jobs\ResourcesImportJob;
 use App\Project;
 use App\Resources;
@@ -17,11 +18,12 @@ class ResourcesController extends Controller
 
     public function index()
     {
-        $resources = Resources::paginate(50);
+        $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
+        $resources = $filter->filter()->orderBy('resource_code')->orderBy('name')->paginate(100);
         return view('resources.index', compact('resources'));
     }
 
-    public function create(Request $request)
+    public function create()
     {
 
         $units_drop = Unit::options();
@@ -137,5 +139,13 @@ class ResourcesController extends Controller
 
         flash('Resource has been updated successfully', 'success');
         return redirect()->route('project.show', $project);
+    }
+
+    function filter(Request $request)
+    {
+        $data = $request->only(['name', 'unit', 'resource_type_id']);
+        \Session::set('filters.resources', $data);
+
+        return \Redirect::back();
     }
 }

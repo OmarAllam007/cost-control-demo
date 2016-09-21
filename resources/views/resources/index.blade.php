@@ -15,6 +15,8 @@
 @stop
 
 @section('body')
+    @include('resources._filters')
+
     @if ($resources->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
@@ -55,3 +57,7 @@
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No resources found</strong></div>
     @endif
 @stop
+
+@section('javascript')
+    <script src="{{asset('/js/tree-select.js')}}"></script>
+@endsection

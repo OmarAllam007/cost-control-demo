@@ -1,22 +1,5 @@
 $(function () {
     'use strict';
-    var Code = '';
-    function getCode($string) {
-        var res = $string.split(" ");
-        for (var i = 0; i < res.length; i++) {
-            if(res[i].toString().substr(0,1)==0)
-            {
-                continue;
-            }
-            else {
-                Code = Code + res[i].toString().substr(0, 1);
-            }
-        }
-        Code = Code.replace(/0/,'');
-        console.log(Code.replace(/»/, ''));
-    }
-
-
 
     $('.tree-radio').on('change', function(){
         if (this.checked) {
@@ -40,18 +23,10 @@ $(function () {
                     parent = parent.parents('li').first();
                 }
 
-
-                console.log(getCode(stack.reverse().join()));
                 trigger.html(stack.reverse().join(' &raquo; '));
-
             }
 
         }
     });
-
-
-
-
 });
-
 //# sourceMappingURL=tree-select.js.map

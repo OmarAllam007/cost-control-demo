@@ -4,6 +4,7 @@ namespace App;
 
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use App\Filter\ResourcesFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -81,5 +82,11 @@ class Resources extends Model
         }
 
         return $this->rate;
+    }
+
+    function scopeSearch(Builder $query, $filters)
+    {
+        $filter = new ResourcesFilter($query, $filters);
+        $filter->filter();
     }
 }

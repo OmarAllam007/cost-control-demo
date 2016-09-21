@@ -23,6 +23,7 @@ trait Tree
         return $relation;
     }
 
+
     public function scopeTree(Builder $query)
     {
         $query->parents()

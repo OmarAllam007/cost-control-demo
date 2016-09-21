@@ -174,3 +174,15 @@ a, .btn {
   display: block;
   clear: both;
 }
+
+.filter-form {
+  margin-bottom: 20px;
+
+  .btn {
+    margin-top: 25px;
+  }
+
+  .form-group-sm p {
+    margin: 5px 0 5px;
+  }
+}

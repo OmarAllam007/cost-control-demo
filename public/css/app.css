@@ -8073,4 +8073,11 @@ a, .btn {
   display: block;
   clear: both; }
 
+.filter-form {
+  margin-bottom: 20px; }
+  .filter-form .btn {
+    margin-top: 25px; }
+  .filter-form .form-group-sm p {
+    margin: 5px 0 5px; }
+
 /*# sourceMappingURL=app.css.map */

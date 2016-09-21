@@ -20,6 +20,8 @@ Route::group(['prefix' => 'resources'], function () {
 
     Route::get('override/{resources}/{project}', ['as' => 'resources.override', 'uses' => 'ResourcesController@override']);
     Route::post('override/{resources}/{project}', ['as' => 'resources.post-override', 'uses' => 'ResourcesController@postOverride']);
+
+    Route::post('/filter', ['as' => 'resources.filter', 'uses' => 'ResourcesController@filter']);
 });
 
 Route::group(['prefix' => 'productivity'], function () {
