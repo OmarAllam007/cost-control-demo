@@ -29,13 +29,6 @@
     </div>
 </div>
 
-<div class="col-sm-2">
-    <div class="form-group-sm">
-        <label class="control-label" for="resourceUnit">Unit</label>
-        {{Form::select('unit', App\Unit::options(), session('filters.resources.unit'), ['class' => 'form-control', 'id' => 'resourceUnit'])}}
-    </div>
-</div>
-
 <div class="col-sm-3">
     <div class="form-group-sm">
         <button class="btn btn-primary btn-sm"><i class="fa fa-filter"></i> Filter</button>

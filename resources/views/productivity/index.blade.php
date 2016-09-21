@@ -26,3 +26,7 @@
         </div>
     @endif
 @stop
+
+@section('javascript')
+    <script src="{{asset('/js/tree-select.js')}}"></script>
+@endsection
