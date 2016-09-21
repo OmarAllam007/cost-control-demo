@@ -17,7 +17,8 @@ class ProductivityController extends Controller
 
     public function index()
     {
-        $filter = new ProductivityFilter(Productivity::query(), session('filter.productivity'));
+
+        $filter = new ProductivityFilter(Productivity::query(), session('filters.productivity'));
         $productivities = $filter->filter()->paginate(100);
         return view('productivity.index', compact('productivities'));
     }
@@ -128,7 +129,7 @@ class ProductivityController extends Controller
     public function filter(Request $request)
     {
         $data = $request->only('code', 'description', 'crew_structure', 'unit', 'source');
-        \Session::set('filter.productivity', $data);
+        \Session::set('filters.productivity', $data);
         return \Redirect::back();
     }
 }
