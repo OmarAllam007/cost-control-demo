@@ -27,6 +27,10 @@ Route::group(['prefix' => 'productivity'], function () {
     Route::post('/filter',['as'=>'productivity.filter','uses'=>'ProductivityController@filter']);
 });
 
+Route::group(['prefix' => 'unit'], function () {
+    Route::post('/filter',['as'=>'unit.filter','uses'=>'UnitController@filter']);
+});
+
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
