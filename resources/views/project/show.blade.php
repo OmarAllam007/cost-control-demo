@@ -25,7 +25,7 @@
     <ul class="nav nav-tabs">
         <li><a href="#wbs-structure" data-toggle="tab">WBS</a></li>
         <li><a href="#quantity-survey" data-toggle="tab">Quantity Survey</a></li>
-        <li class="active"><a href="#breakdown" data-toggle="tab">Breakdown</a></li>
+        <li><a href="#breakdown" data-toggle="tab">Breakdown</a></li>
         <li><a href="#resources" data-toggle="tab">Resources</a></li>
         <li><a href="#productivity" data-toggle="tab">Productivity</a></li>
         <li><a href="#boq" data-toggle="tab">BOQs</a></li>
@@ -40,7 +40,7 @@
             @include('project.tabs._quantity-survey')
         </section>
 
-        <section class="tab-pane active" id="breakdown">
+        <section class="tab-pane" id="breakdown">
             @include('project.tabs._breakdown')
         </section>
 
@@ -56,3 +56,28 @@
         </section>
     </div>
 @stop
+
+@section('javascript')
+    <script>
+        (function (w, d, $) {
+            $(function () {
+                $('.nav-tabs').on('click', 'a', function () {
+                    window.location.hash = $(this).attr('href');
+                });
+
+                $(w).on('hashchange', function(){
+                    var element = $('a[href="' + window.location.hash + '"]');
+                    if (element.length) {
+                        element.tab('show');
+                    }
+                });
+
+                if (window.location.hash && $('a[href="' + window.location.hash + '"]').length) {
+                    $('a[href="' + window.location.hash + '"]').tab('show');
+                } else {
+                    $('.nav-tabs a').first().tab('show');
+                }
+            })
+        }(window, document, jQuery))
+    </script>
+@endsection
