@@ -17,7 +17,7 @@ trait Tree
     {
         $relation = $this->hasMany(static::class, 'parent_id');
         if (isset($this->orderBy)) {
-            foreach ($this->$orderBy as $order) {
+            foreach ($this->orderBy as $order) {
                 $relation->orderBy($order);
             }
         }
@@ -33,7 +33,7 @@ trait Tree
             ->with('children.children.children');
 
         if (isset($this->orderBy)) {
-            foreach ($this->$orderBy as $order) {
+            foreach ($this->orderBy as $order) {
                 $query->orderBy($order);
             }
         }
