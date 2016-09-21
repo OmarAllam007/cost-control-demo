@@ -1,6 +1,6 @@
 <template id="ResourcesTemplate">
     <div id="ResourcesModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -33,7 +33,7 @@
                                         @{{ resource.name }}
                                     </label>
                                 </td>
-                                <td>@{{ resource.type }}</td>
+                                <td>@{{ resource.root_type }}</td>
                                 <td>@{{ resource.rate }}</td>
                                 <td>@{{ resource.unit }}</td>
                             </tr>
