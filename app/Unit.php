@@ -13,6 +13,6 @@ class Unit extends Model
 
     static function options()
     {
-        return static::pluck('type', 'id')->prepend('Select Unit', '');
+        return static::orderBy('type')->pluck('type', 'id')->prepend('Select Unit', '');
     }
 }
