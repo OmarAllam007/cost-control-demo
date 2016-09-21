@@ -2,34 +2,7 @@
 
 
 
-Route::get('/import',
-    ['uses' => 'ActivityDivisionController@import'
-        , 'as' => 'division.import'
-    ]);
-Route::get('/import',
-    ['uses' => 'ProductivityController@import'
-        , 'as' => 'productivity.import'
-    ]);
 
-Route::get('/importproductivity',
-    ['uses' => 'ProductivityController@importProductivity'
-        , 'as' => 'productivity.importProductivity'
-    ]);
-
-Route::get('/importcategory',
-    ['uses' => 'CategoryController@importcategory'
-        , 'as' => 'category.importcategory'
-    ]);
-
-Route::post('project/upload',
-    ['uses' => 'ProjectController@upload'
-        , 'as' => 'project.upload'
-    ]);
-
-Route::post('productivity/upload',
-    ['uses' => 'ProductivityController@upload'
-        , 'as' => 'productivity.upload'
-    ]);
 
 Route::resource('boq-division', 'BoqDivisionController');
 
@@ -41,9 +14,14 @@ Route::group(['prefix' => 'boq'], function () {
     Route::post('import/{project}', ['as' => 'boq.post-import', 'uses' => 'BoqController@postImport']);
 });
 
+
 Route::group(['prefix' => 'productivity'], function () {
     Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
+});
+
+Route::group(['prefix' => 'business-partner'], function () {
+    Route::post('/filter',['as'=>'business-partner.filter','uses'=>'BusinessPartnerController@filter']);
 });
 
 

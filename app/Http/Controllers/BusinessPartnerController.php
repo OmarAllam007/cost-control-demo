@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BusinessPartner;
+use App\Filter\BusinessPartnerFilter;
 use Illuminate\Http\Request;
 
 class BusinessPartnerController extends Controller
@@ -12,9 +13,8 @@ class BusinessPartnerController extends Controller
 
     public function index()
     {
-        $businessPartners = BusinessPartner::select('id','name','type')->groupBy('name')
-            ->paginate();
-
+        $filter = new BusinessPartnerFilter(BusinessPartner::query(),session('filters.partners'));
+        $businessPartners = $filter->filter()->orderBy('name')->paginate(100);
         return view('business-partner.index', compact('businessPartners'));
     }
 
@@ -62,5 +62,11 @@ class BusinessPartnerController extends Controller
         flash('Business partner has been deleted', 'success');
 
         return \Redirect::route('business-partner.index');
+    }
+    public function filter(Request $request)
+    {
+        $data = $request->only(['name','type']);
+        \Session::set('filters.partners',$data);
+        return \Redirect::back();
     }
 }
