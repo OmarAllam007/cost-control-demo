@@ -10,14 +10,15 @@
 <div class="col-sm-3">
     <div class="form-group-sm">
         <label for="ResourceType">Resource Type</label>
-        <p>
-            <a href="#ResourceTypeModal" data-toggle="modal">
+        <p id="resourceTypeContainer">
+            <a href="#ResourceTypeModal" data-toggle="modal" id="selectType">
                 @if ($type = Session::get('filters.resources.resource_type_id'))
                     {{App\ResourceType::find($type)->name}}
                 @else
                     Select Type
                 @endif
             </a>
+            <a href="#" class="text-danger reset-modal-input" id="resetType"> <i class="fa fa-times-circle"></i></a>
         </p>
     </div>
 </div>

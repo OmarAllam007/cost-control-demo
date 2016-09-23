@@ -59,4 +59,36 @@
 
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>
+    <script>
+        (function (w, d, $) {
+            $(function () {
+                var typeModal = $('#ResourceTypeModal');
+                var selectType = $('#selectType');
+
+                var resetType = $('#resetType');
+
+                var types = typeModal.find('.tree-radio');
+
+                if (types.is(':checked')) {
+                    selectType.after(resetType);
+                }
+
+                types.on('change', function () {
+                    if (types.is(':checked')) {
+                        resetType.show();
+                    } else {
+                        resetType.hide();
+                    }
+                }).change();
+
+
+                resetType.on('click', function (e) {
+                    e.preventDefault();
+                    types.attr('checked', false);
+                    resetType.hide();
+                    selectType.text('Select Type');
+                });
+            });
+        }(window, document, jQuery));
+    </script>
 @endsection
