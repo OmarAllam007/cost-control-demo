@@ -10,8 +10,9 @@
                 </div>
                 <p>
                     <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Resource Type' }}
+                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select' }}
                     </a>
+                    <a id="remove-parent"><span class="fa fa-times"></span></a>
                 </p>
                 {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
             </div>
@@ -67,9 +68,11 @@
             {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
             <p>
 
-                <a href="#ParentsModal2" data-toggle="modal" id="select-parent">
+                <a href="#ParentsModal2" data-toggle="modal" id="select-parent2">
                     {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id'))->path : 'Select Business Partner' }}
                 </a>
+                <a id="remove-parent2"><span class="fa fa-times"></span></a>
+
             </p>
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>

@@ -8,8 +8,10 @@
             </div>
             <p>
                 <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('parent_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Division' }}
+                    {{Form::getValueAttribute('parent_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select ' }}
                 </a>
+                <a id="remove-parent"><span class="fa fa-times"></span></a>
+
             </p>
             {!! $errors->first('parent_id', '<div class="help-block">:message</div>') !!}
         </div>

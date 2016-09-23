@@ -2,10 +2,10 @@ $(function () {
     'use strict';
 
 
-    $('.tree-radio').on('change', function(){
+    $('.tree-radio').on('change', function () {
         if (this.checked) {
             var selector = '#' + $(this).parents('.modal').attr('id');
-            var trigger = $('[href="' + selector +'"]');
+            var trigger = $('[href="' + selector + '"]');
 
             var label = $(this).data('label');
             if (label) {
@@ -30,6 +30,15 @@ $(function () {
 
         }
 
+    });
+
+    $('#remove-parent').on('click', function (){
+        $('#select-parent').text('Select');
+        $('.tree-radio').removeAttr('checked');
+    });
+    $('#remove-parent2').on('click', function () {
+        $('#select-parent2').text('Select');
+        $('.tree-radio').removeAttr('checked');
     });
 
 });

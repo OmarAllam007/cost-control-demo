@@ -17,8 +17,9 @@
             {{Form::label('std_activity_id', 'Standard Activity', ['class' => 'control-label'])}}
             <p>
                 <a href="#ActivitiesModal" data-toggle="modal" id="select-activity">
-                    {{Form::getValueAttribute('std_activity_id')? App\StdActivity::find(Form::getValueAttribute('std_activity_id'))->path : 'Select Activity' }}
+                    {{Form::getValueAttribute('std_activity_id')? App\StdActivity::find(Form::getValueAttribute('std_activity_id'))->path : 'Select' }}
                 </a>
+                <a id="remove-parent"><span class="fa fa-times"></span></a>
             </p>
         </div>
 

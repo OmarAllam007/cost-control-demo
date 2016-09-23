@@ -11,13 +11,16 @@
     <div class="form-group-sm">
         <label for="ResourceType">Resource Type</label>
         <p>
-            <a href="#ResourceTypeModal" data-toggle="modal">
+            <a href="#ResourceTypeModal" data-toggle="modal" id="select-parent">
                 @if ($type = Session::get('filters.resources.resource_type_id'))
                     {{App\ResourceType::find($type)->name}}
                 @else
-                    Select Type
+                    Select
                 @endif
+
             </a>
+            <a id="remove-parent"><span class="fa fa-times"></span></a>
+
         </p>
     </div>
 </div>
@@ -25,7 +28,7 @@
 <div class="col-sm-2">
     <div class="form-group-sm">
         <label class="control-label" for="resourceCode">Resource Code</label>
-        <input type="text" id="resourceCode" name="resource_code" class="form-control" value="{{session('filters.resources.code')}}">
+        <input type="text" id="resourceCode" name="resource_code" class="form-control" value="{{session('filters.resources.resource_code')}}">
     </div>
 </div>
 

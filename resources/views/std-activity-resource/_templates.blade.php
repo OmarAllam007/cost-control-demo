@@ -29,7 +29,7 @@
                             <tr v-for="resource in resources">
                                 <td>
                                     <label>
-                                        <input type="radio" name="resource_id" :value="resource.id" v-on:change="setResource(resource)" :checked="resource.id == selected.id">
+                                        <input type="radio" name="resource_id" :value="resource.id" v-on:change="setResource(resource)" :checked="resource.id == selected.id" id="tree-radio2">
                                         @{{ resource.name }}
                                     </label>
                                 </td>

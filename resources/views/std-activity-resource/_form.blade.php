@@ -19,9 +19,10 @@
             {{ Form::label('resource_id', 'Resource', ['class' => 'control-label']) }}
 
             <p>
-                <a href="#ResourcesModal" data-toggle="modal">
-                    @{{ resource.name || "Select Resource" }}
+                <a href="#ResourcesModal" data-toggle="modal" id="select-parent">
+                    @{{ resource.name || "Select" }}
                 </a>
+                <a id="remove-parent"><span class="fa fa-times"></span></a>
             </p>
 
             {!! $errors->first('resource_id', '<div class="help-block">:message</div>') !!}

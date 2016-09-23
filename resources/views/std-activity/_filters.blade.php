@@ -10,13 +10,14 @@
     <div class="form-group-sm">
         <label for="ActivityDivision">Division</label>
         <p>
-            <a href="#ParentsModal" data-toggle="modal">
+            <a href="#ParentsModal" data-toggle="modal" id="select-parent">
                 @if ($div_id = session('filters.std-activity.division_id'))
                     {{App\ActivityDivision::find($div_id)->path}}
                 @else
-                    Select Division
+                    Select
                 @endif
             </a>
+            <a id="remove-parent"><span class="fa fa-times"></span></a>
         </p>
     </div>
 </div>
@@ -27,5 +28,4 @@
 </div>
 
 @include('std-activity._division_modal', ['value' => session('filters.std-activity.division_id')])
-
 {{Form::close()}}
