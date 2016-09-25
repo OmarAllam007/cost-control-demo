@@ -45,13 +45,11 @@ class ProjectController extends Controller
         set_time_limit(1800);
         ini_set('memory_limit', '4G');
 
-
-
         $project->load([
             'wbs_levels',
             'quantities',
-            'breakdown_resources' => function($q) {
-//                return $q->filter(['resource_type' => 43]);
+            'breakdown_resources' => function($q) use ($project) {
+                return $q->filter('filters.breakdown.' . $project->id);
             },
             'breakdown_resources.breakdown',
             'breakdown_resources.breakdown.template',
@@ -88,5 +86,12 @@ class ProjectController extends Controller
         return \Redirect::route('project.index');
     }
 
+    function filters(Request $request, Project $project)
+    {
+        $data = $request->all();
+        \Session::set('filters.breakdown.' . $project->id, $data);
+
+        return back();
+    }
 
 }

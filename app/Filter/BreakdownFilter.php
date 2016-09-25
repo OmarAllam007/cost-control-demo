@@ -28,6 +28,20 @@ class BreakdownFilter extends AbstractFilter
         });
     }
 
+    protected function cost_account($value)
+    {
+        $this->query->whereHas('breakdown', function(Builder $q) use ($value) {
+            $q->where('cost_account', 'LIKE', "%$value%");
+        });
+    }
+
+    protected function resource($name)
+    {
+        $this->query->whereHas('resource.resource', function(Builder $q) use ($name) {
+            $q->where('name', 'LIKE', "%$name%");
+        });
+    }
+
     protected function resource_type($id)
     {
         $this->query->whereHas('resource.resource', function(Builder $q) use ($id) {
@@ -36,6 +50,4 @@ class BreakdownFilter extends AbstractFilter
             $q->whereIn('resource_type_id', $ids);
         });
     }
-
-
 }
