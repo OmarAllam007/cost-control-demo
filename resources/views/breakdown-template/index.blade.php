@@ -6,7 +6,9 @@
 @stop
 
 @section('body')
-    @include('breakdown-template._filter')
+    <div id="BreakdownResourceForm">
+        @include('breakdown-template._filter')
+    </div>
 
     @if ($breakdownTemplates->total())
         <table class="table table-condensed table-striped table-fixed">
@@ -38,3 +40,15 @@
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No breakdown template found</strong></div>
     @endif
 @stop
+
+@section('javascript')
+    <script type="text/javascript">
+        var resource = false;
+        @if (session('filters.breakdown-template.resource_id'))
+                resource = {!! json_encode(\App\Resources::find(session('filters.breakdown-template.resource_id'))->morphToJSON()) !!};
+                @endif
+console.log(resource);
+        var productivity = {};
+    </script>
+    <script src="{{asset('/js/breakdown-resource.js')}}"></script>
+@endsection

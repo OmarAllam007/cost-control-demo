@@ -46,7 +46,7 @@
                         @{{ productivity.code || "Select Productivity Reference" }}
                     </a>
                 </p>
-{{--                {{ Form::select('productivity_id', \App\Productivity::options(), null, ['class' => 'form-control']) }}--}}
+                {{--                {{ Form::select('productivity_id', \App\Productivity::options(), null, ['class' => 'form-control']) }}--}}
                 {!! $errors->first('productivity_id', '<div class="help-block">:message</div>') !!}
             </div>
 
@@ -75,7 +75,7 @@
     <script type="text/javascript">
         var resource = {};
         @if (Form::getValueAttribute('resource_id'))
-            resource = {!! json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) !!}
+            resource = {!! json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) !!};
         @endif
 
         var productivity = {};
