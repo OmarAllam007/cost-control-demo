@@ -1,11 +1,11 @@
 <table class="table table-condensed table-striped table-fixed">
     <thead>
     <tr>
-        <th class="col-xs-1">CSI CODE</th>
+        <th class="col-xs-2">CSI CODE</th>
         <th class="col-xs-3">Description</th>
         <th class="col-xs-3">Crew Structure</th>
         <th class="col-xs-1">Unit</th>
-        <th class="col-xs-2">Daily Output</th>
+        <th class="col-xs-1">Daily Output</th>
         <th class="col-xs-2">Actions</th>
     </tr>
     </thead>
@@ -13,11 +13,11 @@
     @foreach($productivities as $productivity)
 
         <tr>
-            <td class="col-xs-1">{{ $productivity->code }}</td>
-            <td class="col-xs-3">{!! nl2br(e($productivity->description)) !!}</td>
-            <td class="col-xs-3">{!! nl2br(e($productivity->crew_structure)) !!}</td>
+            <td class="col-xs-2">{{ $productivity->code?:0 }}</td>
+            <td class="col-xs-3">{!! nl2br(e($productivity->description?:'')) !!}</td>
+            <td class="col-xs-3">{!! nl2br(e($productivity->crew_structure?:'')) !!}</td>
             <td class="col-xs-1">{{ isset($productivity->units->type)?$productivity->units->type:'' }}</td>
-            <td class="col-xs-2">{{number_format(floatval($productivity->daily_output), 2)}}</td>
+            <td class="col-xs-1">{{number_format(floatval($productivity->daily_output), 2)?:0}}</td>
             <td class="col-xs-2">
                 <form action="{{ route('productivity.destroy', $productivity) }}" method="post">
                     {{csrf_field()}} {{method_field('delete')}}

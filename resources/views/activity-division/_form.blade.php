@@ -17,9 +17,11 @@
             {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
             <p>
                 <a href="#ParentsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('parent_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Parent' }}
+                    {{Form::getValueAttribute('parent_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select' }}
                 </a>
+                <a id="remove-parent"><span class="fa fa-times"></span></a>
             </p>
+
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
 

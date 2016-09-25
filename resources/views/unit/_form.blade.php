@@ -4,14 +4,13 @@
         <div class="form-group {{$errors->first('type', 'has-error')}}">
             {{ Form::label('type', 'Name', ['class' => 'control-label']) }}
             {{ Form::text('type', null, ['class' => 'form-control']) }}
-            <?php echo  $errors->first('type', '<div class="help-block"></div>'); ?>
-
+            {!! $errors->first('type', '<div class="help-block">:message</div>') !!}
         </div>
 
         <!-- Continue working on your fields here -->
 
         <div class="form-group">
-            <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            <button class="btn btn-success"><i class="fa fa-check"></i> Add Unit</button>
         </div>
     </div>
 </div>

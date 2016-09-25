@@ -29,5 +29,4 @@
 </div>
 
 @include('std-activity._division_modal', ['value' => session('filters.std-activity.division_id')])
-
 {{Form::close()}}

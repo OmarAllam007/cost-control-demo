@@ -312,5 +312,9 @@ $(function () {
 
         }
     });
+    $('#remove-parent').on('click', function () {
+        $('#select-activity').text('Select');
+        $('.tree-radio').removeAttr('checked');
+    });
 });
 //# sourceMappingURL=breakdown.js.map

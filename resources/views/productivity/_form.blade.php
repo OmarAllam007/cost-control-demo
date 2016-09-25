@@ -19,8 +19,9 @@
             </div>
             <p>
                 <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select Division' }}
+                    {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select' }}
                 </a>
+                <a id="remove-parent"><span class="fa fa-times"></span></a>
             </p>
             {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
         </div>
@@ -105,14 +106,13 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\CsiCategory::tree()->get() as $level)
-                        @include('productivity._recursive_input', ['input'=>'csi_category_id'])
+                        @include('productivity._recursive_input', $level)
                     @endforeach
                 </ul>
             </div>
         </div>
     </div>
 </div>
-
 
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>

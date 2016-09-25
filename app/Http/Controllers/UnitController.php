@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filter\UnitFilter;
 use App\Unit;
 use Illuminate\Http\Request;
 
@@ -12,8 +13,8 @@ class UnitController extends Controller
 
     public function index()
     {
-        $units = Unit::paginate();
-
+        $filter = new UnitFilter(Unit::query(),session('filters.unit'));
+        $units = $filter->filter()->paginate(10);
         return view('unit.index', compact('units'));
     }
 
@@ -62,5 +63,12 @@ class UnitController extends Controller
         flash('Unit has been deleted', 'success');
 
         return \Redirect::route('unit.index');
+    }
+
+    public function filter(Request $request)
+    {
+        $data = $request->only('type');
+        \Session::set('filters.unit',$data);
+        return \Redirect::back();
     }
 }

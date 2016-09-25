@@ -10198,4 +10198,10 @@ $(function(){
     });
 });
 
+$('#remove-parent').on('click', function () {
+  $('#select-parent').text('Select');
+  $('.tree-radio').removeAttr('checked');
+  $('#tree-radio2').removeAttr('checked');
+});
+
 //# sourceMappingURL=breakdown-resource.js.map

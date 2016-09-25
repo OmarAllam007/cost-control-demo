@@ -6,6 +6,7 @@
 @stop
 
 @section('body')
+    @include('unit._filters')
     @if ($units->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
