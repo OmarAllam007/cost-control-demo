@@ -25,6 +25,7 @@ $(function () {
                 }
 
                 trigger.html(stack.reverse().join(' &raquo; '));
+                generateCode(stack);
             }
 
 
@@ -32,14 +33,24 @@ $(function () {
 
     });
 
-    $('#remove-parent').on('click', function (){
-        $('#select-parent').text('Select');
-        $('.tree-radio').removeAttr('checked');
+    function generateCode($stack) {
+
+        // var code = $stack.toString();
+        // var splittedArray = code.split(',');
+        // var finalcode = '';
+        //
+        // for (var i = 0; i < splittedArray.length; i++) {
+        //     if (splittedArray)
+        //         finalcode = finalcode + splittedArray[i].charAt(0) + i;
+        //     console.log(finalcode);
+        // }
+        // $('#resource_code').val(finalcode);
+    };
+    $('.remove-parent').on('click', function () {
+        $(this).parent().find('.select-parent').text($(this).attr('data'));
+        $(this).modal().removeAttr('checked',false);
     });
-    $('#remove-parent2').on('click', function () {
-        $('#select-parent2').text('Select');
-        $('.tree-radio').removeAttr('checked');
-    });
+
 
 });
 //# sourceMappingURL=tree-select.js.map
