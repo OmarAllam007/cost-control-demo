@@ -8052,15 +8052,13 @@ a, .btn {
   box-shadow: none; }
 
 .table-fixed thead {
-  width: 100%;
-
-}
+  width: 100%; }
 
 .table-fixed tbody {
   height: 400px;
   overflow-y: auto;
   width: 100%;
-  border-top: 2px solid #ff6666; }
+  border-top: 2px solid #ddd; }
 
 .table-fixed thead, .table-fixed tbody,
 .table-fixed tr, .table-fixed td, .table-fixed th {

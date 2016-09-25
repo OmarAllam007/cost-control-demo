@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BreakdownTemplate;
+use App\Filter\BreakdownTemplateFilter;
 use Illuminate\Http\Request;
 
 class BreakdownTemplateController extends Controller
@@ -12,8 +13,8 @@ class BreakdownTemplateController extends Controller
 
     public function index()
     {
-        $breakdownTemplates = BreakdownTemplate::paginate();
-
+        $filter = new BreakdownTemplateFilter(BreakdownTemplate::query(), session('filters.breakdown-template'));
+        $breakdownTemplates = $filter->filter()->paginate(50);
         return view('breakdown-template.index', compact('breakdownTemplates'));
     }
 
@@ -61,5 +62,12 @@ class BreakdownTemplateController extends Controller
         flash('Breakdown template has been deleted', 'success');
 
         return \Redirect::route('std-activity.show', $breakdown_template->activity);
+    }
+
+    function filters(Request $request)
+    {
+        $data = $request->only(['name', 'resource_id']);
+        \Session::set('filters.breakdown-template', $data);
+        return \Redirect::back();
     }
 }

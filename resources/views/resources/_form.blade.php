@@ -9,9 +9,10 @@
                     {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
                 </div>
                 <p>
-                    <a href="#LevelsModal" data-toggle="modal" class="select-parent">
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open">
                         {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Type' }}
                     </a>
+                    <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
                 </p>
                 {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
             </div>
@@ -24,7 +25,7 @@
             @if(!empty($edit))
                 {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
             @else
-                {{ Form::text('resource_code',null, ['class' => 'form-control','id'=>'resource_code']) }}
+                {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
             @endif
             {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
 
@@ -67,10 +68,10 @@
             {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
             <p>
 
-                <a href="#ParentsModal2" data-toggle="modal" class="select-parent">
+                <a href="#ParentsModal2" data-toggle="modal" id="select-parent2">
                     {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id'))->path : 'Select Business Partner' }}
                 </a>
-                <a class="remove-parent" data-toggle="ParentsModal2" data="Select Business Partner"><span class="fa fa-times"></span></a>
+                <a id="remove-parent2"><span class="fa fa-times"></span></a>
 
             </p>
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
@@ -99,7 +100,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\ResourceType::tree()->get() as $level)
-                        @include('resources._recursive_input', compact('level'))
+                        @include('resources._recursive_input', ['level' => $level, 'value' => Form::getValueAttribute('resource_id')])
                     @endforeach
                 </ul>
             </div>

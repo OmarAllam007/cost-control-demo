@@ -7,20 +7,18 @@
     </div>
 </div>
 
-<div class="col-sm-2">
+<div class="col-sm-3">
     <div class="form-group-sm">
         <label for="ResourceType">Resource Type</label>
-        <p>
-            <a href="#ResourceTypeModal" data-toggle="modal" id="select-parent">
+        <p id="resourceTypeContainer">
+            <a href="#ResourceTypeModal" data-toggle="modal" id="selectType">
                 @if ($type = Session::get('filters.resources.resource_type_id'))
                     {{App\ResourceType::find($type)->name}}
                 @else
-                    Select
+                    Select Type
                 @endif
-
             </a>
-            <a id="remove-parent"><span class="fa fa-times"></span></a>
-
+            <a href="#" class="text-danger reset-modal-input" id="resetType"> <i class="fa fa-times-circle"></i></a>
         </p>
     </div>
 </div>
@@ -49,7 +47,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\ResourceType::tree()->get() as $level)
-                        @include('resources._recursive_input', compact('level'))
+                        @include('resources._recursive_input', ['level' => $level, 'value' => session('filters.resources.resource_type_id')])
                     @endforeach
                 </ul>
             </div>

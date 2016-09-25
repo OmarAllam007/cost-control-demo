@@ -12,7 +12,6 @@
             {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
         </div>
 
-
         <div class="form-group {{$errors->first('std_activity_id', 'has-errors')}}">
             {{Form::label('std_activity_id', 'Standard Activity', ['class' => 'control-label'])}}
             <p>

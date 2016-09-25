@@ -48,9 +48,9 @@
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
-                <td class="col-xs-6">Resource</td>
-                <td class="col-xs-3">Equation</td>
-                <td class="col-xs-3">Action</td>
+                <th class="col-xs-6">Resource</th>
+                <th class="col-xs-3">Equation</th>
+                <th class="col-xs-3">Action</th>
             </tr>
             </thead>
             <tbody>
