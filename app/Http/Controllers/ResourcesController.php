@@ -19,7 +19,7 @@ class ResourcesController extends Controller
     public function index()
     {
         $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
-        $resources = $filter->filter()->orderBy('resource_code')->orderBy('name')->paginate(100);
+        $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
         return view('resources.index', compact('resources'));
     }
 

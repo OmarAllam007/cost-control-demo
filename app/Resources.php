@@ -89,4 +89,12 @@ class Resources extends Model
         $filter = new ResourcesFilter($query, $filters);
         $filter->filter();
     }
+
+    function scopeBasic(Builder $query)
+    {
+        $query->where(function(Builder $query) {
+            $query->where('project_id', 0)
+                ->orWhereNull('project_id');
+        });
+    }
 }
