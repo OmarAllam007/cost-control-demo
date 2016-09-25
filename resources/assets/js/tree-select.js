@@ -25,7 +25,11 @@ $(function () {
 
                 trigger.html(stack.reverse().join(' &raquo; '));
             }
-
         }
+    });
+
+    $('.remove-tree-input').on('click', function () {
+        $(this).parent().find('.tree-open').text($(this).data('label'));
+        $($(this).data('target')).find('.tree-radio').removeAttr('checked');
     });
 });

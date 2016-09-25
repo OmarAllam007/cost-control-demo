@@ -6,6 +6,8 @@
 @stop
 
 @section('body')
+    @include('breakdown-template._filter')
+
     @if ($breakdownTemplates->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>

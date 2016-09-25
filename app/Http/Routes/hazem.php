@@ -43,6 +43,10 @@ Route::group(['prefix' => 'survey'], function () {
     Route::post('fix-import/{code}', ['as' => 'survey.post-fix-import', 'uses' => 'SurveyController@postFixImport']);
 });
 
+Route::group(['prefix' => 'breakdown-template'], function () {
+    Route::post('filters', ['as' => 'breakdown-template.filters', 'uses' => 'BreakdownTemplateController@filters']);
+});
+
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');

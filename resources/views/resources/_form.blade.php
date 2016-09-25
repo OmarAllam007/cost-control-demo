@@ -9,10 +9,10 @@
                     {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
                 </div>
                 <p>
-                    <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select' }}
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open">
+                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Type' }}
                     </a>
-                    <a id="remove-parent"><span class="fa fa-times"></span></a>
+                    <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
                 </p>
                 {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
             </div>
@@ -100,7 +100,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\ResourceType::tree()->get() as $level)
-                        @include('resources._recursive_input', compact('level'))
+                        @include('resources._recursive_input', ['level' => $level, 'value' => Form::getValueAttribute('resource_id')])
                     @endforeach
                 </ul>
             </div>

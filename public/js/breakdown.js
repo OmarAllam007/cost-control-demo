@@ -309,12 +309,12 @@ $(function () {
 
                 trigger.html(stack.reverse().join(' &raquo; '));
             }
-
         }
     });
-    $('#remove-parent').on('click', function () {
-        $('#select-activity').text('Select');
-        $('.tree-radio').removeAttr('checked');
+
+    $('.remove-tree-input').on('click', function () {
+        $(this).parent().find('.tree-open').text($(this).data('label'));
+        $($(this).data('target')).find('.tree-radio').removeAttr('checked');
     });
 });
 //# sourceMappingURL=breakdown.js.map
