@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Filter\BreakdownFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class BreakdownResource extends Model
@@ -96,5 +98,11 @@ class BreakdownResource extends Model
             return 0;
         }
         return $this->budget_cost / $this->eng_qty;
+    }
+
+    function scopeFilter(Builder $query, $fields)
+    {
+        $filter = new BreakdownFilter($query, $fields);
+        return $filter->filter();
     }
 }

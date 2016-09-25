@@ -25,7 +25,6 @@ class ResourcesController extends Controller
 
     public function create()
     {
-
         $units_drop = Unit::options();
         $partners = BusinessPartner::options();
         $resources = Resources::all();

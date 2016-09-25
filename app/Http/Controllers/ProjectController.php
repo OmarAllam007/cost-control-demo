@@ -44,8 +44,23 @@ class ProjectController extends Controller
     {
         set_time_limit(1800);
         ini_set('memory_limit', '4G');
-        $project->load(['wbs_levels','breakdown_resources']);
-        return view('project.show', compact('project','productivity'));
+
+
+
+        $project->load([
+            'wbs_levels',
+            'quantities',
+            'breakdown_resources' => function($q) {
+//                return $q->filter(['resource_type' => 43]);
+            },
+            'breakdown_resources.breakdown',
+            'breakdown_resources.breakdown.template',
+            'breakdown_resources.breakdown.std_activity',
+            'breakdown_resources.resource',
+            'breakdown_resources.productivity',
+        ]);
+
+        return view('project.show', compact('project', 'productivity'));
     }
 
     public function edit(Project $project)

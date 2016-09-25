@@ -37,4 +37,17 @@ class ResourceType extends Model
         return $parent;
     }
 
+    function getChildrenIds()
+    {
+        $ids = collect($this->id);
+
+        /** @var ResourceType $child */
+        foreach ($this->children as $child) {
+            $subids = $child->getChildrenIds();
+            $ids = $ids->merge($subids);
+        }
+
+        return $ids;
+    }
+
 }

@@ -13,24 +13,8 @@ class ResourcesFilter extends AbstractFilter
         $type = ResourceType::with(['children', 'children.children', 'children.children.children'])
             ->find($id);
 
-        $ids = $this->getTypeChildren($type);
+        $ids = $type->getChildrenIds();
 
         $this->query->whereIn('resource_type_id', $ids);
-    }
-
-    /**
-     * @param $type
-     * @return \Illuminate\Support\Collection
-     */
-    protected function getTypeChildren($type)
-    {
-        $ids = collect($type->id);
-
-        foreach ($type->children as $child) {
-            $subids = $this->getTypeChildren($child);
-            $ids = $ids->merge($subids);
-        }
-
-        return $ids;
     }
 }
