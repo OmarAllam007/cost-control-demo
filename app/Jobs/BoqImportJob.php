@@ -46,21 +46,22 @@ class BoqImportJob extends ImportJob implements ShouldQueue
             $key = in_array($data[0], $boqs);
             if (!$key) {
                 Boq::create([
-                    'item_code' => $data[0] ?: '',
-                    'cost_account' => $data[1] ?:'',
-                    'wbs_id' => $this->getWbsId($data[2]) ?: 0,
-                    'item' => $data[3] ?: '',
-                    'description' => $data[4] ?: '',
-                    'type' => $data[5] ?: '',
-                    'unit_id' => $this->getUnit($data[6])?: 0,
-                    'quantity' => $data[7]?: 0,
-                    'price_ur' => $data[9] ?: 0,
-                    'arabic_description' => $data[10]?: '',
+                    'wbs_id' => $this->getWbsId($data[0]) ?: 0,
+                    'item_code' => $data[1] ?: '',
+                    'cost_account' => $data[2] ?:'',
+                    'type' => $data[3] ?: '',
                     'division_id' => $this->getDivisionId($data)?:'',
-                    'kcc_qty' => $data[14] ?: '',
-                    'subcon' => $data[15]?: '',
-                    'materials' => $data[16]?: '',
-                    'manpower' => $data[17]?: '',
+                    'description' => $data[7] ?: '',
+                    'unit_id' => $this->getUnit($data[8])?: 0,
+                    'quantity' => $data[9]?: 0,
+                    'price_ur' => $data[10] ?: 0,
+                    'dry_ur' => $data[11] ?: 0,
+                    'kcc_qty' => $data[12] ?: '',
+                    'materials' => $data[13]?: '',
+                    'subcon' => $data[14]?: '',
+                    'manpower' => $data[15]?: '',
+//                    'type' => $data[5] ?: '',
+//                    'arabic_description' => $data[10]?: '',
                     'project_id' => $this->project_id,
                 ]);
             }
@@ -87,7 +88,7 @@ class BoqImportJob extends ImportJob implements ShouldQueue
     {
         $this->loadDivision();
 
-        $levels = array_filter(array_slice($data, 11, 3));
+        $levels = array_filter(array_slice($data, 4, 3));
         $division_id = 0;
         $path = [];
         foreach ($levels as $level) {

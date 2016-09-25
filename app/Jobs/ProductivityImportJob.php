@@ -41,21 +41,20 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
             $data = $this->getDataFromCells($cells);
 
             if (!(in_array($data[0], $productivities))) {
-
                 Productivity::create([
                     'code' => $data[0],
+                    'description' => $data[5],
                     'csi_category_id' => $this->getDivisionId($data),
-                    'unit' => $this->getUnit($data[4]),
-                    'crew_structure' => $data[5],
-                    'crew_hours' => $data[6],
-                    'crew_equip' => $data[7],
+                    'unit' => $this->getUnit($data[6]),
+                    'crew_structure' => $data[7],
+//                    'crew_hours' => $data[6],
+//                    'crew_equip' => $data[7],
                     'daily_output' => $data[8],
                     'man_hours' => $data[9],
                     'equip_hours' => $data[10],
-                    'reduction_factor' => $data[11],
-                    'after_reduction' => $this->getAfterFactor($data[11], $data[8]),
-                    'source' => $data[12],
-
+//                    'reduction_factor' => $data[11],
+                    'after_reduction' => $this->getAfterFactor($data[9], $data[8]),
+                    'source' => $data[10],
                 ]);
 
             }
@@ -83,7 +82,7 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
     {
         $this->loadDivision();
 
-        $levels = array_filter(array_slice($data, 1, 3));
+        $levels = array_filter(array_slice($data, 1, 4));
         $division_id = 0;
         $path = [];
         foreach ($levels as $level) {

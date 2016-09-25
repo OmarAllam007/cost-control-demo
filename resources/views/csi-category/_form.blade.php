@@ -7,10 +7,10 @@
                 {{ Form::select('parent_id', App\CsiCategory::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
-                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('parent_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select ' }}
+                <a href="#LevelsModal" data-toggle="modal" class="tree-open">
+                    {{Form::getValueAttribute('parent_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Category' }}
                 </a>
-                <a id="remove-parent"><span class="fa fa-times"></span></a>
+                <a class="remove-tree-input" data-target="#LevelsModal" data-label="Select Category"><span class="fa fa-times"></span></a>
 
             </p>
             {!! $errors->first('parent_id', '<div class="help-block">:message</div>') !!}
@@ -42,7 +42,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\CsiCategory::tree()->get() as $level)
-                        @include('csi-category._recursive_input', compact('parent_id'))
+                        @include('csi-category._recursive_input', compact('level'))
                     @endforeach
                 </ul>
             </div>

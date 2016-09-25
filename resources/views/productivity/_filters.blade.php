@@ -4,14 +4,14 @@
     <div class="form-group-sm">
         <label for="ResourceType">Productivity Category</label>
         <p>
-            <a href="#CSICategoryModal" data-toggle="modal" id="select-parent">
+            <a href="#CSICategoryModal" data-toggle="modal" class="tree-open">
                 @if ($type = Session::get('filters.productivity.csi_category_id'))
                     {{App\CsiCategory::find($type)->name}}
                 @else
-                    Select
+                    Select Category
                 @endif
             </a>
-            <a id="remove-parent"><span class="fa fa-times"></span></a>
+            <a class="remove-tree-input" data-target="#CSICategoryModal" data-label="Select Category"><span class="fa fa-times"></span></a>
         </p>
     </div>
 </div>

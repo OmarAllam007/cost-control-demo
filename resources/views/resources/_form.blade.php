@@ -68,10 +68,10 @@
             {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
             <p>
 
-                <a href="#ParentsModal2" data-toggle="modal" id="select-parent2">
+                <a href="#ParentsModal2" data-toggle="modal" class="tree-open">
                     {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id'))->path : 'Select Business Partner' }}
                 </a>
-                <a id="remove-parent2"><span class="fa fa-times"></span></a>
+                <a class="remove-tree-input" data-label="Select Business Partner" data-target="#ParentsModal2"><span class="fa fa-times"></span></a>
 
             </p>
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
