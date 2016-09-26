@@ -40,7 +40,6 @@ class ResourcesImportJob extends ImportJob
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
-
             $type_id = $this->getTypeId($data);
             Resources::create([
                 'resource_type_id' => $type_id,
@@ -48,9 +47,10 @@ class ResourcesImportJob extends ImportJob
                 'rate' => floatval($data[6]),
                 'unit' => $this->getUnit($data[7]),
                 'waste' => $this->getWaste($data[8]),
-                'partner_id' => $this->getPartner($data[9]),
+                'business_partner_id' => $this->getPartner($data[9]),
                 'reference' => $data[10]
             ]);
+
         }
     }
 

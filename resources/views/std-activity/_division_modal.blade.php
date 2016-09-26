@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\ActivityDivision::tree()->get() as $division)
-                        @include('std-activity._recursive_input', compact('division', 'value'))
+                        @include('std-activity._recursive_input', compact('division'))
                     @endforeach
                 </ul>
             </div>
