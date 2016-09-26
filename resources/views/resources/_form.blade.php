@@ -100,7 +100,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\ResourceType::tree()->get() as $level)
-                        @include('resources._recursive_input', ['level' => $level, 'value' => Form::getValueAttribute('resource_id')])
+                        @include('resources._recursive_input', ['level' => $level, 'value' => Form::getValueAttribute('resource_type_id')])
                     @endforeach
                 </ul>
             </div>

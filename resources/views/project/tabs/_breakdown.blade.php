@@ -10,7 +10,7 @@
         {{Form::label('wbs_id', 'WBS Level', ['class' => 'control-label'])}}
         <p>
             <a href="#WBSModal" data-toggle="modal" class="tree-open">
-                {{ session('resource_type')? App\WbsLevel::find(session('resource_type'))->path : 'Select WBS Level' }}
+                {{ session('filters.breakdown.'.$project->id.'.wbs_id')? App\WbsLevel::find(session('filters.breakdown.'.$project->id.'.wbs_id'))->path : 'Select WBS Level' }}
             </a>
             <a href="#" class="remove-tree-input" data-target="#WBSModal" data-label="Select WBS Level"><span class="fa fa-times-circle"></span></a>
         </p>
@@ -20,7 +20,12 @@
 <div class="col-sm-2">
     <div class="form-group form-group-sm">
         {{Form::label('activity', 'Activity', ['class' => 'control-label'])}}
-        {{Form::select('activity', App\StdActivity::options(), session('filters.breakdown.' . $project->id . '.activity'), ['class' => 'form-control'])}}
+        <p>
+            <a href="#ActivitiesModal" data-toggle="modal" class="tree-open">
+                {{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}
+            </a>
+            <a href="#" class="remove-tree-input" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
+        </p>
     </div>
 </div>
 
@@ -36,7 +41,7 @@
         {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
         <p>
             <a href="#ResourceTypeModal" data-toggle="modal" class="tree-open">
-                {{session('resource_type')? App\ResourceType::with('parent')->find(session('resource_type'))->path : 'Select Resource Type' }}
+                {{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}
             </a>
             <a href="#" class="remove-tree-input" data-target="#ResourceTypeModal" data-label="Select Resource Type"><span class="fa fa-times-circle"></span></a>
         </p>
@@ -47,7 +52,7 @@
 <div class="col-sm-2">
     <div class="form-group form-group-sm">
         {{Form::label('resource', 'Resource Name', ['class' => 'control-label'])}}
-        {{Form::text('resource', session('filters.breakdown.' . $project->id . '.resource'), ['class' => 'form-control'])}}
+        {{Form::text('resource', session('filters.breakdown.'.$project->id.'.resource'), ['class' => 'form-control'])}}
     </div>
 </div>
 
@@ -57,8 +62,9 @@
     </div>
 </div>
 
-@include('resource-type._modal', ['input' => 'resource_type', 'value' => session('resource_type')])
-@include('wbs-level._modal', ['input' => 'wbs_id', 'value' => session('wbs_id'), 'project_id' => $project->id])
+@include('resource-type._modal', ['input' => 'resource_type', 'value' => session('filters.breakdown.'.$project->id.'.resource_type')])
+@include('std-activity._modal', ['input' => 'activity', 'value' => session('filters.breakdown.'.$project->id.'.activity')])
+@include('wbs-level._modal', ['input' => 'wbs_id', 'value' => session('filters.breakdown.'.$project->id.'.wbs_id'), 'project_id' => $project->id])
 {{Form::close()}}
 
 @if ($project->breakdown_resources->count())

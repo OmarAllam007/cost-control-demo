@@ -7,8 +7,8 @@
     <div class="collapse" id="division-children-{{$division->id}}">
         @if ($division->children && $division->children->count())
             <ul class="list-unstyled">
-                @foreach($division->children as $child)
-                    @include('std-activity._recursive_activity_input', ['division' => $child])
+                @foreach($division->children as $division)
+                    @include('std-activity._recursive_activity_input', ['division' => $division, 'input' => $input, 'value' => $value])
                 @endforeach
             </ul>
         @endif
@@ -17,7 +17,7 @@
                 @foreach($division->activities as $activity)
                     <li>
                         <label>
-                            <input type="radio" class="tree-radio activity-input" name="std_activity_id" value="{{$activity->id}}" {{Form::getValueAttribute('std_activity_id') == $activity->id? 'checked' : ''}} data-label="{{$activity->name}}">
+                            <input type="radio" class="tree-radio activity-input" name="{{$input or 'std_activity_id'}}" value="{{$activity->id}}" {{$value == $activity->id? 'checked' : ''}} data-label="{{$activity->name}}">
                             {{$activity->name}}
                         </label>
                     </li>

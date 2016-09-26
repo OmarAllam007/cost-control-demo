@@ -24,7 +24,7 @@ class BreakdownFilter extends AbstractFilter
     protected function activity($id)
     {
         $this->query->whereHas('breakdown', function(Builder $q) use ($id) {
-            $q->where('activity', $id);
+            $q->where('std_activity_id', $id);
         });
     }
 

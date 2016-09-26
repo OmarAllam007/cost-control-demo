@@ -79,24 +79,7 @@
     </div>
 </div>
 
-<div id="ActivitiesModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select Parent</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-unstyled tree">
-                    @foreach(App\ActivityDivision::with('activities')->tree()->get() as $division)
-                        @include('std-activity._recursive_activity_input', ['division' => $division, 'input' => 'std_activity_id'])
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+@include('std-activity._modal', ['input' => 'std_activity_id', 'value' => Form::getValueAttribute('std_activity_id')])
 
 <div class="form-group">
     <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
