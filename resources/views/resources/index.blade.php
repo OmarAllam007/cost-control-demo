@@ -22,7 +22,7 @@
             <tr>
                 <th class="col-xs-2">Resource Code</th>
                 <th class="col-xs-3">Resource Name</th>
-                <th class="col-xs-1">Resource Type</th>
+                <th class="col-xs-2">Resource Type</th>
                 <th class="col-xs-1">Rate</th>
                 <th class="col-xs-1">Unit</th>
                 <th class="col-xs-1">Waste</th>
@@ -34,15 +34,16 @@
                 <tr>
                     <td class="col-xs-2">{{ $resource->resource_code }}</td>
                     <td class="col-xs-3">{{ $resource->name }}</td>
-                    <td class="col-xs-1">{{$resource->types->root->name or ''}}</td>
+                    <td class="col-xs-2">{{$resource->types->root->name or ''}}</td>
                     <td class="col-xs-1">{{ $resource->rate }}</td>
                     <td class="col-xs-1">{{ $resource->units->type or ''}}</td>
                     <td class="col-xs-1">{{ $resource->waste }}</td>
                     <td class="col-xs-2">
                         <form action="{{ route('resources.destroy', $resource) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
-                            <a class="btn btn-sm btn-primary" href="{{ route('resources.edit', $resource) }} "><i
-                                        class="fa fa-edit"></i> Edit</a>
+                            <a class="btn btn-sm btn-primary" href="{{ route('resources.edit', $resource) }} ">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                         </form>
                     </td>

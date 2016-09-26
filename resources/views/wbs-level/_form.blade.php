@@ -26,15 +26,15 @@
         </div>
 
         <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
-            {{ Form::label('wbs_id', 'Parent', ['class' => 'control-label']) }}
+            {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
             <div class="hidden">
-                {{ Form::select('wbs_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
+                {{ Form::select('parent_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
-                <a href="#LevelsModal" data-toggle="modal" class="tree-open">
-                    {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
+                <a href="#WBSModal" data-toggle="modal" class="tree-open">
+                    {{Form::getValueAttribute('parent_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Wbs Level' }}
                 </a>
-                <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
+                <a href="#" class="remove-tree-input" data-label="Select Wbs Level" data-target="#WBSModal"><span class="fa fa-times-cricle"></span></a>
             </p>
             {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
         </div>
@@ -54,24 +54,7 @@
 </div>
 
 
-<div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select Parent</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-unstyled tree">
-                    @foreach(App\WbsLevel::forProject(request('project', Form::getValueAttribute('project_id')))->tree()->get() as $level)
-                        @include('wbs-level._recursive_input', compact('level'))
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+@include('wbs-level._modal', ['input' => 'parent_id', 'value' => Form::getValueAttribute('parent_id'), 'project_id' => request('project', Form::getValueAttribute('project_id'))])
 
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>

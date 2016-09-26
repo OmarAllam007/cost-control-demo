@@ -28,7 +28,8 @@ $(function () {
         }
     });
 
-    $('.remove-tree-input').on('click', function () {
+    $('.remove-tree-input').on('click', function (e) {
+        e.preventDefault();
         $(this).parent().find('.tree-open').text($(this).data('label'));
         $($(this).data('target')).find('.tree-radio').removeAttr('checked');
     });

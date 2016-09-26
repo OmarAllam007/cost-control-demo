@@ -47,6 +47,8 @@ Route::group(['prefix' => 'breakdown-template'], function () {
     Route::post('filters', ['as' => 'breakdown-template.filters', 'uses' => 'BreakdownTemplateController@filters']);
 });
 
+Route::post('breakdown/filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
+
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');

@@ -80,4 +80,5 @@
             })
         }(window, document, jQuery))
     </script>
+    <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection

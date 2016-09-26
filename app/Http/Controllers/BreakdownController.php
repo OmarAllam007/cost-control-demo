@@ -47,4 +47,12 @@ class BreakdownController extends Controller
     {
 
     }
+
+    function filters(Request $request, Project $project)
+    {
+        $data = $request->except('_token');
+        \Session::set('filters.breakdown.' . $project->id, $data);
+
+        return \Redirect::to(route('project.show', $project) . '#breakdown');
+    }
 }

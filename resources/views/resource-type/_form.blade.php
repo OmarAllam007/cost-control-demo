@@ -5,10 +5,10 @@
         <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
             {{ Form::label('parent_id', 'Resource Type', ['class' => 'control-label']) }}
             <p>
-                <a href="#ParentsModal" data-toggle="modal" class="tree-open">
+                <a href="#ResourceTypeModal" data-toggle="modal" class="tree-open">
                     {{Form::getValueAttribute('parent_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Resource Type' }}
                 </a>
-                <a class="remove-tree-input" data-target="#ParentsModal" data-label="Select Resource Type"><span class="fa fa-times"></span></a>
+                <a class="remove-tree-input" data-target="#ResourceTypeModal" data-label="Select Resource Type"><span class="fa fa-times"></span></a>
             </p>
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
@@ -25,24 +25,7 @@
     </div>
 </div>
 
-<div id="ParentsModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select Division Type</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-unstyled tree">
-                    @foreach(App\ResourceType::tree()->get() as $division)
-                        @include('resource-type._recursive_input', compact('division'))
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+@include('resource-type._modal')
 
 
 @section('javascript')

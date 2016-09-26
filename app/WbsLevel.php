@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class WbsLevel extends Model
 {
     use SoftDeletes;
-    use Tree;
+    use Tree, HasOptions;
 
     protected $fillable = ['name', 'project_id', 'parent_id', 'comments', 'code'];
 
