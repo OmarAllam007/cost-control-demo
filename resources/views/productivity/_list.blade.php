@@ -11,7 +11,6 @@
     </thead>
     <tbody>
     @foreach($productivities as $productivity)
-
         <tr>
             <td class="col-xs-2">{{ $productivity->code?:0 }}</td>
             <td class="col-xs-3">{!! nl2br(e($productivity->description?:'')) !!}</td>

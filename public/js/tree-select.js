@@ -32,5 +32,7 @@ $(function () {
         $(this).parent().find('.tree-open').text($(this).data('label'));
         $($(this).data('target')).find('.tree-radio').removeAttr('checked');
     });
+
+
 });
 //# sourceMappingURL=tree-select.js.map

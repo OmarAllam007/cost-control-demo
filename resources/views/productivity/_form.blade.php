@@ -14,11 +14,8 @@
 
         <div class="form-group {{$errors->first('csi_category_id', 'has-error')}}">
             {{ Form::label('csi_category_id', 'CSI Category', ['class' => 'control-label']) }}
-            <div class="hidden">
-                {{ Form::select('csi_category_id', App\CsiCategory::options(), null, ['class' => 'form-control']) }}
-            </div>
             <p>
-                <a href="#LevelsModal" data-toggle="modal" class="tree-open">
+                <a href="#LevelsModal" data-toggle="modal" class="tree-open" id="select-parent">
                     {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select Category' }}
                 </a>
                 <a class="remove-tree-input" data-target="#LevelsModal" data-label="Select Category"><span class="fa fa-times"></span></a>
@@ -35,7 +32,7 @@
 
         <div class="form-group {{$errors->first('crew_structure', 'has-error')}}">
             {{ Form::label('crew_structure', 'Crew Structure', ['class' => 'control-label']) }}
-            {{ Form::textarea('crew_structure',null, ['class' => 'form-control']) }}
+            {{ Form::textarea('crew_structure',null, ['class' => 'form-control','id'=> 'crew_structure']) }}
             {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -106,7 +103,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\CsiCategory::tree()->get() as $level)
-                        @include('productivity._recursive_input', $level)
+                        @include('productivity._recursive_input', ['csi_category_id'=>$level])
                     @endforeach
                 </ul>
             </div>

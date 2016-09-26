@@ -45,19 +45,19 @@ class ActivityImportJob extends ImportJob
     {
         if (!$this->divisions) {
             $this->divisions = collect();
-            ActivityDivision::all()->each(function($division) {
+            ActivityDivision::all()->each(function ($division) {
                 $this->divisions->put(mb_strtolower($division->canonical), $division->id);
             });
+
         }
 
-        $tokens = array_filter(array_slice($data, 3));
+        $tokens = array_filter(array_slice($data,0, 3));
         $division_id = 0;
         $path = [];
 
         foreach ($tokens as $token) {
             $path[] = mb_strtolower($token);
             $key = implode('/', $path);
-
             if ($this->divisions->has($key)) {
                 $division_id = $this->divisions->get($key);
                 continue;
@@ -65,7 +65,8 @@ class ActivityImportJob extends ImportJob
 
             $division = ActivityDivision::create([
                 'parent_id' => $division_id,
-                'name' => $token
+                'name' => $token,
+
             ]);
             $division_id = $division->id;
             $this->divisions->put($key, $division_id);
@@ -78,19 +79,20 @@ class ActivityImportJob extends ImportJob
     {
         if (!$this->activities) {
             $this->activities = collect();
-            StdActivity::all()->each(function($activity){
+            StdActivity::all()->each(function ($activity) {
                 $this->activities->put(mb_strtolower($activity->name), $activity->id);
             });
         }
+        $name = $data[4];
+        $code = $data[5];
 
-        $name = $data[3];
         $key = mb_strtolower($name);
 
         if ($this->activities->has($key)) {
             return $this->activities->get($key);
         }
 
-        $activity = StdActivity::create(compact('name', 'division_id'));
+        $activity = StdActivity::create(compact('name', 'division_id','code'));
         $this->activities->put($key, $activity->id);
         return $activity->id;
     }
