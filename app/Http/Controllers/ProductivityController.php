@@ -95,6 +95,7 @@ class ProductivityController extends Controller
 
     function override(Productivity $productivity, Project $project)
     {
+        $overide = true;
         $overwrote = Productivity::version($project->id, $productivity->id)->first();
         $edit = true;
         if (!$overwrote) {

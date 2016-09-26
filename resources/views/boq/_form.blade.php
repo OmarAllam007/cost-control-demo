@@ -19,16 +19,17 @@
                 {{ Form::select('wbs_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
-                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
+                <a href="#LevelsModal" data-toggle="modal" id="select-parent" class="tree-open">
                     {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
                 </a>
+                <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
             </p>
             {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('item', 'has-error')}}">
-            {{ Form::label('item', 'BOQ Item', ['class' => 'control-label']) }}
-            {{ Form::text('item', null, ['class' => 'form-control']) }}
+            {{ Form::label('description', 'BOQ Item', ['class' => 'control-label']) }}
+            {{ Form::text('description', null, ['class' => 'form-control']) }}
             {!! $errors->first('item', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -136,7 +137,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\BoqDivision::tree()->get() as $division)
-                        @include('boq-division._recursive_input', compact('division_id'))
+                        @include('boq-division._recursive_input', compact('division'))
                     @endforeach
                 </ul>
             </div>

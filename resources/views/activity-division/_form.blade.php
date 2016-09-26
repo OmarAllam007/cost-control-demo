@@ -16,10 +16,10 @@
         <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
             {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
             <p>
-                <a href="#ParentsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('parent_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select' }}
+                <a href="#ParentsModal" data-toggle="modal" class="tree-open">
+                    {{Form::getValueAttribute('parent_id')? App\ActivityDivision::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Activity Division' }}
                 </a>
-                <a id="remove-parent"><span class="fa fa-times"></span></a>
+                <a class="remove-tree-input" data-label="Select Activity Division" data-target="#ParentsModal"><span class="fa fa-times"></span></a>
             </p>
 
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}

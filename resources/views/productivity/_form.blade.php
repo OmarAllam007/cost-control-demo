@@ -18,10 +18,10 @@
                 {{ Form::select('csi_category_id', App\CsiCategory::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
-                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
-                    {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select' }}
+                <a href="#LevelsModal" data-toggle="modal" class="tree-open">
+                    {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select Category' }}
                 </a>
-                <a id="remove-parent"><span class="fa fa-times"></span></a>
+                <a class="remove-tree-input" data-target="#LevelsModal" data-label="Select Category"><span class="fa fa-times"></span></a>
             </p>
             {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
         </div>
