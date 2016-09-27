@@ -42,7 +42,7 @@ class Productivity extends Model
     public function getAfterReductionAttribute()
     {
 
-        return $this->daily_output * (1 - $this->reduction_factor);
+        return $this->daily_output * $this->reduction_factor;
     }
 
     function scopeFilter(Builder $query, $term = '')
