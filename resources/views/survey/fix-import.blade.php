@@ -8,7 +8,6 @@
 @endsection
 
 @section('body')
-    {{dump($errors->all())}}
     {{Form::open(['route' => ['survey.post-fix-import', $key]])}}
     <div class="row">
         <div class="col-sm-6">

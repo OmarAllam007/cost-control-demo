@@ -97,4 +97,17 @@ class Resources extends Model
                 ->orWhereNull('project_id');
         });
     }
+
+    public static function checkFixImport($data)
+    {
+        $errors = [];
+
+        foreach ($data['units'] as $unit => $unit_id) {
+            if (!$unit_id) {
+                $errors[$unit] = $unit;
+            }
+        }
+
+        return $errors;
+    }
 }

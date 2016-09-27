@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\BusinessPartner;
+use App\Project;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Support\Collection;
@@ -36,22 +37,40 @@ class ResourcesImportJob extends ImportJob
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
+        $failed = collect();
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
+            if (!array_filter($data)) {
+                continue;
+            }
+
             $type_id = $this->getTypeId($data);
-            Resources::create([
+            $unit_id = $this->getUnit($data[7]);
+            $item = [
                 'resource_type_id' => $type_id,
                 'resource_code' => $data[4], 'name' => $data[5],
                 'rate' => floatval($data[6]),
-                'unit' => $this->getUnit($data[7]),
+                'unit' => $unit_id,
                 'waste' => $this->getWaste($data[8]),
                 'business_partner_id' => $this->getPartner($data[9]),
                 'reference' => $data[10]
-            ]);
+            ];
 
+            if ($unit_id) {
+                Resources::create($item);
+            } else {
+                $item['orig_unit'] = $data[7];
+                $failed->push($item);
+            }
         }
+
+        if ($failed->count()) {
+            return $failed;
+        }
+
+        return false;
     }
 
     protected function getTypeId($data)

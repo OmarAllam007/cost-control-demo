@@ -17,6 +17,8 @@ Route::group(['prefix' => 'wbs-level'], function () {
 Route::group(['prefix' => 'resources'], function () {
     Route::get('import', ['as' => 'resources.import', 'uses' => 'ResourcesController@import']);
     Route::post('import', ['as' => 'resources.post-import', 'uses' => 'ResourcesController@postImport']);
+    Route::get('fix-import/{key}', ['as' => 'resources.fix-import', 'uses' => 'ResourcesController@fixImport']);
+    Route::post('fix-import/{key}', ['as' => 'resources.post-fix-import', 'uses' => 'ResourcesController@postFixImport']);
 
     Route::get('override/{resources}/{project}', ['as' => 'resources.override', 'uses' => 'ResourcesController@override']);
     Route::post('override/{resources}/{project}', ['as' => 'resources.post-override', 'uses' => 'ResourcesController@postOverride']);
