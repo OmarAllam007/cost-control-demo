@@ -9,94 +9,69 @@
 
 @section('body')
     {{Form::open(['route' => ['survey.post-fix-import', $key]])}}
-    <div class="form-group clearfix">
-        <button class="btn btn-primary pull-right"><i class="fa fa-check"></i> Update</button>
+    <div class="row">
+        <div class="col-sm-6">
+            <h4>Units</h4>
+            <table class="table table-striped table-condensed table-hover">
+                <thead>
+                <tr>
+                    <th>Unit</th>
+                    <th>Equivalent</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($items->pluck('unit')->unique() as $unit)
+                    <tr class="{{$errors->first("units.$unit", 'danger')}}">
+                        <td class="col-sm-6">
+                            {{$unit}}
+                        </td>
+                        <td class="col-sm-6">
+                            {{Form::select("data[units][$unit]", App\Unit::options(), null, ['class' => 'form-control input-sm'])}}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-6">
+            <h4>WBS</h4>
+            <table class="table table-striped table-condensed table-hover">
+                <thead>
+                <tr>
+                    <th>Unit</th>
+                    <th>Equivalent</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($items->pluck('wbs_code')->unique() as $level)
+                    <tr class="{{$errors->first("wbs.$level", 'danger')}}">
+                        <td>
+                            {{$level}}
+                        </td>
+                        <td>
+                            <a href="#" class="select-wbs">
+                                @if (Form::getValueAttribute("data[wbs][$level]"))
+                                    {{App\WbsLevel::find(Form::getValueAttribute("data[wbs][$level]"))->code}}
+                                @else
+                                    Select WBS
+                                @endif
+                            </a>
+                            {{Form::hidden("data[wbs][$level]")}}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <table class="table table-striped table-condensed">
-        <thead>
-        <tr>
-            <th>Cost Account</th>
-            <th>Original WBS</th>
-            <th>Selected WBS</th>
-            <th>Description</th>
-            <th>Original Unit</th>
-            <th>Unit</th>
-            <th>Budget Qty</th>
-            <th>Eng Qty</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($items as $idx => $item)
-            <tr class="{{$errors->first($idx, 'danger')}}">
-                <td>
-                    {{$item['cost_account']}}
-                    {{Form::hidden("data[$idx][cost_account]", $item['cost_account'])}}
-                </td>
-                <td>
-                    {{$item['wbs_code']}}
-                </td>
-                <td>
-                    @if ($item['wbs_level_id'])
-                        {{$item['wbs_code']}}
-                        {{Form::hidden("data[$idx][wbs_level_id]", $item['wbs_level_id'])}}
-                    @else
-                        <a href="#" class="select-wbs">
-
-                            {{old("data.$idx.wbs_level_id")? App\WbsLevel::find(old("data.$idx.wbs_level_id"))->code : 'Select WBS'}}
-                        </a>
-                        {{Form::hidden("data[$idx][wbs_level_id]")}}
-                    @endif
-                </td>
-                <td class="col-md-4">
-                    {{substr($item['description'], 0, 55)}}{{strlen($item['description']) > 55? '...' : '' }}
-                    {{Form::hidden("data[$idx][description]", $item['description'])}}
-                </td>
-                <td>{{$item['unit']}}</td>
-                <td>
-                    @if ($item['unit_id'])
-                        {{$item['unit']}}
-                        {{Form::hidden("data[$idx][unit_id]", $item['unit_id'])}}
-                    @else
-                        {{Form::select("data[$idx][unit_id]", App\Unit::options())}}
-                    @endif
-                </td>
-                <td>
-                    {{number_format(floatval($item['budget_qty']), 2)}}
-                    {{Form::hidden("data[$idx][budget_qty]", $item['budget_qty'])}}
-                </td>
-                <td>
-                    {{number_format(floatval($item['eng_qty']), 2)}}
-                    {{Form::hidden("data[$idx][eng_qty]", $item['eng_qty'])}}
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-
-    <div class="form-group clearfix">
-        <button class="btn btn-primary pull-right"><i class="fa fa-check"></i> Update</button>
+    <div class="form-group">
+        <button class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
     </div>
     {{Form::close()}}
 
-    <div id="WbsModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Select WBS</h4>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-unstyled tree">
-                        @foreach(App\WbsLevel::forProject($project->id)->tree()->get() as $level)
-                            @include('wbs-level._recursive_input', compact('level'))
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('wbs-level._modal', ['value' => '', 'project_id' => $project->id])
 @endsection
 
 @section('javascript')
@@ -104,7 +79,7 @@
         (function (w, d, $) {
             $(function () {
                 var target = null;
-                var wbsModal = $('#WbsModal');
+                var wbsModal = $('#WBSModal');
 
                 $('.select-wbs').click(function (e) {
                     e.preventDefault();
@@ -113,7 +88,8 @@
                     wbsModal.find('.in').removeClass('in');
                 });
 
-                wbsModal.on('change', '.tree-radio', function(){
+                wbsModal.on('change', '.tree-radio', function () {
+                    console.log($(this).data('code'));
                     target.text($(this).data('code'));
                     target.parent().find('input').val($(this).val());
                 });

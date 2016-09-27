@@ -37,10 +37,11 @@ class ResourcesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
-        if ($request['waste'] <= 1)
+        if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
-        else
+        } else {
             $request['waste'] = ($request->waste / 100);
+        }
 
         Resources::create($request->all());
 
@@ -69,10 +70,11 @@ class ResourcesController extends Controller
 
         $this->validate($request, $this->rules);
 
-        if ($request['waste'] <= 1)
+        if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
-        else
+        } else {
             $request['waste'] = ($request->waste / 100);
+        }
 
         $resources->update($request->all());
 
@@ -103,10 +105,57 @@ class ResourcesController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new ResourcesImportJob($file->path()));
+        $failed = $this->dispatch(new ResourcesImportJob($file->path()));
 
-        flash('Resource have been imported', 'success');
+        if ($failed) {
+            $key = 'res_' . time();
+            \Cache::add($key, ['items' => $failed], 180);
+            flash('Could not import some resources', 'warning');
+            return redirect()->route('resources.fix-import', $key);
+        }
+
+        flash('Resources have been imported', 'success');
         return redirect()->route('resources.index');
+    }
+
+    function fixImport($key)
+    {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return \Redirect::route('resources.index');
+        }
+
+        $failed = \Cache::get($key);
+        $items = $failed['items'];
+
+        return view('resources.fix-import', compact('items', 'key'));
+    }
+
+    function postFixImport(Request $request, $key)
+    {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return \Redirect::route('resources.index');
+        }
+
+        $data = $request->get('data');
+        $errors = Resources::checkFixImport($data);
+        $failed = \Cache::get($key);
+
+        if (!$errors) {
+            $units = $data['units'];
+
+            foreach ($failed['items'] as $item) {
+                $item['unit'] = $units[$item['orig_unit']];
+                Resources::create($item);
+            }
+
+            flash('Resources have been imported', 'success');
+            return \Redirect::route('resources.index');
+        }
+
+        flash('Could not update resources', 'warning');
+        return \Redirect::back()->withErrors($errors)->withInput($data);
     }
 
     function override(Resources $resources, Project $project)
@@ -118,7 +167,8 @@ class ResourcesController extends Controller
             $overwrote = $resources;
         }
 
-        return view('resources.override', ['resource' => $overwrote, 'baseResource' => $resources, 'project' => $project,'override'=>$override]);
+        return view('resources.override',
+            ['resource' => $overwrote, 'baseResource' => $resources, 'project' => $project, 'override' => $override]);
     }
 
     function postOverride(Resources $resources, Project $project, Request $request)
@@ -142,7 +192,7 @@ class ResourcesController extends Controller
 
     function filter(Request $request)
     {
-        $data = $request->only(['name', 'unit', 'resource_type_id','resource_code']);
+        $data = $request->only(['name', 'unit', 'resource_type_id', 'resource_code']);
         \Session::set('filters.resources', $data);
 
         return \Redirect::route('resources.index');

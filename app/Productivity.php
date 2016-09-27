@@ -38,13 +38,13 @@ class Productivity extends Model
     public function productivityAfterReduction()
     {
 
-        return $this->after_reduction = (1 - $this->reduction_factor) * $this->daily_output;
+        return $this->after_reduction;
     }
 
     public function getAfterReductionAttribute()
     {
 
-        return $this->daily_output * (1 - $this->reduction_factor);
+        return $this->daily_output * $this->reduction_factor;
     }
 
     function scopeFilter(Builder $query, $term = '')

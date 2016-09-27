@@ -126,11 +126,25 @@ class SurveyController extends Controller
         $result = \Cache::get($key);
         $project = Project::find($result['project_id']);
         $data = $request->get('data');
-
         $errors = Survey::checkImportData($data);
+
         if (!$errors) {
             /** @var Project $project */
-            $project->quantities()->createMany($data);
+            $units = $data['units'];
+            $wbs = $data['wbs'];
+
+            foreach ($result['failed'] as $key => $item) {
+                if(!$item['unit_id']) {
+                    $item['unit_id'] = $units[$item['unit']];
+                }
+
+                if(!$item['wbs_level_id']) {
+                    $item['wbs_level_id'] = $wbs[$item['wbs_code']];
+                }
+
+                $project->quantities()->create($item);
+            }
+
             flash('Quantities have been imported', 'success');
             return redirect()->route('project.show', $project);
         }
