@@ -4,6 +4,7 @@ namespace App;
 
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use App\Http\Requests\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,6 +23,7 @@ class Productivity extends Model
     {
         return static::orderBy('code')->pluck('code', 'id')->prepend('Select Reference', '');
     }
+
 
     public function category()
     {
@@ -63,7 +65,7 @@ class Productivity extends Model
             'code' => $this->code,
             'daily_output' => $this->daily_output,
             'reduction' => $this->reduction_factor,
-            'after_reduction' => $this->after_reduction
+            'after_reduction' => $this->after_reduction,
         ];
     }
 
@@ -75,9 +77,51 @@ class Productivity extends Model
 
     function scopeBasic(Builder $query)
     {
-        $query->where(function(Builder $query) {
-           $query->where('project_id', 0)
-               ->orWhereNull('project_id');
+        $query->where(function (Builder $query) {
+            $query->where('project_id', 0)
+                ->orWhereNull('project_id');
         });
     }
+
+    public function getCrewManAttribute($crew_structure)
+    {
+        $man_powers = array_map('strtolower', array_column(ProductivityList::where('name', '=', 'Manpower')->get(array('type'))->toArray(), 'type'));
+        $man_numbers = [];
+        $lines = explode("\n", strtolower($crew_structure));
+        foreach ($lines as $line) {
+            $tokens = [];
+            preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
+            $key = trim($tokens[2]);
+            $man_number = trim($tokens[1]);
+            if (array_search($key, $man_powers)) {//if(array_search($key,$crew) !== false){
+                $man_numbers[] = $man_number * 10;
+            }
+        }
+
+        return  array_sum($man_numbers);
+    }
+
+    public function getCrewEquipAttribute($crew_structure)
+    {
+        $equip_powers = array_map('strtolower', array_column(ProductivityList::where('name', '=', 'Equipment')->get(array('type'))->toArray(), 'type'));
+        $equip_numbers = [];
+        $lines = explode("\n", strtolower($crew_structure));
+        foreach ($lines as $line) {
+            $tokens = [];
+            preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
+            $key = trim($tokens[2]);
+            $number = trim($tokens[1]);
+            if (array_search($key, $equip_powers)) {//if(array_search($key,$crew) !== false){
+                $equip_numbers[] = $number * 10;
+            }
+        }
+        return array_sum($equip_numbers);
+    }
+    public function getManHourAttribute(){
+        return round(($this->getCrewManAttribute($this->crew_structure) / $this->daily_output),2);
+    }
+    public function getEquipHourAttribute(){
+        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->daily_output),2);
+    }
+
 }

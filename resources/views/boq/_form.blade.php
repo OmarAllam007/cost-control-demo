@@ -65,14 +65,21 @@
         </div>
 
         <div class="form-group {{$errors->first('unit_id', 'has-error')}}">
-            {{Form::label('unit_id','Unit of measure')}}
-            {{Form::select('unit_id',App\Unit::options(),['class'=>'form-control'],['class'=>'form-control'])}}
+            {{Form::label('unit_id','Unit of measure', ['class' => 'control-label'])}}
+            {{Form::select('unit_id',App\Unit::options(),null,['class'=>'form-control'])}}
+            {!! $errors->first('unit_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('quantity', 'has-error')}}">
             {{ Form::label('quantity', 'Quantity', ['class' => 'control-label']) }}
             {{ Form::text('quantity', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
             {!! $errors->first('quantity', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('kcc_qty', 'has-error')}}">
+            {{ Form::label('kcc_qty', 'KCC-Quantity', ['class' => 'control-label']) }}
+            {{ Form::text('kcc_qty', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
+            {!! $errors->first('kcc_qty', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('dry_ur', 'has-error')}}">

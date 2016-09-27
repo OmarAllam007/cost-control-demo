@@ -6,6 +6,7 @@ use App\CsiCategory;
 use App\Filter\ProductivityFilter;
 use App\Jobs\ProductivityImportJob;
 use App\Productivity;
+use App\ProductivityList;
 use App\Project;
 use App\Unit;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class ProductivityController extends Controller
     {
         $edit = false;
 
-        return view('productivity.create')->with('edit',$edit);
+        return view('productivity.create')->with('edit', $edit);
     }
 
     public function store(Request $request)
@@ -35,7 +36,11 @@ class ProductivityController extends Controller
         $this->validate($request, $this->rules);
 
         $this->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
-        Productivity::create($request->all());
+
+//        $man_hours  = $this->manHour($request);
+//        $equip_hours = $this->equipHour($request);
+         Productivity::create($request->all());
+//        $productivity->update(['man_hours' => array_sum($man_hours), 'equip_hours' => array_sum($equip_hours)]);
 
         flash('Productivity has been saved', 'success');
 
@@ -55,12 +60,14 @@ class ProductivityController extends Controller
         return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category', 'edit'));
     }
 
+
+
     public function update(Productivity $productivity, Request $request)
     {
         $this->validate($request, $this->rules);
         $productivity->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
-        $productivity->update($request->all());
 
+        $productivity->update($request->all());
         flash('Productivity has been saved', 'success');
 
         return \Redirect::route('productivity.index');
