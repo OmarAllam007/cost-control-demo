@@ -110,7 +110,7 @@ class ResourcesImportJob extends ImportJob
         if (!$this->partners) {
             $this->partners = collect();
             BusinessPartner::all()->each(function($partner) {
-                $this->partners->put(mb_strtolower($partner->type), $partner->id);
+                $this->partners->put(mb_strtolower($partner->name), $partner->id);
             });
         }
 
