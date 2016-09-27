@@ -16,9 +16,15 @@ class Survey extends Model
     {
         $errors = [];
 
-        foreach ($data as $idx => $row) {
-            if (empty($row['wbs_level_id']) || empty($row['unit_id'])) {
-                $errors[$idx] = $idx;
+        foreach ($data['units'] as $unit => $unit_id) {
+            if (empty($unit_id)) {
+                $errors['units.'.$unit] = $unit;
+            }
+        }
+
+        foreach ($data['wbs'] as $wbs => $wbs_id) {
+            if (empty($wbs_id)) {
+                $errors['wbs.'.$wbs] = $wbs;
             }
         }
 
