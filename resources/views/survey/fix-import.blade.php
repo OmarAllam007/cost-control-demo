@@ -8,6 +8,7 @@
 @endsection
 
 @section('body')
+    {{dump($errors->all())}}
     {{Form::open(['route' => ['survey.post-fix-import', $key]])}}
     <div class="row">
         <div class="col-sm-6">
@@ -21,7 +22,7 @@
                 </thead>
                 <tbody>
                 @foreach ($items->pluck('unit')->unique() as $unit)
-                    <tr class="{{$errors->first($unit, 'danger')}}">
+                    <tr class="{{$errors->first("units.$unit", 'danger')}}">
                         <td class="col-sm-6">
                             {{$unit}}
                         </td>
@@ -50,7 +51,14 @@
                             {{$level}}
                         </td>
                         <td>
-
+                            <a href="#" class="select-wbs">
+                                @if (Form::getValueAttribute("data[wbs][$level]"))
+                                    {{App\WbsLevel::find(Form::getValueAttribute("data[wbs][$level]"))->code}}
+                                @else
+                                    Select WBS
+                                @endif
+                            </a>
+                            {{Form::hidden("data[wbs][$level]")}}
                         </td>
                     </tr>
                 @endforeach
@@ -72,7 +80,7 @@
         (function (w, d, $) {
             $(function () {
                 var target = null;
-                var wbsModal = $('#WbsModal');
+                var wbsModal = $('#WBSModal');
 
                 $('.select-wbs').click(function (e) {
                     e.preventDefault();
@@ -82,6 +90,7 @@
                 });
 
                 wbsModal.on('change', '.tree-radio', function () {
+                    console.log($(this).data('code'));
                     target.text($(this).data('code'));
                     target.parent().find('input').val($(this).val());
                 });
