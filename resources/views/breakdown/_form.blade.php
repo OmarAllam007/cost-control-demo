@@ -15,7 +15,7 @@
         <div class="form-group {{$errors->first('wbs_level_id', 'has-error')}}">
             {{ Form::label('wbs_level_id', 'WBS Level', ['class' => 'control-label']) }}
             <p>
-                <a href="#LevelsModal" data-toggle="modal" id="select-parent">
+                <a href="#WBSModal" data-toggle="modal" id="select-parent">
                     {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select WBS Level' }}
                 </a>
             </p>
@@ -60,25 +60,7 @@
 
 @include('breakdown._template')
 
-<div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select Parent</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-unstyled tree">
-                    @foreach(App\WbsLevel::forProject(request('project', Form::getValueAttribute('project_id')))->tree()->get() as $level)
-                        @include('wbs-level._recursive_input', ['level' => $level, 'input' => 'wbs_level_id'])
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
+@include('wbs-level._modal', ['value' => Form::getValueAttribute('wbs_level_id'), 'input' => 'wbs_level_id', 'project_id' => request('project', Form::getValueAttribute('project_id'))])
 @include('std-activity._modal', ['input' => 'std_activity_id', 'value' => Form::getValueAttribute('std_activity_id')])
 
 <div class="form-group">
