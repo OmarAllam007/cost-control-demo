@@ -25,7 +25,7 @@
     </div>
 </div>
 
-@include('resource-type._modal')
+@include('resource-type._modal', ['value' => Form::getValueAttribute('parent_id'), 'input' => 'parent_id'])
 
 
 @section('javascript')
