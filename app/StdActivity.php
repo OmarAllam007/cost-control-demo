@@ -11,7 +11,7 @@ class StdActivity extends Model
     protected $orderBy = ['name','code'];
     protected static $alias = 'Activity';
 
-    protected $fillable = ['code', 'name', 'division_id', 'id_partial'];
+    protected $fillable = ['code', 'name', 'division_id', 'word_package_name'];
 
     protected $dates = ['created_at', 'updated_at'];
 
