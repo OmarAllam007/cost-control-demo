@@ -39,7 +39,6 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
             $data = $this->getDataFromCells($cells);
-
             if (!(in_array($data[0], $productivities))) {
                 Productivity::create([
                     'code' => $data[0],
@@ -47,12 +46,12 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
                     'csi_category_id' => $this->getDivisionId($data),
                     'unit' => $this->getUnit($data[6]),
                     'crew_structure' => $data[7],
-//                    'crew_hours' => $data[6],
+//                   'crew_hours' => $data[6],
 //                    'crew_equip' => $data[7],
                     'daily_output' => $data[8],
-                    'man_hours' => $data[9],
-                    'equip_hours' => $data[10],
-//                    'reduction_factor' => $data[11],
+//                    'man_hours' => $data[9],
+                    'reduction_factor' => $data[9],
+//                    'equip_hours' => $data[10],
                     'after_reduction' => $this->getAfterFactor($data[9], $data[8]),
                     'source' => $data[10],
                 ]);
