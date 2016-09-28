@@ -1,0 +1,96 @@
+name,type,decspline
+Manpower,Arch Foreman,Arch
+Manpower,Finishing Carpenter,Arch
+Manpower,Plaster,Arch
+Manpower,Brick Layer,Arch
+Manpower,Tile Layer,Arch
+Manpower,Bricklayer Helper,Arch
+Manpower,Terrazzo Worker,Arch
+Manpower,Mason,Arch
+Manpower,Painter,Arch
+Manpower,Terrazzo Helper,Arch
+Manpower,Scaffolder,Arch
+Manpower,Tile roofer ,Arch
+Manpower,Civil Foreman,Civil
+Manpower,Civil Carpenter,Civil
+Manpower,Steel Fixer,Civil
+Manpower,Cement Finisher,Civil
+Manpower,Struc. Steel Workers ,Civil
+Manpower,Steel welder,Civil
+Manpower,Surveyor,Civil
+Manpower,Aggregate Spreader,Civil
+Manpower,Sheet Metal Worker,Civil
+Manpower,Electrician,Elec
+Manpower,Elec Foreman ,Elec
+Manpower,Special Electrician,Elec
+Manpower,Common Labor,General
+Manpower,Helper,General
+Manpower,Equip. Operator ,General
+Manpower,Welder,General
+Manpower,Plumber,Mech
+Manpower,Mech Foreman ,Mech
+Manpower,Plumber Helper,Mech
+Manpower,Sprinkler Installer,Mech
+Manpower,Pipe Fitter,Mech
+Manpower,Steam Fitter (HVAC),Mech
+Manpower,Asbestos Worker,Mech
+Equipment,Tools Set,General
+Equipment,Crane 35 Ton,General
+Equipment,Crane 80 Ton,General
+Equipment,Dozer 75 HP,General
+Equipment,Gas Engine Vibrator,General
+Equipment,Concrete Pump &Trans Mixer,General
+Equipment,Fork Lift,General
+Equipment,Mixer 0.17 m3,General
+Equipment,Scafolding set,General
+Equipment,Set Consumable Tools,General
+Equipment,Grinder,General
+Equipment,Mixer,General
+Equipment,Wheeled Engine Cart,General
+Equipment,Cable pull Tools Set,General
+Equipment,"Roller Compact, 1000 kg.",General
+Equipment,Gas engine vibrating plate,General
+Equipment,"Backhoe Loader,50HP",General
+Equipment,"F.E. Loader, W.M 0.76 CUM",General
+Equipment,Hydraulic Excavator 0.57 CUM,General
+Equipment,Welding M/C,General
+Equipment,Asbestos Apprentice,General
+Equipment, Truck,General
+Equipment,Concrete Pump (small),General
+Equipment,Gas Finishing Machine,General
+Equipment,Concrete Pump,General
+Equipment,Truck,General
+Equipment,Power Tool,General
+Equipment,"Truck Crane,136 metric ton",General
+Equipment,Crane ,General
+Equipment,Gas Vibrator,General
+Equipment,Hodcarrier,General
+Equipment,Hand Metal Roller,General
+Equipment,Terrazzo Mixer 0.28 m3,General
+Equipment,Tool set,General
+Equipment,Gas Welding Machine,General
+Equipment, Power Tools & Pipe Power,General
+Equipment,Power & Pipe Power Tools,General
+Equipment,Gas welding M/c,General
+Equipment,Crane 11 ton,General
+Equipment,Welding Machine,General
+Equipment,Standard Tools,General
+Equipment,"Sheepfoot Roller, 300 HP",General
+Equipment,"Water Tanker, 25M3",General
+Equipment,Tandem Roller 4.5 Ton,General
+Equipment,"Dozer, 300HP (224KW)",General
+Equipment,"Tandem Roller, 9 ton",General
+Equipment,Water Tanker,General
+Equipment,Dozer 225 HP,General
+Equipment,"Backhoe, 50 HP",General
+Equipment,Vibrating Compactor,General
+Equipment,Mixer 0.28 m3,General
+Equipment, Power tool,General
+Equipment,Power Tools,General
+Equipment,Hydraulic Jacks,General
+Equipment,Conduit Power Tools,General
+Equipment,Truck Crane 11 Ton,General
+Equipment,Backhoe,General
+Equipment,Heat Bender,General
+Equipment,concrete mixer,General
+Equipment,Omar,General

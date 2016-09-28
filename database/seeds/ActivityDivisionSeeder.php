@@ -11,7 +11,7 @@ class ActivityDivisionSeeder extends Seeder
      */
     public function run()
     {
-        \App\ActivityDivision::truncate();
+//        \App\ActivityDivision::truncate();
 
         $activity_controller = new \App\Http\Controllers\ActivityDivisionController;
         $activity_controller->import();

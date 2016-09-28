@@ -11,18 +11,16 @@ class SurveyCategorySeed extends Seeder
      */
     public function run()
     {
-        \App\Category::truncate();
-
-        $seeds = [
-            ['name' => 'NCO'],
-            ['name' => 'OFFICERS APPART'],
-            ['name' => 'FRIDAY MOSQUE'],
-
-        ];
-
-        foreach ($seeds as $seed) {
-            \App\Category::create($seed);
-        }
+//        $seeds = [
+//            ['name' => 'NCO'],
+//            ['name' => 'OFFICERS APPART'],
+//            ['name' => 'FRIDAY MOSQUE'],
+//
+//        ];
+//
+//        foreach ($seeds as $seed) {
+//            \App\Category::create($seed);
+//        }
 
 
     }
