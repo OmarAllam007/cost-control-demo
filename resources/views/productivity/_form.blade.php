@@ -49,10 +49,10 @@
         <div class="form-group {{$errors->first('description', 'has-error')}}">
             {{ Form::label('description', 'Description', ['class' => 'control-label', 'readonly' => 'readonly']) }}
             @if ($override)
-                {{ Form::textarea('description', null, ['class' => 'form-control', 'readonly']) }}
+                {{ Form::textarea('description', $base->description, ['class' => 'form-control', 'readonly']) }}
                 {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
             @else
-                {{ Form::textarea('description', $base->description, ['class' => 'form-control', ]) }}
+                {{ Form::textarea('description', null, ['class' => 'form-control', ]) }}
             @endif
         </div>
 
