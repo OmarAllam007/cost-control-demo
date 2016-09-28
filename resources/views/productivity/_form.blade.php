@@ -4,60 +4,86 @@
         <div class="form-group {{$errors->first('code', 'has-error')}}">
             {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
             @if($edit)
-                {{ Form::text('code', null, ['class' => 'form-control','disabled' => 'disabled']) }}
+                {{ Form::text('code', null, ['class' => 'form-control','readonly' => 'readonly']) }}
                 {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
+            @elseif($override)
+                {{ Form::text('code', $base->code, ['class' => 'form-control','readonly' => 'readonly']) }}
             @else
                 {{ Form::text('code', null, ['class' => 'form-control']) }}
-
             @endif
         </div>
 
         <div class="form-group {{$errors->first('csi_category_id', 'has-error')}}">
             {{ Form::label('csi_category_id', 'CSI Category', ['class' => 'control-label']) }}
-            <p>
-                <a href="#LevelsModal" data-toggle="modal" class="tree-open" id="select-parent">
-                    {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select Category' }}
-                </a>
-                <a class="remove-tree-input" data-target="#LevelsModal" data-label="Select Category"><span class="fa fa-times"></span></a>
-            </p>
-            {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
+            @if ($override)
+                <p>
+                    <em>{{ $base->category->path }}</em>
+                </p>
+            @else
+                <p>
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open" id="select-parent">
+                        {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select Category' }}
+                    </a>
+                    <a class="remove-tree-input" data-target="#LevelsModal" data-label="Select Category"><span class="fa fa-times"></span></a>
+                </p>
+                {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
+            @endif
         </div>
-
-
-        <div class="form-group {{$errors->first('description', 'has-error')}}">
-            {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
-            {{ Form::textarea('description', null, ['class' => 'form-control']) }}
-            {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
-        </div>
-
-        <div class="form-group {{$errors->first('crew_structure', 'has-error')}}">
-            {{ Form::label('crew_structure', 'Crew Structure', ['class' => 'control-label']) }}
-            {{ Form::textarea('crew_structure',null, ['class' => 'form-control','id'=> 'crew_structure']) }}
-            {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
-        </div>
-
-        <div class="form-group {{$errors->first('unit', 'has-error')}}">
-            {{ Form::label('unit', 'Unit', ['class' => 'control-label']) }}
-            {{ Form::select('unit', App\Unit::options(), null, ['class' => 'form-control']) }}
-            {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
-        </div>
-
 
         <div class="form-group {{$errors->first('daily_output', 'has-error')}}">
-
             {{ Form::label('daily_output', 'Daily Output', ['class' => 'control-label']) }}
-            {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
+            @if($override)
+                {{ Form::text('daily_output', $base->daily_output, ['class' => 'form-control', 'readonly']) }}
+            @else
+                {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
+                {!! $errors->first('daily_output', '<div class="help-block">:message</div>') !!}
+            @endif
         </div>
 
         <div class="form-group {{$errors->first('reduction_factor', 'has-error')}}">
             {{ Form::label('reduction_factor', 'Reduction Factor', ['class' => 'control-label']) }}
             {{ Form::text('reduction_factor', null, ['class' => 'form-control']) }}
+            {!! $errors->first('reduction_factor', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('description', 'has-error')}}">
+            {{ Form::label('description', 'Description', ['class' => 'control-label', 'readonly' => 'readonly']) }}
+            @if ($override)
+                {{ Form::textarea('description', null, ['class' => 'form-control', 'readonly']) }}
+                {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
+            @else
+                {{ Form::textarea('description', $base->description, ['class' => 'form-control', ]) }}
+            @endif
+        </div>
+
+        <div class="form-group {{$errors->first('crew_structure', 'has-error')}}">
+            {{ Form::label('crew_structure', 'Crew Structure', ['class' => 'control-label']) }}
+            @if ($override)
+                {{ Form::textarea('crew_structure', $base->crew_structure, ['class' => 'form-control','id'=> 'crew_structure', 'readonly' => 'readonly']) }}
+            @else
+                {{ Form::textarea('crew_structure',null, ['class' => 'form-control','id'=> 'crew_structure']) }}
+                {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
+            @endif
+        </div>
+
+        <div class="form-group {{$errors->first('unit', 'has-error')}}">
+            {{ Form::label('unit', 'Unit', ['class' => 'control-label']) }}
+            @if ($override)
+                {{ Form::select('unit', App\Unit::options(), $base->unit, ['class' => 'form-control', 'readonly']) }}
+            @else
+                {{ Form::select('unit', App\Unit::options(), null, ['class' => 'form-control']) }}
+                {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
+            @endif
         </div>
 
         <div class="form-group {{$errors->first('source', 'has-error')}}">
             {{ Form::label('source', 'Source', ['class' => 'control-label']) }}
+            @if ($override)
+            {{ Form::text('source', null, ['class' => 'form-control', 'readonly']) }}
+            @else
             {{ Form::text('source', null, ['class' => 'form-control']) }}
             {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
+                @endif
         </div>
 
         <div class="form-group">
