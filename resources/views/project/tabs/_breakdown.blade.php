@@ -73,7 +73,7 @@
             <thead>
             <tr>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-black">WBS</th>
-                <th style="min-width: 200px; max-width: 200px;" class="bg-primary">Activity</th>
+                <th style="min-width: 300px; max-width: 300px;" class="bg-primary">Activity</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-black">Breakdown Template</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-primary">Cost Account</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Eng. Qty.</th>
@@ -102,7 +102,7 @@
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">
                         <abbr title="{{$resource->breakdown->wbs_level->path}}">{{$resource->breakdown->wbs_level->code}}</abbr>
                     </td>
-                    <td style="min-width: 200px; max-width: 200px;" class="bg-primary">{{$resource->breakdown->std_activity->name}}</td>
+                    <td style="min-width: 300px; max-width: 300px;" class="bg-primary">{{$resource->breakdown->std_activity->name}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">{{$resource->breakdown->template->name}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{$resource->breakdown->cost_account}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_qty, 2)}}</td>
