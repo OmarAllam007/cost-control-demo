@@ -33,11 +33,11 @@ class ActivityImportJob extends ImportJob
 
         foreach ($rows as $row) {
             $data = $this->getDataFromCells($row->getCellIterator());
-
             $division_id = $this->getDivisionId($data);
             $activity_id = $this->getActivity($data, $division_id);
 
             BreakdownTemplate::create(['name' => $data[4], 'code' => $data[5], 'std_activity_id' => $activity_id]);
+
         }
     }
 
@@ -51,7 +51,7 @@ class ActivityImportJob extends ImportJob
 
         }
 
-        $tokens = array_filter(array_slice($data,0, 3));
+        $tokens = array_filter(array_slice($data, 0, 3));
         $division_id = 0;
         $path = [];
 
@@ -83,16 +83,16 @@ class ActivityImportJob extends ImportJob
                 $this->activities->put(mb_strtolower($activity->name), $activity->id);
             });
         }
+        $work_package_name = $data[3];
         $name = $data[4];
         $code = $data[5];
-
         $key = mb_strtolower($name);
 
         if ($this->activities->has($key)) {
             return $this->activities->get($key);
         }
 
-        $activity = StdActivity::create(compact('name', 'division_id','code'));
+        $activity = StdActivity::create(compact('name', 'division_id', 'code','work_package_name'));
         $this->activities->put($key, $activity->id);
         return $activity->id;
     }
