@@ -29,6 +29,9 @@ Route::group(['prefix' => 'resources'], function () {
 Route::group(['prefix' => 'productivity'], function () {
     Route::get('override/{productivity}/{project}', ['as' => 'productivity.override', 'uses' => 'ProductivityController@override']);
     Route::post('override/{productivity}/{project}', ['as' => 'productivity.post-override', 'uses' => 'ProductivityController@postOverride']);
+
+    Route::get('fix-import/{key}', ['as' => 'productivity.fix-import', 'uses' => 'ProductivityController@fixImport']);
+    Route::post('fix-import/{key}', ['as' => 'productivity.post-fix-import', 'uses' => 'ProductivityController@postFixImport']);
 });
 
 Route::group(['prefix' => 'std-activity'], function () {

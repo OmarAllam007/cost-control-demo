@@ -16,8 +16,8 @@
             <tr>
                 <td class="col-xs-2">{{$productivity->code}}</td>
                 <td class="col-xs-2">{{$productivity->category->name}}</td>
-                <td class="col-xs-2">{{$productivity->daily_output}}</td>
-                <td class="col-xs-2">{{$productivity->after_reduction}}</td>
+                <td class="col-xs-2">{{$productivity->versionFor($project->id)->daily_output}}</td>
+                <td class="col-xs-2">{{$productivity->versionFor($project->id)->after_reduction}}</td>
                 <td class="col-xs-2">{{$productivity->units->type or ''}}</td>
                 <td class="col-xs-2"><a href="{{route('productivity.override', compact('project', 'productivity'))}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a></td>
             </tr>

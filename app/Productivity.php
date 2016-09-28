@@ -4,7 +4,6 @@ namespace App;
 
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
-use App\Http\Requests\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,9 +12,21 @@ class Productivity extends Model
 {
     use SoftDeletes, Tree, HasOptions;
 
-    protected $fillable = ['csi_category_id', 'description',
-        'unit', 'crew_structure', 'crew_hours', 'crew_equip', 'daily_output',
-        'man_hours', 'equip_hours', 'reduction_factor', 'after_reduction', 'source', 'code'];
+    protected $fillable = [
+        'csi_category_id',
+        'description',
+        'unit',
+        'crew_structure',
+        'crew_hours',
+        'crew_equip',
+        'daily_output',
+        'man_hours',
+        'equip_hours',
+        'reduction_factor',
+        'after_reduction',
+        'source',
+        'code'
+    ];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -37,14 +48,26 @@ class Productivity extends Model
 
     public function productivityAfterReduction()
     {
-
         return $this->after_reduction;
     }
 
     public function getAfterReductionAttribute()
     {
-
         return $this->daily_output * $this->reduction_factor;
+    }
+
+    function hasVersionFor($project_id)
+    {
+        return Productivity::version($project_id, $this->id)->count();
+    }
+
+    function versionFor($project_id)
+    {
+        if ($this->hasVersionFor($project_id)) {
+            return Productivity::version($project_id, $this->id)->first();
+        }
+
+        return $this;
     }
 
     function scopeFilter(Builder $query, $term = '')
@@ -85,7 +108,8 @@ class Productivity extends Model
 
     public function getCrewManAttribute($crew_structure)
     {
-        $man_powers = array_map('strtolower', array_column(ProductivityList::where('name', '=', 'Manpower')->get(array('type'))->toArray(), 'type'));
+        $man_powers = array_map('strtolower',
+            array_column(ProductivityList::where('name', '=', 'Manpower')->get(array('type'))->toArray(), 'type'));
         $man_numbers = [];
         $lines = explode("\n", strtolower($crew_structure));
         foreach ($lines as $line) {
@@ -98,12 +122,13 @@ class Productivity extends Model
             }
         }
 
-        return  array_sum($man_numbers);
+        return array_sum($man_numbers);
     }
 
     public function getCrewEquipAttribute($crew_structure)
     {
-        $equip_powers = array_map('strtolower', array_column(ProductivityList::where('name', '=', 'Equipment')->get(array('type'))->toArray(), 'type'));
+        $equip_powers = array_map('strtolower',
+            array_column(ProductivityList::where('name', '=', 'Equipment')->get(array('type'))->toArray(), 'type'));
         $equip_numbers = [];
         $lines = explode("\n", strtolower($crew_structure));
         foreach ($lines as $line) {
@@ -117,11 +142,14 @@ class Productivity extends Model
         }
         return array_sum($equip_numbers);
     }
-    public function getManHourAttribute(){
-        return round(($this->getCrewManAttribute($this->crew_structure) / $this->daily_output),2);
-    }
-    public function getEquipHourAttribute(){
-        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->daily_output),2);
+
+    public function getManHourAttribute()
+    {
+        return round(($this->getCrewManAttribute($this->crew_structure) / $this->daily_output), 2);
     }
 
+    public function getEquipHourAttribute()
+    {
+        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->daily_output), 2);
+    }
 }
