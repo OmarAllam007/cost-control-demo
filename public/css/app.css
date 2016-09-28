@@ -7999,8 +7999,6 @@ ul.tree .tree--item {
 
 .scrollpane {
   overflow-x: auto; }
-  .scrollpane table.table th, .scrollpane table.table td {
-    white-space: nowrap; }
 
 .panel-sm .panel-body {
   padding: 10px; }
@@ -8072,6 +8070,13 @@ a, .btn {
   content: ' ';
   display: block;
   clear: both; }
+
+.table-breakdown {
+  margin-bottom: 0; }
+  .table-breakdown tbody {
+    max-height: 450px;
+    overflow-y: auto;
+    display: block; }
 
 .filter-form {
   margin-bottom: 20px; }
