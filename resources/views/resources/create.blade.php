@@ -9,7 +9,7 @@
 @section('body')
     {{ Form::open(['route' => 'resources.store']) }}
 
-        @include('resources._form')
+        @include('resources._form', ['override' => false])
 
     {{ Form::close() }}
 @stop

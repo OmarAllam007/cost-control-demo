@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\HasOptions;
+use App\Behaviors\Overridable;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Productivity extends Model
 {
-    use SoftDeletes, Tree, HasOptions;
+    use SoftDeletes, Tree, HasOptions, Overridable;
 
     protected $fillable = [
         'csi_category_id',
@@ -56,20 +57,6 @@ class Productivity extends Model
         return $this->daily_output * $this->reduction_factor;
     }
 
-    function hasVersionFor($project_id)
-    {
-        return Productivity::version($project_id, $this->id)->count();
-    }
-
-    function versionFor($project_id)
-    {
-        if ($this->hasVersionFor($project_id)) {
-            return Productivity::version($project_id, $this->id)->first();
-        }
-
-        return $this;
-    }
-
     function scopeFilter(Builder $query, $term = '')
     {
         $query->take(20)
@@ -90,20 +77,6 @@ class Productivity extends Model
             'reduction' => $this->reduction_factor,
             'after_reduction' => $this->after_reduction,
         ];
-    }
-
-    function scopeVersion(Builder $query, $project_id, $productivity)
-    {
-        $query->where('productivity_id', $productivity)
-            ->where('project_id', $project_id);
-    }
-
-    function scopeBasic(Builder $query)
-    {
-        $query->where(function (Builder $query) {
-            $query->where('project_id', 0)
-                ->orWhereNull('project_id');
-        });
     }
 
     public function getCrewManAttribute($crew_structure)
@@ -143,12 +116,12 @@ class Productivity extends Model
         return array_sum($equip_numbers);
     }
 
-    public function getManHourAttribute()
+    public function getManHoursAttribute()
     {
         return round(($this->getCrewManAttribute($this->crew_structure) / $this->daily_output), 2);
     }
 
-    public function getEquipHourAttribute()
+    public function getEquipHoursAttribute()
     {
         return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->daily_output), 2);
     }

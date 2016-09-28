@@ -3,18 +3,18 @@
 namespace App;
 
 use App\Behaviors\HasOptions;
+use App\Behaviors\Overridable;
 use App\Behaviors\Tree;
-use App\Filter\ResourcesFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Resources extends Model
 {
-    use SoftDeletes, HasOptions, Tree;
-
+    use SoftDeletes, HasOptions, Tree, Overridable;
 
     protected $table = 'resources';
+
     protected $fillable = [
         'resource_code',
         'name',
@@ -26,12 +26,12 @@ class Resources extends Model
         'reference',
         'project_id'
     ];
+
     protected $dates = ['created_at', 'updated_at'];
 
     public function types()
     {
         return $this->belongsTo(ResourceType::class, 'resource_type_id');
-
     }
 
     public function parteners()
@@ -43,7 +43,6 @@ class Resources extends Model
     {
         return $this->belongsTo(Unit::class, 'unit');
     }
-
 
     function scopeFilter(Builder $query, $term = '')
     {
@@ -66,36 +65,6 @@ class Resources extends Model
             'rate' => $this->rate,
             'root_type' => $this->types->root->name
         ];
-    }
-
-    function scopeVersion(Builder $query, $project_id, $resource_id)
-    {
-        $query->where('resource_id', $resource_id)
-            ->where('project_id', $project_id);
-    }
-
-    function rateForProject(Project $project)
-    {
-        $projectResource = $project->resources->where('resource_id', $this->id)->first();
-        if ($projectResource) {
-            return $projectResource->rate;
-        }
-
-        return $this->rate;
-    }
-
-    function scopeSearch(Builder $query, $filters)
-    {
-        $filter = new ResourcesFilter($query, $filters);
-        $filter->filter();
-    }
-
-    function scopeBasic(Builder $query)
-    {
-        $query->where(function(Builder $query) {
-            $query->where('project_id', 0)
-                ->orWhereNull('project_id');
-        });
     }
 
     public static function checkFixImport($data)

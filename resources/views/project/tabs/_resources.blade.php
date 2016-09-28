@@ -9,19 +9,25 @@
     <table class="table table-condensed table-striped table-fixed">
         <thead>
         <tr>
-            <th class="col-xs-3">Code</th>
+            <th class="col-xs-2">Code</th>
             <th class="col-xs-3">Resource</th>
-            <th class="col-xs-3">Type</th>
-            <th class="col-xs-3">Actions</th>
+            <th class="col-xs-2">Type</th>
+            <th class="col-xs-2">Rate</th>
+            <th class="col-xs-1">Unit</th>
+            <th class="col-xs-1">Waste</th>
+            <th class="col-xs-1">Actions</th>
         </tr>
         </thead>
         <tbody>
         @foreach ($project->plain_resources as $resource)
         <tr>
-            <td class="col-xs-3">{{$resource->resource_code}}</td>
+            <td class="col-xs-2">{{$resource->resource_code}}</td>
             <td class="col-xs-3">{{$resource->name}}</td>
-            <td class="col-xs-3">{{$resource->types->root->name or ''}}</td>
-            <td class="col-xs-3">
+            <td class="col-xs-2">{{$resource->types->root->name or ''}}</td>
+            <td class="col-xs-2">{{number_format($resource->versionFor($project->id)->rate, 2)}}</td>
+            <td class="col-xs-1">{{$resource->versionFor($project->id)->units->type or ''}}</td>
+            <td class="col-xs-1">{{number_format($resource->versionFor($project->id)->waste, 2)}} %</td>
+            <td class="col-xs-1">
                 <a href="{{route('resources.override', ['resources' => $resource, 'project' => $project])}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
             </td>
         </tr>

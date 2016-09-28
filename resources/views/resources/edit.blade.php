@@ -14,11 +14,9 @@
 @stop
 
 @section('body')
-    {{ Form::model($resources, ['route' => ['resources.update', $resources]]) }}
+    {{ Form::model($resources, ['route' => ['resources.update', $resources], 'method' => 'PATCH']) }}
 
-        {{ method_field('PATCH') }}
-
-        @include('resources._form')
+        @include('resources._form', ['override' => false])
 
     {{ Form::close() }}
 @stop

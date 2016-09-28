@@ -9,7 +9,7 @@
 @section('body')
     {{ Form::model($resource, ['route' => ['resources.post-override', $baseResource, $project]]) }}
 
-        @include('resources._form')
+        @include('resources._form', ['override' => true, 'base' => $baseResource])
 
     {{ Form::close() }}
 @stop

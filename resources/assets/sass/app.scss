@@ -70,10 +70,6 @@ ul.tree  {
 
 .scrollpane {
   overflow-x: auto;
-
-  table.table th,table.table td {
-    white-space: nowrap;
-  }
 }
 
 .panel-sm {
@@ -173,6 +169,16 @@ a, .btn {
   content: ' ';
   display: block;
   clear: both;
+}
+
+.table-breakdown {
+  margin-bottom: 0;
+
+  tbody {
+    max-height: 450px;
+    overflow-y: auto;
+    display: block;
+  }
 }
 
 .filter-form {

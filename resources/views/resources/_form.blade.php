@@ -8,12 +8,16 @@
                 <div class="hidden">
                     {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
                 </div>
-                <p>
-                    <a href="#LevelsModal" data-toggle="modal" class="tree-open">
-                        {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Type' }}
-                    </a>
-                    <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
-                </p>
+                @if ($override)
+                    <p><em>{{$base->types->path}}</em></p>
+                @else
+                    <p>
+                        <a href="#LevelsModal" data-toggle="modal" class="tree-open">
+                            {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Type' }}
+                        </a>
+                        <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
+                    </p>
+                @endif
                 {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
             </div>
 
@@ -24,6 +28,8 @@
             {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
             @if(!empty($edit))
                 {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
+            @elseif($override)
+                {{ Form::text('resource_code',$base->code, ['class' => 'form-control','readonly'=>'readonly']) }}
             @else
                 {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
             @endif
@@ -33,8 +39,12 @@
 
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
-            {{ Form::text('name', null, ['class' => 'form-control']) }}
-            {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
+            @if($override)
+                {{ Form::text('name', $base->name, ['class' => 'form-control', 'readonly' => 'readonly']) }}
+            @else
+                {{ Form::text('name', null, ['class' => 'form-control']) }}
+                {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
+            @endif
         </div>
 
         <div class="form-group {{$errors->first('rate', 'has-error')}}">
@@ -42,6 +52,7 @@
             {{ Form::number('rate', null, ['class' => 'form-control','step'=>'any']) }}
             {!! $errors->first('rate', '<div class="help-block">:message</div>') !!}
         </div>
+
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
             {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control']) }}
@@ -67,7 +78,6 @@
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
             {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
             <p>
-
                 <a href="#ParentsModal2" data-toggle="modal" class="tree-open">
                     {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id'))->path : 'Select Business Partner' }}
                 </a>
