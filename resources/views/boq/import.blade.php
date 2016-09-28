@@ -14,7 +14,7 @@
             {{Form::open(['route' => ['boq.post-import',$project], 'files' => true])}}
 
             <p class="text-info">
-                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/boq.xlsx')}}">click here</a> to download a sample template
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/BOQ.xlsx')}}">click here</a> to download a sample template
             </p>
 
             <div class="form-group {{$errors->first('file', 'has-error')}}">

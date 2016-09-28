@@ -97,28 +97,26 @@
             <tbody>
             @foreach($project->breakdown_resources as $resource)
                 <tr>
-                    <td class="bg-black">
-                        <abbr title="{{$resource->breakdown->wbs_level->path}}">{{$resource->breakdown->wbs_level->code}}</abbr>
-                    </td>
-                    <td class="bg-primary">{{$resource->breakdown->std_activity->name}}</td>
-                    <td class="bg-black">{{$resource->breakdown->template->name}}</td>
-                    <td class="bg-primary">{{$resource->breakdown->cost_account}}</td>
-                    <td class="bg-success">{{number_format($resource->eng_qty, 2)}}</td>
-                    <td class="bg-success">{{number_format($resource->budget_qty, 2)}}</td>
-                    <td class="bg-primary">{{number_format($resource->resource_qty, 2)}}</td>
-                    <td class="bg-success">{{$resource->resource_waste}}%</td>
+                    <td class="bg-black"><abbr title="{{$resource->breakdown->wbs_level->path or ''}}">{{$resource->breakdown->wbs_level->code or ''}}</abbr></td>
+                    <td class="bg-primary">{{$resource->breakdown->std_activity->name or ''}}</td>
+                    <td class="bg-black">{{$resource->breakdown->template->name or ''}}</td>
+                    <td class="bg-primary">{{$resource->breakdown->cost_account or ''}}</td>
+                    <td class="bg-success">{{number_format($resource->eng_qty, 2)or ''}}</td>
+                    <td class="bg-success">{{number_format($resource->budget_qty, 2)or ''}}</td>
+                    <td class="bg-primary">{{number_format($resource->resource_qty, 2)or ''}}</td>
+                    <td class="bg-success">{{$resource->resource_waste or ''}}%</td>
                     <td class="bg-success">{{$resource->project_resource->types->root->name or ''}}</td>
                     <td class="bg-success">{{$resource->project_resource->resource_code or ''}}</td>
                     <td class="bg-success">{{$resource->project_resource->name or ''}}</td>
                     <td class="bg-success">{{$resource->project_resource->rate or ''}}</td>
                     <td class="bg-success">{{$resource->project_resource->units->type or ''}}</td>
-                    <td class="bg-success">{{number_format($resource->budget_unit, 2)}}</td>
-                    <td class="bg-success">{{number_format($resource->budget_cost, 2)}}</td>
-                    <td class="bg-black">{{number_format($resource->boq_unit_rate, 2)}}</td>
+                    <td class="bg-success">{{number_format($resource->budget_unit, 2) or ''}}</td>
+                    <td class="bg-success">{{number_format($resource->budget_cost, 2) or ''}}</td>
+                    <td class="bg-black">{{number_format($resource->boq_unit_rate, 2) or ''}}</td>
                     <td class="bg-primary">{{$resource->labor_count or ''}}</td>
                     <td class="bg-success">{{$resource->project_productivity->after_reduction or ''}}</td>
                     <td class="bg-primary">{{$resource->project_productivity->csi_code or ''}}</td>
-                    <td class="bg-success">{{$resource->remarks}}</td>
+                    <td class="bg-success">{{$resource->remarks or ''}}</td>
                 </tr>
             @endforeach
             </tbody>
