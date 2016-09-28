@@ -20,10 +20,13 @@ class ProductivityController extends Controller
     {
 
         $filter = new ProductivityFilter(Productivity::query(), session('filters.productivity'));
-        $crew_structure = Productivity::all();
         $productivities = $filter->filter()->paginate(100);
+
         return view('productivity.index', compact('productivities'));
     }
+
+
+
 
     public function create()
     {
@@ -39,7 +42,7 @@ class ProductivityController extends Controller
 
 //        $man_hours  = $this->manHour($request);
 //        $equip_hours = $this->equipHour($request);
-         Productivity::create($request->all());
+        Productivity::create($request->all());
 //        $productivity->update(['man_hours' => array_sum($man_hours), 'equip_hours' => array_sum($equip_hours)]);
 
         flash('Productivity has been saved', 'success');
@@ -59,7 +62,6 @@ class ProductivityController extends Controller
         $edit = true;
         return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category', 'edit'));
     }
-
 
 
     public function update(Productivity $productivity, Request $request)

@@ -11,17 +11,16 @@ class ProjectSeed extends Seeder
      */
     public function run()
     {
-        \App\Project::truncate();
 
-        $seeds = [
-            ['name' => 'Project 1', 'description' => 'This is a Project 1'],
-            ['name' => 'Project 2', 'description' => 'This is a Project 2'],
-
-
-        ];
-
-        foreach ($seeds as $seed) {
-            \App\Project::create($seed);
-        }
+//        $seeds = [
+//            ['name' => 'Project 1', 'description' => 'This is a Project 1'],
+//            ['name' => 'Project 2', 'description' => 'This is a Project 2'],
+//
+//
+//        ];
+//
+//        foreach ($seeds as $seed) {
+//            \App\Project::create($seed);
+//        }
     }
 }

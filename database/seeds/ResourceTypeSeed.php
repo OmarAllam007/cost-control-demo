@@ -11,21 +11,19 @@ class ResourceTypeSeed extends Seeder
      */
     public function run()
     {
-        \App\ResourceType::truncate();
-
-        $seeds = [
-            ['name' => 'General Requirment', 'parent_id' => 0],
-            ['name' => 'LABORS', 'parent_id' => 0],
-            ['name' => 'MATERIAL', 'parent_id' => 0],
-            ['name' => 'Subcontractors', 'parent_id' => 0],
-            ['name' => 'EQUIPMENT', 'parent_id' => 0],
-            ['name' => 'SCAFFOLDING', 'parent_id' => 0],
-            ['name' => 'OTHERS', 'parent_id' => 0],
-        ];
-
-        foreach ($seeds as $seed) {
-            \App\ResourceType::create($seed);
-        }
+//        $seeds = [
+//            ['name' => 'General Requirment', 'parent_id' => 0],
+//            ['name' => 'LABORS', 'parent_id' => 0],
+//            ['name' => 'MATERIAL', 'parent_id' => 0],
+//            ['name' => 'Subcontractors', 'parent_id' => 0],
+//            ['name' => 'EQUIPMENT', 'parent_id' => 0],
+//            ['name' => 'SCAFFOLDING', 'parent_id' => 0],
+//            ['name' => 'OTHERS', 'parent_id' => 0],
+//        ];
+//
+//        foreach ($seeds as $seed) {
+//            \App\ResourceType::create($seed);
+//        }
 
 
     }

@@ -12,38 +12,26 @@ class ProductivityListSeed extends Seeder
     public function run()
     {
         set_time_limit(60);
-        $start = microtime(true);
-        $path = storage_path('files\category.csv');
+
+        $path = storage_path('productivity_List.csv');
         $handle = fopen($path, "r");
 
         if ($handle !== FALSE) {
             fgetcsv($handle);
-            $productivity_category = \App\CsiCategory::query()->pluck('name', 'id')->toArray();
-
+            $productivity_list = \App\ProductivityList::query()->pluck('type', 'id')->toArray();
             while (($row = fgetcsv($handle)) !== FALSE) {
-                $levels = array_filter($row);
-                $parent_id = 0;
-                foreach ($levels as $level) { //fill categories
-                    if (!isset($productivity_category[$level])) {
-                        $category = \App\CsiCategory::create([
-                            'name' => $level,
-                            'parent_id' => $parent_id,
-                        ]);
-
-                        $productivity_category[$level] = $parent_id = $category->id;
-
-                    } else {
-                        $parent_id = $productivity_category[$level];
-                    }
+                if (in_array($row[1], $productivity_list)) {
+                    continue;
+                } else {
+                    \App\ProductivityList::create([
+                        'name' => $row[0],
+                        'type' => $row[1],
+                        'discipline' => $row[2],
+                    ]);
                 }
-                //fill productivies
-
             }
-
-
         }
 
         fclose($handle);
-
     }
 }

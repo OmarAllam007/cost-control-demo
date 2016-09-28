@@ -7,7 +7,7 @@ class BusinessPartnerSeed extends Seeder
 
     public function run()
     {
-        \App\BusinessPartner::truncate();
+//        \App\BusinessPartner::truncate();
 
         $seeds = [
             ['name' => 'AlKifah', 'type'=>'Business Partner' ],
