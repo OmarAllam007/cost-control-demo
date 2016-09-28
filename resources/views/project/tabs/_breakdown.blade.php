@@ -69,7 +69,7 @@
 
 @if ($project->breakdown_resources->count())
     <div class="scrollpane">
-        <table class="table table-condensed">
+        <table class="table table-condensed table-bordered table-striped table-hover">
             <thead>
             <tr>
                 <th class="bg-black">WBS</th>
@@ -103,22 +103,22 @@
                     <td class="bg-primary">{{$resource->breakdown->std_activity->name}}</td>
                     <td class="bg-black">{{$resource->breakdown->template->name}}</td>
                     <td class="bg-primary">{{$resource->breakdown->cost_account}}</td>
-                    <td class="bg-success">{{number_format($resource->eng_qty, 2)}}</td>
-                    <td class="bg-success">{{number_format($resource->budget_qty, 2)}}</td>
+                    <td class="">{{number_format($resource->eng_qty, 2)}}</td>
+                    <td class="">{{number_format($resource->budget_qty, 2)}}</td>
                     <td class="bg-primary">{{number_format($resource->resource_qty, 2)}}</td>
-                    <td class="bg-success">{{$resource->resource_waste}}%</td>
-                    <td class="bg-success">{{$resource->project_resource->types->root->name or ''}}</td>
-                    <td class="bg-success">{{$resource->project_resource->resource_code or ''}}</td>
-                    <td class="bg-success">{{$resource->project_resource->name or ''}}</td>
-                    <td class="bg-success">{{$resource->project_resource->rate or ''}}</td>
-                    <td class="bg-success">{{$resource->project_resource->units->type or ''}}</td>
-                    <td class="bg-success">{{number_format($resource->budget_unit, 2)}}</td>
-                    <td class="bg-success">{{number_format($resource->budget_cost, 2)}}</td>
+                    <td class="">{{number_format($resource->project_resource->resource_waste, 2)}}%</td>
+                    <td class="">{{$resource->resource->types->root->name or ''}}</td>
+                    <td class="">{{$resource->resource->resource->resource_code or ''}}</td>
+                    <td class="">{{$resource->resource->resource->name or ''}}</td>
+                    <td class="">{{$resource->project_resource->rate or ''}}</td>
+                    <td class="">{{$resource->project_resource->units->type or ''}}</td>
+                    <td class="">{{number_format($resource->budget_unit, 2)}}</td>
+                    <td class="">{{number_format($resource->budget_cost, 2)}}</td>
                     <td class="bg-black">{{number_format($resource->boq_unit_rate, 2)}}</td>
                     <td class="bg-primary">{{$resource->labor_count or ''}}</td>
-                    <td class="bg-success">{{$resource->project_productivity->after_reduction or ''}}</td>
-                    <td class="bg-primary">{{$resource->project_productivity->csi_code or ''}}</td>
-                    <td class="bg-success">{{$resource->remarks}}</td>
+                    <td class="">{{$resource->project_productivity->after_reduction or ''}}</td>
+                    <td class="bg-primary">{{$resource->productivity->csi_code or ''}}</td>
+                    <td class="">{{$resource->remarks}}</td>
                 </tr>
             @endforeach
             </tbody>
