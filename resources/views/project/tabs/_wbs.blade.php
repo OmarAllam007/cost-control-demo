@@ -10,7 +10,6 @@
 
 
 <div class="clearfix"></div>
-
 @if ($project->wbs_tree->count())
     <ul class="list-unstyled tree">
         @foreach($project->wbs_tree as $wbs_level)

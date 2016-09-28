@@ -25,7 +25,7 @@ class Project extends Model
         'project_contract_value',
         'project_start_date',
         'project_duration',
-        'description'
+        'description',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -35,6 +35,7 @@ class Project extends Model
         return $this->wbs_levels()->tree()->get();
     }
 
+
     function wbs_levels()
     {
         return $this->hasMany(WbsLevel::class);
@@ -42,8 +43,10 @@ class Project extends Model
 
     function boqs()
     {
-        return $this->hasMany(Boq::class,'project_id');
+        return $this->hasMany(Boq::class, 'project_id');
     }
+
+
     function breakdowns()
     {
         return $this->hasMany(Breakdown::class);

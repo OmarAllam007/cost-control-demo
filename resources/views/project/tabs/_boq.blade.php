@@ -11,7 +11,6 @@
 </div>
 
 <div class="clearfix"></div>
-
 @if ($project->boqs->count())
     <table class="table table-condensed table-striped table-fixed">
         <thead>
@@ -24,7 +23,7 @@
             <th class="col-xs-1">PRICE U.R.</th>
             <th class="col-xs-1">DRY (1 BLDG.)</th>
             <th class="col-xs-1">PRICE (1 BLDG.)</th>
-            {{--<th class="col-xs-1">DRY (ALL BLDG.)</th>--}}
+            <th class="col-xs-1">DRY (ALL BLDG.)</th>
             <th class="col-xs-1">PRICE (ALL BLDG.)</th>
             <th class="col-xs-2">Actions</th>
         </tr>
@@ -41,7 +40,7 @@
                         <td class="col-xs-1">{{ $boq->price_ur?:'' }}</td>
                         <td class="col-xs-1">{{$boq->getDryForBuilding($boq->getDry($boq->subcon,$boq->materials,$boq->manpower),$boq->quantity)?:''  }}</td>
                         <td class="col-xs-1">{{$boq->getPriceForBuilding($boq->price_ur,$boq->quantity)?:'' }}</td>
-                        {{--<td class="col-xs-1">{{ $boq->getDryForAllBuilding($boq->quantity,$boq->getDry($boq->subcon,$boq->materials,$boq->manpower))?:'' }}</td>--}}
+                        <td class="col-xs-1">{{ $boq->getDryForAllBuilding($boq->quantity,$boq->getDry($boq->subcon,$boq->materials,$boq->manpower))?:'' }}</td>
                         <td class="col-xs-1">{{ $boq->getPriceForAllBuilding($boq->quantity,$boq->price_ur)?:''}}</td>
                         <td class="col-xs-2">
                             <form action="{{ route('boq.destroy', $boq) }}" method="post">

@@ -16,7 +16,7 @@ class ResourceTypeController extends Controller
 
     public function index()
     {
-        $resource_levels = ResourceType::tree()->paginate();
+        $resource_levels = ResourceType::tree()->orderBy('name')->paginate();
         $resources = Resources::lists('id', 'name')->all();
 
         return view('resource-type.index', compact('resources', 'resource_levels','resource_types'));

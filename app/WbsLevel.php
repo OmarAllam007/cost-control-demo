@@ -22,19 +22,19 @@ class WbsLevel extends Model
         return self::pluck('name', 'id')->prepend('Select Level', '');
     }
 
-    public static function getCode($string)
-    {
-        $fullstring = explode(" ", $string);
-        $code = '';
-        for ($i = 0; $i < count($fullstring); $i++) {
-            if (substr($fullstring[ $i ], 0, 1) == '0') {
-                continue;
-            } else {
-                $code = $code . substr($fullstring[ $i ], 0, 1) . '';
-            }
-        }
-        return preg_replace("/[^A-Za-z0-9 ]/", '', $code);
-    }
+//    public static function getCode($string)
+//    {
+//        $fullstring = explode(" ", $string);
+//        $code = '';
+//        for ($i = 0; $i < count($fullstring); $i++) {
+//            if (substr($fullstring[ $i ], 0, 1) == '0') {
+//                continue;
+//            } else {
+//                $code = $code . substr($fullstring[ $i ], 0, 1) . '';
+//            }
+//        }
+//        return preg_replace("/[^A-Za-z0-9 ]/", '', $code);
+//    }
 
     public function project()
     {
