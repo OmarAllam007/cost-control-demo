@@ -20,6 +20,7 @@ class ProductivityController extends Controller
     {
 
         $filter = new ProductivityFilter(Productivity::query(), session('filters.productivity'));
+        $crew_structure = Productivity::all();
         $productivities = $filter->filter()->paginate(100);
         return view('productivity.index', compact('productivities'));
     }
@@ -27,7 +28,6 @@ class ProductivityController extends Controller
     public function create()
     {
         $edit = false;
-
         return view('productivity.create')->with('edit', $edit);
     }
 

@@ -49,6 +49,19 @@
             {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
         </div>
 
+        <div class="form-group {{$errors->first('man_hours', 'has-error')}}">
+
+            {{ Form::label('man_hours', 'Man Hours', ['class' => 'control-label']) }}
+            {{ Form::text('man_hours', null, ['class' => 'form-control','disabled' => 'disabled']) }}
+        </div>
+
+        <div class="form-group {{$errors->first('equip_hours', 'has-error')}}">
+
+            {{ Form::label('equip_hours', 'Man Hours', ['class' => 'control-label']) }}
+            {{ Form::text('equip_hours',null, ['class' => 'form-control','disabled' => 'disabled']) }}
+        </div>
+
+
         <div class="form-group {{$errors->first('reduction_factor', 'has-error')}}">
             {{ Form::label('reduction_factor', 'Reduction Factor', ['class' => 'control-label']) }}
             {{ Form::text('reduction_factor', null, ['class' => 'form-control']) }}
