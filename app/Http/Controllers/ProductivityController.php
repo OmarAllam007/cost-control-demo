@@ -39,7 +39,7 @@ class ProductivityController extends Controller
 
 //        $man_hours  = $this->manHour($request);
 //        $equip_hours = $this->equipHour($request);
-         Productivity::create($request->all());
+        Productivity::create($request->all());
 //        $productivity->update(['man_hours' => array_sum($man_hours), 'equip_hours' => array_sum($equip_hours)]);
 
         flash('Productivity has been saved', 'success');
@@ -59,7 +59,6 @@ class ProductivityController extends Controller
         $edit = true;
         return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category', 'edit'));
     }
-
 
 
     public function update(Productivity $productivity, Request $request)
@@ -95,8 +94,15 @@ class ProductivityController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new ProductivityImportJob($file->path()));
+        $failed = $this->dispatch(new ProductivityImportJob($file->path()));
+        if ($failed) {
+            $key = 'prod_' . time();
+            \Cache::add($key, $failed, 180);
+            flash('Could not import all items', 'warning');
+            return \Redirect::route('productivity.fix-import', $key);
+        }
 
+        flash('Productivity has been imported', 'success');
         return redirect()->route('productivity.index');
     }
 
@@ -109,7 +115,12 @@ class ProductivityController extends Controller
             $overwrote = $productivity;
         }
 
-        return view('productivity.override', ['productivity' => $overwrote, 'baseProductivity' => $productivity, 'project' => $project, 'edit' => $edit]);
+        return view('productivity.override', [
+            'productivity' => $overwrote,
+            'baseProductivity' => $productivity,
+            'project' => $project,
+            'edit' => $edit
+        ]);
     }
 
     function postOverride(Request $request, Productivity $productivity, Project $project)
@@ -140,11 +151,41 @@ class ProductivityController extends Controller
 
     function fixImport($key)
     {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return \Redirect::route('productivity.index');
+        }
 
+        $items = \Cache::get($key);
+
+        return view('productivity.fix-import', compact('items', 'key'));
     }
 
-    function postFixImport($key)
+    function postFixImport(Request $request, $key)
     {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return \Redirect::route('productivity.index');
+        }
 
+        $data = $request->get('data');
+        $errors = Productivity::checkFixImport($data);
+        if (!$errors) {
+            $items = \Cache::get($key);
+
+            foreach ($items as $item) {
+                if (isset($data['units'][$item['orig_unit']])) {
+                    $item['unit'] = $data['units'][$item['orig_unit']];
+                    Productivity::create($item);
+                }
+            }
+
+            flash('Productivity has been imported', 'success');
+            return \Redirect::route('productivity.index');
+        }
+
+        flash('Could not import all items');
+        return \Redirect::route('productivity.fix-import', $key)
+            ->withErrors($errors)->withInput($request->all());
     }
 }

@@ -9,10 +9,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ProductivityImportJob extends ImportJob implements ShouldQueue
+class ProductivityImportJob extends ImportJob
 {
-    use InteractsWithQueue, SerializesModels;
-
     protected $units;
     protected $file;
     protected $division;
@@ -20,11 +18,8 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
 
     public function __construct($file)
     {
-
-
         $this->file = $file;
     }
-
 
     public function handle()
     {
@@ -32,35 +27,47 @@ class ProductivityImportJob extends ImportJob implements ShouldQueue
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-        $productivities = Productivity::query()->pluck('code')->toArray();
+        $productivities = Productivity::query()->pluck('code');
 
+        $failed = collect();
         foreach ($rows as $row) {
-
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
             $data = $this->getDataFromCells($cells);
-            if (!(in_array($data[0], $productivities))) {
-                Productivity::create([
-                    'code' => $data[0],
-                    'description' => $data[5],
-                    'csi_category_id' => $this->getDivisionId($data),
-                    'unit' => $this->getUnit($data[6]),
-                    'crew_structure' => $data[7],
-//                   'crew_hours' => $data[6],
-//                    'crew_equip' => $data[7],
-                    'daily_output' => $data[8],
-//                    'man_hours' => $data[9],
-                    'reduction_factor' => $data[9],
-//                    'equip_hours' => $data[10],
-                    'after_reduction' => $this->getAfterFactor($data[9], $data[8]),
-                    'source' => $data[10],
-                ]);
-
+            if (!array_filter($data)) {
+                continue;
             }
 
+            if (!$productivities->has($data[0])) {
+                $unit = $this->getUnit($data[6]);
+                $item = [
+                    'code' => $data[0],
+                    'csi_code' => $data[0],
+                    'description' => $data[5],
+                    'csi_category_id' => $this->getDivisionId($data),
+                    'unit' => $unit,
+                    'crew_structure' => $data[7],
+                    'daily_output' => $data[8],
+                    'reduction_factor' => $data[9],
+                    'source' => $data[10]
+                ];
+
+                if ($unit) {
+                    Productivity::create($item);
+                } else {
+                    $item['orig_unit'] = $data[6];
+                    $failed->push($item);
+                }
+            }
         }
 
         unlink($this->file);
+
+        if ($failed->count()) {
+            return $failed;
+        }
+
+        return false;
     }
 
     private function loadDivision()
