@@ -14,7 +14,6 @@ class Productivity extends Model
     use SoftDeletes, Tree, HasOptions, Overridable;
 
     protected $fillable = [
-        'csi_code',
         'csi_category_id',
         'description',
         'unit',
@@ -37,18 +36,6 @@ class Productivity extends Model
         return static::orderBy('code')->pluck('code', 'id')->prepend('Select Reference', '');
     }
 
-    public static function checkFixImport($data)
-    {
-        $errors = [];
-
-        foreach ($data['units'] as $unit => $unit_id) {
-            if (!$unit_id) {
-                $errors[$unit] = $unit;
-            }
-        }
-
-        return $errors;
-    }
 
     public function category()
     {
@@ -131,13 +118,12 @@ class Productivity extends Model
 
     public function getManHoursAttribute()
     {
-        dd($this->getCrewManAttribute($this->crew_structure) / $this->after_reduction);
-        return round(($this->getCrewManAttribute($this->crew_structure) / $this->after_reduction), 2);
+
+        return round(($this->getCrewManAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
     }
 
     public function getEquipHoursAttribute()
     {
-
-        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->after_reduction), 2);
+        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
     }
 }
