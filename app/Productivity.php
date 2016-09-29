@@ -14,6 +14,7 @@ class Productivity extends Model
     use SoftDeletes, Tree, HasOptions, Overridable;
 
     protected $fillable = [
+        'csi_code',
         'csi_category_id',
         'description',
         'unit',
@@ -36,6 +37,18 @@ class Productivity extends Model
         return static::orderBy('code')->pluck('code', 'id')->prepend('Select Reference', '');
     }
 
+    public static function checkFixImport($data)
+    {
+        $errors = [];
+
+        foreach ($data['units'] as $unit => $unit_id) {
+            if (!$unit_id) {
+                $errors[$unit] = $unit;
+            }
+        }
+
+        return $errors;
+    }
 
     public function category()
     {

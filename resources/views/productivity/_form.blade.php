@@ -1,15 +1,15 @@
 {{ csrf_field() }}
 <div class="row">
     <div class="col-md-6">
-        <div class="form-group {{$errors->first('code', 'has-error')}}">
-            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
+        <div class="form-group {{$errors->first('csi_code', 'has-error')}}">
+            {{ Form::label('csi_code', 'Code', ['class' => 'control-label']) }}
             @if($edit)
-                {{ Form::text('code', null, ['class' => 'form-control','readonly' => 'readonly']) }}
-                {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
+                {{ Form::text('csi_code', null, ['class' => 'form-control','readonly' => 'readonly']) }}
+                {!! $errors->first('csi_code', '<div class="help-block">:message</div>') !!}
             @elseif($override)
-                {{ Form::text('code', $base->code, ['class' => 'form-control','readonly' => 'readonly']) }}
+                {{ Form::text('csi_code', $base->csi_code, ['class' => 'form-control','readonly' => 'readonly']) }}
             @else
-                {{ Form::text('code', null, ['class' => 'form-control']) }}
+                {{ Form::text('csi_code', null, ['class' => 'form-control']) }}
             @endif
         </div>
 
