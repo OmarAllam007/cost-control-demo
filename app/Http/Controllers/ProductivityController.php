@@ -48,7 +48,8 @@ class ProductivityController extends Controller
 
     public function show(Productivity $productivity)
     {
-        return view('productivity.show', compact('productivity'));
+        $project = Project::where('id',$productivity->project_id)->first();
+        return view('productivity.show', compact('productivity','project'));
     }
 
     public function edit(Productivity $productivity)

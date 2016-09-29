@@ -131,11 +131,13 @@ class Productivity extends Model
 
     public function getManHoursAttribute()
     {
-        return round(($this->getCrewManAttribute($this->crew_structure) / $this->daily_output), 2);
+        dd($this->getCrewManAttribute($this->crew_structure) / $this->after_reduction);
+        return round(($this->getCrewManAttribute($this->crew_structure) / $this->after_reduction), 2);
     }
 
     public function getEquipHoursAttribute()
     {
-        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->daily_output), 2);
+
+        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->after_reduction), 2);
     }
 }

@@ -17,7 +17,7 @@
         <tbody>
         <tr>
             <th>Project</th>
-            <td>{{$project->name}}</td>
+            <td>{{$project->name or ''}}</td>
         </tr>
         <tr>
             <th>Productivity Code</th>
@@ -27,11 +27,31 @@
         </tbody>
     </table>
 
-    <h4 class="page-header">Productivity</h4>
-    {{--<div class="form-group clearfix">--}}
-        {{--<a href="{{route('breakdown-template.create', ['activity' => $productivity->id])}}" class="btn btn-primary pull-right"><i class="fa fa-plus-circle"></i>--}}
-            {{--Add template</a>--}}
-    {{--</div>--}}
+    <h4 class="page-header">Productivity Details</h4>
+    <div class="form-group clearfix">
+        <table class="table table-condensed">
+            <tbody>
+            <tr>
+                <th>Description</th>
+                <td>{{$productivity->description or ''}}</td>
+            </tr>
+            <tr>
+                <th>Unit</th>
+                <td>{{$productivity->units->type}}</td>
+            </tr>
+            <tr>
+                <th>Crew Structure</th>
+                <td>{{$productivity->crew_structure}}</td>
+            </tr>
+
+            <tr>
+                <th>Man Hours</th>
+                <td>{{$productivity->getManHoursAttribute()}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
 
 @stop
 
