@@ -35,17 +35,17 @@ class Project extends Model
         return $this->wbs_levels()->tree()->get();
     }
 
-
     function wbs_levels()
     {
         return $this->hasMany(WbsLevel::class);
     }
 
+
     function boqs()
+
     {
         return $this->hasMany(Boq::class, 'project_id');
     }
-
 
     function breakdowns()
     {

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\ActivityDivision;
+use App\Boq;
+use App\BoqDivision;
 use App\Productivity;
 use App\Project;
 use Illuminate\Http\Request;
@@ -43,12 +45,16 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         set_time_limit(1800);
-        ini_set('memory_limit', '4G');
+        ini_set('memory_limit', '32m');
+
+        $divisions = BoqDivision::whereHas('items', function ($q) use ($project) {
+            $q->where('project_id', $project->id);
+        })->get();
 
         $project->load([
             'wbs_levels',
             'quantities',
-            'breakdown_resources' => function($q) use ($project) {
+            'breakdown_resources' => function ($q) use ($project) {
                 return $q->filter(session('filters.breakdown.' . $project->id, []));
             },
             'breakdown_resources.breakdown',
@@ -58,7 +64,7 @@ class ProjectController extends Controller
             'breakdown_resources.productivity',
         ]);
 
-        return view('project.show', compact('project', 'productivity'));
+        return view('project.show', compact('project', 'divisions'));
     }
 
     public function edit(Project $project)

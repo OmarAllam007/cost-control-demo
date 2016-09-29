@@ -14,7 +14,7 @@
             {{Form::open(['route' => ['productivity.post-import'], 'files' => true])}}
 
             <p class="text-info">
-                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/Productivity.xlsx')}}">click here</a> to download a sample template
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/productivity.xlsx')}}">click here</a> to download a sample template
             </p>
 
             <div class="form-group {{$errors->first('file', 'has-error')}}">
