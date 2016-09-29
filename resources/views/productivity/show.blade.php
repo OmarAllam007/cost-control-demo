@@ -13,11 +13,45 @@
 @stop
 
 @section('body')
-{{ Form::model($productivity, ['route' => ['productivity.update', $productivity]]) }}
+    <table class="table table-condensed">
+        <tbody>
+        <tr>
+            <th>Project</th>
+            <td>{{$project->name or ''}}</td>
+        </tr>
+        <tr>
+            <th>Productivity Code</th>
+            <td>{{$productivity->code}}</td>
+        </tr>
 
-{{ method_field('patch') }}
+        </tbody>
+    </table>
 
-@include('productivity._form')
+    <h4 class="page-header">Productivity Details</h4>
+    <div class="form-group clearfix">
+        <table class="table table-condensed">
+            <tbody>
+            <tr>
+                <th>Description</th>
+                <td>{{$productivity->description or ''}}</td>
+            </tr>
+            <tr>
+                <th>Unit</th>
+                <td>{{$productivity->units->type}}</td>
+            </tr>
+            <tr>
+                <th>Crew Structure</th>
+                <td>{{$productivity->crew_structure}}</td>
+            </tr>
 
-{{ Form::close() }}
+            <tr>
+                <th>Man Hours</th>
+                <td>{{$productivity->getManHoursAttribute()}}</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
 @stop
+

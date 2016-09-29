@@ -100,15 +100,15 @@
             @foreach($project->breakdown_resources as $resource)
                 <tr>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">
-                        <abbr title="{{$resource->breakdown->wbs_level->path or ''}}">{{$resource->breakdown->wbs_level->code or ''}}</abbr>
+                        <abbr title="{{$resource->breakdown->wbs_level->path}}">{{$resource->breakdown->wbs_level->code}}</abbr>
                     </td>
-                    <td style="min-width: 300px; max-width: 300px;" class="bg-primary">{{$resource->breakdown->std_activity->name or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-black">{{$resource->breakdown->template->name or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{$resource->breakdown->cost_account or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_qty, 2) or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_qty, 2) or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{number_format($resource->resource_qty, 2) or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->project_resource->resource_waste, 2) or ''}}
+                    <td style="min-width: 300px; max-width: 300px;" class="bg-primary">{{$resource->breakdown->std_activity->name}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-black">{{$resource->breakdown->template->name}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{$resource->breakdown->cost_account}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_qty, 2)}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_qty, 2)}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{number_format($resource->resource_qty, 2)}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->project_resource->resource_waste, 2)}}
                         %
                     </td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->types->root->name or ''}}</td>

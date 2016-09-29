@@ -24,6 +24,8 @@
                         <i class="fa fa-edit"></i> Edit
                     </a>
                     <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
+                    <a class="btn btn-sm btn-info" href="{{ route('productivity.show', $productivity) }} "><i class="fa fa-eye"></i>
+                        View</a>
                 </form>
             </td>
         </tr>

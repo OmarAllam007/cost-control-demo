@@ -24,7 +24,8 @@
                     <a href="#LevelsModal" data-toggle="modal" class="tree-open" id="select-parent">
                         {{Form::getValueAttribute('csi_category_id')? App\CsiCategory::with('parent')->find(Form::getValueAttribute('csi_category_id'))->path : 'Select Category' }}
                     </a>
-                    <a class="remove-tree-input" data-target="#LevelsModal" data-label="Select Category"><span class="fa fa-times"></span></a>
+                    <a class="remove-tree-input" data-target="#LevelsModal" data-label="Select Category"><span
+                                class="fa fa-times"></span></a>
                 </p>
                 {!! $errors->first('csi_category_id', '<div class="help-block">:message</div>') !!}
             @endif
@@ -66,6 +67,9 @@
             @endif
         </div>
 
+
+
+
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'Unit', ['class' => 'control-label']) }}
             @if ($override)
@@ -77,13 +81,13 @@
         </div>
 
         <div class="form-group {{$errors->first('source', 'has-error')}}">
-            {{ Form::label('source', 'Source', ['class' => 'control-label']) }}
+            {{ Form::label('source', '', ['class' => 'control-label']) }}
             @if ($override)
-            {{ Form::text('source', null, ['class' => 'form-control', 'readonly']) }}
+                {{ Form::text('source', null, ['class' => 'form-control', 'readonly']) }}
             @else
-            {{ Form::text('source', null, ['class' => 'form-control']) }}
-            {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
-                @endif
+                {{ Form::text('source', null, ['class' => 'form-control']) }}
+                {!! $errors->first('source', '<div class="help-block">:message</div>') !!}
+            @endif
         </div>
 
         <div class="form-group">

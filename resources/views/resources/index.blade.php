@@ -32,12 +32,12 @@
             <tbody>
             @foreach($resources as $resource)
                 <tr>
-                    <td class="col-xs-2">{{ $resource->resource_code }}</td>
-                    <td class="col-xs-3">{{ $resource->name }}</td>
+                    <td class="col-xs-2">{{ $resource->resource_code or ''}}</td>
+                    <td class="col-xs-3">{{ $resource->name or ''}}</td>
                     <td class="col-xs-2">{{$resource->types->root->name or ''}}</td>
-                    <td class="col-xs-1">{{ number_format($resource->rate, 2) }}</td>
+                    <td class="col-xs-1">{{ number_format($resource->rate, 2) or ''}}</td>
                     <td class="col-xs-1">{{ $resource->units->type or ''}}</td>
-                    <td class="col-xs-1">{{ number_format($resource->waste, 2) }} %</td>
+                    <td class="col-xs-1">{{ number_format($resource->waste, 2) or ''}} %</td>
                     <td class="col-xs-2">
                         <form action="{{ route('resources.destroy', $resource) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
