@@ -58,5 +58,9 @@ class Boq extends Model
         return $this->belongsTo(BoqDivision::class,'division_id');
     }
 
+    function project(){
+        return $this->belongsTo(Project::class,'project_id');
+    }
+
 
 }

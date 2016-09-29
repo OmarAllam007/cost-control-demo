@@ -28,8 +28,8 @@
         </div>
 
         <div class="form-group {{$errors->first('item', 'has-error')}}">
-            {{ Form::label('description', 'BOQ Item', ['class' => 'control-label']) }}
-            {{ Form::text('description', null, ['class' => 'form-control']) }}
+            {{ Form::label('item', 'BOQ Item', ['class' => 'control-label']) }}
+            {{ Form::text('item', null, ['class' => 'form-control']) }}
             {!! $errors->first('item', '<div class="help-block">:message</div>') !!}
         </div>
 

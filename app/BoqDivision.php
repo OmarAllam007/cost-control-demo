@@ -16,7 +16,6 @@ class BoqDivision extends Model
 
     public function items()
     {
-
         return $this->hasMany(Boq::class,'division_id');
     }
 }

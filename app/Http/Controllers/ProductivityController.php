@@ -27,7 +27,6 @@ class ProductivityController extends Controller
     public function create()
     {
         $edit = false;
-
         return view('productivity.create')->with('edit', $edit);
     }
 
