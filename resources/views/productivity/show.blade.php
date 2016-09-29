@@ -13,11 +13,25 @@
 @stop
 
 @section('body')
-{{ Form::model($productivity, ['route' => ['productivity.update', $productivity]]) }}
+    <table class="table table-condensed">
+        <tbody>
+        <tr>
+            <th>Project</th>
+            <td>{{$project->name}}</td>
+        </tr>
+        <tr>
+            <th>Productivity Code</th>
+            <td>{{$productivity->code}}</td>
+        </tr>
 
-{{ method_field('patch') }}
+        </tbody>
+    </table>
 
-@include('productivity._form')
+    <h4 class="page-header">Productivity</h4>
+    {{--<div class="form-group clearfix">--}}
+        {{--<a href="{{route('breakdown-template.create', ['activity' => $productivity->id])}}" class="btn btn-primary pull-right"><i class="fa fa-plus-circle"></i>--}}
+            {{--Add template</a>--}}
+    {{--</div>--}}
 
-{{ Form::close() }}
 @stop
+
