@@ -14,7 +14,7 @@
             {{Form::open(['route' => 'std-activity.post-import', 'files' => true])}}
 
             <p class="text-info">
-                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/Standard Activity.xlsx')}}">click here</a> to download a sample template
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/standard activity.xlsx')}}">click here</a> to download a sample template
             </p>
 
             <div class="form-group {{$errors->first('file', 'has-errors')}}">
