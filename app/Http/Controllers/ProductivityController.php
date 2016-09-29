@@ -35,12 +35,7 @@ class ProductivityController extends Controller
         $this->validate($request, $this->rules);
 
         $this->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
-
-//        $man_hours  = $this->manHour($request);
-//        $equip_hours = $this->equipHour($request);
          Productivity::create($request->all());
-//        $productivity->update(['man_hours' => array_sum($man_hours), 'equip_hours' => array_sum($equip_hours)]);
-
         flash('Productivity has been saved', 'success');
 
         return \Redirect::route('productivity.index');
@@ -48,7 +43,9 @@ class ProductivityController extends Controller
 
     public function show(Productivity $productivity)
     {
-        return view('productivity.show', compact('productivity'));
+        $project = Project::where('id',$productivity->project_id)->first();
+
+        return view('productivity.show', compact('productivity','project'));
     }
 
     public function edit(Productivity $productivity)
