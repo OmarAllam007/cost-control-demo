@@ -111,7 +111,7 @@
                     <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->project_resource->resource_waste, 2)}}
                         %
                     </td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->types->root->name or ''}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->resource->types->root->name or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->resource->resource_code or ''}}</td>
                     <td style="min-width: 200px; max-width: 200px;" class="">{{$resource->resource->resource->name or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->project_resource->rate or ''}}</td>
