@@ -79,17 +79,17 @@
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Eng. Qty.</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Budget Qty.</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-primary">Resource Qty.</th>
-                <th style="min-width: 150px; max-width: 150px;" class="bg-success">Resource Waste</th>
+                <th style="min-width: 150px; max-width: 150px;" class="bg-info">Resource Waste</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Resource Type</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Resource Code</th>
                 <th style="min-width: 200px; max-width: 200px;" class="bg-success">Resource Name</th>
-                <th style="min-width: 150px; max-width: 150px;" class="bg-success">Price/Unit</th>
-                <th style="min-width: 150px; max-width: 150px;" class="bg-success">Unit of measure</th>
+                <th style="min-width: 150px; max-width: 150px;" class="bg-info">Price/Unit</th>
+                <th style="min-width: 150px; max-width: 150px;" class="bg-info">Unit of measure</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Budget Unit</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Budget Cost</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-black">BOQ Equivalent Unit Rate</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-primary">No. Of Labors</th>
-                <th style="min-width: 150px; max-width: 150px;" class="bg-success">Productivity (Unit/Day)</th>
+                <th style="min-width: 150px; max-width: 150px;" class="bg-info">Productivity (Unit/Day)</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-primary">Productivity Ref</th>
                 <th style="min-width: 150px; max-width: 150px;" class="bg-success">Remarks</th>
             </tr>
@@ -108,19 +108,17 @@
                     <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_qty, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_qty, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{number_format($resource->resource_qty, 2)}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->project_resource->resource_waste, 2)}}
-                        %
-                    </td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-info">{{number_format($resource->project_resource->resource_waste, 2)}}%</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->resource->types->root->name or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->resource->resource_code or ''}}</td>
                     <td style="min-width: 200px; max-width: 200px;" class="">{{$resource->resource->resource->name or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->project_resource->rate or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->project_resource->units->type or ''}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-info">{{$resource->project_resource->rate or ''}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-info">{{$resource->project_resource->units->type or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_unit, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_cost, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">{{number_format($resource->boq_unit_rate, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{$resource->labor_count or ''}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->project_productivity->after_reduction or ''}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-info">{{$resource->project_productivity->after_reduction or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{$resource->productivity->csi_code or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->remarks}}</td>
                 </tr>
