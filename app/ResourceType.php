@@ -28,7 +28,6 @@ class ResourceType extends Model
     public function getRootAttribute()
     {
         $this->load(['parent', 'parent.parent', 'parent.parent.parent']);
-
         $parent = $this;
         while ($parent->parent_id && $parent->id != $parent->parent_id) {
             $parent = $parent->parent;

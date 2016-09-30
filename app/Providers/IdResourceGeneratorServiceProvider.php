@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Make\Makers\Resource;
+use App\Resources;
 
 class IdResourceGeneratorServiceProvider extends ServiceProvider
 {
@@ -14,8 +14,32 @@ class IdResourceGeneratorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Resource::creating(function (Resource $resource){
-            return $resource;
+        Resources::creating(function (Resources $resource) {
+            $names = explode('»', $resource->types->path);
+            $code = [];
+            foreach ($names as $name) {
+                $name = trim($name);
+                $code[] = substr(trim($name), 0, 1);
+                if (strrchr($name, ' ')) {
+                    $position = strrpos($name, ' ');
+                    $code[] = substr($name, $position + 1, 1);
+                }
+                $code[] = '.';
+            }
+            $code = implode('', $code);
+
+            $num = 1;
+            $item = Resources::where('resource_code', 'like', $code . '_')->get(['resource_code'])->last();
+
+            if (!is_null($item)) {
+                $itemCode = substr($item->resource_code, strrpos($item->resource_code, '.') + 1);
+                $itemCode++;
+                $code = $code . $itemCode;
+                $resource->resource_code = $code;
+            } else {
+                $resource->resource_code = $code . $num;
+            }
+
         });
     }
 
@@ -26,6 +50,6 @@ class IdResourceGeneratorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
     }
 }
