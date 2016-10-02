@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class BreakdownTemplateController extends Controller
 {
 
-    protected $rules = ['name' => 'required', 'code' => 'required', 'std_activity_id' => 'required|exists:std_activities,id'];
+    protected $rules = ['name' => 'required', 'std_activity_id' => 'required|exists:std_activities,id'];
 
     public function index()
     {
