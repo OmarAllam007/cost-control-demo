@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\ActivityDivision::with('activities')->tree()->get() as $division)
-                        @include('std-activity._recursive_activity_input', ['division' => $division, 'input' => isset($input)? $input : 'std_activity_id', 'value' => $value])
+                        @include('std-activity._recursive_activity_input', ['division' => $division, 'input' => isset($input)? $input : 'std_activity_id'])
                     @endforeach
                 </ul>
             </div>

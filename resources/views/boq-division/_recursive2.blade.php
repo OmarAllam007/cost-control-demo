@@ -10,7 +10,7 @@
     </div>
     <article id="children-{{$division->id}}" class="tree--child collapse">
         @if ($division->items->count())
-            <table class="table table-striped table-hover table-condensed">
+            <table class="table table-striped table-hover table-condensed table-responsive">
                 <thead>
                 <tr>
                     <th class="col-md-8">Boq Items</th>
@@ -24,7 +24,7 @@
                 <tbody>
                 @foreach($division->items as $item)
                     <tr>
-                        <td>{{$item->item}}</td>
+                        <td>{{$item->item_code}}</td>
                         <td>
                             <div class="pull-right">
                                 <a href="{{route('boq.show', $item->id)}}" class="btn btn-xs btn-info">

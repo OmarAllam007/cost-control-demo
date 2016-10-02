@@ -24,7 +24,7 @@ class Resources extends Model
         'business_partner_id',
         'resource_type_id',
         'reference',
-        'project_id'
+        'project_id',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -33,6 +33,8 @@ class Resources extends Model
     {
         return $this->belongsTo(ResourceType::class, 'resource_type_id');
     }
+
+
 
     public function parteners()
     {
@@ -63,7 +65,7 @@ class Resources extends Model
             'type' => $this->types->name,
             'unit' => isset($this->units->type) ? $this->units->type : '',
             'rate' => $this->rate,
-            'root_type' => $this->types->root->name
+            'root_type' => $this->types->root->name,
         ];
     }
 
@@ -73,7 +75,7 @@ class Resources extends Model
 
         foreach ($data['units'] as $unit => $unit_id) {
             if (!$unit_id) {
-                $errors[$unit] = $unit;
+                $errors[ $unit ] = $unit;
             }
         }
 

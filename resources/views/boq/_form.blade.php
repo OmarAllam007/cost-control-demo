@@ -27,10 +27,10 @@
             {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('item', 'has-error')}}">
-            {{ Form::label('item', 'BOQ Item', ['class' => 'control-label']) }}
-            {{ Form::text('item', null, ['class' => 'form-control']) }}
-            {!! $errors->first('item', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('item_code', 'has-error')}}">
+            {{ Form::label('item_code', 'Item Code', ['class' => 'control-label']) }}
+            {{ Form::text('item_code', null, ['class' => 'form-control']) }}
+            {!! $errors->first('item_code', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('cost_account', 'has-error')}}">
@@ -39,10 +39,10 @@
             {!! $errors->first('cost_account', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('description', 'has-error')}}">
-            {{ Form::label('description', 'Description', ['class' => 'control-label']) }}
-            {{ Form::textarea('description', null, ['class' => 'form-control']) }}
-            {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('type', 'has-error')}}">
+            {{ Form::label('type', 'Discipline', ['class' => 'control-label']) }}
+            {{ Form::text('type', null, ['class' => 'form-control']) }}
+            {!! $errors->first('type', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('division_id', 'has-error')}}">
@@ -57,23 +57,43 @@
             </p>
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
+        {{--<div class="form-group {{$errors->first('item', 'has-error')}}">--}}
+            {{--{{ Form::label('item', 'BOQ Item', ['class' => 'control-label']) }}--}}
+            {{--{{ Form::text('item', null, ['class' => 'form-control']) }}--}}
+            {{--{!! $errors->first('item', '<div class="help-block">:message</div>') !!}--}}
+        {{--</div>--}}
 
-        <div class="form-group {{$errors->first('type', 'has-error')}}">
-            {{ Form::label('type', 'Discipline', ['class' => 'control-label']) }}
-            {{ Form::text('type', null, ['class' => 'form-control']) }}
-            {!! $errors->first('type', '<div class="help-block">:message</div>') !!}
+
+
+        <div class="form-group {{$errors->first('description', 'has-error')}}">
+            {{ Form::label('description', 'Item Description', ['class' => 'control-label']) }}
+            {{ Form::textarea('description', null, ['class' => 'form-control']) }}
+            {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
         </div>
 
+
         <div class="form-group {{$errors->first('unit_id', 'has-error')}}">
-            {{Form::label('unit_id','Unit of measure', ['class' => 'control-label'])}}
+            {{Form::label('unit_id','Unit', ['class' => 'control-label'])}}
             {{Form::select('unit_id',App\Unit::options(),null,['class'=>'form-control'])}}
             {!! $errors->first('unit_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('quantity', 'has-error')}}">
-            {{ Form::label('quantity', 'Quantity', ['class' => 'control-label']) }}
+            {{ Form::label('quantity', 'Estimated Quantity', ['class' => 'control-label']) }}
             {{ Form::text('quantity', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
             {!! $errors->first('quantity', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('price_ur', 'has-error')}}">
+            {{ Form::label('price_ur', 'Unit Pirce', ['class' => 'control-label']) }}
+            {{ Form::text('price_ur', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
+            {!! $errors->first('price_ur', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('dry_ur', 'has-error')}}">
+            {{ Form::label('dry_ur', 'Unit Dry', ['class' => 'control-label']) }}
+            {{ Form::text('dry_ur', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
+            {!! $errors->first('dry_ur', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('kcc_qty', 'has-error')}}">
@@ -82,29 +102,33 @@
             {!! $errors->first('kcc_qty', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('dry_ur', 'has-error')}}">
-            {{ Form::label('dry_ur', 'DRY U.R.', ['class' => 'control-label']) }}
-            {{ Form::text('dry_ur', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
-            {!! $errors->first('dry_ur', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('materials', 'has-error')}}">
+            {{ Form::label('materials', 'Materials', ['class' => 'control-label']) }}
+            {{ Form::text('materials', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
+            {!! $errors->first('materials', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('price_ur', 'has-error')}}">
-            {{ Form::label('price_ur', 'PRICE U.R.', ['class' => 'control-label']) }}
-            {{ Form::text('price_ur', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
-            {!! $errors->first('price_ur', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('subcon', 'has-error')}}">
+            {{ Form::label('subcon', 'Sub-Con.', ['class' => 'control-label']) }}
+            {{ Form::text('subcon', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
+            {!! $errors->first('subcon', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('arabic_description', 'has-error')}}">
-            {{ Form::label('arabic_description', 'Arabic Description', ['class' => 'control-label']) }}
-            {{ Form::textarea('arabic_description', null, ['class' => 'form-control']) }}
-            {!! $errors->first('arabic_description', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('manpower', 'has-error')}}">
+            {{ Form::label('manpower', 'ManPower', ['class' => 'control-label']) }}
+            {{ Form::text('manpower', null,['class' => 'form-control'] ,['class' => 'form-control']) }}
+            {!! $errors->first('manpower', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('code', 'has-error')}}">
-            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
-            {{ Form::text('code', null, ['class' => 'form-control']) }}
-            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
-        </div>
+
+
+
+
+
+
+
+
+
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
