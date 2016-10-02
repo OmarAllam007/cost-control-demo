@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Tree
 {
-    protected $path;
+    protected $tree_path;
 
     public function parent()
     {
@@ -47,8 +47,8 @@ trait Tree
 
     public function getPathAttribute()
     {
-        if ($this->path) {
-            return $this->path;
+        if ($this->tree_path) {
+            return $this->tree_path;
         }
 
         $stack = collect([$this->name]);
@@ -58,7 +58,7 @@ trait Tree
             $parent = $parent->parent;
         }
 
-        return $this->path = $stack->reverse()->implode(' » ');
+        return $this->tree_path = $stack->reverse()->implode(' » ');
     }
 
     public function getCanonicalAttribute()
@@ -71,7 +71,7 @@ trait Tree
             $parent = $parent->parent;
         }
 
-        return $this->path = $stack->reverse()->implode('/');
+        return $this->tree_path = $stack->reverse()->implode('/');
     }
 
 }
