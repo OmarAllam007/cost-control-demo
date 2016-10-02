@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
+use App\BreakdownTemplate;
+use App\StdActivity;
 use Illuminate\Support\ServiceProvider;
-use App\Resources;
 
-class IdResourceGeneratorServiceProvider extends ServiceProvider
+class IdBreakDownTemplateGenerator extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -14,30 +15,33 @@ class IdResourceGeneratorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Resources::creating(function (Resources $resource) {
-            $names = explode('»', $resource->types->path);
+        BreakdownTemplate::creating(function (BreakdownTemplate $template) {
+            $names = explode('»', $template->activity->division->path);
+
             $code = [];
             foreach ($names as $name) {
                 $name = trim($name);
-                $code[] = substr(trim($name), 0, 1);
+                $code[] = substr(trim($name), 0, 3);
                 if (strrchr($name, ' ')) {
                     $position = strrpos($name, ' ');
                     $code[] = substr($name, $position + 1, 1);
                 }
                 $code[] = '.';
             }
-            $code = implode('', $code);
+            $activityName = $template->activity->name;
+            $code = implode('', $code).substr($activityName,0,3);
+
 
             $num = 1;
-            $item = Resources::where('resource_code', 'like', $code . '_')->get(['resource_code'])->last();
+            $item = BreakdownTemplate::where('code', 'like', $code . '_')->get(['code'])->last();
 
             if (!is_null($item)) {
                 $itemCode = substr($item->resource_code, strrpos($item->resource_code, '.') + 1);
                 $itemCode++;
                 $code = $code . $itemCode;
-                $resource->resource_code = $code;
+                $template->code = $code;
             } else {
-                $resource->resource_code = $code . $num;
+                $template->code = $code . $num;
             }
 
         });
@@ -50,6 +54,6 @@ class IdResourceGeneratorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-echo '';
+        //
     }
 }

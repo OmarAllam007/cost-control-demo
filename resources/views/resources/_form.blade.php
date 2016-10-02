@@ -25,13 +25,12 @@
 
         <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
 
-            {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
             @if(!empty($edit))
+                {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
                 {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
             @elseif($override)
+                {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
                 {{ Form::text('resource_code',$base->code, ['class' => 'form-control','readonly'=>'readonly']) }}
-            @else
-                {{ Form::text('resource_code',null, ['class' => 'form-control']) }}
             @endif
             {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
 

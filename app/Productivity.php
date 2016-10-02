@@ -26,7 +26,7 @@ class Productivity extends Model
         'reduction_factor',
         'after_reduction',
         'source',
-        'code'
+        'code',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -52,11 +52,6 @@ class Productivity extends Model
         return $this->after_reduction;
     }
 
-    public function getAfterReductionAttribute()
-    {
-        return $this->daily_output * $this->reduction_factor;
-    }
-
     function scopeFilter(Builder $query, $term = '')
     {
         $query->take(20)
@@ -67,7 +62,6 @@ class Productivity extends Model
         }
     }
 
-
     function morphToJSON()
     {
         return [
@@ -77,6 +71,12 @@ class Productivity extends Model
             'reduction' => $this->reduction_factor,
             'after_reduction' => $this->after_reduction,
         ];
+    }
+
+    public function getManHoursAttribute()
+    {
+
+        return round(($this->getCrewManAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
     }
 
     public function getCrewManAttribute($crew_structure)
@@ -98,6 +98,16 @@ class Productivity extends Model
         return array_sum($man_numbers);
     }
 
+    public function getAfterReductionAttribute()
+    {
+        return $this->daily_output * $this->reduction_factor;
+    }
+
+    public function getEquipHoursAttribute()
+    {
+        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
+    }
+
     public function getCrewEquipAttribute($crew_structure)
     {
         $equip_powers = array_map('strtolower',
@@ -114,16 +124,5 @@ class Productivity extends Model
             }
         }
         return array_sum($equip_numbers);
-    }
-
-    public function getManHoursAttribute()
-    {
-
-        return round(($this->getCrewManAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
-    }
-
-    public function getEquipHoursAttribute()
-    {
-        return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
     }
 }
