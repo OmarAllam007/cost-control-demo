@@ -118,6 +118,7 @@ class ProductivityController extends Controller
             'productivity' => $overwrote,
             'baseProductivity' => $productivity,
             'project' => $project,
+            'edit' => false
         ]);
     }
 
