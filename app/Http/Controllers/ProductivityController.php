@@ -110,7 +110,6 @@ class ProductivityController extends Controller
     {
         $overide = true;
         $overwrote = Productivity::version($project->id, $productivity->id)->first();
-        $edit = true;
         if (!$overwrote) {
             $overwrote = $productivity;
         }
@@ -119,7 +118,7 @@ class ProductivityController extends Controller
             'productivity' => $overwrote,
             'baseProductivity' => $productivity,
             'project' => $project,
-            'edit' => $edit
+            'edit' => false
         ]);
     }
 
