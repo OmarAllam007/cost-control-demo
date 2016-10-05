@@ -28,20 +28,19 @@ class IdBreakDownTemplateGenerator extends ServiceProvider
                 }
                 $code[] = '.';
             }
+
             $activityName = $template->activity->name;
-            $code = implode('', $code).substr($activityName,0,3);
-
-
+            $code = implode('', $code) . substr($activityName, 0, 3);
             $num = 1;
-            $item = BreakdownTemplate::where('code', 'like', $code . '_')->get(['code'])->last();
+            $item = BreakdownTemplate::where('code', 'like', $code . '%')->get(['code'])->last();
 
             if (!is_null($item)) {
-                $itemCode = substr($item->resource_code, strrpos($item->resource_code, '.') + 1);
+                $itemCode = substr($item->code, strrpos($item->code, '.') + 1);
                 $itemCode++;
-                $code = $code . $itemCode;
+                $code = $code .'.'. $itemCode;
                 $template->code = $code;
             } else {
-                $template->code = $code . $num;
+                $template->code = $code .'.'. $num;
             }
 
         });
