@@ -24,4 +24,19 @@ class StdActivity extends Model
     {
         return $this->hasMany(BreakdownTemplate::class);
     }
+
+    public function getBudgetCost($project_id)
+    {
+        $breakdowns = Breakdown::with('resources')
+            ->where('project_id', $project_id)
+            ->where('std_activity_id', $this->id)->get();
+
+        $cost = 0;
+        foreach ($breakdowns as $b) {
+            foreach ($b->resources as $resource) {
+                $cost += $resource->budget_cost;
+            }
+        }
+        return $cost;
+    }
 }
