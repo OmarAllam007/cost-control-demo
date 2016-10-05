@@ -91,7 +91,7 @@ class Productivity extends Model
             preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
             $key = trim($tokens[2]);
             $man_number = trim($tokens[1]);
-            if (in_array($man_powers)) {//if(array_search($key,$crew) !== false){
+            if (in_array($key, $man_powers)) {//if(array_search($key,$crew) !== false){
                 $man_numbers[] = $man_number * 10;
             }
         }
