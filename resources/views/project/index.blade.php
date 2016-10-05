@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('header')
-    <h2>Project</h2>
+    <h2>Projects</h2>
     <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right">
         <i class="fa fa-plus"></i> Add Project
     </a>

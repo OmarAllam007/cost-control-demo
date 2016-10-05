@@ -7,6 +7,7 @@
             <a href="{{route('activity-division.edit', $division)}}" class="label label-primary"><i class="fa fa-pencil"></i> Edit</a>
         </span>
     </div>
+
     <article id="children-{{$division->id}}" class="tree--child collapse">
         @if ($division->activities->count())
             <table class="table table-striped table-hover table-condensed">

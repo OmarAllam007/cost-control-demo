@@ -25,12 +25,24 @@ Route::group(['prefix' => 'business-partner'], function () {
 });
 Route::group(['prefix' => 'productivity'], function () {
     Route::post('/filter',['as'=>'productivity.filter','uses'=>'ProductivityController@filter']);
+    Route::get('/report',['as'=> 'productivity.report','uses'=>'ProductivityController@showReport']);
 });
 
 Route::group(['prefix' => 'unit'], function () {
     Route::post('/filter',['as'=>'unit.filter','uses'=>'UnitController@filter']);
 });
 
+Route::group(['prefix' => 'project'], function () {
+    Route::get('wbs_report/{project}',['as'=>'wbs.report','uses'=>'ReportController@wbsReport']);
+    Route::get('productivity_report/{project}',['as'=>'productivity.report','uses'=>'ReportController@productivityReport']);
+    Route::get('standard_activity_report/{project}',['as'=>'stdActivity.report','uses'=>'ReportController@stdActivityReport']);
+
+    Route::get('qs_summery_report/{project}',['as'=>'qsReport.report','uses'=>'ReportController@qsSummeryReport']);
+
+    Route::get('resourse_dictionary/{project}',['as'=>'resource_dictionary.report','uses'=>'ReportController@resourceDictionary']);
+
+    Route::get('man_power/{project}',['as'=>'man_power.report','uses'=>'ReportController@manPower']);
+});
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');

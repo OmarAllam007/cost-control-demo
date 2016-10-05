@@ -16,7 +16,7 @@ class Project extends Model
     use SoftDeletes, HasOptions, Tree;
 
     protected static $alias = 'Project';
-
+    protected $ids = [];
     protected $fillable = [
         'name',
         'project_code',
@@ -40,16 +40,10 @@ class Project extends Model
         return $this->hasMany(WbsLevel::class);
     }
 
-
     function boqs()
 
     {
         return $this->hasMany(Boq::class, 'project_id');
-    }
-
-    function breakdowns()
-    {
-        return $this->hasMany(Breakdown::class);
     }
 
     function breakdown_resources()
@@ -82,5 +76,48 @@ class Project extends Model
 
         return $this->projectResources;
     }
+
+    function getActivities()//get ids of Activities
+    {
+        return $this->breakdowns()
+            ->with('std_activity')->get()
+            ->pluck('std_activity.id');
+    }
+
+    function breakdowns()
+    {
+        return $this->hasMany(Breakdown::class);
+    }
+
+    function getDivisions()
+    {
+        $divisions = $this->breakdowns()->with('std_activity.division')->get()->pluck('std_activity.division');
+        $all = collect();
+        $parents = collect();
+        foreach ($divisions as $division) {
+            $all->push($division->id);
+            $parent = $division;
+            while ($parent->parent_id && $parent->id != $parent->parent_id) {
+                $parent = $parent->parent;
+                $all->push($parent->id);
+            }
+            $parents->push($parent->id);
+        }
+        $all->unique();
+        $parents->unique();
+        return compact('all', 'parents');
+
+    }
+
+    function getProjectResources()
+    {
+        $br_down_ids = $this->breakdowns()->pluck('id')->toArray();
+        $std_activity_resources = BreakdownResource::whereIn('breakdown_id', $br_down_ids)->pluck('std_activity_resource_id')->toArray();
+
+        $resources_ids = StdActivityResource::whereIn('id', $std_activity_resources)->pluck('resource_id')->toArray();
+
+        return $resources_ids;
+    }
+
 
 }

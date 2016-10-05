@@ -188,4 +188,8 @@ class ProductivityController extends Controller
         return \Redirect::route('productivity.fix-import', $key)
             ->withErrors($errors)->withInput($request->all());
     }
+    public function showReport(){
+        $projects = Project::paginate();
+        return view('productivity.productivity_project',compact('projects'));
+    }
 }

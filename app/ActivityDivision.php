@@ -16,7 +16,7 @@ class ActivityDivision extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-    protected $orderBy = ['code','name'];
+    protected $orderBy = ['code', 'name'];
 
 
     public function getLabelAttribute()
@@ -40,5 +40,22 @@ class ActivityDivision extends Model
         $query->with('activities')
             ->with('children.activities')
             ->with('children.children.activities');
+    }
+
+    public function getRootAttribute()
+    {
+        $this->load(['parent', 'parent.parent', 'parent.parent.parent']);
+        $parent_ids = [];
+        $parents = collect();
+        $parent = $this;
+        $parents->push($parent);
+        $parent_ids [] = $parent->id;
+
+        while ($parent->parent_id && $parent->id != $parent->parent_id) {
+            $parent = $parent->parent;
+            $parent_ids[] = $parent->id;
+        }
+
+        return $parents;
     }
 }

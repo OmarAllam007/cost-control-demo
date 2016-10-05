@@ -16,7 +16,6 @@ class CsiCategory extends Model
 
     public function productivity()
     {
-
         return $this->hasMany(Productivity::class,'csi_category_id');
     }
 }

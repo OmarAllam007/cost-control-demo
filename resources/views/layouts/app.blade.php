@@ -31,13 +31,6 @@
                 {{--@if (Auth::check())--}}
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/project') }}">Projects</a></li>
-                    {{--<li><a href="{{route('category.index')}}">Quantity Survey Categories</a></li>--}}
-                    {{--<li>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="{{url('/survey')}}">Quantity Survey <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{route('survey.index')}}">Quantity Survey</a></li>
-                        </ul>
-                    </li>--}}
                     <li>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standard Activity <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -61,7 +54,9 @@
                         <ul class="dropdown-menu ">
                             <li><a href="{{route('csi-category.index')}}">CSI Category</a></li>
                             <li><a href="{{route('productivity.index')}}">Productivity</a></li>
+
                         </ul>
+                    {{--<li><a href="{{route('productivity.report')}}">Reports</a></li>--}}
 
                     </li>
 

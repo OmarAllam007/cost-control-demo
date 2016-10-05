@@ -98,6 +98,7 @@
         <table class="table table-condensed table-striped table-hover table-breakdown">
             <tbody>
             @foreach($project->breakdown_resources as $resource)
+
                 <tr>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">
                         <abbr title="{{$resource->breakdown->wbs_level->path}}">{{$resource->breakdown->wbs_level->code}}</abbr>
