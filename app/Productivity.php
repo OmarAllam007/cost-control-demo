@@ -27,6 +27,7 @@ class Productivity extends Model
         'after_reduction',
         'source',
         'code',
+        'csi_code',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
