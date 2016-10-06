@@ -50,6 +50,9 @@ Route::group(['prefix' => 'survey'], function () {
 
 Route::group(['prefix' => 'breakdown-template'], function () {
     Route::post('filters', ['as' => 'breakdown-template.filters', 'uses' => 'BreakdownTemplateController@filters']);
+
+    Route::get('import', ['as' => 'breakdown-template.import', 'uses' => 'BreakdownTemplateController@import']);
+    Route::post('import', ['as' => 'breakdown-template.post-import', 'uses' => 'BreakdownTemplateController@postImport']);
 });
 
 Route::post('breakdown/filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
+use App\Jobs\ImportBreakdownTemplateJob;
 use Illuminate\Http\Request;
 
 class BreakdownTemplateController extends Controller
@@ -69,5 +70,23 @@ class BreakdownTemplateController extends Controller
         $data = $request->only(['name', 'resource_id']);
         \Session::set('filters.breakdown-template', $data);
         return \Redirect::back();
+    }
+
+    function import()
+    {
+        return view('breakdown-template.import');
+    }
+
+    function postImport(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx',
+        ]);
+
+        $file = $request->file('file');
+        $this->dispatch(new ImportBreakdownTemplateJob($file->path()));
+
+        flash('Breakdown templates imported successfully', 'success');
+        return \Redirect::route('breakdown-template.index');
     }
 }
