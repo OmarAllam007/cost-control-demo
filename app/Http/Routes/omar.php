@@ -42,6 +42,8 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('resourse_dictionary/{project}',['as'=>'resource_dictionary.report','uses'=>'ReportController@resourceDictionary']);
 
     Route::get('man_power/{project}',['as'=>'man_power.report','uses'=>'ReportController@manPower']);
+    Route::get('budget_summery/{project}',['as'=>'budget_summery.report','uses'=>'ReportController@budgetSummery']);
+    Route::get('activity_resource_breakdown/{project}',['as'=>'activity_resource_breakdown.report','uses'=>'ReportController@activityResourceBreakDown']);
 });
 
 Route::resource('unit', 'UnitController');
