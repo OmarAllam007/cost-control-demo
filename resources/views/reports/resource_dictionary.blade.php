@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('body')
-    <table class="table table-condensed table-striped table-fixed">
+    <table class="table table-condensed table-striped">
         <thead>
         <tr>
             <th class="col-xs-1">Resource-Type</th>
@@ -18,35 +18,43 @@
         </thead>
         <tbody>
         @foreach ($data as $root=>$divisions)
+            <?php $counter=0;?>
             @foreach($divisions['divisions'] as $divIndex => $resourceType)
-                @foreach($divisions['resources'][$resourceType->id] as $index => $resource)
+                @foreach($divisions['divisions'][$divIndex]['resources'] as $index => $resource)
                     <tr>
                         <td class="col-xs-1">
-                            @if ($divIndex == 0 && $index == 0)
+                            @if ($counter == 0)
                                 {{$root}}
                             @endif
                         </td>
                             <td class="col-xs-2">
-                                @if ($index == 0)
-                                {{$resourceType->name}}
+                                @if ($counter == 0)
+                                    {{$resourceType['name']}}
                                 @endif
                             </td>
                         <td class="col-xs-1">
-                            {{$resource->resource_code}}
+                            {{$resource['code']}}
                         </td>
                         <td class="col-xs-1">
-                            {{$resource->name}}
+                            {{$resource['name']}}
                         </td>
                         <td class="col-xs-1">
-                            {{ isset(\App\Unit::where('id',$resource->unit)->first()->type)?\App\Unit::where('id',$resource->unit)->first()->type:''}}
+                            {{$resource['unit']}}
                         </td>
-                        <td class="col-xs-1">{{$resource->rate}}</td>
-                        <td class="col-xs-1">{{isset(\App\BusinessPartner::where('id',$resource->business_partner_id)->first()->name)?\App\BusinessPartner::where('id',$resource->business_partner_id)->first()->name:''}}</td>
+                        <td class="col-xs-1">
+                            {{$resource['rate']}}
+                        </td>
+                        <td class="col-xs-1">
+                            {{$resource['partner']}}
+                        </td>
 
-                        <td class="col-xs-1">{{$resource->reference}}</td>
-                        <td class="col-xs-1">{{$resource->waste}} %</td>
-                        <td class="col-xs-1"></td>
-
+                        <td class="col-xs-1">
+                            {{$resource['reference']}}
+                        </td>
+                        <td class="col-xs-1">{{$resource['waste']}}%</td>
+                        <td class="col-xs-1">{{$resource['budget_unit']}}</td>
+                        <td class="col-xs-1">{{$resource['budget_cost']}}</td>
+                    <?php $counter++;?>
                 @endforeach
             @endforeach
         @endforeach

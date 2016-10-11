@@ -7,6 +7,7 @@ use App\Boq;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\Http\Controllers\Reports\ActivityResourceBreakDown;
+use App\Http\Controllers\Reports\BoqPriceList;
 use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostByDiscipline;
@@ -154,16 +155,8 @@ class ReportController extends Controller
 
     public function boqPriceList(Project $project)
     {
-        $wbs_level_ids = $project->breakdowns()->with('wbs_level')->get()->pluck('wbs_level.id');
-        $wbs_levels = WbsLevel::whereIn('id', $wbs_level_ids)->get();
-        foreach ($wbs_levels as $level) {
-            $boq_items[ $level->id ] = [
-                'description' => Boq::where('wbs_id', $level->id)->get()->pluck('description'),
-                'cost_account' => Boq::where('wbs_id', $level->id)->get()->pluck('cost_account'),
-            ];
-        }
-//        dd($boq_items);
-        return view('boq.boq_price_list', compact('project', 'boq_items', 'wbs_levels'));
+        $boq_price_list = new BoqPriceList();
+        return $boq_price_list->getBoqPriceList($project);
     }
 
 
@@ -203,13 +196,20 @@ class ReportController extends Controller
         return $budget->getBudgetCostForBuilding($project);
     }
 
-    public function quantityAndCostByDiscipline(Project $project){
+    public function quantityAndCostByDiscipline(Project $project)
+    {
         $discipline = new QtyAndCost();
         return $discipline->compare($project);
     }
 
-    public function revisedBoq(Project $project){
-        $boq =new  RevisedBoq();
+    public function revisedBoq(Project $project)
+    {
+        $boq = new  RevisedBoq();
         return $boq->getRevised($project);
     }
+
+//    public function boqPriceList(Project $project){
+//        $boq =new  RevisedBoq();
+//        return $boq->getRevised($project);
+//    }
 }

@@ -44,7 +44,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('man_power/{project}',['as'=>'man_power.report','uses'=>'ReportController@manPower']);
     Route::get('budget_summery/{project}',['as'=>'budget_summery.report','uses'=>'ReportController@budgetSummery']);
     Route::get('activity_resource_breakdown/{project}',['as'=>'activity_resource_breakdown.report','uses'=>'ReportController@activityResourceBreakDown']);
-    Route::get('boq_price_list/{project}',['as'=>'boq_price_list.report','uses'=>'ReportController@boqPriceList']);
+
 /////////////////// Sunday
     Route::get('qs_summery_report/{project}',['as'=>'qsReport.report','uses'=>'ReportController@qsSummery']);
 
@@ -62,6 +62,8 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('qty_cost_discipline/{project}',['as'=>'qty_cost_discipline.report','uses'=>'ReportController@quantityAndCostByDiscipline']);
 
     Route::get('revised_boq/{project}',['as'=>'revised_boq.report','uses'=>'ReportController@revisedBoq']);
+
+    Route::get('boq_price_list/{project}',['as'=>'boq_price_list.report','uses'=>'ReportController@boqPriceList']);
 
 });
 
