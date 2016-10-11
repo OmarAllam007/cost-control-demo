@@ -24,7 +24,7 @@
                 <tbody>
                 @foreach($division->items as $item)
                     <tr>
-                        <td>{{$item->item_code}}</td>
+                        <td>{{$item->description}}</td>
                         <td>
                             <div class="pull-right">
                                 <a href="{{route('boq.show', $item->id)}}" class="btn btn-xs btn-info">

@@ -37,13 +37,32 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('productivity_report/{project}',['as'=>'productivity.report','uses'=>'ReportController@productivityReport']);
     Route::get('standard_activity_report/{project}',['as'=>'stdActivity.report','uses'=>'ReportController@stdActivityReport']);
 
-    Route::get('qs_summery_report/{project}',['as'=>'qsReport.report','uses'=>'ReportController@qsSummeryReport']);
+
 
     Route::get('resourse_dictionary/{project}',['as'=>'resource_dictionary.report','uses'=>'ReportController@resourceDictionary']);
 
     Route::get('man_power/{project}',['as'=>'man_power.report','uses'=>'ReportController@manPower']);
     Route::get('budget_summery/{project}',['as'=>'budget_summery.report','uses'=>'ReportController@budgetSummery']);
     Route::get('activity_resource_breakdown/{project}',['as'=>'activity_resource_breakdown.report','uses'=>'ReportController@activityResourceBreakDown']);
+    Route::get('boq_price_list/{project}',['as'=>'boq_price_list.report','uses'=>'ReportController@boqPriceList']);
+/////////////////// Sunday
+    Route::get('qs_summery_report/{project}',['as'=>'qsReport.report','uses'=>'ReportController@qsSummery']);
+
+    Route::get('budget_cost_dry_cost/{project}',['as'=>'budget_cost_dry_cost.report','uses'=>'ReportController@budgetCostVSDryCost']);
+
+    Route::get('budget_cost_vs_break_down/{project}',['as'=>'budget_cost_vs_break_down.report','uses'=>'ReportController@budgetCostVSBreadDown']);
+
+    Route::get('budget_cost_by_discipline/{project}',['as'=>'budget_cost_by_discipline.report','uses'=>'ReportController@budgetCostDiscipline']);
+
+
+    ////Monday
+    Route::get('budget_cost_by_building/{project}',['as'=>'budget_cost_by_building.report','uses'=>'ReportController@budgetCostForBuilding']);
+    Route::get('budget_cost_dry_cost_discipline/{project}',['as'=>'budget_cost_dry_cost_discipline.report','uses'=>'ReportController@budgetCostDryCostDiscipline']);
+
+    Route::get('qty_cost_discipline/{project}',['as'=>'qty_cost_discipline.report','uses'=>'ReportController@quantityAndCostByDiscipline']);
+
+    Route::get('revised_boq/{project}',['as'=>'revised_boq.report','uses'=>'ReportController@revisedBoq']);
+
 });
 
 Route::resource('unit', 'UnitController');

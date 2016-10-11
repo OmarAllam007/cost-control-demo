@@ -3,10 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\ActivityDivision;
+use App\Boq;
+use App\Breakdown;
+use App\BreakdownResource;
+use App\Http\Controllers\Reports\ActivityResourceBreakDown;
+use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
+use App\Http\Controllers\Reports\BudgetCostByBuilding;
+use App\Http\Controllers\Reports\BudgetCostByDiscipline;
+use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
+use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
+use App\Http\Controllers\Reports\BudgetCostDryCostDiscipline;
+use App\Http\Controllers\Reports\QtyAndCost;
+use App\Http\Controllers\Reports\QuantitiySurveySummery;
+use App\Http\Controllers\Reports\ResourceDictionary;
+use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
 use App\Resources;
 use App\StdActivity;
 use App\StdActivityResource;
+use App\WbsLevel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -37,22 +52,10 @@ class ReportController extends Controller
 
     public function resourceDictionary(Project $project)
     {
-
-        $resources_ids = $project->getProjectResources();
-        $resources = Resources::whereIn('id', $resources_ids)->get();
-        return view('resources.report', compact('project', 'resources'));
+        $resource = new ResourceDictionary();
+        return $resource->getResourceDictionary($project);
     }
 
-    public function qsSummeryReport(Project $project)
-    {
-        $div_ids = $project->getDivisions();
-        $activity_ids = $project->getActivities()->toArray();
-        $all = $div_ids['all'];
-        $parent_ids = $div_ids['parents'];
-
-        $parents = ActivityDivision::whereIn('id', $parent_ids)->get();
-        return view('survey.report', compact('project', 'parents', 'all', 'activity_ids'));
-    }
 
     public function manPower(Project $project)
     {
@@ -145,7 +148,68 @@ class ReportController extends Controller
 
     public function activityResourceBreakDown(Project $project)
     {
+        $activity = new ActivityResourceBreakDown();
+        return $activity->getActivityResourceBreakDown($project);
+    }
 
-        return view('std-activity.activity_resource_breakdown', compact('project'));
+    public function boqPriceList(Project $project)
+    {
+        $wbs_level_ids = $project->breakdowns()->with('wbs_level')->get()->pluck('wbs_level.id');
+        $wbs_levels = WbsLevel::whereIn('id', $wbs_level_ids)->get();
+        foreach ($wbs_levels as $level) {
+            $boq_items[ $level->id ] = [
+                'description' => Boq::where('wbs_id', $level->id)->get()->pluck('description'),
+                'cost_account' => Boq::where('wbs_id', $level->id)->get()->pluck('cost_account'),
+            ];
+        }
+//        dd($boq_items);
+        return view('boq.boq_price_list', compact('project', 'boq_items', 'wbs_levels'));
+    }
+
+
+    public function qsSummery(Project $project)
+    {
+        $quantity_survey = new QuantitiySurveySummery();
+        return $quantity_survey->qsSummeryReport($project);
+    }
+
+    public function budgetCostVSDryCost(Project $project)
+    {
+        $budget_cost = new BudgetCostDryCostByBuilding();
+        return $budget_cost->compareBudgetCostDryCost($project);
+    }
+
+    public function budgetCostVSBreadDown(Project $project)
+    {
+        $budget_breakDown = new  BudgetCostByBreakDownItem();
+        return $budget_breakDown->compareBudgetCostByBreakDownItem($project);
+    }
+
+    public function budgetCostDiscipline(Project $project)
+    {
+        $budget_breakDown = new  BudgetCostByDiscipline();
+        return $budget_breakDown->compareBudgetCostDiscipline($project);
+    }
+
+    public function budgetCostDryCostDiscipline(Project $project)
+    {
+        $budget_cost = new BudgetCostDryCostByDiscipline();
+        return $budget_cost->compareBudgetCostDryCostDiscipline($project);
+    }
+
+    public function budgetCostForBuilding(Project $project)
+    {
+        $budget = new BudgetCostByBuilding();
+        return $budget->getBudgetCostForBuilding($project);
+    }
+
+    public function quantityAndCostByDiscipline(Project $project){
+        $discipline = new QtyAndCost();
+        return $discipline->compare($project);
+    }
+
+    public function revisedBoq(Project $project){
+        $boq =new  RevisedBoq();
+        return $boq->getRevised($project);
     }
 }
