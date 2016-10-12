@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('header')
-    <h2>Budget Cost By VS Dry Cost</h2>
+    <h2>Budget Cost By VS Dry Cost By Building</h2>
     <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
 @endsection
 @section('body')
@@ -35,7 +35,7 @@
             <td class="col-xs-2">{{$total['total_dry']}}</td>
             <td class="col-xs-2">{{$total['total_budget']}}</td>
             <td class="col-xs-2">{{$total['difference']}}</td>
-            <td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>
+            <td class="col-xs-2">% {{number_format($total['total_increase'])}}</td>
         </tr>
         </tbody>
     </table>
