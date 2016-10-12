@@ -1,4 +1,8 @@
 @extends('layouts.app')
+@section('header')
+    <h2>Budget Cost By Building</h2>
+    <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+@endsection
 @section('body')
     <table class="table table-condensed table-striped table-fixed">
         <thead>

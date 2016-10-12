@@ -41,7 +41,6 @@ class ImportJob extends Job
         }
 
         $unit = trim($unit);
-
         $key = mb_strtolower($unit);
         return $this->units->get($key, 0);
     }

@@ -1,4 +1,8 @@
 @extends('layouts.app')
+@section('header')
+    <h2 align="center">Quantity And Cost </h2>
+    <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+@stop
 @section('body')
 
     <table class="table table-condensed table-striped table-fixed">

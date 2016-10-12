@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('header')
-    <h1>QS-Summery</h1>
-    <a href="{{URL::previous()}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+    <h2 align="center">Quantity Survey</h2>
+    <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
 @endsection
 @section('body')
     @foreach($level_array as $level)

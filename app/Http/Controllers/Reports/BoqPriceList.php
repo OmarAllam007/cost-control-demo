@@ -28,8 +28,8 @@ class BoqPriceList
             $boqs = Boq::where('cost_account', $cost_account)->get();
 
 
-            if (!isset($data[ $wbs_level->id ])) {
-                $data[ $wbs_level->id ] = [
+            if (!isset($data[ $wbs_level->name ])) {
+                $data[ $wbs_level->name ] = [
                     'name' => $wbs_level->name,
                     'items' => [],
                     'totals'=>[
@@ -44,15 +44,15 @@ class BoqPriceList
 
             }
             foreach ($boqs as $boq) {
-                if (!isset($data[ $wbs_level->id ]['items'][ $boq->description ])) {
-                    $data[ $wbs_level->id ]['items'][ $boq->description ] = [
+                if (!isset($data[ $wbs_level->name ]['items'][ $boq->description ])) {
+                    $data[ $wbs_level->name ]['items'][ $boq->description ] = [
                         'id'=>$boq->id,
                         'boq_name' => $boq->description,
                         'cost_accounts' => [],
                     ];
                 }
-                if (!isset($data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ])) {
-                    $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ] = [
+                if (!isset($data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ])) {
+                    $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ] = [
                         'cost_account' => $cost_account,
                         'LABORS' => 0,
                         'MATERIAL' => 0,
@@ -63,41 +63,41 @@ class BoqPriceList
                         'total_resources'=>0
                     ];
                     if($root->id==16){
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['LABORS']=$breakDown_resource->boq_unit_rate;
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['LABORS']=$breakDown_resource->boq_unit_rate;
 
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['LABORS'];
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['LABORS'];
 
-                        $data[ $wbs_level->id ]['totals']['LABORS']+=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['LABORS'];
+                        $data[ $wbs_level->name ]['totals']['LABORS']+=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['LABORS'];
                     }
                     else if($root->id==22){
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['EQUIPMENT']=$breakDown_resource->boq_unit_rate;
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['EQUIPMENT']=$breakDown_resource->boq_unit_rate;
 
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['EQUIPMENT'];
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['EQUIPMENT'];
 
-                        $data[ $wbs_level->id ]['totals']['EQUIPMENT']+=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['EQUIPMENT'];
+                        $data[ $wbs_level->name ]['totals']['EQUIPMENT']+=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['EQUIPMENT'];
 
                     }
                     else if($root->id==43){
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['Subcontractors']=$breakDown_resource->boq_unit_rate;
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['Subcontractors']=$breakDown_resource->boq_unit_rate;
 
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['Subcontractors'];
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['Subcontractors'];
 
-                        $data[ $wbs_level->id ]['totals']['Subcontractors']+=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['Subcontractors'];
+                        $data[ $wbs_level->name ]['totals']['Subcontractors']+=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['Subcontractors'];
 
                     }
                     else if($root->id==136){
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['MATERIAL']=$breakDown_resource->boq_unit_rate;
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['MATERIAL']=$breakDown_resource->boq_unit_rate;
 
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['MATERIAL'];
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['MATERIAL'];
 
-                        $data[ $wbs_level->id ]['totals']['MATERIAL']+= $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['MATERIAL'];
+                        $data[ $wbs_level->name ]['totals']['MATERIAL']+= $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['MATERIAL'];
                     }
                     else if($root->id==230){
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['OTHERS']=$breakDown_resource->boq_unit_rate;
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['OTHERS']=$breakDown_resource->boq_unit_rate;
 
-                        $data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['OTHERS'];
+                        $data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['total_resources']=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['OTHERS'];
 
-                        $data[ $wbs_level->id ]['totals']['OTHERS']+=$data[ $wbs_level->id ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['OTHERS'];
+                        $data[ $wbs_level->name ]['totals']['OTHERS']+=$data[ $wbs_level->name ]['items'][ $boq->description ]['cost_accounts'][ $cost_account ]['OTHERS'];
 
                     }
                 }

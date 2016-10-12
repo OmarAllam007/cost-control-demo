@@ -14,6 +14,8 @@ use App\Http\Controllers\Reports\BudgetCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostDiscipline;
+use App\Http\Controllers\Reports\HighPriorityMaterials;
+use App\Http\Controllers\Reports\Productivity;
 use App\Http\Controllers\Reports\QtyAndCost;
 use App\Http\Controllers\Reports\QuantitiySurveySummery;
 use App\Http\Controllers\Reports\ResourceDictionary;
@@ -36,7 +38,8 @@ class ReportController extends Controller
 
     public function productivityReport(Project $project)
     {
-        return view('productivity.report', compact('project'));
+        $productivity = new Productivity();
+        return $productivity->getProductivity($project);
     }
 
     public function stdActivityReport(Project $project)
@@ -206,6 +209,12 @@ class ReportController extends Controller
     {
         $boq = new  RevisedBoq();
         return $boq->getRevised($project);
+    }
+
+    public function highPriority(Project $project)
+    {
+        $high_materials = new HighPriorityMaterials();
+        return $high_materials->getTopHighPriorityMaterials($project);
     }
 
 //    public function boqPriceList(Project $project){

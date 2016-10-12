@@ -1,4 +1,8 @@
 @extends('layouts.app')
+@section('header')
+    <h2>Boq Price List</h2>
+    <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+@endsection
 @section('body')
 
     <table class="table table-condensed table-striped table-fixed">
@@ -18,7 +22,7 @@
                 <td class="col-xs-2">{{$row['resource_code']?:''}}</td>
                 <td class="col-xs-3">{{$row['resource_type']}}</td>
                 <td class="col-xs-2">{{$row['budget_cost']}}</td>
-                <td class="col-xs-3">{{$row['weight']}} % </td>
+                <td class="col-xs-3">{{$row['weight']}} %</td>
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">

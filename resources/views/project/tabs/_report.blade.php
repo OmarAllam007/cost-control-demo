@@ -18,7 +18,7 @@
         </th>
         <th class="col-xs-4">
             <a href="{{route('resource_dictionary.report',$project)}}" class="btn btn-success" style="width:100%; margin-bottom: 2px;">RESOURCE DICITIONARY</a><br>
-            <a href="#" class="btn btn-success" style="width:100%; margin-bottom: 2px;">High Priorty Materials</a><br>
+            <a href="{{route('high_priority.report',$project)}}" class="btn btn-success" style="width:100%; margin-bottom: 2px;">High Priority Materials</a><br>
             <a href="{{route('man_power.report',$project)}}" class="btn btn-success" style="width:100%;margin-bottom: 2px;">Budget Number (Manpower)</a><br>
             <a href="{{route('budget_summery.report',$project)}}" class="btn btn-success" style="width:100%;margin-bottom: 2px;">Budget Summary</a><br>
             <a href="{{route('activity_resource_breakdown.report',$project)}}" class="btn btn-success" style="width:100%;margin-bottom: 2px;">Activity Resource Breakdown</a><br>

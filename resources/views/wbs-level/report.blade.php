@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('header')
-    <h1>Project - {{$project->name}}</h1>
-    <a href="{{URL::previous()}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+    <h1>WBS-LEVELS</h1>
+    <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
 @endsection
 @section('body')
     @if ($project->wbs_tree->count())

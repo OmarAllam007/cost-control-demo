@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('header')
-    <a href="{{ URL::previous()}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left "></i> Back</a>
+    <a href="{{ URL::previous()}}#report" class="btn btn-sm btn-default"><i class="fa fa-chevron-left "></i> Back</a>
 @endsection
 @section('body')
     <ul class="list-unstyled tree">
