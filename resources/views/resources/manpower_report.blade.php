@@ -1,17 +1,21 @@
-@extends('layouts.app')
-@section('header')
-    <a href="{{URL::previous()}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
-@endsection
-@section('body')
-    <h1 align="center" style="background: yellow;color: #000000;">BUDGET BY NUMBERS</h1>
+@extends('layouts.' . (request('print')? 'print' : 'app'))
 
-    <div class="tree--item">
-        <a href="#children-1" class="tree--item--label" data-toggle="collapse"><i
-                    class="fa fa-chevron-circle-right"></i> {{$root}}
+@section('header')
+    <h2>BUDGET BY NUMBERS</h2>
+    <div class="pull-right">
+        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
+            <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
+@stop
 
-    <article id="children-1" class="tree--child collapse">
+@section('body')
+    <div class="tree--item">
+       <strong>{{$root}}</strong>
+    </div>
+
+    <article id="children-1" class="tree--child">
         <table class="table table-condensed table-striped " style="margin: 3px; padding: 5px;">
             <thead>
             <tr>
@@ -21,11 +25,11 @@
                 <th class="col-md-1 bg-success">Unit of measure</th>
             </tr>
             </thead>
+            <tbody>
             @foreach($resources as $resource)
 
                 @if($resource['id'])
 
-                    <tbody>
                     <tr>
                         {{--<td class="col-md-3">{{$resource['type'] or ''}}</td>--}}
                         <td class="col-md-3 ">{{$resource['name'] or ''}}</td>
@@ -33,17 +37,15 @@
                         <td class="col-md-2">{{number_format($resource['budget_unit'], 2)}}</td>
                         <td class="col-md-1">{{$resource['unit']  or ''}}</td>
                     </tr>
-
-        @endif
+                @endif
+            @endforeach
+            <tr style="border:solid #000000">
+                <td>Total</td>
+                <td>{{number_format($total_budget_cost, 2)}}</td>
+                <td>{{number_format($total_budget_unit, 2)}}</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
     </article>
-
-    @endforeach
-    <tr style="border:solid #000000">
-        <td>Total</td>
-        <td>{{$total_budget_cost}}</td>
-        <td>{{$total_budget_unit}}</td>
-        <td></td>
-    </tr>
-    </tbody>
-    </table>
 @stop

@@ -62,7 +62,7 @@ class ActivityResourceBreakDown
 
         }
 //        dd($data);
-        return view('std-activity.activity_resource_breakdown', compact('data'));
+        return view('std-activity.activity_resource_breakdown', compact('data', 'project'));
 
     }
 }

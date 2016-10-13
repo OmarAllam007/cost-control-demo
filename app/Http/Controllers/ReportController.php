@@ -147,7 +147,7 @@ class ReportController extends Controller
         }
 
 
-        return view('std-activity.budgetSummery', compact('parents', 'all', 'activity_ids', 'activities', 'std_activity_cost'));
+        return view('std-activity.budgetSummery', compact('parents', 'all', 'activity_ids', 'activities', 'std_activity_cost', 'project'));
     }
 
     public function activityResourceBreakDown(Project $project)
