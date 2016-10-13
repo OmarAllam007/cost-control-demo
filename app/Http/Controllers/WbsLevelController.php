@@ -85,7 +85,7 @@ class WbsLevelController extends Controller
     function postImport(Project $project, Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx'
+            'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
@@ -94,5 +94,45 @@ class WbsLevelController extends Controller
 
         flash('WBS has been imported to ' . $project->name, 'success');
         return redirect()->route('project.show', $project);
+    }
+
+    public function exportWbsLevels(Project $project)
+    {
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'WBS-LEVEL 1');
+        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'WBS-LEVEL 2');
+        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'WBS-LEVEL 3');
+        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'WBS-LEVEL 4');
+        $rowCount = 2;
+        foreach ($project->wbs_tree as $level) {
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $level->name);
+            $rowCount++;
+            if ($level->children && $level->children->count()) {
+                foreach ($level->children as $children) {
+                    $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $children->name);
+                    $rowCount++;
+                    if ($children->children && $children->children->count()) {
+                        foreach ($children->children as $child) {
+                            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $child->name);
+                            $rowCount++;
+                            if ($child->children && $child->children->count()) {
+                                foreach ($child->children as $child) {
+                                    $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $child->name);
+                                    $rowCount++;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$project->name.' - WBS Levels.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save('php://output');
     }
 }

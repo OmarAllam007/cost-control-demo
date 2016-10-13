@@ -1,4 +1,10 @@
-
+<div class="form-group tab-actions clearfix">
+    <div class="pull-right">
+        <a href="{{route('productivity.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
+    </div>
+</div>
 @if ($project->productivities->count())
     <table class="table table-condensed table-striped table-fixed">
         <thead>

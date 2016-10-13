@@ -45,11 +45,11 @@
                                 @endforeach
                             </td>
                             <td class="col-xs-2">
-                                    {{$level['activity_divisions']['budget_qty']}}<br>
+                                    {{number_format($level['activity_divisions']['budget_qty'],2)}}<br>
                             </td>
 
                             <td class="col-xs-2">
-                                    {{$level['activity_divisions']['eng_qty']}}<br>
+                                    {{number_format($level['activity_divisions']['eng_qty'],2)}}<br>
                             </td>
 {{----}}
                             {{--<td class="col-xs-2">--}}

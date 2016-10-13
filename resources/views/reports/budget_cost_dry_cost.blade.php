@@ -32,9 +32,9 @@
         <tr style="border-top: solid #000000">
             <td class="col-xs-2"></td>
             <td class="col-xs-2">Grand Total</td>
-            <td class="col-xs-2">{{$total['total_dry']}}</td>
-            <td class="col-xs-2">{{$total['total_budget']}}</td>
-            <td class="col-xs-2">{{$total['difference']}}</td>
+            <td class="col-xs-2">{{number_format($total['total_dry'],2)}}</td>
+            <td class="col-xs-2">{{number_format($total['total_budget'],2)}}</td>
+            <td class="col-xs-2">{{number_format($total['difference'],2)}}</td>
             <td class="col-xs-2">% {{number_format($total['total_increase'])}}</td>
         </tr>
         </tbody>

@@ -21,8 +21,8 @@
             <tr>
                 <td class="col-xs-2">{{$row['code']}}</td>
                 <td class="col-xs-2">{{$row['name']}}</td>
-                <td class="col-xs-2">{{$row['budget_cost']}}</td>
-                <td class="col-xs-2">%{{number_format($row['weight'])}}</td>
+                <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
+                <td class="col-xs-2">%{{number_format($row['weight'],2)}}</td>
                 <td class="col-xs-2"></td>
                 <td class="col-xs-2"></td>
             </tr>
@@ -30,8 +30,8 @@
         <tr style="border-top: solid #000000">
             <td class="col-xs-2"></td>
             <td class="col-xs-2" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-2">{{$total['total']}}</td>
-            <td class="col-xs-2">% {{$total['weight']}}</td>
+            <td class="col-xs-2">{{number_format($total['total'],2)}}</td>
+            <td class="col-xs-2">% {{number_format($total['weight'],2)}}</td>
             <td class="col-xs-2"></td>
             <td class="col-xs-2"></td>
             <td class="col-xs-2"></td>

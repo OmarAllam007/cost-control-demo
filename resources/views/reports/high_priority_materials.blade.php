@@ -18,8 +18,8 @@
         @foreach($data as $row)
             <tr>
                 <td class="col-xs-3">{{$row['name']}}</td>
-                <td class="col-xs-3">{{$row['budget_cost']}}</td>
-                <td class="col-xs-3">{{$row['budget_unit']}}</td>
+                <td class="col-xs-3">{{number_format($row['budget_cost'],2)}}</td>
+                <td class="col-xs-3">{{number_format($row['budget_unit'],2)}}</td>
                 <td class="col-xs-3">{{$row['unit']}}</td>
             </tr>
         @endforeach

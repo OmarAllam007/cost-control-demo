@@ -19,15 +19,15 @@
 
             <tr>
                 <td class="col-xs-4">{{$row['name']}}</td>
-                <td class="col-xs-4">{{$row['dry_qty_eq']}}</td>
-                <td class="col-xs-4">{{$row['budget_cost_eq']}}</td>
+                <td class="col-xs-4">{{number_format($row['dry_qty_eq'],2)}}</td>
+                <td class="col-xs-4">{{number_format($row['budget_cost_eq'],2)}}</td>
 
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
             <td class="col-xs-4" style="font-weight: 800">Total</td>
-            <td class="col-xs-4">{{$total['dry_qty_eq']}}</td>
-            <td class="col-xs-4">{{$total['budget_cost_eq']}}</td>
+            <td class="col-xs-4">{{number_format($total['dry_qty_eq'],2)}}</td>
+            <td class="col-xs-4">{{number_format($total['budget_cost_eq'],2)}}</td>
 
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}
         </tr>

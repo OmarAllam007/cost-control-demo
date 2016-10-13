@@ -12,6 +12,7 @@ Route::group(['prefix' => 'api'], function(){
 Route::group(['prefix' => 'wbs-level'], function () {
     Route::get('import/{project}', ['as' => 'wbs-level.import', 'uses' => 'WbsLevelController@import']);
     Route::post('import/{project}', ['as' => 'wbs-level.post-import', 'uses' => 'WbsLevelController@postImport']);
+    Route::get('export/{project}',['as'=>'wbs-level.export','uses'=>'WbsLevelController@exportWbsLevels']);
 });
 
 Route::group(['prefix' => 'resources'], function () {
