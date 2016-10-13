@@ -8116,4 +8116,7 @@ body {
     border: none;
     padding: 5px; }
 
+.td {
+  page-break-inside: auto; }
+
 /*# sourceMappingURL=print.css.map */

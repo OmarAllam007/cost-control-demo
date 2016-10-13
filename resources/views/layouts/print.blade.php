@@ -22,7 +22,7 @@
             {{date('d M Y')}}
             </strong>
         </th>
-        <th width="34%" class="header-text">
+        <th width="34%" class="header-text text-center">
             @yield('header')
         </th>
         <th width="33%">
