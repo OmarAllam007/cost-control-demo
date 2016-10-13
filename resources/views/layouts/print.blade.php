@@ -59,7 +59,7 @@
 @yield('javascript')
 
 <script>
-//    print();
+    window.print();
 </script>
 </body>
 </html>

@@ -6,7 +6,7 @@
         {{$wbs_level->name}}
         <small class="text-muted">({{$wbs_level->code}})</small>
     </td>
-    @for ($i = $tree_level; $i < 4; ++$i)
+    @for ($i = $tree_level + 1; $i < 4; ++$i)
         <td>&nbsp;</td>
     @endfor
 </tr>
