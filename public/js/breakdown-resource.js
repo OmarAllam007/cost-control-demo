@@ -10071,6 +10071,46 @@ var template = Object.freeze({
   return Vue;
 
 }));
+var App = new Vue({
+    el: '#BreakdownResourceForm',
+
+    data: {
+        resource: resource,
+        productivity: productivity
+    },
+
+    computed: {
+        show_productivity: function () {
+            //If the main type of the resource is labor type
+            //show productivity options
+            var laborx = /labor|labour|equipment|scaffold/i;
+            return laborx.test(this.resource.root_type);
+        }
+    },
+
+    components: {
+        Resources: Resources,
+        Productivity: Productivity
+    },
+
+    events: {
+        'resource-changed': function (resource) {
+            this.resource = resource;
+        },
+
+        'productivity-changed': function (productivity) {
+            this.productivity = productivity;
+        }
+    }
+});
+
+
+$(function(){
+    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
+        $(this).find('input.search').focus();
+    });
+});
+
 var Productivity = Vue.extend({
     template: document.getElementById('ProductivityTemplate').innerHTML,
 
@@ -10158,44 +10198,4 @@ var Resources = Vue.extend({
         }
     }
 });
-var App = new Vue({
-    el: '#BreakdownResourceForm',
-
-    data: {
-        resource: resource,
-        productivity: productivity
-    },
-
-    computed: {
-        show_productivity: function () {
-            //If the main type of the resource is labor type
-            //show productivity options
-            var laborx = /labor|labour|equipment|scaffold/i;
-            return laborx.test(this.resource.root_type);
-        }
-    },
-
-    components: {
-        Resources: Resources,
-        Productivity: Productivity
-    },
-
-    events: {
-        'resource-changed': function (resource) {
-            this.resource = resource;
-        },
-
-        'productivity-changed': function (productivity) {
-            this.productivity = productivity;
-        }
-    }
-});
-
-
-$(function(){
-    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
-        $(this).find('input.search').focus();
-    });
-});
-
 //# sourceMappingURL=breakdown-resource.js.map

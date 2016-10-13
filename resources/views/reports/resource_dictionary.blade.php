@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.' . (request('print')? 'print' : 'app'))
+
 @section('header')
     <h2 align="center">Resource Dictionary</h2>
     <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
