@@ -7,6 +7,9 @@
         <a href="{{route('survey.import', ['project' => $project->id])}}" class="btn btn-success btn-sm">
             <i class="fa fa-cloud-upload"></i> Import
         </a>
+        <a href="{{route('survey.post-export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
     </div>
 </div>
 

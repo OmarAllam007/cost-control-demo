@@ -69,6 +69,11 @@ Route::group(['prefix' => 'project'], function () {
 
 });
 
+Route::group(['prefix' => 'survey'], function () {
+    Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'ExportController@exportQuantitySurvey']);
+    Route::post('export/{project}', ['as' => 'survey.post-export', 'uses' => 'ExportController@exportQuantitySurvey']);
+});
+
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

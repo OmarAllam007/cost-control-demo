@@ -46,6 +46,7 @@ Route::group(['prefix' => 'survey'], function () {
     Route::post('import/{project}', ['as' => 'survey.post-import', 'uses' => 'SurveyController@postImport']);
     Route::get('fix-import/{code}', ['as' => 'survey.fix-import', 'uses' => 'SurveyController@fixImport']);
     Route::post('fix-import/{code}', ['as' => 'survey.post-fix-import', 'uses' => 'SurveyController@postFixImport']);
+
 });
 
 Route::group(['prefix' => 'breakdown-template'], function () {
