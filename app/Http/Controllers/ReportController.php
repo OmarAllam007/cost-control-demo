@@ -51,7 +51,7 @@ class ReportController extends Controller
 
         $parents = ActivityDivision::whereIn('id', $parent_ids)->get();
 
-        return view('std-activity.report', compact('parents', 'all', 'activity_ids'));
+        return view('std-activity.report', compact('parents', 'all', 'activity_ids', 'project'));
     }
 
     public function resourceDictionary(Project $project)
