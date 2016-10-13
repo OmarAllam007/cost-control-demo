@@ -27,6 +27,7 @@ class Productivity extends Model
         'after_reduction',
         'source',
         'code',
+        'csi_code',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -84,13 +85,13 @@ class Productivity extends Model
         $man_powers = array_map('strtolower',
             array_column(ProductivityList::where('name', '=', 'Manpower')->get(array('type'))->toArray(), 'type'));
         $man_numbers = [];
-        $lines = explode("\n", strtolower($crew_structure));
+        $lines = array_filter(explode("\n", strtolower($crew_structure)));
         foreach ($lines as $line) {
             $tokens = [];
             preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
-            $key = trim($tokens[2]);
+            $key = strtolower(trim($tokens[2]));
             $man_number = trim($tokens[1]);
-            if (array_search($key, $man_powers)) {//if(array_search($key,$crew) !== false){
+            if (in_array($key, $man_powers)) {//if(array_search($key,$crew) !== false){
                 $man_numbers[] = $man_number * 10;
             }
         }
