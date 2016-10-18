@@ -28,7 +28,7 @@ class BreakdownController extends Controller
     public function store(BreakdownRequest $request)
     {
         $breakdown = Breakdown::create($request->all());
-        $breakdown->resources()->createMany($request->get('resources'));
+        $breakdown->syncResources($request->get('resources'));
 
         return \Redirect::route('project.show', $breakdown->project_id);
     }

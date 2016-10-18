@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Breakdown extends Model
 {
-    protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id','code'];
+    protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code'];
 
     function resources()
     {
@@ -31,5 +31,15 @@ class Breakdown extends Model
     function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    function syncResources($resources)
+    {
+        foreach ($resources as $res) {
+            $resource = $this->resources()->create($res);
+            if (!empty($res['variables'])) {
+                $resource->syncVariables($res['variables']);
+            }
+        }
     }
 }

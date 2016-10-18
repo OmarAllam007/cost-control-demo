@@ -10071,46 +10071,6 @@ var template = Object.freeze({
   return Vue;
 
 }));
-var App = new Vue({
-    el: '#BreakdownResourceForm',
-
-    data: {
-        resource: resource,
-        productivity: productivity
-    },
-
-    computed: {
-        show_productivity: function () {
-            //If the main type of the resource is labor type
-            //show productivity options
-            var laborx = /labor|labour|equipment|scaffold/i;
-            return laborx.test(this.resource.root_type);
-        }
-    },
-
-    components: {
-        Resources: Resources,
-        Productivity: Productivity
-    },
-
-    events: {
-        'resource-changed': function (resource) {
-            this.resource = resource;
-        },
-
-        'productivity-changed': function (productivity) {
-            this.productivity = productivity;
-        }
-    }
-});
-
-
-$(function(){
-    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
-        $(this).find('input.search').focus();
-    });
-});
-
 var Productivity = Vue.extend({
     template: document.getElementById('ProductivityTemplate').innerHTML,
 
@@ -10198,4 +10158,76 @@ var Resources = Vue.extend({
         }
     }
 });
+var Variables = Vue.extend({
+    template: document.getElementById('VariablesTemplate').innerHTML,
+
+    props: ['vars'],
+
+    methods: {
+        addVariable: function() {
+            var index = this.vars.length;
+            var number = index + 1;
+            var _var = {id: index, name: '$v' + number, label: ''};
+
+            this.vars.push(_var);
+        },
+
+        removeVariable: function($index) {
+            var newVars = [];
+            var i = 0;
+            var counter = 0;
+            for (i; i < this.vars.length; i++) {
+                if ($index != i) {
+                    this.vars[i].id = counter;
+                    this.vars[i].name = '$v' + (counter + 1);
+                    newVars.push(this.vars[i]);
+                    counter++;
+                }
+            }
+            this.$set('vars', newVars);
+        }
+    }
+});
+
+var App = new Vue({
+    el: '#BreakdownResourceForm',
+
+    data: {
+        resource: resource,
+        productivity: productivity
+    },
+
+    computed: {
+        show_productivity: function () {
+            //If the main type of the resource is labor type
+            //show productivity options
+            var laborx = /labor|labour|equipment|scaffold/i;
+            return laborx.test(this.resource.root_type);
+        }
+    },
+
+    components: {
+        resources: Resources,
+        productivity: Productivity,
+        variables: Variables
+    },
+
+    events: {
+        'resource-changed': function (resource) {
+            this.resource = resource;
+        },
+
+        'productivity-changed': function (productivity) {
+            this.productivity = productivity;
+        }
+    }
+});
+
+
+$(function(){
+    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
+        $(this).find('input.search').focus();
+    });
+});
+
 //# sourceMappingURL=breakdown-resource.js.map

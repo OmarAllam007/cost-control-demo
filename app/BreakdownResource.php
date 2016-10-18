@@ -105,4 +105,26 @@ class BreakdownResource extends Model
         $filter = new BreakdownFilter($query, $fields);
         return $filter->filter();
     }
+
+    function syncVariables($variables)
+    {
+        $qtySurvey = Survey::where('cost_account', $this->breakdown->cost_account)
+            ->where('project_id', $this->breakdown->project_id)->first();
+
+        $variableNames = $this->resource->variables->pluck('label', 'display_order');
+
+        foreach ($variables as $index => $value) {
+            $this->variables()->create([
+                'qty_survey_id' => $qtySurvey->id,
+                'name' => $variableNames[$index],
+                'value' => $value,
+                'display_order' => $index,
+            ]);
+        }
+    }
+
+    function variables()
+    {
+        return $this->hasMany(BreakdownVariable::class);
+    }
 }
