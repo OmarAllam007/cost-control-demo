@@ -18,7 +18,7 @@
                 @foreach($division->activities as $activity)
                     <li>
                         <label>
-                            <input type="radio" class="tree-radio activity-input" name="{{$input or 'std_activity_id'}}" value="{{$activity->id}}" data-label="{{$activity->name}}">
+                            <input type="radio" class="tree-radio activity-input" name="{{$input or 'std_activity_id'}}" value="{{$activity->id}}" data-label="{{$activity->name}}" {{$value == $activity->id? 'checked="checked' : ''}}>
                             {{$activity->name}}
                         </label>
                     </li>

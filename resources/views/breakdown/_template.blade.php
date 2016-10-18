@@ -8,3 +8,12 @@
 <template id="resourceRowTemplate">
     @include('breakdown._resource_template', ['index' => '##'])
 </template>
+
+<template id="variableTemplate">
+    <div class="form-group">
+        <label for="var_%res%_%index%" class="control-label col-sm-3 var-name"></label>
+        <div class="col-sm-9">
+            <input id="var_%res%_%index%" type="text" class="form-control" name="resources[%res%][variables][%index%]">
+        </div>
+    </div>
+</template>

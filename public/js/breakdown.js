@@ -44,24 +44,28 @@
         };
 
         $('.activity-input').on('change', function(){
-            var value = this.value;
-            if (value) {
-                if (breakdowns[value]) {
-                    fillBreakdowns(breakdowns[value]);
+            if (this.checked) {
+                var value = this.value;
+
+                if (value) {
+                    if (breakdowns[value]) {
+                        fillBreakdowns(breakdowns[value]);
+                    } else {
+                        showLoader();
+                        $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value}})
+                            .then(function(response){
+                                fillBreakdowns(response);
+                                hideLoader();
+                            }, function(){
+                                showError('Cannot load breakdowns');
+                                fillBreakdowns([]);
+                            });
+                    }
                 } else {
-                    showLoader();
-                    $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value}})
-                    .then(function(response){
-                        fillBreakdowns(response);
-                        hideLoader();
-                    }, function(){
-                        showError('Cannot load breakdowns');
-                        fillBreakdowns([]);
-                    });
+                    fillBreakdowns([]);
                 }
-            } else {
-                fillBreakdowns([]);
             }
+
         }).change();
     });
 
@@ -79,6 +83,7 @@
     var resourcesError = $('#resourcesError').html();
     var containerTemplate = $('#containerTemplate').html();
     var resourceRowTemplate = $('#resourceRowTemplate').html();
+    var variableTemplate = $('#variableTemplate').html();
 
     templateInput.on('change', function(){
         loadResources();
@@ -129,6 +134,19 @@
             for (key in resources[res]) {
                 var input = rowObject.find('[j-model="' + key + '"]');
                 input.val(resources[res][key]);
+            }
+
+            if ($.isPlainObject(resources[res].variables) && !$.isEmptyObject(resources[res].variables)) {
+                rowObject.find('.edit-variables').show();
+                var variablesContainer = rowObject.find('.variables-container');
+                var variableHtml = '';
+                for (var order in resources[res].variables) {
+                    variableHtml = $(variableTemplate.replace(/%res%/g, counter).replace(/%index%/g, order));
+                    variableHtml.find('label.var-name').html(resources[res].variables[order]);
+                    variablesContainer.append(variableHtml);
+                }
+            } else {
+                rowObject.find('.edit-variables').hide();
             }
 
             table.find('tbody').append(rowObject);

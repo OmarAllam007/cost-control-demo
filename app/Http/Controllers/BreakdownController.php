@@ -27,6 +27,7 @@ class BreakdownController extends Controller
 
     public function store(BreakdownRequest $request)
     {
+        dd($request->all());
         $breakdown = Breakdown::create($request->all());
         $breakdown->resources()->createMany($request->get('resources'));
 

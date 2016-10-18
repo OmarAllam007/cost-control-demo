@@ -44,24 +44,28 @@
         };
 
         $('.activity-input').on('change', function(){
-            var value = this.value;
-            if (value) {
-                if (breakdowns[value]) {
-                    fillBreakdowns(breakdowns[value]);
+            if (this.checked) {
+                var value = this.value;
+
+                if (value) {
+                    if (breakdowns[value]) {
+                        fillBreakdowns(breakdowns[value]);
+                    } else {
+                        showLoader();
+                        $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value}})
+                            .then(function(response){
+                                fillBreakdowns(response);
+                                hideLoader();
+                            }, function(){
+                                showError('Cannot load breakdowns');
+                                fillBreakdowns([]);
+                            });
+                    }
                 } else {
-                    showLoader();
-                    $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value}})
-                    .then(function(response){
-                        fillBreakdowns(response);
-                        hideLoader();
-                    }, function(){
-                        showError('Cannot load breakdowns');
-                        fillBreakdowns([]);
-                    });
+                    fillBreakdowns([]);
                 }
-            } else {
-                fillBreakdowns([]);
             }
+
         }).change();
     });
 

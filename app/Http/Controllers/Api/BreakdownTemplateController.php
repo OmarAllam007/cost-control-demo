@@ -13,7 +13,7 @@ class BreakdownTemplateController extends Controller
     {
         $activityId = request('activity');
         $activity = StdActivity::find($activityId);
-        
+
         if (!$activity) {
             return [];
         }
