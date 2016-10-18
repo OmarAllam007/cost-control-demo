@@ -85,4 +85,18 @@ class StdActivityResource extends Model
             ]);
         }
     }
+
+    function getVarsAttribute()
+    {
+        $variables = [];
+        foreach ($this->variables as $var) {
+            $variables[] = [
+                'name' => '$v' . $var->display_order,
+                'label' => $var->label,
+                'id' => $var->display_order
+            ];
+        }
+
+        return collect($variables);
+    }
 }
