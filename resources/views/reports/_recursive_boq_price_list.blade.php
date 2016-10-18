@@ -1,10 +1,7 @@
 @foreach($data as $wbs_level=>$attributes)
-
     <li class="list-unstyled">
         <div class="tree--item">
-            <a href="#children-{{$wbs_level}}" class="tree--item--label" data-toggle="collapse"><i
-                        class="fa fa-chevron-circle-right"></i> {{$attributes['name']}}
-            </a>
+            <strong>{{$attributes['name']}}</strong>
         </div>
         @if(isset($attributes['items']))
             <ul class="list-unstyled">
@@ -12,11 +9,7 @@
                 @foreach($value['cost_accounts'] as $account)
                     <li>
                     <div class="tree--item collapse">
-
-
-                        <a href="#children-{{$value['id']}}" class="tree--item--label"><i
-                                    class="fa fa-chevron-circle-right"></i> {{$item}}
-                        </a>
+                        <strong>{{$item}}</strong>
 
                         <article id="children-{{$value['id']}}">
                             <table class="table table-condensed table-striped " style="margin: 3px; padding: 5px;">

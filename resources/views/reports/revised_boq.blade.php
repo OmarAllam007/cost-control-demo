@@ -22,18 +22,18 @@
             <tr>
                 <td class="col-xs-2">{{$row['code']}}</td>
                 <td class="col-xs-3">{{$row['name']}}</td>
-                <td class="col-xs-3">{{number_format($row['revised_boq'],2)}}</td>
-                <td class="col-xs-2">{{number_format($row['original_boq'],2)}}</td>
-                <td class="col-xs-2">% {{number_format($row['weight'],2)}}</td>
+                <td class="col-xs-3">{{$row['revised_boq']}}</td>
+                <td class="col-xs-2">{{$row['original_boq']}}</td>
+                <td class="col-xs-2">% {{$row['weight']}}</td>
 
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
             <td class="col-xs-2"></td>
             <td class="col-xs-3" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-3">{{number_format($total['revised_boq'],2)}}</td>
-            <td class="col-xs-2">{{number_format($total['original_boq'],2)}}</td>
-            <td class="col-xs-2">% {{number_format($total['weight'],2)}}</td>
+            <td class="col-xs-3">{{$total['revised_boq']}}</td>
+            <td class="col-xs-2">{{$total['original_boq']}}</td>
+            <td class="col-xs-2">% {{$total['weight']}}</td>
 
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}
         </tr>

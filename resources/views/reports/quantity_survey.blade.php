@@ -1,19 +1,22 @@
-@extends('layouts.app')
+@extends('layouts.' . (request('print')? 'print' : 'app'))
+
 @section('header')
     <h2 align="center">Quantity Survey</h2>
-    <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+    <div class="pull-right">
+        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
+            <i class="fa fa-chevron-left"></i> Back
+        </a>
+    </div>
 @endsection
 @section('body')
     @foreach($level_array as $level)
         <li class="list-unstyled">
             <div class="tree--item">
-                <a href="#children-{{$level['id']}}" class="tree--item--label" data-toggle="collapse"><i
-                            class="fa fa-chevron-circle-right"></i> {{$level['name']}}
-                    <small class="text-muted"></small>
-                </a>
+                <strong>{{$level['name']}}</strong>
             </div>
             @if($level['activity_divisions'])
-                <ul class="list-unstyled collapse" id="children-{{$level['id']}}">
+                <ul class="list-unstyled">
                     <table class="table table-condensed table-striped">
                         <thead>
                         <tr>
@@ -22,7 +25,6 @@
                             <th class="col-xs-2">Cost Account</th>
                             <th class="col-xs-2">Engineering Quantity</th>
                             <th class="col-xs-2">Budget Quantity</th>
-{{----}}
                         </tr>
                         </thead>
                         <tbody>

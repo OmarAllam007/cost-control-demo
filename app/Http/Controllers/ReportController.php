@@ -51,7 +51,7 @@ class ReportController extends Controller
 
         $parents = ActivityDivision::whereIn('id', $parent_ids)->get();
 
-        return view('std-activity.report', compact('parents', 'all', 'activity_ids'));
+        return view('std-activity.report', compact('parents', 'all', 'activity_ids', 'project'));
     }
 
     public function resourceDictionary(Project $project)
@@ -147,7 +147,7 @@ class ReportController extends Controller
         }
 
 
-        return view('std-activity.budgetSummery', compact('parents', 'all', 'activity_ids', 'activities', 'std_activity_cost'));
+        return view('std-activity.budgetSummery', compact('parents', 'all', 'activity_ids', 'activities', 'std_activity_cost', 'project'));
     }
 
     public function activityResourceBreakDown(Project $project)

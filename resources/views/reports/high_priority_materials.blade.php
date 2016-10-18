@@ -1,16 +1,22 @@
-@extends('layouts.app')
+@extends('layouts.' . (request('print')? 'print' : 'app'))
+
 @section('header')
     <h2>High Priority Materials</h2>
-    <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
-@endsection
+    <div class="pull-right">
+        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
+            <i class="fa fa-chevron-left"></i> Back
+        </a>
+    </div>
+@stop
 @section('body')
-    <table class="table table-condensed table-striped table-fixed">
+    <table class="table table-condensed table-striped table-bordered">
         <thead>
         <tr>
-            <th class="col-xs-3">Description</th>
-            <th class="col-xs-3">Budget Cost</th>
-            <th class="col-xs-3">Budget Unit</th>
-            <th class="col-xs-3">Unit</th>
+            <th class="col-xs-6">Description</th>
+            <th class="col-xs-2">Budget Cost</th>
+            <th class="col-xs-2">Budget Unit</th>
+            <th class="col-xs-2">Unit</th>
 
         </tr>
         </thead>

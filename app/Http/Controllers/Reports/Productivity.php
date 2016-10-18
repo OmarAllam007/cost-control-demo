@@ -43,6 +43,6 @@ class Productivity
             }
         }
 //        dd($data);
-        return view('reports.productivity', compact('data'));
+        return view('reports.productivity', compact('data', 'project'));
     }
 }

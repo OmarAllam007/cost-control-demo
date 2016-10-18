@@ -13,6 +13,7 @@ var elixir = require('laravel-elixir');
 
 elixir(function (mix) {
     mix.sass('app.scss');
+    mix.sass('print.scss');
 
     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
     mix.scripts('tree-select.js');

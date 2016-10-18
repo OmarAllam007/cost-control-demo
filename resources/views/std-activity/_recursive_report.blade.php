@@ -1,11 +1,7 @@
 <li>
-    <div class="tree--item">
-        <a href="#children-{{$division->id}}" class="tree--item--label" data-toggle="collapse"><i
-                    class="fa fa-chevron-circle-right"></i> {{$division->label}}
-        </a>
-    </div>
+    <p class="tree--item">{{$division->label}}</p>
 
-    <article id="children-{{$division->id}}" class="tree--child collapse">
+    <article class="tree--child ">
         @if ($division->children()->whereIn('id', $all)->get() && $division->children()->whereIn('id', $all)->count())
             <ul class="list-unstyled">
                 @foreach($division->children()->whereIn('id', $all)->get() as $child)
@@ -15,11 +11,10 @@
         @endif
 
         @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
-            <table class="table table-striped table-hover table-condensed">
+            <table class="table table-striped table-condensed">
                 <thead>
                 <tr>
                     <th class="col-md-8">Activity</th>
-
                 </tr>
                 </thead>
                 <tbody>
