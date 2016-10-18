@@ -77,11 +77,26 @@ class StdActivityResource extends Model
     function syncVariables($variables)
     {
         $this->variables()->delete();
+
         foreach ($variables as $index => $var) {
             $this->variables()->create([
                 'label' => $var,
                 'display_order' => $index + 1
             ]);
         }
+    }
+
+    function getVarsAttribute()
+    {
+        $variables = [];
+        foreach ($this->variables as $var) {
+            $variables[] = [
+                'name' => '$v' . $var->display_order,
+                'label' => $var->label,
+                'id' => $var->display_order
+            ];
+        }
+
+        return collect($variables);
     }
 }

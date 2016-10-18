@@ -50,4 +50,16 @@ class Survey extends Model
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
+
+    function variables()
+    {
+        return $this->hasMany(BreakdownVariable::class, 'qty_survey_id');
+    }
+
+    function syncVariables($variables)
+    {
+        foreach ($this->variables as $var) {
+            $var->update(['value' => $variables[$var->id]]);
+        }
+    }
 }
