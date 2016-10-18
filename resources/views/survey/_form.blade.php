@@ -59,6 +59,15 @@
             {{Form::text('eng_qty',null,['class'=>'form-control'])}}
         </div>
 
+        @if (isset($survey))
+            @foreach($survey->variables as $var)
+                <div class="form-group">
+                    <label for="var_{{$var->id}}" class="control-label">{{$var->name}}</label>
+                    {{Form::text($name = "variables[{$var->id}]", old($name, $var->value), ['class' => 'form-control'])}}
+                </div>
+            @endforeach
+        @endif
+
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Save</button>
         </div>

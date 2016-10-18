@@ -61,10 +61,17 @@ class BreakdownResource extends Model
 
     function getResourceQtyAttribute()
     {
-        $v = $this->budget_qty;
-        $V = $this->budget_qty;
-        $result = '';
-        eval('$result=' . $this->resource->equation.';');
+        $v = $V = $this->budget_qty;
+
+        $variables = [];
+        foreach ($this->variables as $variable) {
+            $variables["v{$variable->display_order}"] = $variable->value;
+            $variables["V{$variable->display_order}"] = $variable->value;
+        }
+        extract($variables);
+
+        $result = 0;
+        @eval('$result=' . $this->resource->equation.';');
         return $result;
     }
 
@@ -114,12 +121,17 @@ class BreakdownResource extends Model
         $variableNames = $this->resource->variables->pluck('label', 'display_order');
 
         foreach ($variables as $index => $value) {
-            $this->variables()->create([
-                'qty_survey_id' => $qtySurvey->id,
-                'name' => $variableNames[$index],
-                'value' => $value,
-                'display_order' => $index,
-            ]);
+            $var = $this->variables()->where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
+            if ($var) {
+                $var->update(compact('value'));
+            } else {
+                $this->variables()->create([
+                    'qty_survey_id' => $qtySurvey->id,
+                    'name' => $variableNames[$index],
+                    'value' => $value,
+                    'display_order' => $index,
+                ]);
+            }
         }
     }
 

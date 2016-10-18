@@ -126,7 +126,7 @@
                             <label for="variables_@{{_var.id}}" class="control-label col-sm-2">@{{ _var.name }}</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
-                                    <input type="text" name="variables[@{{_var.id}}][name]" id="variables_@{{_var.id}}"
+                                    <input type="text" name="variables[@{{_var.id}}]" id="variables_@{{_var.id}}"
                                            v-model="_var.label" class="form-control">
                                     <span class="input-group-btn">
                                         <button class="btn btn-warning" @click="removeVariable($index)"><i class="fa fa-remove"></i></button>

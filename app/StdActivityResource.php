@@ -77,6 +77,7 @@ class StdActivityResource extends Model
     function syncVariables($variables)
     {
         $this->variables()->delete();
+
         foreach ($variables as $index => $var) {
             $this->variables()->create([
                 'label' => $var,
