@@ -121,7 +121,7 @@ class BreakdownResource extends Model
         $variableNames = $this->resource->variables->pluck('label', 'display_order');
 
         foreach ($variables as $index => $value) {
-            $var = $this->variables()->where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
+            $var = BreakdownVariable::where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
             if ($var) {
                 $var->update(compact('value'));
             } else {
