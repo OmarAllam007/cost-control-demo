@@ -72,7 +72,7 @@
     <script>
         jQuery(function ($) {
             $('#CostAccount').completeList({
-                url: '/api/cost-accounts'
+                url: '/api/cost-accounts?project={{request('project')}}'
             });
         });
     </script>
