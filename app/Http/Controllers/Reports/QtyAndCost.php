@@ -54,7 +54,7 @@ class QtyAndCost
             $total['dry_qty_eq'] +=$data[ $key ]['dry_qty_eq'];
             $total['budget_cost_eq'] +=$data[ $key ]['budget_cost_eq'];
         }
-        return view('reports.qty_and_cost', compact('data','total'));
+        return view('reports.qty_and_cost', compact('data','total','project'));
     }
 
 }

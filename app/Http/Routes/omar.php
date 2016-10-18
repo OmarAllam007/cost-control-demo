@@ -7,9 +7,12 @@ Route::resource('csi-category', 'CsiCategoryController');
 Route::group(['prefix' => 'boq'], function () {
     Route::get('import/{project}', ['as' => 'boq.import', 'uses' => 'BoqController@import']);
     Route::post('import/{project}', ['as' => 'boq.post-import', 'uses' => 'BoqController@postImport']);
+    Route::get('export/{project}', ['as' => 'boq.export', 'uses' => 'BoqController@exportBoq']);
+
 });
-
-
+Route::group(['prefix' => 'breakdown'], function () {
+Route::get('export/{project}',['as'=>'break_down.export','uses'=>'BreakdownController@exportBreakDown']);
+});
 Route::group(['prefix' => 'productivity'], function () {
     Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);

@@ -100,17 +100,48 @@ class WbsLevelController extends Controller
     {
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()
+            ->getStyle('A1:D1')
+            ->applyFromArray(
+                array(
+                    'fill' => array(
+                        'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => 'FFFFCC')
+                    )
+                )
+            );
         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'WBS-LEVEL 1');
+
         $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'WBS-LEVEL 2');
         $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'WBS-LEVEL 3');
         $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'WBS-LEVEL 4');
         $rowCount = 2;
         foreach ($project->wbs_tree as $level) {
+            $objPHPExcel->getActiveSheet()
+                ->getStyle('A'.$rowCount.':D'.$rowCount)
+                ->applyFromArray(
+                    array(
+                        'fill' => array(
+                            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => 'CCE5FF')
+                        )
+                    )
+                );
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $level->name);
             $rowCount++;
             if ($level->children && $level->children->count()) {
                 foreach ($level->children as $children) {
                     $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $children->name);
+                    $objPHPExcel->getActiveSheet()
+                        ->getStyle('B'.$rowCount.':D'.$rowCount)
+                        ->applyFromArray(
+                            array(
+                                'fill' => array(
+                                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                                    'color' => array('rgb' => 'FFE5CC')
+                                )
+                            )
+                        );
                     $rowCount++;
                     if ($children->children && $children->children->count()) {
                         foreach ($children->children as $child) {

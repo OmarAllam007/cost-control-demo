@@ -208,6 +208,8 @@ class ResourcesController extends Controller
         $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Rate');
         $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Unit');
         $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Waste');
+        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'reference');
+        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Business Partner');
         $rowCount = 2;
         foreach ($project->plain_resources as $resource)
         {
@@ -216,9 +218,12 @@ class ResourcesController extends Controller
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name);
 
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount,$resource->versionFor($project->id)->rate);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount,$resource->versionFor($project->id)->units->type or '');
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount,isset($resource->versionFor($project->id)->units->type)?$resource->versionFor($project->id)->units->type:'');
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount,$resource->versionFor($project->id)->waste);
+            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount,$resource->versionFor($project->id)->waste.'%');
+
+            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount,$resource->reference);
+            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount,isset(BusinessPartner::find($resource->business_partner_id)->name)? BusinessPartner::find($resource->business_partner_id)->name :'' );
             $rowCount++;
 
         }

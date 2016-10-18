@@ -54,7 +54,7 @@ class BudgetCostDryCostByDiscipline
             $total['budget_cost'] +=$data[$key]['budget_cost'];
             $total['increase'] +=$data[$key]['increase'];
         }
-        return view('reports.budget_cost_dry_cost_by_discipline',compact('data','total'));
+        return view('reports.budget_cost_dry_cost_by_discipline',compact('data','total','project'));
     }
 
 }

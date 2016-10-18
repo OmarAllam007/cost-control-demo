@@ -33,7 +33,6 @@
     <tbody>
     <tr>
         <td colspan="3">
-
             @yield('body')
         </td>
     </tr>

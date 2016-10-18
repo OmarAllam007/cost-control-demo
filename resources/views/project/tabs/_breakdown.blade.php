@@ -1,5 +1,9 @@
 <div class="form-group tab-actions clearfix">
-    <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
+
+    <a style="margin-left: 2px;" href="{{route('break_down.export', ['project' => $project->id])}}" class="btn btn-info btn-sm pull-right">
+        <i class="fa fa-cloud-download"></i> Export
+    </a>
+    <a  href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
         <i class="fa fa-plus"></i> Add Breakdown
     </a>
 </div>
@@ -106,8 +110,8 @@
                     <td style="min-width: 300px; max-width: 300px;" class="bg-primary">{{$resource->breakdown->std_activity->name}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">{{$resource->breakdown->template->name}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{$resource->breakdown->cost_account}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_qty, 2)}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_qty, 2)}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_quantity, 2)}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_quantity, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{number_format($resource->resource_qty, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">{{number_format($resource->project_resource->waste, 2)}}%</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->resource->types->root->name or ''}}</td>

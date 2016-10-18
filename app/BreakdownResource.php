@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakdownResource extends Model
 {
-    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks','code'];
+    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code'];
 
     function breakdown()
     {
@@ -64,7 +64,7 @@ class BreakdownResource extends Model
         $v = $this->budget_qty;
         $V = $this->budget_qty;
         $result = '';
-        eval('$result=' . $this->resource->equation.';');
+        eval('$result=' . $this->resource->equation . ';');
         return $result;
     }
 
@@ -79,7 +79,7 @@ class BreakdownResource extends Model
             $result = $this->resource_qty * $this->labor_count / $reductionFactor;
             return $result > 0.25 ? round($result, 2) : 0.25;
         } else {
-            return $this->resource_qty * (1 + ($this->resource_waste /100));
+            return $this->resource_qty * (1 + ($this->resource_waste / 100));
         }
     }
 
@@ -99,6 +99,18 @@ class BreakdownResource extends Model
         }
         return $this->budget_cost / $this->eng_qty;
     }
+
+    function getEngQuantityAttribute()
+    {
+        $engQuantity = Survey::where('cost_account', $this->breakdown->cost_account)->first()->eng_qty;
+        return $engQuantity;
+    }
+    function getBudgetQuantityAttribute()
+    {
+        $engQuantity = Survey::where('cost_account', $this->breakdown->cost_account)->first()->budget_qty;
+        return $engQuantity;
+    }
+
 
     function scopeFilter(Builder $query, $fields)
     {
