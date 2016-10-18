@@ -1,3 +1,6 @@
+<div class="pull-right">
+    <a href="#" target="_blank" class="btn btn-primary"><li class="fa fa-print"></li> Print All</a>
+</div>
 <table class="table table-condensed table-striped table-fixed text-center">
     <thead>
     <tr>

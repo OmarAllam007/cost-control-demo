@@ -44,6 +44,6 @@ class BudgetCostByBuilding
             $total['weight'] += $data[$key]['weight'];
         }
 
-        return view('reports.budget_cost_by_building',compact('data','total'));
+        return view('reports.budget_cost_by_building',compact('data','total','project'));
     }
 }

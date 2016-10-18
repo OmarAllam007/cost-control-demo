@@ -8,6 +8,10 @@
     <a href="{{route('boq.import', $project->id)}}" class="btn btn-success btn-sm">
         <i class="fa fa-cloud-upload"></i> Import
     </a>
+
+    <a href="{{route('boq.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+        <i class="fa fa-cloud-download"></i> Export
+    </a>
 </div>
 
 <div class="clearfix"></div>
@@ -15,7 +19,6 @@
 @if ($divisions->count())
     <ul class="list-unstyled tree">
         @foreach($divisions as $division)
-
             @include('boq-division._recursive2', compact('division'))
         @endforeach
     </ul>

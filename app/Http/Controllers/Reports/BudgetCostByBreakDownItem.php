@@ -48,6 +48,6 @@ class BudgetCostByBreakDownItem
         }
 
         ksort($bd_resource);
-        return view('reports.budget_cost_by_break_down',compact('bd_resource','total'));
+        return view('reports.budget_cost_by_break_down',compact('bd_resource','total','project'));
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakdownResource extends Model
 {
-    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks','code'];
+    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code'];
 
     function breakdown()
     {
@@ -61,17 +61,10 @@ class BreakdownResource extends Model
 
     function getResourceQtyAttribute()
     {
-        $v = $V = $this->budget_qty;
-
-        $variables = [];
-        foreach ($this->variables as $variable) {
-            $variables["v{$variable->display_order}"] = $variable->value;
-            $variables["V{$variable->display_order}"] = $variable->value;
-        }
-        extract($variables);
-
-        $result = 0;
-        @eval('$result=' . $this->resource->equation.';');
+        $v = $this->budget_qty;
+        $V = $this->budget_qty;
+        $result = '';
+        eval('$result=' . $this->resource->equation . ';');
         return $result;
     }
 
@@ -86,7 +79,7 @@ class BreakdownResource extends Model
             $result = $this->resource_qty * $this->labor_count / $reductionFactor;
             return $result > 0.25 ? round($result, 2) : 0.25;
         } else {
-            return $this->resource_qty * (1 + ($this->resource_waste /100));
+            return $this->resource_qty * (1 + ($this->resource_waste / 100));
         }
     }
 
@@ -107,6 +100,18 @@ class BreakdownResource extends Model
         return $this->budget_cost / $this->eng_qty;
     }
 
+    function getEngQuantityAttribute()
+    {
+        $engQuantity = Survey::where('cost_account', $this->breakdown->cost_account)->first()->eng_qty;
+        return $engQuantity;
+    }
+    function getBudgetQuantityAttribute()
+    {
+        $engQuantity = Survey::where('cost_account', $this->breakdown->cost_account)->first()->budget_qty;
+        return $engQuantity;
+    }
+
+
     function scopeFilter(Builder $query, $fields)
     {
         $filter = new BreakdownFilter($query, $fields);
@@ -121,17 +126,12 @@ class BreakdownResource extends Model
         $variableNames = $this->resource->variables->pluck('label', 'display_order');
 
         foreach ($variables as $index => $value) {
-            $var = BreakdownVariable::where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
-            if ($var) {
-                $var->update(compact('value'));
-            } else {
-                $this->variables()->create([
-                    'qty_survey_id' => $qtySurvey->id,
-                    'name' => $variableNames[$index],
-                    'value' => $value,
-                    'display_order' => $index,
-                ]);
-            }
+            $this->variables()->create([
+                'qty_survey_id' => $qtySurvey->id,
+                'name' => $variableNames[$index],
+                'value' => $value,
+                'display_order' => $index,
+            ]);
         }
     }
 
