@@ -20,14 +20,20 @@
 
             <p>
                 <a href="#ResourcesModal" data-toggle="modal" id="select-parent">
-                    @{{ resource.name || "Select" }}
+                    @{{ resource.name || "Select Resource" }}
                 </a>
                 <a id="remove-parent"><span class="fa fa-times"></span></a>
             </p>
-
+            {{Form::hidden('resource_id')}}
             {!! $errors->first('resource_id', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group">
+            <label for="">Variables</label>
+            <p>
+                <a href="#VariablesModal" data-toggle="modal"><em>Edit Variables</em></a>
+            </p>
+        </div>
 
         <div class="form-group {{$errors->first('equation', 'has-error')}}">
             {{ Form::label('equation', 'Equation', ['class' => 'control-label']) }}

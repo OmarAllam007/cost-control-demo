@@ -41,6 +41,11 @@ class StdActivityResource extends Model
         return $this->belongsTo(Productivity::class);
     }
 
+    function variables()
+    {
+        return $this->hasMany(ResourceVariable::class);
+    }
+
     function morphForJSON($account)
     {
         $attributes = [
@@ -56,7 +61,8 @@ class StdActivityResource extends Model
             'resource_type' => $this->resource->types->root->name,
             'budget_qty' => '',
             'eng_qty' => '',
-            'remarks' => $this->remarks
+            'remarks' => $this->remarks,
+            'variables' => $this->variables()->pluck('label', 'display_order')
         ];
 
         $costAccount = Survey::where('cost_account', $account)->first();
@@ -66,5 +72,16 @@ class StdActivityResource extends Model
         }
 
         return $attributes;
+    }
+
+    function syncVariables($variables)
+    {
+        $this->variables()->delete();
+        foreach ($variables as $index => $var) {
+            $this->variables()->create([
+                'label' => $var,
+                'display_order' => $index + 1
+            ]);
+        }
     }
 }
