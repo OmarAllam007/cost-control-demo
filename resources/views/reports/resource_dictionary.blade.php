@@ -52,7 +52,7 @@
                             {{$resource['unit']}}
                         </td>
                         <td class="col-xs-1">
-                            {{$resource['rate']}}
+                            {{number_format($resource['rate'],2)}}
                         </td>
                         <td class="col-xs-1">
                             {{$resource['partner']}}
@@ -61,9 +61,9 @@
                         <td class="col-xs-1">
                             {{$resource['reference']}}
                         </td>
-                        <td class="col-xs-1">{{$resource['waste']}}%</td>
-                        <td class="col-xs-1">{{$resource['budget_unit']}}</td>
-                        <td class="col-xs-1">{{$resource['budget_cost']}}</td>
+                        <td class="col-xs-1">{{number_format($resource['waste'],2)}}%</td>
+                        <td class="col-xs-1">{{number_format($resource['budget_unit'],2)}}</td>
+                        <td class="col-xs-1">{{number_format($resource['budget_cost'],2)}}</td>
                     <?php $counter++;?>
                 @endforeach
             @endforeach

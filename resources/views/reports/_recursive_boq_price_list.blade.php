@@ -35,7 +35,7 @@
                                     <td class="col-md-1">{{$account['EQUIPMENT']}}</td>
                                     <td class="col-md-1">{{$account['SCAFFOLDING']}}</td>
                                     <td class="col-md-1">{{$account['OTHERS']}}</td>
-                                    <td class="col-md-3">{{$account['total_resources']}}</td>
+                                    <td class="col-md-3">{{number_format($account['total_resources'],2)}}</td>
                                 </tr>
                                 </tbody>
                             </table>

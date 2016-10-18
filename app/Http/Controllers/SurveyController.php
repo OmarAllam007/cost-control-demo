@@ -14,7 +14,7 @@ class SurveyController extends Controller
     protected $rules = [
         'description' => 'required', 'cost_account' => 'required',
         'project_id' => 'required', 'wbs_level_id' => 'required',
-        'budget_qty' => 'required', 'eng_qty' => 'required'
+        'budget_qty' => 'required', 'eng_qty' => 'required',
     ];
 
     public function index()
@@ -86,7 +86,7 @@ class SurveyController extends Controller
     function postImport(Project $project, Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx'
+            'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
@@ -135,12 +135,12 @@ class SurveyController extends Controller
             $wbs = $data['wbs'];
 
             foreach ($result['failed'] as $key => $item) {
-                if(!$item['unit_id']) {
-                    $item['unit_id'] = $units[$item['unit']];
+                if (!$item['unit_id']) {
+                    $item['unit_id'] = $units[ $item['unit'] ];
                 }
 
-                if(!$item['wbs_level_id']) {
-                    $item['wbs_level_id'] = $wbs[$item['wbs_code']];
+                if (!$item['wbs_level_id']) {
+                    $item['wbs_level_id'] = $wbs[ $item['wbs_code'] ];
                 }
 
                 $project->quantities()->create($item);
@@ -153,4 +153,40 @@ class SurveyController extends Controller
         flash('Could not import the following items. Please fix errors below', 'warning');
         return \Redirect::back()->withErrors($errors)->withInput(compact('data'));
     }
+
+
+    public function exportQuantitySurvey(Project $project)
+    {
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->SetCellValue('A1' ,'Cost Account');
+        $objPHPExcel->getActiveSheet()->SetCellValue('B1' ,'WBS-Level');
+        $objPHPExcel->getActiveSheet()->SetCellValue('C1' ,'Description');
+        $objPHPExcel->getActiveSheet()->SetCellValue('D1' ,'Budget Quantity');
+        $objPHPExcel->getActiveSheet()->SetCellValue('E1' ,'Engineer Quantity');
+
+        $rowCount = 2;
+        foreach ($project->quantities as $quantity) {
+            $cost_account = $quantity->cost_account;
+            $wbs_level = $quantity->wbsLevel->path;
+            $description = $quantity->description;
+            $budget_qty = $quantity->budget_qty;
+            $eng_qty = $quantity->eng_qty;
+
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $cost_account);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $wbs_level);
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $description);
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $budget_qty);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $eng_qty);
+            $rowCount++;
+
+
+        }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$project->name.' - Quantity Survey.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save('php://output');
+    }
+
 }

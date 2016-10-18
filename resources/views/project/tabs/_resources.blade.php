@@ -1,7 +1,11 @@
 <div class="form-group tab-actions pull-right">
     <a href="{{ route('resources.create',['project' => $project->id]) }} " class="btn btn-sm btn-primary">
     <i class="fa fa-plus"></i> Add resource
+
 </a>
+    <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+        <i class="fa fa-cloud-download"></i> Export
+    </a>
 </div>
 <div class="clearfix"></div>
 

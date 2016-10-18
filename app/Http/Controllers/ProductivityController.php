@@ -48,8 +48,8 @@ class ProductivityController extends Controller
 
     public function show(Productivity $productivity)
     {
-        $project = Project::where('id',$productivity->project_id)->first();
-        return view('productivity.show', compact('productivity','project'));
+        $project = Project::where('id', $productivity->project_id)->first();
+        return view('productivity.show', compact('productivity', 'project'));
     }
 
     public function edit(Productivity $productivity)
@@ -118,7 +118,7 @@ class ProductivityController extends Controller
             'productivity' => $overwrote,
             'baseProductivity' => $productivity,
             'project' => $project,
-            'edit' => false
+            'edit' => false,
         ]);
     }
 
@@ -173,8 +173,8 @@ class ProductivityController extends Controller
             $items = \Cache::get($key);
 
             foreach ($items as $item) {
-                if (isset($data['units'][$item['orig_unit']])) {
-                    $item['unit'] = $data['units'][$item['orig_unit']];
+                if (isset($data['units'][ $item['orig_unit'] ])) {
+                    $item['unit'] = $data['units'][ $item['orig_unit'] ];
                     Productivity::create($item);
                 }
             }
@@ -187,8 +187,35 @@ class ProductivityController extends Controller
         return \Redirect::route('productivity.fix-import', $key)
             ->withErrors($errors)->withInput($request->all());
     }
-    public function showReport(){
+
+    public function showReport()
+    {
         $projects = Project::paginate();
-        return view('productivity.productivity_project',compact('projects'));
+        return view('productivity.productivity_project', compact('projects'));
+    }
+
+    public function exportProductivity(Project $project)
+    {
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Code');
+        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Category Name');
+        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Daily Output');
+        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'After Reduction');
+        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Unit');
+        $rowCount = 2;
+        foreach ($project->productivities as $productivity) {
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $productivity->code);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $productivity->category->name);
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $productivity->versionFor($project->id)->daily_output);
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $productivity->versionFor($project->id)->after_reduction);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $productivity->units->type );
+            $rowCount++;
+        }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$project->name.' - Productivity.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save('php://output');
     }
 }

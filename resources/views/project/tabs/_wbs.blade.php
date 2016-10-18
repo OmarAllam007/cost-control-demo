@@ -6,6 +6,9 @@
     <a href="{{route('wbs-level.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
         <i class="fa fa-plus"></i> Add Level
     </a>
+    <a href="{{route('wbs-level.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+        <i class="fa fa-cloud-download"></i> Export
+    </a>
 </div>
 
 

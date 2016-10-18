@@ -22,9 +22,9 @@
             <tr>
                 <td class="col-xs-2">{{$row['code']}}</td>
                 <td class="col-xs-2">{{$row['name']}}</td>
-                <td class="col-xs-2">{{$row['dry_cost']}}</td>
-                <td class="col-xs-2">{{$row['budget_cost']}}</td>
-                <td class="col-xs-2">{{$row['difference']}}</td>
+                <td class="col-xs-2">{{number_format($row['dry_cost'],2)}}</td>
+                <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
+                <td class="col-xs-2">{{number_format($row['difference'],2)}}</td>
                 <td class="col-xs-2">%{{number_format($row['increase'],2)}}</td>
 
             </tr>
@@ -32,10 +32,10 @@
         <tr style="border-top: solid #000000">
             <td class="col-xs-2"></td>
             <td class="col-xs-2" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-2">{{$total['dry_cost']}}</td>
-            <td class="col-xs-2">{{$total['budget_cost']}}</td>
-            <td class="col-xs-2">{{$total['difference']}}</td>
-            <td class="col-xs-2">{{$total['increase']}}</td>
+            <td class="col-xs-2">{{number_format($total['dry_cost'],2)}}</td>
+            <td class="col-xs-2">{{number_format($total['budget_cost'],2)}}</td>
+            <td class="col-xs-2">{{number_format($total['difference'],2)}}</td>
+            <td class="col-xs-2">% {{number_format($total['increase'],2)}}</td>
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}
         </tr>
         </tbody>

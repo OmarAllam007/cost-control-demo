@@ -1,9 +1,4 @@
 <?php
-
-
-
-
-
 Route::resource('boq-division', 'BoqDivisionController');
 
 Route::resource('csi-category', 'CsiCategoryController');
@@ -18,6 +13,8 @@ Route::group(['prefix' => 'boq'], function () {
 Route::group(['prefix' => 'productivity'], function () {
     Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
+    Route::get('export/{project}', ['as' => 'productivity.export', 'uses' => 'ProductivityController@exportProductivity']);
+
 });
 
 Route::group(['prefix' => 'business-partner'], function () {
@@ -70,9 +67,13 @@ Route::group(['prefix' => 'project'], function () {
 });
 
 Route::group(['prefix' => 'survey'], function () {
-    Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'ExportController@exportQuantitySurvey']);
-    Route::post('export/{project}', ['as' => 'survey.post-export', 'uses' => 'ExportController@exportQuantitySurvey']);
+    Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'SurveyController@exportQuantitySurvey']);
 });
+
+Route::group(['prefix' => 'resources'], function () {
+    Route::get('export/{project}', ['as' => 'resources.export', 'uses' => 'ResourcesController@exportResources']);
+});
+
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
