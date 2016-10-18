@@ -8,68 +8,7 @@
     </a>
 </div>
 
-{{Form::open(['route' => ['breakdown.filters', $project], 'class' => 'row filter-form'])}}
-<div class="col-sm-2">
-    <div class="form-group form-group-sm">
-        {{Form::label('wbs_id', 'WBS Level', ['class' => 'control-label'])}}
-        <p>
-            <a href="#WBSModal" data-toggle="modal" class="tree-open">
-                {{ session('filters.breakdown.'.$project->id.'.wbs_id')? App\WbsLevel::find(session('filters.breakdown.'.$project->id.'.wbs_id'))->path : 'Select WBS Level' }}
-            </a>
-            <a href="#" class="remove-tree-input" data-target="#WBSModal" data-label="Select WBS Level"><span class="fa fa-times-circle"></span></a>
-        </p>
-    </div>
-</div>
-
-<div class="col-sm-2">
-    <div class="form-group form-group-sm">
-        {{Form::label('activity', 'Activity', ['class' => 'control-label'])}}
-        <p>
-            <a href="#ActivitiesModal" data-toggle="modal" class="tree-open">
-                {{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}
-            </a>
-            <a href="#" class="remove-tree-input" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
-        </p>
-    </div>
-</div>
-
-<div class="col-sm-2">
-    <div class="form-group form-group-sm">
-        {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
-        {{Form::text('cost_account', session('filters.breakdown.' . $project->id . '.cost_account'), ['class' => 'form-control'])}}
-    </div>
-</div>
-
-<div class="col-sm-2">
-    <div class="form-group form-group-sm">
-        {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
-        <p>
-            <a href="#ResourceTypeModal" data-toggle="modal" class="tree-open">
-                {{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}
-            </a>
-            <a href="#" class="remove-tree-input" data-target="#ResourceTypeModal" data-label="Select Resource Type"><span class="fa fa-times-circle"></span></a>
-        </p>
-
-    </div>
-</div>
-
-<div class="col-sm-2">
-    <div class="form-group form-group-sm">
-        {{Form::label('resource', 'Resource Name', ['class' => 'control-label'])}}
-        {{Form::text('resource', session('filters.breakdown.'.$project->id.'.resource'), ['class' => 'form-control'])}}
-    </div>
-</div>
-
-<div class="col-sm-2">
-    <div class="form-group form-group-sm">
-        <button class="btn btn-sm btn-primary"><i class="fa fa-filter"></i> Filter</button>
-    </div>
-</div>
-
-@include('resource-type._modal', ['input' => 'resource_type', 'value' => session('filters.breakdown.'.$project->id.'.resource_type')])
-@include('std-activity._modal', ['input' => 'activity', 'value' => session('filters.breakdown.'.$project->id.'.activity')])
-@include('wbs-level._modal', ['input' => 'wbs_id', 'value' => session('filters.breakdown.'.$project->id.'.wbs_id'), 'project_id' => $project->id])
-{{Form::close()}}
+@include('project.filters._breakdown')
 
 @if ($project->breakdown_resources->count())
     <div class="scrollpane">
@@ -102,7 +41,6 @@
         <table class="table table-condensed table-striped table-hover table-breakdown">
             <tbody>
             @foreach($project->breakdown_resources as $resource)
-
                 <tr>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">
                         <abbr title="{{$resource->breakdown->wbs_level->path}}">{{$resource->breakdown->wbs_level->code}}</abbr>
@@ -110,8 +48,8 @@
                     <td style="min-width: 300px; max-width: 300px;" class="bg-primary">{{$resource->breakdown->std_activity->name}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">{{$resource->breakdown->template->name}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{$resource->breakdown->cost_account}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_quantity, 2)}}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_quantity, 2)}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->eng_qty, 2)}}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="">{{number_format($resource->budget_qty, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-primary">{{number_format($resource->resource_qty, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">{{number_format($resource->project_resource->waste, 2)}}%</td>
                     <td style="min-width: 150px; max-width: 150px;" class="">{{$resource->resource->resource->types->root->name or ''}}</td>
