@@ -63,11 +63,23 @@ class ImportBreakdownTemplateJob extends ImportJob
 
             $resource_id = $this->getResource($data[3]);
             if ($resource_id) {
-                $template->resources()->create([
+                $resource = $template->resources()->create([
                     'resource_id' => $resource_id,
                     'equation' => $data[5],
                     'remarks' => $data[6]
                 ]);
+
+                $count = count($data);
+                if ($count > 6) {
+                    $display_order = 1;
+                    for ($i = 7; $i < $count; ++$i) {
+                        $label = trim($data[$i]);
+                        if ($label) {
+                            $resource->variables()->create(compact('label', 'display_order'));
+                            ++$display_order;
+                        }
+                    }
+                }
             }
         }
 
