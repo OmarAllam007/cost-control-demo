@@ -8087,6 +8087,29 @@ a, .btn {
   .filter-form .form-group-sm p {
     margin: 5px 0 5px; }
 
+.dropdown-menu > li > .btn-link {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #333333;
+  white-space: nowrap;
+  text-align: left;
+  float: none;
+  cursor: pointer;
+  width: 100%; }
+  .dropdown-menu > li > .btn-link:hover {
+    text-decoration: none;
+    color: #262626;
+    background-color: #f5f5f5; }
+
+body#iframe {
+  background-color: #fff; }
+
+.modal-body.iframe {
+  padding: 15px 0; }
+
 @page {
   size: A4;
   margin: 5px; }

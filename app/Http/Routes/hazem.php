@@ -7,6 +7,7 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('cost-accounts/account', 'Api\CostAccountController@show');
     Route::get('resources', 'Api\ResourcesController@index');
     Route::get('productivity', 'Api\ProductivityController@index');
+    Route::get('productivity/labours-count/{productivity}', 'Api\ProductivityController@labors_count');
 });
 
 Route::group(['prefix' => 'wbs-level'], function () {
@@ -67,3 +68,5 @@ Route::resource('breakdown-template', 'BreakdownTemplateController');
 Route::resource('std-activity-resource', 'StdActivityResourceController');
 
 Route::resource('breakdown', 'BreakdownController');
+
+Route::resource('breakdown-resource', 'BreakdownResourceController');

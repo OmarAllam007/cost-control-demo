@@ -19,7 +19,7 @@ class CostAccountController extends Controller
         }
 
         if ($request->has('project')) {
-            $query->where('project_id', $request->get('project_id'));
+            $query->where('project_id', $request->get('project'));
         }
 
         if ($request->has('wbs')) {

@@ -58,7 +58,7 @@
 
             <div class="form-group {{$errors->first('labor_count', 'has-error')}}">
                 {{ Form::label('labor_count', 'Labor Count', ['class' => 'control-label']) }}
-                {{ Form::text('labor_count', null, ['class' => 'form-control']) }}
+                {{ Form::text('labor_count', null, ['class' => 'form-control', 'v-model' => 'labor_count']) }}
                 {!! $errors->first('labor_count', '<div class="help-block">:message</div>') !!}
             </div>
         </section>

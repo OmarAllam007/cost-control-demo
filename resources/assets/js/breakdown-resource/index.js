@@ -3,7 +3,8 @@ var App = new Vue({
 
     data: {
         resource: resource,
-        productivity: productivity
+        productivity: productivity,
+        labor_count: 0
     },
 
     computed: {
@@ -28,6 +29,10 @@ var App = new Vue({
 
         'productivity-changed': function (productivity) {
             this.productivity = productivity;
+        },
+
+        set_labor_count: function(count) {
+            this.labor_count = count;
         }
     }
 });

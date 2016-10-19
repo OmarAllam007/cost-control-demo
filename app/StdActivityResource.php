@@ -78,11 +78,13 @@ class StdActivityResource extends Model
     {
         $this->variables()->delete();
 
-        foreach ($variables as $index => $var) {
-            $this->variables()->create([
-                'label' => $var,
-                'display_order' => $index + 1
-            ]);
+        if ($variables) {
+            foreach ($variables as $index => $var) {
+                $this->variables()->create([
+                    'label' => $var,
+                    'display_order' => $index + 1
+                ]);
+            }
         }
     }
 
