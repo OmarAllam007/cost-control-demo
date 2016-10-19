@@ -27,8 +27,8 @@ class RevisedBoq
         foreach ($break_downs as $break_down) {
             $boqs = Boq::where('cost_account', $break_down->cost_account);
             $wbs = $break_down->wbs_level;
-            if (!isset($data[$wbs->id])) {
-                $data[$wbs->id] = [
+            if (!isset($data[ $wbs->id ])) {
+                $data[ $wbs->id ] = [
                     'code' => $wbs->code,
                     'name' => $wbs->name,
                     'revised_boq' => 0,
@@ -37,20 +37,22 @@ class RevisedBoq
                 ];
             }
 
-            $data[$wbs->id]['original_boq'] += $boqs->sum(\DB::raw('price_ur * quantity'));
+            $data[ $wbs->id ]['original_boq'] += $boqs->sum(\DB::raw('price_ur * quantity'));
 
             $eng_qty = Survey::where('cost_account', $break_down->cost_account)->sum(\DB::raw('eng_qty'));
             $price_ur = Boq::where('cost_account', $break_down->cost_account)->sum(\DB::raw('price_ur'));
-            $data[$wbs->id]['revised_boq'] += $price_ur * $eng_qty;
+            $data[ $wbs->id ]['revised_boq'] += $price_ur * $eng_qty;
         }
 
         foreach ($data as $key => $value) {
-            $total['revised_boq'] += $data[$key]['revised_boq'];
-            $total['original_boq'] += $data[$key]['original_boq'];
+            $total['revised_boq'] += $data[ $key ]['revised_boq'];
+            $total['original_boq'] += $data[ $key ]['original_boq'];
         }
         foreach ($data as $key => $value) {
-            $data[$key]['weight'] += (($data[$key]['revised_boq'] / $data[$key]['original_boq']) * 100);
-            $total['weight'] += $data[$key]['weight'];
+
+            $data[ $key ]['weight'] += (($data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']) * 100);
+
+            $total['weight'] += $data[ $key ]['weight'];
         }
         return view('reports.revised_boq', compact('data', 'total', 'project'));
     }

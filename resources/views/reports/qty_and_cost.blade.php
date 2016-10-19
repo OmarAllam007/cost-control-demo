@@ -7,8 +7,10 @@
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
 @stop
+@section('image')
+    <img src="{{asset('images/reports/costdryqty.jpg')}}">
+@endsection
 @section('body')
-
     <table class="table table-condensed table-striped table-fixed">
         <thead>
         <tr style="background-color: yellow">

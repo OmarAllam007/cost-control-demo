@@ -7,6 +7,9 @@
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
 @endsection
+@section('image')
+    <img src="{{asset('images/reports/costbydiscipline.jpg')}}">
+@endsection
 @section('body')
 
     <table class="table table-condensed table-striped table-fixed">

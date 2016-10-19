@@ -9,6 +9,9 @@
         </a>
     </div>
 @endsection
+@section('image')
+    <img src="{{asset('images/reports/qsSummery.jpg')}}">
+@endsection
 @section('body')
     @foreach($level_array as $level)
         <li class="list-unstyled">

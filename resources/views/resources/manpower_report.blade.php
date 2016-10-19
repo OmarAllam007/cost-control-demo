@@ -9,7 +9,9 @@
         </a>
     </div>
 @stop
-
+@section('image')
+    <img src="{{asset('images/reports/manpower.jpg')}}">
+@endsection
 @section('body')
     <div class="tree--item">
        <strong>{{$root}}</strong>
