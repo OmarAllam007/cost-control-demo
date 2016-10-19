@@ -8,11 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakdownResource extends Model
 {
-    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code'];
+    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_qty_manual'];
 
     function breakdown()
     {
         return $this->belongsTo(Breakdown::class);
+    }
+
+    function getCostAccountAttribute()
+    {
+        $this->load(['breakdown']);
+        return $this->breakdown->cost_account;
+    }
+
+    function getStdActivityIdAttribute()
+    {
+        $this->load(['breakdown']);
+        return $this->breakdown->std_activity_id;
     }
 
     function resource()
@@ -61,6 +73,10 @@ class BreakdownResource extends Model
 
     function getResourceQtyAttribute()
     {
+        if ($this->resource_qty_manual) {
+            return $this->attributes['resource_qty'];
+        }
+
         $v = $V = $this->budget_qty;
 
         $variables = [];

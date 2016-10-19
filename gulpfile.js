@@ -17,6 +17,7 @@ elixir(function (mix) {
 
     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
     mix.scripts('tree-select.js');
+    mix.scripts('autocomplete.js');
     mix.scripts([
         'breakdown/load-templates.js',
         'breakdown/load-resources.js',
