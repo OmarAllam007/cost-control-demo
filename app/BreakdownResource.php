@@ -15,6 +15,12 @@ class BreakdownResource extends Model
         return $this->belongsTo(Breakdown::class);
     }
 
+    function getWbsLevelIdAttribute()
+    {
+        $this->load(['breakdown']);
+        return $this->breakdown->wbs_level_id;
+    }
+
     function getCostAccountAttribute()
     {
         $this->load(['breakdown']);

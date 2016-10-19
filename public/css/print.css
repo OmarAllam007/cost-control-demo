@@ -8104,9 +8104,12 @@ a, .btn {
 
 body#iframe {
   background-color: #fff; }
+  body#iframe .container-fluid {
+    margin-top: 15px;
+    margin-bottom: 15px; }
 
 .modal-body.iframe {
-  padding: 15px 0; }
+  padding: 0; }
 
 @page {
   size: A4;
