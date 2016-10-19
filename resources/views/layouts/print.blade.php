@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+@include('layouts.cover')
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -8,6 +9,8 @@
     <title>{{config('app.name')}}</title>
     <link rel="stylesheet" href="{{asset('/css/print.css')}}">
 </head>
+
+
 <body id="app-layout">
 
 <table class="table">
@@ -15,11 +18,11 @@
     <tr>
         <th width="33%">
             <strong>
-            AlKifah Contracting Co. <br>
-            Project Control Department <br>
-            Budget Team <br>
-            Project: {{$project->name}} <br>
-            {{date('d M Y')}}
+                AlKifah Contracting Co. <br>
+                Project Control Department <br>
+                Budget Team <br>
+                Project: {{$project->name}} <br>
+                {{date('d M Y')}}
             </strong>
         </th>
         <th width="34%" class="header-text text-center">
@@ -37,6 +40,7 @@
         </td>
     </tr>
     </tbody>
+    <div class="page-break"></div>
 </table>
 {{--<div class="panel panel-default" id="main-panel">
     <div class="panel-heading clearfix">
@@ -61,4 +65,5 @@
     window.print();
 </script>
 </body>
+
 </html>

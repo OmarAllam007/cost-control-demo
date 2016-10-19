@@ -9,7 +9,9 @@
         </a>
     </div>
 @stop
-
+@section('image')
+    <img src="{{asset('images/reports/activity-breakdown.jpg')}}">
+@endsection
 @section('body')
     <ul class="list-unstyled tree">
         @foreach($data as $wbs_level=>$attributes)

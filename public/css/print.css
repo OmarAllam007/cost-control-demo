@@ -236,6 +236,8 @@ th {
   .table-bordered td {
     border: 1px solid #ddd !important; } }
 
+
+
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
@@ -8117,5 +8119,11 @@ a, .btn {
 
 .tree--child {
   margin-bottom: 20px; }
-
+@media all {
+  .page-break	{ display: none; }
+}
+/*tr {display: table-row-group;}*/
+@media print {
+  .page-break	{ display: block; page-break-after: always; }
+}
 /*# sourceMappingURL=print.css.map */

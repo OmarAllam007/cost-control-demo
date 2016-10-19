@@ -46,11 +46,7 @@ class ProjectController extends Controller
     {
         set_time_limit(1800);
         ini_set('memory_limit', '32m');
-
-        $divisions = BoqDivision::whereHas('items', function ($q) use ($project) {
-            $q->where('project_id', $project->id);
-        })->get();
-
+        $divisions = $this->getBoqs($project);
         $project->load([
             'wbs_levels',
             'quantities',
@@ -67,12 +63,34 @@ class ProjectController extends Controller
         return view('project.show', compact('project', 'divisions'));
     }
 
+    public function getBoqs(Project $project)
+    {
+        $items = [];
+        $boqs = Boq::where('project_id', $project->id)->get();
+        foreach ($boqs as $boq) {
+            if (!isset($items[ $boq->type ])) {
+                $items[ $boq->type ] = [
+                    'id' => $boq->id,
+                    'name' => $boq->type,
+                    'items' => [],
+                ];
+            }
+            if (!isset($items[ $boq->type ]['items'][$boq->id])) {
+                $items[ $boq->type ]['items'][$boq->id] = [
+                    'id' => $boq->id,
+                    'name' => $boq->description,];
+            }
+        }
+       return $items;
+    }
+
     public function edit(Project $project)
     {
         return view('project.edit', compact('project'));
     }
 
-    public function update(Project $project, Request $request)
+    public
+    function update(Project $project, Request $request)
     {
         $this->validate($request, $this->rules);
 
@@ -83,7 +101,8 @@ class ProjectController extends Controller
         return \Redirect::route('project.index');
     }
 
-    public function destroy(Project $project)
+    public
+    function destroy(Project $project)
     {
         $project->delete();
 
@@ -99,7 +118,6 @@ class ProjectController extends Controller
 
         return back();
     }
-
 
 
 }

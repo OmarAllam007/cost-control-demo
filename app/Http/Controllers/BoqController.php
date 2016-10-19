@@ -77,6 +77,16 @@ class BoqController extends Controller
         return \Redirect::route('project.show', $boq->project_id);
     }
 
+    public function deleteAll(Project $project)
+    {
+        $items = Boq::where('project_id',$project->id)->get();
+        foreach ($items as $item){
+            $item->delete();
+        }
+        flash('All Boqs Deleted successfully', 'success');
+        return \Redirect::route('project.show', $project->id);
+    }
+
     function import(Project $project)
     {
         return view('boq.import', compact('project'));

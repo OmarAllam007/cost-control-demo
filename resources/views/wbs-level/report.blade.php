@@ -9,6 +9,9 @@
         </a>
     </div>
 @endsection
+@section('image')
+    <img src="{{asset('images/reports/wbs-level.jpg')}}">
+@endsection
 @section('body')
     @if ($project->wbs_tree->count())
         <table class="table table-condensed table-bordered">

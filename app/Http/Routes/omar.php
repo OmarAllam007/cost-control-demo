@@ -3,16 +3,19 @@ Route::resource('boq-division', 'BoqDivisionController');
 
 Route::resource('csi-category', 'CsiCategoryController');
 
-
 Route::group(['prefix' => 'boq'], function () {
     Route::get('import/{project}', ['as' => 'boq.import', 'uses' => 'BoqController@import']);
     Route::post('import/{project}', ['as' => 'boq.post-import', 'uses' => 'BoqController@postImport']);
     Route::get('export/{project}', ['as' => 'boq.export', 'uses' => 'BoqController@exportBoq']);
+    Route::delete('delete-all/{project}', ['as' => 'boq.delete-all', 'uses' => 'BoqController@deleteAll']);
 
 });
+
 Route::group(['prefix' => 'breakdown'], function () {
 Route::get('export/{project}',['as'=>'break_down.export','uses'=>'BreakdownController@exportBreakDown']);
+    Route::get('printAll/{project}',['as'=>'break_down.printall','uses'=>'BreakdownController@printAll']);
 });
+
 Route::group(['prefix' => 'productivity'], function () {
     Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
@@ -23,6 +26,7 @@ Route::group(['prefix' => 'productivity'], function () {
 Route::group(['prefix' => 'business-partner'], function () {
     Route::post('/filter',['as'=>'business-partner.filter','uses'=>'BusinessPartnerController@filter']);
 });
+
 Route::group(['prefix' => 'productivity'], function () {
     Route::post('/filter',['as'=>'productivity.filter','uses'=>'ProductivityController@filter']);
     Route::get('/report',['as'=> 'productivity.report','uses'=>'ProductivityController@showReport']);
@@ -76,7 +80,6 @@ Route::group(['prefix' => 'survey'], function () {
 Route::group(['prefix' => 'resources'], function () {
     Route::get('export/{project}', ['as' => 'resources.export', 'uses' => 'ResourcesController@exportResources']);
 });
-
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');

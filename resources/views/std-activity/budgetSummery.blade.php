@@ -9,6 +9,9 @@
         </a>
     </div>
 @stop
+@section('image')
+    <img src="{{asset('images/reports/budgetsummery.jpg')}}">
+@endsection
 @section('body')
 
     <ul class="list-unstyled tree">

@@ -9,6 +9,9 @@
         </a>
     </div>
 @endsection
+@section('image')
+    <img src="{{asset('images/reports/ResourceDictionary.jpg')}}">
+@endsection
 @section('body')
     <table class="table table-condensed table-striped">
         <thead>

@@ -4,6 +4,18 @@ namespace App\Http\Controllers;
 
 
 use App\Breakdown;
+use App\Http\Controllers\Reports\ActivityResourceBreakDown;
+use App\Http\Controllers\Reports\BoqPriceList;
+use App\Http\Controllers\Reports\BudgetCostByBuilding;
+use App\Http\Controllers\Reports\BudgetCostByDiscipline;
+use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
+use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
+use App\Http\Controllers\Reports\HighPriorityMaterials;
+use App\Http\Controllers\Reports\Productivity;
+use App\Http\Controllers\Reports\QtyAndCost;
+use App\Http\Controllers\Reports\QuantitiySurveySummery;
+use App\Http\Controllers\Reports\ResourceDictionary;
+use App\Http\Controllers\Reports\RevisedBoq;
 use App\Http\Requests\BreakdownRequest;
 use App\Project;
 use Illuminate\Http\Request;
@@ -54,5 +66,85 @@ class BreakdownController extends Controller
         \Session::set('filters.breakdown.' . $project->id, $data);
 
         return \Redirect::to(route('project.show', $project) . '#breakdown');
+    }
+
+    function printAll(Project $project)
+    {
+        //Budget Calculations
+        $wbsLevelReport = new ReportController();
+        $wbsLevelReportHtml = $wbsLevelReport->wbsReport($project)->render();
+
+        $stdActivityReport = new ReportController();
+        $stdActivityReportHtml = $stdActivityReport->stdActivityReport($project)->render();
+
+        $productivity = new Productivity();
+        $productivityHtml = $productivity->getProductivity($project)->render();
+
+        $qsSummery = new QuantitiySurveySummery();
+        $qsSummeryHtml = $qsSummery->qsSummeryReport($project)->render();
+
+        $boqPriceList = new BoqPriceList();
+        $boqPriceListHtml = $boqPriceList->getBoqPriceList($project)->render();
+        //Budget Output
+        $resourceDictionary = new ResourceDictionary();
+        $resourceDictionaryHtml = $resourceDictionary->getResourceDictionary($project)->render();
+
+        $highPriorityMaterials = new HighPriorityMaterials();
+        $highPriorityMaterialsHtml = $highPriorityMaterials->getTopHighPriorityMaterials($project)->render();
+
+        $budgetManPower = new ReportController();
+        $budgetManPowerHtml = $budgetManPower->manPower($project)->render();
+
+        $budgetSummery = new ReportController();
+        $budgetSummeryHtml = $budgetSummery->budgetSummery($project)->render();
+
+        $activityResourceBreakDown = new ActivityResourceBreakDown();
+        $activityResourceBreakDownHtml = $activityResourceBreakDown->getActivityResourceBreakDown($project)->render();
+
+        $revisedBoq = new RevisedBoq();
+        $revisedBoqHtml = $revisedBoq->getRevised($project)->render();
+        //Budget Reports
+
+        $budgetCostByBuilding = new BudgetCostByBuilding();
+        $budgetCostByBuildingHtml = $budgetCostByBuilding->getBudgetCostForBuilding($project)->render();
+
+        $budgetCostByDiscipline = new BudgetCostByDiscipline();
+        $budgetCostByDisciplineHtml = $budgetCostByDiscipline->compareBudgetCostDiscipline($project)->render();
+
+        $budgetCostByBreakDown = new ReportController();
+        $budgetCostByBreakDownHtml = $budgetCostByBreakDown->budgetCostVSBreadDown($project)->render();
+
+        $budgetCostDryCostByBuilding = new BudgetCostDryCostByBuilding();
+        $budgetCostDryCostByBuildingHtml = $budgetCostDryCostByBuilding->compareBudgetCostDryCost($project)->render();
+
+        $budgetCostDryCostByDiscipline = new BudgetCostDryCostByDiscipline();
+        $budgetCostDryCostByDisciplineHtml = $budgetCostDryCostByDiscipline->compareBudgetCostDryCostDiscipline($project)->render();
+
+        $budgetCostVsDry = new QtyAndCost();
+        $budgetCostVsDryHtml = $budgetCostVsDry->compare($project)->render();
+
+
+
+        echo $wbsLevelReportHtml.
+            $stdActivityReportHtml.
+            $productivityHtml.
+            $qsSummeryHtml.
+            $boqPriceListHtml.
+            $resourceDictionaryHtml.
+            $highPriorityMaterialsHtml.
+            $budgetManPowerHtml.
+            $budgetSummeryHtml.
+            $activityResourceBreakDownHtml.
+            $revisedBoqHtml.
+            $budgetCostByBuildingHtml.
+            $budgetCostByDisciplineHtml.
+            $budgetCostByBreakDownHtml.
+            $budgetCostDryCostByBuildingHtml.
+            $budgetCostDryCostByDisciplineHtml.
+            $budgetCostVsDryHtml
+
+        ;
+
+
     }
 }
