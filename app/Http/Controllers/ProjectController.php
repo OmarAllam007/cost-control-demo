@@ -89,8 +89,7 @@ class ProjectController extends Controller
         return view('project.edit', compact('project'));
     }
 
-    public
-    function update(Project $project, Request $request)
+    public function update(Project $project, Request $request)
     {
         $this->validate($request, $this->rules);
 
@@ -101,8 +100,7 @@ class ProjectController extends Controller
         return \Redirect::route('project.index');
     }
 
-    public
-    function destroy(Project $project)
+    public function destroy(Project $project)
     {
         $project->delete();
 
