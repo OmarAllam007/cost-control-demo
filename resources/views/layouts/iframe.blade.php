@@ -27,7 +27,7 @@
         if (window.parent != window) {
             setTimeout(function(){
                 window.parent.location.reload();
-            }, 3000)
+            }, 3000);
         }
     </script>
 @endif

@@ -10079,7 +10079,9 @@ var Productivity = Vue.extend({
             productivities: [],
             loading: false,
             term: '',
-            selected: productivity
+            selected: productivity,
+            labors_count: 0,
+            labors_cache: {}
         };
     },
 
@@ -10090,6 +10092,15 @@ var Productivity = Vue.extend({
     watch: {
         term: function () {
             this.load();
+        },
+
+        selected: function() {
+            $.ajax({
+                url: '/api/productivity/labours-count/' + this.selected.id,
+                dataType: 'json'
+            }).success(response => {
+                this.$dispatch('set_labor_count', response.count);
+            });
         }
     },
 
@@ -10194,7 +10205,8 @@ var App = new Vue({
 
     data: {
         resource: resource,
-        productivity: productivity
+        productivity: productivity,
+        labor_count: 0
     },
 
     computed: {
@@ -10219,6 +10231,10 @@ var App = new Vue({
 
         'productivity-changed': function (productivity) {
             this.productivity = productivity;
+        },
+
+        set_labor_count: function(count) {
+            this.labor_count = count;
         }
     }
 });

@@ -80,12 +80,12 @@ class Productivity extends Model
         return round(($this->getCrewManAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
     }
 
-    public function getCrewManAttribute($crew_structure)
+    public function getCrewManAttribute()
     {
         $man_powers = array_map('strtolower',
             array_column(ProductivityList::where('name', '=', 'Manpower')->get(array('type'))->toArray(), 'type'));
         $man_numbers = [];
-        $lines = array_filter(explode("\n", strtolower($crew_structure)));
+        $lines = array_filter(explode("\n", strtolower($this->crew_structure)));
         foreach ($lines as $line) {
             $tokens = [];
             preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
@@ -109,12 +109,12 @@ class Productivity extends Model
         return round(($this->getCrewEquipAttribute($this->crew_structure) / $this->getAfterReductionAttribute()), 2);
     }
 
-    public function getCrewEquipAttribute($crew_structure)
+    public function getCrewEquipAttribute()
     {
         $equip_powers = array_map('strtolower',
             array_column(ProductivityList::where('name', '=', 'Equipment')->get(array('type'))->toArray(), 'type'));
         $equip_numbers = [];
-        $lines = explode("\n", strtolower($crew_structure));
+        $lines = explode("\n", strtolower($this->crew_structure));
         foreach ($lines as $line) {
             $tokens = [];
             preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);

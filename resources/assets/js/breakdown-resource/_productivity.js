@@ -6,7 +6,9 @@ var Productivity = Vue.extend({
             productivities: [],
             loading: false,
             term: '',
-            selected: productivity
+            selected: productivity,
+            labors_count: 0,
+            labors_cache: {}
         };
     },
 
@@ -17,6 +19,15 @@ var Productivity = Vue.extend({
     watch: {
         term: function () {
             this.load();
+        },
+
+        selected: function() {
+            $.ajax({
+                url: '/api/productivity/labours-count/' + this.selected.id,
+                dataType: 'json'
+            }).success(response => {
+                this.$dispatch('set_labor_count', response.count);
+            });
         }
     },
 

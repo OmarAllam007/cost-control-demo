@@ -16,4 +16,9 @@ class ProductivityController extends Controller
                 return $productivity->morphToJSON();
             });
     }
+
+    function labors_count(Productivity $productivity)
+    {
+        return ['count' => $productivity->crew_man];
+    }
 }
