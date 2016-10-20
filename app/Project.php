@@ -43,7 +43,9 @@ class Project extends Model
     function boqs()
 
     {
-        return $this->hasMany(Boq::class, 'project_id');
+        $relation = $this->hasMany(Boq::class, 'project_id');
+        $relation->orderBy('description');
+        return $relation;
     }
 
     function breakdown_resources()

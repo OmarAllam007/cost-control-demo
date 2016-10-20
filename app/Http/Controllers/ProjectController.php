@@ -62,25 +62,20 @@ class ProjectController extends Controller
         return view('project.show', compact('project', 'divisions'));
     }
 
-    public function getBoqs(Project $project)
+    protected function getBoqs(Project $project)
     {
         $items = [];
-        $boqs = Boq::where('project_id', $project->id)->get();
-        foreach ($boqs as $boq) {
-            if (!isset($items[ $boq->type ])) {
-                $items[ $boq->type ] = [
-                    'id' => $boq->id,
+        foreach ($project->boqs as $boq) {
+            if (!isset($items[$boq->type])) {
+                $items[$boq->type] = [
                     'name' => $boq->type,
-                    'items' => [],
+                    'items' => collect(),
                 ];
             }
-            if (!isset($items[ $boq->type ]['items'][$boq->id])) {
-                $items[ $boq->type ]['items'][$boq->id] = [
-                    'id' => $boq->id,
-                    'name' => $boq->description,];
-            }
+
+            $items[$boq->type]['items']->push($boq);
         }
-       return $items;
+        return $items;
     }
 
     public function edit(Project $project)
