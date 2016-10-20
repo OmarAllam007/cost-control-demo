@@ -21,3 +21,4 @@
     </thead>
 </table>
 @yield('image')
+<p style="page-break-before: always"></p>

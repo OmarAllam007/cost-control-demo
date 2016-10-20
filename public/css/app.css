@@ -8107,5 +8107,21 @@ body#iframe {
 
 .modal-body.iframe {
   padding: 15px 0; }
-
+#std-style{
+  background-color: #1f648b;
+  color:white;
+  padding: 3px;
+  font-weight: bold;
+}
+#std-activity-style
+{
+  background-color: #ec971f;
+  color:black;
+  padding: 3px;
+}
+#shadow {
+  -webkit-box-shadow: 0 8px 6px -6px black;
+  -moz-box-shadow: 0 8px 6px -6px black;
+  box-shadow: 0 8px 6px -6px black;
+}
 /*# sourceMappingURL=app.css.map */

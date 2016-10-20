@@ -1,6 +1,6 @@
-{{--<div class="pull-right">--}}
-    {{--<a href="{{route('break_down.printall',$project)}}?print=2" target="_blank" class="btn btn-primary"><li class="fa fa-print"></li> Print All</a>--}}
-{{--</div>--}}
+<div class="pull-right">
+    <a href="{{route('break_down.printall',$project)}}?print=2" target="_blank" class="btn btn-primary"><li class="fa fa-print"></li> Print All</a>
+</div>
 <table class="table table-condensed table-striped table-fixed text-center">
     <thead>
     <tr>

@@ -1,5 +1,5 @@
 @include('layouts.cover')
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -12,7 +12,6 @@
 
 
 <body id="app-layout">
-
 <table class="table">
     <thead>
     <tr>
@@ -33,6 +32,7 @@
         </th>
     </tr>
     </thead>
+
     <tbody>
     <tr>
         <td colspan="3">
@@ -40,8 +40,9 @@
         </td>
     </tr>
     </tbody>
-    <div class="page-break"></div>
 </table>
+<p style="page-break-before: always"></p>
+
 {{--<div class="panel panel-default" id="main-panel">
     <div class="panel-heading clearfix">
 
