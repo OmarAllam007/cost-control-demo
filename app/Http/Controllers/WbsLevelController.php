@@ -90,10 +90,10 @@ class WbsLevelController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new WbsImportJob($project, $file->path()));
+        $count = $this->dispatch(new WbsImportJob($project, $file->path()));
 
-        flash('WBS has been imported to ' . $project->name, 'success');
-        return redirect()->route('project.show', $project);
+        flash($count . 'WBS levels have been imported', 'success');
+        return redirect()->to(route('project.show', $project) . '#wbs-structure');
     }
 
     public function exportWbsLevels(Project $project)

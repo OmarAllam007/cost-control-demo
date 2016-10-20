@@ -46,6 +46,7 @@ class WbsImportJob extends Job
         });
 
         $rows = $sheet->getRowIterator(2);
+        $count = 0;
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $parent = 0;
@@ -76,11 +77,13 @@ class WbsImportJob extends Job
                     'parent_id' => $parent,
                     'project_id' => $this->project->id
                 ]);
+                $count++;
                 $parent = $level->id;
                 $levels->put($canonical, $parent);
             }
         }
 
         unlink($this->file);
+        return $count;
     }
 }
