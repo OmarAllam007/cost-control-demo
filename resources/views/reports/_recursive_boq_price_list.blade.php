@@ -1,6 +1,9 @@
 @foreach($data as $wbs_level=>$attributes)
     <li class="list-unstyled">
-        <div class="tree--item">
+        <div class="tree--item" style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;">
             <strong>{{$attributes['name']}}</strong>
         </div>
         @if(isset($attributes['items']))
@@ -9,20 +12,24 @@
                 @foreach($value['cost_accounts'] as $account)
                     <li>
                     <div class="tree--item collapse">
-                        <strong>{{$item}}</strong>
+
+                        <p style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;"><strong>{{$item}}</strong></p>
 
                         <article id="children-{{$value['id']}}">
-                            <table class="table table-condensed table-striped " style="margin: 3px; padding: 5px;">
-                                <thead>
-                                <tr>
-                                    <th class="col-md-3 bg-success">Cost Account</th>
-                                    <th class="col-md-1 bg-success">LABORS</th>
-                                    <th class="col-md-1 bg-success">MATERIAL</th>
-                                    <th class="col-md-1 bg-success">Subcontractors</th>
-                                    <th class="col-md-1 bg-success">EQUIPMENT</th>
-                                    <th class="col-md-1 bg-success">SCAFFOLDING</th>
-                                    <th class="col-md-1 bg-success">OTHERS</th>
-                                    <th class="col-md-3 bg-success">Grand Total</th>
+                            <table class="table table-condensed table-striped " >
+                                <thead >
+                                <tr class="items-style">
+                                    <th class="col-md-3">Cost Account</th>
+                                    <th class="col-md-1">LABORS</th>
+                                    <th class="col-md-1">MATERIAL</th>
+                                    <th class="col-md-1">Subcontractors</th>
+                                    <th class="col-md-1">EQUIPMENT</th>
+                                    <th class="col-md-1">SCAFFOLDING</th>
+                                    <th class="col-md-1">OTHERS</th>
+                                    <th class="col-md-3">Grand Total</th>
                                 </tr>
                                 </thead>
                                 <tbody>

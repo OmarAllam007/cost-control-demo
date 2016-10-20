@@ -8107,21 +8107,19 @@ body#iframe {
 
 .modal-body.iframe {
   padding: 15px 0; }
-#std-style{
-  background-color: #1f648b;
+.tree-style{
+  background-color: #154360;
   color:white;
   padding: 3px;
   font-weight: bold;
 }
-#std-activity-style
+.items-style
 {
-  background-color: #ec971f;
+  background: #ec971f;
   color:black;
   padding: 3px;
 }
-#shadow {
-  -webkit-box-shadow: 0 8px 6px -6px black;
-  -moz-box-shadow: 0 8px 6px -6px black;
-  box-shadow: 0 8px 6px -6px black;
+.row-shadow {
+  box-shadow: 0px 5px 6px grey;
 }
 /*# sourceMappingURL=app.css.map */

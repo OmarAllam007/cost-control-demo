@@ -8142,11 +8142,8 @@ body#iframe {
 
 .tree--child {
   margin-bottom: 20px; }
-@media all {
-  table	{ display: none; }
-}
-/*tr {display: table-row-group;}*/
-@media print {
-  table	{ display: block; page-break-after: always; }
-}
+
+
+thead { display: table-row-group }
+
 /*# sourceMappingURL=print.css.map */
