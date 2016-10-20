@@ -96,7 +96,7 @@ class SurveyController extends Controller
         if ($status['failed']->count()) {
             $key = 'qs_import_' . time();
             \Cache::add($key, $status, 180);
-            flash('Could not import the following items. Please fix.', 'warning');
+            flash('Could not import some items.', 'warning');
             return redirect()->route('survey.fix-import', $key);
         }
 
