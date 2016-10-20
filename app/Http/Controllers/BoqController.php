@@ -100,9 +100,61 @@ class BoqController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new BoqImportJob($project, $file->path()));
+        $status = $this->dispatch(new BoqImportJob($project, $file->path()));
+        if ($status['failed']->count()) {
+            $key = 'boq_' . time();
+            \Cache::add($key, $status, 180);
+            flash('Could not import all items', 'warning');
+            return \Redirect::route('boq.fix-import', $key);
+        }
 
+        flash($status['success'] . ' BOQ items have been imported', 'success');
         return redirect()->route('project.show', $project);
+    }
+
+    function fixImport($key)
+    {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return \Redirect::route('project.index');
+        }
+
+        $status = \Cache::get($key);
+
+        return view('boq.fix-import', ['items' => $status['failed'], 'project' => Project::find($status['project_id']), 'key' => $key]);
+    }
+
+    function postFixImport(Request $request, $key)
+    {
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return \Redirect::route('project.index');
+        }
+
+        $data = $request->get('data');
+        $errors = Boq::checkFixImport($data);
+        if (!$errors) {
+            $status = \Cache::get($key);
+
+            foreach ($status['failed'] as $item) {
+                if (isset($item['orig_unit_id']) && isset($data['units'][ $item['orig_unit_id'] ])) {
+                    $item['unit'] = $data['units'][$item['orig_unit_id']];
+                }
+
+                if (isset($item['orig_wbs_id']) && isset($data['wbs'][$item['orig_wbs_id']])) {
+                    $item['wbs_id'] = $data['wbs'][$item['orig_wbs_id']];
+                }
+
+                Boq::create($item);
+                ++$status['success'];
+            }
+
+            flash($status['success'] . ' BOQ items have been imported', 'success');
+            return \Redirect::to(route('project.show', $status['project_id']) . '#boq');
+        }
+
+        flash('Could not import all items');
+        return \Redirect::route('boq.fix-import', $key)->withErrors($errors)->withInput($request->all());
     }
 
     function exportBoq(Project $project)

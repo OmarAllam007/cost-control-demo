@@ -62,5 +62,23 @@ class Boq extends Model
         return $this->belongsTo(Project::class,'project_id');
     }
 
+    public static function checkFixImport($data)
+    {
+        $errors = [];
+
+        foreach ($data['units'] as $unit => $unit_id) {
+            if (empty($unit_id)) {
+                $errors['units.'.$unit] = $unit;
+            }
+        }
+
+        foreach ($data['wbs'] as $wbs => $wbs_id) {
+            if (empty($wbs_id)) {
+                $errors['wbs.'.$wbs] = $wbs;
+            }
+        }
+
+        return $errors;
+    }
 
 }

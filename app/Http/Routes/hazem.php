@@ -58,6 +58,11 @@ Route::group(['prefix' => 'breakdown-template'], function () {
     Route::post('import', ['as' => 'breakdown-template.post-import', 'uses' => 'BreakdownTemplateController@postImport']);
 });
 
+Route::group(['prefix' => 'boq'], function() {
+    Route::get('fix-import/{key}', ['as' => 'boq.fix-import', 'uses' => 'BoqController@fixImport']);
+    Route::post('fix-import/{key}', ['as' => 'boq.post-fix-import', 'uses' => 'BoqController@postFixImport']);
+});
+
 Route::post('breakdown/filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
 
 Route::resource('project', 'ProjectController');
