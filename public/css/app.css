@@ -8109,6 +8109,7 @@ body#iframe {
     margin-bottom: 15px; }
 
 .modal-body.iframe {
-  padding: 0; }
+  padding: 0;
+  height: 500px; }
 
 /*# sourceMappingURL=app.css.map */
