@@ -26,14 +26,12 @@
                             <td>
                                 <div class="pull-right">
                                     <form action="{{ route('boq.destroy', $item) }}" method="post">
-                                        <a href="{{route('boq.show', $item['id'])}}" class="btn btn-xs btn-info">
-                                            <i class="fa fa-eye"></i> Show
-                                        </a>
-                                        <a href="{{route('boq.edit', $item)}}" class="btn btn-xs btn-primary"
-                                        <i class="fa fa-edit"></i> Edit
+                                        {{csrf_field()}} {{method_field('delete')}}
+
+                                        <a href="{{route('boq.edit', $item)}}" class="btn btn-xs btn-primary">
+                                            <i class="fa fa-edit"></i> Edit
                                         </a>
 
-                                        {{csrf_field()}} {{method_field('delete')}}
                                         <button class="btn btn-xs btn-warning"><i class="fa fa-trash-o"></i>
                                             Delete
                                         </button>
