@@ -23,10 +23,10 @@
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('word_package_name', 'has-error')}}">
-            {{ Form::label('word_package_name', 'Work Package Name', ['class' => 'control-label']) }}
-            {{ Form::text('word_package_name', null, ['class' => 'form-control']) }}
-            {!! $errors->first('word_package_name', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('work_package_name', 'has-error')}}">
+            {{ Form::label('work_package_name', 'Work Package Name', ['class' => 'control-label']) }}
+            {{ Form::text('work_package_name', null, ['class' => 'form-control']) }}
+            {!! $errors->first('work_package_name', '<div class="help-block">:message</div>') !!}
         </div>
         <!-- Continue working on your fields here -->
 
