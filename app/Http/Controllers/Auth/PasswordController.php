@@ -18,6 +18,8 @@ class PasswordController extends Controller
     |
     */
 
+    protected $redirectPath = '/project';
+
     use ResetsPasswords;
 
     /**

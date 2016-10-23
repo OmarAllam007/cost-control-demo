@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Laravel\Socialite\Facades\Socialite;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -21,14 +23,14 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesUsers, ThrottlesLogins;
 
     /**
      * Where to redirect users after login / registration.
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/project';
 
     /**
      * Create a new authentication controller instance.
@@ -68,5 +70,24 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    function googleRedirect()
+    {
+        return \Socialite::driver('google')->redirect();
+    }
+
+    function googleHandle()
+    {
+        $googleUser = \Socialite::driver('google')->user();
+        $user = User::where('email', $googleUser->email)->first();
+
+        if ($user) {
+            \Auth::login($user);
+            return \Redirect::to($this->redirectPath());
+        } else {
+            flash('You are not authorized to login');
+            return \Redirect::to('/login');
+        }
     }
 }
