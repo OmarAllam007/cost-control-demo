@@ -11,16 +11,15 @@
     <img src="{{asset('images/reports/budgetdrydiscpline.jpg')}}">
 @endsection
 @section('body')
-
-    <table class="table table-condensed table-striped table-fixed">
+    <table class="table table-condensed">
         <thead>
-        <tr>
-            <th class="col-xs-2">Code</th>
-            <th class="col-xs-2">Discipline</th>
-            <th class="col-xs-2">Dry Cost</th>
-            <th class="col-xs-2">Budget Cost</th>
-            <th class="col-xs-2">Difference</th>
-            <th class="col-xs-2">Increase</th>
+        <tr class="row-shadow">
+            <th class="col-xs-2" style="background-color:#446CB3; color: white">Code</th>
+            <th class="col-xs-2" style="background-color:#446CB3; color: white">Discipline</th>
+            <th class="col-xs-2" style="background-color:#446CB3; color: white">Dry Cost</th>
+            <th class="col-xs-2" style="background-color:#446CB3; color: white">Budget Cost</th>
+            <th class="col-xs-2" style="background-color:#446CB3; color: white">Difference</th>
+            <th class="col-xs-2" style="background-color:#446CB3; color: white">Increase</th>
         </tr>
         </thead>
         <tbody>

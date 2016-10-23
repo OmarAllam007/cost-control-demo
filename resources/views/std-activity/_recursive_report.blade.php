@@ -14,7 +14,7 @@
         @endif
 
         @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
-            <table class="table table-striped table-condensed">
+            <table class="table table-condensed">
                 <thead class="items-style ">
                 <tr class="row-shadow">
                     <th class="col-md-8">Activity</th>

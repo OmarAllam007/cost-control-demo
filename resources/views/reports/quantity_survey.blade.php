@@ -24,7 +24,7 @@
             </div>
             @if($level['activity_divisions'])
                 <ul class="list-unstyled">
-                    <table class="table table-condensed table-striped">
+                    <table class="table table-condensed">
                         <thead>
                         <tr class="row-shadow items-style">
                             <th class="col-xs-3">Activity Division</th>

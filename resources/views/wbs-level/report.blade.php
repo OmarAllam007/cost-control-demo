@@ -14,7 +14,7 @@
 @endsection
 @section('body')
     @if ($project->wbs_tree->count())
-        <table class="table table-condensed table-bordered">
+        <table class="table table-condensed table-bordered ">
             <thead>
             <tr class="row-shadow">
                 <th width="25%" style="background-color:#446CB3; color: white">WBS Level 1</th>

@@ -8146,4 +8146,7 @@ body#iframe {
 
 thead { display: table-row-group }
 
+@media print {
+  body {-webkit-print-color-adjust: exact;}
+}
 /*# sourceMappingURL=print.css.map */

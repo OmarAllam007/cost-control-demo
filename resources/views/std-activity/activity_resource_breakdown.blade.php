@@ -17,24 +17,33 @@
         @foreach($data as $wbs_level=>$attributes)
             @if(isset($attributes['activities']))
                 <li>
-                    <p><strong>{{$wbs_level}}</strong></p>
+                    <p style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;"><strong>{{$wbs_level}}</strong></p>
                     <ul class="list-unstyled">
                         @foreach($attributes['activities'] as $item=>$value)
                             @foreach($value['cost_accounts'] as $account)
                                 <li class="tree--item">
-                                    <p><strong>{{$item}}</strong></p>
+                                    <p style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;"><strong>{{$item}}</strong></p>
                                     <ul>
                                         <li class="tree--item">
-                                            <p><strong>{{$account['cost_account']}}</strong></p>
+                                            <p style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;"><strong>{{$account['cost_account']}}</strong></p>
                                             <article id="children-">
-                                                <table class="table table-condensed table-striped table-bordered">
+                                                <table class="table table-condensed ">
                                                     <thead>
-                                                    <tr>
+                                                    <tr class="row-shadow items-style">
                                                         {{--<th class="col-md-3 bg-success">Cost Account</th>--}}
-                                                        <th class="col-md-3 bg-success">Resource Name</th>
-                                                        <th class="col-md-2 bg-success">Price-Unit</th>
-                                                        <th class="col-md-2 bg-success">Budget Unit</th>
-                                                        <th class="col-md-2 bg-success">Budget Cost</th>
+                                                        <th class="col-md-3">Resource Name</th>
+                                                        <th class="col-md-2">Price-Unit</th>
+                                                        <th class="col-md-2">Budget Unit</th>
+                                                        <th class="col-md-2">Budget Cost</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>

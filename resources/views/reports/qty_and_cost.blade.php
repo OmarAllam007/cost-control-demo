@@ -11,12 +11,12 @@
     <img src="{{asset('images/reports/costdryqty.jpg')}}">
 @endsection
 @section('body')
-    <table class="table table-condensed table-striped table-fixed">
+    <table class="table table-condensed ">
         <thead>
-        <tr style="background-color: yellow">
-            <th class="col-xs-4">Discipline</th>
-            <th class="col-xs-4">(Budget Cost- Dry Cost) * DRY Qty</th>
-            <th class="col-xs-4">(Budget QTY- Dry QTY) * Budget cost</th>
+        <tr class="row-shadow">
+            <th class="col-xs-4" style="background-color:#446CB3; color: white">Discipline</th>
+            <th class="col-xs-4" style="background-color:#446CB3; color: white">(Budget Cost- Dry Cost) * DRY Qty</th>
+            <th class="col-xs-4" style="background-color:#446CB3; color: white">(Budget QTY- Dry QTY) * Budget cost</th>
 
         </tr>
         </thead>

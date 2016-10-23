@@ -21,7 +21,7 @@
   padding: 3px;
   font-weight: bold;"><strong>{{$category}}</strong></div>
                 <ul>
-                    <table class="table table-condensed table-striped">
+                    <table class="table table-condensed">
                         <thead>
                         <tr class="row-shadow items-style">
                             {{--<th class="col-xs-2">Category</th>--}}
