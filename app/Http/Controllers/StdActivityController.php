@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filter\StdActivityFilter;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\ActivityImportJob;
 use App\StdActivity;
 use Illuminate\Http\Request;
@@ -91,5 +92,17 @@ class StdActivityController extends Controller
         \Session::set('filters.std-activity', $data);
 
         return \Redirect::back();
+    }
+
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('std_activity_resources')->delete();
+        \DB::table('breakdown_templates')->delete();
+        \DB::table('std_activities')->delete();
+        \DB::table('activity_divisions')->delete();
+
+        flash('All activities have been deleted', 'info');
+
+        return \Redirect::route('std-activity.index');
     }
 }

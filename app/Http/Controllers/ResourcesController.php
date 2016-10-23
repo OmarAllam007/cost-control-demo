@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\BusinessPartner;
 use App\Filter\ResourcesFilter;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\ResourcesImportJob;
 use App\Project;
 use App\Resources;
 use App\ResourceType;
+use App\StdActivityResource;
 use App\Unit;
 use Illuminate\Http\Request;
 
@@ -145,9 +147,12 @@ class ResourcesController extends Controller
         if (!$errors) {
             $units = $data['units'];
 
+            Resources::flushEventListeners();
             foreach ($failed['items'] as $item) {
-                $item['unit'] = $units[ $item['orig_unit'] ];
-                Resources::create($item);
+                if (isset($units[$item['orig_unit']])) {
+                    $item['unit'] = $units[$item['orig_unit']];
+                    Resources::create($item);
+                }
             }
 
             flash('Resources have been imported', 'success');
@@ -211,26 +216,37 @@ class ResourcesController extends Controller
         $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'reference');
         $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Business Partner');
         $rowCount = 2;
-        foreach ($project->plain_resources as $resource)
-        {
+        foreach ($project->plain_resources as $resource) {
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource->resource_code);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource->name);
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name);
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount,$resource->versionFor($project->id)->rate);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount,isset($resource->versionFor($project->id)->units->type)?$resource->versionFor($project->id)->units->type:'');
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource->versionFor($project->id)->rate);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, isset($resource->versionFor($project->id)->units->type) ? $resource->versionFor($project->id)->units->type : '');
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount,$resource->versionFor($project->id)->waste.'%');
+            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $resource->versionFor($project->id)->waste . '%');
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount,$resource->reference);
-            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount,isset(BusinessPartner::find($resource->business_partner_id)->name)? BusinessPartner::find($resource->business_partner_id)->name :'' );
+            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $resource->reference);
+            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, isset(BusinessPartner::find($resource->business_partner_id)->name) ? BusinessPartner::find($resource->business_partner_id)->name : '');
             $rowCount++;
 
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$project->name.' - Resources.xlsx"');
+        header('Content-Disposition: attachment;filename="' . $project->name . ' - Resources.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
+
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('resources')->delete();
+        \DB::table('std_activity_resources')->delete();
+        \DB::table('resource_types')->delete();
+//        StdActivityResource::query()->delete();
+
+        flash('All resources have been deleted', 'info');
+
+        return \Redirect::route('resources.index');
     }
 }

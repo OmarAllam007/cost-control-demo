@@ -26,6 +26,8 @@ Route::group(['prefix' => 'resources'], function () {
     Route::post('override/{resources}/{project}', ['as' => 'resources.post-override', 'uses' => 'ResourcesController@postOverride']);
 
     Route::post('/filter', ['as' => 'resources.filter', 'uses' => 'ResourcesController@filter']);
+
+    Route::delete('wipe', ['as' => 'resources.wipe', 'uses' => 'ResourcesController@wipe']);
 });
 
 Route::group(['prefix' => 'productivity'], function () {
@@ -41,6 +43,7 @@ Route::group(['prefix' => 'std-activity'], function () {
     Route::post('import', ['as' => 'std-activity.post-import', 'uses' => 'StdActivityController@postImport']);
 
     Route::post('filters', ['as' => 'std-activity.filters', 'uses' => 'StdActivityController@filters']);
+    Route::delete('wipe', ['as' => 'std-activity.wipe', 'uses' => 'StdActivityController@wipe']);
 });
 
 Route::group(['prefix' => 'survey'], function () {

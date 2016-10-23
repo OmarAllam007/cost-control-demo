@@ -26,6 +26,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies($gate);
 
-        //
+        $gate->define('wipe', function($user) {
+            return in_array(\Auth::user()->email, [
+                'hazem.mohamed@alkifah.com',
+                'karim.elsharkawy@alkifah.com',
+                'omar.garana@alkifah.com'
+            ]);
+        });
     }
 }
