@@ -18,7 +18,7 @@ class BreakdownTemplate extends Model
 
     public function activity()
     {
-        return $this->belongsTo(StdActivity::class, 'std_activity_id')->withTrashed();
+        return $this->belongsTo(StdActivity::class, 'std_activity_id');
     }
 
     public function resources()
