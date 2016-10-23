@@ -14,35 +14,28 @@
 
     <table class="table table-condensed table-striped table-fixed">
         <thead>
-        <tr>
-            <th class="col-xs-2">Code</th>
-            <th class="col-xs-2">Discipline</th>
-            <th class="col-xs-2">Budget Cost</th>
-            <th class="col-xs-2">Weight</th>
-            <th class="col-xs-2"></th>
-            <th class="col-xs-2"></th>
-            </th>
+        <tr class="row-shadow">
+            <th class="col-xs-3" style="background-color:#446CB3; color: white">Code</th>
+            <th class="col-xs-3" style="background-color:#446CB3; color: white">Discipline</th>
+            <th class="col-xs-3" style="background-color:#446CB3; color: white">Budget Cost</th>
+            <th class="col-xs-3" style="background-color:#446CB3; color: white">Weight</th>
         </tr>
         </thead>
         <tbody>
         @foreach($survey as $row)
-
             <tr>
-                <td class="col-xs-2">{{$row['code']}}</td>
-                <td class="col-xs-2">{{$row['name']}}</td>
-                <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
-                <td class="col-xs-2">%{{number_format($row['weight'])}}</td>
-                <td class="col-xs-2"></td>
-                <td class="col-xs-2"></td>
+                <td class="col-xs-3">{{$row['code']}}</td>
+                <td class="col-xs-3">{{$row['name']}}</td>
+                <td class="col-xs-3">{{number_format($row['budget_cost'],2)}}</td>
+                <td class="col-xs-3">%{{number_format($row['weight'])}}</td>
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
-            <td class="col-xs-2"></td>
-            <td class="col-xs-2" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-2">{{number_format($total['total'],2)}}</td>
-            <td class="col-xs-2" style="font-style: italic">{{number_format($total['weight_total'],2)}}</td>
-            <td class="col-xs-2"></td>
-            <td class="col-xs-2"></td>
+            <td class="col-xs-3"></td>
+            <td class="col-xs-3" style="font-weight: 800">Grand Total</td>
+            <td class="col-xs-3">{{number_format($total['total'],2)}}</td>
+            <td class="col-xs-3" style="font-style: italic">{{number_format($total['weight_total'],2)}}</td>
+
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}
         </tr>
         </tbody>

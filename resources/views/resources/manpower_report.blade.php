@@ -13,18 +13,21 @@
     <img src="{{asset('images/reports/manpower.jpg')}}">
 @endsection
 @section('body')
-    <div class="tree--item">
+    <div class="tree--item" style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;">
        <strong>{{$root}}</strong>
     </div>
 
     <article id="children-1" class="tree--child">
-        <table class="table table-condensed table-striped " style="margin: 3px; padding: 5px;">
+        <table class="table table-condensed  " style="margin: 3px; padding: 5px;">
             <thead>
-            <tr>
-                <th class="col-md-3 bg-success">Description</th>
-                <th class="col-md-3 bg-success">Budget Cost</th>
-                <th class="col-md-2 bg-success">Budget Unit</th>
-                <th class="col-md-1 bg-success">Unit of measure</th>
+            <tr class="items-style row-shadow">
+                <th class="col-md-3">Description</th>
+                <th class="col-md-3">Budget Cost</th>
+                <th class="col-md-2">Budget Unit</th>
+                <th class="col-md-1">Unit of measure</th>
             </tr>
             </thead>
             <tbody>

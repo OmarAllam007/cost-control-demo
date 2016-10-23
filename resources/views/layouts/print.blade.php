@@ -1,11 +1,12 @@
 @include('layouts.cover')
-        <!DOCTYPE html>
+<p style="page-break-before:always;"></p>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>{{config('app.name')}}</title>
     <link rel="stylesheet" href="{{asset('/css/print.css')}}">
 </head>
@@ -33,6 +34,7 @@
         </th>
     </tr>
     </thead>
+
     <tbody>
     <tr>
         <td colspan="3">
@@ -40,8 +42,9 @@
         </td>
     </tr>
     </tbody>
-    <div class="page-break"></div>
 </table>
+
+
 {{--<div class="panel panel-default" id="main-panel">
     <div class="panel-heading clearfix">
 
@@ -65,5 +68,6 @@
     window.print();
 </script>
 </body>
-
 </html>
+<p style="page-break-before:always;"></p>
+{{--<p style="page-break-after:always;"></p>--}}

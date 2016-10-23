@@ -13,20 +13,20 @@
     <img src="{{asset('images/reports/ResourceDictionary.jpg')}}">
 @endsection
 @section('body')
-    <table class="table table-condensed table-striped">
+    <table class="table table-condensed table-bordered">
         <thead>
-        <tr>
-            <th class="col-xs-1">Resource-Type</th>
-            <th class="col-xs-2">RESOURCE DIVISION</th>
-            <th class="col-xs-1">CODE</th>
-            <th class="col-xs-1">RESOURCE NAME</th>
-            <th class="col-xs-1">UNIT</th>
-            <th class="col-xs-1">RATE</th>
-            <th class="col-xs-1">SUPPLIER/SUBCON.</th>
-            <th class="col-xs-1">REFERENCE</th>
-            <th class="col-xs-1">Waste %</th>
-            <th class="col-xs-1">BUDGET UNIT</th>
-            <th class="col-xs-1">BUDGET COST</th>
+        <tr class="row-shadow">
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">Resource-Type</th>
+            <th class="col-xs-2" style="background-color:#446CB3; color: white">RESOURCE DIVISION</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">CODE</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">RESOURCE NAME</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">UNIT</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">RATE</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">SUPPLIER/SUBCON.</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">REFERENCE</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">Waste %</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">BUDGET UNIT</th>
+            <th class="col-xs-1" style="background-color:#446CB3; color: white">BUDGET COST</th>
         </tr>
         </thead>
         <tbody>

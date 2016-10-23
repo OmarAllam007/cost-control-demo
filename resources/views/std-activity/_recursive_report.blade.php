@@ -1,7 +1,10 @@
 <li>
-    <p class="tree--item">{{$division->label}}</p>
+    <p class="tree--item" style="background-color: #1f648b;
+  color:white;
+  padding: 3px;
+  font-weight: bold;">{{$division->label}}</p>
 
-    <article class="tree--child ">
+    <article class="tree--child">
         @if ($division->children()->whereIn('id', $all)->get() && $division->children()->whereIn('id', $all)->count())
             <ul class="list-unstyled">
                 @foreach($division->children()->whereIn('id', $all)->get() as $child)
@@ -11,9 +14,9 @@
         @endif
 
         @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
-            <table class="table table-striped table-condensed">
-                <thead>
-                <tr>
+            <table class="table table-condensed">
+                <thead class="items-style ">
+                <tr class="row-shadow">
                     <th class="col-md-8">Activity</th>
                 </tr>
                 </thead>

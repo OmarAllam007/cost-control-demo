@@ -13,16 +13,20 @@
     <img src="{{asset('images/reports/qsSummery.jpg')}}">
 @endsection
 @section('body')
+    <ul class="list-unstyled tree">
     @foreach($level_array as $level)
         <li class="list-unstyled">
-            <div class="tree--item">
+            <div class="tree--item" style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;">
                 <strong>{{$level['name']}}</strong>
             </div>
             @if($level['activity_divisions'])
                 <ul class="list-unstyled">
-                    <table class="table table-condensed table-striped">
+                    <table class="table table-condensed">
                         <thead>
-                        <tr>
+                        <tr class="row-shadow items-style">
                             <th class="col-xs-3">Activity Division</th>
                             <th class="col-xs-3">Boq Description</th>
                             <th class="col-xs-2">Cost Account</th>
@@ -69,3 +73,4 @@
             @endforeach
         </li>
 @endsection
+</ul>

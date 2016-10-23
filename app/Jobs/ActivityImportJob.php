@@ -33,12 +33,21 @@ class ActivityImportJob extends ImportJob
 
         foreach ($rows as $row) {
             $data = $this->getDataFromCells($row->getCellIterator());
+            if (!array_filter($data)) {
+                continue;
+            }
             $division_id = $this->getDivisionId($data);
             $activity_id = $this->getActivity($data, $division_id);
 
-            BreakdownTemplate::create(['name' => $data[4], 'code' => $data[5], 'std_activity_id' => $activity_id]);
+
+//            BreakdownTemplate::create([
+//                'name' => $data[4],
+//                'code' => $data[5],
+//                'std_activity_id' => $activity_id
+//            ]);
 
         }
+
     }
 
     protected function getDivisionId($data)
@@ -80,19 +89,21 @@ class ActivityImportJob extends ImportJob
         if (!$this->activities) {
             $this->activities = collect();
             StdActivity::all()->each(function ($activity) {
-                $this->activities->put(mb_strtolower($activity->name), $activity->id);
+                $this->activities->put(mb_strtolower($activity->code), $activity->id);
             });
         }
         $work_package_name = $data[3];
         $name = $data[4];
         $code = $data[5];
-        $key = mb_strtolower($name);
+        $id_partial = $data[6];
+        $discipline = $data[7];
+        $key = mb_strtolower($code);
 
         if ($this->activities->has($key)) {
             return $this->activities->get($key);
         }
 
-        $activity = StdActivity::create(compact('name', 'division_id', 'code','work_package_name'));
+        $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
         $this->activities->put($key, $activity->id);
         return $activity->id;
     }

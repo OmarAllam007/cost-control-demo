@@ -236,6 +236,8 @@ th {
   .table-bordered td {
     border: 1px solid #ddd !important; } }
 
+
+
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
@@ -8104,13 +8106,9 @@ a, .btn {
 
 body#iframe {
   background-color: #fff; }
-  body#iframe .container-fluid {
-    margin-top: 15px;
-    margin-bottom: 15px; }
 
 .modal-body.iframe {
-  padding: 0;
-  height: 500px; }
+  padding: 15px 0; }
 
 @page {
   size: A4;
@@ -8144,5 +8142,11 @@ body#iframe {
 
 .tree--child {
   margin-bottom: 20px; }
-
+@media all {
+  .page-break	{ display: none; }
+}
+/*tr {display: table-row-group;}*/
+@media print {
+  .page-break	{ display: block; page-break-after: always; }
+}
 /*# sourceMappingURL=print.css.map */

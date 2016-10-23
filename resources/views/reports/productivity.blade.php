@@ -10,25 +10,32 @@
     </div>
 @stop
 @section('image')
-    <img src="{{asset('images/reports/productivity.jpg')}}">
+    <img src="{{asset('images/reports/productivity.jpg')}}" height="80%">
 @endsection
 @section('body')
-
     <ul class="list-unstyled tree">
         @foreach($data as $category=>$attributes)
-
             <li class="list-unstyled">
-                <div class="tree--item"><strong>{{$category}}</strong></div>
+                <div class="tree--item" style="background-color: #154360;
+  color:white;
+  padding: 3px;
+  font-weight: bold;"><strong>{{$category}}</strong></div>
                 <ul>
-                    <table class="table table-condensed table-striped">
+                    <table class="table table-condensed">
                         <thead>
-                        <tr>
+                        <tr class="row-shadow items-style">
                             {{--<th class="col-xs-2">Category</th>--}}
                             <th class="col-xs-3">Item Description</th>
                             <th class="col-xs-3">Crew Structure</th>
-                            <th class="col-xs-2 text-center">Daily output</th>
-                            <th class="col-xs-2 text-center">Unit of measure</th>
-                            <th class="col-xs-2 text-center">After reduction</th>
+                            <th class="col-xs-2 text-center" >Daily
+                                output
+                            </th>
+                            <th class="col-xs-2 text-center">Unit of
+                                measure
+                            </th>
+                            <th class="col-xs-2 text-center" >After
+                                reduction
+                            </th>
                             </th>
                         </tr>
                         </thead>
@@ -49,6 +56,5 @@
                 </ul>
             </li>
         @endforeach
-
     </ul>
 @endsection

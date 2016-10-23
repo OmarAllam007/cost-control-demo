@@ -10,7 +10,7 @@
     </div>
 @endsection
 @section('image')
-    <img src="{{asset('images/reports/standard-activity.jpg')}}">
+    <img src="{{asset('images/reports/standard-activity.jpg')}}" height="80%">
 @endsection
 @section('body')
     <ul class="list-unstyled tree">

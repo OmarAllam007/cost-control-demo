@@ -8104,12 +8104,8 @@ a, .btn {
 
 body#iframe {
   background-color: #fff; }
-  body#iframe .container-fluid {
-    margin-top: 15px;
-    margin-bottom: 15px; }
 
 .modal-body.iframe {
-  padding: 0;
-  height: 500px; }
-
+  padding: 15px 0; }
+.modell{}
 /*# sourceMappingURL=app.css.map */
