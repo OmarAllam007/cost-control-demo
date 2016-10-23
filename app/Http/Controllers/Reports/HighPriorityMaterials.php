@@ -39,9 +39,13 @@ class HighPriorityMaterials
 
 
         }
-        usort($data, function ($a, $b) {
-            return $b['budget_cost'] - $a['budget_cost'];
-        });
+        if($data)
+        {
+            usort($data, function ($a, $b) {
+                return $b['budget_cost'] - $a['budget_cost'];
+            });
+        }
+
         return view('reports.high_priority_materials',compact('data', 'project'));
     }
 }
