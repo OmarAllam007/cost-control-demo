@@ -89,7 +89,7 @@ class ActivityImportJob extends ImportJob
         if (!$this->activities) {
             $this->activities = collect();
             StdActivity::all()->each(function ($activity) {
-                $this->activities->put(mb_strtolower($activity->name), $activity->id);
+                $this->activities->put(mb_strtolower($activity->code), $activity->id);
             });
         }
         $work_package_name = $data[3];
@@ -97,14 +97,13 @@ class ActivityImportJob extends ImportJob
         $code = $data[5];
         $id_partial = $data[6];
         $discipline = $data[7];
-        $key = mb_strtolower($name);
-
+        $key = mb_strtolower($code);
 
         if ($this->activities->has($key)) {
             return $this->activities->get($key);
         }
 
-        $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name ,'id_partial'=>$id_partial,'discipline'=>$discipline]);
+        $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
         $this->activities->put($key, $activity->id);
         return $activity->id;
     }
