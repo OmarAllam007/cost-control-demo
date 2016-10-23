@@ -147,6 +147,7 @@ class ResourcesController extends Controller
         if (!$errors) {
             $units = $data['units'];
 
+            Resources::flushEventListeners();
             foreach ($failed['items'] as $item) {
                 if (isset($units[$item['orig_unit']])) {
                     $item['unit'] = $units[$item['orig_unit']];
