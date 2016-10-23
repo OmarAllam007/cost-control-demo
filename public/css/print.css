@@ -187,6 +187,7 @@ th {
   *,
   *:before,
   *:after {
+
     background: transparent !important;
     color: #000 !important;
     box-shadow: none !important;
@@ -206,7 +207,7 @@ th {
     border: 1px solid #999;
     page-break-inside: avoid; }
   thead {
-    display: table-header-group; }
+    display: table-row-group; }
   tr,
   img {
     page-break-inside: avoid; }
@@ -234,7 +235,8 @@ th {
       background-color: #fff !important; }
   .table-bordered th,
   .table-bordered td {
-    border: 1px solid #ddd !important; } }
+    border: 1px solid #ddd !important; }
+}
 
 
 
@@ -8142,11 +8144,11 @@ body#iframe {
 
 .tree--child {
   margin-bottom: 20px; }
-@media all {
-  .page-break	{ display: none; }
-}
+
 /*tr {display: table-row-group;}*/
-@media print {
-  .page-break	{ display: block; page-break-after: always; }
-}
+/*@media print {*/
+  /*html, body {*/
+    /*height: 99%;*/
+  /*}*/
+/*}*/
 /*# sourceMappingURL=print.css.map */
