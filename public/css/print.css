@@ -8142,11 +8142,11 @@ body#iframe {
 
 .tree--child {
   margin-bottom: 20px; }
-
-
-thead { display: table-row-group }
-
+@media all {
+  .page-break	{ display: none; }
+}
+/*tr {display: table-row-group;}*/
 @media print {
-  body {-webkit-print-color-adjust: exact;}
+  .page-break	{ display: block; page-break-after: always; }
 }
 /*# sourceMappingURL=print.css.map */

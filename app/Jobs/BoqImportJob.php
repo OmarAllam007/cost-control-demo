@@ -37,8 +37,8 @@ class BoqImportJob extends ImportJob implements ShouldQueue
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
 
-        $boqs = Boq::query()->pluck('cost_account')->toArray();
-        $notImported = [];
+        $boqs = Boq::query()->pluck('item_code')->toArray();
+
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
@@ -48,24 +48,27 @@ class BoqImportJob extends ImportJob implements ShouldQueue
                 Boq::create([
                     'wbs_id' => $this->getWbsId($data[0]) ?: 0,
                     'item_code' => $data[1] ?: '',
-                    'cost_account' => $data[2] ?: '',
+                    'cost_account' => $data[2] ?:'',
                     'type' => $data[3] ?: '',
-                    'division_id' => $this->getDivisionId($data) ?: '',
+                    'division_id' => $this->getDivisionId($data)?:'',
                     'description' => $data[7] ?: '',
-                    'unit_id' => $this->getUnit($data[8]) ?: 0,
-                    'quantity' => $data[9] ?: 0,
+                    'unit_id' => $this->getUnit($data[8])?: 0,
+                    'quantity' => $data[9]?: 0,
                     'price_ur' => $data[10] ?: 0,
                     'dry_ur' => $data[11] ?: 0,
                     'kcc_qty' => $data[12] ?: '',
-                    'materials' => $data[13] ?: '',
-                    'subcon' => $data[14] ?: '',
-                    'manpower' => $data[15] ?: '',
+                    'materials' => $data[13]?: '',
+                    'subcon' => $data[14]?: '',
+                    'manpower' => $data[15]?: '',
+//                    'type' => $data[5] ?: '',
+//                    'arabic_description' => $data[10]?: '',
                     'project_id' => $this->project_id,
                 ]);
-            } else {
-                $notImported[ $data[2] ] = $data[7];
             }
+
+
         }
+
         unlink($this->file);
     }
 
@@ -74,7 +77,7 @@ class BoqImportJob extends ImportJob implements ShouldQueue
     {
         $level = WbsLevel::where('code', $wbs_code)->first();
 
-        if (!$level) {
+        if(!$level){
             return 0;
         }
         return $level->id;
@@ -97,7 +100,7 @@ class BoqImportJob extends ImportJob implements ShouldQueue
             } else {
                 $division = BoqDivision::create([
                     'name' => $level,
-                    'parent_id' => $division_id,
+                    'parent_id' => $division_id
                 ]);
                 $division_id = $division->id;
                 $this->division->put($key, $division_id);

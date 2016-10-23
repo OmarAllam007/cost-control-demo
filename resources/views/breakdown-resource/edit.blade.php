@@ -3,15 +3,24 @@
 @section('body')
     {{ Form::model($breakdown_resource, ['route' => ['breakdown-resource.update', $breakdown_resource], 'method' => 'patch', 'class' => 'col-sm-9']) }}
 
-    <div class="form-group">
-        {{Form::label('activity', null)}}
+    <div class="form-group {{$errors->first('std_activity_id', 'has-error')}}">
+        {{Form::label('wbs_level_id', 'WBS Level', ['class' => 'control-label'])}}
 
+        <p>
+            <a href="#WBSModal" data-toggle="modal">
+                <em>{{($wbs_id = Form::getValueAttribute('wbs_level_id'))? \App\WbsLevel::find($wbs_id)->path : 'Select WBS Level'}}</em>
+            </a>
+        </p>
+        {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
+    </div>
+
+    <div class="form-group {{$errors->first('std_activity_id', 'has-error')}}">
+        {{Form::label('activity', null, ['class' => 'control-label'])}}
         <p>
             <a href="#ActivitiesModal" data-toggle="modal">
                 <em>{{($activity_id = Form::getValueAttribute('std_activity_id'))? \App\StdActivity::find($activity_id)->name : 'Select Activity'}}</em>
             </a>
         </p>
-
         {!! $errors->first('std_activity_id', '<div class="help-block">:message</div>') !!}
     </div>
 
@@ -45,6 +54,7 @@
     </div>
 
     @include('std-activity._modal', ['value' => $activity_id])
+    @include('wbs-level._modal', ['value' => $wbs_id, 'project_id' => $breakdown_resource->breakdown->project_id])
 
     {{ Form::close() }}
 @endsection

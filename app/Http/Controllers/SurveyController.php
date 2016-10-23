@@ -91,16 +91,16 @@ class SurveyController extends Controller
 
         $file = $request->file('file');
 
-        $result = $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
+        $status = $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
 
-        if ($result) {
+        if ($status['failed']->count()) {
             $key = 'qs_import_' . time();
-            \Cache::add($key, $result, 180);
-            flash('Could not import the following items. Please fix.', 'warning');
+            \Cache::add($key, $status, 180);
+            flash('Could not import some items.', 'warning');
             return redirect()->route('survey.fix-import', $key);
         }
 
-        flash('Quantity survey has been imported', 'success');
+        flash($status . ' Quantity survey items have been imported', 'success');
         return redirect()->route('project.show', $project);
     }
 
@@ -111,9 +111,9 @@ class SurveyController extends Controller
             return redirect()->route('project.index');
         }
 
-        $result = \Cache::get($key);
-        $project = Project::find($result['project_id']);
-        $items = $result['failed'];
+        $status = \Cache::get($key);
+        $project = Project::find($status['project_id']);
+        $items = $status['failed'];
         return view('survey.fix-import', compact('items', 'key', 'project'));
     }
 
@@ -124,8 +124,8 @@ class SurveyController extends Controller
             return redirect()->route('project.index');
         }
 
-        $result = \Cache::get($key);
-        $project = Project::find($result['project_id']);
+        $status = \Cache::get($key);
+        $project = Project::find($status['project_id']);
         $data = $request->get('data');
         $errors = Survey::checkImportData($data);
 
@@ -134,7 +134,7 @@ class SurveyController extends Controller
             $units = $data['units'];
             $wbs = $data['wbs'];
 
-            foreach ($result['failed'] as $key => $item) {
+            foreach ($status['failed'] as $key => $item) {
                 if (!$item['unit_id']) {
                     $item['unit_id'] = $units[ $item['unit'] ];
                 }
@@ -144,13 +144,14 @@ class SurveyController extends Controller
                 }
 
                 $project->quantities()->create($item);
+                ++$status['success'];
             }
 
-            flash('Quantities have been imported', 'success');
+            flash($status . ' Quantity survey items have been imported', 'success');
             return redirect()->route('project.show', $project);
         }
 
-        flash('Could not import the following items. Please fix errors below', 'warning');
+        flash('Could not import some items.', 'warning');
         return \Redirect::back()->withErrors($errors)->withInput(compact('data'));
     }
 

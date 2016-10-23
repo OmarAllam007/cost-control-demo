@@ -18,8 +18,6 @@ class QuantitySurveyImportJob extends ImportJob
      */
     protected $file;
 
-    protected $failed;
-
     protected $wbsLevels;
 
     function __construct(Project $project, $file)
@@ -28,13 +26,15 @@ class QuantitySurveyImportJob extends ImportJob
         $this->file = $file;
 
         $this->wbsLevels = collect();
-        $this->failed = collect();
     }
 
     function handle()
     {
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
+
+        $failed = collect();
+        $success = 0;
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
         foreach ($rows as $row) {
@@ -57,17 +57,13 @@ class QuantitySurveyImportJob extends ImportJob
             if (!$wbs_level_id || !$unit_id) {
                 $data['wbs_code'] = $cells[0];
                 $data['unit'] = $cells[3];
-                $this->failed->push($data);
+                $failed->push($data);
             } else {
                 Survey::create($data);
             }
         }
 
-        if ($this->failed->isEmpty()) {
-            return false;
-        }
-
-        return ['project_id' => $this->project->id, 'failed' => $this->failed];
+        return ['project_id' => $this->project->id, 'failed' => $failed, 'success' => $success];
     }
 
     protected function getWBSLevel($code)
