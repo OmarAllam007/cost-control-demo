@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filter\StdActivityFilter;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\ActivityImportJob;
 use App\StdActivity;
 use Illuminate\Http\Request;
