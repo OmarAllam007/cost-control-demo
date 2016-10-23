@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\BusinessPartner;
 use App\Filter\ResourcesFilter;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\ResourcesImportJob;
 use App\Project;
 use App\Resources;
 use App\ResourceType;
+use App\StdActivityResource;
 use App\Unit;
 use Illuminate\Http\Request;
 
@@ -232,5 +234,16 @@ class ResourcesController extends Controller
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
+
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('resources')->delete();
+        \DB::table('std_activity_resources')->delete();
+//        StdActivityResource::query()->delete();
+
+        flash('All resources have been deleted', 'info');
+
+        return \Redirect::route('resources.index');
     }
 }

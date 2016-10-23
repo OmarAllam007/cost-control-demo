@@ -92,4 +92,16 @@ class StdActivityController extends Controller
 
         return \Redirect::back();
     }
+
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('std_activity_resources')->delete();
+        \DB::table('breakdown_templates')->delete();
+        \DB::table('std_activities')->delete();
+        \DB::table('activity_divisions')->delete();
+
+        flash('All activities have been deleted', 'info');
+
+        return \Redirect::route('std-activity.index');
+    }
 }
