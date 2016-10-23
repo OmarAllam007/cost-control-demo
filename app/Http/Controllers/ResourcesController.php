@@ -240,6 +240,7 @@ class ResourcesController extends Controller
     {
         \DB::table('resources')->delete();
         \DB::table('std_activity_resources')->delete();
+        \DB::table('resource_types')->delete();
 //        StdActivityResource::query()->delete();
 
         flash('All resources have been deleted', 'info');
