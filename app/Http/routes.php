@@ -12,14 +12,17 @@
 */
 
 Route::get('/', function () {
-    $projects = \App\Project::paginate();
-    return view('project.index',['projects'=>$projects]);
+    return \Redirect::route('project.index');
 });
 
 Route::auth();
+Route::get('auth/google', 'Auth\AuthController@googleRedirect');
+Route::get('auth/google/continue', 'Auth\AuthController@googleHandle');
 
-require __DIR__ . '/Routes/hazem.php';
-require __DIR__ . '/Routes/omar.php';
+Route::group(['middleware' => 'auth'], function () {
+    require __DIR__ . '/Routes/hazem.php';
+    require __DIR__ . '/Routes/omar.php';
+});
 
 
 
