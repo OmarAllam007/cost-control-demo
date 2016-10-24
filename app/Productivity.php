@@ -126,4 +126,17 @@ class Productivity extends Model
         }
         return array_sum($equip_numbers);
     }
+
+    public static function checkFixImport($data)
+    {
+        $errors = [];
+
+        foreach ($data['units'] as $unit => $unit_id) {
+            if (!$unit_id) {
+                $errors[$unit] = $unit;
+            }
+        }
+
+        return $errors;
+    }
 }

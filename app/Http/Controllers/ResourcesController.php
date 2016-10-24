@@ -11,6 +11,7 @@ use App\Resources;
 use App\ResourceType;
 use App\StdActivityResource;
 use App\Unit;
+use App\UnitAlias;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -107,16 +108,17 @@ class ResourcesController extends Controller
 
         $file = $request->file('file');
 
-        $failed = $this->dispatch(new ResourcesImportJob($file->path()));
+        $status = $this->dispatch(new ResourcesImportJob($file->path()));
 
-        if ($failed) {
+        if ($status['failed']->count()) {
             $key = 'res_' . time();
-            \Cache::add($key, ['items' => $failed], 180);
+            \Cache::add($key, $status, 180);
+
             flash('Could not import some resources', 'warning');
             return redirect()->route('resources.fix-import', $key);
         }
 
-        flash('Resources have been imported', 'success');
+        flash($status['success'] . ' Resources have been imported', 'success');
         return redirect()->route('resources.index');
     }
 
@@ -127,8 +129,8 @@ class ResourcesController extends Controller
             return \Redirect::route('resources.index');
         }
 
-        $failed = \Cache::get($key);
-        $items = $failed['items'];
+        $status = \Cache::get($key);
+        $items = $status['failed'];
 
         return view('resources.fix-import', compact('items', 'key'));
     }
@@ -142,20 +144,23 @@ class ResourcesController extends Controller
 
         $data = $request->get('data');
         $errors = Resources::checkFixImport($data);
-        $failed = \Cache::get($key);
+        $status = \Cache::get($key);
 
         if (!$errors) {
             $units = $data['units'];
 
             Resources::flushEventListeners();
-            foreach ($failed['items'] as $item) {
+            foreach ($status['failed'] as $item) {
                 if (isset($units[$item['orig_unit']])) {
                     $item['unit'] = $units[$item['orig_unit']];
                     Resources::create($item);
+                    $status['success']++;
+
+                    UnitAlias::createAliasFor($item['unit'], $item['orig_unit']);
                 }
             }
 
-            flash('Resources have been imported', 'success');
+            flash($status['success'] . ' Resources have been imported', 'success');
             return \Redirect::route('resources.index');
         }
 

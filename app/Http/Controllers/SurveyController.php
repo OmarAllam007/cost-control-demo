@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\QuantitySurveyImportJob;
 use App\Project;
 use App\Survey;
 use App\Unit;
+use App\UnitAlias;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -137,6 +139,7 @@ class SurveyController extends Controller
             foreach ($status['failed'] as $key => $item) {
                 if (!$item['unit_id']) {
                     $item['unit_id'] = $units[ $item['unit'] ];
+                    UnitAlias::createAliasFor($item['unit_id'], $item['unit']);
                 }
 
                 if (!$item['wbs_level_id']) {
@@ -189,6 +192,15 @@ class SurveyController extends Controller
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
+
+    function wipe(WipeRequest $request, Project $project)
+    {
+        $project->quantities()->delete();
+
+        flash('All quantities have been deleted', 'info');
+
+        return \Redirect::to(route('project.show', $project) . '#quantity-survey');
     }
 
 }

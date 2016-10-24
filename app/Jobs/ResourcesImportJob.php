@@ -37,7 +37,7 @@ class ResourcesImportJob extends ImportJob
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
-        $failed = collect();
+        $status = ['failed' => collect(), 'success' => 0];
 
 //        Resources::flushEventListeners();
         foreach ($rows as $row) {
@@ -60,17 +60,18 @@ class ResourcesImportJob extends ImportJob
 
             if ($unit_id) {
                 Resources::create($item);
+                ++$status['success'];
             } else {
                 $item['orig_unit'] = $data[7];
-                $failed->push($item);
+                $status['failed']->push($item);
             }
         }
 
-        if ($failed->count()) {
-            return $failed;
-        }
+//        if ($failed->count()) {
+//            return $failed;
+//        }
 
-        return false;
+        return $status;
     }
 
     protected function getTypeId($data)

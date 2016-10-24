@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Boq;
 use App\BoqDivision;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\BoqImportJob;
 use App\Project;
 use App\Unit;
+use App\UnitAlias;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -139,6 +141,7 @@ class BoqController extends Controller
             foreach ($status['failed'] as $item) {
                 if (isset($item['orig_unit_id']) && isset($data['units'][ $item['orig_unit_id'] ])) {
                     $item['unit'] = $data['units'][$item['orig_unit_id']];
+                    UnitAlias::createAliasFor($item['unit'], $item['orig_unit_id']);
                 }
 
                 if (isset($item['orig_wbs_id']) && isset($data['wbs'][$item['orig_wbs_id']])) {
@@ -213,6 +216,14 @@ class BoqController extends Controller
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
 
+    function wipe(WipeRequest $request, Project $project)
+    {
+        $project->boqs()->delete();
+
+        flash('All BOQs have been deleted', 'info');
+
+        return \Redirect::to(route('project.show', $project) . '#boq');
     }
 }

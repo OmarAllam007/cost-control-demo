@@ -1,12 +1,18 @@
-<div class="form-group tab-actions clearfix">
+<div class="clearfix">
+    <div class="form-group tab-actions pull-right">
+        <a style="margin-left: 2px;" href="{{route('break_down.export', ['project' => $project->id])}}"
+           class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
+        <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
+            <i class="fa fa-plus"></i> Add Breakdown
+        </a>
 
-    <a style="margin-left: 2px;" href="{{route('break_down.export', ['project' => $project->id])}}"
-       class="btn btn-info btn-sm pull-right">
-        <i class="fa fa-cloud-download"></i> Export
-    </a>
-    <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm pull-right">
-        <i class="fa fa-plus"></i> Add Breakdown
-    </a>
+        @can('wipe')
+            <a href="#WipeBreakdownModal" data-toggle="modal" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
+                Delete all</a>
+        @endcan
+    </div>
 </div>
 
 @include('project.filters._breakdown')
@@ -112,12 +118,33 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span>
+                </button>
                 <h4 class="modal-title">Edit resource</h4>
             </div>
             <div class="modal-body iframe">
 
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade" id="WipeBreakdownModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <form method="post" action="{{route('breakdown.wipe', $project)}}" class="modal-content">
+            {{csrf_field()}} {{method_field('delete')}}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Delete all breakdown</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all breakdowns?</div>
+                <input type="hidden" name="wipe" value="1">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete all</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Cancel</button>
+            </div>
+        </form>
     </div>
 </div>
