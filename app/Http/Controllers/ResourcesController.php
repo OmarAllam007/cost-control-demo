@@ -11,6 +11,7 @@ use App\Resources;
 use App\ResourceType;
 use App\StdActivityResource;
 use App\Unit;
+use App\UnitAlias;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -154,6 +155,8 @@ class ResourcesController extends Controller
                     $item['unit'] = $units[$item['orig_unit']];
                     Resources::create($item);
                     $status['success']++;
+
+                    UnitAlias::createAliasFor($item['unit'], $item['orig_unit']);
                 }
             }
 

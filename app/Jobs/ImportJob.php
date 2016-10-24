@@ -10,6 +10,7 @@ namespace App\Jobs;
 
 
 use App\Unit;
+use App\UnitAlias;
 use Illuminate\Support\Collection;
 
 class ImportJob extends Job
@@ -37,6 +38,10 @@ class ImportJob extends Job
             $this->units = collect();
             Unit::all()->each(function ($unit) {
                 $this->units->put(mb_strtolower($unit->type), $unit->id);
+            });
+
+            UnitAlias::all()->each(function($unit) {
+                $this->units->put(mb_strtolower($unit->name), $unit->unit_id);
             });
         }
 
