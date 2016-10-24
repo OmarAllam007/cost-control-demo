@@ -3,6 +3,9 @@ Route::resource('boq-division', 'BoqDivisionController');
 
 Route::resource('csi-category', 'CsiCategoryController');
 
+Route::group(['prefix'=>'csi-category'],function (){
+    Route::delete('delete-all',['uses'=>'CsiCategoryController@wipe','as'=>'csi-category.wipe']);
+});
 Route::group(['prefix' => 'boq'], function () {
     Route::get('import/{project}', ['as' => 'boq.import', 'uses' => 'BoqController@import']);
     Route::post('import/{project}', ['as' => 'boq.post-import', 'uses' => 'BoqController@postImport']);
@@ -12,64 +15,66 @@ Route::group(['prefix' => 'boq'], function () {
 });
 
 Route::group(['prefix' => 'breakdown'], function () {
-Route::get('export/{project}',['as'=>'break_down.export','uses'=>'BreakdownController@exportBreakDown']);
-    Route::get('printAll/{project}',['as'=>'break_down.printall','uses'=>'BreakdownController@printAll']);
+    Route::get('export/{project}', ['as' => 'break_down.export', 'uses' => 'BreakdownController@exportBreakDown']);
+    Route::get('printAll/{project}', ['as' => 'break_down.printall', 'uses' => 'BreakdownController@printAll']);
 });
 
 Route::group(['prefix' => 'productivity'], function () {
     Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
     Route::get('export/{project}', ['as' => 'productivity.export', 'uses' => 'ProductivityController@exportProductivity']);
+    Route::delete('delete-all', ['uses' => 'ProductivityController@wipe', 'as' => 'productivity.wipe']);
 
 });
 
 Route::group(['prefix' => 'business-partner'], function () {
-    Route::post('/filter',['as'=>'business-partner.filter','uses'=>'BusinessPartnerController@filter']);
+    Route::post('/filter', ['as' => 'business-partner.filter', 'uses' => 'BusinessPartnerController@filter']);
+    Route::delete('delete-all', ['uses' => 'BusinessPartnerController@wipe', 'as' => 'partner.wipe']);
 });
 
 Route::group(['prefix' => 'productivity'], function () {
-    Route::post('/filter',['as'=>'productivity.filter','uses'=>'ProductivityController@filter']);
-    Route::get('/report',['as'=> 'productivity.report','uses'=>'ProductivityController@showReport']);
+    Route::post('/filter', ['as' => 'productivity.filter', 'uses' => 'ProductivityController@filter']);
+    Route::get('/report', ['as' => 'productivity.report', 'uses' => 'ProductivityController@showReport']);
 });
 
 Route::group(['prefix' => 'unit'], function () {
-    Route::post('/filter',['as'=>'unit.filter','uses'=>'UnitController@filter']);
+    Route::post('/filter', ['as' => 'unit.filter', 'uses' => 'UnitController@filter']);
+    Route::delete('delete-all', ['uses' => 'UnitController@wipe', 'as' => 'unit.wipe']);
 });
 
 Route::group(['prefix' => 'project'], function () {
-    Route::get('wbs_report/{project}',['as'=>'wbs.report','uses'=>'ReportController@wbsReport']);
-    Route::get('productivity_report/{project}',['as'=>'productivity.report','uses'=>'ReportController@productivityReport']);
-    Route::get('standard_activity_report/{project}',['as'=>'stdActivity.report','uses'=>'ReportController@stdActivityReport']);
+    Route::get('wbs_report/{project}', ['as' => 'wbs.report', 'uses' => 'ReportController@wbsReport']);
+    Route::get('productivity_report/{project}', ['as' => 'productivity.report', 'uses' => 'ReportController@productivityReport']);
+    Route::get('standard_activity_report/{project}', ['as' => 'stdActivity.report', 'uses' => 'ReportController@stdActivityReport']);
 
 
+    Route::get('resourse_dictionary/{project}', ['as' => 'resource_dictionary.report', 'uses' => 'ReportController@resourceDictionary']);
 
-    Route::get('resourse_dictionary/{project}',['as'=>'resource_dictionary.report','uses'=>'ReportController@resourceDictionary']);
-
-    Route::get('man_power/{project}',['as'=>'man_power.report','uses'=>'ReportController@manPower']);
-    Route::get('budget_summery/{project}',['as'=>'budget_summery.report','uses'=>'ReportController@budgetSummery']);
-    Route::get('activity_resource_breakdown/{project}',['as'=>'activity_resource_breakdown.report','uses'=>'ReportController@activityResourceBreakDown']);
+    Route::get('man_power/{project}', ['as' => 'man_power.report', 'uses' => 'ReportController@manPower']);
+    Route::get('budget_summery/{project}', ['as' => 'budget_summery.report', 'uses' => 'ReportController@budgetSummery']);
+    Route::get('activity_resource_breakdown/{project}', ['as' => 'activity_resource_breakdown.report', 'uses' => 'ReportController@activityResourceBreakDown']);
 
 /////////////////// Sunday
-    Route::get('qs_summery_report/{project}',['as'=>'qsReport.report','uses'=>'ReportController@qsSummery']);
+    Route::get('qs_summery_report/{project}', ['as' => 'qsReport.report', 'uses' => 'ReportController@qsSummery']);
 
-    Route::get('budget_cost_dry_cost/{project}',['as'=>'budget_cost_dry_cost.report','uses'=>'ReportController@budgetCostVSDryCost']);
+    Route::get('budget_cost_dry_cost/{project}', ['as' => 'budget_cost_dry_cost.report', 'uses' => 'ReportController@budgetCostVSDryCost']);
 
-    Route::get('budget_cost_vs_break_down/{project}',['as'=>'budget_cost_vs_break_down.report','uses'=>'ReportController@budgetCostVSBreadDown']);
+    Route::get('budget_cost_vs_break_down/{project}', ['as' => 'budget_cost_vs_break_down.report', 'uses' => 'ReportController@budgetCostVSBreadDown']);
 
-    Route::get('budget_cost_by_discipline/{project}',['as'=>'budget_cost_by_discipline.report','uses'=>'ReportController@budgetCostDiscipline']);
+    Route::get('budget_cost_by_discipline/{project}', ['as' => 'budget_cost_by_discipline.report', 'uses' => 'ReportController@budgetCostDiscipline']);
 
 
     ////Monday
-    Route::get('budget_cost_by_building/{project}',['as'=>'budget_cost_by_building.report','uses'=>'ReportController@budgetCostForBuilding']);
-    Route::get('budget_cost_dry_cost_discipline/{project}',['as'=>'budget_cost_dry_cost_discipline.report','uses'=>'ReportController@budgetCostDryCostDiscipline']);
+    Route::get('budget_cost_by_building/{project}', ['as' => 'budget_cost_by_building.report', 'uses' => 'ReportController@budgetCostForBuilding']);
+    Route::get('budget_cost_dry_cost_discipline/{project}', ['as' => 'budget_cost_dry_cost_discipline.report', 'uses' => 'ReportController@budgetCostDryCostDiscipline']);
 
-    Route::get('qty_cost_discipline/{project}',['as'=>'qty_cost_discipline.report','uses'=>'ReportController@quantityAndCostByDiscipline']);
+    Route::get('qty_cost_discipline/{project}', ['as' => 'qty_cost_discipline.report', 'uses' => 'ReportController@quantityAndCostByDiscipline']);
 
-    Route::get('revised_boq/{project}',['as'=>'revised_boq.report','uses'=>'ReportController@revisedBoq']);
+    Route::get('revised_boq/{project}', ['as' => 'revised_boq.report', 'uses' => 'ReportController@revisedBoq']);
 
-    Route::get('boq_price_list/{project}',['as'=>'boq_price_list.report','uses'=>'ReportController@boqPriceList']);
+    Route::get('boq_price_list/{project}', ['as' => 'boq_price_list.report', 'uses' => 'ReportController@boqPriceList']);
 
-    Route::get('high_priority/{project}',['as'=>'high_priority.report','uses'=>'ReportController@highPriority']);
+    Route::get('high_priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriority']);
 
 });
 
@@ -80,7 +85,9 @@ Route::group(['prefix' => 'survey'], function () {
 Route::group(['prefix' => 'resources'], function () {
     Route::get('export/{project}', ['as' => 'resources.export', 'uses' => 'ResourcesController@exportResources']);
 });
-
+Route::group(['prefix'=>'resource-type'],function(){
+    Route::delete('delete-all',['uses'=>'ResourceTypeController@wipe','as'=>'type.wipe']);
+});
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

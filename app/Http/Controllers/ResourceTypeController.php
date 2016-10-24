@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use App\Http\Requests\WipeRequest;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Http\Request;
@@ -69,6 +70,12 @@ class ResourceTypeController extends Controller
     {
         $resource_type->delete();
         flash('Resource type has been deleted', 'success');
+        return \Redirect::route('resource-type.index');
+    }
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('resource_types')->delete();
+        flash('All resource types have been deleted', 'info');
         return \Redirect::route('resource-type.index');
     }
 }

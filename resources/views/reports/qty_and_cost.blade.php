@@ -15,7 +15,7 @@
         <thead>
         <tr class="row-shadow">
             <th class="col-xs-4" style="background-color:#446CB3; color: white">Discipline</th>
-            <th class="col-xs-4" style="background-color:#446CB3; color: white">(Budget Cost- Dry Cost) * DRY Qty</th>
+            <th class="col-xs-4" style="background-color:#446CB3; color: white">(Budget Cost- Dry Cost) * Budget Quantity</th>
             <th class="col-xs-4" style="background-color:#446CB3; color: white">(Budget QTY- Dry QTY) * Budget cost</th>
 
         </tr>
@@ -25,14 +25,14 @@
 
             <tr>
                 <td class="col-xs-4">{{$row['name']}}</td>
-                <td class="col-xs-4">{{number_format($row['dry_qty_eq'],2)}}</td>
+                <td class="col-xs-4">{{number_format($row['budget_qty_eq'],2)}}</td>
                 <td class="col-xs-4">{{number_format($row['budget_cost_eq'],2)}}</td>
 
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
             <td class="col-xs-4" style="font-weight: 800">Total</td>
-            <td class="col-xs-4">{{number_format($total['dry_qty_eq'],2)}}</td>
+            <td class="col-xs-4">{{number_format($total['budget_qty_eq'],2)}}</td>
             <td class="col-xs-4">{{number_format($total['budget_cost_eq'],2)}}</td>
 
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}

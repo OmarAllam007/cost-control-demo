@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CsiCategory;
+use App\Http\Requests\WipeRequest;
 use Illuminate\Http\Request;
 
 class CsiCategoryController extends Controller
@@ -60,6 +61,13 @@ class CsiCategoryController extends Controller
 
         flash('Csi category has been deleted', 'success');
 
+        return \Redirect::route('csi-category.index');
+    }
+
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('csi_categories')->delete();
+        flash('All categories have been deleted', 'info');
         return \Redirect::route('csi-category.index');
     }
 }

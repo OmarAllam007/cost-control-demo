@@ -1,10 +1,3 @@
-@if(request('all'))
-@include('layouts.first_cover')
-<p style="page-break-before:always;"></p>
-@endif
-@include('layouts.cover')
-<p style="page-break-after:always;"></p>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +10,6 @@
 
 
 <body id="app-layout">
-
 <table class="table">
     <thead>
     <tr>
@@ -30,6 +22,7 @@
                 {{date('d M Y')}}
             </strong>
         </th>
+
         <th width="34%" class="header-text text-center">
             @yield('header')
         </th>
@@ -38,22 +31,14 @@
         </th>
     </tr>
     </thead>
-
     <tbody>
+
     <tr>
         <td colspan="3">
-            @yield('body')
+            <img src="{{asset('images/reports/Report.jpg')}}">
         </td>
     </tr>
     </tbody>
 </table>
-<script src="{{asset('/js/bootstrap.js')}}"></script>
-
-@yield('javascript')
-
-<script>
-    window.print();
-</script>
 </body>
 </html>
-<p style="page-break-after:always;"></p>

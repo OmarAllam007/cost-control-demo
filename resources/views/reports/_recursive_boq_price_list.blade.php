@@ -36,12 +36,12 @@
                                 <tr>
                                     {{--<td class="col-md-3">{{$resource['type'] or ''}}</td>--}}
                                     <td class="col-md-3 ">{{$account['cost_account']}}</td>
-                                    <td class="col-md-1">{{$account['LABORS']}}</td>
-                                    <td class="col-md-1">{{$account['MATERIAL']}}</td>
-                                    <td class="col-md-1">{{$account['Subcontractors']}}</td>
-                                    <td class="col-md-1">{{$account['EQUIPMENT']}}</td>
-                                    <td class="col-md-1">{{$account['SCAFFOLDING']}}</td>
-                                    <td class="col-md-1">{{$account['OTHERS']}}</td>
+                                    <td class="col-md-1">{{number_format($account['LABORS'],2)}}</td>
+                                    <td class="col-md-1">{{number_format($account['MATERIAL'],2)}}</td>
+                                    <td class="col-md-1">{{number_format($account['Subcontractors']),2}}</td>
+                                    <td class="col-md-1">{{number_format($account['EQUIPMENT']),2}}</td>
+                                    <td class="col-md-1">{{number_format($account['SCAFFOLDING']),2}}</td>
+                                    <td class="col-md-1">{{number_format($account['OTHERS'],2)}}</td>
                                     <td class="col-md-3">{{number_format($account['total_resources'],2)}}</td>
                                 </tr>
                                 </tbody>

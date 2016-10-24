@@ -14,32 +14,44 @@ class IdResourceGeneratorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         Resources::creating(function (Resources $resource) {
+            //get first character of root
+            $rootName = substr($resource->types->root->name, strpos($resource->types->root->name, '.') + 1, 1);
+
             $names = explode('»', $resource->types->path);
             $code = [];
-            foreach ($names as $name) {
-                $name = trim($name);
-                $code[] = substr(trim($name), 0, 1);
-                if (strrchr($name, ' ')) {
-                    $position = strrpos($name, ' ');
-                    $code[] = substr($name, $position + 1, 1);
+            $code [] = $rootName;
+            //if Labors get by letter else by number
+            if ($rootName != 'L') {
+                foreach ($names as $key => $name) {
+                    if ($key == 0) {
+                        continue;
+                    }
+
+                    $name = trim($name);
+                    $divname = substr($name, 0, strpos($resource->types->root->name, '.'));
+                    $code [] = $divname;
+
                 }
-                $code[] = '.';
-            }
-            $code = implode('', $code);
-
-            $num = 1;
-            $item = Resources::where('resource_code', 'like', $code . '_')->get(['resource_code'])->last();
-
-            if (!is_null($item)) {
-                $itemCode = substr($item->resource_code, strrpos($item->resource_code, '.') + 1);
-                $itemCode++;
-                $code = $code . $itemCode;
-                $resource->resource_code = $code;
             } else {
-                $resource->resource_code = $code . $num;
+                foreach ($names as $key => $name) {
+                    if ($key == 0) {
+                        continue;
+                    }
+                    $name = trim($name);
+                    $divname = substr($name, strpos($resource->types->root->name, '.') + 1, 1);
+                    $code [] = $divname;
+
+                }
             }
 
+            $resourceNumber = Resources::where('resource_type_id', $resource->types->id)->count();
+            $resourceNumber++;
+            $code[] = $resourceNumber <= 10 ? '0' . $resourceNumber : $resourceNumber;
+            $finalCode = implode('.', $code);
+
+            $resource->resource_code = $finalCode;
         });
     }
 
@@ -50,6 +62,6 @@ class IdResourceGeneratorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-echo '';
+        echo '';
     }
 }

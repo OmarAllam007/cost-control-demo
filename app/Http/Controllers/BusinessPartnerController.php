@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessPartner;
 use App\Filter\BusinessPartnerFilter;
+use App\Http\Requests\WipeRequest;
 use Illuminate\Http\Request;
 
 class BusinessPartnerController extends Controller
@@ -13,7 +14,7 @@ class BusinessPartnerController extends Controller
 
     public function index()
     {
-        $filter = new BusinessPartnerFilter(BusinessPartner::query(),session('filters.partners'));
+        $filter = new BusinessPartnerFilter(BusinessPartner::query(), session('filters.partners'));
         $businessPartners = $filter->filter()->orderBy('name')->paginate(100);
         return view('business-partner.index', compact('businessPartners'));
     }
@@ -27,6 +28,7 @@ class BusinessPartnerController extends Controller
     {
         $this->validate($request, $this->rules);
 
+        dd($this->$partners);
         BusinessPartner::create($request->all());
 
         flash('Business partner has been saved', 'success');
@@ -63,10 +65,17 @@ class BusinessPartnerController extends Controller
 
         return \Redirect::route('business-partner.index');
     }
+
     public function filter(Request $request)
     {
-        $data = $request->only(['name','type']);
-        \Session::set('filters.partners',$data);
+        $data = $request->only(['name', 'type']);
+        \Session::set('filters.partners', $data);
         return \Redirect::back();
+    }
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('business_partners')->delete();
+        flash('All Partners have been deleted', 'info');
+        return \Redirect::route('business-partner.index');
     }
 }
