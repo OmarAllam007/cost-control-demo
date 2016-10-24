@@ -39,7 +39,8 @@ class HighPriorityMaterials
 
 
         }
-        if($data)
+
+        if(!is_null($data))
         {
             usort($data, function ($a, $b) {
                 return $b['budget_cost'] - $a['budget_cost'];

@@ -1,5 +1,5 @@
 @include('layouts.cover')
-<p style="page-break-before:always;"></p>
+<p style="page-break-after:always;"></p>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -43,23 +43,6 @@
     </tr>
     </tbody>
 </table>
-
-
-{{--<div class="panel panel-default" id="main-panel">
-    <div class="panel-heading clearfix">
-
-    </div>
-
-    <div class="panel-body">
-        @if (session()->has('flash-message'))
-            @include("partials/alert/" . session('flash-type'), ['message' => session('flash-message')])
-        @endif
-
-
-    </div>
-</div>--}}
-
-
 <script src="{{asset('/js/bootstrap.js')}}"></script>
 
 @yield('javascript')
@@ -69,5 +52,4 @@
 </script>
 </body>
 </html>
-<p style="page-break-before:always;"></p>
-{{--<p style="page-break-after:always;"></p>--}}
+<p style="page-break-after:always;"></p>
