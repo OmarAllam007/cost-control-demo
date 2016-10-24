@@ -10,11 +10,8 @@ class UnitAlias extends Model
 
     public static function createAliasFor($unit_id, $name)
     {
-        $alias = self::where('name', $name)->first();
-        if ($alias) {
-            return $alias;
+        if (!self::where('name', $name)->exists()) {
+            self::create(['unit_id' => $unit_id, 'name' => $name]);
         }
-
-        return self::create(['unit_id' => $unit_id, 'name' => $name]);
     }
 }

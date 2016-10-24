@@ -8,6 +8,7 @@ use App\Jobs\QuantitySurveyImportJob;
 use App\Project;
 use App\Survey;
 use App\Unit;
+use App\UnitAlias;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -138,6 +139,7 @@ class SurveyController extends Controller
             foreach ($status['failed'] as $key => $item) {
                 if (!$item['unit_id']) {
                     $item['unit_id'] = $units[ $item['unit'] ];
+                    UnitAlias::createAliasFor($item['unit_id'], $item['unit']);
                 }
 
                 if (!$item['wbs_level_id']) {

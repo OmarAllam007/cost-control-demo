@@ -9,6 +9,7 @@ use App\Productivity;
 use App\ProductivityList;
 use App\Project;
 use App\Unit;
+use App\UnitAlias;
 use Illuminate\Http\Request;
 
 class ProductivityController extends Controller
@@ -18,7 +19,6 @@ class ProductivityController extends Controller
 
     public function index()
     {
-
         $filter = new ProductivityFilter(Productivity::query(), session('filters.productivity'));
         $productivities = $filter->filter()->basic()->paginate(100);
         return view('productivity.index', compact('productivities'));
@@ -176,6 +176,7 @@ class ProductivityController extends Controller
                 if (isset($data['units'][ $item['orig_unit'] ])) {
                     $item['unit'] = $data['units'][ $item['orig_unit'] ];
                     Productivity::create($item);
+                    UnitAlias::createAliasFor($item['unit'], $item['orig_unit']);
                 }
             }
 

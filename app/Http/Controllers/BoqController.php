@@ -8,6 +8,7 @@ use App\Http\Requests\WipeRequest;
 use App\Jobs\BoqImportJob;
 use App\Project;
 use App\Unit;
+use App\UnitAlias;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -140,6 +141,7 @@ class BoqController extends Controller
             foreach ($status['failed'] as $item) {
                 if (isset($item['orig_unit_id']) && isset($data['units'][ $item['orig_unit_id'] ])) {
                     $item['unit'] = $data['units'][$item['orig_unit_id']];
+                    UnitAlias::createAliasFor($item['unit'], $item['orig_unit_id']);
                 }
 
                 if (isset($item['orig_wbs_id']) && isset($data['wbs'][$item['orig_wbs_id']])) {
