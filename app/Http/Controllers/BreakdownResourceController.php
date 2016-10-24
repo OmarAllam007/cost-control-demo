@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\BreakdownResource;
+use App\Http\Requests\WipeRequest;
+use App\Productivity;
+use App\Project;
+use App\Resources;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -97,5 +101,18 @@ class BreakdownResourceController extends Controller
 
         flash('Resource has been deleted', 'info');
         return \Redirect::to(route('project.show', $breakdown_resource->breakdown->project) . '#breakdown');
+    }
+
+    function wipe(WipeRequest $request, Project $project)
+    {
+
+        BreakdownResource::whereIn('breakdown_id', $project->breakdowns()->pluck('id'))->delete();
+        $project->breakdowns()->delete();
+        Resources::where('project_id', $project->id)->delete();
+        Productivity::where('project_id', $project->id)->delete();
+
+        flash('All breakdowns have been removed', 'info');
+
+        return \Redirect::to(route('project.show', $project) . '#breakdown');
     }
 }

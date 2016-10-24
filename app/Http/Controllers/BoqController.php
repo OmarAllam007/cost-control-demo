@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Boq;
 use App\BoqDivision;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\BoqImportJob;
 use App\Project;
 use App\Unit;
@@ -213,6 +214,14 @@ class BoqController extends Controller
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
 
+    function wipe(WipeRequest $request, Project $project)
+    {
+        $project->boqs()->delete();
+
+        flash('All BOQs have been deleted', 'info');
+
+        return \Redirect::to(route('project.show', $project) . '#boq');
     }
 }

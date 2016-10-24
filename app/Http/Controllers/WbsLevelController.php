@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\WipeRequest;
 use App\Jobs\WbsImportJob;
 use App\Project;
 use App\WbsLevel;
@@ -165,5 +166,16 @@ class WbsLevelController extends Controller
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
+
+    function wipe(WipeRequest $request, Project $project)
+    {
+        $project->quantities()->delete();
+        $project->boqs()->delete();
+        $project->wbs_levels()->delete();
+
+        flash('WBS has been deleted', 'info');
+
+        return \Redirect::route('project.show', $project);
     }
 }

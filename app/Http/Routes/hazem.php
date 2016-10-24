@@ -14,6 +14,8 @@ Route::group(['prefix' => 'wbs-level'], function () {
     Route::get('import/{project}', ['as' => 'wbs-level.import', 'uses' => 'WbsLevelController@import']);
     Route::post('import/{project}', ['as' => 'wbs-level.post-import', 'uses' => 'WbsLevelController@postImport']);
     Route::get('export/{project}',['as'=>'wbs-level.export','uses'=>'WbsLevelController@exportWbsLevels']);
+
+    Route::delete('wipe/{project}', ['as' => 'wbs-level.wipe', 'uses' => 'WbsLevelController@wipe']);
 });
 
 Route::group(['prefix' => 'resources'], function () {
@@ -52,6 +54,7 @@ Route::group(['prefix' => 'survey'], function () {
     Route::get('fix-import/{code}', ['as' => 'survey.fix-import', 'uses' => 'SurveyController@fixImport']);
     Route::post('fix-import/{code}', ['as' => 'survey.post-fix-import', 'uses' => 'SurveyController@postFixImport']);
 
+    Route::delete('wipe/{project}', ['as' => 'survey.wipe', 'uses' => 'SurveyController@wipe']);
 });
 
 Route::group(['prefix' => 'breakdown-template'], function () {
@@ -64,9 +67,12 @@ Route::group(['prefix' => 'breakdown-template'], function () {
 Route::group(['prefix' => 'boq'], function() {
     Route::get('fix-import/{key}', ['as' => 'boq.fix-import', 'uses' => 'BoqController@fixImport']);
     Route::post('fix-import/{key}', ['as' => 'boq.post-fix-import', 'uses' => 'BoqController@postFixImport']);
+
+    Route::delete('wipe/{project}', ['as' => 'boq.wipe', 'uses' => 'BoqController@wipe']);
 });
 
 Route::post('breakdown/filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
+Route::delete('breakdown/wipe/{project}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
 
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
@@ -74,7 +80,5 @@ Route::resource('std-activity', 'StdActivityController');
 Route::resource('activity-division', 'ActivityDivisionController');
 Route::resource('breakdown-template', 'BreakdownTemplateController');
 Route::resource('std-activity-resource', 'StdActivityResourceController');
-
 Route::resource('breakdown', 'BreakdownController');
-
 Route::resource('breakdown-resource', 'BreakdownResourceController');
