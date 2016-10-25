@@ -25,13 +25,13 @@
 
                     <article class="tree--child">
                         <ul class="list-unstyled">
-                                <p class="blue-second-level">{{$resourceType['name']}}</p>
-                                {{--resources--}}
+                            <p class="blue-second-level">{{$resourceType['name']}}</p>
+                            {{--resources--}}
                             <article class="tree--child">
                                 <li>
-                                    <table class="table table-condensed ">
+                                    <table class="table table-condensed table-responsive">
                                         <thead>
-                                        <tr class="blue-first-level">
+                                        <tr class="blue-third-level">
                                             <th class="col-xs-1">CODE</th>
                                             <th class="col-xs-1">RESOURCE NAME</th>
                                             <th class="col-xs-1">UNIT</th>
