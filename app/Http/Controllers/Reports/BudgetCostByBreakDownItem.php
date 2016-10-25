@@ -48,6 +48,29 @@ class BudgetCostByBreakDownItem
         }
 
         ksort($bd_resource);
+        $this->compareBudgetCostByBreakDownItemChart($bd_resource);
         return view('reports.budget_cost_by_break_down',compact('bd_resource','total','project'));
+    }
+
+    public function compareBudgetCostByBreakDownItemChart($data){
+        $item = \Lava::DataTable();
+        $item->addStringColumn('Resource Type')->addNumberColumn('Weight');
+        foreach ($data as $key => $value) {
+            $item->addRow([$data[ $key ]['resource_type'], $data[ $key ]['weight']]);
+        }
+        \Lava::PieChart('BreakDown', $item, [
+            'width' => '1000',
+            'height' => '600',
+            'title' => 'Budget Cost | % Weight',
+            'is3D' => true,
+            'slices' => [
+                ['offset' => 0.0],
+                ['offset' => 0.0],
+                ['offset' => 0.0],
+            ],
+            'pieSliceText' => "label",
+            'sliceVisibilityThreshold'=>0,
+        ]);
+
     }
 }

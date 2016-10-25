@@ -48,7 +48,47 @@ class BudgetCostByDiscipline
             $survey[$key]['weight'] += floatval(($survey[$key]['budget_cost'] / $total['total']) * 100);
             $total['weight_total'] += $survey[$key]['weight'];
         }
+        $this->compareBudgetCostDisciplineCharts($survey);
         return view('reports.budget_cost_by_discipline', compact('project', 'survey','total'));
+
+    }
+
+    public function compareBudgetCostDisciplineCharts($data)
+    {
+        $costTable = \Lava::DataTable();
+        $costTable->addStringColumn('BudgetCost')->addNumberColumn('Discipline');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$data[ $key ]['name'], $data[ $key ]['budget_cost']]);
+        }
+        \Lava::ColumnChart('BudgetCost', $costTable, [
+            'title' => 'Budget Cost By Discipline',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width'=>'1000',
+                'height'=>'600',
+
+            ],
+        ]);
+
+
+        $building = \Lava::DataTable();
+        $building->addStringColumn('Buildings')->addNumberColumn('Weight');
+        foreach ($data as $key => $value) {
+            $building->addRow([$data[ $key ]['name'], $data[ $key ]['weight']]);
+        }
+        \Lava::PieChart('Cost', $building, [
+            'width' => '1000',
+            'height' => '600',
+            'title' => '% Weight From Budget',
+            'is3D' => true,
+            'slices' => [
+                ['offset' => 0.0],
+                ['offset' => 0.0],
+                ['offset' => 0.0],
+            ],
+            'pieSliceText' => "value",
+        ]);
 
     }
 }

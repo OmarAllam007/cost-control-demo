@@ -83,7 +83,6 @@ class BudgetCostByBuilding
         }
         \Lava::ColumnChart('BudgetCost', $costTable, [
             'title' => 'Budget Cost',
-            'tooltip'=>['weight'=>$data[ $key ]['weight']],
             'titleTextStyle' => [
                 'color' => '#eb6b2c',
                 'fontSize' => 14,
