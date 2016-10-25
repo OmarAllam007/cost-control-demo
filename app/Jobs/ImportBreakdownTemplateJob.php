@@ -106,6 +106,8 @@ class ImportBreakdownTemplateJob extends ImportJob
         if (!$this->templates->has($key)) {
             $template = $activity->breakdowns()->firstOrCreate(compact('name'));
             $this->templates->put($key, $template);
+        } else {
+            $template = $activity->breakdowns()->create(compact('name'));
         }
 
         return $this->templates->get($key);
