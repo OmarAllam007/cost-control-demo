@@ -80,9 +80,9 @@ class StdActivityController extends Controller
 
         $file = $request->file('file');
 
-        $this->dispatch(new ActivityImportJob($file->path()));
+        $count = $this->dispatch(new ActivityImportJob($file->path()));
 
-        flash('Activities have been imported', 'success');
+        flash($count . ' Activities have been imported', 'success');
         return redirect()->route('std-activity.index');
     }
 

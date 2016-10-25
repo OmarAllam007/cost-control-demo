@@ -30,6 +30,7 @@ class ActivityImportJob extends ImportJob
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
+        $count = 0;
 
         foreach ($rows as $row) {
             $data = $this->getDataFromCells($row->getCellIterator());
@@ -37,9 +38,16 @@ class ActivityImportJob extends ImportJob
                 continue;
             }
             $division_id = $this->getDivisionId($data);
-            $activity_id = $this->getActivity($data, $division_id);
+            $work_package_name = $data[3];
+            $name = $data[4];
+            $code = $data[5];
+            $id_partial = $data[6];
+            $discipline = $data[7];
+            $key = mb_strtolower($code);
 
+            $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
 
+            ++$count;
 //            BreakdownTemplate::create([
 //                'name' => $data[4],
 //                'code' => $data[5],
@@ -48,6 +56,7 @@ class ActivityImportJob extends ImportJob
 
         }
 
+        return $count;
     }
 
     protected function getDivisionId($data)
@@ -82,19 +91,5 @@ class ActivityImportJob extends ImportJob
         }
 
         return $division_id;
-    }
-
-    private function getActivity($data, $division_id)
-    {
-        $work_package_name = $data[3];
-        $name = $data[4];
-        $code = $data[5];
-        $id_partial = $data[6];
-        $discipline = $data[7];
-        $key = mb_strtolower($code);
-
-        $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
-//        $this->activities->put($key, $activity->id);
-        return $activity->id;
     }
 }
