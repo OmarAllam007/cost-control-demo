@@ -29,7 +29,7 @@ class ProductivityImportJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
         $productivities = Productivity::query()->pluck('code');
 
-        $failed = collect();
+        $status = ['success' => 0, 'failed' => collect()];
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
@@ -54,20 +54,17 @@ class ProductivityImportJob extends ImportJob
 
                 if ($unit) {
                     Productivity::create($item);
+                    ++$status['success'];
                 } else {
                     $item['orig_unit'] = $data[6];
-                    $failed->push($item);
+                    $status['failed']->push($item);
                 }
             }
         }
 
         unlink($this->file);
 
-        if ($failed->count()) {
-            return $failed;
-        }
-
-        return false;
+        return $status;
     }
 
     private function loadDivision()

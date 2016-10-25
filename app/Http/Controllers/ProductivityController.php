@@ -95,15 +95,15 @@ class ProductivityController extends Controller
 
         $file = $request->file('file');
 
-        $failed = $this->dispatch(new ProductivityImportJob($file->path()));
-        if ($failed) {
+        $status = $this->dispatch(new ProductivityImportJob($file->path()));
+        if ($status['failed']->count()) {
             $key = 'prod_' . time();
-            \Cache::add($key, $failed, 180);
+            \Cache::add($key, $status, 180);
             flash('Could not import all items', 'warning');
             return \Redirect::route('productivity.fix-import', $key);
         }
 
-        flash('Productivity has been imported', 'success');
+        flash($status['success'] . ' items have been imported', 'success');
         return redirect()->route('productivity.index');
     }
 
@@ -156,7 +156,8 @@ class ProductivityController extends Controller
             return \Redirect::route('productivity.index');
         }
 
-        $items = \Cache::get($key);
+        $status = \Cache::get($key);
+        $items = $status['failed'];
 
         return view('productivity.fix-import', compact('items', 'key'));
     }
@@ -171,17 +172,18 @@ class ProductivityController extends Controller
         $data = $request->get('data');
         $errors = Productivity::checkFixImport($data);
         if (!$errors) {
-            $items = \Cache::get($key);
+            $status = \Cache::get($key);
 
-            foreach ($items as $item) {
-                if (isset($data['units'][ $item['orig_unit'] ])) {
-                    $item['unit'] = $data['units'][ $item['orig_unit'] ];
+            foreach ($status['failed'] as $item) {
+                if (isset($data['units'][$item['orig_unit']])) {
+                    $item['unit'] = $data['units'][$item['orig_unit']];
                     Productivity::create($item);
                     UnitAlias::createAliasFor($item['unit'], $item['orig_unit']);
+                    ++$status['success'];
                 }
             }
 
-            flash('Productivity has been imported', 'success');
+            flash($status['success'] . ' items have been imported', 'success');
             return \Redirect::route('productivity.index');
         }
 
@@ -218,12 +220,12 @@ class ProductivityController extends Controller
             $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $productivity->versionFor($project->id)->daily_output);
             $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $productivity->versionFor($project->id)->after_reduction);
             $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $productivity->reduction_factor);
-            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $productivity->units->type );
-            $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $productivity->source );
+            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $productivity->units->type);
+            $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $productivity->source);
             $rowCount++;
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$project->name.' - Productivity.xlsx"');
+        header('Content-Disposition: attachment;filename="' . $project->name . ' - Productivity.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');

@@ -43,6 +43,8 @@ class ImportBreakdownTemplateJob extends ImportJob
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
 
+        $rowCount = 0;
+
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
