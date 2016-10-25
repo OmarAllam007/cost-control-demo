@@ -13,24 +13,24 @@
 @section('body')
     <table class="table table-condensed ">
         <thead>
-        <tr class="row-shadow">
-            <th class="col-xs-4" style="background-color:#446CB3; color: white">Discipline</th>
-            <th class="col-xs-4" style="background-color:#446CB3; color: white">(Budget Cost- Dry Cost) * Budget Quantity</th>
-            <th class="col-xs-4" style="background-color:#446CB3; color: white">(Budget QTY- Dry QTY) * Budget cost</th>
+        <tr class="output-cell">
+            <th class="col-xs-4">Discipline</th>
+            <th class="col-xs-4">(Budget Cost- Dry Cost) * Budget Quantity</th>
+            <th class="col-xs-4">(Budget QTY- Dry QTY) * Budget cost</th>
 
         </tr>
         </thead>
         <tbody>
         @foreach($data as $row)
 
-            <tr>
+            <tr class="tbl-content">
                 <td class="col-xs-4">{{$row['name']}}</td>
                 <td class="col-xs-4">{{number_format($row['budget_qty_eq'],2)}}</td>
                 <td class="col-xs-4">{{number_format($row['budget_cost_eq'],2)}}</td>
 
             </tr>
         @endforeach
-        <tr style="border-top: solid #000000">
+        <tr style="border-top: solid #000000" class="output-cell">
             <td class="col-xs-4" style="font-weight: 800">Total</td>
             <td class="col-xs-4">{{number_format($total['budget_qty_eq'],2)}}</td>
             <td class="col-xs-4">{{number_format($total['budget_cost_eq'],2)}}</td>

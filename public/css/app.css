@@ -8145,8 +8145,7 @@ body#iframe {
   font-weight: bold; }
 
 .tbl-content {
-  font-weight: bold;
-}
+  font-weight: bold; }
 
 .tbl-division {
   background-color: #b1a0c7;
@@ -8167,7 +8166,9 @@ body#iframe {
 .output-cell {
   background-color: #ffff00;
   color: red;
-  font-weight: bold; }
+  font-weight: bold;
+  border-bottom: solid #000000;
+  border-top: solid #000000; }
 
 .report-buttons {
   background-color: #e7f6ee;

@@ -14,25 +14,25 @@
 
     <table class="table table-condensed table-fixed">
         <thead>
-        <tr class="row-shadow">
-            <th class="col-xs-3" style="background-color:#446CB3; color: white">Code</th>
-            <th class="col-xs-3" style="background-color:#446CB3; color: white">Resource Type</th>
-            <th class="col-xs-3" style="background-color:#446CB3; color: white">Budget Cost</th>
-            <th class="col-xs-3" style="background-color:#446CB3; color: white">% Weight</th>
+        <tr class="output-cell">
+            <th class="col-xs-3" >Code</th>
+            <th class="col-xs-3" >Resource Type</th>
+            <th class="col-xs-3" >Budget Cost</th>
+            <th class="col-xs-3" >% Weight</th>
 
         </tr>
         </thead>
         <tbody>
         @foreach($bd_resource as $row)
 
-            <tr>
+            <tr class="tbl-content">
                 <td class="col-xs-3">{{$row['resource_code']?:''}}</td>
                 <td class="col-xs-3">{{$row['resource_type']}}</td>
                 <td class="col-xs-3">{{number_format($row['budget_cost'],2)}}</td>
                 <td class="col-xs-3">{{number_format($row['weight'],2)}} %</td>
             </tr>
         @endforeach
-        <tr style="border-top: solid #000000">
+        <tr style="border-top: solid #000000" class="output-cell">
             <td class="col-xs-3"></td>
             <td class="col-xs-3">Grand Total</td>
             <td class="col-xs-3">{{number_format($total['total'])}}</td>
