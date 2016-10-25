@@ -1,9 +1,16 @@
 <li>
     <div class="tree--item">
-        <div class="tree--item--label" style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;">
+        <div class="tree--item--label
+@if($tree_level ==0)
+                blue-second-level
+        @elseif($tree_level ==1)
+                blue-third-level
+           @elseif($tree_level ==2)
+                blue-fourth-level
+           @else
+                blue-fourth-level
+           @endif
+                ">
             {{$division->label}}
             <strong class="pull-right">{{$std_activity_cost[$division->id]['budget_cost']}}</strong>
         </div>
@@ -14,7 +21,7 @@
         @if ($division->children()->whereIn('id', $all)->get() && $division->children()->whereIn('id', $all)->count())
             <ul class="list-unstyled">
                 @foreach($division->children()->whereIn('id', $all)->get() as $child)
-                    @include('std-activity._recursive_budget_summery', ['division' => $child])
+                    @include('std-activity._recursive_budget_summery', ['division' => $child ,'tree_level'=>$tree_level+1])
                 @endforeach
             </ul>
         @endif
@@ -22,7 +29,7 @@
         @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
             <table class="table  table-condensed">
                 <thead>
-                <tr class="row-shadow items-style">
+                <tr class="activity-header">
                     <th>Activity</th>
                     <th width="200px"><span class="pull-right">Budget Cost</span></th>
                 </tr>

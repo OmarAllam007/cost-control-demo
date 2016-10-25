@@ -14,19 +14,19 @@
 
     <table class="table table-condensed">
         <thead>
-        <tr class="row-shadow">
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Code</th>
-            <th class="col-xs-3" style="background-color:#446CB3; color: white">BUILDING NAME</th>
-            <th class="col-xs-3" style="background-color:#446CB3; color: white">REVISED BOQ</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">ORIGINAL BOQ</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">% Weight</th>
+        <tr class="output-cell">
+            <th class="col-xs-2" >Code</th>
+            <th class="col-xs-3" >BUILDING NAME</th>
+            <th class="col-xs-3" >REVISED BOQ</th>
+            <th class="col-xs-2" >ORIGINAL BOQ</th>
+            <th class="col-xs-2" >% Weight</th>
 
         </tr>
         </thead>
         <tbody>
         @foreach($data as $row)
 
-            <tr>
+            <tr class="tbl-content">
                 <td class="col-xs-2">{{$row['code']}}</td>
                 <td class="col-xs-3">{{$row['name']}}</td>
                 <td class="col-xs-3">{{number_format($row['revised_boq'],2)}}</td>
@@ -35,7 +35,7 @@
 
             </tr>
         @endforeach
-        <tr style="border-top: solid #000000">
+        <tr style="border-top: solid #000000" class="output-cell">
             <td class="col-xs-2"></td>
             <td class="col-xs-3" style="font-weight: 800">Grand Total</td>
             <td class="col-xs-3">{{number_format($total['revised_boq'],2)}}</td>

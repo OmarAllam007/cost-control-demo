@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Filter\UnitFilter;
+use App\Http\Requests\WipeRequest;
 use App\Unit;
 use Illuminate\Http\Request;
 
@@ -70,5 +71,11 @@ class UnitController extends Controller
         $data = $request->only('type');
         \Session::set('filters.unit',$data);
         return \Redirect::back();
+    }
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('units')->delete();
+        flash('All units have been deleted', 'info');
+        return \Redirect::route('unit.index');
     }
 }

@@ -17,15 +17,15 @@
         <table class="table table-condensed table-bordered ">
             <thead>
             <tr class="row-shadow">
-                <th width="25%" style="background-color:#446CB3; color: white">WBS Level 1</th>
-                <th width="25%" style="background-color:#446CB3; color: white">WBS Level 2</th>
-                <th width="25%" style="background-color:#446CB3; color: white">WBS Level 3</th>
-                <th width="25%" style="background-color:#446CB3; color: white">WBS Level 4</th>
+                <th width="25%" class="blue-first-level">WBS Level 1</th>
+                <th width="25%" class="blue-first-level">WBS Level 2</th>
+                <th width="25%" class="blue-first-level">WBS Level 3</th>
+                <th width="25%" class="blue-first-level">WBS Level 4</th>
             </tr>
             </thead>
             <tbody>
             @foreach($project->wbs_tree as $wbs_level)
-                @include('wbs-level._recursive_report', ['wbs_level' => $wbs_level, 'tree_level' => 0])
+                @include('wbs-level._recursive_report', ['wbs_level' => $wbs_level, 'tree_level' => 0,'child'=>false])
             @endforeach
             </tbody>
         </table>

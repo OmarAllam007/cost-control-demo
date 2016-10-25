@@ -1,10 +1,7 @@
 @foreach($data as $wbs_level=>$attributes)
     <li class="list-unstyled">
-        <div class="tree--item" style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;">
-            <strong>{{$attributes['name']}}</strong>
+        <div class="tree--item">
+            <p class="blue-second-level">{{$attributes['name']}}</p>
         </div>
         @if(isset($attributes['items']))
             <ul class="list-unstyled">
@@ -13,15 +10,12 @@
                     <li>
                     <div class="tree--item collapse">
 
-                        <p style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;"><strong>{{$item}}</strong></p>
+                        <p class="blue-third-level">{{$item}}</p>
 
                         <article id="children-{{$value['id']}}">
                             <table class="table table-condensed table-striped " >
                                 <thead >
-                                <tr class="items-style">
+                                <tr class="tbl-content">
                                     <th class="col-md-3">Cost Account</th>
                                     <th class="col-md-1">LABORS</th>
                                     <th class="col-md-1">MATERIAL</th>
@@ -33,15 +27,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr class="tbl-content">
                                     {{--<td class="col-md-3">{{$resource['type'] or ''}}</td>--}}
                                     <td class="col-md-3 ">{{$account['cost_account']}}</td>
-                                    <td class="col-md-1">{{$account['LABORS']}}</td>
-                                    <td class="col-md-1">{{$account['MATERIAL']}}</td>
-                                    <td class="col-md-1">{{$account['Subcontractors']}}</td>
-                                    <td class="col-md-1">{{$account['EQUIPMENT']}}</td>
-                                    <td class="col-md-1">{{$account['SCAFFOLDING']}}</td>
-                                    <td class="col-md-1">{{$account['OTHERS']}}</td>
+                                    <td class="col-md-1">{{number_format($account['LABORS'],2)}}</td>
+                                    <td class="col-md-1">{{number_format($account['MATERIAL'],2)}}</td>
+                                    <td class="col-md-1">{{number_format($account['Subcontractors']),2}}</td>
+                                    <td class="col-md-1">{{number_format($account['EQUIPMENT']),2}}</td>
+                                    <td class="col-md-1">{{number_format($account['SCAFFOLDING']),2}}</td>
+                                    <td class="col-md-1">{{number_format($account['OTHERS'],2)}}</td>
                                     <td class="col-md-3">{{number_format($account['total_resources'],2)}}</td>
                                 </tr>
                                 </tbody>

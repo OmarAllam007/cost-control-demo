@@ -16,14 +16,11 @@
     <ul class="list-unstyled tree">
         @foreach($data as $category=>$attributes)
             <li class="list-unstyled">
-                <div class="tree--item" style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;"><strong>{{$category}}</strong></div>
+                <div class="tbl-division">{{$category}}</div>
                 <ul>
                     <table class="table table-condensed">
                         <thead>
-                        <tr class="row-shadow items-style">
+                        <tr class="tbl-header">
                             {{--<th class="col-xs-2">Category</th>--}}
                             <th class="col-xs-3">Item Description</th>
                             <th class="col-xs-3">Crew Structure</th>
@@ -41,7 +38,7 @@
                         </thead>
                         <tbody>
                         @foreach($attributes['items'] as $item)
-                            <tr>
+                            <tr class="tbl-content">
                                 {{--<td class="col-xs-2" ></td>--}}
                                 <td>{{$item['name']}}</td>
                                 <td>{!! nl2br(e($item['crew_structure'])) !!}</td>

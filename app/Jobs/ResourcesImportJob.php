@@ -39,14 +39,13 @@ class ResourcesImportJob extends ImportJob
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $status = ['failed' => collect(), 'success' => 0];
 
-        Resources::flushEventListeners();
+//        Resources::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
             if (!array_filter($data)) {
                 continue;
             }
-
             $type_id = $this->getTypeId($data);
             $unit_id = $this->getUnit($data[7]);
             $item = [

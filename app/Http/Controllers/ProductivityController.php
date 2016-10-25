@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\ActivityDivision;
 use App\CsiCategory;
 use App\Filter\ProductivityFilter;
+use App\Http\Requests\WipeRequest;
 use App\Jobs\ProductivityImportJob;
 use App\Productivity;
 use App\ProductivityList;
@@ -226,5 +227,16 @@ class ProductivityController extends Controller
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
+
+    function wipe(WipeRequest $request)
+    {
+        \DB::table('productivities')->delete();
+        \DB::table('csi_categories')->delete();
+
+
+        flash('All productivities have been deleted', 'info');
+
+        return \Redirect::route('productivity.index');
     }
 }

@@ -1,5 +1,4 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
-
 @section('header')
     <h2>BOQ Price List</h2>
     <div class="pull-right">

@@ -35,7 +35,7 @@
 
     <tr>
         <td colspan="3">
-            @yield('image')
+            <img src="{{asset('images/reports/Report.jpg')}}">
         </td>
     </tr>
     </tbody>

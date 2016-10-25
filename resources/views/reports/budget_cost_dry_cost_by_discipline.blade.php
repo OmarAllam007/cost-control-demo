@@ -13,19 +13,19 @@
 @section('body')
     <table class="table table-condensed">
         <thead>
-        <tr class="row-shadow">
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Code</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Discipline</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Dry Cost</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Budget Cost</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Difference</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Increase</th>
+        <tr class="output-cell">
+            <th class="col-xs-2">Code</th>
+            <th class="col-xs-2">Discipline</th>
+            <th class="col-xs-2">Dry Cost</th>
+            <th class="col-xs-2">Budget Cost</th>
+            <th class="col-xs-2">Difference</th>
+            <th class="col-xs-2">Increase</th>
         </tr>
         </thead>
         <tbody>
         @foreach($data as $row)
 
-            <tr>
+            <tr class="tbl-content">
                 <td class="col-xs-2">{{$row['code']}}</td>
                 <td class="col-xs-2">{{$row['name']}}</td>
                 <td class="col-xs-2">{{number_format($row['dry_cost'],2)}}</td>
@@ -35,7 +35,7 @@
 
             </tr>
         @endforeach
-        <tr style="border-top: solid #000000">
+        <tr style="border-top: solid #000000" class="output-cell">
             <td class="col-xs-2"></td>
             <td class="col-xs-2" style="font-weight: 800">Grand Total</td>
             <td class="col-xs-2">{{number_format($total['dry_cost'],2)}}</td>

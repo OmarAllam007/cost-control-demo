@@ -1,13 +1,9 @@
 <div class="pull-right">
-    <a href="{{route('break_down.printall',$project)}}?print=2" target="_blank" class="btn btn-primary"><li class="fa fa-print"></li> Print All</a>
+    <a href="{{route('break_down.printall',$project)}}?print=1&all=1" target="_blank" class="btn btn-primary"><li class="fa fa-print"></li> Print All</a>
 </div>
 <table class="table table-condensed table-striped table-fixed text-center">
     <thead>
-    <tr>
-        <th class="col-xs-4 text-center">Budget Calculations</th>
-        <th class="col-xs-4 text-center">Budget Output</th>
-        <th class="col-xs-4 text-center">Budget Reports</th>
-    </tr>
+
 
     <tr>
         <th class="col-xs-4">
