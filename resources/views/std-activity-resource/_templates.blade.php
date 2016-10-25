@@ -13,38 +13,16 @@
                         <input type="text" v-model="term" placeholder="Type here to search" class="form-control search"
                                debounce="500" autocomplete="off">
                     </div>
-                    <div class="alert alert-info text-center" v-if="loading"><i class="fa fa-spinner fa-spin"></i>
-                        Loading
-                    </div>
-                    <section v-else>
-                        <table class="table table-condensed table-hover table-striped" v-if="resources.length">
-                            <thead>
-                            <tr>
-                                <th>Resource</th>
-                                <th>Type</th>
-                                <th>Standard Rate</th>
-                                <th>Unit</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="resource in resources">
-                                <td>
-                                    <label>
-                                        <input type="radio" name="resource_id" :value="resource.id"
-                                               v-on:change="setResource(resource)" :checked="resource.id == selected.id"
-                                               id="tree-radio2">
-                                        @{{ resource.name }}
-                                    </label>
-                                </td>
-                                <td>@{{ resource.root_type }}</td>
-                                <td>@{{ resource.rate }}</td>
-                                <td>@{{ resource.unit }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="alert alert-warning" v-else><i class="fa fa-exclamation-triangle"></i> No resources
+
+                    <section>
+                            <ul class="list-unstyled tree">
+                                @foreach(App\ResourceType::tree()->get() as $type)
+                                    @include('resources._recursive_resource_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_id')])
+                                @endforeach
+                            </ul>
+                        {{--<div class="alert alert-warning" v-else><i class="fa fa-exclamation-triangle"></i> No resources
                             found
-                        </div>
+                        </div>--}}
                     </section>
 
 
@@ -53,7 +31,7 @@
         </div>
     </div>
 </template>
-<resources></resources>
+<resources resource=""></resources>
 
 
 <template id="ProductivityTemplate">
@@ -129,7 +107,8 @@
                                     <input type="text" name="variables[@{{_var.id}}]" id="variables_@{{_var.id}}"
                                            v-model="_var.label" class="form-control">
                                     <span class="input-group-btn">
-                                        <button class="btn btn-warning" @click="removeVariable($index)"><i class="fa fa-trash"></i></button>
+                                        <button class="btn btn-warning" @click="removeVariable($index)"><i
+                                                class="fa fa-trash"></i></button>
                                     </span>
                                 </div>
 
@@ -144,8 +123,11 @@
 
                 <div class="modal-footer">
                     <div class="pull-right">
-                        <button class="btn btn-primary" type="button" @click="addVariable"><i class="fa fa-plus"></i> Add variable</button>
-                        <button class="btn btn-default" type="button" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+                        <button class="btn btn-primary" type="button" @click="addVariable"><i class="fa fa-plus"></i>
+                        Add variable</button>
+                        <button class="btn btn-default" type="button" data-dismiss="modal"><i class="fa fa-close"></i>
+                            Close
+                        </button>
                     </div>
                 </div> {{-- /End modal footer --}}
 
@@ -154,4 +136,5 @@
     </div>
 </template>
 
-<variables :vars="{{old('variables', isset($std_activity_resource->vars)? $std_activity_resource->vars : '[]')}}"></variables>
+<variables
+        :vars="{{old('variables', isset($std_activity_resource->vars)? $std_activity_resource->vars : '[]')}}"></variables>

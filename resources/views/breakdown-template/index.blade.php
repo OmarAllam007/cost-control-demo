@@ -61,7 +61,7 @@
         @if (session('filters.breakdown-template.resource_id'))
                 resource = {!! json_encode(\App\Resources::find(session('filters.breakdown-template.resource_id'))->morphToJSON()) !!};
         @endif
-console.log(resource);
+
         var productivity = {};
     </script>
     <script src="{{asset('/js/breakdown-resource.js')}}"></script>

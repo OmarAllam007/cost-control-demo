@@ -18,9 +18,9 @@
             {{Form::label('std_activity_id', 'Standard Activity', ['class' => 'control-label'])}}
             <p>
                 <a href="#ActivitiesModal" data-toggle="modal" id="select-activity">
-                    {{Form::getValueAttribute('std_activity_id')? App\StdActivity::find(Form::getValueAttribute('std_activity_id'))->name : 'Select Activity' }}
+                    {{($activity_id = request('activity', Form::getValueAttribute('std_activity_id')))? App\StdActivity::find($activity_id)->name : 'Select Activity' }}
                 </a>
-                <a id="remove-parent"><span class="fa fa-times"></span></a>
+                <a href="#" id="remove-parent"><span class="fa fa-times"></span></a>
             </p>
         </div>
 
@@ -30,7 +30,7 @@
     </div>
 </div>
 
-@include('std-activity._modal', ['value' => Form::getValueAttribute('std_activity_id')])
+@include('std-activity._modal', ['value' => $activity_id])
 @section('javascript')
-    <script src="/js/breakdown.js"></script>
-    @endsection
+
+@endsection

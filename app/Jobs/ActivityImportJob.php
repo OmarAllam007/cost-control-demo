@@ -94,7 +94,7 @@ class ActivityImportJob extends ImportJob
         $key = mb_strtolower($code);
 
         $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
-        $this->activities->put($key, $activity->id);
+//        $this->activities->put($key, $activity->id);
         return $activity->id;
     }
 }
