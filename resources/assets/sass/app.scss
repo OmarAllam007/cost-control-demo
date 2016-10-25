@@ -1,5 +1,4 @@
 @import "variables";
-
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
 
@@ -16,14 +15,14 @@
   }
 }
 
-table.table>tbody>tr>td,
-table.table>tbody>tr>th,
-table.table>thead>tr>td,
-table.table>thead>tr>th {
+table.table > tbody > tr > td,
+table.table > tbody > tr > th,
+table.table > thead > tr > td,
+table.table > thead > tr > th {
   vertical-align: middle;
 }
 
-ul.tree  {
+ul.tree {
   .tree--child {
     margin-left: 15px;
 
@@ -160,7 +159,7 @@ a, .btn {
   display: block;
 }
 
-.table-fixed tbody td, .table-fixed thead > tr> th {
+.table-fixed tbody td, .table-fixed thead > tr > th {
   float: left;
   border-bottom-width: 0;
 }
@@ -229,4 +228,85 @@ body#iframe {
 
 .modal .alert {
   margin-bottom: 0;
+}
+
+.blue-first-level {
+  background-color: #366092;
+  color: white;
+  font-weight: bold;
+  padding:10px;
+}
+
+.blue-second-level {
+  background-color: #95b3d7;
+  color: white;
+  font-weight: bold;
+  padding:10px;
+}
+
+.blue-third-level {
+  background-color: #dce6f1;
+  color: black;
+  font-weight: bold;
+  padding:10px;
+}
+.blue-fourth-level {
+  background-color: #dfe9f4;
+  color: black;
+  font-weight: bold;
+  padding:10px;
+}
+
+.tbl-header {
+  background-color: #92d050;
+  color: white;
+  font-weight: bold;
+}
+.tbl-content {
+  font-weight: bold;
+}
+
+.tbl-division {
+  background-color: #b1a0c7;
+  color: black;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.tbl-children-division {
+  background-color: #ddd9c4;
+  color: black;
+  font-weight: bold;
+}
+
+.output-header {
+  background-color: #ddd9c4;
+  color: black;
+  font-weight: bold;
+}
+
+.output-cell {
+  background-color: #ffff00;
+  color: red;
+  font-weight: bold;
+}
+
+.report-buttons {
+  background-color: #e7f6ee;
+  color: red;
+  font-weight: bold;
+}
+.wbs-code{
+  color: white;
+  font-weight: bolder;
+}
+
+.normal-row{
+  font-weight: bolder;
+}
+.activity-header {
+  font-weight: bolder;
+  color: black;
+  background-color: #e7f1fc;
+
 }

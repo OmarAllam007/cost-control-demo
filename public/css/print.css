@@ -8112,6 +8112,79 @@ body#iframe {
   padding: 0;
   height: 500px; }
 
+.modal .alert {
+  margin-bottom: 0; }
+
+.blue-first-level {
+  background-color: #366092;
+  color: white;
+  font-weight: bold;
+  padding: 10px; }
+
+.blue-second-level {
+  background-color: #95b3d7;
+  color: white;
+  font-weight: bold;
+  padding: 10px; }
+
+.blue-third-level {
+  background-color: #dce6f1;
+  color: black;
+  font-weight: bold;
+  padding: 10px; }
+
+.blue-fourth-level {
+  background-color: #dfe9f4;
+  color: black;
+  font-weight: bold;
+  padding: 10px; }
+
+.tbl-header {
+  background-color: #92d050;
+  color: white;
+  font-weight: bold; }
+
+.tbl-content {
+  font-weight: bold; }
+
+.tbl-division {
+  background-color: #b1a0c7;
+  color: black;
+  font-weight: bold;
+  padding: 5px; }
+
+.tbl-children-division {
+  background-color: #ddd9c4;
+  color: black;
+  font-weight: bold; }
+
+.output-header {
+  background-color: #ddd9c4;
+  color: black;
+  font-weight: bold; }
+
+.output-cell {
+  background-color: #ffff00;
+  color: red;
+  font-weight: bold; }
+
+.report-buttons {
+  background-color: #e7f6ee;
+  color: red;
+  font-weight: bold; }
+
+.wbs-code {
+  color: white;
+  font-weight: bolder; }
+
+.normal-row {
+  font-weight: bolder; }
+
+.activity-header {
+  font-weight: bolder;
+  color: black;
+  background-color: #e7f1fc; }
+
 @page {
   size: A4;
   margin: 5px; }
@@ -8149,6 +8222,6 @@ body#iframe {
   margin-bottom: 22px; }
 
 td img {
-  height: 90%; }
+  height: 100%; }
 
 /*# sourceMappingURL=print.css.map */

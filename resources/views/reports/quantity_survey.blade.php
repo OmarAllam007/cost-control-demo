@@ -16,17 +16,14 @@
     <ul class="list-unstyled tree">
     @foreach($level_array as $level)
         <li class="list-unstyled">
-            <div class="tree--item" style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;">
+            <div class="blue-second-level">
                 <strong>{{$level['name']}}</strong>
             </div>
             @if($level['activity_divisions'])
                 <ul class="list-unstyled">
                     <table class="table table-condensed">
                         <thead>
-                        <tr class="row-shadow items-style">
+                        <tr class="blue-third-level">
                             <th class="col-xs-3">Activity Division</th>
                             <th class="col-xs-3">Boq Description</th>
                             <th class="col-xs-2">Cost Account</th>
@@ -36,7 +33,7 @@
                         </thead>
                         <tbody>
                         @foreach($level['activity_divisions']['division'] as $division)
-                        <tr>
+                        <tr class="tbl-content">
                             <td class="col-xs-3">
 
                                     {!!  nl2br($division) !!}<br>

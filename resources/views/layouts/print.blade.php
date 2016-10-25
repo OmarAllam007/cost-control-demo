@@ -3,7 +3,7 @@
 <p style="page-break-before:always;"></p>
 @endif
 @include('layouts.cover')
-<p style="page-break-after:always;"></p>
+<p style="page-break-before:always;"></p>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,4 +56,4 @@
 </script>
 </body>
 </html>
-<p style="page-break-after:always;"></p>
+<p style="page-break-after:auto;"></p>

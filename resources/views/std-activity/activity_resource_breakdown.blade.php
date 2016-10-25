@@ -17,28 +17,20 @@
         @foreach($data as $wbs_level=>$attributes)
             @if(isset($attributes['activities']))
                 <li>
-                    <p style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;"><strong>{{$wbs_level}}</strong></p>
+                    <p class="blue-second-level"><strong>{{$wbs_level}}</strong></p>
                     <ul class="list-unstyled">
                         @foreach($attributes['activities'] as $item=>$value)
                             @foreach($value['cost_accounts'] as $account)
                                 <li class="tree--item">
-                                    <p style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;"><strong>{{$item}}</strong></p>
+                                    <p class="blue-third-level"><strong>{{$item}}</strong></p>
                                     <ul>
                                         <li class="tree--item">
-                                            <p style="background-color: #154360;
-  color:white;
-  padding: 3px;
-  font-weight: bold;"><strong>{{$account['cost_account']}}</strong></p>
+                                            <p class="blue-fourth-level">
+                                                {{$account['cost_account']}} </p>
                                             <article id="children-">
                                                 <table class="table table-condensed ">
                                                     <thead>
-                                                    <tr class="row-shadow items-style">
+                                                    <tr class="tbl-children-division">
                                                         {{--<th class="col-md-3 bg-success">Cost Account</th>--}}
                                                         <th class="col-md-3">Resource Name</th>
                                                         <th class="col-md-2">Price-Unit</th>
@@ -48,9 +40,7 @@
                                                     </thead>
                                                     <tbody>
                                                     @foreach($account['resources'] as $resource)
-                                                        <tr>
-                                                            {{--<td class="col-md-3">{{$resource['type'] or ''}}</td>--}}
-                                                            {{--<td class="col-md-3 ">{{$account['cost_account']}}</td>--}}
+                                                        <tr class="tbl-content">
                                                             <td class="col-md-3">{{$resource['name']}}</td>
                                                             <td class="col-md-2">{{$resource['price_unit']}}</td>
                                                             <td class="col-md-2">{{$resource['budget_unit']}}</td>

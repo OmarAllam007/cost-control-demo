@@ -13,19 +13,19 @@
     <img src="{{asset('images/reports/high-priority.jpg')}}">
 @endsection
 @section('body')
-    <table class="table table-condensed table-bordered">
+    <table class="table table-condensed">
         <thead>
-        <tr class="row-shadow">
-            <th class="col-xs-6" style="background-color:#446CB3; color: white">Description</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Budget Cost</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Budget Unit</th>
-            <th class="col-xs-2" style="background-color:#446CB3; color: white">Unit</th>
+        <tr class="tbl-children-division">
+            <th class="col-xs-6">Description</th>
+            <th class="col-xs-2">Budget Cost</th>
+            <th class="col-xs-2">Budget Unit</th>
+            <th class="col-xs-2">Unit</th>
 
         </tr>
         </thead>
         <tbody>
         @foreach($data as $row)
-            <tr>
+            <tr class="tbl-content">
                 <td class="col-xs-3">{{$row['name']}}</td>
                 <td class="col-xs-3">{{number_format($row['budget_cost'],2)}}</td>
                 <td class="col-xs-3">{{number_format($row['budget_unit'],2)}}</td>
