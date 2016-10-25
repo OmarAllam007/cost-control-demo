@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Reports;
 use App\Boq;
 use App\Project;
 use App\Survey;
+use Khill\Lavacharts\Lavacharts;
 
 class RevisedBoq
 {
@@ -54,6 +55,30 @@ class RevisedBoq
 
             $total['weight'] += $data[ $key ]['weight'];
         }
-        return view('reports.revised_boq', compact('data', 'total', 'project'));
+        $chart = $this->getRevisedChart($data);
+        return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
+    }
+
+    public function getRevisedChart($data)
+    {
+        $lava = new Lavacharts(); // See note below for Laravel
+        $revised_boqs = $lava->DataTable();
+        $revised_boqs->addStringColumn('Boqs')->addNumberColumn('Weight');
+        foreach ($data as $key => $value) {
+            $revised_boqs->addRow([$data[ $key ]['name'], $data[ $key ]['weight']]);
+        }
+        $lava->PieChart('BOQ', $revised_boqs, [
+            'width'=>'1000',
+            'height'=>'600',
+            'title' => 'REVISED BOQ',
+            'is3D' => true,
+            'slices' => [
+                ['offset' => 0.0],
+                ['offset' => 0.0],
+                ['offset' => 0.0],
+            ],
+            'pieSliceText'=> "value",
+        ]);
+        return $lava;
     }
 }

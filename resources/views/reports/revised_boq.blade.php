@@ -47,4 +47,7 @@
         </tbody>
     </table>
 
+    <div id="chart-div"></div>
+    <?=  $chart->render('PieChart', 'BOQ', 'chart-div') ?>
+
 @endsection

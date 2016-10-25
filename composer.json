@@ -10,7 +10,8 @@
         "laravelcollective/html": "^5.2",
         "barryvdh/laravel-ide-helper": "^2.2",
         "phpoffice/phpexcel": "^1.8",
-        "laravel/socialite": "^2.0"
+        "laravel/socialite": "^2.0",
+        "khill/lavacharts" : "3.0.*"
 
     },
     "require-dev": {

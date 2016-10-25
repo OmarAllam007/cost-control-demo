@@ -187,10 +187,12 @@ th {
   *,
   *:before,
   *:after {
-    background: transparent !important;
+    background-color: transparent !important;
     color: #000 !important;
     box-shadow: none !important;
-    text-shadow: none !important; }
+    text-shadow: none !important;
+
+  }
   a,
   a:visited {
     text-decoration: underline; }
@@ -206,7 +208,7 @@ th {
     border: 1px solid #999;
     page-break-inside: avoid; }
   thead {
-    display: table-header-group; }
+    display: table-header-group;}
   tr,
   img {
     page-break-inside: avoid; }
@@ -8223,8 +8225,6 @@ body#iframe {
 .tree--child {
   margin-bottom: 22px; }
 
-td img {
-  height: 100%; }
 
 .blue-first-level {
   background-color: #366092;
@@ -8300,6 +8300,8 @@ td img {
 
 @media print {
   thead {
-    display: table-row-group; } }
+    display: table-row-group; }
+
+}
 
 /*# sourceMappingURL=print.css.map */
