@@ -11,7 +11,7 @@
     <img src="{{asset('images/reports/costbybuilding.jpg')}}">
 @endsection
 @section('body')
-    <table class="table table-condensed table-fixed">
+    <table class="table table-condensed ">
         <thead>
         <tr class="output-cell">
             <th class="col-xs-3">Code</th>
@@ -40,4 +40,11 @@
         </tbody>
     </table>
 
+
+
+    <div id="chart-div" style="width:800px; margin:0 auto;"></div><hr>
+    <?=  \Lava::render('PieChart','BOQ','chart-div') ?>
+
+    <div id="chart-div2" style="width:800px; margin:0 auto;"></div>
+    <?= \Lava::render('ColumnChart','BudgetCost','chart-div2') ?>
 @endsection

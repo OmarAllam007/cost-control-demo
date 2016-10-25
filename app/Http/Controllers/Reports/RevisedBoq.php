@@ -61,13 +61,14 @@ class RevisedBoq
 
     public function getRevisedChart($data)
     {
-        $lava = new Lavacharts(); // See note below for Laravel
-        $revised_boqs = $lava->DataTable();
+
+//        $chart = new Lavacharts();
+        $revised_boqs = \Lava::DataTable();
         $revised_boqs->addStringColumn('Boqs')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {
             $revised_boqs->addRow([$data[ $key ]['name'], $data[ $key ]['weight']]);
         }
-        $lava->PieChart('BOQ', $revised_boqs, [
+       \Lava::PieChart('BOQ', $revised_boqs, [
             'width'=>'1000',
             'height'=>'600',
             'title' => 'REVISED BOQ',
@@ -79,6 +80,5 @@ class RevisedBoq
             ],
             'pieSliceText'=> "value",
         ]);
-        return $lava;
     }
 }

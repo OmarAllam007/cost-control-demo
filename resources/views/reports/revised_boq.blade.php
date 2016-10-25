@@ -48,6 +48,6 @@
     </table>
 
     <div id="chart-div"></div>
-    <?=  $chart->render('PieChart', 'BOQ', 'chart-div') ?>
+    <?=  \Lava::render('PieChart', 'BOQ', 'chart-div') ?>
 
 @endsection
