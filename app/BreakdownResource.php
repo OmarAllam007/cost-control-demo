@@ -93,7 +93,7 @@ class BreakdownResource extends Model
         extract($variables);
 
         $result = 0;
-        @eval('$result=' . $this->resource->equation.';');
+        @eval('$result=' . $this->resource->equation . ';');
         return $result;
     }
 
@@ -131,7 +131,11 @@ class BreakdownResource extends Model
 
     function getEngQtyAttribute()
     {
-        $engQuantity = Survey::where('cost_account', $this->breakdown->cost_account)->first()->eng_qty;
+        $costAccount = Survey::where('cost_account', $this->breakdown->cost_account)->first();
+        $engQuantity = 0;
+        if ($costAccount) {
+            $engQuantity = $costAccount->eng_qty;
+        }
         return $engQuantity;
     }
 
