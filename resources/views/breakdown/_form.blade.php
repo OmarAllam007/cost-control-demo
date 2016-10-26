@@ -38,10 +38,15 @@
                 </a>
             </p>
         </div>
-    <div class="form-group {{$errors->first('template_id', 'has-errors')}}">
-        {{Form::label('template_id', 'Breakdown Template', ['class' => 'control-label'])}}
-        {{Form::select('template_id', App\BreakdownTemplate::options(), null, ['class' => 'form-control', 'id' => 'TemplateID'])}}
-    </div>
+
+        <div class="form-group {{$errors->first('template_id', 'has-errors')}}">
+            {{Form::label('template_id', 'Breakdown Template', ['class' => 'control-label'])}}
+            {{Form::select('template_id', App\BreakdownTemplate::options(), null, ['class' => 'form-control', 'id' => 'TemplateID'])}}
+        </div>
+
+        <div class="form-group" id="SetVariablesPane">
+            <a href="#VariablesModal" class="btn btn-info" data-toggle="modal"><i class="fa fa-dollar"></i> Set Variables</a>
+        </div>
     </div>
 </div>
 

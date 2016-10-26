@@ -12,12 +12,12 @@ class CreateResourceVariablesTable extends Migration
      */
     public function up()
     {
-        Schema::table('resource_variables', function (Blueprint $table) {
-//            $table->increments('id');
-//            $table->integer('std_activity_resource_id');
-//            $table->string('label');
-//            $table->integer('display_order');
-//            $table->timestamps();
+        Schema::create('std_activity_variables', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('std_activity_id');
+            $table->string('label');
+            $table->integer('display_order');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +28,6 @@ class CreateResourceVariablesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('resource_variables');
+        Schema::drop('std_activity_variables');
     }
 }

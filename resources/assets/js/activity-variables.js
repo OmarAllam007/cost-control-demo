@@ -1,4 +1,6 @@
-var Variables = Vue.extend({
+import Vue from 'vue';
+
+let Variables = Vue.extend({
     template: document.getElementById('VariablesTemplate').innerHTML,
 
     props: ['vars'],
@@ -26,5 +28,13 @@ var Variables = Vue.extend({
             }
             this.$set('vars', newVars);
         }
+    }
+});
+
+new Vue({
+    el: 'body',
+
+    components: {
+        Variables
     }
 });

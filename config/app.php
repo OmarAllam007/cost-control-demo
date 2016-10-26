@@ -1,6 +1,6 @@
 <?php
 
-return [
+$config = [
 
     'name' => 'Cost Control',
 
@@ -162,7 +162,6 @@ return [
         Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
 
 
-
         /*
          * Application Service Providers...
          */
@@ -221,3 +220,9 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 ];
+
+if ($config['env'] == 'local') {
+//    $config['providers'][] = \Barryvdh\Debugbar\ServiceProvider::class;
+}
+
+return $config;

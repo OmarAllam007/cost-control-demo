@@ -8,6 +8,7 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('resources', 'Api\ResourcesController@index');
     Route::get('productivity', 'Api\ProductivityController@index');
     Route::get('productivity/labours-count/{productivity}', 'Api\ProductivityController@labors_count');
+    Route::get('std-activity/variables/{std_activity}', 'Api\StdActivityController@variables');
 });
 
 Route::group(['prefix' => 'wbs-level'], function () {

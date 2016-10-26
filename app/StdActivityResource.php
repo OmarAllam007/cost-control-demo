@@ -43,7 +43,7 @@ class StdActivityResource extends Model
 
     function variables()
     {
-        return $this->hasMany(ResourceVariable::class);
+        return $this->hasMany(StdActivityVariable::class);
     }
 
     function morphForJSON($account)
@@ -62,7 +62,7 @@ class StdActivityResource extends Model
             'budget_qty' => '',
             'eng_qty' => '',
             'remarks' => $this->remarks,
-            'variables' => $this->variables()->pluck('label', 'display_order')
+//            'variables' => $this->variables()->pluck('label', 'display_order')
         ];
 
         $costAccount = Survey::where('cost_account', $account)->first();
@@ -72,33 +72,5 @@ class StdActivityResource extends Model
         }
 
         return $attributes;
-    }
-
-    function syncVariables($variables)
-    {
-        $this->variables()->delete();
-
-        if ($variables) {
-            foreach ($variables as $index => $var) {
-                $this->variables()->create([
-                    'label' => $var,
-                    'display_order' => $index + 1
-                ]);
-            }
-        }
-    }
-
-    function getVarsAttribute()
-    {
-        $variables = [];
-        foreach ($this->variables as $var) {
-            $variables[] = [
-                'name' => '$v' . $var->display_order,
-                'label' => $var->label,
-                'id' => $var->display_order
-            ];
-        }
-
-        return collect($variables);
     }
 }

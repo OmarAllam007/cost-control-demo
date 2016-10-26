@@ -25,25 +25,6 @@
     </td>
 
     <td>
-        <a href="#variableModal_{{$index}}" class="edit-variables" data-toggle="modal">Variables</a>
-
-        <div class="modal fade" id="variableModal_{{$index}}" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Variables</h4>
-                    </div>
-                    <div class="modal-body variables-container form-horizontal">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </td>
-
-    <td>
         <input class="form-control input-sm" type="text" name="resources[{{$index}}][resource_waste]"
                id="resourceWaste{{$index}}" value="{{old("resources.$index.resource_waste")}}" j-model="resource_waste">
     </td>

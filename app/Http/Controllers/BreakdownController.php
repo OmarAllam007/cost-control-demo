@@ -41,8 +41,9 @@ class BreakdownController extends Controller
     {
         $breakdown = Breakdown::create($request->all());
         $breakdown->resources()->createMany($request->get('resources'));
+        $breakdown->syncVariables($request->get('variables'));
 
-        return \Redirect::route('project.show', $breakdown->project_id);
+        return \Redirect::to(route('project.show', $breakdown->project_id) . '#breakdown');
     }
 
     public function edit(Breakdown $breakdown)
