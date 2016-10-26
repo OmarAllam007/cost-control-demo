@@ -12,7 +12,7 @@
 @endsection
 @section('body')
 
-    <table class="table table-condensed table-fixed">
+    <table class="table table-condensed">
         <thead>
         <tr class="output-cell">
             <th class="col-xs-3" >Code</th>
@@ -41,5 +41,6 @@
         </tr>
         </tbody>
     </table>
-
+    <div id="chart-div" style="width:800px; margin:0 auto;"></div><hr>
+    <?=  \Lava::render('PieChart','BreakDown','chart-div') ?>
 @endsection

@@ -47,4 +47,7 @@
         </tbody>
     </table>
 
+    <div id="chart-div"></div>
+    <?=  \Lava::render('PieChart', 'BOQ', 'chart-div') ?>
+
 @endsection

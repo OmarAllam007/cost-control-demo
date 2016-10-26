@@ -159,6 +159,8 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Make\MakeServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
+
 
 
         /*
