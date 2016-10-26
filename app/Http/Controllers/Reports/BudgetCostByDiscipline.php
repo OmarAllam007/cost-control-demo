@@ -18,8 +18,8 @@ class BudgetCostByDiscipline
     {
         $survey = [];
         $total = [
-            'total'=>0,
-            'weight_total'=>0
+            'total' => 0,
+            'weight_total' => 0,
         ];
         $breakdowns = $project->breakdowns()->get();
         foreach ($breakdowns as $breakdown) {
@@ -27,10 +27,10 @@ class BudgetCostByDiscipline
             foreach ($qs_items as $qs_item) {
                 if (!isset($survey[ $qs_item->discipline ])) {
                     $survey[ $qs_item->discipline ] = [
-                        'code' => $qs_item->code,
-                        'name' => $qs_item->discipline,
+                        'code' => $breakdown->std_activity->code,
+                        'name' => $breakdown->std_activity->discipline,
                         'budget_cost' => 0,
-                        'weight'=>0
+                        'weight' => 0,
                     ];
                 }
                 foreach ($breakdown->resources as $resource) {
@@ -41,15 +41,17 @@ class BudgetCostByDiscipline
             }
 
         }
-        foreach ($survey as $item){
-            $total['total'] +=$item['budget_cost'];
+        foreach ($survey as $item) {
+            $total['total'] += $item['budget_cost'];
         }
-        foreach ($survey as $key=>$value){
-            $survey[$key]['weight'] += floatval(($survey[$key]['budget_cost'] / $total['total']) * 100);
-            $total['weight_total'] += $survey[$key]['weight'];
+        foreach ($survey as $key => $value) {
+            if ($total['total']) {
+                $survey[ $key ]['weight'] += floatval(($survey[ $key ]['budget_cost'] / $total['total']) * 100);
+                $total['weight_total'] += $survey[ $key ]['weight'];
+            }
         }
         $this->compareBudgetCostDisciplineCharts($survey);
-        return view('reports.budget_cost_by_discipline', compact('project', 'survey','total'));
+        return view('reports.budget_cost_by_discipline', compact('project', 'survey', 'total'));
 
     }
 
@@ -65,8 +67,8 @@ class BudgetCostByDiscipline
             'titleTextStyle' => [
                 'color' => '#eb6b2c',
                 'fontSize' => 14,
-                'width'=>'1000',
-                'height'=>'600',
+                'width' => '1000',
+                'height' => '600',
 
             ],
         ]);

@@ -34,6 +34,11 @@
             {{ Form::text('work_package_name', null, ['class' => 'form-control']) }}
             {!! $errors->first('work_package_name', '<div class="help-block">:message</div>') !!}
         </div>
+        <div class="form-group {{$errors->first('discipline', 'has-error')}}">
+            {{ Form::label('', 'Discipline', ['class' => 'control-label']) }}
+            {{ Form::text('discipline', null, ['class' => 'form-control']) }}
+            {!! $errors->first('discipline', '<div class="help-block">:message</div>') !!}
+        </div>
         <!-- Continue working on your fields here -->
 
         <div class="form-group">

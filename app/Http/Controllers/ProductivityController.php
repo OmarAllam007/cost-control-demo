@@ -37,10 +37,9 @@ class ProductivityController extends Controller
 
         $this->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
 
-//        $man_hours  = $this->manHour($request);
-//        $equip_hours = $this->equipHour($request);
+
         Productivity::create($request->all());
-//        $productivity->update(['man_hours' => array_sum($man_hours), 'equip_hours' => array_sum($equip_hours)]);
+
 
         flash('Productivity has been saved', 'success');
 

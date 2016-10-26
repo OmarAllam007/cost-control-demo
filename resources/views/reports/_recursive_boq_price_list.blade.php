@@ -10,7 +10,7 @@
                     <li>
                     <div class="tree--item collapse">
 
-                        <p class="blue-third-level">{{$item}}</p>
+                        <p class="blue-third-level">{{$boq_details['boq_name']}}</p>
 
                         <article id="children-{{$boq_details['id']}}">
                             <table class="table table-condensed table-striped " >

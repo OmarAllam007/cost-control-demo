@@ -41,8 +41,11 @@ class BudgetCostByBuilding
             $total['total'] += $item['budget_cost'];
         }
         foreach ($data as $key => $value) {
-            $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
-            $total['weight'] += $data[ $key ]['weight'];
+            if($total['total']!=0){
+
+                $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
+                $total['weight'] += $data[ $key ]['weight'];
+            }
         }
         $pieChart = $this->getBudgetCostForBuildingPieChart($data);
         $columnChart = $this->getBugetCostByBuildingColumnChart($data);

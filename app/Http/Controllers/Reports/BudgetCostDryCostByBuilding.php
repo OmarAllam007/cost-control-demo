@@ -42,7 +42,10 @@ class BudgetCostDryCostByBuilding
 
             $data[ $wbs_id ]['difference'] = ($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']);
 
-            $data[ $wbs_id ]['increase'] = floatval(($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']) / $data[ $wbs_id ]['dry_cost'] * 100);
+            if (!$data[ $wbs_id ]['dry_cost']) {
+                $data[ $wbs_id ]['increase'] = floatval(($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']) / $data[ $wbs_id ]['dry_cost'] * 100);
+            }
+
         }
         foreach ($data as $item) {
             $total['total_dry'] += $item['dry_cost'];
@@ -50,7 +53,9 @@ class BudgetCostDryCostByBuilding
             $total['total_increase'] += $item['increase'];
             $total['difference'] += $item['difference'];
         }
-        $total['total_increase'] = $total['difference'] / $total['total_budget'] * 100;
+        if (!$total['total_budget']) {
+            $total['total_increase'] = $total['difference'] / $total['total_budget'] * 100;
+        }
         $this->getBudgetCostDryCostColumnChart($data);
         $this->getBudgetCostDryCostSecondColumnChart($data);
         $this->getBudgetCostDryCostThirdColumnChart($data);
@@ -134,9 +139,9 @@ class BudgetCostDryCostByBuilding
         $costTable = \Lava::DataTable();
 
         $costTable->addStringColumn('WBS')->addNumberColumn('Increase')->addRoleColumn(
-            'role','annotation');
+            'role', 'annotation');
         foreach ($data as $key => $value) {
-            $costTable->addRow([$data[ $key ]['name'], number_format($data[ $key ]['increase'],1),$data[ $key ]['name']]);
+            $costTable->addRow([$data[ $key ]['name'], number_format($data[ $key ]['increase'], 1), $data[ $key ]['name']]);
         }
         $options = [
 

@@ -31,7 +31,7 @@ class BoqImportJob extends ImportJob implements ShouldQueue
     public function handle()
     {
 
-        ini_set('max_execution_time', 300);
+        ini_set('max_execution_time', 500);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
@@ -60,8 +60,6 @@ class BoqImportJob extends ImportJob implements ShouldQueue
                     'materials' => $data[13]?: '',
                     'subcon' => $data[14]?: '',
                     'manpower' => $data[15]?: '',
-//                    'type' => $data[5] ?: '',
-//                    'arabic_description' => $data[10]?: '',
                     'project_id' => $this->project_id,
                 ]);
             }
