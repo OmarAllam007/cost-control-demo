@@ -14,7 +14,7 @@ class CreateBreakdownVariablesTable extends Migration
     {
         Schema::create('breakdown_variables', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('breakdown_resource_id');
+            $table->integer('breakdown_id');
             $table->integer('qty_survey_id');
             $table->string('name');
             $table->float('value');

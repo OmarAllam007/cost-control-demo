@@ -21,6 +21,7 @@ elixir(function (mix) {
     mix.scripts([
         'breakdown/load-templates.js',
         'breakdown/load-resources.js',
+        'breakdown/load-variables.js',
         'autocomplete.js',
         'tree-select.js'
     ], 'public/js/breakdown.js');

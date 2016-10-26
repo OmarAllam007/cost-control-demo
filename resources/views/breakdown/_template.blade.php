@@ -11,9 +11,23 @@
 
 <template id="variableTemplate">
     <div class="form-group">
-        <label for="var_%res%_%index%" class="control-label col-sm-3 var-name"></label>
+        <label for="var_{display_order}" class="control-label col-sm-3 var-name">{label}</label>
         <div class="col-sm-9">
-            <input id="var_%res%_%index%" type="text" class="form-control" name="resources[%res%][variables][%index%]">
+            <input id="var_{display_order}" type="text" class="form-control" name="variables[{display_order}]">
         </div>
     </div>
 </template>
+
+<div class="modal fade" id="VariablesModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Variables</h4>
+            </div>
+            <div class="modal-body form-horizontal" id="VariablesPane">
+
+            </div>
+        </div>
+    </div>
+</div>
