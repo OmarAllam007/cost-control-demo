@@ -14,60 +14,59 @@
 @endsection
 @section('body')
     <ul class="list-unstyled tree">
-    @foreach($level_array as $level)
-        <li class="list-unstyled">
-            <div class="blue-second-level">
-                <strong>{{$level['name']}}</strong>
-            </div>
-            @if($level['activity_divisions'])
-                <ul class="list-unstyled">
-                    <table class="table table-condensed">
-                        <thead>
-                        <tr class="blue-third-level">
-                            <th class="col-xs-3">Activity Division</th>
-                            <th class="col-xs-3">Boq Description</th>
-                            <th class="col-xs-2">Cost Account</th>
-                            <th class="col-xs-2">Engineering Quantity</th>
-                            <th class="col-xs-2">Budget Quantity</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($level['activity_divisions']['division'] as $division)
-                        <tr class="tbl-content">
-                            <td class="col-xs-3">
+        @foreach($level_array as $level)
+            <li class="list-unstyled">
+                <div class="blue-second-level">
+                    <strong>{{$level['name']}}</strong>
+                </div>
+                @if($level['activity_divisions'])
+                    <ul class="list-unstyled">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr class="blue-third-level">
+                                <th class="col-xs-3">Activity Division</th>
+                                <th class="col-xs-3">Boq Description</th>
+                                <th class="col-xs-2">Cost Account</th>
+                                <th class="col-xs-2">Engineering Quantity</th>
+                                <th class="col-xs-2">Budget Quantity</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($level['activity_divisions']['division'] as $division)
+                                <tr class="tbl-content">
+                                    <td class="col-xs-3">
 
-                                    {!!  nl2br($division) !!}<br>
+                                        {!!  nl2br($division) !!}<br>
 
-                            </td>
-                                <td class="col-xs-3">
-                                    @foreach($level['activity_divisions']['boq_item_description'] as $boq)
-                                    {!!  nl2br($boq) !!}<br>
-                                    @endforeach
-                                </td>
+                                    </td>
 
-                            <td class="col-xs-2">
-                                @foreach($level['activity_divisions']['cost_account'] as $account)
-                                {!!  nl2br($account) !!}<br>
-                                @endforeach
-                            </td>
-                            <td class="col-xs-2">
-                                    {{number_format($level['activity_divisions']['budget_qty'],2)}}<br>
-                            </td>
+                                    <td class="col-xs-3">
 
-                            <td class="col-xs-2">
-                                    {{number_format($level['activity_divisions']['eng_qty'],2)}}<br>
-                            </td>
-{{----}}
-                            {{--<td class="col-xs-2">--}}
-                                {{--{{$wbs[$level->id]['budget_qty']}}<br>--}}
-                            {{--</td>--}}
-                        </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </ul>
-            @endif
-            @endforeach
-        </li>
-@endsection
-</ul>
+                                        {{$level['activity_divisions']['boq_item_description']}}<br>
+
+                                    </td>
+
+                                    <td class="col-xs-2">
+                                        {{$level['activity_divisions']['cost_account']}}
+                                    </td>
+                                    <td class="col-xs-2">
+                                        {{number_format($level['activity_divisions']['budget_qty'],2)}}<br>
+                                    </td>
+
+                                    <td class="col-xs-2">
+                                        {{number_format($level['activity_divisions']['eng_qty'],2)}}<br>
+                                    </td>
+                                    {{----}}
+                                    {{--<td class="col-xs-2">--}}
+                                    {{--{{$wbs[$level->id]['budget_qty']}}<br>--}}
+                                    {{--</td>--}}
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </ul>
+                @endif
+                @endforeach
+            </li>
+            @endsection
+    </ul>

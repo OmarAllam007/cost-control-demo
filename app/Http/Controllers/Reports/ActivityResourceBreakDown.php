@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Reports;
 
 
+use App\Boq;
 use App\Project;
 
 class ActivityResourceBreakDown
@@ -33,9 +34,11 @@ class ActivityResourceBreakDown
                     'cost_accounts' => [],
                 ];
             }
+
             if (!isset($data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ])) {
                 $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ] = [
                     'cost_account' => $break_down->cost_account,
+                    'boq_description'=>Boq::where('cost_account',$break_down->cost_account)->first()->description,
                     'resources' => [],
                 ];
             }
@@ -61,7 +64,6 @@ class ActivityResourceBreakDown
 
 
         }
-//        dd($data);
         return view('std-activity.activity_resource_breakdown', compact('data', 'project'));
 
     }

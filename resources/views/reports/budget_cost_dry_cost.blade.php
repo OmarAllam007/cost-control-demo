@@ -12,7 +12,7 @@
 @endsection
 @section('body')
 
-    <table class="table table-condensed table-striped table-fixed">
+    <table class="table table-condensed">
         <thead>
         <tr class="output-cell">
             <th class="col-xs-2">Code</th>
@@ -45,5 +45,12 @@
         </tr>
         </tbody>
     </table>
+    <div id="chart-div"></div>
+    <?=  \Lava::render('ColumnChart', 'BudgetCost', 'chart-div') ?>
+<br>
+    <div id="chart-div2"></div>
+    <?=  \Lava::render('ColumnChart', 'Difference', 'chart-div2') ?>
 
+    <div id="chart-div3"></div>
+    <?=  \Lava::render('ColumnChart', 'Increase', 'chart-div3') ?>
 @endsection

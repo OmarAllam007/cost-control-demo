@@ -5,14 +5,14 @@
         </div>
         @if(isset($attributes['items']))
             <ul class="list-unstyled">
-            @foreach($attributes['items'] as $item=>$value)
-                @foreach($value['cost_accounts'] as $account)
+            @foreach($attributes['items'] as $item=>$boq_details)
+
                     <li>
                     <div class="tree--item collapse">
 
                         <p class="blue-third-level">{{$item}}</p>
 
-                        <article id="children-{{$value['id']}}">
+                        <article id="children-{{$boq_details['id']}}">
                             <table class="table table-condensed table-striped " >
                                 <thead >
                                 <tr class="tbl-content">
@@ -29,14 +29,14 @@
                                 <tbody>
                                 <tr class="tbl-content">
                                     {{--<td class="col-md-3">{{$resource['type'] or ''}}</td>--}}
-                                    <td class="col-md-3 ">{{$account['cost_account']}}</td>
-                                    <td class="col-md-1">{{number_format($account['LABORS'],2)}}</td>
-                                    <td class="col-md-1">{{number_format($account['MATERIAL'],2)}}</td>
-                                    <td class="col-md-1">{{number_format($account['Subcontractors']),2}}</td>
-                                    <td class="col-md-1">{{number_format($account['EQUIPMENT']),2}}</td>
-                                    <td class="col-md-1">{{number_format($account['SCAFFOLDING']),2}}</td>
-                                    <td class="col-md-1">{{number_format($account['OTHERS'],2)}}</td>
-                                    <td class="col-md-3">{{number_format($account['total_resources'],2)}}</td>
+                                    <td class="col-md-3 ">{{$boq_details['cost_account']}}</td>
+                                    <td class="col-md-1">{{number_format($boq_details['LABORS'],2)}}</td>
+                                    <td class="col-md-1">{{number_format($boq_details['MATERIAL'],2)}}</td>
+                                    <td class="col-md-1">{{number_format($boq_details['Subcontractors']),2}}</td>
+                                    <td class="col-md-1">{{number_format($boq_details['EQUIPMENT']),2}}</td>
+                                    <td class="col-md-1">{{number_format($boq_details['SCAFFOLDING']),2}}</td>
+                                    <td class="col-md-1">{{number_format($boq_details['OTHERS'],2)}}</td>
+                                    <td class="col-md-3">{{number_format($boq_details['total_resources'],2)}}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -45,7 +45,6 @@
 
                     </li>
                 @endforeach
-            @endforeach
             </ul>
         @endif
     </li>

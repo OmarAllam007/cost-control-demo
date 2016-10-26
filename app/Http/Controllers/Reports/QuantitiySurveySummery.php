@@ -22,8 +22,9 @@ class QuantitiySurveySummery
 
         $level_array = [];
         foreach ($break_downs as $break_down) {
-            $boq_item = Boq::where('cost_account', $break_down->cost_account)->get();
-            $division_name = ActivityDivision::where('id',$break_down->std_activity->division->id);
+            $boq_item = Boq::where('cost_account', $break_down->cost_account)->first();
+            $division_name = ActivityDivision::where('id', $break_down->std_activity->division->id)->get();
+
             if (!isset($level_array[ $break_down->wbs_level->id ])) {
                 $level_array[ $break_down->wbs_level->id ] = [
                     'id' => $break_down->wbs_level->id,
@@ -31,11 +32,10 @@ class QuantitiySurveySummery
                     'activity_divisions' => [
                         'division' => $division_name->pluck('name'),
                         'activity_names' => [$break_down->std_activity->name],
-                        'boq_item_description' => $boq_item->pluck('description'),
-                        'cost_account' => $boq_item->pluck('cost_account'),
+                        'boq_item_description' => $boq_item->description,
+                        'cost_account' => $boq_item->cost_account,
                         'budget_qty' => 0,
                         'eng_qty' => 0,
-
                     ],
 
                 ];
