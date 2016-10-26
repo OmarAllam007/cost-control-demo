@@ -51,7 +51,7 @@ class StdActivity extends Model
 
         if ($variables) {
             $counter = 0;
-            foreach ($variables as $index => $var) {
+            foreach ($variables as $var) {
                 $this->variables()->create([
                     'label' => $var,
                     'display_order' => ++$counter
