@@ -13,10 +13,10 @@ class CreateUnitAliasesTable extends Migration
     public function up()
     {
         Schema::create('unit_aliases', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('unit_id')->unsigned();
-            $table->string('name');
-            $table->timestamps();
+//            $table->increments('id');
+//            $table->integer('unit_id')->unsigned();
+//            $table->string('name');
+//            $table->timestamps();
         });
     }
 

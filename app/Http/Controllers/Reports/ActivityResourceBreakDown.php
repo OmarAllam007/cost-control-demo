@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Reports;
 
 
+use App\Boq;
 use App\Project;
 
 class ActivityResourceBreakDown
@@ -33,9 +34,11 @@ class ActivityResourceBreakDown
                     'cost_accounts' => [],
                 ];
             }
+
             if (!isset($data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ])) {
                 $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ] = [
                     'cost_account' => $break_down->cost_account,
+                    'boq_description'=>Boq::where('cost_account',$break_down->cost_account)->first()->description,
                     'resources' => [],
                 ];
             }
@@ -49,19 +52,18 @@ class ActivityResourceBreakDown
                 $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_cost'] +=$breakDown_resource->budget_cost;
 
                 $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_unit'] +=$breakDown_resource->budget_unit;
+//
+//                $budget_unit = $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_unit'];
+//                $budget_cost = $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_cost'];
 
-                $budget_unit = $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_unit'];
-                $budget_cost = $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_cost'];
-                if($budget_unit!=0){
-                    $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['price_unit'] = $budget_cost/$budget_unit;
-                }
+                    $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['price_unit'] = $breakDown_resource->project_resource->rate;
+
 
             }
 
 
 
         }
-//        dd($data);
         return view('std-activity.activity_resource_breakdown', compact('data', 'project'));
 
     }

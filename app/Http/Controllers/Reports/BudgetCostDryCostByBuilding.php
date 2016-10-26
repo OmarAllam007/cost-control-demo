@@ -42,7 +42,10 @@ class BudgetCostDryCostByBuilding
 
             $data[ $wbs_id ]['difference'] = ($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']);
 
-            $data[ $wbs_id ]['increase'] = floatval(($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']) / $data[ $wbs_id ]['dry_cost'] * 100);
+            if (!$data[ $wbs_id ]['dry_cost']) {
+                $data[ $wbs_id ]['increase'] = floatval(($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']) / $data[ $wbs_id ]['dry_cost'] * 100);
+            }
+
         }
         foreach ($data as $item) {
             $total['total_dry'] += $item['dry_cost'];
@@ -50,8 +53,126 @@ class BudgetCostDryCostByBuilding
             $total['total_increase'] += $item['increase'];
             $total['difference'] += $item['difference'];
         }
-        $total['total_increase'] = $total['difference']/$total['total_budget']*100;
-
+        if (!$total['total_budget']) {
+            $total['total_increase'] = $total['difference'] / $total['total_budget'] * 100;
+        }
+        $this->getBudgetCostDryCostColumnChart($data);
+        $this->getBudgetCostDryCostSecondColumnChart($data);
+        $this->getBudgetCostDryCostThirdColumnChart($data);
         return view('reports.budget_cost_dry_cost', compact('project', 'break_downs', 'data', 'total'));
+    }
+
+    public function getBudgetCostDryCostColumnChart($data)
+    {
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('WBS')->addNumberColumn('Dry Cost')->addNumberColumn('Budget Cost');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$data[ $key ]['name'], $data[ $key ]['dry_cost'], $data[ $key ]['budget_cost']]);
+
+        }
+        $options = [
+            'toolTip' => 'value',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
+            ],
+            'title' => trans('Budget VS Dry'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'WBS',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+
+        ];
+        \Lava::ColumnChart('BudgetCost', $costTable, $options);
+
+    }
+
+    public function getBudgetCostDryCostSecondColumnChart($data)
+    {
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('WBS')->addNumberColumn('Difference');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$data[ $key ]['name'], $data[ $key ]['difference']]);
+
+        }
+        $options = [
+            'isStacked' => 'false',
+            'tooltip' => 'value',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
+            ],
+            'title' => trans('Difference'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'WBS',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+            'labels' => [
+                'visible' => 'true',
+            ],
+            'legend' => [
+                'position' => 'none',
+            ],
+            'bar' => [
+                'groupWidth' => '30%',
+            ],
+        ];
+        \Lava::ColumnChart('Difference', $costTable, $options);
+
+    }
+
+    public function getBudgetCostDryCostThirdColumnChart($data)
+    {
+
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('WBS')->addNumberColumn('Increase')->addRoleColumn(
+            'role', 'annotation');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$data[ $key ]['name'], number_format($data[ $key ]['increase'], 1), $data[ $key ]['name']]);
+        }
+        $options = [
+
+            'tooltip' => 'percent',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
+            ],
+            'title' => trans('Increase %'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'WBS',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+            'labels' => [
+                'visible' => 'true',
+            ],
+            'legend' => [
+                'position' => 'none',
+            ],
+
+            'bar' => [
+                'groupWidth' => '30%',
+            ],
+
+        ];
+        \Lava::ColumnChart('Increase', $costTable, $options);
+
     }
 }
