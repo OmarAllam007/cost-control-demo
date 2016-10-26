@@ -76,7 +76,7 @@ class Productivity extends Model
 
     public function getManHoursAttribute()
     {
-        if ($this->after_reduction) {
+        if (!$this->after_reduction) {
             return 0;
         }
 
