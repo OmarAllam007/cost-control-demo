@@ -43,8 +43,6 @@ class ImportBreakdownTemplateJob extends ImportJob
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
 
-        $rowCount = 0;
-
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -106,8 +104,6 @@ class ImportBreakdownTemplateJob extends ImportJob
         if (!$this->templates->has($key)) {
             $template = $activity->breakdowns()->firstOrCreate(compact('name'));
             $this->templates->put($key, $template);
-        } else {
-            $template = $activity->breakdowns()->create(compact('name'));
         }
 
         return $this->templates->get($key);
