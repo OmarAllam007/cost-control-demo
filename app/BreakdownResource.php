@@ -141,7 +141,11 @@ class BreakdownResource extends Model
 
     function getBudgetQtyAttribute()
     {
-        $budgetQuantity = Survey::where('cost_account', $this->breakdown->cost_account)->first()->budget_qty;
+        $costAccount = Survey::where('cost_account', $this->breakdown->cost_account)->first();
+        $budgetQuantity = 0;
+        if ($costAccount) {
+            $budgetQuantity = $costAccount->budget_qty;
+        }
         return $budgetQuantity;
     }
 
