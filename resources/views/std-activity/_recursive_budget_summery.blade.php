@@ -12,7 +12,7 @@
            @endif
                 ">
             {{$division->label}}
-            <strong class="pull-right">{{$std_activity_cost[$division->id]['budget_cost']}}</strong>
+            <strong class="pull-right">{{number_format($std_activity_cost[$division->id]['budget_cost'],2)}}</strong>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
                 @foreach($division->activities()->whereIn('id',$activity_ids)->get() as $activity)
                     <tr>
                         <td>{{$activity->name}}</td>
-                        <td><span class="pull-right">{{$activities[$activity->id]['budget_cost']}}</span></td>
+                        <td><span class="pull-right">{{number_format($activities[$activity->id]['budget_cost'],2)}}</span></td>
                     </tr>
                 @endforeach
                 </tbody>

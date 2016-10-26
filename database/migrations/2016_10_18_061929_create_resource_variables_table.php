@@ -12,7 +12,7 @@ class CreateResourceVariablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('std_activity_variables', function (Blueprint $table) {
+        Schema::table('std_activity_variables', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('std_activity_id');
             $table->string('label');

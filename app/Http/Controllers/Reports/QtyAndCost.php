@@ -23,12 +23,12 @@ class QtyAndCost
             'budget_cost_eq' => 0,
         ];
         foreach ($break_downs as $break_down) {
-            $boqs = Boq::where('cost_account', $break_down->cost_account);
-            foreach ($boqs->get() as $boq) {
+            $boq = Boq::where('cost_account', $break_down->cost_account)->first();
+
                 if (!isset($data[ $boq->type ])) {
                     $data[ $boq->type ] = [
-                        'code' => $boq->item_code,
-                        'name' => $boq->type,
+                        'code' => $break_down->std_activity->code,
+                        'name' => $break_down->std_activity->discipline,
                         'dry_qty' => $boq->quantity,
                         'budget_qty' => 0,
                         'dry_cost' => 0,
@@ -37,8 +37,8 @@ class QtyAndCost
                         'budget_cost_eq' => 0,
 
                     ];
-                }
-                $data[ $boq->type ]['dry_cost'] += $boqs->sum(\DB::raw('dry_ur * quantity'));
+
+                $data[ $boq->type ]['dry_cost'] += $boq->sum(\DB::raw('dry_ur * quantity'));
 
                 foreach ($break_down->resources as $resource) {
                     $data[ $boq->type ]['budget_cost'] += $resource->budget_cost;

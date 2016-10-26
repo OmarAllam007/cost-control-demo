@@ -25,7 +25,7 @@ class BudgetCostByDiscipline
         foreach ($breakdowns as $breakdown) {
             $qs_items = Survey::where('cost_account', $breakdown->cost_account)->get();
             foreach ($qs_items as $qs_item) {
-                if (!isset($survey[ $qs_item->discipline ])) {
+                if (!isset($survey[ $breakdown->std_activity->discipline ])) {
                     $survey[ $qs_item->discipline ] = [
                         'code' => $breakdown->std_activity->code,
                         'name' => $breakdown->std_activity->discipline,
@@ -34,7 +34,7 @@ class BudgetCostByDiscipline
                     ];
                 }
                 foreach ($breakdown->resources as $resource) {
-                    $survey[ $qs_item->discipline ]['budget_cost'] += $resource->budget_cost;
+                    $survey[ $breakdown->std_activity->discipline ]['budget_cost'] += $resource->budget_cost;
                 }
 
 
