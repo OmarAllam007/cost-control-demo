@@ -50,10 +50,11 @@ class StdActivity extends Model
         $this->variables()->delete();
 
         if ($variables) {
+            $counter = 0;
             foreach ($variables as $index => $var) {
                 $this->variables()->create([
                     'label' => $var,
-                    'display_order' => $index + 1
+                    'display_order' => ++$counter
                 ]);
             }
         }

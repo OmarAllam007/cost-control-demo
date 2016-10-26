@@ -90,6 +90,7 @@ class BreakdownResource extends Model
             $variables["v{$variable->display_order}"] = $variable->value ?: 0;
             $variables["V{$variable->display_order}"] = $variable->value ?: 0;
         }
+        file_put_contents('/tmp/debug.log', print_r($variables, 1), FILE_APPEND);
         extract($variables);
 
         $result = 0;

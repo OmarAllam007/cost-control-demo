@@ -47,13 +47,19 @@ class ActivityImportJob extends ImportJob
 
             $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
 
-            ++$count;
-//            BreakdownTemplate::create([
-//                'name' => $data[4],
-//                'code' => $data[5],
-//                'std_activity_id' => $activity_id
-//            ]);
+            $count = count($data);
+            if ($count > 6) {
+                $display_order = 1;
+                for ($i = 7; $i < $count; ++$i) {
+                    $label = trim($data[$i]);
+                    if ($label) {
+                        $activity->variables()->create(compact('label', 'display_order'));
+                        ++$display_order;
+                    }
+                }
+            }
 
+            ++$count;
         }
 
         return $count;
