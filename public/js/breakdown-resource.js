@@ -10071,52 +10071,6 @@ var template = Object.freeze({
   return Vue;
 
 }));
-var App = new Vue({
-    el: '#BreakdownResourceForm',
-
-    data: {
-        resource: resource,
-        productivity: productivity,
-        labor_count: 0
-    },
-
-    computed: {
-        show_productivity: function () {
-            //If the main type of the resource is labor type
-            //show productivity options
-            var laborx = /labor|labour|equipment|scaffold/i;
-            return laborx.test(this.resource.root_type);
-        }
-    },
-
-    components: {
-        resources: Resources,
-        productivity: Productivity,
-        variables: Variables
-    },
-
-    events: {
-        'resource-changed': function (resource) {
-            this.resource = resource;
-        },
-
-        'productivity-changed': function (productivity) {
-            this.productivity = productivity;
-        },
-
-        set_labor_count: function(count) {
-            this.labor_count = count;
-        }
-    }
-});
-
-
-$(function(){
-    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
-        $(this).find('input.search').focus();
-    });
-});
-
 var Productivity = Vue.extend({
     template: document.getElementById('ProductivityTemplate').innerHTML,
 
@@ -10175,43 +10129,49 @@ var Productivity = Vue.extend({
 var Resources = Vue.extend({
     template: document.getElementById('ResourcesTemplate').innerHTML,
 
+    props: ['resource'],
+
     data: function () {
         return {
             resources: [],
             loading: false,
             term: '',
-            selected: resource
         };
     },
 
-    ready: function () {
-        this.load();
-    },
-
     watch: {
-        term: function () {
-            this.load();
+        term: function (term) {
+            const root = $('#ResourcesModal');
+            if (term == '') {
+                root.find('.radio').removeClass('hidden');
+                root.find('.collapse').removeClass('in');
+            } else {
+                const lower = term.toLowerCase();
+                root.find('.resource-name').each((index, element) => {
+                    let $el = $(element);
+                    if ($el.html().toLowerCase().indexOf(lower) != -1) {
+                        $el.parents('.radio').removeClass('hidden');
+                    } else {
+                        $el.parents('.radio').addClass('hidden');
+                    }
+                });
+
+            }
+            root.find('.tree--item').each((index, element) => {
+                let $parent = $(element).parent('li');
+                if ($parent.find('.radio').not('.hidden').length) {
+                    $parent.show();
+                } else {
+                    $parent.hide();
+                }
+            });
         }
     },
 
     methods: {
-        setResource: function(resource) {
-            this.selected = resource;
+        setResource: function (resource) {
+            this.resource = resource;
             this.$dispatch('resource-changed', resource);
-        },
-
-        load: function () {
-            var self = this;
-            if (!this.loading) {
-                self.loading = true;
-                $.ajax({
-                    url: '/api/resources',
-                    type: 'get', data: {term: self.term}, dataType: 'json', cache: false
-                }).success(function (response) {
-                    self.resources = response;
-                    self.loading = false;
-                });
-            }
         }
     }
 });
@@ -10244,6 +10204,52 @@ var Variables = Vue.extend({
             this.$set('vars', newVars);
         }
     }
+});
+
+var App = new Vue({
+    el: '#BreakdownResourceForm',
+
+    data: {
+        resource: resource,
+        productivity: productivity,
+        labor_count: 0
+    },
+
+    computed: {
+        show_productivity: function () {
+            //If the main type of the resource is labor type
+            //show productivity options
+            var laborx = /labor|labour|equipment|scaffold/i;
+            return laborx.test(this.resource.root_type);
+        }
+    },
+
+    components: {
+        resources: Resources,
+        productivity: Productivity,
+        variables: Variables
+    },
+
+    events: {
+        'resource-changed': function (resource) {
+            this.resource = resource;
+        },
+
+        'productivity-changed': function (productivity) {
+            this.productivity = productivity;
+        },
+
+        set_labor_count: function(count) {
+            this.labor_count = count;
+        }
+    }
+});
+
+
+$(function(){
+    $('#BreakdownResourceForm').on('shown.bs.modal', '.modal', function(){
+        $(this).find('input.search').focus();
+    });
 });
 
 //# sourceMappingURL=breakdown-resource.js.map

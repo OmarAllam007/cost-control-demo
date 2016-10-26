@@ -31,15 +31,15 @@
                 </thead>
                 <tbody>
 
-                @foreach($resource_level->resources as $resource_type)
+                @foreach($resource_level->resources as $resource)
                     <tr>
-                        <td>{{$resource_type->name}}</td>
+                        <td>{{$resource->name}}</td>
                         <td>
                             <div class="pull-right">
-                                <a href="{{route('resources.show', $resource_type->resources)}}" class="btn btn-xs btn-info">
+                                {{--<a href="{{route('resources.show', $resource)}}" class="btn btn-xs btn-info">
                                     <i class="fa fa-eye"></i> Show
-                                </a>
-                                <a href="{{route('resources.edit', $resource_type)}}" class="btn btn-xs btn-primary">
+                                </a>--}}
+                                <a href="{{route('resources.edit', $resource)}}" class="btn btn-xs btn-primary">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                             </div>
