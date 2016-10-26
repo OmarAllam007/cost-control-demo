@@ -28,13 +28,6 @@
             {!! $errors->first('resource_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group">
-            <label for="">Variables</label>
-            <p>
-                <a href="#VariablesModal" data-toggle="modal"><em>Edit Variables</em></a>
-            </p>
-        </div>
-
         <div class="form-group {{$errors->first('equation', 'has-error')}}">
             {{ Form::label('equation', 'Equation', ['class' => 'control-label']) }}
             <p class="text-info">

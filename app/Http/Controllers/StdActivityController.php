@@ -30,7 +30,8 @@ class StdActivityController extends Controller
     {
         $this->validate($request, $this->rules);
 
-        StdActivity::create($request->all());
+        $activity = StdActivity::create($request->all());
+        $activity->syncVariables($request->get('variables'));
 
         flash('Std activity has been saved', 'success');
 
@@ -52,6 +53,7 @@ class StdActivityController extends Controller
         $this->validate($request, $this->rules);
 
         $std_activity->update($request->all());
+        $std_activity->syncVariables($request->get('variables'));
 
         flash('Std activity has been saved', 'success');
 

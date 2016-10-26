@@ -19,7 +19,6 @@ var App = new Vue({
     components: {
         resources: Resources,
         productivity: Productivity,
-        variables: Variables
     },
 
     events: {

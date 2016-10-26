@@ -28,4 +28,6 @@ elixir(function (mix) {
     mix.scripts([
         'vue.js', 'breakdown-resource'
     ], 'public/js/breakdown-resource.js');
+
+    mix.rollup('activity-variables.js');
 });
