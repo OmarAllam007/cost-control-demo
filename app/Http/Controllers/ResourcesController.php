@@ -189,8 +189,10 @@ class ResourcesController extends Controller
 
         if (!$newResource) {
             $newResource = new Resources($request->all());
+            $newResource->resource_code = $resources->resource_code;
             $newResource->project_id = $project->id;
             $newResource->resource_id = $resources->id;
+            Resources::flushEventListeners();
             $newResource->save();
         } else {
             $newResource->update($request->all());
