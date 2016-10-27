@@ -14,15 +14,15 @@ class BudgetCostByBreakDownItem
 {
     public function compareBudgetCostByBreakDownItem(Project $project)
     {
-        $break_downs = $project->breakdowns()->get();
+        $break_downs = $project->breakdown_resources()->get();
 
         $bd_resource = [];
         $total = [
             'total' => 0,
             'weight_total'=>0
         ];
-        foreach ($break_downs as $break_down) {
-            foreach ($break_down->resources as $resource) {
+
+            foreach ($break_downs as $resource) {
                 $root = $resource->resource->resource->types->root;
                 if (!isset($bd_resource[ $root->name ])) {
                     $bd_resource[ $root->name ] = [
@@ -34,8 +34,6 @@ class BudgetCostByBreakDownItem
                     ];
                 }
                 $bd_resource[ $root->name ]['budget_cost'] += $resource->budget_cost;
-            }
-
 
         }
         foreach ($bd_resource as $item) {

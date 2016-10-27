@@ -17,6 +17,7 @@ class HighPriorityMaterials
     public function getTopHighPriorityMaterials(Project $project)
     {
         $break_down_resources = $project->breakdown_resources()->get();
+        $data= [];
         foreach ($break_down_resources as $break_down_resource) {
             $resource = $break_down_resource->resource->resource;
             $root = $break_down_resource->resource->resource->types->root;

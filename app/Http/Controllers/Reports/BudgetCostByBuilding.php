@@ -42,7 +42,6 @@ class BudgetCostByBuilding
         }
         foreach ($data as $key => $value) {
             if($total['total']!=0){
-
                 $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
                 $total['weight'] += $data[ $key ]['weight'];
             }

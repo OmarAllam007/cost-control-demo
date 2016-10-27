@@ -14,8 +14,8 @@
     <table class="table table-condensed">
         <thead>
         <tr class="output-cell">
-            <th class="col-xs-2">Code</th>
-            <th class="col-xs-2">Discipline</th>
+
+            <th class="col-xs-3">Discipline</th>
             <th class="col-xs-2">Dry Cost</th>
             <th class="col-xs-2">Budget Cost</th>
             <th class="col-xs-2">Difference</th>
@@ -26,8 +26,8 @@
         @foreach($data as $row)
 
             <tr class="tbl-content">
-                <td class="col-xs-2">{{$row['code']}}</td>
-                <td class="col-xs-2">{{$row['name']}}</td>
+
+                <td class="col-xs-3">{{$row['name']}}</td>
                 <td class="col-xs-2">{{number_format($row['dry_cost'],2)}}</td>
                 <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
                 <td class="col-xs-2">{{number_format($row['difference'],2)}}</td>
@@ -36,8 +36,8 @@
             </tr>
         @endforeach
         <tr style="border-top: solid #000000" class="output-cell">
-            <td class="col-xs-2"></td>
-            <td class="col-xs-2" style="font-weight: 800">Grand Total</td>
+
+            <td class="col-xs-3" style="font-weight: 800">Grand Total</td>
             <td class="col-xs-2">{{number_format($total['dry_cost'],2)}}</td>
             <td class="col-xs-2">{{number_format($total['budget_cost'],2)}}</td>
             <td class="col-xs-2">{{number_format($total['difference'],2)}}</td>

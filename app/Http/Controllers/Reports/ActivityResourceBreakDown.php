@@ -52,13 +52,8 @@ class ActivityResourceBreakDown
                 $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_cost'] +=$breakDown_resource->budget_cost;
 
                 $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_unit'] +=$breakDown_resource->budget_unit;
-//
-//                $budget_unit = $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_unit'];
-//                $budget_cost = $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['budget_cost'];
-/**/
+
                     $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['price_unit'] = $breakDown_resource->project_resource->rate;
-
-
             }
 
 

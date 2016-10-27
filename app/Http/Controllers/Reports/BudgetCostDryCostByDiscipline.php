@@ -17,7 +17,7 @@ class BudgetCostDryCostByDiscipline
 {
     public function compareBudgetCostDryCostDiscipline(Project $project)
     {
-        $break_downs = $project->breakdowns()->get();
+        $break_downs = $project->breakdown_resources()->get();
         $data = [];
         $total = [
             'dry_cost'=>0,
@@ -26,21 +26,22 @@ class BudgetCostDryCostByDiscipline
             'increase'=>0,
         ];
         foreach ($break_downs as $break_down) {
-            $boqs = Boq::where('cost_account', $break_down->cost_account)->first();
-                if (!isset($data[ $break_down->std_activity->discipline ])) {
-                    $data[ $break_down->std_activity->discipline ] = [
-                        'code'=>$break_down->std_activity->item_code,
-                        'name' => $break_down->std_activity->discipline,
+            $boqs = Boq::where('cost_account', $break_down->breakdown->cost_account)->first();
+                if (!isset($data[ $break_down->breakdown->std_activity->discipline ])) {
+                    $data[ $break_down->breakdown->std_activity->discipline ] = [
+                        'code'=>$break_down->breakdown->std_activity->item_code,
+                        'name' => $break_down->breakdown->std_activity->discipline,
                         'dry_cost'=>0,
                         'budget_cost'=>0,
                         'difference'=>0,
                         'increase'=>0,
                     ];
 
-                $data[ $break_down->std_activity->discipline ]['dry_cost'] += $boqs->sum(\DB::raw('dry_ur * quantity'));
+                $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] += $boqs->sum(\DB::raw('dry_ur * quantity'));
 
-                foreach ($break_down->resources as $resource) {
-                    $data[ $break_down->std_activity->discipline ]['budget_cost'] += $resource->budget_cost;
+
+                    foreach ($break_downs as $resource) {
+                        $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] += $resource->budget_cost;
                 }
 
             }

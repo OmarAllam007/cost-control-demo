@@ -28,7 +28,6 @@ class BusinessPartnerController extends Controller
     {
         $this->validate($request, $this->rules);
 
-        dd($this->$partners);
         BusinessPartner::create($request->all());
 
         flash('Business partner has been saved', 'success');
