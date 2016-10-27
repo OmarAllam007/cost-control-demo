@@ -83,15 +83,15 @@
                         class="bg-info">{{number_format($resource->project_resource->waste, 2)}}%
                     </td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="">{{$resource->resource->resource->types->root->name or ''}}</td>
+                        class="">{{$resource->resource->types->root->name or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="">{{$resource->resource->resource->resource_code or ''}}</td>
+                        class="">{{$resource->resource->resource_code or ''}}</td>
                     <td style="min-width: 200px; max-width: 200px;"
-                        class="">{{$resource->resource->resource->name or ''}}</td>
+                        class="">{{$resource->resource->name or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-info">{{$resource->project_resource->rate or ''}}</td>
+                        class="bg-info">{{$resource->resource->rate or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-info">{{$resource->project_resource->units->type or ''}}</td>
+                        class="bg-info">{{$resource->resource->units->type or ''}}</td>
                     <td style="min-width: 150px; max-width: 150px;"
                         class="">{{number_format($resource->budget_unit, 2)}}</td>
                     <td style="min-width: 150px; max-width: 150px;"

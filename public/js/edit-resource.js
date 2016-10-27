@@ -10290,47 +10290,80 @@ setTimeout(function () {
 
 var vue_common$1 = Vue;
 
-var Variables = vue_common$1.extend({
-    template: document.getElementById('VariablesTemplate').innerHTML,
+var Resources = {
+    template: document.getElementById('ResourcesTemplate').innerHTML,
 
-    props: ['vars'],
+    props: ['resource'],
+
+    data: function () {
+        var data = {
+            resources: [],
+            resource_id: '',
+            loading: false,
+            term: ''
+        };
+
+        if (this.resource) {
+            data.resource_id = this.resource.id;
+            this.$dispatch('resource-changed', this.resource);
+        }
+
+        return data;
+    },
+
+    watch: {
+        term: function (term) {
+            var root = $('#ResourcesModal');
+            if (term == '') {
+                root.find('.radio').removeClass('hidden');
+                root.find('.collapse').removeClass('in');
+            } else {
+                var lower = term.toLowerCase();
+                root.find('.resource-name').each(function (index, element) {
+                    var $el = $(element);
+                    if ($el.html().toLowerCase().indexOf(lower) != -1) {
+                        $el.parents('.radio').removeClass('hidden');
+                    } else {
+                        $el.parents('.radio').addClass('hidden');
+                    }
+                });
+
+            }
+            root.find('.tree--item').each(function (index, element) {
+                var $parent = $(element).parent('li');
+                if ($parent.find('.radio').not('.hidden').length) {
+                    $parent.show();
+                } else {
+                    $parent.hide();
+                }
+            });
+        }
+    },
 
     methods: {
-        addVariable: function() {
-            var index = this.vars.length;
-            var number = index + 1;
-            var _var = {id: index, name: '$v' + number, label: ''};
-
-            this.vars.push(_var);
-        },
-
-        removeVariable: function($index) {
-            var this$1 = this;
-
-            var newVars = [];
-            var i = 0;
-            var counter = 0;
-            for (i; i < this.vars.length; i++) {
-                if ($index != i) {
-                    this$1.vars[i].id = counter;
-                    this$1.vars[i].name = '$v' + (counter + 1);
-                    newVars.push(this$1.vars[i]);
-                    counter++;
-                }
-            }
-            this.$set('vars', newVars);
+        setResource: function (resource) {
+            this.resource = resource;
+            this.$dispatch('resource-changed', resource);
         }
     }
-});
+};
 
 new vue_common$1({
     el: 'body',
 
-    components: {
-        Variables: Variables
+    data: {
+        resource: {}
+    },
+
+    components: { Resources: Resources },
+
+    events: {
+        'resource-changed': function (resource) {
+            this.resource = resource;
+        },
     }
 });
 
 }((this.LaravelElixirBundle = this.LaravelElixirBundle || {})));
 
-//# sourceMappingURL=activity-variables.js.map
+//# sourceMappingURL=edit-resource.js.map

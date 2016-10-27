@@ -4,138 +4,142 @@ $line-height-base: 1.2;
 $text-color: #444;
 
 @import 'app.scss';
+@media print {
 
-@page {
-  size: A4;
-  margin: 5px;
-}
+  @page {
+    size: A4;
+    margin: 5px;
+  }
 
-.container-fluid {
-  padding-left: 5px;
-  padding-right: 5px;
-}
+  .container-fluid {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 
-.table > thead > tr > th.header-text {
-  vertical-align: bottom;
-}
-.header-text h1,
-.header-text h2,
-.header-text h3,
-.header-text h4 {
-  font-size: 12px;
-  font-weight: 700;
-}
+  .table > thead > tr > th.header-text {
+    vertical-align: bottom;
+  }
+  .header-text h1,
+  .header-text h2,
+  .header-text h3,
+  .header-text h4 {
+    font-size: 12px;
+    font-weight: 700;
+  }
 
-.btn {
-  display: none;
-}
+  .btn {
+    display: none;
+  }
 
-#main-panel {
-  border: none;
-
-  > .panel-body, > .panel-heading {
+  #main-panel {
     border: none;
+
+    > .panel-body, > .panel-heading {
+      border: none;
+      padding: 5px;
+    }
+  }
+
+  .td {
+    page-break-inside: auto;
+  }
+
+  .tree--child {
+    margin-bottom: 20px;
+  }
+  .tree--child {
+    margin-bottom: 22px;
+  }
+  td img {
+    height: 80%;
+  }
+
+  .blue-first-level {
+    background-color: #366092 !important;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+  }
+
+  .blue-second-level {
+    background-color: #95b3d7 !important;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+  }
+
+  .blue-third-level {
+    background-color: #dce6f1 !important;
+    color: black;
+    font-weight: bold;
+    padding: 10px;
+  }
+  .blue-fourth-level {
+    background-color: #dfe9f4 !important;
+    color: black;
+    font-weight: bold;
+    padding: 10px;
+  }
+
+  .tbl-header {
+    background-color: #92d050 !important;
+    color: white;
+    font-weight: bold;
+  }
+  .tbl-content {
+    font-weight: bold;
+  }
+
+  .tbl-division {
+    background-color: #b1a0c7 !important;
+    color: black;
+    font-weight: bold;
     padding: 5px;
   }
-}
 
-.td {
-  page-break-inside: auto;
-}
+  .tbl-children-division {
+    background-color: #ddd9c4 !important;
+    color: black;
+    font-weight: bold;
+  }
 
+  .output-header {
+    background-color: #ddd9c4 !important;
+    color: black;
+    font-weight: bold;
+  }
 
-.tree--child {
-  margin-bottom: 20px; }
-.tree--child {
-  margin-bottom: 22px; }
-td img{
-  height:80%;
-}
+  .output-cell {
+    background-color: #ffff00 !important;
+    color: red;
+    font-weight: bold;
+    border-bottom: solid #000000;
+    border-top: solid #000000;
+  }
 
-.blue-first-level {
-  background-color: #366092;
-  color: white;
-  font-weight: bold;
-  padding:10px;
-}
+  .report-buttons {
+    background-color: #e7f6ee;
+    color: red;
+    font-weight: bold;
+  }
+  .wbs-code {
+    color: white;
+    font-weight: bolder;
+  }
 
-.blue-second-level {
-  background-color: #95b3d7;
-  color: white;
-  font-weight: bold;
-  padding:10px;
-}
+  .normal-row {
+    font-weight: bolder;
+  }
+  .activity-header {
+    font-weight: bolder;
+    color: black;
+    background-color: #e7f1fc;
 
-.blue-third-level {
-  background-color: #dce6f1;
-  color: black;
-  font-weight: bold;
-  padding:10px;
-}
-.blue-fourth-level {
-  background-color: #dfe9f4;
-  color: black;
-  font-weight: bold;
-  padding:10px;
-}
+  }
 
-.tbl-header {
-  background-color: #92d050;
-  color: white;
-  font-weight: bold;
-}
-.tbl-content {
-  font-weight: bold;
-}
-
-.tbl-division {
-  background-color: #b1a0c7;
-  color: black;
-  font-weight: bold;
-  padding: 5px;
-}
-
-.tbl-children-division {
-  background-color: #ddd9c4;
-  color: black;
-  font-weight: bold;
-}
-
-.output-header {
-  background-color: #ddd9c4;
-  color: black;
-  font-weight: bold;
-}
-
-.output-cell {
-  background-color: #ffff00;
-  color: red;
-  font-weight: bold;
-  border-bottom: solid #000000;
-  border-top: solid #000000;
-}
-
-.report-buttons {
-  background-color: #e7f6ee;
-  color: red;
-  font-weight: bold;
-}
-.wbs-code{
-  color: white;
-  font-weight: bolder;
-}
-
-.normal-row{
-  font-weight: bolder;
-}
-.activity-header {
-  font-weight: bolder;
-  color: black;
-  background-color: #e7f1fc;
-
-}
-
-@media print {
-  thead {
-    display: table-row-group; }
+  @media print {
+    thead {
+      display: table-row-group;
+    }
+  }
 }
