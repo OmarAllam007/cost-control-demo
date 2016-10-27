@@ -29,9 +29,9 @@
             <tr class="tbl-content">
                 <td class="col-xs-2">{{$row['code']}}</td>
                 <td class="col-xs-2">{{$row['name']}}</td>
-                <td class="col-xs-2">{{$row['dry_cost']}}</td>
-                <td class="col-xs-2">{{$row['budget_cost']}}</td>
-                <td class="col-xs-2">{{$row['difference']}}</td>
+                <td class="col-xs-2">{{number_format($row['dry_cost'],2)}}</td>
+                <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
+                <td class="col-xs-2">{{number_format($row['difference'],2)}}</td>
                 <td class="col-xs-2">% {{intval($row['increase'])}}</td>
             </tr>
         @endforeach

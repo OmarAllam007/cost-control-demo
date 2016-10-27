@@ -26,7 +26,7 @@ class RevisedBoq
             'weight' => 0,
         ];
         foreach ($break_downs as $break_down) {
-            $boqs = Boq::where('cost_account', $break_down->cost_account);
+            $boqs = Boq::where('cost_account', $break_down->cost_account)->first();
             $wbs = $break_down->wbs_level;
             if (!isset($data[ $wbs->id ])) {
                 $data[ $wbs->id ] = [

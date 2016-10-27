@@ -25,7 +25,7 @@ class AddTemplateNameStdActivity extends Migration
     public function down()
     {
         Schema::table('std_activities', function (Blueprint $table) {
-            $table->dropColumn('breakdown_template_name');
+//            $table->dropColumn('breakdown_template_name');
         });
     }
 }
