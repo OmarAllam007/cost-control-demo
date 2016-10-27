@@ -60,28 +60,28 @@ class BoqPriceList
     public function getResourceTypeQuantity($data, $breakDown_resource,$wbs_level,$cost_account, $name)
     {
         if ($name == 'LABORS') {
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['LABORS'] += $breakDown_resource->project_resource->rate;
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->project_resource->rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['LABORS'] += $breakDown_resource->boq_unit_rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->boq_unit_rate;
         }
         if ($name == 'EQUIPMENT') {
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['EQUIPMENT'] += $breakDown_resource->project_resource->rate;
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->project_resource->rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['EQUIPMENT'] += $breakDown_resource->boq_unit_rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->boq_unit_rate;
         }
         if ($name == 'MATERIAL') {
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['MATERIAL'] += $breakDown_resource->project_resource->rate;
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->project_resource->rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['MATERIAL'] += $breakDown_resource->boq_unit_rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->boq_unit_rate;
         }
         if ($name == 'Subcontractors') {
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['Subcontractors'] += $breakDown_resource->project_resource->rate;
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->project_resource->rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['Subcontractors'] += $breakDown_resource->boq_unit_rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->boq_unit_rate;
         }
         if ($name == 'SCAFFOLDING') {
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['SCAFFOLDING'] += $breakDown_resource->project_resource->rate;
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->project_resource->rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['SCAFFOLDING'] += $breakDown_resource->boq_unit_rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->boq_unit_rate;
         }
         if ($name == 'OTHERS') {
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['OTHERS'] += $breakDown_resource->project_resource->rate;
-            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->project_resource->rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['OTHERS'] += $breakDown_resource->boq_unit_rate;
+            $data[ $wbs_level->name ]['items'][ $cost_account ]['total_resources'] += $breakDown_resource->boq_unit_rate;
         }
 
         return $data;
