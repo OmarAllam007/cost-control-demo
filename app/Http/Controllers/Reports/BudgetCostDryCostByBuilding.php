@@ -42,7 +42,7 @@ class BudgetCostDryCostByBuilding
 
             $data[ $wbs_id ]['difference'] = ($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']);
 
-            if (!$data[ $wbs_id ]['dry_cost']) {
+            if ($data[ $wbs_id ]['dry_cost']) {
                 $data[ $wbs_id ]['increase'] = floatval(($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']) / $data[ $wbs_id ]['dry_cost'] * 100);
             }
 
@@ -53,7 +53,7 @@ class BudgetCostDryCostByBuilding
             $total['total_increase'] += $item['increase'];
             $total['difference'] += $item['difference'];
         }
-        if (!$total['total_budget']) {
+        if ($total['total_budget']) {
             $total['total_increase'] = $total['difference'] / $total['total_budget'] * 100;
         }
         $this->getBudgetCostDryCostColumnChart($data);

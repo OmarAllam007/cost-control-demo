@@ -50,10 +50,11 @@ class RevisedBoq
             $total['original_boq'] += $data[ $key ]['original_boq'];
         }
         foreach ($data as $key => $value) {
+            if ($data[ $key ]['original_boq']) {
+                $data[ $key ]['weight'] += (($data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']) * 100);
 
-            $data[ $key ]['weight'] += (($data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']) * 100);
-
-            $total['weight'] += $data[ $key ]['weight'];
+                $total['weight'] += $data[ $key ]['weight'];
+            }
         }
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
@@ -61,16 +62,14 @@ class RevisedBoq
 
     public function getRevisedChart($data)
     {
-
-//        $chart = new Lavacharts();
         $revised_boqs = \Lava::DataTable();
         $revised_boqs->addStringColumn('Boqs')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {
             $revised_boqs->addRow([$data[ $key ]['name'], $data[ $key ]['weight']]);
         }
-       \Lava::PieChart('BOQ', $revised_boqs, [
-            'width'=>'1000',
-            'height'=>'600',
+        \Lava::PieChart('BOQ', $revised_boqs, [
+            'width' => '1000',
+            'height' => '600',
             'title' => 'REVISED BOQ',
             'is3D' => true,
             'slices' => [
@@ -78,7 +77,7 @@ class RevisedBoq
                 ['offset' => 0.0],
                 ['offset' => 0.0],
             ],
-            'pieSliceText'=> "value",
+            'pieSliceText' => "value",
         ]);
     }
 }
