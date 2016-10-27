@@ -10352,7 +10352,8 @@ new vue_common$1({
     el: 'body',
 
     data: {
-        resource: {}
+        resource: {},
+        activity_id: 0
     },
 
     components: { Resources: Resources },
