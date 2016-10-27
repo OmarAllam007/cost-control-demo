@@ -32,7 +32,7 @@
             <td class="col-xs-1">{{$resource->versionFor($project->id)->units->type or ''}}</td>
             <td class="col-xs-1">{{number_format($resource->versionFor($project->id)->waste, 2)}} %</td>
             <td class="col-xs-1">
-                <a href="{{route('resources.override', ['resources' => $resource, 'project' => $project])}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
+                <a href="{{route('resources.override', ['resources' => $resource->resource_id ?: $resource->id, 'project' => $project])}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
             </td>
         </tr>
         @endforeach

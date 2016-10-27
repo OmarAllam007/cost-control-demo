@@ -30,10 +30,20 @@
         {!! $errors->first('cost_account', '<div class="help-block">:message</div>') !!}
     </div>
 
-    <div class="form-group {{$errors->first('resource_qty', 'has-error')}}">
-        {{Form::label('resource_qty', "Resource Quantity", ['class' => 'control-label'])}}
-        {{Form::text('resource_qty', null, ['class' => 'form-control', 'id' => 'CostAccount'])}}
-        {!! $errors->first('resource_qty', '<div class="help-block">:message</div>') !!}
+    <div class="form-group {{$errors->first('std_activity_id', 'has-error')}}">
+        {{Form::label('resource_id', 'Resource', ['class' => 'control-label'])}}
+        <p>
+            <a href="#ResourcesModal" data-toggle="modal">
+                <em>@{{ resource.name ? resource.name : 'Select Resource'}}</em>
+            </a>
+        </p>
+        {!! $errors->first('std_activity_id', '<div class="help-block">:message</div>') !!}
+    </div>
+
+    <div class="form-group {{$errors->first('equation', 'has-error')}}">
+        {{Form::label('equation', "Resource Quantity Equation", ['class' => 'control-label'])}}
+        {{Form::text('equation', null, ['class' => 'form-control', 'id' => 'CostAccount'])}}
+        {!! $errors->first('equation', '<div class="help-block">:message</div>') !!}
     </div>
 
 
@@ -54,12 +64,14 @@
     </div>
 
     @include('std-activity._modal', ['value' => $activity_id])
+    @include('std-activity-resource._resources_modal')
     @include('wbs-level._modal', ['value' => $wbs_id, 'project_id' => $breakdown_resource->breakdown->project_id])
 
     {{ Form::close() }}
 @endsection
 
 @section('javascript')
+    <script src="{{asset('/js/edit-resource.js')}}"></script>
     <script src="{{asset('/js/autocomplete.js')}}"></script>
     <script>
         jQuery(function ($) {

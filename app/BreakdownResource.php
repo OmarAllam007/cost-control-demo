@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakdownResource extends Model
 {
-    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_qty_manual'];
+    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_qty_manual', 'resource_id', 'equation'];
 
     function breakdown()
     {
@@ -33,7 +33,7 @@ class BreakdownResource extends Model
         return $this->breakdown->std_activity_id;
     }
 
-    function resource()
+    function template_resource()
     {
         return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id')->withTrashed();
     }
@@ -43,16 +43,34 @@ class BreakdownResource extends Model
         return $this->belongsTo(Productivity::class)->withTrashed();
     }
 
-    function getProjectResourceAttribute()
+    function getResourceIdAttribute()
     {
-        $resource = $this->resource->resource;
+        return $this->resource->id;
+    }
 
-        if (!$resource) {
-            return null;
+    function getEquationAttribute()
+    {
+        if ($this->attributes['equation']) {
+            return $this->attributes['equation'];
         }
 
-        $projectResource = Resources::where('resource_id', $resource->id)
-            ->where('project_id', $this->breakdown->project->id)->first();
+        return $this->template_resource->equation;
+    }
+
+    function getResourceAttribute()
+    {
+        return $this->project_resource;
+    }
+
+    function getProjectResourceAttribute()
+    {
+        if ($this->attributes['resource_id']) {
+            $resource = Resources::find($this->attributes['resource_id']);
+        } else {
+            $resource = $this->template_resource->resource;
+        }
+
+        $projectResource = Resources::where('resource_id', $resource->id)->where('project_id', $this->breakdown->project->id)->first();
         if ($projectResource) {
             return $projectResource;
         }
@@ -93,7 +111,7 @@ class BreakdownResource extends Model
         extract($variables);
 
         $result = 0;
-        @eval('$result=' . $this->resource->equation . ';');
+        @eval('$result=' . $this->equation . ';');
         return $result;
     }
 

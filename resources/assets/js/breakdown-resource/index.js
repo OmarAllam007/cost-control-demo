@@ -1,3 +1,7 @@
+import Vue from 'vue';
+import Resources from './_resources';
+import Productivity from './_productivity';
+
 var App = new Vue({
     el: '#BreakdownResourceForm',
 

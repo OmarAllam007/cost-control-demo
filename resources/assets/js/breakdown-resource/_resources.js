@@ -1,14 +1,22 @@
-var Resources = Vue.extend({
+export default {
     template: document.getElementById('ResourcesTemplate').innerHTML,
 
     props: ['resource'],
 
     data: function () {
-        return {
+        let data = {
             resources: [],
+            resource_id: '',
             loading: false,
-            term: '',
+            term: ''
         };
+
+        if (this.resource) {
+            data.resource_id = this.resource.id;
+            this.$dispatch('resource-changed', this.resource);
+        }
+
+        return data;
     },
 
     watch: {
@@ -46,4 +54,4 @@ var Resources = Vue.extend({
             this.$dispatch('resource-changed', resource);
         }
     }
-});
+};

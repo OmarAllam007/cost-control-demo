@@ -26,9 +26,8 @@ elixir(function (mix) {
         'tree-select.js'
     ], 'public/js/breakdown.js');
 
-    mix.scripts([
-        'vue.js', 'breakdown-resource'
-    ], 'public/js/breakdown-resource.js');
+    mix.rollup('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
 
     mix.rollup('activity-variables.js');
+    mix.rollup('edit-resource.js');
 });

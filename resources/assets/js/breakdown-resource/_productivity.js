@@ -1,4 +1,4 @@
-var Productivity = Vue.extend({
+export default {
     template: document.getElementById('ProductivityTemplate').innerHTML,
 
     data: function () {
@@ -51,4 +51,4 @@ var Productivity = Vue.extend({
             }
         }
     }
-});
+};

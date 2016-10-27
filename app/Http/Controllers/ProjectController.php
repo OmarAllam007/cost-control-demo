@@ -55,7 +55,7 @@ class ProjectController extends Controller
             'breakdown_resources.breakdown',
             'breakdown_resources.breakdown.template',
             'breakdown_resources.breakdown.std_activity',
-            'breakdown_resources.resource',
+            'breakdown_resources.template_resource',
             'breakdown_resources.productivity',
         ]);
 
