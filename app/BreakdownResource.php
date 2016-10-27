@@ -104,7 +104,7 @@ class BreakdownResource extends Model
         $v = $V = $this->budget_qty;
 
         $variables = [];
-        foreach ($this->breakdown->variables as $variable) {
+        foreach ($this->qty_survey->variables as $variable) {
             $variables["v{$variable->display_order}"] = $variable->value ?: 0;
             $variables["V{$variable->display_order}"] = $variable->value ?: 0;
         }
@@ -113,6 +113,13 @@ class BreakdownResource extends Model
         $result = 0;
         @eval('$result=' . $this->equation . ';');
         return $result;
+    }
+
+    function getQtySurveyAttribute()
+    {
+        return Survey::where('cost_account', $this->cost_account)
+            ->where('project_id', $this->breakdown->project_id)
+            ->first();
     }
 
     function getBudgetUnitAttribute()

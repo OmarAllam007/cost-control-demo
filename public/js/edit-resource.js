@@ -10353,7 +10353,18 @@ new vue_common$1({
 
     data: {
         resource: {},
-        activity_id: 0
+        activity_id: 0,
+        variables: []
+    },
+
+    watch: {
+        activity_id: function activity_id(activity_id) {
+            var this$1 = this;
+
+            $.ajax({
+                url: '/api/std-activity/variables/' + activity_id, dataType: 'json'
+            }).success(function (vars) { return this$1.variables = vars; });
+        }
     },
 
     components: { Resources: Resources },
