@@ -85,7 +85,7 @@
 
                 var editResourceModal = $('#EditResourceModal');
                 var modalContent = editResourceModal.find('.modal-body');
-                $('.edit-breakdown').on('click', function(e) {
+                $('.in-iframe').on('click', function(e) {
                     e.preventDefault();
                     modalContent.html('<iframe src="' + this.href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
                     editResourceModal.modal();

@@ -72,8 +72,13 @@ Route::group(['prefix' => 'boq'], function() {
     Route::delete('wipe/{project}', ['as' => 'boq.wipe', 'uses' => 'BoqController@wipe']);
 });
 
-Route::post('breakdown/filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
-Route::delete('breakdown/wipe/{project}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
+Route::group(['prefix' => 'breakdown'], function(){
+    Route::get('duplicate/{breakdown}', ['as' => 'breakdown.duplicate', 'uses' => 'BreakdownController@duplicate']);
+    Route::post('duplicate/{breakdown}', ['as' => 'breakdown.post-duplicate', 'uses' => 'BreakdownController@postDuplicate']);
+
+    Route::post('filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
+    Route::delete('wipe/{project}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
+});
 
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');

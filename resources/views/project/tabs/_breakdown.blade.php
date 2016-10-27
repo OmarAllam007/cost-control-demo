@@ -56,11 +56,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-left">
-                            <li><a href="{{route('breakdown-resource.edit', $resource)}}"
-                                   class="btn btn-link edit-breakdown"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
-                            <li>
-                                <button class="btn btn-link"><i class="fa fa-fw fa-trash"></i> Delete</button>
-                            </li>
+                            <li><a href="{{route('breakdown-resource.edit', $resource)}}" class="btn btn-link in-iframe"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
+                            <li><a href="{{route('breakdown.duplicate', $resource->breakdown)}}" class="btn btn-link in-iframe"><i class="fa fa-fw fa-copy"></i> Duplicate</a></li>
+                            <li><button class="btn btn-link"><i class="fa fa-fw fa-trash"></i> Delete</button></li>
                         </ul>
                         {{Form::close()}}
                     </td>
