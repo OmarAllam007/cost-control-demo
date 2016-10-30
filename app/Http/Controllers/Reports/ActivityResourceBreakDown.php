@@ -22,7 +22,7 @@ class ActivityResourceBreakDown
             $break_down = $breakDown_resource->breakdown;
             $wbs_level = $break_down->wbs_level;
             $std_activity_item = $break_down->std_activity;
-            $resource = $breakDown_resource->resource->resource;
+            $resource = $breakDown_resource->resource;
             if (!isset($data[ $wbs_level->name ])) {
                 $data[ $wbs_level->name ] = [
                     'activities' => [],

@@ -21,8 +21,8 @@
 
         @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
             <table class="table table-condensed">
-                <thead class="items-style ">
-                <tr class="row-shadow">
+                <thead >
+                <tr class="blue-third-level">
                     <th class="col-md-8 activity-header">Activity</th>
                 </tr>
                 </thead>

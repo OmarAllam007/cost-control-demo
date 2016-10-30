@@ -34,6 +34,7 @@
             <a href="{{route('budget_cost_dry_cost_discipline.report',$project)}}" target="_blank" class="btn btn-success" style="width:100%;margin-bottom: 2px;">Budget Cost v.s Dry Cost By Disicpline
             </a><br>
             <a href="{{route('qty_cost_discipline.report',$project)}}" target="_blank" class="btn btn-success" style="width:100%;margin-bottom: 2px;">Budget Cost v.s Dry Cost QTY & Cost
+
             </a><br>
         </th>
     </tr>

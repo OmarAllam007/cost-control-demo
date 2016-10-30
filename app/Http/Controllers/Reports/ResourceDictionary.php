@@ -25,9 +25,11 @@ class ResourceDictionary
         $data = [];
 
         foreach ($break_down_resources as $break_down_resource) {
-            $resource = $break_down_resource->resource->resource;
-            $division = $break_down_resource->resource->resource->types;
-            $root = $break_down_resource->resource->resource->types->root;
+
+            $resource = $break_down_resource->resource;
+
+            $division = $break_down_resource->resource->types;
+            $root = $break_down_resource->resource->types->root;
             if (!isset($data[ $root->name ])) {
                 $data[ $root->name ] = [
                     'name' => $root->name,
