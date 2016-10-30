@@ -46,6 +46,22 @@ class BreakdownController extends Controller
         return \Redirect::to(route('project.show', $breakdown->project_id) . '#breakdown');
     }
 
+    public function duplicate(Breakdown $breakdown)
+    {
+        return view('breakdown.duplicate', compact('breakdown'));
+    }
+
+    public function postDuplicate(Request $request, Breakdown $breakdown)
+    {
+        $this->validate($request, ['wbs_level_id' => 'required', 'cost_account' => 'required']);
+
+        $duplicate = $breakdown->duplicate($request->only('wbs_level_id', 'cost_account'));
+
+        flash('Breakdown has been duplicated', 'success');
+
+        return \Redirect::to(route('breakdown.duplicate', $breakdown) . '?close=1');
+    }
+
     public function edit(Breakdown $breakdown)
     {
         return view('breakdown.edit', compact('breakdown'));

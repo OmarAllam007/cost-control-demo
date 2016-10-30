@@ -75,13 +75,8 @@ class BreakdownResourceController extends Controller
      */
     public function update(Request $request, BreakdownResource $breakdown_resource)
     {
-        $breakdown_resource->update($request->only(['std_activity_id', 'cost_account', 'wbs_level_id', 'resource_id', 'equation']));
-
-        $data = $request->only(['labor_count', 'productivity_id', 'resource_qty']);
-        if ($request->get('resource_qty') != $breakdown_resource->resource_qty) {
-            $data['resource_qty_manual'] = 1;
-        }
-        $breakdown_resource->update($data);
+        $breakdown_resource->breakdown->update($request->only(['std_activity_id', 'cost_account', 'wbs_level_id']));
+        $breakdown_resource->update($request->only('labor_count', 'productivity_id', 'resource_id', 'equation'));
 
         flash('Resource has been updated', 'success');
         return \Redirect::to(route('breakdown-resource.edit', $breakdown_resource) . '?close=1');

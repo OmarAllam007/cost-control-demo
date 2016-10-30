@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakdownResource extends Model
 {
-    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_qty_manual', 'resource_id', 'equation'];
+    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_id', 'equation'];
 
     function breakdown()
     {
@@ -97,14 +97,14 @@ class BreakdownResource extends Model
 
     function getResourceQtyAttribute()
     {
-        if ($this->resource_qty_manual) {
-            return $this->attributes['resource_qty'];
-        }
+//        if ($this->resource_qty_manual) {
+//            return $this->attributes['resource_qty'];
+//        }
 
         $v = $V = $this->budget_qty;
 
         $variables = [];
-        foreach ($this->breakdown->variables as $variable) {
+        foreach ($this->qty_survey->variables as $variable) {
             $variables["v{$variable->display_order}"] = $variable->value ?: 0;
             $variables["V{$variable->display_order}"] = $variable->value ?: 0;
         }
@@ -113,6 +113,13 @@ class BreakdownResource extends Model
         $result = 0;
         @eval('$result=' . $this->equation . ';');
         return $result;
+    }
+
+    function getQtySurveyAttribute()
+    {
+        return Survey::where('cost_account', $this->cost_account)
+            ->where('project_id', $this->breakdown->project_id)
+            ->first();
     }
 
     function getBudgetUnitAttribute()

@@ -66,4 +66,21 @@ class Breakdown extends Model
     {
         return $this->hasMany(BreakdownVariable::class);
     }
+
+    public function duplicate($data)
+    {
+        $newData = $this->toArray();
+        unset($newData['id'], $newData['created_at']);
+        $newData['wbs_level_id'] = $data['wbs_level_id'];
+        $newData['cost_account'] = $data['cost_account'];
+        $newBreakdown = self::create($newData);
+
+        foreach ($this->resources as $resource) {
+            $newResource = $resource->toArray();
+            unset($newResource['id'], $newResource['breakdown_id'], $newResource['created_at']);
+            $newBreakdown->resources()->create($newResource);
+        }
+
+        return $newBreakdown;
+    }
 }
