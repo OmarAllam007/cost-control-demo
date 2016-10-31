@@ -16,7 +16,7 @@
 
                     <section>
                         <ul class="list-unstyled tree">
-                            @foreach(App\ResourceType::tree()->get() as $type)
+                            @foreach($resourcesTree as $type)
                                 @include('resources._recursive_resource_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_id')])
                             @endforeach
                         </ul>
