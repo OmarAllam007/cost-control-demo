@@ -8314,4 +8314,8 @@ table.table > tbody > tr > td > a.visible-button {
   color: black;
   background-color: #e7f1fc !important; }
 
+@media print {
+  div.pull-right > a {
+    display: none; } }
+
 /*# sourceMappingURL=print.css.map */

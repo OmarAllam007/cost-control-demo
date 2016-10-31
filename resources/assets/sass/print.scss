@@ -251,6 +251,9 @@ table.table > tbody > tr > td > a.visible-button {
   background-color: #e7f1fc !important;
 }
 
-
-
+@media print{
+  div.pull-right > a {
+    display: none;
+  }
+}
 
