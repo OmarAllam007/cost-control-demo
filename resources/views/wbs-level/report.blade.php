@@ -3,7 +3,7 @@
 @section('header')
     <h1>WBS-LEVELS</h1>
     <div class="pull-right">
-        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="?print=1&paint=wbs" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>

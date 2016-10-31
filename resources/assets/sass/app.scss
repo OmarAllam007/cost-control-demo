@@ -1,5 +1,5 @@
 @import "variables";
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../../../node_modules/bootstrap-sass-noprint/assets/stylesheets/bootstrap";
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
 
 #main-panel {
@@ -310,5 +310,4 @@ body#iframe {
   font-weight: bolder;
   color: black;
   background-color: #e7f1fc;
-
 }

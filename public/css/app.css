@@ -182,60 +182,6 @@ td,
 th {
   padding: 0; }
 
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
-@media print {
-  *,
-  *:before,
-  *:after {
-    background: transparent !important;
-    color: #000 !important;
-    box-shadow: none !important;
-    text-shadow: none !important; }
-  a,
-  a:visited {
-    text-decoration: underline; }
-  a[href]:after {
-    content: " (" attr(href) ")"; }
-  abbr[title]:after {
-    content: " (" attr(title) ")"; }
-  a[href^="#"]:after,
-  a[href^="javascript:"]:after {
-    content: ""; }
-  pre,
-  blockquote {
-    border: 1px solid #999;
-    page-break-inside: avoid; }
-  thead {
-    display: table-header-group; }
-  tr,
-  img {
-    page-break-inside: avoid; }
-  img {
-    max-width: 100% !important; }
-  p,
-  h2,
-  h3 {
-    orphans: 3;
-    widows: 3; }
-  h2,
-  h3 {
-    page-break-after: avoid; }
-  .navbar {
-    display: none; }
-  .btn > .caret,
-  .dropup > .btn > .caret {
-    border-top-color: #000 !important; }
-  .label {
-    border: 1px solid #000; }
-  .table {
-    border-collapse: collapse !important; }
-    .table td,
-    .table th {
-      background-color: #fff !important; }
-  .table-bordered th,
-  .table-bordered td {
-    border: 1px solid #ddd !important; } }
-
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
@@ -5770,15 +5716,15 @@ button.close {
     display: none !important; } }
 
 /*!
- *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  Font Awesome 4.6.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
 /* FONT PATH
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url("../fonts/fontawesome-webfont.eot?v=4.7.0");
-  src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.7.0") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.7.0") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
+  src: url("../fonts/fontawesome-webfont.eot?v=4.6.3");
+  src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.6.3") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.6.3") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.6.3") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -7592,7 +7538,6 @@ button.close {
   content: ""; }
 
 .fa-battery-4:before,
-.fa-battery:before,
 .fa-battery-full:before {
   content: ""; }
 
@@ -7938,143 +7883,6 @@ button.close {
 .fa-fa:before,
 .fa-font-awesome:before {
   content: ""; }
-
-.fa-handshake-o:before {
-  content: ""; }
-
-.fa-envelope-open:before {
-  content: ""; }
-
-.fa-envelope-open-o:before {
-  content: ""; }
-
-.fa-linode:before {
-  content: ""; }
-
-.fa-address-book:before {
-  content: ""; }
-
-.fa-address-book-o:before {
-  content: ""; }
-
-.fa-vcard:before,
-.fa-address-card:before {
-  content: ""; }
-
-.fa-vcard-o:before,
-.fa-address-card-o:before {
-  content: ""; }
-
-.fa-user-circle:before {
-  content: ""; }
-
-.fa-user-circle-o:before {
-  content: ""; }
-
-.fa-user-o:before {
-  content: ""; }
-
-.fa-id-badge:before {
-  content: ""; }
-
-.fa-drivers-license:before,
-.fa-id-card:before {
-  content: ""; }
-
-.fa-drivers-license-o:before,
-.fa-id-card-o:before {
-  content: ""; }
-
-.fa-quora:before {
-  content: ""; }
-
-.fa-free-code-camp:before {
-  content: ""; }
-
-.fa-telegram:before {
-  content: ""; }
-
-.fa-thermometer-4:before,
-.fa-thermometer:before,
-.fa-thermometer-full:before {
-  content: ""; }
-
-.fa-thermometer-3:before,
-.fa-thermometer-three-quarters:before {
-  content: ""; }
-
-.fa-thermometer-2:before,
-.fa-thermometer-half:before {
-  content: ""; }
-
-.fa-thermometer-1:before,
-.fa-thermometer-quarter:before {
-  content: ""; }
-
-.fa-thermometer-0:before,
-.fa-thermometer-empty:before {
-  content: ""; }
-
-.fa-shower:before {
-  content: ""; }
-
-.fa-bathtub:before,
-.fa-s15:before,
-.fa-bath:before {
-  content: ""; }
-
-.fa-podcast:before {
-  content: ""; }
-
-.fa-window-maximize:before {
-  content: ""; }
-
-.fa-window-minimize:before {
-  content: ""; }
-
-.fa-window-restore:before {
-  content: ""; }
-
-.fa-times-rectangle:before,
-.fa-window-close:before {
-  content: ""; }
-
-.fa-times-rectangle-o:before,
-.fa-window-close-o:before {
-  content: ""; }
-
-.fa-bandcamp:before {
-  content: ""; }
-
-.fa-grav:before {
-  content: ""; }
-
-.fa-etsy:before {
-  content: ""; }
-
-.fa-imdb:before {
-  content: ""; }
-
-.fa-ravelry:before {
-  content: ""; }
-
-.fa-eercast:before {
-  content: ""; }
-
-.fa-microchip:before {
-  content: ""; }
-
-.fa-snowflake-o:before {
-  content: ""; }
-
-.fa-superpowers:before {
-  content: ""; }
-
-.fa-wpexplorer:before {
-  content: ""; }
-
-.fa-meetup:before {
-  content: ""; }
 
 .sr-only {
   position: absolute;

@@ -1,4 +1,4 @@
-@include('layouts.cover')
+@include('layouts.buttons')
 <p style="page-break-before:always;"></p>
 
 <!DOCTYPE html>
@@ -8,13 +8,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{config('app.name')}}</title>
-    <link rel="stylesheet" href="{{asset('/css/print.css')}}">
+    {{--<link rel="stylesheet" href="{{asset('/css/print.css')}}">--}}
 </head>
 
 
 <body id="app-layout">
 
-<table class="table">
+<table>
     <thead>
     <tr>
         <th width="33%">
@@ -48,6 +48,17 @@
 @yield('javascript')
 
 <script>
+    function changeButtonBackroundColor() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        $('.'+hash[1]).css('background','#3e5a20');
+    }
+    changeButtonBackroundColor();
     window.print();
 </script>
 </body>

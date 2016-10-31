@@ -23,7 +23,7 @@ class BudgetCostByBreakDownItem
         ];
 
             foreach ($break_downs as $resource) {
-                $root = $resource->resource->resource->types->root;
+                $root = $resource->resource->types->root;
                 if (!isset($bd_resource[ $root->name ])) {
                     $bd_resource[ $root->name ] = [
                         'resource_type' => $root->name,
@@ -41,8 +41,11 @@ class BudgetCostByBreakDownItem
 
         }
         foreach ($bd_resource as $key => $value) {
-            $bd_resource[$key]['weight'] += floatval(($bd_resource[$key]['budget_cost'] / $total['total']) * 100);
-            $total['weight_total'] += $bd_resource[$key]['weight'];
+            if($total['total']){
+                $bd_resource[$key]['weight'] += floatval(($bd_resource[$key]['budget_cost'] / $total['total']) * 100);
+                $total['weight_total'] += $bd_resource[$key]['weight'];
+            }
+
         }
 
         ksort($bd_resource);

@@ -2,7 +2,7 @@
 @section('header')
     <h2>Budget Cost By Building</h2>
     <div class="pull-right">
-        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="?print=1&paint=budget-building" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
         <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
@@ -11,9 +11,9 @@
     <img src="{{asset('images/reports/costbybuilding.jpg')}}">
 @endsection
 @section('body')
-    <table class="table table-condensed ">
-        <thead>
-        <tr class="output-cell">
+    <table class="table table-condensed table-responsive">
+        <thead class="output-cell">
+        <tr>
             <th class="col-xs-3">Code</th>
             <th class="col-xs-3">Building Name</th>
             <th class="col-xs-3">Budget Cost</th>
@@ -31,11 +31,11 @@
                 <td class="col-xs-3">%{{number_format($row['weight'],2)}}</td>
             </tr>
         @endforeach
-        <tr style="border-top: solid #000000" class="output-cell">
-            <td class="col-xs-3"></td>
-            <td class="col-xs-3" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-3">{{number_format($total['total'],2)}}</td>
-            <td class="col-xs-3">% {{number_format($total['weight'],2)}}</td>
+        <tr style="border-top: solid #000000" >
+            <td class="col-xs-3 output-cell"></td>
+            <td class="col-xs-3 output-cell" style="font-weight: 800">Grand Total</td>
+            <td class="col-xs-3 output-cell">{{number_format($total['total'],2)}}</td>
+            <td class="col-xs-3 output-cell">% {{number_format($total['weight'],2)}}</td>
         </tr>
         </tbody>
     </table>

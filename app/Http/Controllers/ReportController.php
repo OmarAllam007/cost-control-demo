@@ -67,10 +67,10 @@ class ReportController extends Controller
         $root = '';
 
         foreach ($project->breakdown_resources as $resource) {
-            $rootName = $resource->resource->resource->types->root->name;
+            $rootName = $resource->resource->types->root->name;
             if (str_contains($rootName, 'LABORS')) {
                 $root = $rootName;
-                $resourceObject = $resource->resource->resource;
+                $resourceObject = $resource->resource;
                 if (!isset($resources[ $resourceObject->id ])) {
                     $resources[ $resourceObject->id ] = [
                         'id' => $resourceObject->id,
@@ -217,8 +217,5 @@ class ReportController extends Controller
         return $high_materials->getTopHighPriorityMaterials($project);
     }
 
-//    public function boqPriceList(Project $project){
-//        $boq =new  RevisedBoq();
-//        return $boq->getRevised($project);
-//    }
+
 }

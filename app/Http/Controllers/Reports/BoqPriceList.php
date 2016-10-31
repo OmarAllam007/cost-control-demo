@@ -19,8 +19,9 @@ class BoqPriceList
         $breakDown_resources = $project->breakdown_resources()->get();
         $data = [];
         foreach ($breakDown_resources as $breakDown_resource) {
-            $resources = $breakDown_resource->resource->resource;
-            $root = $resources->types->root;
+            $resource = $breakDown_resource->resource;
+
+            $root = $resource->types->root;
             $wbs_level = $breakDown_resource->breakdown->wbs_level;
             $cost_account = $breakDown_resource->breakdown->cost_account;
 
