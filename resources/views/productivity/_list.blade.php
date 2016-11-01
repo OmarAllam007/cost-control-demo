@@ -1,4 +1,4 @@
-<table class="table table-condensed table-striped table-fixed">
+<table class="table table-condensed table-striped">
     <thead>
     <tr>
         <th class="col-xs-2">CSI CODE</th>
