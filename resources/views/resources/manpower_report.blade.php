@@ -1,9 +1,12 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
-
+@if(request('all'))
+    @include('reports.all._man-power')
+@endif
 @section('header')
     <h2>BUDGET BY NUMBERS</h2>
     <div class="pull-right">
-        <a href="?print=1&paint=budget-number" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="?print=1&paint=budget-number" target="_blank" class="btn btn-default btn-sm"><i
+                    class="fa fa-print"></i> Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
@@ -13,8 +16,8 @@
     <img src="{{asset('images/reports/manpower.jpg')}}">
 @endsection
 @section('body')
-    <div class="tree--item blue-third-level" style="color: black" >
-       <strong>{{$root}}</strong>
+    <div class="tree--item blue-third-level" style="color: black">
+        <strong>{{$root}}</strong>
     </div>
 
     <article id="children-1" class="tree--child">

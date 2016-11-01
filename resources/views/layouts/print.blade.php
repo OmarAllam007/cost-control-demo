@@ -1,4 +1,6 @@
+@if(request('paint'))
 @include('layouts.buttons')
+@endif
 <p style="page-break-before:always;"></p>
 
 <!DOCTYPE html>
@@ -8,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{config('app.name')}}</title>
-    {{--<link rel="stylesheet" href="{{asset('/css/print.css')}}">--}}
+    <link rel="stylesheet" href="{{asset('/css/print.css')}}">
 </head>
 
 

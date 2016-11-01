@@ -16,7 +16,8 @@ class CacheWBSTree extends Job
     /**
      * @var Project
      */
-    private $project;
+    public $project;
+
 
     function __construct(Project $project)
     {

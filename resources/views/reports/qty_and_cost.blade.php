@@ -1,4 +1,7 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
+@if(request('all'))
+    @include('reports.all._cost_dry')
+@endif
 @section('header')
     <h2 align="center">Quantity And Cost </h2>
     <div class="pull-right">

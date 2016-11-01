@@ -1,4 +1,7 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
+@if(request('all'))
+    @include('reports.all._budget_cost_by_break_down')
+@endif
 @section('header')
     <h2>Budget Cost By Item break Down</h2>
     <div class="pull-right">

@@ -1,9 +1,12 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
-
+@if(request('all'))
+    @include('reports.all._activity_resource_breakdown')
+@endif
 @section('header')
     <h2>Activity Resource BreakDown</h2>
     <div class="pull-right">
-        <a href="?print=1&paint=activity-resource" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="?print=1&paint=activity-resource" target="_blank" class="btn btn-default btn-sm"><i
+                    class="fa fa-print"></i> Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
@@ -26,7 +29,8 @@
                                     <ul>
                                         <li class="tree--item">
                                             <p class="blue-fourth-level">
-                                                {{$account['cost_account']}} - <abbr>({{$account['boq_description']}})</abbr></p>
+                                                {{$account['cost_account']}} - <abbr>({{$account['boq_description']}}
+                                                    )</abbr></p>
                                             <article id="children-">
                                                 <table class="table table-condensed ">
                                                     <thead>
