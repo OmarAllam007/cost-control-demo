@@ -14,6 +14,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \View::composer('std-activity-resource._resources_modal', 'App\Http\ViewComposers\ResourcesComposer');
+        \View::composer('project.tabs._wbs', 'App\Http\ViewComposers\WbsComposer');
+        \View::composer('wbs-level._modal', 'App\Http\ViewComposers\WbsComposer');
+        \View::composer('csi-category.index', 'App\Http\ViewComposers\CsiCategoryComposer');
     }
 
     /**

@@ -14,9 +14,10 @@
 
 
 @section('body')
+
     @if ($categories->total())
         <ul class="list-unstyled tree">
-            @foreach($categories as $category)
+            @foreach($categoryTree as $category)
                 @include('productivity._recursive')
             @endforeach
         </ul>

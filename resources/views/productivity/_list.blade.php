@@ -12,11 +12,11 @@
     <tbody>
     @foreach($productivities as $productivity)
         <tr>
-            <td class="col-xs-2">{{ $productivity->csi_code?:0 }}</td>
-            <td class="col-xs-3">{!! nl2br(e($productivity->description?:'')) !!}</td>
-            <td class="col-xs-3">{!! nl2br(e($productivity->crew_structure?:'')) !!}</td>
-            <td class="col-xs-1">{{ isset($productivity->units->type)?$productivity->units->type:'' }}</td>
-            <td class="col-xs-1">{{number_format(floatval($productivity->daily_output), 2)?:0}}</td>
+            <td class="col-xs-2">{{ $productivity['csi_code']?:0 }}</td>
+            <td class="col-xs-3">{!! nl2br(e($productivity['description']?:'')) !!}</td>
+            <td class="col-xs-3">{!! nl2br(e($productivity['crew_structure']?:'')) !!}</td>
+            <td class="col-xs-1">{{ isset($productivity['unit'])?$productivity['unit']:'' }}</td>
+            <td class="col-xs-1">{{number_format(floatval($productivity['daily_output']), 2)?:0}}</td>
             <td class="col-xs-2">
                 <form action="{{ route('productivity.destroy', $productivity) }}" method="post">
                     {{csrf_field()}} {{method_field('delete')}}
