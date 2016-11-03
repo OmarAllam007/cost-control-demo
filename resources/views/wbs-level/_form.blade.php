@@ -36,7 +36,6 @@
                 </a>
                 <a href="#" class="remove-tree-input" data-label="Select Wbs Level" data-target="#WBSModal"><span class="fa fa-times-cricle"></span></a>
             </p>
-            {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">

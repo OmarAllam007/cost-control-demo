@@ -1,8 +1,12 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
+@if(request('all'))
+    @include('reports.all._budget_cost_by_building')
+@endif
 @section('header')
     <h2>Budget Cost By Building</h2>
     <div class="pull-right">
-        <a href="?print=1&paint=budget-building" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        <a href="?print=1&paint=budget-building" target="_blank" class="btn btn-default btn-sm"><i
+                    class="fa fa-print"></i> Print</a>
         <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
@@ -31,7 +35,7 @@
                 <td class="col-xs-3">%{{number_format($row['weight'],2)}}</td>
             </tr>
         @endforeach
-        <tr style="border-top: solid #000000" >
+        <tr style="border-top: solid #000000">
             <td class="col-xs-3 output-cell"></td>
             <td class="col-xs-3 output-cell" style="font-weight: 800">Grand Total</td>
             <td class="col-xs-3 output-cell">{{number_format($total['total'],2)}}</td>
@@ -42,9 +46,10 @@
 
 
 
-    <div id="chart-div" style="width:800px; margin:0 auto;"></div><hr>
-    <?=  \Lava::render('PieChart','BOQ','chart-div') ?>
+    <div id="chart-div" style="width:800px; margin:0 auto;"></div>
+    <hr>
+    <?=  \Lava::render('PieChart', 'BOQ', 'chart-div') ?>
 
     <div id="chart-div2" style="width:800px; margin:0 auto;"></div>
-    <?= \Lava::render('ColumnChart','BudgetCost','chart-div2') ?>
+    <?= \Lava::render('ColumnChart', 'BudgetCost', 'chart-div2') ?>
 @endsection

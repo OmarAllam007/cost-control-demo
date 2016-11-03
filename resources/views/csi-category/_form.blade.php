@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
-            {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
+            {{ Form::label('parent_id', 'Category', ['class' => 'control-label']) }}
             <div class="hidden">
                 {{ Form::select('parent_id', App\CsiCategory::options(), null, ['class' => 'form-control']) }}
             </div>

@@ -66,14 +66,14 @@ class ProjectController extends Controller
     {
         $items = [];
         foreach ($project->boqs as $boq) {
-            if (!isset($items[$boq->type])) {
-                $items[$boq->type] = [
+            if (!isset($items[ $boq->type ])) {
+                $items[ $boq->type ] = [
                     'name' => $boq->type,
                     'items' => collect(),
                 ];
             }
 
-            $items[$boq->type]['items']->push($boq);
+            $items[ $boq->type ]['items']->push($boq);
         }
         return $items;
     }

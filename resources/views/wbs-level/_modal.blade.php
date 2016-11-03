@@ -8,7 +8,8 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\WbsLevel::forProject($project_id)->tree()->get() as $level)
+                    @foreach($wbsTree as $level)
+
                         @include('wbs-level._recursive_input', compact('level'))
                     @endforeach
                 </ul>

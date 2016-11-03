@@ -1,5 +1,7 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
-
+@if(request('all'))
+    @include('reports.all._standard-activity')
+@endif
 @section('header')
     <h2 class="">Standard Activity</h2>
     <div class="pull-right">

@@ -1,5 +1,7 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
-
+@if(request('all'))
+    @include('reports.all._resource_dictionary')
+@endif
 @section('header')
     <h2 align="center">Resource Dictionary</h2>
     <div class="pull-right">
@@ -29,7 +31,7 @@
                             {{--resources--}}
                             <article class="tree--child">
                                 <li>
-                                    <table class="table table-condensed table-responsive">
+                                    <table class="table table-condensed">
                                         <thead>
                                         <tr class="blue-third-level">
                                             <th class="col-xs-1">CODE</th>

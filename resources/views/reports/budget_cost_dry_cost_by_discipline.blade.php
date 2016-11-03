@@ -1,4 +1,7 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
+@if(request('all'))
+    @include('reports.all._budget_dry_discipline')
+@endif
 @section('header')
     <h2>Budget Cost By VS Dry Cost By Discipline</h2>
     <div class="pull-right">
