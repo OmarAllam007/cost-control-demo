@@ -20,9 +20,9 @@
 
 <div class="clearfix"></div>
 
-@if ($divisions)
+@if ($boqArray)
     <ul class="list-unstyled tree">
-        @include('boq-division._recursive2', compact('division'))
+        @include('boq-division._recursive2')
     </ul>
 @else
 

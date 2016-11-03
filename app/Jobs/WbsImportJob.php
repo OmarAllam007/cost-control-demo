@@ -41,12 +41,13 @@ class WbsImportJob extends Job
         $sheet = $excel->getSheet(0);
 
         $levels = collect();
-        $this->project->wbs_levels()->get()->each(function($level) use ($levels) {
+        $this->project->wbs_levels()->get()->each(function ($level) use ($levels) {
             $levels->put($level->canonical, $level->id);
         });
 
         $rows = $sheet->getRowIterator(2);
         $count = 0;
+        WbsLevel::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $parent = 0;
@@ -75,14 +76,14 @@ class WbsImportJob extends Job
                     'code' => $code,
                     'name' => $value,
                     'parent_id' => $parent,
-                    'project_id' => $this->project->id
+                    'project_id' => $this->project->id,
                 ]);
                 $count++;
                 $parent = $level->id;
                 $levels->put($canonical, $parent);
             }
         }
-
+        dispatch(new CacheWBSTree());
         unlink($this->file);
         return $count;
     }

@@ -5,14 +5,13 @@ namespace App\Jobs;
 use App\Jobs\Job;
 use App\Resources;
 use App\ResourceType;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+
 
 class CacheResourcesTree extends Job
 {
     public function handle()
     {
+
         $tree = [];
         $types = ResourceType::tree()->get();
 

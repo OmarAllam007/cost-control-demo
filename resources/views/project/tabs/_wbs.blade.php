@@ -21,7 +21,6 @@
 @if ($project->wbs_tree->count())
     <ul class="list-unstyled tree">
     @foreach($wbsTree as $wbs_level)
-
             @include('wbs-level._recursive', compact('wbs_level'))
         @endforeach
     </ul>
