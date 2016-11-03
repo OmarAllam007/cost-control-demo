@@ -150,7 +150,7 @@ class SurveyController extends Controller
                 ++$status['success'];
             }
 
-            flash($status . ' Quantity survey items have been imported', 'success');
+            flash($status['success'] . ' Quantity survey items have been imported', 'success');
             return redirect()->route('project.show', $project);
         }
 
