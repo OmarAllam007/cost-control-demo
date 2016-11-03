@@ -39,7 +39,7 @@ class ResourcesImportJob extends ImportJob
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $status = ['failed' => collect(), 'success' => 0];
 
-//        Resources::flushEventListeners();
+        Resources::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -66,6 +66,8 @@ class ResourcesImportJob extends ImportJob
                 $status['failed']->push($item);
             }
         }
+
+        dispatch(new CacheResourcesTree());
 
 //        if ($failed->count()) {
 //            return $failed;

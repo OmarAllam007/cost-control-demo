@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessPartner;
 use App\Filter\ResourcesFilter;
 use App\Http\Requests\WipeRequest;
+use App\Jobs\CacheResourcesTree;
 use App\Jobs\ResourcesImportJob;
 use App\Project;
 use App\Resources;
@@ -159,6 +160,8 @@ class ResourcesController extends Controller
                     UnitAlias::createAliasFor($item['unit'], $item['orig_unit']);
                 }
             }
+
+            $this->dispatch(new CacheResourcesTree());
 
             flash($status['success'] . ' Resources have been imported', 'success');
             return \Redirect::route('resources.index');
