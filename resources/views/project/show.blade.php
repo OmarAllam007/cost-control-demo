@@ -91,14 +91,7 @@
                     editResourceModal.modal();
                 });
             });
-            $('a[target]').on('mouseover', function () {
-                $(this).width($(this).width() * 1.008)
-                $(this).height($(this).height() * 1.00)
-            });
-            $('a[target]').on('mouseleave', function () {
-                $(this).width($(this).width() / 1.008)
-                $(this).height($(this).height() / 1.008)
-            });
+
         }(window, document, jQuery))
 
     </script>
