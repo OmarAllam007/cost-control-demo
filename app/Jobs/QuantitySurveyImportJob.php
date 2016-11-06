@@ -60,6 +60,7 @@ class QuantitySurveyImportJob extends ImportJob
                 $failed->push($data);
             } else {
                 Survey::create($data);
+                ++$success;
             }
         }
 
