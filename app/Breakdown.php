@@ -45,19 +45,21 @@ class Breakdown extends Model
 
     function syncVariables($variables)
     {
-        $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->first();
-        $variableNames = $this->std_activity->variables->pluck('label', 'display_order');
-        foreach ($variables as $index => $value) {
-            $var = BreakdownVariable::where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
-            if ($var) {
-                $var->update(compact('value'));
-            } else {
-                $this->variables()->create([
-                    'qty_survey_id' => $qtySurvey->id,
-                    'name' => $variableNames[$index],
-                    'value' => $value,
-                    'display_order' => $index,
-                ]);
+        if ($variables) {
+            $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->first();
+            $variableNames = $this->std_activity->variables->pluck('label', 'display_order');
+            foreach ($variables as $index => $value) {
+                $var = BreakdownVariable::where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
+                if ($var) {
+                    $var->update(compact('value'));
+                } else {
+                    $this->variables()->create([
+                        'qty_survey_id' => $qtySurvey->id,
+                        'name' => $variableNames[$index],
+                        'value' => $value,
+                        'display_order' => $index,
+                    ]);
+                }
             }
         }
     }
