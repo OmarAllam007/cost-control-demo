@@ -10311,6 +10311,10 @@ var Resources = {
         return data;
     },
 
+    ready: function ready() {
+        this.$dispatch('resource-changed', this.resource);
+    },
+
     watch: {
         term: function (term) {
             var root = $('#ResourcesModal');

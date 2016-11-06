@@ -126,7 +126,7 @@
     </div>
 </div>
 
-@include('wbs-level._modal', ['project_id' => $project_id, 'value' => Form::getValueAttribute('wbs_id')])
+@include('wbs-level._modal', ['project_id' => $project_id, 'value' => Form::getValueAttribute('wbs_id'), 'input' => 'wbs_id'])
 
 <div id="LevelsModal2" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

@@ -100,6 +100,9 @@ class BreakdownResource extends Model
 //        if ($this->resource_qty_manual) {
 //            return $this->attributes['resource_qty'];
 //        }
+        if (!$this->equation) {
+            return 0;
+        }
 
         $v = $V = $this->budget_qty;
 
@@ -125,13 +128,13 @@ class BreakdownResource extends Model
     function getBudgetUnitAttribute()
     {
         if ($this->productivity) {
-            $reductionFactor = $this->project_productivity->reduction_factor;
+            $reductionFactor = $this->project_productivity->after_reduction;
             if (!$reductionFactor) {
                 return 0;
             }
 
             $result = $this->resource_qty * $this->labor_count / $reductionFactor;
-            return $result > 0.25 ? round($result, 2) : 0.25;
+            return $result > 0.25 ? round($result + 0.05, 1) : 0.25;
         } else {
             return $this->resource_qty * (1 + ($this->resource_waste / 100));
         }

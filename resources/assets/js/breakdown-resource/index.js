@@ -5,7 +5,7 @@ import Productivity from './_productivity';
 var App = new Vue({
     el: '#BreakdownResourceForm',
     data: {
-        resource: resource,
+        resource: {},
         productivity: productivity,
         labor_count: 0
     },

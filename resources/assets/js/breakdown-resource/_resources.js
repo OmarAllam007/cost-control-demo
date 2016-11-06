@@ -19,6 +19,10 @@ export default {
         return data;
     },
 
+    ready() {
+        this.$dispatch('resource-changed', this.resource);
+    },
+
     watch: {
         term: function (term) {
             const root = $('#ResourcesModal');
