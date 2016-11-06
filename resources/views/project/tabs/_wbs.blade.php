@@ -18,7 +18,7 @@
 
 
 <div class="clearfix"></div>
-@if ($project->wbs_tree->count())
+@if (count($wbsTree))
     <ul class="list-unstyled tree">
     @foreach($wbsTree as $wbs_level)
             @include('wbs-level._recursive', compact('wbs_level'))
