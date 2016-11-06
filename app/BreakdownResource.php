@@ -100,6 +100,9 @@ class BreakdownResource extends Model
 //        if ($this->resource_qty_manual) {
 //            return $this->attributes['resource_qty'];
 //        }
+        if (!$this->equation) {
+            return 0;
+        }
 
         $v = $V = $this->budget_qty;
 
