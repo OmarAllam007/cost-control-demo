@@ -49,7 +49,7 @@ class ActivityImportJob extends ImportJob
             $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
 
             $count = count($data);
-            if ($count > 6) {
+            if ($count > 8) {
                 $display_order = 1;
                 for ($i = 7; $i < $count; ++$i) {
                     $label = trim($data[$i]);
