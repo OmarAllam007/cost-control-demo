@@ -1,5 +1,4 @@
-@foreach($divisions as $index => $division)
-
+@foreach($boqArray as $index => $division)
         <li>
             <div class="tree--item">
                 <a href="#children-{{$index}}" class="tree--item--label" data-toggle="collapse">
@@ -18,7 +17,7 @@
                     <tbody>
                     @foreach($division['items'] as $item)
                         <tr>
-                            <td>{{$item->description}}</td>
+                            <td>{{$item['description']}}</td>
                             <td>{{$item['cost_account']}}</td>
                             <td>
                                 <form action="{{ route('boq.destroy', $item) }}" method="post">

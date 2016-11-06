@@ -42,7 +42,7 @@ class Productivity
                 }
             }
         }
-//        dd($data);
+
         return view('reports.productivity', compact('data', 'project'));
     }
 }

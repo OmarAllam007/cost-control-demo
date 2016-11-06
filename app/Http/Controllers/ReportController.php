@@ -65,7 +65,8 @@ class ReportController extends Controller
     {
         $resources = [];
         $root = '';
-
+        $total_budget_cost = '';
+        $total_budget_unit = '';
         foreach ($project->breakdown_resources as $resource) {
             $rootName = $resource->resource->types->root->name;
             if (str_contains($rootName, 'LABORS')) {
@@ -81,8 +82,7 @@ class ReportController extends Controller
                         'unit' => $resource->project_resource->units->type,
                     ];
                 }
-                $total_budget_cost = '';
-                $total_budget_unit = '';
+
                 $resources[ $resourceObject->id ]['budget_cost'] += $resource->budget_cost;
                 $resources[ $resourceObject->id ]['budget_unit'] += $resource->budget_unit;
 

@@ -5,14 +5,13 @@
     <thead>
 
 
-    <tr>
+    <tr id="buttons">
         <th class="col-xs-4">
-
             <a href="{{route('wbs.report',$project)}}" target="_blank" class="btn btn-success" style="width:100%; margin-bottom: 2px;">WBS (CONTROL POINT)</a><br>
             <a href="{{route('stdActivity.report',$project)}}" target="_blank" class="btn btn-success" style="width:100%; margin-bottom: 2px;">STANDARD ACTIVITY</a><br>
             <a href="{{route('productivity.report',$project)}}" target="_blank" class="btn btn-success" style="width:100%;margin-bottom: 2px;">PRODUCTIVITY</a><br>
             <a href="{{route('qsReport.report',$project)}}" target="_blank" class="btn btn-success" style="width:100%;margin-bottom: 2px;">QS Summary</a><br>
-            <a href="#" class="btn btn-success" style="width:100%;margin-bottom: 2px;">REFERENCES & NOTES</a><br>
+            <a href="#" class="btn btn-success" target="" style="width:100%;margin-bottom: 2px;">REFERENCES & NOTES</a><br>
             <a href="{{route('boq_price_list.report',$project)}}" target="_blank" class="btn btn-success" style="width:100%;margin-bottom: 2px;">BOQ PRICE LIST</a><br>
         </th>
         <th class="col-xs-4">

@@ -26,6 +26,7 @@ class ActivityImportJob extends ImportJob
 
     public function handle()
     {
+
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
 

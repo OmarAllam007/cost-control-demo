@@ -70,7 +70,7 @@
                     window.location.hash = $(this).attr('href');
                 });
 
-                $(w).on('hashchange', function(){
+                $(w).on('hashchange', function () {
                     var element = $('a[href="' + window.location.hash + '"]');
                     if (element.length) {
                         element.tab('show');
@@ -85,13 +85,22 @@
 
                 var editResourceModal = $('#EditResourceModal');
                 var modalContent = editResourceModal.find('.modal-body');
-                $('.in-iframe').on('click', function(e) {
+                $('.in-iframe').on('click', function (e) {
                     e.preventDefault();
                     modalContent.html('<iframe src="' + this.href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
                     editResourceModal.modal();
                 });
             });
+            $('a[target]').on('mouseover', function () {
+                $(this).width($(this).width() * 1.008)
+                $(this).height($(this).height() * 1.00)
+            });
+            $('a[target]').on('mouseleave', function () {
+                $(this).width($(this).width() / 1.008)
+                $(this).height($(this).height() / 1.008)
+            });
         }(window, document, jQuery))
+
     </script>
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection
