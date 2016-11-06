@@ -10311,6 +10311,10 @@ var Resources = {
         return data;
     },
 
+    ready: function ready() {
+        this.$dispatch('resource-changed', this.resource);
+    },
+
     watch: {
         term: function (term) {
             var root = $('#ResourcesModal');
@@ -10407,13 +10411,11 @@ var Productivity = {
 
 var App = new vue_common$1({
     el: '#BreakdownResourceForm',
-
     data: {
-        resource: resource,
+        resource: {},
         productivity: productivity,
         labor_count: 0
     },
-
     computed: {
         show_productivity: function () {
             //If the main type of the resource is labor type

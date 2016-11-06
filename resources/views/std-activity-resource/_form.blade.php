@@ -72,11 +72,6 @@
 
 @section('javascript')
     <script type="text/javascript">
-        var resource = {};
-        @if (Form::getValueAttribute('resource_id'))
-            resource = {!! json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) !!};
-        @endif
-
         var productivity = {};
         @if (Form::getValueAttribute('productivity_id'))
                 productivity = {!! json_encode(\App\Productivity::find(Form::getValueAttribute('productivity_id'))->morphToJSON()) !!}

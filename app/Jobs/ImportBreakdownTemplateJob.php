@@ -118,7 +118,7 @@ class ImportBreakdownTemplateJob extends ImportJob
 
     protected function getProductivity($ref)
     {
-        $productivity = Productivity::where()->first();
+        $productivity = Productivity::where('csi_code', $ref)->first();
         if ($productivity) {
             return $productivity->id;
         }
