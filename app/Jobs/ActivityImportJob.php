@@ -43,7 +43,7 @@ class ActivityImportJob extends ImportJob
             $name = $data[4];
             $code = $data[5];
             $id_partial = $data[6];
-            $discipline = $data[7];
+            $discipline = strtoupper($data[7]);
             $key = mb_strtolower($code);
 
             $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
