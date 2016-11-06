@@ -5,10 +5,6 @@
     <div class="btn-toolbar pull-right">
         <a href="{{ route('csi-category.create') }} " class="btn btn-sm btn-primary pull-right"><i
                     class="fa fa-plus"></i> Add CSI Category</a>
-        @can('wipe')
-            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete
-                All</a>
-        @endcan
     </div>
 @stop
 
