@@ -63,8 +63,6 @@ class BoqImportJob extends ImportJob implements ShouldQueue
                     'project_id' => $this->project_id,
                 ]);
             }
-
-
         }
 
         unlink($this->file);
@@ -73,7 +71,7 @@ class BoqImportJob extends ImportJob implements ShouldQueue
 
     protected function getWbsId($wbs_code)
     {
-        $level = WbsLevel::where('code', $wbs_code)->first();
+        $level = WbsLevel::forProject($this->project_id)->where('code', $wbs_code)->first();
 
         if(!$level){
             return 0;
