@@ -30,7 +30,7 @@ class ProductivityImportJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
         $productivities = Productivity::query()->pluck('code');
         $status = ['success' => 0, 'failed' => collect()];
-        ini_set('max_execution_time',500);
+        CsiCategory::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
@@ -60,7 +60,7 @@ class ProductivityImportJob extends ImportJob
                 }
             }
         }
-
+        dispatch(new CacheCsiCategoryTree());
         unlink($this->file);
 
         return $status;
