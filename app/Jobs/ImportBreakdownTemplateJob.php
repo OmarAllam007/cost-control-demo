@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Reports\Productivity;
+use App\Productivity;
 use App\Resources;
 use App\StdActivity;
 use Illuminate\Support\Collection;
