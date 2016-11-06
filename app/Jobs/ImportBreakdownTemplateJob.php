@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Productivity;
 use App\Resources;
 use App\StdActivity;
 use Illuminate\Support\Collection;
@@ -62,11 +63,14 @@ class ImportBreakdownTemplateJob extends ImportJob
             }
 
             $resource_id = $this->getResource($data[3]);
+
             if ($resource_id) {
                 $resource = $template->resources()->create([
                     'resource_id' => $resource_id,
                     'equation' => $data[5],
-                    'remarks' => $data[6]
+                    'labor_count' => $data[6],
+                    'productivity_id' => $data[7]? $this->getProductivity($data[7]) : 0,
+                    'remarks' => $data[8]
                 ]);
             }
         }
@@ -110,5 +114,14 @@ class ImportBreakdownTemplateJob extends ImportJob
         Resources::select(['resource_code', 'id'])->get()->each(function (Resources $resource) {
             $this->resources->put(strtolower($resource->resource_code), $resource->id);
         });
+    }
+
+    protected function getProductivity($ref)
+    {
+        $productivity = Productivity::where()->first();
+        if ($productivity) {
+            return $productivity->id;
+        }
+        return 0;
     }
 }

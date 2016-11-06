@@ -51,7 +51,7 @@ class QuantitySurveyImportJob extends ImportJob
             $data = [
                 'project_id' => $this->project->id, 'cost_account' => $cells[1], 'wbs_level_id' => $wbs_level_id,
                 'description' => $cells[2], 'unit_id' => $unit_id, 'budget_qty' => $cells[4], 'eng_qty' => $cells[5],
-                'discipline' => isset($cells[6])? $cells[6] : ''
+                'discipline' => isset($cells[6])? strtoupper($cells[6]) : ''
             ];
 
             if (!$wbs_level_id || !$unit_id) {

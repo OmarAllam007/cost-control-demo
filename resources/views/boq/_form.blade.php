@@ -4,11 +4,11 @@
 
         <div class="form-group {{$errors->first('project_id', 'has-error')}}">
             {{ Form::label('project_id', 'Project', ['class' => 'control-label']) }}
-            @if (request('project'))
-                <p><em>{{App\Project::find(request('project'))->name}}</em></p>
-                {{Form::hidden('project_id', request('project'))}}
+            @if ($project_id = request('project'))
+                <p><em>{{App\Project::find($project_id)->name}}</em></p>
+                {{Form::hidden('project_id', $project_id)}}
             @else
-                {{ Form::select('project_id', App\Project::options(), request('project'), ['class' => 'form-control']) }}
+                {{ Form::select('project_id', App\Project::options(), $project_id = Form::getValueAttribute('project_id'), ['class' => 'form-control']) }}
             @endif
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
         </div>
@@ -19,7 +19,7 @@
                 {{ Form::select('wbs_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
             </div>
             <p>
-                <a href="#LevelsModal" data-toggle="modal" id="select-parent" class="tree-open">
+                <a href="#WBSModal" data-toggle="modal" id="select-parent" class="tree-open">
                     {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
                 </a>
                 <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
@@ -41,7 +41,7 @@
 
         <div class="form-group {{$errors->first('type', 'has-error')}}">
             {{ Form::label('type', 'Discipline', ['class' => 'control-label']) }}
-            {{ Form::select('type', ['' => 'Select Discipline', 'Civil' => 'Civil', 'Arch' => 'Arch', 'Mechanical' => 'Mechanical', 'Electrical' => 'Electrical'], null, ['class' => 'form-control']) }}
+            {{ Form::select('type', config('app.discipline'), null, ['class' => 'form-control']) }}
             {!! $errors->first('type', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -120,42 +120,13 @@
             {!! $errors->first('manpower', '<div class="help-block">:message</div>') !!}
         </div>
 
-
-
-
-
-
-
-
-
-
-
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
     </div>
 </div>
 
-
-<div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select Parent</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-unstyled tree">
-                    @foreach(App\WbsLevel::forProject(request('project', Form::getValueAttribute('project_id')))->tree()->get() as $level)
-                        @include('boq._recursive_input', ['level' => $level, 'input' => 'wbs_id'])
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
+@include('wbs-level._modal', ['project_id' => $project_id, 'value' => Form::getValueAttribute('wbs_id')])
 
 <div id="LevelsModal2" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

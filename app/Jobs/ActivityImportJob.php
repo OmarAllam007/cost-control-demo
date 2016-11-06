@@ -43,15 +43,15 @@ class ActivityImportJob extends ImportJob
             $name = $data[4];
             $code = $data[5];
             $id_partial = $data[6];
-            $discipline = $data[7];
+            $discipline = strtoupper($data[7]);
             $key = mb_strtolower($code);
 
             $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
 
-            $count = count($data);
-            if ($count > 8) {
+            $cellCount = count($data);
+            if ($cellCount > 8) {
                 $display_order = 1;
-                for ($i = 7; $i < $count; ++$i) {
+                for ($i = 8; $i < $cellCount; ++$i) {
                     $label = trim($data[$i]);
                     if ($label) {
                         $activity->variables()->create(compact('label', 'display_order'));
