@@ -219,6 +219,8 @@ $config = [
         'Form' => \Collective\Html\FormFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
+
+    'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil', 'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical', 'ELECTRICAL' => 'Electrical'],
 ];
 
 if ($config['env'] == 'local') {

@@ -25,7 +25,7 @@
 
         <div class="form-group {{$errors->first('discipline', 'has-error')}}">
             {{ Form::label('discipline', 'Discipline', ['class' => 'control-label']) }}
-            {{ Form::select('discipline', ['' => 'Select Discipline', 'Civil' => 'Civil', 'Arch' => 'Arch', 'Mechanical' => 'Mechanical', 'Electrical' => 'Electrical'], null, ['class' => 'form-control']) }}
+            {{ Form::select('discipline', config('app.discipline'), null, ['class' => 'form-control']) }}
             {!! $errors->first('discipline', '<div class="help-block">:message</div>') !!}
         </div>
 
@@ -35,10 +35,10 @@
             {!! $errors->first('work_package_name', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('partial_id', 'has-error')}}">
-            {{ Form::label('partial_id', 'Partial ID', ['class' => 'control-label']) }}
-            {{ Form::text('partial_id', null, ['class' => 'form-control']) }}
-            {!! $errors->first('partial_id', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('id_partial', 'has-error')}}">
+            {{ Form::label('id_partial', 'Partial ID', ['class' => 'control-label']) }}
+            {{ Form::text('id_partial', null, ['class' => 'form-control']) }}
+            {!! $errors->first('id_partial', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group">

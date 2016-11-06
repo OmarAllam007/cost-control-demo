@@ -41,7 +41,7 @@
 
         <div class="form-group {{$errors->first('type', 'has-error')}}">
             {{ Form::label('type', 'Discipline', ['class' => 'control-label']) }}
-            {{ Form::select('type', ['' => 'Select Discipline', 'Civil' => 'Civil', 'Arch' => 'Arch', 'Mechanical' => 'Mechanical', 'Electrical' => 'Electrical'], null, ['class' => 'form-control']) }}
+            {{ Form::select('type', config('app.discipline'), null, ['class' => 'form-control']) }}
             {!! $errors->first('type', '<div class="help-block">:message</div>') !!}
         </div>
 
