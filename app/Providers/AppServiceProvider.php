@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         \View::composer('std-activity-resource._resources_modal', 'App\Http\ViewComposers\ResourcesComposer');
         \View::composer('project.tabs._boq', 'App\Http\ViewComposers\BoqComposer');
+        \View::composer('resource-type._modal', 'App\Http\ViewComposers\ResourcesComposer');
 
         \View::composer(['project.tabs._wbs','wbs-level._recursive_input','wbs-level._recursive','wbs-level._modal'], 'App\Http\ViewComposers\WbsComposer');
         \View::composer('csi-category.index', 'App\Http\ViewComposers\CsiCategoryComposer');

@@ -9,7 +9,8 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\ResourceType::tree()->get() as $division)
+                    @foreach($resourcesTree as $division)
+
                         @include('resource-type._recursive_input', ['division' => $division, 'value' => $value])
                     @endforeach
                 </ul>

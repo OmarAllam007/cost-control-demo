@@ -49,6 +49,7 @@ class ProjectController extends Controller
         $project->load([
             'wbs_levels',
             'quantities',
+            'quantities.wbsLevel',
             'breakdown_resources' => function ($q) use ($project) {
                 return $q->filter(session('filters.breakdown.' . $project->id, []));
             },
