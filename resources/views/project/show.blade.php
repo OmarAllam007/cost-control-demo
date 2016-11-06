@@ -22,6 +22,28 @@
         </div>
     @endif
 
+    <div class="row">
+    <div class="col-sm-4">
+        <div class="panel panel-default wbs-panel">
+            <div class="panel-header">
+                <div class="btn-toolbar">
+                    <a href="/wbs-level/add?wbs=@{{selected.id}}" class="btn btn-default"><i class="fa fa-plus"></i></a>
+                    <a href="/wbs-level/@{{selected.id}}/edit" class="btn btn-default"><i class="fa fa-edit"></i></a>
+                    @can('wipe')
+                        <a href="" class="btn btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
+                    @endcan
+                </div>
+            </div>
+
+            <div class="panel-body wbs-tree-container">
+                
+            </div>
+        </div>
+    </div>
+    </div>
+@endsection
+
+@section('old')
     <ul class="nav nav-tabs">
         <li><a href="#wbs-structure" data-toggle="tab">WBS</a></li>
         <li><a href="#quantity-survey" data-toggle="tab">Quantity Survey</a></li>
