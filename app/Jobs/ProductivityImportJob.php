@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\CsiCategory;
 use App\Jobs\Job;
 use App\Productivity;
+use Barryvdh\Debugbar\Middleware\Debugbar;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,8 +29,8 @@ class ProductivityImportJob extends ImportJob
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
         $productivities = Productivity::query()->pluck('code');
-
         $status = ['success' => 0, 'failed' => collect()];
+        ini_set('max_execution_time',500);
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
@@ -37,7 +38,6 @@ class ProductivityImportJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
-
             if (!$productivities->has($data[0])) {
                 $unit = $this->getUnit($data[6]);
                 $item = [
@@ -49,9 +49,8 @@ class ProductivityImportJob extends ImportJob
                     'crew_structure' => $data[7],
                     'daily_output' => $data[8],
                     'reduction_factor' => $data[9],
-                    'source' => $data[10]
+                    'source' => $data[10],
                 ];
-
                 if ($unit) {
                     Productivity::create($item);
                     ++$status['success'];
@@ -65,20 +64,6 @@ class ProductivityImportJob extends ImportJob
         unlink($this->file);
 
         return $status;
-    }
-
-    private function loadDivision()
-    {
-        if ($this->division) {
-            return $this->division;
-        }
-
-        $this->division = collect();
-        CsiCategory::all()->each(function ($division) {
-            $this->division->put(mb_strtolower($division->canonical), $division->id);
-        });
-
-        return $this->division;
     }
 
     protected function getDivisionId($data)
@@ -97,7 +82,7 @@ class ProductivityImportJob extends ImportJob
             } else {
                 $division = CsiCategory::create([
                     'name' => $level,
-                    'parent_id' => $division_id
+                    'parent_id' => $division_id,
                 ]);
                 $division_id = $division->id;
                 $this->division->put($key, $division_id);
@@ -105,6 +90,20 @@ class ProductivityImportJob extends ImportJob
         }
 
         return $division_id;
+    }
+
+    private function loadDivision()
+    {
+        if ($this->division) {
+            return $this->division;
+        }
+
+        $this->division = collect();
+        CsiCategory::all()->each(function ($division) {
+            $this->division->put(mb_strtolower($division->canonical), $division->id);
+        });
+
+        return $this->division;
     }
 
     protected function getAfterFactor($factor, $daily)

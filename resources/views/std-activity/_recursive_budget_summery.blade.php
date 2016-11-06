@@ -11,22 +11,19 @@
                 blue-fourth-level
            @endif
                 ">
-            {{$division->label}}
-            <strong class="pull-right">{{number_format($std_activity_cost[$division->id]['budget_cost'],2)}}</strong>
+            {{$division['name']}}
+            <strong class="pull-right">{{number_format($division['budget_cost'],2)}}</strong>
         </div>
     </div>
 
-    <article id="children-{{$division->id}}" class="tree--child">
+    <article id="children-{{$division['id']}}" class="tree--child">
+            {{--<ul class="list-unstyled">--}}
+                {{--@foreach($division['divisions'] as $child)--}}
+                    {{--@include('std-activity._recursive_budget_summery', ['division' => $child ,'tree_level'=>$tree_level+1])--}}
+                {{--@endforeach--}}
+            {{--</ul>--}}
 
-        @if ($division->children()->whereIn('id', $all)->get() && $division->children()->whereIn('id', $all)->count())
-            <ul class="list-unstyled">
-                @foreach($division->children()->whereIn('id', $all)->get() as $child)
-                    @include('std-activity._recursive_budget_summery', ['division' => $child ,'tree_level'=>$tree_level+1])
-                @endforeach
-            </ul>
-        @endif
-
-        @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
+        @if ($division['activities'])
             <table class="table  table-condensed">
                 <thead>
                 <tr class="activity-header">
@@ -35,10 +32,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($division->activities()->whereIn('id',$activity_ids)->get() as $activity)
+                @foreach($division['activities'] as $activity)
                     <tr>
-                        <td>{{$activity->name}}</td>
-                        <td><span class="pull-right">{{number_format($activities[$activity->id]['budget_cost'],2)}}</span></td>
+                        <td>{{$activity['name']}}</td>
+                        <td><span class="pull-right">{{number_format($activity['budget_cost'],2)}}</span></td>
                     </tr>
                 @endforeach
                 </tbody>
