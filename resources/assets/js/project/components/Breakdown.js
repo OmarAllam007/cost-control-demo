@@ -18,7 +18,6 @@ export default {
 
     events: {
         wbs_changed(params) {
-            console.log(params);
             this.loading = true;
             $.ajax({
                 url: '/api/wbs/breakdowns/' + params.selection, dataType: 'json',

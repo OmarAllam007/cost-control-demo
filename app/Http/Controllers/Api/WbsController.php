@@ -14,9 +14,11 @@ class WbsController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level)
     {
-        return BreakdownResource::forWbs($wbs_level->id)->get()
+        $resources = BreakdownResource::forWbs($wbs_level->id)->get()
             ->map(function (BreakdownResource $res) {
                 return new BreakdownResourceFormatter($res);
             });
+
+        return $resources->toJSON();
     }
 }

@@ -9,7 +9,7 @@
         </section>
 
         <div class="scrollpane" v-if="breakdowns.length">
-            <table class="table table-condensed table-striped table-hover">
+            <table class="table table-condensed table-striped table-hover table-breakdown">
                 <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -34,6 +34,8 @@
                     <th style="min-width: 150px; max-width: 150px;" class="bg-success">Remarks</th>
                 </tr>
                 </thead>
+            </table>
+            <table class="table table-condensed table-striped table-hover table-breakdown">
                 <tbody>
                 <tr v-for="breakdown in breakdowns">
                     <td>&nbsp;</td>

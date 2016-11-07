@@ -33,6 +33,11 @@ class Breakdown extends Model
         return $this->belongsTo(Project::class);
     }
 
+    function qty_survey()
+    {
+        return $this->belongsTo(Survey::class, 'cost_account', 'cost_account')->where('project_id', $this->project_id);
+    }
+
     /*function syncResources($resources)
     {
         foreach ($resources as $res) {
