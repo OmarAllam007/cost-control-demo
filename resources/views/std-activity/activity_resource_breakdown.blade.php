@@ -37,6 +37,7 @@
                                                     <tr class="tbl-children-division">
                                                         {{--<th class="col-md-3 bg-success">Cost Account</th>--}}
                                                         <th class="col-md-3">Resource Name</th>
+                                                        <th class="col-md-3">Unit of Measure</th>
                                                         <th class="col-md-2">Price-Unit</th>
                                                         <th class="col-md-2">Budget Unit</th>
                                                         <th class="col-md-2">Budget Cost</th>
@@ -46,6 +47,7 @@
                                                     @foreach($account['resources'] as $resource)
                                                         <tr class="tbl-content">
                                                             <td class="col-md-3">{{$resource['name']}}</td>
+                                                            <td class="col-md-3">{{$resource['unit']}}</td>
                                                             <td class="col-md-2">{{$resource['price_unit']}}</td>
                                                             <td class="col-md-2">{{$resource['budget_unit']}}</td>
                                                             <td class="col-md-2">{{$resource['budget_cost']}}</td>

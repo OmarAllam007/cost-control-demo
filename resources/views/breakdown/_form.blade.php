@@ -43,9 +43,10 @@
             {{Form::label('template_id', 'Breakdown Template', ['class' => 'control-label'])}}
             {{Form::select('template_id', ['' => 'Select Template'], null, ['class' => 'form-control', 'id' => 'TemplateID'])}}
         </div>
-
+        <input type="hidden" name="code">
         <div class="form-group" id="SetVariablesPane">
-            <a href="#VariablesModal" class="btn btn-info" data-toggle="modal"><i class="fa fa-dollar"></i> Set Variables</a>
+            <a href="#VariablesModal" class="btn btn-info" data-toggle="modal"><i class="fa fa-dollar"></i> Set
+                Variables</a>
         </div>
     </div>
 </div>
