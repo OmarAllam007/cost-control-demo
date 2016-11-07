@@ -18,16 +18,16 @@ class RevisedBoq
 {
     public function getRevised(Project $project)
     {
-        $break_downs = $project->breakdowns()->get();
+        $resources = $project->breakdown_resources()->get();
         $data = [];
         $total = [
             'revised_boq' => 0,
             'original_boq' => 0,
             'weight' => 0,
         ];
-        foreach ($break_downs as $break_down) {
-            $boqs = Boq::where('cost_account', $break_down->cost_account)->first();
-            $wbs = $break_down->wbs_level;
+        foreach ($resources as $break_down_resource) {
+            $boq = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
+            $wbs = $break_down_resource->breakdown->wbs_level;
             if (!isset($data[ $wbs->id ])) {
                 $data[ $wbs->id ] = [
                     'code' => $wbs->code,
@@ -38,10 +38,10 @@ class RevisedBoq
                 ];
             }
 
-            $data[ $wbs->id ]['original_boq'] += $boqs->sum(\DB::raw('price_ur * quantity'));
+            $data[ $wbs->id ]['original_boq'] = $boq->sum(\DB::raw('price_ur * quantity'));
 
-            $eng_qty = Survey::where('cost_account', $break_down->cost_account)->sum(\DB::raw('eng_qty'));
-            $price_ur = Boq::where('cost_account', $break_down->cost_account)->sum(\DB::raw('price_ur'));
+            $eng_qty = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first()->eng_qty;
+            $price_ur = $boq->price_ur;
             $data[ $wbs->id ]['revised_boq'] += $price_ur * $eng_qty;
         }
 
