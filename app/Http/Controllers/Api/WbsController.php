@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\BreakdownResource;
 use App\Formatters\BreakdownResourceFormatter;
+use App\Survey;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,16 @@ class WbsController extends Controller
                 return new BreakdownResourceFormatter($res);
             });
 
-        return $resources->toJSON();
+        return $resources;
+    }
+
+    function boq(WbsLevel $wbs_level)
+    {
+
+    }
+
+    function qtySurvey(WbsLevel $wbs_level)
+    {
+        return Survey::where('wbs_level_id', $wbs_level->id)->get();
     }
 }

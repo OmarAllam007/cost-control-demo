@@ -1,9 +1,9 @@
 <template id="BreakdownTemplate">
-    <div class="loader" v-show="loading">
-        <i class="fa fa-spinner fa-spin fa-3x"></i>
-    </div>
-
     <div class="breakdown">
+        <div class="loader" v-show="loading">
+            <i class="fa fa-spinner fa-spin fa-3x"></i>
+        </div>
+
         <section class="filters" id="breakdown-filters">
 
         </section>
@@ -41,22 +41,31 @@
                     <td>&nbsp;</td>
                     <td style="min-width: 300px; max-width: 300px;" class="bg-primary">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">@{{ breakdown.cost_account }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-primary">@{{ breakdown.cost_account }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.eng_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.budget_qty }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">@{{ breakdown.resource_qty }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-primary">@{{ breakdown.resource_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">@{{ breakdown.resource_waste }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.resource_type }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.resource_code }}</td>
-                    <td style="min-width: 200px; max-width: 200px;" class="bg-success">@{{ breakdown.resource_name }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-success">@{{ breakdown.resource_type }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-success">@{{ breakdown.resource_code }}</td>
+                    <td style="min-width: 200px; max-width: 200px;"
+                        class="bg-success">@{{ breakdown.resource_name }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">@{{ breakdown.unit_price }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">@{{ breakdown.measure_unit }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.budget_unit }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.budget_cost }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.boq_equivilant_rate }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">@{{ breakdown.labors_count }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-info">@{{ breakdown.productivity_output }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-primary">@{{ breakdown.productivity_ref }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-black">@{{ breakdown.boq_equivilant_rate }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-primary">@{{ breakdown.labors_count }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-info">@{{ breakdown.productivity_output }}</td>
+                    <td style="min-width: 150px; max-width: 150px;"
+                        class="bg-primary">@{{ breakdown.productivity_ref }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.remarks }}</td>
                 </tr>
                 </tbody>

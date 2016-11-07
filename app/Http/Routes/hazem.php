@@ -13,7 +13,7 @@ Route::group(['prefix' => 'api'], function(){
     Route::group(['prefix' => 'wbs'], function(){
         Route::get('breakdowns/{wbs_level}', 'Api\WbsController@breakdowns');
         Route::get('boq/{wbs_level}', 'Api\WbsController@boq');
-        Route::get('qty-survey/{wbs_level}', 'Api\WbsController@qty-survey');
+        Route::get('qty-survey/{wbs_level}', 'Api\WbsController@qtySurvey');
     });
 });
 

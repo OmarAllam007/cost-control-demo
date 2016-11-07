@@ -14,11 +14,6 @@ use App\Support\CachableQuery;
 
 trait CachesQueries
 {
-    public function newEloquentBuilder($query)
-    {
-        return new CachableBuilder($query);
-    }
-
     protected function newBaseQueryBuilder()
     {
         $conn = $this->getConnection();
