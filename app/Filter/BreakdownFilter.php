@@ -37,7 +37,7 @@ class BreakdownFilter extends AbstractFilter
 
     protected function resource($name)
     {
-        $this->query->whereHas('resource.resource', function(Builder $q) use ($name) {
+        $this->query->whereHas('template_resource.resource', function(Builder $q) use ($name) {
             $q->where('name', 'LIKE', "%$name%");
         });
     }
