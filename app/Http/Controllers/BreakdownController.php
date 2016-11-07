@@ -40,7 +40,12 @@ class BreakdownController extends Controller
     public function store(BreakdownRequest $request)
     {
         $breakdown = Breakdown::create($request->all());
-        $breakdown->resources()->createMany($request->get('resources'));
+        $resource_code = $breakdown->resources->code = $breakdown->wbs_level->code . '.' . $breakdown->std_activity->id_partial;
+
+        $resources = $breakdown->resources()->createMany($request->get('resources'));
+        foreach ($resources as $resource){
+            $breakdown->resources()->create(['code'=>$resource_code]);
+        }
         $breakdown->syncVariables($request->get('variables'));
 
         return \Redirect::to(route('project.show', $breakdown->project_id) . '#breakdown');
@@ -141,26 +146,23 @@ class BreakdownController extends Controller
         $budgetCostVsDryHtml = $budgetCostVsDry->compare($project)->render();
 
 
-
-        echo $wbsLevelReportHtml.
-            $stdActivityReportHtml.
-            $productivityHtml.
-            $qsSummeryHtml.
-            $boqPriceListHtml.
-            $resourceDictionaryHtml.
-            $highPriorityMaterialsHtml.
-            $budgetManPowerHtml.
-            $budgetSummeryHtml.
-            $activityResourceBreakDownHtml.
-            $revisedBoqHtml.
-            $budgetCostByBuildingHtml.
-            $budgetCostByDisciplineHtml.
-            $budgetCostByBreakDownHtml.
-            $budgetCostDryCostByBuildingHtml.
-            $budgetCostDryCostByDisciplineHtml.
-            $budgetCostVsDryHtml
-
-        ;
+        echo $wbsLevelReportHtml .
+            $stdActivityReportHtml .
+            $productivityHtml .
+            $qsSummeryHtml .
+            $boqPriceListHtml .
+            $resourceDictionaryHtml .
+            $highPriorityMaterialsHtml .
+            $budgetManPowerHtml .
+            $budgetSummeryHtml .
+            $activityResourceBreakDownHtml .
+            $revisedBoqHtml .
+            $budgetCostByBuildingHtml .
+            $budgetCostByDisciplineHtml .
+            $budgetCostByBreakDownHtml .
+            $budgetCostDryCostByBuildingHtml .
+            $budgetCostDryCostByDisciplineHtml .
+            $budgetCostVsDryHtml;
 
 
     }

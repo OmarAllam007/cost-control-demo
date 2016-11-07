@@ -29,8 +29,9 @@
                                 <th class="col-xs-3">Activity Division</th>
                                 <th class="col-xs-3">Boq Description</th>
                                 <th class="col-xs-2">Cost Account</th>
-                                <th class="col-xs-2">Engineering Quantity</th>
-                                <th class="col-xs-2">Budget Quantity</th>
+                                <th class="col-xs-1">Engineering Quantity</th>
+                                <th class="col-xs-1">Budget Quantity</th>
+                                <th class="col-xs-2">Unit of Measure</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -51,17 +52,16 @@
                                     <td class="col-xs-2">
                                         {{$level['activity_divisions']['cost_account']}}
                                     </td>
-                                    <td class="col-xs-2">
+                                    <td class="col-xs-1">
                                         {{number_format($level['activity_divisions']['budget_qty'],2)}}<br>
                                     </td>
 
-                                    <td class="col-xs-2">
+                                    <td class="col-xs-1">
                                         {{number_format($level['activity_divisions']['eng_qty'],2)}}<br>
                                     </td>
-                                    {{----}}
-                                    {{--<td class="col-xs-2">--}}
-                                    {{--{{$wbs[$level->id]['budget_qty']}}<br>--}}
-                                    {{--</td>--}}
+                                    <td class="col-xs-2">
+                                        {{$level['activity_divisions']['unit']}}<br>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

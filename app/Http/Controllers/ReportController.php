@@ -100,54 +100,45 @@ class ReportController extends Controller
 
     public function budgetSummery(Project $project)
     {
-        $div_ids = $project->getDivisions();
-        $activity_ids = $project->getActivities()->toArray();
-        $all = $div_ids['all'];
-        $parent_ids = $div_ids['parents'];
+        $data = [];
+        $breakdowns = $project->breakdown_resources;
+        foreach ($breakdowns as $breakdown) {
+            $std_acivity_division = $breakdown->breakdown->std_activity->division;
 
-        $allDivisions = ActivityDivision::whereIn('id', $all)->get();
-        $parents = ActivityDivision::whereIn('id', $parent_ids)->get();
-
-        $std_array = $project->breakdowns()->with('std_activity')->pluck('std_activity_id')->toArray();
-        $std_activities = StdActivity::whereIn('id', $std_array)->get();
-        $std_activity_cost = [];
-        $stds_activity_cost = [];
-        $activities = [];
-        $parents_cost = [];
-
-        foreach ($allDivisions as $allDivision) {
-            $childrenIds = ActivityDivision::where('parent_id', $allDivision->id)->get()->pluck('id');
-            if (!isset($std_activity_cost[ $allDivision->id ])) {
-                $std_activity_cost[ $allDivision->id ] = [
+            if (!isset($data[ $std_acivity_division->parent->name ])) {
+                $data[ $std_acivity_division->parent->name ] = [
+                    'id'=>$std_acivity_division->parent->id,
+                    'name' => $std_acivity_division->parent->name,
                     'budget_cost' => 0,
-                ];
-                $stds_activity_cost[ $allDivision->id ] = [
-                    'name' => $allDivision->name,
-                    'total_cost' => 0,
-                    'divisions' => [
-                        'name' => $allDivision->children,
-                        'budget_cost' => 0,
-                        'budget_cost' => 0,
-                    ],
-                ];
+                    'name' => $std_acivity_division->name,
+                    'divisions' => [],
 
-
+                ];
             }
-            foreach ($std_activities->where('division_id', $allDivision->id) as $activity) {
-                if (!isset($activities[ $activity->id ])) {
-                    $activities[ $activity->id ] = [
+//fill divisions
+            foreach (ActivityDivision::where('parent_id', $std_acivity_division->parent->id)->get() as $item) {
+                if (!isset($data[ $std_acivity_division->parent->name ]['divisions'][ $item->name ])) {
+                    $data[ $std_acivity_division->parent->name ]['divisions'][ $item->name ] = [
+                        'id'=>$item->id,
+                        'name' => $item->name,
                         'budget_cost' => 0,
+                        'activities' => [],
                     ];
                 }
-                $activities[ $activity->id ]['budget_cost'] += $activity->getBudgetCost($project->id);
-                $std_activity_cost[ $allDivision->id ]['budget_cost'] += $activities[ $activity->id ]['budget_cost'];
-
+                foreach ($std_acivity_division->activities as $activity) {
+                    if (!isset($data[ $std_acivity_division->parent->name ]['divisions'][ $item->name ]['activities'][ $activity->name ])) {
+                        $data[ $std_acivity_division->parent->name ]['divisions'][ $item->name ]['activities'][ $activity->name ] = [
+                            'activity_name' => $activity->name,
+                            'budget_cost' => $activity->getBudgetCost($project->id),
+                        ];
+                    }
+                }
             }
 
         }
 
-
-        return view('std-activity.budgetSummery', compact('parents', 'all', 'activity_ids', 'activities', 'std_activity_cost', 'project'));
+//        dd($data);
+        return view('std-activity.budgetSummery', compact('data', 'project'));
     }
 
     public function activityResourceBreakDown(Project $project)
