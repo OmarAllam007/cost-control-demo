@@ -14,6 +14,7 @@
 @stop
 
 @section('body')
+    <section id="wbsArea">
     @if (trim($project->description))
         <div class="panel panel-default">
             <div class="panel-body">
@@ -23,27 +24,34 @@
     @endif
 
     <div class="row">
-    <div class="col-sm-4">
-        <div class="panel panel-default wbs-panel">
-            <div class="panel-header">
-                <div class="btn-toolbar">
-                    <a href="/wbs-level/add?wbs=@{{selected.id}}" class="btn btn-default"><i class="fa fa-plus"></i></a>
-                    <a href="/wbs-level/@{{selected.id}}/edit" class="btn btn-default"><i class="fa fa-edit"></i></a>
-                    @can('wipe')
-                        <a href="" class="btn btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
-                    @endcan
+        <div class="col-sm-4">
+            <aside class="panel panel-default wbs-panel">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title  pull-left">WBS</h3>
+                    <div class="btn-toolbar pull-right">
+                        <a href="/wbs-level/add?wbs=@{{selected.id}}" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
+                        <a href="/wbs-level/@{{selected.id}}/edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></a>
+                        @can('wipe')
+                            <a href="" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
+                        @endcan
+                    </div>
                 </div>
-            </div>
 
-            <div class="panel-body wbs-tree-container">
-                
-            </div>
+                <div class="panel-body wbs-tree-container">
+                    <ul class="wbs-tree" id="wbs-tree">
+                        @foreach($wbsTree as $item)
+                            @include('project.wbs-item', compact('item'))
+                        @endforeach
+                    </ul>
+                </div>
+            </aside>
         </div>
     </div>
-    </div>
+    </section>
 @endsection
 
 @section('old')
+    {{--
     <ul class="nav nav-tabs">
         <li><a href="#wbs-structure" data-toggle="tab">WBS</a></li>
         <li><a href="#quantity-survey" data-toggle="tab">Quantity Survey</a></li>
@@ -82,6 +90,7 @@
             @include('project.tabs._report',$project)
         </section>
     </div>
+    --}}
 @stop
 
 @section('javascript')
@@ -111,6 +120,15 @@
                     e.preventDefault();
                     modalContent.html('<iframe src="' + this.href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
                     editResourceModal.modal();
+                });
+
+                var wbsTree = $('#wbs-tree').on('click', '.wbs-icon', function(e) {
+                    e.preventDefault();
+                    $(this).find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
+                }).on('click', '.wbs-link', function(e) {
+                    e.preventDefault();
+                    wbsTree.find('.wbs-item').removeClass('active');
+                    $(this).parent('.wbs-item').addClass('active');
                 });
             });
 

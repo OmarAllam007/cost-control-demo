@@ -130,7 +130,7 @@ ul.tree {
   }
 }
 
-a, .btn {
+a, .btn, a:focus, btn:focus {
   outline: none;
 }
 
@@ -230,31 +230,82 @@ body#iframe {
   margin-bottom: 0;
 }
 
+.wbs-tree {
+  padding-left: 0;
+
+  li {
+    list-style-type: none;
+    position: relative;
+
+    .wbs-item:hover {
+      background-color: #f5f5f5;
+      color: $text-color;
+    }
+
+    .wbs-item.active {
+      background-color: $brand-primary;
+      color: #fff;
+
+      a {
+        color: #fff;
+      }
+
+      a:hover {
+        text-decoration: none;
+      }
+    }
+
+    .wbs-item {
+      display: block;
+      padding: 5px 5px 5px 21px;
+    }
+  }
+
+  ul {
+    padding-left: 0;
+    margin-left: 15px;
+  }
+
+  .wbs-icon {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+/***************************/
+/*     Reports design      */
+/***************************/
 .blue-first-level {
   background-color: #366092;
   color: white;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .blue-second-level {
   background-color: #95b3d7;
   color: white;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .blue-third-level {
   background-color: #dce6f1;
   color: black;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
+
 .blue-fourth-level {
   background-color: #dfe9f4;
   color: black;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .tbl-header {
@@ -262,6 +313,7 @@ body#iframe {
   color: white;
   font-weight: bold;
 }
+
 .tbl-content {
   font-weight: bold;
 }
@@ -298,14 +350,16 @@ body#iframe {
   color: red;
   font-weight: bold;
 }
-.wbs-code{
+
+.wbs-code {
   color: white;
   font-weight: bolder;
 }
 
-.normal-row{
+.normal-row {
   font-weight: bolder;
 }
+
 .activity-header {
   font-weight: bolder;
   color: black;

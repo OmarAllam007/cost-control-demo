@@ -30,6 +30,7 @@ class ProductivityImportJob extends ImportJob
         $productivities = Productivity::query()->pluck('code');
 
         $status = ['success' => 0, 'failed' => collect()];
+        set_time_limit(60);
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
