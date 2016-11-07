@@ -36,6 +36,7 @@ class BudgetCostDryCostByBuilding
             }
 
             $data[ $wbs_id ]['dry_cost'] += Boq::where('cost_account', $break_down->cost_account)->sum(\DB::raw('dry_ur * quantity'));
+
             foreach ($break_down->resources as $resource) {
                 $data[ $wbs_id ]['budget_cost'] += $resource->budget_cost;
             }
@@ -45,7 +46,6 @@ class BudgetCostDryCostByBuilding
             if ($data[ $wbs_id ]['dry_cost']) {
                 $data[ $wbs_id ]['increase'] = floatval(($data[ $wbs_id ]['budget_cost'] - $data[ $wbs_id ]['dry_cost']) / $data[ $wbs_id ]['dry_cost'] * 100);
             }
-
         }
         foreach ($data as $item) {
             $total['total_dry'] += $item['dry_cost'];

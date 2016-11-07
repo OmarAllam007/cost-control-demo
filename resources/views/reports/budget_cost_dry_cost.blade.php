@@ -28,7 +28,6 @@
         </thead>
         <tbody>
         @foreach($data as $row)
-
             <tr class="tbl-content">
                 <td class="col-xs-2">{{$row['code']}}</td>
                 <td class="col-xs-2">{{$row['name']}}</td>

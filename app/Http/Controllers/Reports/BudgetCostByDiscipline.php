@@ -50,6 +50,7 @@ class BudgetCostByDiscipline
                 $total['weight_total'] += $survey[ $key ]['weight'];
             }
         }
+
         $this->compareBudgetCostDisciplineCharts($survey);
         return view('reports.budget_cost_by_discipline', compact('project', 'survey', 'total'));
 

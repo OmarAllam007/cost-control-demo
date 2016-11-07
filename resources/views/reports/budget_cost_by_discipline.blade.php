@@ -25,10 +25,10 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($survey as $row)
+        @foreach($survey as $key=>$row)
             <tr class="tbl-content">
 
-                <td class="col-xs-4">{{$row['name']}}</td>
+                <td class="col-xs-4">{{$key}}</td>
                 <td class="col-xs-4">{{number_format($row['budget_cost'],2)}}</td>
                 <td class="col-xs-4">%{{number_format($row['weight'])}}</td>
             </tr>
@@ -37,7 +37,7 @@
 
             <td class="col-xs-4 output-cell" style="font-weight: 800">Grand Total</td>
             <td class="col-xs-4 output-cell">{{number_format($total['total'],2)}}</td>
-            <td class="col-xs-4 output-cell" style="font-style: italic">{{number_format($total['weight_total'],2)}}</td>
+            <td class="col-xs-4 output-cell" >%{{number_format($total['weight_total'],2)}}</td>
 
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}
         </tr>

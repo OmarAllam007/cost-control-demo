@@ -44,8 +44,7 @@
                     </tr>
                 @endif
             @endforeach
-            <tr style="border:solid #000000">
-                <td>Total</td>
+            <tr class="tbl-children-division"> <td>Total</td>
                 <td>{{number_format($total_budget_cost, 2)}}</td>
                 <td>{{number_format($total_budget_unit, 2)}}</td>
                 <td></td>

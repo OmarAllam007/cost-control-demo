@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Reports;
 use App\ActivityDivision;
 use App\Boq;
 use App\Project;
+use App\StdActivity;
 use App\Unit;
 use App\WbsLevel;
 
@@ -19,36 +20,46 @@ class QuantitiySurveySummery
 {
     public function qsSummeryReport(Project $project)
     {
-        $break_downs = $project->breakdowns()->get();
+        $break_downs_resources = $project->breakdown_resources()->get();
+
 
         $level_array = [];
-        foreach ($break_downs as $break_down) {
-            $boq_item = Boq::where('cost_account', $break_down->cost_account)->first();
-            $division_name = ActivityDivision::where('id', $break_down->std_activity->division->id)->get();
-            if (!isset($level_array[ $break_down->wbs_level->id ])) {
-                $level_array[ $break_down->wbs_level->id ] = [
-                    'id' => $break_down->wbs_level->id,
-                    'name' => $break_down->wbs_level->name,
+        foreach ($break_downs_resources as $break_down_resource) {
+            $boq_item = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
+            $division_name = ActivityDivision::find(StdActivity::find($break_down_resource->stdactivityid)->division_id)->name;
+            $activity_name = StdActivity::find($break_down_resource->stdactivityid)->name;
+            if (!isset($level_array[ $break_down_resource->wbslevelid ])) {
+                $level_array[ $break_down_resource->wbslevelid ] = [
+                    'id' => $break_down_resource->wbslevelid,
+                    'name' => $break_down_resource->breakdown->wbs_level->name,
                     'activity_divisions' => [
-                        'division' => $division_name->pluck('name'),
-                        'activity_names' => [$break_down->std_activity->name],
-                        'boq_item_description' => $boq_item->description,
-                        'cost_account' => $boq_item->cost_account,
-                        'budget_qty' => 0,
-                        'eng_qty' => 0,
-                        'unit'=>'',
                     ],
+                ];
+            }
+            if (!isset($level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ])) {
+                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['name'] = $division_name;
 
+            }
+            if (!isset($level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ])) {
+                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ] = [
+                    'name' => $activity_name,
+                    'cost_accounts' => [],
                 ];
 
             }
-            foreach ($break_down->resources as $resource) {
-                $level_array[ $break_down->wbs_level->id ]['activity_divisions']['budget_qty'] = $resource->budget_qty;
-                $level_array[ $break_down->wbs_level->id ]['activity_divisions']['eng_qty']  = $resource->eng_qty;
-                $level_array[ $break_down->wbs_level->id ]['activity_divisions']['unit'] = Unit::find($resource->qty_survey->unit_id)->type;
-            }
-        }
 
+            if (!isset($level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ]['cost_accounts'][ $break_down_resource->cost_account ])) {
+                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ]['cost_accounts'][ $break_down_resource->cost_account ] = [
+                    'cost_account' => $break_down_resource->cost_account,
+                    'boq_name' =>$boq_item->description,
+                    'budget_qty'=>$break_down_resource->budget_qty,
+                    'eng_qty'=>$break_down_resource->eng_qty,
+                    'unit'=>isset(Unit::find($boq_item->id)->type)?Unit::find($boq_item->id)->type:'',
+                ];
+            }
+
+
+        }
         return view('reports.quantity_survey', compact('project', 'level_array'));
     }
 }

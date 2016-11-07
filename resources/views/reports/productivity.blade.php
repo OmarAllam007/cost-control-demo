@@ -27,14 +27,11 @@
                             {{--<th class="col-xs-2">Category</th>--}}
                             <th class="col-xs-3">Item Description</th>
                             <th class="col-xs-3">Crew Structure</th>
-                            <th class="col-xs-2 text-center">Daily
-                                output
-                            </th>
+
                             <th class="col-xs-2 text-center">Unit of
                                 measure
                             </th>
-                            <th class="col-xs-2 text-center">After
-                                reduction
+                            <th class="col-xs-2 text-center">Output
                             </th>
                             </th>
                         </tr>
@@ -45,7 +42,7 @@
                                 {{--<td class="col-xs-2" ></td>--}}
                                 <td>{{$item['name']}}</td>
                                 <td>{!! nl2br(e($item['crew_structure'])) !!}</td>
-                                <td class="text-center">{{$item['daily_output']}}</td>
+                                {{--<td class="text-center">{{$item['daily_output']}}</td>--}}
                                 <td class="text-center">{{$item['unit']}}</td>
                                 <td class="text-center">{{$item['productivity']}}</td>
                             </tr>
