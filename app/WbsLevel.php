@@ -32,4 +32,15 @@ class WbsLevel extends Model
     {
         $query->where('project_id', $project_id);
     }
+
+    public function deleteRecursive()
+    {
+        if ($this->children->count()) {
+            $this->children->each(function($level){
+                $level->deleteRecursive();
+            });
+        }
+
+        $this->delete();
+    }
 }

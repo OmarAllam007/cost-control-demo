@@ -71,7 +71,7 @@ class WbsLevelController extends Controller
 
     public function destroy(WbsLevel $wbs_level)
     {
-        $wbs_level->delete();
+        $wbs_level->deleteRecursive();
 
         flash('WBS level has been deleted', 'success');
 
