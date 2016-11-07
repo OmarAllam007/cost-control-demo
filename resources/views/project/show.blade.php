@@ -46,6 +46,31 @@
                 </div>
             </aside>
         </div>
+
+
+        <div class="col-sm-8">
+            <section id="wbs-display">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#Breakdown">Resources</a></li>
+                    <li><a href="#BOQ">BOQ</a></li>
+                    <li><a href="#QtySurvey">Quantity Survey</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <article class="tab-pane active" id="Breakdown">
+                        @include('project.templates.breakdown')
+                    </article>
+
+                    <article class="tab-pane" id="BOQ">
+                        @include('project.templates.boq')
+                    </article>
+
+                    <article class="tab-pane" id="QtySurvey">
+                        @include('project.templates.qty-survey')
+                    </article>
+                </div>
+            </section>
+        </div>
     </div>
     </section>
 @endsection

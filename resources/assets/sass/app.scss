@@ -232,6 +232,8 @@ body#iframe {
 
 .wbs-tree {
   padding-left: 0;
+  max-height: 500px;
+  overflow: auto;
 
   li {
     list-style-type: none;

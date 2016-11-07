@@ -8200,7 +8200,9 @@ body#iframe {
   margin-bottom: 0; }
 
 .wbs-tree {
-  padding-left: 0; }
+  padding-left: 0;
+  max-height: 500px;
+  overflow: auto; }
   .wbs-tree li {
     list-style-type: none;
     position: relative; }
