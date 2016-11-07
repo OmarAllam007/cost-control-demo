@@ -38,8 +38,8 @@
                                             <table class="table table-condensed">
                                                 <thead>
                                                 <tr class="blue-fourth-level">
-                                                    <th class="col-xs-3">Boq Description</th>
                                                     <th class="col-xs-2">Cost Account</th>
+                                                    <th class="col-xs-3">Boq Description</th>
                                                     <th class="col-xs-1">Engineering Quantity</th>
                                                     <th class="col-xs-1">Budget Quantity</th>
                                                     <th class="col-xs-2">Unit of Measure</th>
@@ -50,12 +50,13 @@
 
                                                     <tr>
 
-                                                        <td class="col-xs-3">
-                                                            {{$cost_account['boq_name']}}
-                                                        </td>
+
 
                                                         <td class="col-xs-2">
                                                             {{$cost_account['cost_account']}}
+                                                        </td>
+                                                        <td class="col-xs-3">
+                                                            {{$cost_account['boq_name']}}
                                                         </td>
                                                         <td class="col-xs-1">
                                                             {{$cost_account['eng_qty']}}
