@@ -12,8 +12,9 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix.sass('app.scss');
-    mix.sass('print.scss');
+    mix.sass('app.scss').webpack('project/index.js', 'public/js/project.js');
+
+    /*mix.sass('print.scss');
 
     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
     mix.scripts('tree-select.js');
@@ -29,5 +30,5 @@ elixir(function (mix) {
     mix.rollup('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
 
     mix.rollup('activity-variables.js');
-    mix.rollup('edit-resource.js');
+    mix.rollup('edit-resource.js');*/
 });

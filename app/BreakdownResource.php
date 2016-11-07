@@ -179,4 +179,10 @@ class BreakdownResource extends Model
         $filter = new BreakdownFilter($query, $fields);
         return $filter->filter();
     }
+
+    function scopeForWbs(Builder $query, $wbs_id) {
+        return $query->whereHas('breakdown', function(Builder $q) use ($wbs_id){
+            return $q->where('wbs_level_id', $wbs_id);
+        });
+    }
 }

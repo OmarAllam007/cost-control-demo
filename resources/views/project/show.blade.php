@@ -29,8 +29,8 @@
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title  pull-left">WBS</h3>
                     <div class="btn-toolbar pull-right">
-                        <a href="/wbs-level/add?wbs=@{{selected.id}}" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
-                        <a href="/wbs-level/@{{selected.id}}/edit" class="btn btn-sm btn-default"><i class="fa fa-edit"></i></a>
+                        <a href="/wbs-level/add?wbs=@{{selected}}" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
+                        <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-default" v-show="selected"><i class="fa fa-edit"></i></a>
                         @can('wipe')
                             <a href="" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
                         @endcan
@@ -49,7 +49,7 @@
 
 
         <div class="col-sm-8">
-            <section id="wbs-display">
+            <section id="wbs-display" v-if="selected">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#Breakdown">Resources</a></li>
                     <li><a href="#BOQ">BOQ</a></li>
@@ -70,7 +70,12 @@
                     </article>
                 </div>
             </section>
+
+            <div class="alert alert-info" v-else>
+                <i class="fa fa-info-circle"></i> Please select a WBS
+            </div>
         </div>
+
     </div>
     </section>
 @endsection
@@ -160,5 +165,5 @@
         }(window, document, jQuery))
 
     </script>
-    <script src="{{asset('/js/tree-select.js')}}"></script>
+    <script src="{{asset('/js/project.js')}}"></script>
 @endsection

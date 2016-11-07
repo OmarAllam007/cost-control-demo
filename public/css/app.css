@@ -8229,6 +8229,9 @@ body#iframe {
   .wbs-tree a:hover {
     text-decoration: none; }
 
+#wbs-display .tab-pane {
+  padding-top: 20px; }
+
 /***************************/
 /*     Reports design      */
 /***************************/
