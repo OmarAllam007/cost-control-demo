@@ -49,9 +49,6 @@
                                                 @foreach($activity['cost_accounts'] as $cost_account)
 
                                                     <tr>
-
-
-
                                                         <td class="col-xs-2">
                                                             {{$cost_account['cost_account']}}
                                                         </td>
