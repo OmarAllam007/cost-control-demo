@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Boq;
 use App\BreakdownResource;
 use App\Formatters\BreakdownResourceFormatter;
 use App\Survey;
@@ -25,7 +26,7 @@ class WbsController extends Controller
 
     function boq(WbsLevel $wbs_level)
     {
-
+        return Boq::where('wbs_id', $wbs_level->id)->get()->groupBy('type');
     }
 
     function qtySurvey(WbsLevel $wbs_level)

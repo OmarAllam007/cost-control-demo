@@ -8,7 +8,7 @@
 
         </section>
 
-        <table class="table table-condensed table-striped table-hover table-fixed">
+        <table class="table table-condensed table-striped table-hover table-fixed" v-if="quantities.length">
             <thead>
             <tr>
                 <th class="col-xs-2">Cost Account</th>
@@ -36,6 +36,9 @@
             </tr>
             </tbody>
         </table>
+        <div class="alert alert-info" v-else>
+            <i class="fa fa-info-circle"></i> No quantities found
+        </div>
     </div>
 </template>
 
