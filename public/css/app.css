@@ -8232,6 +8232,19 @@ body#iframe {
 #wbs-display .tab-pane {
   padding-top: 20px; }
 
+#wbs-display .loader {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 99;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center; }
+
 /***************************/
 /*     Reports design      */
 /***************************/
