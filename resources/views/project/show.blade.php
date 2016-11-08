@@ -15,113 +15,88 @@
 
 @section('body')
     <section id="wbsArea">
-    @if (trim($project->description))
-        <div class="panel panel-default">
-            <div class="panel-body">
-                {!! nl2br(e($project->description)) !!}
+        @if (trim($project->description))
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {!! nl2br(e($project->description)) !!}
+                </div>
             </div>
-        </div>
-    @endif
+        @endif
 
-    <div class="row">
-        <div class="col-sm-4">
-            <aside class="panel panel-default wbs-panel">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title  pull-left">WBS</h3>
-                    <div class="btn-toolbar pull-right">
-                        <a href="/wbs-level/add?wbs=@{{selected}}" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
-                        <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-default" v-show="selected"><i class="fa fa-edit"></i></a>
-                        @can('wipe')
-                            <a href="" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
-                        @endcan
+        <div class="row">
+            <div class="col-sm-4">
+                <aside class="panel panel-default wbs-panel">
+                    <div class="panel-heading clearfix">
+                        <h3 class="panel-title  pull-left">WBS</h3>
+                        <div class="btn-toolbar pull-right">
+                            <a href="/wbs-level/add?wbs=@{{selected}}" class="btn btn-sm btn-default"><i
+                                        class="fa fa-plus"></i></a>
+                            <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-default" v-show="selected"><i
+                                        class="fa fa-edit"></i></a>
+                            @can('wipe')
+                                <a href="" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
+                            @endcan
+                        </div>
                     </div>
-                </div>
 
-                <div class="panel-body wbs-tree-container">
-                    <ul class="wbs-tree" id="wbs-tree">
-                        @foreach($wbsTree as $item)
-                            @include('project.wbs-item', compact('item'))
-                        @endforeach
+                    <div class="panel-body wbs-tree-container">
+                        <ul class="wbs-tree" id="wbs-tree">
+                            @foreach($wbsTree as $item)
+                                @include('project.wbs-item', compact('item'))
+                            @endforeach
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+
+
+            <div class="col-sm-8">
+                <section id="wbs-display" v-show="selected">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#Breakdown">Resources</a></li>
+                        <li><a href="#BOQ">BOQ</a></li>
+                        <li><a href="#QtySurvey">Quantity Survey</a></li>
                     </ul>
+
+                    <div class="tab-content">
+                        <article class="tab-pane active" id="Breakdown">
+                            @include('project.templates.breakdown')
+                        </article>
+
+                        <article class="tab-pane" id="BOQ">
+                            @include('project.templates.boq')
+                        </article>
+
+                        <article class="tab-pane" id="QtySurvey">
+                            @include('project.templates.qty-survey')
+                        </article>
+                    </div>
+                </section>
+
+                <div class="alert alert-info" v-else>
+                    <i class="fa fa-info-circle"></i> Please select a WBS
                 </div>
-            </aside>
+            </div>
+
         </div>
+    </section>
 
 
-        <div class="col-sm-8">
-            <section id="wbs-display" v-if="selected">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#Breakdown">Resources</a></li>
-                    <li><a href="#BOQ">BOQ</a></li>
-                    <li><a href="#QtySurvey">Quantity Survey</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <article class="tab-pane active" id="Breakdown">
-                        @include('project.templates.breakdown')
-                    </article>
-
-                    <article class="tab-pane" id="BOQ">
-                        @include('project.templates.boq')
-                    </article>
-
-                    <article class="tab-pane" id="QtySurvey">
-                        @include('project.templates.qty-survey')
-                    </article>
+    <div class="modal fade" tabindex="-1" id="EditResourceModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">Edit resource</h4>
                 </div>
-            </section>
+                <div class="modal-body iframe">
 
-            <div class="alert alert-info" v-else>
-                <i class="fa fa-info-circle"></i> Please select a WBS
+                </div>
             </div>
         </div>
-
     </div>
-    </section>
 @endsection
-
-@section('old')
-    {{--
-    <ul class="nav nav-tabs">
-        <li><a href="#wbs-structure" data-toggle="tab">WBS</a></li>
-        <li><a href="#quantity-survey" data-toggle="tab">Quantity Survey</a></li>
-        <li><a href="#breakdown" data-toggle="tab">Breakdown</a></li>
-        <li><a href="#resources" data-toggle="tab">Resources</a></li>
-        <li><a href="#productivity" data-toggle="tab">Productivity</a></li>
-        <li><a href="#boq" data-toggle="tab">BOQs</a></li>
-        <li><a href="#report" data-toggle="tab">Reports</a></li>
-    </ul>
-
-    <div class="tab-content">
-        <section class="tab-pane" id="wbs-structure">
-            @include('project.tabs._wbs')
-        </section>
-
-        <section class="tab-pane" id="quantity-survey">
-            @include('project.tabs._quantity-survey')
-        </section>
-
-        <section class="tab-pane" id="breakdown">
-            @include('project.tabs._breakdown')
-        </section>
-
-        <section class="tab-pane" id="resources">
-            @include('project.tabs._resources')
-        </section>
-
-        <section class="tab-pane" id="productivity">
-            @include('project.tabs._productivity')
-        </section>
-        <section class="tab-pane" id="boq">
-            @include('project.tabs._boq')
-        </section>
-
-        <section class="tab-pane" id="report">
-            @include('project.tabs._report',$project)
-        </section>
-    </div>
-    --}}
-@stop
 
 @section('javascript')
     <script>
@@ -146,16 +121,16 @@
 
                 var editResourceModal = $('#EditResourceModal');
                 var modalContent = editResourceModal.find('.modal-body');
-                $('.in-iframe').on('click', function (e) {
+                $('#wbs-display').on('click', '.in-iframe', function (e) {
                     e.preventDefault();
                     modalContent.html('<iframe src="' + this.href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
                     editResourceModal.modal();
                 });
 
-                var wbsTree = $('#wbs-tree').on('click', '.wbs-icon', function(e) {
+                var wbsTree = $('#wbs-tree').on('click', '.wbs-icon', function (e) {
                     e.preventDefault();
                     $(this).find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
-                }).on('click', '.wbs-link', function(e) {
+                }).on('click', '.wbs-link', function (e) {
                     e.preventDefault();
                     wbsTree.find('.wbs-item').removeClass('active');
                     $(this).parent('.wbs-item').addClass('active');

@@ -82,19 +82,17 @@ class BreakdownResourceController extends Controller
         return \Redirect::to(route('breakdown-resource.edit', $breakdown_resource) . '?close=1');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param BreakdownResource $breakdown_resource
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
-     */
-    public function destroy(BreakdownResource $breakdown_resource)
+    public function destroy(BreakdownResource $breakdown_resource, Request $request)
     {
         $breakdown_resource->load('breakdown.project');
         $breakdown_resource->delete();
 
-        flash('Resource has been deleted', 'info');
+        $msg = 'Resource has been deleted';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+
+        flash($msg, 'info');
         return \Redirect::to(route('project.show', $breakdown_resource->breakdown->project) . '#breakdown');
     }
 

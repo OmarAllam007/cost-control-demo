@@ -12,7 +12,7 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <thead>
                 <tr>
-                    <th>&nbsp;</th>
+                    <th style="min-width: 32px; max-width: 32px;">&nbsp;</th>
                     <th style="min-width: 300px; max-width: 300px;" class="bg-primary">Activity</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-black">Breakdown Template</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-primary">Cost Account</th>
@@ -38,7 +38,23 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <tbody>
                 <tr v-for="breakdown in breakdowns">
-                    <td>&nbsp;</td>
+                    <td style="min-width: 32px; max-width: 32px;">
+
+                        <form action="/breakdown-resource/@{{ breakdown.id }}" @submit.prevent="destroy(breakdown.id)" class="dropdown">
+                            {{csrf_field()}} {{method_field('delete')}}
+                            <button data-toggle="dropdown" type="button" class="btn btn-default btn-xs dropdown-toggle">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-left">
+                                <li><a href="/breakdown-resource/@{{ breakdown.id }}/edit" class="btn btn-link in-iframe"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
+                                <li><a href="/breakdown/duplicate/@{{ breakdown.breakdown_id }}" class="btn btn-link in-iframe"><i class="fa fa-fw fa-copy"></i> Duplicate</a></li>
+                                <li>
+                                    <button class="btn btn-link"><i class="fa fa-fw fa-trash"></i> Delete</button>
+                                </li>
+                            </ul>
+                        </form>
+
+                    </td>
                     <td style="min-width: 300px; max-width: 300px;" class="bg-primary">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
