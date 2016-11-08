@@ -11,10 +11,6 @@
 <body id="iframe">
 
 <div class="container-fluid">
-    @if (session()->has('flash-message'))
-        @include("partials/alert/" . session('flash-type'), ['message' => session('flash-message')])
-    @endif
-
     @yield('body')
 </div>
 
@@ -22,12 +18,13 @@
 
 @yield('javascript')
 
-@if (\Request::has('close'))
+@if (\Request::has('reload'))
     <script>
         if (window.parent != window) {
-            setTimeout(function(){
-                window.parent.location.reload();
-            }, 3000);
+            window.parent.app.reload('quantities', {
+                message: '{{session('flash-message')}}',
+                type: '{{session('flash-type')}}'
+            });
         }
     </script>
 @endif

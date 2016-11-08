@@ -7,8 +7,7 @@ window.app = new Vue({
     el: '#wbsArea',
 
     data: {
-        selected: 0,
-        reload: ''
+        selected: 0
     },
 
     watch: {
@@ -18,7 +17,8 @@ window.app = new Vue({
     },
 
     methods: {
-        reload(component) {
+        reload(component, alert) {
+            $('#EditResourceModal').modal('hide');
             this.$broadcast('reload_' + component);
         }
     },

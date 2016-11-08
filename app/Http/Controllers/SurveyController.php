@@ -68,7 +68,7 @@ class SurveyController extends Controller
 
         flash('Quantity survey has been saved', 'success');
 
-        return \Redirect::route('project.show', $survey->project_id);
+        return \Redirect::to('/blank?reload=quantities');
     }
 
     public function destroy(Survey $survey, Request $request)

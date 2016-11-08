@@ -121,7 +121,13 @@
                 var modalContent = editResourceModal.find('.modal-body');
                 $('#wbs-display').on('click', '.in-iframe', function (e) {
                     e.preventDefault();
-                    modalContent.html('<iframe src="' + this.href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
+                    var href = this.href;
+                    if (href.indexOf('?') < 0) {
+                        href += '?iframe=1';
+                    } else {
+                        href += '&iframe=1';
+                    }
+                    modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
                     editResourceModal.modal();
                 });
 
@@ -136,8 +142,6 @@
             });
 
         }(window, document, jQuery));
-
-        var reload = {component: ''};
 
     </script>
     <script src="{{asset('/js/project.js')}}"></script>
