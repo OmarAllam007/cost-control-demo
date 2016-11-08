@@ -29,11 +29,6 @@ class WbsImportJob extends Job
         $this->file = $file;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
     public function handle()
     {
         $loader = new \PHPExcel_Reader_Excel2007();
@@ -83,7 +78,7 @@ class WbsImportJob extends Job
                 $levels->put($canonical, $parent);
             }
         }
-        dispatch(new CacheWBSTree());
+        dispatch(new CacheWBSTree($this->project));
         unlink($this->file);
         return $count;
     }
