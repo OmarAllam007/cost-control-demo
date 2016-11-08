@@ -22,13 +22,11 @@ use Illuminate\Http\Request;
 
 class BreakdownController extends Controller
 {
-
     public function create(Request $request)
     {
         if (!$request->has('project')) {
             return \Redirect::route('project.index');
         }
-
         $project = Project::find($request->get('project'));
         if (!$project) {
             flash('Project not found');
@@ -40,11 +38,10 @@ class BreakdownController extends Controller
     public function store(BreakdownRequest $request)
     {
         $breakdown = Breakdown::create($request->all());
-        $resource_code = $breakdown->resources->code = $breakdown->wbs_level->code . '.' . $breakdown->std_activity->id_partial;
-
+        $resource_code = $breakdown->wbs_level->code . $breakdown->std_activity->id_partial;
         $resources = $breakdown->resources()->createMany($request->get('resources'));
-        foreach ($resources as $resource){
-            $breakdown->resources()->create(['code'=>$resource_code]);
+        foreach ($resources as $resource) {
+            $resource->update(['code' => $resource_code]);
         }
         $breakdown->syncVariables($request->get('variables'));
 

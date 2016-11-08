@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Reports;
 
 
+use App\Boq;
+use App\BreakdownResource;
 use App\Project;
 use Khill\Lavacharts\Lavacharts;
 
@@ -23,9 +25,9 @@ class BudgetCostByBuilding
             'weight' => 0,
         ];
         foreach ($breakdowns as $breakdown) {
-            $wbs_id = $breakdown->wbs_level->id;
-            if (!isset($data[ $wbs_id ])) {
-                $data[ $wbs_id ] = [
+            $wbs_level = $breakdown->wbs_level;
+            if (!isset($data[ $wbs_level->id ])) {
+                $data[ $wbs_level->id ] = [
                     'name' => $breakdown->wbs_level->name,
                     'code' => $breakdown->wbs_level->code,
                     'budget_cost' => 0,
@@ -34,14 +36,25 @@ class BudgetCostByBuilding
 
             }
             foreach ($breakdown->resources as $resource) {
-                $data[ $wbs_id ]['budget_cost'] += $resource->budget_cost;
+                $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;//new work
+                $parent = $wbs_level;
+                while ($parent->parent) {
+                    $parent = $parent->parent;
+                    $boq = Boq::where('wbs_id', $parent->id)->first();
+                    if($boq){
+                        if ($boq->dry_ur > 0) {
+                            $data[ $wbs_level->id ]['budget_cost'] += BreakdownResource::where('wbs_id',$parent->id)->first()->budget_cost;
+                        }
+                    }
+                }
             }
+
         }
         foreach ($data as $item) {
             $total['total'] += $item['budget_cost'];
         }
         foreach ($data as $key => $value) {
-            if($total['total']!=0){
+            if ($total['total'] != 0) {
                 $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
                 $total['weight'] += $data[ $key ]['weight'];
             }
@@ -88,8 +101,8 @@ class BudgetCostByBuilding
             'titleTextStyle' => [
                 'color' => '#eb6b2c',
                 'fontSize' => 14,
-                'width'=>'1000',
-                'height'=>'600',
+                'width' => '1000',
+                'height' => '600',
             ],
         ]);
 
