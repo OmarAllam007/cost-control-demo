@@ -26,32 +26,45 @@ class RevisedBoq
             'weight' => 0,
         ];
         foreach ($resources as $break_down_resource) {
-            $boq = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
             $wbs = $break_down_resource->breakdown->wbs_level;
             if (!isset($data[ $wbs->id ])) {
                 $data[ $wbs->id ] = [
                     'code' => $wbs->code,
                     'name' => $wbs->name,
+                    'cost_account' => [],
                     'revised_boq' => 0,
                     'original_boq' => 0,
-                    'weight' => 0,
+                    'weight' => 0
                 ];
             }
+            if (!isset($data[ $wbs->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ])) {
+                $data[ $wbs->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ] = [
+                    'revised_boq' => 0,
+                    'original_boq' => 0,
+                    'weight' => 0,];
 
-            $data[ $wbs->id ]['original_boq'] = $boq->sum(\DB::raw('price_ur * quantity'));
+                $boq = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
+                $survey = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
 
-            $eng_qty = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first()->eng_qty;
-            $price_ur = $boq->price_ur;
-            $data[ $wbs->id ]['revised_boq'] += $price_ur * $eng_qty;
+                $data[ $wbs->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['original_boq'] = $boq->price_ur * $boq->quantity;
+
+                $data[ $wbs->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['revised_boq'] = $boq->price_ur * $survey->eng_qty;
+            }
+
         }
-
         foreach ($data as $key => $value) {
-            $total['revised_boq'] += $data[ $key ]['revised_boq'];
-            $total['original_boq'] += $data[ $key ]['original_boq'];
+            foreach ($value['cost_account'] as $item) {
+                $data[$key]['revised_boq']+=$item['revised_boq'];
+                $total['revised_boq']+=$item['revised_boq'];
+                $data[$key]['original_boq']+=$item['original_boq'];
+                $total['original_boq']+=$item['original_boq'];
+            }
         }
+
+
         foreach ($data as $key => $value) {
             if ($data[ $key ]['original_boq']) {
-                $data[ $key ]['weight'] += (($data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']) * 100);
+                $data[ $key ]['weight'] += (($data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']));
 
                 $total['weight'] += $data[ $key ]['weight'];
             }
