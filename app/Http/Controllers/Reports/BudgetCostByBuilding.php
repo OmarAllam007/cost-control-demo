@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Reports;
 
 
 use App\Boq;
+use App\Breakdown;
 use App\BreakdownResource;
 use App\Project;
 use Khill\Lavacharts\Lavacharts;
@@ -43,7 +44,7 @@ class BudgetCostByBuilding
                     $boq = Boq::where('wbs_id', $parent->id)->first();
                     if($boq){
                         if ($boq->dry_ur > 0) {
-                            $data[ $wbs_level->id ]['budget_cost'] += BreakdownResource::where('wbs_id',$parent->id)->first()->budget_cost;
+
                         }
                     }
                 }
