@@ -1,11 +1,17 @@
 export default {
-    template: document.getElementById('#BOQTemplate').innerHTML,
+    template: document.getElementById('BOQTemplate').innerHTML,
 
     data() {
         return {
-            items: {},
+            boq: {},
             loading: false
         };
+    },
+
+    computed: {
+        empty_boq() {
+            return Object.keys(this.boq).length == 0;
+        }
     },
 
     methods: {
@@ -24,7 +30,11 @@ export default {
                 cache: true
             }).success(response => {
                 this.loading = false;
-                this.boq = response;
+                if ($.isPlainObject(response)) {
+                    this.boq = response;
+                } else {
+                    this.boq = {};
+                }
             }).error(() => {
                 this.loading = false;
                 this.boq = {};
