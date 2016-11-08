@@ -29,10 +29,8 @@
                     <div class="panel-heading clearfix">
                         <h3 class="panel-title  pull-left">WBS</h3>
                         <div class="btn-toolbar pull-right">
-                            <a href="/wbs-level/add?wbs=@{{selected}}" class="btn btn-sm btn-default"><i
-                                        class="fa fa-plus"></i></a>
-                            <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-default" v-show="selected"><i
-                                        class="fa fa-edit"></i></a>
+                            <a href="/wbs-level/create?project={{$project->id}}&wbs=@{{selected}}" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
+                            <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-default" v-show="selected"><i class="fa fa-edit"></i></a>
                             @can('wipe')
                                 <a href="" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
                             @endcan
