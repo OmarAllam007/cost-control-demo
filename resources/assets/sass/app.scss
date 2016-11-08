@@ -231,31 +231,28 @@ body#iframe {
 }
 
 .blue-first-level {
-  background-color: #366092;
+  background-color: #366092 !important;
   color: white;
   font-weight: bold;
-  padding:10px;
-}
+  padding: 10px; }
 
 .blue-second-level {
-  background-color: #95b3d7;
+  background-color: #95b3d8 !important;
   color: white;
   font-weight: bold;
-  padding:10px;
-}
+  padding: 10px; }
 
 .blue-third-level {
-  background-color: #dce6f1;
+  background-color: #a9cbf1 !important;
   color: black;
   font-weight: bold;
-  padding:10px;
-}
+  padding: 10px; }
+
 .blue-fourth-level {
-  background-color: #dfe9f4;
+  background-color: #ebebeb !important;
   color: black;
   font-weight: bold;
-  padding:10px;
-}
+  padding: 10px; }
 
 .tbl-header {
   background-color: #92d050;

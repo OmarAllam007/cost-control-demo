@@ -10,16 +10,19 @@
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
+        <link rel="stylesheet" href="{{asset('/css/print.css')}}">
+
     </div>
+
 @endsection
 @section('image')
     <img src="{{asset('images/reports/wbs-level.jpg')}}">
 @endsection
 @section('body')
     @if ($project->wbs_tree->count())
-        <table class="table table-condensed table-bordered ">
+        <table class="table table-condensed table-bordered">
             <thead>
-            <tr class="row-shadow">
+            <tr>
                 <th width="25%" class="blue-first-level">WBS Level 1</th>
                 <th width="25%" class="blue-first-level">WBS Level 2</th>
                 <th width="25%" class="blue-first-level">WBS Level 3</th>
