@@ -38,7 +38,7 @@ class BudgetCostDryCostByDiscipline
                 $boq = Boq::where('cost_account', $break_down->breakdown->cost_account)->first();
                 $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] = $break_down->budget_cost;
                 $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] = $boq->dry_ur * $boq->quantity;
-            }else{
+            } else {
                 $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] += $break_down->budget_cost;
                 $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] += $boq->dry_ur * $boq->quantity;
             }
