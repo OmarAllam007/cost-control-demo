@@ -11,6 +11,7 @@ export default {
 
     methods: {
         loadBreakdown() {
+            this.loading = true;
             $.ajax({
                 url: '/api/wbs/breakdowns/' + this.wbs_id, dataType: 'json',
                 cache: true
@@ -24,6 +25,7 @@ export default {
         },
 
         destroy(breakdown_id) {
+            this.loading = true;
             $.ajax({
                 url: '/breakdown-resource/' + breakdown_id,
                 data: {_token: document.querySelector('meta[name=csrf-token]').content,_method: 'delete'},
@@ -42,7 +44,6 @@ export default {
 
     events: {
         wbs_changed(params) {
-            this.loading = true;
             this.wbs_id = params.selection;
             this.loadBreakdown(this.wbs_id)
         }

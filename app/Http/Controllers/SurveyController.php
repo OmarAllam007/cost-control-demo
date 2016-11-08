@@ -71,12 +71,15 @@ class SurveyController extends Controller
         return \Redirect::route('project.show', $survey->project_id);
     }
 
-    public function destroy(Survey $survey)
+    public function destroy(Survey $survey, Request $request)
     {
         $survey->delete();
 
-        flash('Quantity survey has been deleted', 'success');
-
+        $msg = 'Quantity survey has been deleted';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+        flash($msg, 'success');
         return \Redirect::route('project.show', $survey->project_id);
     }
 

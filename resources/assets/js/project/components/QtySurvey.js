@@ -4,23 +4,16 @@ export default {
     data() {
         return {
             quantities: [],
-            loading: false
+            loading: false,
+            wbs_id: 0
         };
     },
 
     methods: {
-
-    },
-
-    watch: {
-
-    },
-
-    events: {
-        wbs_changed(params) {
+        loadQuantities() {
             this.loading = true;
             $.ajax({
-                url: '/api/wbs/qty-survey/' + params.selection, dataType: 'json',
+                url: '/api/wbs/qty-survey/' + this.wbs_id, dataType: 'json',
                 cache: true
             }).success(response => {
                 this.loading = false;
@@ -29,6 +22,30 @@ export default {
                 this.loading = false;
                 this.quantities = [];
             });
+        },
+
+        destroy(qty_id) {
+            this.loading = true;
+            $.ajax({
+                url: '/survey/' + qty_id,
+                data: {_token: document.querySelector('meta[name=csrf-token]').content,_method: 'delete'},
+                method: 'post'
+            }).success(response => {
+                if (response.ok) {
+                    this.loadQuantities();
+                }
+            }).error(() => {});
+        }
+    },
+
+    watch: {
+
+    },
+
+    events: {
+        wbs_changed(params) {
+            this.wbs_id = params.selection;
+            this.loadQuantities();
         }
     }
 }
