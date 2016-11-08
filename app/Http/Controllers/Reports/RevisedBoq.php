@@ -55,8 +55,8 @@ class RevisedBoq
         foreach ($data as $key => $value) {
             foreach ($value['cost_account'] as $item) {
                 $data[$key]['revised_boq']+=$item['revised_boq'];
-                $total['revised_boq']+=$item['revised_boq'];
                 $data[$key]['original_boq']+=$item['original_boq'];
+                $total['revised_boq']+=$item['revised_boq'];
                 $total['original_boq']+=$item['original_boq'];
             }
         }
@@ -65,7 +65,6 @@ class RevisedBoq
         foreach ($data as $key => $value) {
             if ($data[ $key ]['original_boq']) {
                 $data[ $key ]['weight'] += (($data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']));
-
                 $total['weight'] += $data[ $key ]['weight'];
             }
         }

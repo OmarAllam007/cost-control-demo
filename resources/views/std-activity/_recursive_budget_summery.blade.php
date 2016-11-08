@@ -17,11 +17,6 @@
     </div>
 
     <article id="children-{{$division['id']}}" class="tree--child">
-            {{--<ul class="list-unstyled">--}}
-                {{--@foreach($division['divisions'] as $child)--}}
-                    {{--@include('std-activity._recursive_budget_summery', ['division' => $child ,'tree_level'=>$tree_level+1])--}}
-                {{--@endforeach--}}
-            {{--</ul>--}}
 
         @if ($division['activities'])
             <table class="table  table-condensed">
