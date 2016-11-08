@@ -36,7 +36,7 @@ class BoqImportJob extends ImportJob implements ShouldQueue
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-
+        Resources::flushEventListeners();
         $boqs = Boq::query()->pluck('item_code')->toArray();
 
         foreach ($rows as $row) {
