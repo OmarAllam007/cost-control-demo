@@ -36,7 +36,7 @@ class WbsImportJob extends Job
         $sheet = $excel->getSheet(0);
 
         $levels = collect();
-        $this->project->wbs_levels()->get()->each(function ($level) use ($levels) {
+        $this->project->wbs_levels->each(function ($level) use ($levels) {
             $levels->put($level->canonical, $level->id);
         });
 
@@ -78,8 +78,10 @@ class WbsImportJob extends Job
                 $levels->put($canonical, $parent);
             }
         }
-        dispatch(new CacheWBSTree($this->project));
-        unlink($this->file);
+
+        \Cache::forget('wbs-tree-' . $this->project->id);
+        \Cache::add('wbs-tree-' . $this->project->id, dispatch(new CacheWBSTree($this->project)), 7 * 24 * 60);
+
         return $count;
     }
 }
