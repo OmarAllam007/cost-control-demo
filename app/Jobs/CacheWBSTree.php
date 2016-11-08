@@ -27,6 +27,7 @@ class CacheWBSTree extends Job
     public function handle()
     {
         $wbs_levels = WbsLevel::where('project_id', $this->project->id)->tree()->get();
+        $tree = [];
         foreach ($wbs_levels as $wbs_level) {
             $levelTree = $this->buildTree($wbs_level);
             $tree[] = $levelTree;
