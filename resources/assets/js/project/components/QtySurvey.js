@@ -46,6 +46,10 @@ export default {
         wbs_changed(params) {
             this.wbs_id = params.selection;
             this.loadQuantities();
+        },
+
+        reload_quantities() {
+            this.loadQuantities();
         }
     }
 }

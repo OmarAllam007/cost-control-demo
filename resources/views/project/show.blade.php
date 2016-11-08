@@ -135,7 +135,9 @@
                 });
             });
 
-        }(window, document, jQuery))
+        }(window, document, jQuery));
+
+        var reload = {component: ''};
 
     </script>
     <script src="{{asset('/js/project.js')}}"></script>

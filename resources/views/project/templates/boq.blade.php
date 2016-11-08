@@ -29,12 +29,12 @@
                         <td class="col-md-6">@{{item['description']}}</td>
                         <td class="col-md-3">@{{item['cost_account']}}</td>
                         <td>
-                            <form action="/boq/@{{item.id}}" method="post">
+                            <form action="/boq/@{{item.id}}" method="post" @submit.prevent="destroy(item.id)">
                                 {{csrf_field()}} {{method_field('delete')}}
                                 <a href="/boq/@{{ item.id }}/edit" class="btn btn-sm btn-primary">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
-                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i>Delete</button>
+                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                             </form>
                         </td>
                     </tr>

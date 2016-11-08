@@ -71,11 +71,16 @@ class BoqController extends Controller
         return \Redirect::route('project.show', $boq->project_id);
     }
 
-    public function destroy(Boq $boq)
+    public function destroy(Boq $boq, Request $request)
     {
         $boq->delete();
 
-        flash('Boq has been deleted', 'success');
+        $msg = 'Boq item has been deleted';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+
+        flash($msg, 'success');
         return \Redirect::route('project.show', $boq->project_id);
     }
 
