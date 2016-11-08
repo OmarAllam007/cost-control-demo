@@ -50,6 +50,7 @@
 
             <div class="col-sm-8">
                 <section id="wbs-display" v-show="selected">
+                    <alert></alert>
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#Breakdown">Resources</a></li>
                         <li><a href="#BOQ">BOQ</a></li>

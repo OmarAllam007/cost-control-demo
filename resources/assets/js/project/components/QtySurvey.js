@@ -33,6 +33,10 @@ export default {
             }).success(response => {
                 if (response.ok) {
                     this.loadQuantities();
+                    this.$dispatch('request_alert', {
+                        type: 'info',
+                        message: response.message
+                    });
                 }
             }).error(() => {});
         }
