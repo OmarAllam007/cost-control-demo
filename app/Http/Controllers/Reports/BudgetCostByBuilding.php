@@ -19,38 +19,58 @@ class BudgetCostByBuilding
 {
     public function getBudgetCostForBuilding(Project $project)
     {
-        $breakdowns = $project->breakdowns()->get();
+        $resources = $project->breakdown_resources()->get();
         $data = [];
         $total = [
             'total' => 0,
             'weight' => 0,
         ];
-        foreach ($breakdowns as $breakdown) {
-            $wbs_level = $breakdown->wbs_level;
-            if (!isset($data[ $wbs_level->id ])) {
-                $data[ $wbs_level->id ] = [
-                    'name' => $breakdown->wbs_level->name,
-                    'code' => $breakdown->wbs_level->code,
-                    'budget_cost' => 0,
-                    'weight' => 0,
-                ];
+        foreach ($resources as $resource) {
 
-            }
-            foreach ($breakdown->resources as $resource) {
-                $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;//new work
-                $parent = $wbs_level;
-                while ($parent->parent) {
-                    $parent = $parent->parent;
-                    $boq = Boq::where('wbs_id', $parent->id)->first();
-                    if($boq){
-                        if ($boq->dry_ur > 0) {
+            $wbs_level = $resource->breakdown->wbs_level;
+            $boq = Boq::where('wbs_id', $wbs_level->id)->first();
 
+            if ($boq->dry_ur) {
+                if (!isset($data[ $wbs_level->id ])) {
+                    $data[ $wbs_level->id ] = [
+                        'name' => $resource->breakdown->wbs_level->name,
+                        'code' => $resource->breakdown->wbs_level->code,
+                        'budget_cost' => 0,
+                        'weight' => 0,
+                    ];
+
+                }
+                $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
+            } else {
+                if($wbs_level->parent){
+                    $parent = $wbs_level->parent;
+                    while ($parent->parent) {
+                        if (!isset($data[ $parent->id ])) {
+                            $data[ $parent->id ] = [
+                                'name' => $resource->breakdown->wbs_level->name,
+                                'code' => $resource->breakdown->wbs_level->code,
+                                'budget_cost' => 0,
+                                'weight' => 0,
+                            ];
                         }
+                        $parent_dry = Boq::where('wbs_id', $parent->id)->first();
+                        if (isset($parent_dry->dry_ur)) {
+                            $parent_break = $resource->breakdown->where('wbs_level_id', $parent->id)->first();
+                            if ($parent_break) {
+                                $parent_resources = $parent_break->resources;
+                                foreach ($parent_resources as $parent_resource) {
+                                    $data[ $parent->id ]['budget_cost'] += $parent_resource->budget_cost;
+                                }
+                            }
+                        }
+                        $parent = $parent->parent;
                     }
                 }
+
             }
 
         }
+
         foreach ($data as $item) {
             $total['total'] += $item['budget_cost'];
         }
@@ -82,14 +102,13 @@ class BudgetCostByBuilding
                 ['offset' => 0.0],
                 ['offset' => 0.0],
             ],
-            'pieSliceText' => "value",
+            'pieSliceText' => "precentage",
         ]);
 
     }
 
     public function getBugetCostByBuildingColumnChart($data)
     {
-//        $columnChart = new Lavacharts; // See note below for Laravel
         $costTable = \Lava::DataTable();
 
         $costTable->addStringColumn('BudgetCost')->addNumberColumn('WBS');

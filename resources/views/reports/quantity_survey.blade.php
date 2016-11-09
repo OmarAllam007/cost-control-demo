@@ -17,7 +17,7 @@
 @section('body')
     <ul class="list-unstyled tree">
         @foreach($level_array as $level)
-            <li class="list-unstyled">
+            <li>
                 <div class="blue-first-level">
                     <strong>{{$level['name']}}</strong>
                 </div>
@@ -36,30 +36,29 @@
                                             </div>
 
                                             <table class="table table-condensed">
-                                                <thead>
-                                                <tr class="blue-fourth-level">
-                                                    <th class="col-xs-2">Cost Account</th>
+                                                <thead class="blue-fourth-level">
+
+                                                    <th class="col-xs-3">Cost Account</th>
                                                     <th class="col-xs-3">Boq Description</th>
-                                                    <th class="col-xs-1">Engineering Quantity</th>
-                                                    <th class="col-xs-1">Budget Quantity</th>
+                                                    <th class="col-xs-2">Engineering Quantity</th>
+                                                    <th class="col-xs-2">Budget Quantity</th>
                                                     <th class="col-xs-2">Unit of Measure</th>
-                                                </tr>
+
                                                 </thead>
                                                 <tbody>
                                                 @foreach($activity['cost_accounts'] as $cost_account)
-
-                                                    <tr>
-                                                        <td class="col-xs-2">
+                                                    <tr style="font-size:10pt">
+                                                        <td class="col-xs-3">
                                                             {{$cost_account['cost_account']}}
                                                         </td>
                                                         <td class="col-xs-3">
                                                             {{$cost_account['boq_name']}}
                                                         </td>
-                                                        <td class="col-xs-1">
+                                                        <td class="col-xs-2">
                                                             {{$cost_account['eng_qty']}}
                                                         </td>
 
-                                                        <td class="col-xs-1">
+                                                        <td class="col-xs-2">
                                                             {{$cost_account['budget_qty']}}
                                                         </td>
                                                         <td class="col-xs-2">
@@ -68,16 +67,16 @@
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                                @endforeach
                                                 </tbody>
                                             </table>
                                         </li>
                                     </ul>
+                                @endforeach
                             </li>
                         </ul>
                     @endforeach
                 @endif
-                @endforeach
             </li>
-            @endsection
+        @endforeach
     </ul>
+@endsection

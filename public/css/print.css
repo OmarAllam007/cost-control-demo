@@ -8313,9 +8313,13 @@ table.table > tbody > tr > td > a.visible-button {
   font-weight: bolder;
   color: black;
   background-color: #e7f1fc !important; }
-
+div.pull-right > a {
+  display: none;
+}
 @media print {
   div.pull-right > a {
-    display: none; } }
+    display: none; }
+}
+
 
 /*# sourceMappingURL=print.css.map */
