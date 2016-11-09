@@ -97,4 +97,5 @@ class BreakdownResourceController extends Controller
 
         return \Redirect::to(route('project.show', $project) . '#breakdown');
     }
+
 }

@@ -10,60 +10,56 @@ namespace App\Http\Controllers\Reports;
 
 
 use App\Boq;
+
 use App\Breakdown;
-use App\BreakdownResource;
 use App\Project;
-use Khill\Lavacharts\Lavacharts;
 
 class BudgetCostByBuilding
 {
     public function getBudgetCostForBuilding(Project $project)
     {
-        $resources = $project->breakdown_resources()->get();
+        $breakdowns = $project->breakdowns()->get();
         $data = [];
         $total = [
             'total' => 0,
             'weight' => 0,
         ];
-        foreach ($resources as $resource) {
 
-            $wbs_level = $resource->breakdown->wbs_level;
-            $boq = Boq::where('wbs_id', $wbs_level->id)->first();
-
-            if ($boq->dry_ur) {
+        foreach ($breakdowns as $breakdown) {
+            //check if br has dr .......
+            $wbs_level = $breakdown->wbs_level;
+            $dry = $breakdown->getDry($wbs_level->id);
+            if ($dry) {
                 if (!isset($data[ $wbs_level->id ])) {
                     $data[ $wbs_level->id ] = [
-                        'name' => $resource->breakdown->wbs_level->name,
-                        'code' => $resource->breakdown->wbs_level->code,
+                        'name' => $wbs_level->name,
+                        'code' => $wbs_level->code,
                         'budget_cost' => 0,
                         'weight' => 0,
                     ];
-
                 }
-                $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
+                $resources = $breakdown->resources;
+                foreach ($resources as $resource) {
+                    $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
+                }
             } else {
-                if($wbs_level->parent){
-                    $parent = $wbs_level->parent;
-                    while ($parent->parent) {
-                        if (!isset($data[ $parent->id ])) {
-                            $data[ $parent->id ] = [
-                                'name' => $resource->breakdown->wbs_level->name,
-                                'code' => $resource->breakdown->wbs_level->code,
-                                'budget_cost' => 0,
-                                'weight' => 0,
-                            ];
+                if (!isset($data[ $wbs_level->id ])) {
+                    $data[ $wbs_level->id ] = [
+                        'name' => $wbs_level->name,
+                        'code' => $wbs_level->code,
+                        'budget_cost' => 0,
+                        'weight' => 0,
+                    ];
+                }
+                $parent = $wbs_level;
+                while ($parent->parent) {
+                    $parent = $parent->parent;
+                    $parent_break_down = Breakdown::where('wbs_level_id', $parent->id)->first();
+                    if($parent_break_down){
+                        $parent_resources = $parent_break_down->resources;
+                        foreach ($parent_resources as $parent_resource) {
+                            $data[ $wbs_level->id ]['budget_cost'] += $parent_resource->budget_cost;
                         }
-                        $parent_dry = Boq::where('wbs_id', $parent->id)->first();
-                        if (isset($parent_dry->dry_ur)) {
-                            $parent_break = $resource->breakdown->where('wbs_level_id', $parent->id)->first();
-                            if ($parent_break) {
-                                $parent_resources = $parent_break->resources;
-                                foreach ($parent_resources as $parent_resource) {
-                                    $data[ $parent->id ]['budget_cost'] += $parent_resource->budget_cost;
-                                }
-                            }
-                        }
-                        $parent = $parent->parent;
                     }
                 }
 
@@ -71,7 +67,8 @@ class BudgetCostByBuilding
 
         }
 
-        foreach ($data as $item) {
+
+        foreach ($data as $key => $item) {
             $total['total'] += $item['budget_cost'];
         }
         foreach ($data as $key => $value) {
