@@ -9,12 +9,6 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('productivity', 'Api\ProductivityController@index');
     Route::get('productivity/labours-count/{productivity}', 'Api\ProductivityController@labors_count');
     Route::get('std-activity/variables/{std_activity}', 'Api\StdActivityController@variables');
-
-    Route::group(['prefix' => 'wbs'], function(){
-        Route::get('breakdowns/{wbs_level}', 'Api\WbsController@breakdowns');
-        Route::get('boq/{wbs_level}', 'Api\WbsController@boq');
-        Route::get('qty-survey/{wbs_level}', 'Api\WbsController@qtySurvey');
-    });
 });
 
 Route::group(['prefix' => 'wbs-level'], function () {
@@ -94,5 +88,3 @@ Route::resource('breakdown-template', 'BreakdownTemplateController');
 Route::resource('std-activity-resource', 'StdActivityResourceController');
 Route::resource('breakdown', 'BreakdownController');
 Route::resource('breakdown-resource', 'BreakdownResourceController');
-
-Route::get('/blank', 'BlankController@index');

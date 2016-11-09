@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\CsiCategory;
 use App\Jobs\Job;
 use App\Productivity;
+use Barryvdh\Debugbar\Middleware\Debugbar;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,7 +29,6 @@ class ProductivityImportJob extends ImportJob
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
         $productivities = Productivity::query()->pluck('code');
-
         $status = ['success' => 0, 'failed' => collect()];
         CsiCategory::flushEventListeners();
         foreach ($rows as $row) {
@@ -38,7 +38,6 @@ class ProductivityImportJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
-
             if (!$productivities->has($data[0])) {
                 $unit = $this->getUnit($data[6]);
                 $item = [
@@ -52,7 +51,6 @@ class ProductivityImportJob extends ImportJob
                     'reduction_factor' => $data[9],
                     'source' => $data[10],
                 ];
-
                 if ($unit) {
                     Productivity::create($item);
                     ++$status['success'];
@@ -66,20 +64,6 @@ class ProductivityImportJob extends ImportJob
         unlink($this->file);
 
         return $status;
-    }
-
-    private function loadDivision()
-    {
-        if ($this->division) {
-            return $this->division;
-        }
-
-        $this->division = collect();
-        CsiCategory::all()->each(function ($division) {
-            $this->division->put(mb_strtolower($division->canonical), $division->id);
-        });
-
-        return $this->division;
     }
 
     protected function getDivisionId($data)
@@ -106,6 +90,20 @@ class ProductivityImportJob extends ImportJob
         }
 
         return $division_id;
+    }
+
+    private function loadDivision()
+    {
+        if ($this->division) {
+            return $this->division;
+        }
+
+        $this->division = collect();
+        CsiCategory::all()->each(function ($division) {
+            $this->division->put(mb_strtolower($division->canonical), $division->id);
+        });
+
+        return $this->division;
     }
 
     protected function getAfterFactor($factor, $daily)

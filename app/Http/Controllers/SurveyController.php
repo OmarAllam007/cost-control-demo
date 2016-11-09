@@ -46,8 +46,7 @@ class SurveyController extends Controller
 
         flash('Quantity survey has been saved', 'success');
 
-//        return \Redirect::route('project.show', $survey->project_id);
-        return \Redirect::to('/blank?reload=quantities');
+        return \Redirect::route('project.show', $survey->project_id);
     }
 
     public function show(Survey $survey)
@@ -69,18 +68,15 @@ class SurveyController extends Controller
 
         flash('Quantity survey has been saved', 'success');
 
-        return \Redirect::to('/blank?reload=quantities');
+        return \Redirect::route('project.show', $survey->project_id);
     }
 
-    public function destroy(Survey $survey, Request $request)
+    public function destroy(Survey $survey)
     {
         $survey->delete();
 
-        $msg = 'Quantity survey has been deleted';
-        if ($request->ajax()) {
-            return ['ok' => true, 'message' => $msg];
-        }
-        flash($msg, 'success');
+        flash('Quantity survey has been deleted', 'success');
+
         return \Redirect::route('project.show', $survey->project_id);
     }
 
@@ -103,12 +99,11 @@ class SurveyController extends Controller
             $key = 'qs_import_' . time();
             \Cache::add($key, $status, 180);
             flash('Could not import some items.', 'warning');
-            return redirect()->to(route('survey.fix-import', $key) . '?iframe=1');
+            return redirect()->route('survey.fix-import', $key);
         }
 
         flash($status . ' Quantity survey items have been imported', 'success');
-//        return redirect()->route('project.show', $project);
-        return \Redirect::to('/blank?reload=quantities');
+        return redirect()->route('project.show', $project);
     }
 
     function fixImport($key)
@@ -156,7 +151,7 @@ class SurveyController extends Controller
             }
 
             flash($status['success'] . ' Quantity survey items have been imported', 'success');
-            return \Redirect::to('/blank?reload=quantities');
+            return redirect()->route('project.show', $project);
         }
 
         flash('Could not import some items.', 'warning');
