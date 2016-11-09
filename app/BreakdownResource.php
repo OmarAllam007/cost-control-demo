@@ -106,12 +106,15 @@ class BreakdownResource extends Model
 
         $v = $V = $this->budget_qty;
 
-        $variables = [];
-        foreach ($this->qty_survey->variables as $variable) {
-            $variables["v{$variable->display_order}"] = $variable->value ?: 0;
-            $variables["V{$variable->display_order}"] = $variable->value ?: 0;
+        if ($this->qty_survey) {
+
+            $variables = [];
+            foreach ($this->qty_survey->variables as $variable) {
+                $variables["v{$variable->display_order}"] = $variable->value ?: 0;
+                $variables["V{$variable->display_order}"] = $variable->value ?: 0;
+            }
+            extract($variables);
         }
-        extract($variables);
 
         $result = 0;
         @eval('$result=' . $this->equation . ';');
