@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.' . (request('iframe')? 'iframe' : 'app'))
 
 @section('header')
     <h2>Edit Survey</h2>
@@ -14,9 +14,9 @@
 @section('body')
     {{ Form::model($survey, ['route' => ['survey.update', $survey]]) }}
 
-        {{ method_field('patch') }}
+    {{ method_field('patch') }}
 
-        @include('survey._form')
+    @include('survey._form')
 
     {{ Form::close() }}
 @stop

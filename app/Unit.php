@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
+    use CachesQueries;
+
     protected $table = 'units';
     protected $fillable = ['type','code'];
 

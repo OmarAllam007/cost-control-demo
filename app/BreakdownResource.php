@@ -107,7 +107,7 @@ class BreakdownResource extends Model
         $v = $V = $this->budget_qty;
 
         $variables = [];
-        foreach ($this->qty_survey->variables as $variable) {
+        foreach ($this->breakdown->qty_survey->variables as $variable) {
             $variables["v{$variable->display_order}"] = $variable->value ?: 0;
             $variables["V{$variable->display_order}"] = $variable->value ?: 0;
         }
@@ -146,7 +146,6 @@ class BreakdownResource extends Model
             return $this->budget_unit * $this->project_resource->rate;
         }
 
-
         return 0;
     }
 
@@ -160,7 +159,8 @@ class BreakdownResource extends Model
 
     function getEngQtyAttribute()
     {
-        $costAccount = Survey::where('cost_account', $this->breakdown->cost_account)->first();
+        $costAccount = $this->breakdown->qty_survey;
+
         $engQuantity = 0;
         if ($costAccount) {
             $engQuantity = $costAccount->eng_qty;
@@ -170,7 +170,7 @@ class BreakdownResource extends Model
 
     function getBudgetQtyAttribute()
     {
-        $costAccount = Survey::where('cost_account', $this->breakdown->cost_account)->first();
+        $costAccount = $this->breakdown->qty_survey;
         $budgetQuantity = 0;
         if ($costAccount) {
             $budgetQuantity = $costAccount->budget_qty;
@@ -184,5 +184,9 @@ class BreakdownResource extends Model
         return $filter->filter();
     }
 
-
+    function scopeForWbs(Builder $query, $wbs_id) {
+        return $query->with(['breakdown', 'breakdown.template', 'breakdown.std_activity'])->whereHas('breakdown', function(Builder $q) use ($wbs_id){
+            return $q->where('wbs_level_id', $wbs_id);
+        });
+    }
 }
