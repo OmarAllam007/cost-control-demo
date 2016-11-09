@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.' . (request('iframe')? 'iframe' : 'app'))
 
 @section('header')
     <h2>Fix import</h2>

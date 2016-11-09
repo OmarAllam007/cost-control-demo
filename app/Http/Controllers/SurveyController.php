@@ -46,7 +46,8 @@ class SurveyController extends Controller
 
         flash('Quantity survey has been saved', 'success');
 
-        return \Redirect::route('project.show', $survey->project_id);
+//        return \Redirect::route('project.show', $survey->project_id);
+        return \Redirect::to('/blank?reload=quantities');
     }
 
     public function show(Survey $survey)
@@ -68,15 +69,18 @@ class SurveyController extends Controller
 
         flash('Quantity survey has been saved', 'success');
 
-        return \Redirect::route('project.show', $survey->project_id);
+        return \Redirect::to('/blank?reload=quantities');
     }
 
-    public function destroy(Survey $survey)
+    public function destroy(Survey $survey, Request $request)
     {
         $survey->delete();
 
-        flash('Quantity survey has been deleted', 'success');
-
+        $msg = 'Quantity survey has been deleted';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+        flash($msg, 'success');
         return \Redirect::route('project.show', $survey->project_id);
     }
 
@@ -99,11 +103,12 @@ class SurveyController extends Controller
             $key = 'qs_import_' . time();
             \Cache::add($key, $status, 180);
             flash('Could not import some items.', 'warning');
-            return redirect()->route('survey.fix-import', $key);
+            return redirect()->to(route('survey.fix-import', $key) . '?iframe=1');
         }
 
         flash($status . ' Quantity survey items have been imported', 'success');
-        return redirect()->route('project.show', $project);
+//        return redirect()->route('project.show', $project);
+        return \Redirect::to('/blank?reload=quantities');
     }
 
     function fixImport($key)
@@ -151,7 +156,7 @@ class SurveyController extends Controller
             }
 
             flash($status['success'] . ' Quantity survey items have been imported', 'success');
-            return redirect()->route('project.show', $project);
+            return \Redirect::to('/blank?reload=quantities');
         }
 
         flash('Could not import some items.', 'warning');

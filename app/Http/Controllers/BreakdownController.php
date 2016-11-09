@@ -45,7 +45,8 @@ class BreakdownController extends Controller
         }
         $breakdown->syncVariables($request->get('variables'));
 
-        return \Redirect::to(route('project.show', $breakdown->project_id) . '#breakdown');
+//        return \Redirect::to(route('project.show', $breakdown->project_id) . '#breakdown');
+        return \Redirect::to('/blank?reload=breakdown');
     }
 
     public function duplicate(Breakdown $breakdown)
@@ -61,7 +62,8 @@ class BreakdownController extends Controller
 
         flash('Breakdown has been duplicated', 'success');
 
-        return \Redirect::to(route('breakdown.duplicate', $breakdown) . '?close=1');
+//        return \Redirect::to(route('breakdown.duplicate', $breakdown) . '?close=1');
+        return \Redirect::to('/blank?reload=breakdown');
     }
 
     public function edit(Breakdown $breakdown)

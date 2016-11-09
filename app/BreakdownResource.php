@@ -109,7 +109,7 @@ class BreakdownResource extends Model
         if ($this->qty_survey) {
 
             $variables = [];
-            foreach ($this->qty_survey->variables as $variable) {
+            foreach ($this->breakdown->qty_survey->variables as $variable) {
                 $variables["v{$variable->display_order}"] = $variable->value ?: 0;
                 $variables["V{$variable->display_order}"] = $variable->value ?: 0;
             }

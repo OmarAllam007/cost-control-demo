@@ -49,8 +49,10 @@ class BoqController extends Controller
         $boq = Boq::create($request->all());
 
         flash('Boq has been saved', 'success');
-        return \Redirect::route('project.show', $boq->project_id);
+//        return \Redirect::route('project.show', $boq->project_id);
+        return \Redirect::to('/blank?reload=boq');
     }
+
 
     public function show(Boq $boq)
     {
@@ -68,14 +70,20 @@ class BoqController extends Controller
         $boq->update($request->all());
 
         flash('Boq has been saved', 'success');
-        return \Redirect::route('project.show', $boq->project_id);
+//        return \Redirect::route('project.show', $boq->project_id);
+        return \Redirect::to('/blank?reload=boq');
     }
 
-    public function destroy(Boq $boq)
+    public function destroy(Boq $boq, Request $request)
     {
         $boq->delete();
 
-        flash('Boq has been deleted', 'success');
+        $msg = 'Boq item has been deleted';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+
+        flash($msg, 'success');
         return \Redirect::route('project.show', $boq->project_id);
     }
 
@@ -107,11 +115,12 @@ class BoqController extends Controller
             $key = 'boq_' . time();
             \Cache::add($key, $status, 180);
             flash('Could not import all items', 'warning');
-            return \Redirect::route('boq.fix-import', $key);
+            return \Redirect::to(route('boq.fix-import', $key) . '?iframe=1');
         }
 
         flash($status['success'] . ' BOQ items have been imported', 'success');
-        return redirect()->route('project.show', $project);
+//        return redirect()->route('project.show', $project);
+        return \Redirect::to('/blank?reload=boq');
     }
 
     function fixImport($key)
@@ -153,11 +162,12 @@ class BoqController extends Controller
             }
 
             flash($status['success'] . ' BOQ items have been imported', 'success');
-            return \Redirect::to(route('project.show', $status['project_id']) . '#boq');
+//            return \Redirect::to(route('project.show', $status['project_id']) . '#boq');
+            return \Redirect::to('/blank?reload=boq');
         }
 
         flash('Could not import all items');
-        return \Redirect::route('boq.fix-import', $key)->withErrors($errors)->withInput($request->all());
+        return \Redirect::to(route('boq.fix-import', $key) . '?iframe=1')->withErrors($errors)->withInput($request->all());
     }
 
     function exportBoq(Project $project)

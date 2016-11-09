@@ -2,13 +2,14 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Model;
 
 class ResourceType extends Model
 {
-    use Tree, HasOptions;
+    use Tree, HasOptions, CachesQueries;
 
     protected $fillable = ['name','parent_id','code'];
 

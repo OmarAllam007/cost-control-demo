@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Overridable;
 use App\Behaviors\Tree;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Productivity extends Model
 {
-    use SoftDeletes, Tree, HasOptions, Overridable;
+    use SoftDeletes, Tree, HasOptions, Overridable, CachesQueries;
 
     protected $fillable = [
         'csi_category_id',
