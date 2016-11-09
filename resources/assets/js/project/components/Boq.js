@@ -56,7 +56,7 @@ export default {
             this.loadBoq();
         },
 
-        load_boq() {
+        reload_boq() {
             this.loadBoq();
         }
     }

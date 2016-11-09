@@ -21,7 +21,7 @@
 @if (\Request::has('reload'))
     <script>
         if (window.parent != window) {
-            window.parent.app.reload('quantities', {
+            window.parent.app.reload('{{request('reload')}}', {
                 message: '{{session('flash-message')}}',
                 type: '{{session('flash-type')}}'
             });
