@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use Illuminate\Database\Eloquent\Model;
 
 class Survey extends Model
 {
+    use CachesQueries;
+
     protected $table = 'qty_surveys';
 
     protected $fillable = ['unit_id','budget_qty','eng_qty','cost_account','category_id','description','wbs_level_id','project_id','code'];
