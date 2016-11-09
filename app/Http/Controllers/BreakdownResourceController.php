@@ -55,31 +55,20 @@ class BreakdownResourceController extends Controller
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(BreakdownResource $breakdown_resource)
     {
         return view('breakdown-resource/edit', compact('breakdown_resource'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param BreakdownResource $breakdown_resource
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, BreakdownResource $breakdown_resource)
     {
         $breakdown_resource->breakdown->update($request->only(['std_activity_id', 'cost_account', 'wbs_level_id']));
         $breakdown_resource->update($request->only('labor_count', 'productivity_id', 'resource_id', 'equation'));
 
         flash('Resource has been updated', 'success');
-        return \Redirect::to(route('breakdown-resource.edit', $breakdown_resource) . '?close=1');
+//        return \Redirect::to(route('breakdown-resource.edit', $breakdown_resource) . '?close=1');
+        return \Redirect::to('/blank?reload=breakdown');
     }
 
     public function destroy(BreakdownResource $breakdown_resource, Request $request)

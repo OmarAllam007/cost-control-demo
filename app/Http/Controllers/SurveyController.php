@@ -103,7 +103,7 @@ class SurveyController extends Controller
             $key = 'qs_import_' . time();
             \Cache::add($key, $status, 180);
             flash('Could not import some items.', 'warning');
-            return redirect()->route('survey.fix-import', $key);
+            return redirect()->to(route('survey.fix-import', $key) . '?iframe=1');
         }
 
         flash($status . ' Quantity survey items have been imported', 'success');

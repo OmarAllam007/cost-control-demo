@@ -115,7 +115,7 @@ class BoqController extends Controller
             $key = 'boq_' . time();
             \Cache::add($key, $status, 180);
             flash('Could not import all items', 'warning');
-            return \Redirect::route('boq.fix-import', $key);
+            return \Redirect::to(route('boq.fix-import', $key) . '?iframe=1');
         }
 
         flash($status['success'] . ' BOQ items have been imported', 'success');
@@ -167,7 +167,7 @@ class BoqController extends Controller
         }
 
         flash('Could not import all items');
-        return \Redirect::route('boq.fix-import', $key)->withErrors($errors)->withInput($request->all());
+        return \Redirect::to(route('boq.fix-import', $key) . '?iframe=1')->withErrors($errors)->withInput($request->all());
     }
 
     function exportBoq(Project $project)

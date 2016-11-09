@@ -4,6 +4,22 @@
             <i class="fa fa-spinner fa-spin fa-3x"></i>
         </div>
 
+        <div class="form-group tab-actions pull-right">
+            <a style="margin-left: 2px;" href="{{route('break_down.export', ['project' => $project->id])}}"
+               class="btn btn-info btn-sm in-iframe">
+                <i class="fa fa-cloud-download"></i> Export
+            </a>
+            <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm in-iframe">
+                <i class="fa fa-plus"></i> Add Breakdown
+            </a>
+
+            @can('wipe')
+                <a href="#WipeBreakdownModal" data-toggle="modal" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
+                    Delete all</a>
+            @endcan
+        </div>
+        <div class="clearfix"></div>
+
         <section class="filters" id="breakdown-filters">
 
         </section>
