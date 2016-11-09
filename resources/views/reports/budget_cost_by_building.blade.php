@@ -30,7 +30,7 @@
         @foreach($data as $row)
             <tr class="tbl-content">
                 <td class="col-xs-3">{{$row['code']}}</td>
-                <td class="col-xs-3">{{$row['name']}}</td>
+                <td class="col-xs-3">{{$row['name']}} {{$row['dry']}}</td>
                 <td class="col-xs-3">{{number_format($row['budget_cost'],2)}}</td>
                 <td class="col-xs-3">%{{number_format($row['weight'],2)}}</td>
             </tr>

@@ -30,37 +30,40 @@ class BudgetCostByBuilding
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);
             if ($dry) {
-                if (!isset($data[ $wbs_level->id ])) {
-                    $data[ $wbs_level->id ] = [
-                        'name' => $wbs_level->name,
-                        'code' => $wbs_level->code,
-                        'budget_cost' => 0,
-                        'weight' => 0,
-                    ];
-                }
                 $resources = $breakdown->resources;
                 foreach ($resources as $resource) {
+                    if (!isset($data[ $wbs_level->id ])) {
+                        $data[ $wbs_level->id ] = [
+                            'name' => $wbs_level->name,
+                            'code' => $wbs_level->code,
+                            'dry'=>'',
+                            'budget_cost' => 0,
+                            'weight' => 0,
+                        ];
+                    }
                     $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
                 }
             } else {
-                if (!isset($data[ $wbs_level->id ])) {
-                    $data[ $wbs_level->id ] = [
-                        'name' => $wbs_level->name,
-                        'code' => $wbs_level->code,
-                        'budget_cost' => 0,
-                        'weight' => 0,
-                    ];
-                }
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
-                    $parent_break_down = Breakdown::where('wbs_level_id', $parent->id)->first();
-                    if($parent_break_down){
-                        $parent_resources = $parent_break_down->resources;
-                        foreach ($parent_resources as $parent_resource) {
-                            $data[ $wbs_level->id ]['budget_cost'] += $parent_resource->budget_cost;
+                    if (!isset($data[ $wbs_level->id ])) {
+                        $data[ $wbs_level->id ] = [
+                            'name' => $wbs_level->name,
+                            'code' => $wbs_level->code,
+                            'dry'=>' (Dry = 0)',
+                            'budget_cost' => 0,
+                            'weight' => 0,
+                        ];
+                        $parent_break_down = Breakdown::where('wbs_level_id', $parent->id)->first();
+                        if($parent_break_down){
+                            $parent_resources = $parent_break_down->resources;
+                            foreach ($parent_resources as $parent_resource) {
+                                $data[ $wbs_level->id ]['budget_cost'] += $parent_resource->budget_cost;
+                            }
                         }
                     }
+
                 }
 
             }
