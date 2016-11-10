@@ -14,23 +14,24 @@
 @stop
 
 @section('body')
-    <section id="wbsArea">
-        @if (trim($project->description))
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    {!! nl2br(e($project->description)) !!}
-                </div>
-            </div>
-        @endif
 
+    <nav class="project-nav">
+        <a href="#wbsArea" class="btn btn-outline btn-primary">WBS &amp; Activity</a>
+        <a href="#Resources" class="btn btn-outline btn-primary">Resources</a>
+        <a href="#Productivity" class="btn btn-outline btn-primary">Productivity</a>
+        <a href="#Reports" class="btn btn-outline btn-success">Reports</a>
+    </nav>
+
+    <section id="wbsArea">
         <div class="row">
             <div class="col-sm-4">
                 <aside class="panel panel-default wbs-panel">
                     <div class="panel-heading clearfix">
                         <h3 class="panel-title  pull-left">WBS</h3>
                         <div class="btn-toolbar pull-right">
-                            <a href="/wbs-level/create?project={{$project->id}}&wbs=@{{selected}}" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
-                            <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-default" v-show="selected"><i class="fa fa-edit"></i></a>
+                            <a href="/wbs-level/create?project={{$project->id}}&wbs=@{{selected}}" data-title="Add WBS Level" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
+                            <a href="{{route('wbs-level.import', $project)}}" data-title="Import WBS" class="btn btn-sm btn-success in-iframe" title="import"><i class="fa fa-cloud-upload"></i></a>
+                            <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-primary" title="Edit" v-show="selected"><i class="fa fa-edit"></i></a>
                             @can('wipe')
                                 <a href="" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
                             @endcan
@@ -38,11 +39,7 @@
                     </div>
 
                     <div class="panel-body wbs-tree-container">
-                        <ul class="wbs-tree" id="wbs-tree">
-                            @foreach($wbsTree as $item)
-                                @include('project.wbs-item', compact('item'))
-                            @endforeach
-                        </ul>
+                        @include('project.templates.wbs', compact('wbsTree'))
                     </div>
                 </aside>
             </div>
@@ -81,7 +78,7 @@
     </section>
 
 
-    <div class="modal fade" tabindex="-1" id="EditResourceModal">
+    <div class="modal fade" tabindex="-1" id="IframeModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -118,9 +115,9 @@
                     $('.nav-tabs a').first().tab('show');
                 }
 
-                var editResourceModal = $('#EditResourceModal');
-                var modalContent = editResourceModal.find('.modal-body');
-                $('#wbs-display').on('click', '.in-iframe', function (e) {
+                var iframeModal = $('#IframeModal');
+                var modalContent = iframeModal.find('.modal-body');
+                $('#wbsArea').on('click', '.in-iframe', function (e) {
                     e.preventDefault();
                     var href = this.href;
                     if (href.indexOf('?') < 0) {
@@ -129,16 +126,8 @@
                         href += '&iframe=1';
                     }
                     modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
-                    editResourceModal.modal();
-                });
-
-                var wbsTree = $('#wbs-tree').on('click', '.wbs-icon', function (e) {
-                    e.preventDefault();
-                    $(this).find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
-                }).on('click', '.wbs-link', function (e) {
-                    e.preventDefault();
-                    wbsTree.find('.wbs-item').removeClass('active');
-                    $(this).parent('.wbs-item').addClass('active');
+                    iframeModal.find('.modal-title').text($(this).data('title'));
+                    iframeModal.modal();
                 });
             });
 

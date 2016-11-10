@@ -14,8 +14,9 @@ var elixir = require('laravel-elixir');
 elixir(function (mix) {
     mix.sass('app.scss').webpack('project/index.js', 'public/js/project.js');
 
-    /*mix.sass('print.scss');
+    mix.sass('print.scss');
 
+    /*
     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
     mix.scripts('tree-select.js');
     mix.scripts('autocomplete.js');
