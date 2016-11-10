@@ -24,9 +24,9 @@ class BudgetCostByBuilding
             'total' => 0,
             'weight' => 0,
         ];
+        $parent_id = 0;
 
         foreach ($breakdowns as $breakdown) {
-            //check if br has dr .......
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);
             if ($dry) {
@@ -36,10 +36,11 @@ class BudgetCostByBuilding
                         $data[ $wbs_level->id ] = [
                             'name' => $wbs_level->name,
                             'code' => $wbs_level->code,
-                            'dry'=>'',
+                            'dry' => '',
                             'budget_cost' => 0,
                             'weight' => 0,
                         ];
+                        $parent_id = $wbs_level->id;
                     }
                     $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
                 }
@@ -51,30 +52,29 @@ class BudgetCostByBuilding
                         $data[ $wbs_level->id ] = [
                             'name' => $wbs_level->name,
                             'code' => $wbs_level->code,
-                            'dry'=>' (Dry = 0)',
+                            'dry' => ' (Dry = 0)',
                             'budget_cost' => 0,
                             'weight' => 0,
                         ];
                         $parent_break_down = Breakdown::where('wbs_level_id', $parent->id)->first();
-                        if($parent_break_down){
+                        if ($parent_break_down) {
                             $parent_resources = $parent_break_down->resources;
                             foreach ($parent_resources as $parent_resource) {
                                 $data[ $wbs_level->id ]['budget_cost'] += $parent_resource->budget_cost;
                             }
                         }
                     }
-
                 }
-
             }
-
+        }
+        if(array_search($parent_id,$data)){//not to show parents wbs
+            unset($data[ $parent_id ]);
         }
 
-
-        foreach ($data as $key => $item) {
+        foreach ($data as $key => $item) {//fill total array
             $total['total'] += $item['budget_cost'];
         }
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value) {//get weight
             if ($total['total'] != 0) {
                 $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
                 $total['weight'] += $data[ $key ]['weight'];
