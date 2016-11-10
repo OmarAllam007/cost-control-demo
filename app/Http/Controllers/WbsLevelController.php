@@ -45,7 +45,8 @@ class WbsLevelController extends Controller
 
         flash('WBS level has been saved', 'success');
 
-        return \Redirect::route('project.show', $wbs_level->project_id);
+//        return \Redirect::route('project.show', $wbs_level->project_id);
+        return \Redirect::to('/blank?reload=wbs');
     }
 
     public function show(WbsLevel $wbs_level)
@@ -66,7 +67,7 @@ class WbsLevelController extends Controller
 
         flash('WBS level has been saved', 'success');
 
-        return \Redirect::route('project.show', $wbs_level->project_id);
+        return \Redirect::to('/blank?reload=wbs');
     }
 
     public function destroy(WbsLevel $wbs_level)

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Boq;
 use App\BreakdownResource;
 use App\Formatters\BreakdownResourceFormatter;
+use App\Jobs\CacheWBSTree;
+use App\Project;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Http\Request;
@@ -14,6 +16,14 @@ use App\Http\Controllers\Controller;
 
 class WbsController extends Controller
 {
+    function index(Project $project)
+    {
+        $wbsTree = \Cache::remember('wbs-tree-' . $project->id, 7 * 24 * 60, function () use ($project) {
+            return dispatch(new CacheWBSTree($project));
+        });
+        return $wbsTree;
+    }
+
     function breakdowns(WbsLevel $wbs_level)
     {
         $resources = BreakdownResource::forWbs($wbs_level->id)->get()

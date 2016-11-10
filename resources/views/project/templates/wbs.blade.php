@@ -24,4 +24,4 @@
     </li>
 </template>
 
-<wbs :wbs_levels="{{json_encode($wbsTree)}}"></wbs>
+<wbs :wbs_levels="{{json_encode($wbsTree)}}" project="{{$project->id}}"></wbs>
