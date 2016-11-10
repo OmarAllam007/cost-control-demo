@@ -184,5 +184,9 @@ class BreakdownResource extends Model
         return $filter->filter();
     }
 
-
+    function scopeForWbs(Builder $query, $wbs_id) {
+        return $query->with(['breakdown', 'breakdown.template', 'breakdown.std_activity'])->whereHas('breakdown', function(Builder $q) use ($wbs_id){
+            return $q->where('wbs_level_id', $wbs_id);
+        });
+    }
 }
