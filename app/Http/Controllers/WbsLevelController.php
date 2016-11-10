@@ -176,7 +176,13 @@ class WbsLevelController extends Controller
         $project->boqs()->delete();
         $project->wbs_levels()->delete();
 
-        flash('WBS has been deleted', 'info');
+        \Cache::forget('wbs-tree-' . $project->id);
+
+        $msg = 'WBS has been deleted';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+        flash($msg, 'info');
 
         return \Redirect::route('project.show', $project);
     }
