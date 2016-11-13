@@ -3,14 +3,14 @@ import WbsItem from './WbsItem';
 export default {
     template: document.getElementById('WbsTemplate').innerHTML,
 
-    props: ['wbs_levels'],
+    props: ['wbs_levels', 'project'],
 
     data () {
         if (!this.wbs_levels) {
             this.wbs_levels = [];
         }
 
-        return {};
+        return { loading: false };
     },
 
     ready() {
@@ -26,13 +26,21 @@ export default {
 
     methods: {
         loadWbs() {
+            this.loading = true;
 
+            $.ajax({
+                url: '/api/wbs/' + this.project,
+                dataType: 'json', cache: false
+            }).success(response => {
+                this.loading = false;
+                this.wbs_levels = response;
+            }).error(() => {
+                this.loading = false;
+            })
         }
     },
 
-    components: {
-        WbsItem
-    },
+    components: { WbsItem },
 
     events: {
         reload_wbs() {

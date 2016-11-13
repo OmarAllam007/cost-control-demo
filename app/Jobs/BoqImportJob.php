@@ -20,12 +20,17 @@ class BoqImportJob extends ImportJob implements ShouldQueue
     protected $file;
     protected $division;
     protected $project_id;
+    /**
+     * @var
+     */
+    private $project;
 
 
     public function __construct($project, $file)
     {
         $this->file = $file;
         $this->project_id = $project->id;
+        $this->project = $project;
     }
 
     public function handle()
@@ -64,7 +69,7 @@ class BoqImportJob extends ImportJob implements ShouldQueue
             }
         }
         \Cache::forget('boq-' . $this->project_id);
-        \Cache::add('boq-' . $this->project_id, dispatch(new CacheBoqTree($this->project_id)), 7 * 24 * 60);
+        \Cache::add('boq-' . $this->project_id, dispatch(new CacheBoqTree($this->project)), 7 * 24 * 60);
         unlink($this->file);
     }
 

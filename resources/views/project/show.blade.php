@@ -31,9 +31,9 @@
                     <div class="panel-heading clearfix">
                         <h3 class="panel-title  pull-left">WBS</h3>
                         <div class="btn-toolbar pull-right">
-                            <a href="/wbs-level/create?project={{$project->id}}&wbs=@{{selected}}" data-title="Add WBS Level" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a>
+                            <a href="/wbs-level/create?project={{$project->id}}&wbs=@{{selected}}" data-title="Add WBS Level" class="btn btn-sm btn-default in-iframe" title="Add Level"><i class="fa fa-plus"></i></a>
                             <a href="{{route('wbs-level.import', $project)}}" data-title="Import WBS" class="btn btn-sm btn-success in-iframe" title="import"><i class="fa fa-cloud-upload"></i></a>
-                            <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-primary" title="Edit" v-show="selected"><i class="fa fa-edit"></i></a>
+                            <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-primary in-iframe" title="Edit WBS Level" v-show="selected"><i class="fa fa-edit"></i></a>
                             @can('wipe')
                                 <a href="" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
                             @endcan
@@ -128,7 +128,7 @@
                         href += '&iframe=1';
                     }
                     modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
-                    iframeModal.find('.modal-title').text($(this).data('title'));
+                    iframeModal.find('.modal-title').text($(this).attr('title')? $(this).attr('title') : $(this).data('title'));
                     iframeModal.modal();
                 });
                 $('.project-nav').on('click', '.in-iframe', function (e) {
