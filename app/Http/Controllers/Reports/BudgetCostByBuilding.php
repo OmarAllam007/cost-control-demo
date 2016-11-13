@@ -24,14 +24,13 @@ class BudgetCostByBuilding
             'total' => 0,
             'weight' => 0,
         ];
-        $parent_id = 0;
+        $parents = [];
 
         foreach ($breakdowns as $breakdown) {
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);
+            $resources = $breakdown->resources;
             if ($dry) {
-                $resources = $breakdown->resources;
-                foreach ($resources as $resource) {
                     if (!isset($data[ $wbs_level->id ])) {
                         $data[ $wbs_level->id ] = [
                             'name' => $wbs_level->name,
@@ -40,13 +39,18 @@ class BudgetCostByBuilding
                             'budget_cost' => 0,
                             'weight' => 0,
                         ];
-                        $parent_id = $wbs_level->id;
+
                     }
+                foreach ($resources as $resource) {
                     $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
                 }
+
+
+
             } else {
                 $parent = $wbs_level;
-                while ($parent->parent) {
+                while ($parent->parent)
+                {
                     $parent = $parent->parent;
                     if (!isset($data[ $wbs_level->id ])) {
                         $data[ $wbs_level->id ] = [
@@ -63,12 +67,14 @@ class BudgetCostByBuilding
                                 $data[ $wbs_level->id ]['budget_cost'] += $parent_resource->budget_cost;
                             }
                         }
+                        $parents [$parent->id] = $parent->id;
                     }
+
                 }
             }
         }
-        if(array_search($parent_id,$data)){//not to show parents wbs
-            unset($data[ $parent_id ]);
+        foreach ($parents as $key=>$value){
+            unset($data[$key]);
         }
 
         foreach ($data as $key => $item) {//fill total array

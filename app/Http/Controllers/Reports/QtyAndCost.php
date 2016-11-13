@@ -38,7 +38,6 @@ class QtyAndCost
                     'budget_cost_eq' => 0,
                 ];
 
-
                 $data[ $resource->breakdown->std_activity->discipline ]['budget_cost'] = $resource->budget_cost;
                 $data[ $resource->breakdown->std_activity->discipline ]['budget_qty'] = $resource->budget_qty;
                 $data[ $resource->breakdown->std_activity->discipline ]['dry_cost'] = $boq->dry_ur * $boq->quantity;
