@@ -19,7 +19,9 @@
         <a href="#wbsArea" class="btn btn-outline btn-primary">WBS &amp; Activity</a>
         <a href="#Resources" class="btn btn-outline btn-primary">Resources</a>
         <a href="#Productivity" class="btn btn-outline btn-primary">Productivity</a>
-        <a href="#Reports" class="btn btn-outline btn-success">Reports</a>
+
+        <a href="{{route('project.reports',$project)}}" data-title="Reports" title="Reports" class="btn btn-outline btn-success in-iframe">Reports</a>
+        <a href="{{route('financial.index',$project)}}" class="btn btn-outline btn-primary">Financial Period</a>
     </nav>
 
     <section id="wbsArea">
@@ -118,6 +120,18 @@
                 var iframeModal = $('#IframeModal');
                 var modalContent = iframeModal.find('.modal-body');
                 $('#wbsArea').on('click', '.in-iframe', function (e) {
+                    e.preventDefault();
+                    var href = this.href;
+                    if (href.indexOf('?') < 0) {
+                        href += '?iframe=1';
+                    } else {
+                        href += '&iframe=1';
+                    }
+                    modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
+                    iframeModal.find('.modal-title').text($(this).data('title'));
+                    iframeModal.modal();
+                });
+                $('.project-nav').on('click', '.in-iframe', function (e) {
                     e.preventDefault();
                     var href = this.href;
                     if (href.indexOf('?') < 0) {

@@ -31,6 +31,11 @@ use App\Http\Requests;
 
 class ReportController extends Controller
 {
+
+    public function getReports(Project $project)
+    {
+        return view('project.tabs._report',compact('project'));
+    }
     public function wbsReport(Project $project)
     {
         return view('wbs-level.report', compact('project'));
@@ -220,4 +225,4 @@ class ReportController extends Controller
 
 }
 
-                                   
+                              

@@ -31,7 +31,6 @@ class BudgetCostByBuilding
             $dry = $breakdown->getDry($wbs_level->id);
             if ($dry) {
                 $resources = $breakdown->resources;
-                foreach ($resources as $resource) {
                     if (!isset($data[ $wbs_level->id ])) {
                         $data[ $wbs_level->id ] = [
                             'name' => $wbs_level->name,
@@ -42,11 +41,13 @@ class BudgetCostByBuilding
                         ];
                         $parent_id = $wbs_level->id;
                     }
+                foreach ($resources as $resource) {
                     $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
                 }
             } else {
                 $parent = $wbs_level;
-                while ($parent->parent) {
+                while ($parent->parent)
+                {
                     $parent = $parent->parent;
                     if (!isset($data[ $wbs_level->id ])) {
                         $data[ $wbs_level->id ] = [
