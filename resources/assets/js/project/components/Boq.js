@@ -47,6 +47,36 @@ export default {
                     this.loadBoq();
                 }
             }).error(() => {});
+        },
+
+        wipeAll() {
+            this.wiping = true;
+            $.ajax({
+                url: '/boq/wipe/' + this.project,
+                data: {
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    _method: 'delete', wipe: true
+                },
+                method: 'post', dataType: 'json'
+            }).success((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: response.ok ? 'info' : 'error'
+                });
+                if (response.ok) {
+                    this.boq = [];
+                    this.selected = 0;
+                }
+                $('#WipeBoqModal').modal('hide');
+            }).error((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: 'error'
+                });
+                $('#WipeBoqModal').modal('hide');
+            });
         }
     },
 

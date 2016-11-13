@@ -5,7 +5,8 @@ export default {
         return {
             quantities: [],
             loading: false,
-            wbs_id: 0
+            wbs_id: 0,
+            wiping: false
         };
     },
 
@@ -39,6 +40,36 @@ export default {
                     });
                 }
             }).error(() => {});
+        },
+
+        wipeAll() {
+            this.wiping = true;
+            $.ajax({
+                url: '/survey/wipe/' + this.project,
+                data: {
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    _method: 'delete', wipe: true
+                },
+                method: 'post', dataType: 'json'
+            }).success((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: response.ok ? 'info' : 'error'
+                });
+                if (response.ok) {
+                    this.quantities = [];
+                    this.selected = 0;
+                }
+                $('#WipeQSModal').modal('hide');
+            }).error((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: 'error'
+                });
+                $('#WipeQSModal').modal('hide');
+            });
         }
     },
 

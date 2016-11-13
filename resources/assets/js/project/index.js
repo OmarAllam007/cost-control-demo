@@ -9,7 +9,7 @@ window.app = new Vue({
     el: '#wbsArea',
 
     data: {
-        selected: 0
+        selected: 0, wiping: false
     },
 
     methods: {

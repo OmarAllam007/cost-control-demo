@@ -17,4 +17,18 @@ class WipeRequest extends Request
             'wipe' => 'present|required'
         ];
     }
+
+    public function forbiddenResponse()
+    {
+        $msg = 'You are not authorized to wipe';
+
+        if ($this->ajax()) {
+            return ['ok' => false, 'message' => $msg];
+        }
+
+        flash($msg);
+        return \Redirect::back();
+    }
+
+
 }

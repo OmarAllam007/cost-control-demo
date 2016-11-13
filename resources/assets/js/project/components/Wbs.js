@@ -10,7 +10,7 @@ export default {
             this.wbs_levels = [];
         }
 
-        return { loading: false };
+        return { loading: false, wiping: false };
     },
 
     ready() {
@@ -37,6 +37,36 @@ export default {
             }).error(() => {
                 this.loading = false;
             })
+        },
+
+        wipeAll () {
+            this.wiping = true;
+            $.ajax({
+                url: '/wbs-level/wipe/' + this.project,
+                data: {
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    _method: 'delete', wipe: true
+                },
+                method: 'post', dataType: 'json'
+            }).success((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: response.ok ? 'info' : 'error'
+                });
+                if (response.ok) {
+                    this.wbs_levels = [];
+                    this.selected = 0;
+                }
+                $('#WipeWBSModal').modal('hide');
+            }).error((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: 'error'
+                });
+                $('#WipeWBSModal').modal('hide');
+            });
         }
     },
 
