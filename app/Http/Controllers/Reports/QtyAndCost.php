@@ -23,13 +23,12 @@ class QtyAndCost
             'budget_cost_eq' => 0,
         ];
         foreach ($break_down_resources as $resource) {
-
-            if (!isset($data[ $resource->breakdown->std_activity->discipline ])) {
-                $boq = Boq::where('cost_account', $resource->breakdown->cost_account)->first();
-
-                $data[ $resource->breakdown->std_activity->discipline ] = [
+            $discipline = $resource->breakdown->std_activity->discipline;
+            $boq = Boq::where('cost_account', $resource->breakdown->cost_account)->first();
+            if (!isset($data[ $discipline ])) {
+                $data[ $discipline ] = [
                     'code' => $resource->breakdown->std_activity->code,
-                    'name' => $resource->breakdown->std_activity->discipline,
+                    'name' => $discipline,
                     'dry_qty' => $boq->quantity,
                     'budget_qty' => 0,
                     'dry_cost' => 0,
@@ -38,15 +37,13 @@ class QtyAndCost
                     'budget_cost_eq' => 0,
                 ];
 
-                $data[ $resource->breakdown->std_activity->discipline ]['budget_cost'] = $resource->budget_cost;
-                $data[ $resource->breakdown->std_activity->discipline ]['budget_qty'] = $resource->budget_qty;
-                $data[ $resource->breakdown->std_activity->discipline ]['dry_cost'] = $boq->dry_ur * $boq->quantity;
-
-
+                $data[ $discipline ]['budget_cost'] = $resource->budget_cost;
+                $data[ $discipline ]['budget_qty'] = $resource->budget_qty;
+                $data[ $discipline ]['dry_cost'] = $boq->dry_ur * $boq->quantity;
             } else {
-                $data[ $resource->breakdown->std_activity->discipline ]['dry_cost'] += $boq->dry_ur * $boq->quantity;
-                $data[ $resource->breakdown->std_activity->discipline ]['budget_cost'] += $resource->budget_cost;
-                $data[ $resource->breakdown->std_activity->discipline ]['budget_qty'] += $resource->budget_qty;
+
+                $data[ $discipline ]['budget_cost'] += $resource->budget_cost;
+                $data[ $discipline ]['budget_qty'] += $resource->budget_qty;
             }
         }
         foreach ($data as $key => $value) {
@@ -57,6 +54,7 @@ class QtyAndCost
             $total['budget_qty_eq'] += $data[ $key ]['budget_qty_eq'];
             $total['budget_cost_eq'] += $data[ $key ]['budget_cost_eq'];
         }
+
         return view('reports.qty_and_cost', compact('data', 'total', 'project'));
     }
 

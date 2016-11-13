@@ -20,7 +20,7 @@
         <a href="#Resources" class="btn btn-outline btn-primary">Resources</a>
         <a href="#Productivity" class="btn btn-outline btn-primary">Productivity</a>
 
-        <a href="{{route('project.reports',$project)}}" data-title="Reports" title="Reports" class="btn btn-outline btn-success in-iframe">Reports</a>
+        <a href="{{route('project.reports',$project)}}" data-title="Reports" title="Reports" class="btn btn-outline btn-success  reports">Reports</a>
         <a href="{{route('financial.index',$project)}}" class="btn btn-outline btn-primary">Financial Period</a>
     </nav>
 
@@ -131,7 +131,7 @@
                     iframeModal.find('.modal-title').text($(this).attr('title')? $(this).attr('title') : $(this).data('title'));
                     iframeModal.modal();
                 });
-                $('.project-nav').on('click', '.in-iframe', function (e) {
+                $('.project-nav').on('click', '.reports', function (e) {
                     e.preventDefault();
                     var href = this.href;
                     if (href.indexOf('?') < 0) {
