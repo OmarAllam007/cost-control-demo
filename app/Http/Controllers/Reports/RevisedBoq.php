@@ -62,7 +62,6 @@ class RevisedBoq
                 }
             } else {
                 $parent = $wbs_level;
-
                 while ($parent->parent) {
                     $parent = $parent->parent;
 
