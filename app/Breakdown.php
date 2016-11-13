@@ -93,7 +93,7 @@ class Breakdown extends Model
 
     function getDry($wbs_id){
         $boq = Boq::where('wbs_id',$wbs_id)->first();
-        if($boq->dry_ur){
+        if(isset($boq->dry_ur)){
             return $boq->dry_ur;
         }
         return 0;
