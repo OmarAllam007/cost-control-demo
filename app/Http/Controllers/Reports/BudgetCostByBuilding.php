@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Reports;
 use App\Boq;
 
 use App\Breakdown;
+use App\BreakdownResource;
 use App\Project;
 
 class BudgetCostByBuilding
@@ -31,50 +32,39 @@ class BudgetCostByBuilding
             $dry = $breakdown->getDry($wbs_level->id);
             $resources = $breakdown->resources;
             if ($dry) {
-                    if (!isset($data[ $wbs_level->id ])) {
-                        $data[ $wbs_level->id ] = [
-                            'name' => $wbs_level->name,
-                            'code' => $wbs_level->code,
-                            'dry' => '',
-                            'budget_cost' => 0,
-                            'weight' => 0,
-                        ];
+                if (!isset($data[ $wbs_level->id ])) {
+                    $data[ $wbs_level->id ] = [
+                        'name' => $wbs_level->name,
+                        'code' => $wbs_level->code,
+                        'budget_cost' => 0,
+                        'weight' => 0,
+                    ];
 
-                    }
-                foreach ($resources as $resource) {
-                    $data[ $wbs_level->id ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
                 }
-
+                foreach ($resources as $resource) {
+                    $data[ $wbs_level->id ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
+                }
 
 
             } else {
                 $parent = $wbs_level;
-                while ($parent->parent)
-                {
+                while ($parent->parent) {
                     $parent = $parent->parent;
-                    if (!isset($data[ $wbs_level->id ])) {
-                        $data[ $wbs_level->id ] = [
-                            'name' => $wbs_level->name,
-                            'code' => $wbs_level->code,
-                            'dry' => ' (Dry = 0)',
-                            'budget_cost' => 0,
-                            'weight' => 0,
-                        ];
-                        $parent_break_down = Breakdown::where('wbs_level_id', $parent->id)->first();
-                        if ($parent_break_down) {
-                            $parent_resources = $parent_break_down->resources;
-                            foreach ($parent_resources as $parent_resource) {
-                                $data[ $wbs_level->id ]['budget_cost'] += is_nan($parent_resource->budget_cost)?0:$parent_resource->budget_cost;
-                            }
+                    $parent_dry = $breakdown->getDry($parent->id);
+                    if ($parent_dry) {
+                        if (!isset($data[ $parent->id ])) {
+                            $data[ $parent->id ] = [
+                                'name' => $parent->name,
+                                'code' => $parent->code,
+                                'budget_cost' => $parent->budget_cost,
+                                'weight' => 0,
+                            ];
                         }
-                        $parents [$parent->id] = $parent->id; }
-
+                    }
                 }
             }
-        } //iterate over breakdowns
-        foreach ($parents as $key=>$value){
-            unset($data[$key]);
-        } //unset parents
+        }
+
 
         foreach ($data as $key => $item) {//fill total array
             $total['total'] += $item['budget_cost'];
@@ -85,7 +75,9 @@ class BudgetCostByBuilding
                 $total['weight'] += $data[ $key ]['weight'];
             }
         }
-        $pieChart = $this->getBudgetCostForBuildingPieChart($data); $columnChart = $this->getBugetCostByBuildingColumnChart($data); return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));
+        $pieChart = $this->getBudgetCostForBuildingPieChart($data);
+        $columnChart = $this->getBugetCostByBuildingColumnChart($data);
+        return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));
     }
 
     public function getBudgetCostForBuildingPieChart($data)

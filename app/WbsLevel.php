@@ -36,11 +36,33 @@ class WbsLevel extends Model
     public function deleteRecursive()
     {
         if ($this->children->count()) {
-            $this->children->each(function($level){
+            $this->children->each(function ($level) {
                 $level->deleteRecursive();
             });
         }
 
         $this->delete();
+    }
+
+    public function getBudgetCostAttribute()
+    {
+        $budget_cost = 0;
+        if ($this->children && count($this->children)) {
+            foreach ($this->children as $child) {
+                $child_break_downs = Breakdown::where('wbs_level_id', $child->id)->get();
+                if ($child_break_downs) {
+                    foreach ($child_break_downs as $break_down) {
+                        $child_break_down_resources = $break_down->resources;
+                        foreach ($child_break_down_resources as $resource) {
+                            $budget_cost += $resource->budget_cost;
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        return $budget_cost;
     }
 }
