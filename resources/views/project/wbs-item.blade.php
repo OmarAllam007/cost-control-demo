@@ -6,7 +6,7 @@
         <span class="wbs-icon"><i class="fa fa-angle-right wbs-icon"></i></span>
     @endif
 
-    <a href="#" class="wbs-link" @click="selected = {{$item['id']}}">{{$item['name']}} &mdash; <small>{{$item['code']}}</small></a>
+    <a href="#" class="wbs-link" @click="selected = {{$item['id']}}" title="{{$item['name']}}">{{$item['code']}}</a>
     </div>
 
     @if (count($item['children']))

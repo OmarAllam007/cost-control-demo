@@ -78,6 +78,7 @@
                     iframeModal.find('.modal-title').text($(this).attr('title')? $(this).attr('title') : $(this).data('title'));
                     iframeModal.modal();
                 });
+
                 $('.project-nav').on('click', '.reports', function (e) {
                     e.preventDefault();
                     var href = this.href;
@@ -92,6 +93,13 @@
                 });
             });
 
+            $('#WBSTreeToggle').on('click', function (e) {
+                e.preventDefault();
+
+                $('#wbs-panel-container').toggle();
+                $('#wbs-display-container').toggleClass('col-sm-9 col-sm-12');
+                $(this).find('i.fa').toggleClass('fa-angle-double-right fa-angle-double-left');
+            })
         }(window, document, jQuery));
 
     </script>

@@ -1,6 +1,9 @@
 <section id="wbsArea">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-12">
+            <a href="#" id="WBSTreeToggle" class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></a>
+        </div>
+        <div class="col-sm-3" id="wbs-panel-container">
             <aside class="panel panel-default wbs-panel">
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title  pull-left">WBS</h3>
@@ -11,6 +14,7 @@
                         @can('wipe')
                             <a href="#WipeWBSModal" data-toggle="modal" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
                         @endcan
+
                     </div>
                 </div>
 
@@ -21,7 +25,7 @@
         </div>
 
 
-        <div class="col-sm-8">
+        <div class="col-sm-9" id="wbs-display-container">
             <section id="wbs-display" v-show="selected">
                 <alert></alert>
                 <ul class="nav nav-tabs">
