@@ -47,9 +47,11 @@ class WbsLevel extends Model
     public function getBudgetCostAttribute()
     {
         $budget_cost = 0;
+        $children = [];
         if ($this->children && count($this->children)) {
             foreach ($this->children as $child) {
                 $child_break_downs = Breakdown::where('wbs_level_id', $child->id)->get();
+                $children [] = $child->id;
                 if ($child_break_downs) {
                     foreach ($child_break_downs as $break_down) {
                         $child_break_down_resources = $break_down->resources;
@@ -63,6 +65,6 @@ class WbsLevel extends Model
             }
         }
 
-        return $budget_cost;
+        return ['budget_cost'=>$budget_cost,'children'=>$children];
     }
 }

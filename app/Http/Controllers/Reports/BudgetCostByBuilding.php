@@ -21,6 +21,7 @@ class BudgetCostByBuilding
     {
         $breakdowns = $project->breakdowns()->get();
         $data = [];
+        $children = [];
         $total = [
             'total' => 0,
             'weight' => 0,
@@ -56,10 +57,13 @@ class BudgetCostByBuilding
                             $data[ $parent->id ] = [
                                 'name' => $parent->name,
                                 'code' => $parent->code,
-                                'budget_cost' => $parent->budget_cost,
+                                'budget_cost' => $parent->budget_cost['budget_cost'],
                                 'weight' => 0,
                             ];
+                        $children = $parent->budget_cost['children'];
                         }
+
+                        break;
                     }
                 }
             }
@@ -67,9 +71,15 @@ class BudgetCostByBuilding
 
 
         foreach ($data as $key => $item) {//fill total array
+            if(in_array($key,$children)){
+                continue;
+            }
             $total['total'] += $item['budget_cost'];
         }
         foreach ($data as $key => $value) {
+            if(in_array($key,$children)){
+                continue;
+            }
             if ($total['total'] != 0) {
                 $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
                 $total['weight'] += $data[ $key ]['weight'];
