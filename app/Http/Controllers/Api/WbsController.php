@@ -45,7 +45,7 @@ class WbsController extends Controller
 //        $r->header('Content-Type', 'text/html');
 //        $r->setContent(json_encode($resources));
 //        return $r;
-        return json_encode($resources);
+        return $resources;
     }
 
     function boq(WbsLevel $wbs_level)
