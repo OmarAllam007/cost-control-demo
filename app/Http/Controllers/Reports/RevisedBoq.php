@@ -19,7 +19,13 @@ class RevisedBoq
 {
     public function getRevised(Project $project)
     {
-//        $resources = $project->breakdown_resources()->get();
+/* iterate over breakdowns
+ * check for dry
+ * calculate original and revised boq
+ * delete parents wbs ....
+ * calculate total revised and original
+ *
+ */
         $breakdowns = $project->breakdowns()->get();
         $data = [];
         $total = [
@@ -32,18 +38,19 @@ class RevisedBoq
             $wbs_level = $breakdown->wbs_level;
             $resources = $breakdown->resources;
             $dry = $breakdown->getDry($wbs_level->id);
+            if (!isset($data[ $wbs_level->id ])) {
+                $data[ $wbs_level->id ] = [
+                    'code' => $wbs_level->code,
+                    'name' => $wbs_level->name,
+                    'cost_account' => [],
+                    'revised_boq' => 0,
+                    'original_boq' => 0,
+                    'weight' => 0,
+                ];
+            }
             if ($dry) {
                 foreach ($resources as $break_down_resource) {
-                    if (!isset($data[ $wbs_level->id ])) {
-                        $data[ $wbs_level->id ] = [
-                            'code' => $wbs_level->code,
-                            'name' => $wbs_level->name,
-                            'cost_account' => [],
-                            'revised_boq' => 0,
-                            'original_boq' => 0,
-                            'weight' => 0,
-                        ];
-                    }
+
                     if (!isset($data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ])) {
                         $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ] = [
                             'revised_boq' => 0,
@@ -54,17 +61,16 @@ class RevisedBoq
                         $boq = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
                         $survey = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
 
-                        $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['original_boq'] = $boq->price_ur * $boq->quantity;
-
-                        $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['revised_boq'] = $boq->price_ur * $survey->eng_qty;
+                        if ($boq && $survey) {
+                            $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['original_boq'] = $boq->price_ur * $boq->quantity;
+                            $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['revised_boq'] = $boq->price_ur * $survey->eng_qty;
+                        }
                     }
-
                 }
             } else {
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
-
                     if (!isset($data[ $wbs_level->id ])) {
                         $data[ $wbs_level->id ] = [
                             'code' => $wbs_level->code,
@@ -110,9 +116,10 @@ class RevisedBoq
 
         }
 
-        foreach ($parents as $key=>$value){
-            unset($data[$key]);
+        foreach ($parents as $key => $value) {
+            unset($data[ $key ]);
         }
+
         foreach ($data as $key => $value) {
             foreach ($value['cost_account'] as $item) {
                 $data[ $key ]['revised_boq'] += $item['revised_boq'];
@@ -121,14 +128,13 @@ class RevisedBoq
                 $total['original_boq'] += $item['original_boq'];
             }
         }
-
-
         foreach ($data as $key => $value) {
             if ($data[ $key ]['original_boq']) {
-                $data[ $key ]['weight'] += (($data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']));
+                $data[ $key ]['weight'] += $data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']*100;
                 $total['weight'] += $data[ $key ]['weight'];
             }
         }
+
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
     }
