@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
-    use SoftDeletes, HasOptions, Tree;
+    use SoftDeletes, HasOptions, Tree, CachesQueries;
 
     protected static $alias = 'Project';
     protected $ids = [];

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 
 class WbsController extends Controller
 {
@@ -26,12 +27,25 @@ class WbsController extends Controller
 
     function breakdowns(WbsLevel $wbs_level)
     {
-        $resources = BreakdownResource::forWbs($wbs_level->id)->get()
+        $resources = BreakdownResource::with('breakdown')
+//            ->with('std_activity_resource')
+            ->with('breakdown.template')
+            ->with('breakdown.project')
+            ->with('breakdown.variables')
+            ->with('template_resource')
+            ->with('template_resource.resource')
+            ->with('template_resource')
+            ->with('productivity')
+            ->forWbs($wbs_level->id)->get()
             ->map(function (BreakdownResource $res) {
                 return new BreakdownResourceFormatter($res);
             });
 
-        return $resources;
+//        $r = new Response();
+//        $r->header('Content-Type', 'text/html');
+//        $r->setContent(json_encode($resources));
+//        return $r;
+        return json_encode($resources);
     }
 
     function boq(WbsLevel $wbs_level)
