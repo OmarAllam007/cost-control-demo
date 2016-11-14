@@ -42,7 +42,7 @@ class BudgetCostByBuilding
 
                     }
                 foreach ($resources as $resource) {
-                    $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
+                    $data[ $wbs_level->id ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
                 }
 
 
@@ -64,7 +64,7 @@ class BudgetCostByBuilding
                         if ($parent_break_down) {
                             $parent_resources = $parent_break_down->resources;
                             foreach ($parent_resources as $parent_resource) {
-                                $data[ $wbs_level->id ]['budget_cost'] += $parent_resource->budget_cost;
+                                $data[ $wbs_level->id ]['budget_cost'] += is_nan($parent_resource->budget_cost)?0:$parent_resource->budget_cost;
                             }
                         }
                         $parents [$parent->id] = $parent->id;
@@ -86,6 +86,7 @@ class BudgetCostByBuilding
                 $total['weight'] += $data[ $key ]['weight'];
             }
         }
+
         $pieChart = $this->getBudgetCostForBuildingPieChart($data);
         $columnChart = $this->getBugetCostByBuildingColumnChart($data);
         return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));
