@@ -33,7 +33,7 @@ class BudgetCostByBreakDownItem
 
                     ];
                 }
-                $bd_resource[ $root->name ]['budget_cost'] += $resource->budget_cost;
+                $bd_resource[ $root->name ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
 
         }
         foreach ($bd_resource as $item) {
