@@ -74,9 +74,9 @@ class ReportController extends Controller
         $total_budget_unit = '';
         foreach ($project->breakdown_resources as $resource) {
             $rootName = $resource->resource->types->root->name;
+            $resourceObject = $resource->resource;
             if (str_contains($rootName, 'LABORS')) {
                 $root = $rootName;
-                $resourceObject = $resource->resource;
                 if (!isset($resources[ $resourceObject->id ])) {
                     $resources[ $resourceObject->id ] = [
                         'id' => $resourceObject->id,
@@ -87,7 +87,6 @@ class ReportController extends Controller
                         'unit' => $resource->project_resource->units->type,
                     ];
                 }
-
             }
             $resources[ $resourceObject->id ]['budget_cost'] += $resource->budget_cost;
             $resources[ $resourceObject->id ]['budget_unit'] += $resource->budget_unit;
@@ -131,10 +130,10 @@ class ReportController extends Controller
             if (!isset($data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ])) {
                 $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ] = [
                     'name' => $activity->name,
-                    'budget_cost' => $resource->budget_cost,
+                    'budget_cost' => is_nan($resource->budget_cost)?0:$resource->budget_cost,
                 ];
             } else {
-                $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += $resource->budget_cost;
+                $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
             }
 
 
