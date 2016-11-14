@@ -86,14 +86,11 @@ class ReportController extends Controller
                         'budget_unit' => 0,
                         'unit' => $resource->project_resource->units->type,
                     ];
-
                 }
 
             }
             $resources[ $resourceObject->id ]['budget_cost'] += $resource->budget_cost;
             $resources[ $resourceObject->id ]['budget_unit'] += $resource->budget_unit;
-
-
         }
         foreach ($resources as $resource) {
             $total_budget_cost += $resource['budget_cost'];

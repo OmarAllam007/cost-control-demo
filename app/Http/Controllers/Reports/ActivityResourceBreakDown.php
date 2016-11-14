@@ -47,7 +47,7 @@ class ActivityResourceBreakDown
             if (!isset($data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ])) {
                 $data[ $wbs_level->name ]['activities'][ $std_activity_item->name ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ] = [
                     'name' => $resource->name,
-                    'unit'=>Unit::find($breakDown_resource->qty_survey->unit_id)->type,
+                    'unit'=>isset($breakDown_resource->qty_survey->unit_id)?Unit::find($breakDown_resource->qty_survey->unit_id)->type:'',
                     'price_unit' => 0,
                     'budget_cost' => 0,
                     'budget_unit' => 0,

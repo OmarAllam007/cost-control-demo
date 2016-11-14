@@ -32,7 +32,6 @@ class BoqPriceList
                 ];
 
             }
-
             if (!isset($data[ $wbs_level->name ]['items'][ $cost_account ])) {
                 $data[ $wbs_level->name ]['items'][ $cost_account ] = [
                     'id' => $boq->id,
