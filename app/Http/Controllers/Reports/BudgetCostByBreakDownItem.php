@@ -53,7 +53,7 @@ class BudgetCostByBreakDownItem
         return view('reports.budget_cost_by_break_down',compact('bd_resource','total','project'));
     }
 
-    public function compareBudgetCostByBreakDownItemChart($data){
+     public function compareBudgetCostByBreakDownItemChart($data){
         $item = \Lava::DataTable();
         $item->addStringColumn('Resource Type')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {

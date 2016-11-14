@@ -25,6 +25,7 @@ class QtyAndCost
         foreach ($break_down_resources as $resource) {
             $discipline = $resource->breakdown->std_activity->discipline;
             $boq = Boq::where('cost_account', $resource->breakdown->cost_account)->first();
+            $dry_cost = $boq->dry_ur * $boq->quantity;
             if (!isset($data[ $discipline ])) {
                 $data[ $discipline ] = [
                     'code' => $resource->breakdown->std_activity->code,
@@ -37,13 +38,13 @@ class QtyAndCost
                     'budget_cost_eq' => 0,
                 ];
 
-                $data[ $discipline ]['budget_cost'] = $resource->budget_cost;
-                $data[ $discipline ]['budget_qty'] = $resource->budget_qty;
-                $data[ $discipline ]['dry_cost'] = $boq->dry_ur * $boq->quantity;
+                $data[ $discipline ]['budget_cost'] = is_nan($resource->budget_cost)?0:$resource->budget_cost;
+                $data[ $discipline ]['budget_qty'] = is_nan($resource->budget_qty)?0:$resource->budget_qty;
+                $data[ $discipline ]['dry_cost'] = is_nan($dry_cost)?0:$dry_cost;
             } else {
 
-                $data[ $discipline ]['budget_cost'] += $resource->budget_cost;
-                $data[ $discipline ]['budget_qty'] += $resource->budget_qty;
+                $data[ $discipline ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
+                $data[ $discipline ]['budget_qty'] += is_nan($resource->budget_qty)?0:$resource->budget_qty;
             }
         }
         foreach ($data as $key => $value) {

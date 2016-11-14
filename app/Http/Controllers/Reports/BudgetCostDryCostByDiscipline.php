@@ -36,14 +36,13 @@ class BudgetCostDryCostByDiscipline
                     'increase' => 0,
                 ];
                 $boq = Boq::where('cost_account', $break_down->breakdown->cost_account)->first();
-                $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] = $break_down->budget_cost;
-                $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] = $boq->dry_ur * $boq->quantity;
+                $dry_cost = $boq->dry_ur * $boq->quantity;
+                $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] = is_nan($break_down->budget_cost)?0:$break_down->budget_cost;
+                $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] = is_nan($dry_cost)?0:$dry_cost;
             } else {
-                $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] += $break_down->budget_cost;
-                $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] += $boq->dry_ur * $boq->quantity;
+                $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] += is_nan($break_down->budget_cost)?0:$break_down->budget_cost;
+                $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] += is_nan($dry_cost)?0:$dry_cost;
             }
-
-
         }
         foreach ($data as $key => $value) {
             if ($data[ $key ]['dry_cost']) {

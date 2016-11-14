@@ -44,7 +44,7 @@ class BudgetCostDryCostByBuilding
                 }
                 $resources = $break_down->resources;
                 foreach ($resources as $resource) {
-                    $data[ $wbs_level->id ]['budget_cost'] += $resource->budget_cost;
+                    $data[ $wbs_level->id ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
                 }
             } else {//if wbs-level has not dry
                 $parent = $wbs_level;
@@ -64,7 +64,7 @@ class BudgetCostDryCostByBuilding
                         if ($parent_break_down) {
                             $parent_resources = $parent_break_down->resources;
                             foreach ($parent_resources as $parent_resource) {
-                                $data[ $wbs_level->id ]['budget_cost'] += $parent_resource->budget_cost;
+                                $data[ $wbs_level->id ]['budget_cost'] += is_nan($parent_resource->budget_cost)?0:$resource->budget_cost;
                             }
                         }
                     }
