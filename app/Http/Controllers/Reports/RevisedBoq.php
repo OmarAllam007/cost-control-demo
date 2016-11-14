@@ -131,10 +131,10 @@ class RevisedBoq
         foreach ($data as $key => $value) {
             if ($data[ $key ]['original_boq']) {
                 $data[ $key ]['weight'] += $data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']*100;
-                $total['weight'] += $data[ $key ]['weight'];
             }
         }
 
+        $total['weight'] = ( $total['revised_boq']/$total['original_boq'] )*100;
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
     }
