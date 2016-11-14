@@ -23,7 +23,7 @@ export default {
             $(this).parent('.wbs-item').addClass('active');
         });
 
-        wbsTree.find('[data-toggle="tooltip"]').tooltip();
+        wbsTree.find('[data-toggle="tooltip"]').tooltip({container: 'body'});
     },
 
     methods: {

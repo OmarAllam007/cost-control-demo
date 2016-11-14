@@ -20,8 +20,8 @@
         <a href="#Resources" class="btn btn-outline btn-primary">Resources</a>
         <a href="#Productivity" class="btn btn-outline btn-primary">Productivity</a>
 
-        <a href="{{route('project.reports',$project)}}" data-title="Reports" title="Reports" class="btn btn-outline btn-success  reports">Reports</a>
-        <a href="{{route('financial.index',$project)}}" class="btn btn-outline btn-primary">Financial Period</a>
+        <a href="{{route('project.reports',$project)}}" data-title="Reports" title="Reports" class="btn btn-outline btn-success in-iframe">Reports</a>
+        {{--<a href="{{route('financial.index',$project)}}" class="btn btn-outline btn-primary">Financial Period</a>--}}
     </nav>
 
     @include('project.tabs.wbs-area')
@@ -66,7 +66,7 @@
 
                 var iframeModal = $('#IframeModal');
                 var modalContent = iframeModal.find('.modal-body');
-                $('#wbsArea').on('click', '.in-iframe', function (e) {
+                $(document).on('click', '.in-iframe', function (e) {
                     e.preventDefault();
                     var href = this.href;
                     if (href.indexOf('?') < 0) {
