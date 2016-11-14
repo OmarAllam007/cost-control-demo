@@ -134,7 +134,7 @@ class RevisedBoq
             }
         }
 
-        $total['weight'] = ( $total['revised_boq']/$total['original_boq'] )*100;
+        $total['weight'] = ( $total['revised_boq'] /$total['original_boq'] )*100;
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
     }
