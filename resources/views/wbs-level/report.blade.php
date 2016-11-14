@@ -10,14 +10,13 @@
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
-        <link rel="stylesheet" href="{{asset('/css/print.css')}}">
-
     </div>
-
 @endsection
+
 @section('image')
     <img src="{{asset('images/reports/wbs-level.jpg')}}">
 @endsection
+
 @section('body')
     @if ($project->wbs_tree->count())
         <table class="table table-condensed table-bordered">
@@ -30,7 +29,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($project->wbs_tree as $wbs_level)
+            @foreach($wbsTree as $wbs_level)
                 @include('wbs-level._recursive_report', ['wbs_level' => $wbs_level, 'tree_level' => 0,'child'=>false])
             @endforeach
             </tbody>
