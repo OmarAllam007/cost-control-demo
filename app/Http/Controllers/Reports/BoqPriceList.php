@@ -16,6 +16,7 @@ class BoqPriceList
 {
     public function getBoqPriceList(Project $project)
     {
+        ini_set('max_execution_time',300);
         $breakDown_resources = $project->breakdown_resources()->get();
         $data = [];
         foreach ($breakDown_resources as $breakDown_resource) {
