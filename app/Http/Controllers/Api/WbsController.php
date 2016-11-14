@@ -40,7 +40,7 @@ class WbsController extends Controller
             ->map(function (BreakdownResource $res) {
                 return new BreakdownResourceFormatter($res);
             });
-
+dd($resources);
 //        $r = new Response();
 //        $r->header('Content-Type', 'text/html');
 //        $r->setContent(json_encode($resources));
