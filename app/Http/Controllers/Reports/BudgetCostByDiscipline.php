@@ -34,7 +34,7 @@ class BudgetCostByDiscipline
                     ];
                 }
                 foreach ($breakdown->resources as $resource) {
-                    $survey[ $breakdown->std_activity->discipline ]['budget_cost'] += $resource->budget_cost;
+                    $survey[ $breakdown->std_activity->discipline ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
                 }
 
 

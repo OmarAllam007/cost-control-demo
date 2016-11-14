@@ -67,8 +67,7 @@ class BudgetCostByBuilding
                                 $data[ $wbs_level->id ]['budget_cost'] += is_nan($parent_resource->budget_cost)?0:$parent_resource->budget_cost;
                             }
                         }
-                        $parents [$parent->id] = $parent->id;
-                    }
+                        $parents [$parent->id] = $parent->id; }
 
                 }
             }
@@ -86,10 +85,7 @@ class BudgetCostByBuilding
                 $total['weight'] += $data[ $key ]['weight'];
             }
         }
-
-        $pieChart = $this->getBudgetCostForBuildingPieChart($data);
-        $columnChart = $this->getBugetCostByBuildingColumnChart($data);
-        return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));
+        $pieChart = $this->getBudgetCostForBuildingPieChart($data); $columnChart = $this->getBugetCostByBuildingColumnChart($data); return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));
     }
 
     public function getBudgetCostForBuildingPieChart($data)
