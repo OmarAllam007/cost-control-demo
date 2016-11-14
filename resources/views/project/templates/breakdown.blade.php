@@ -29,25 +29,25 @@
                 <thead>
                 <tr>
                     <th style="min-width: 32px; max-width: 32px;">&nbsp;</th>
-                    <th style="min-width: 300px; max-width: 300px;" class="bg-primary">Activity</th>
+                    <th style="min-width: 300px; max-width: 300px;" class="bg-blue">Activity</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-black">Breakdown Template</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-primary">Cost Account</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-success">Eng. Qty.</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-success">Budget Qty.</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-primary">Resource Qty.</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Cost Account</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-green">Eng. Qty.</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-green">Budget Qty.</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Resource Qty.</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-info">Resource Waste</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-success">Resource Type</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-success">Resource Code</th>
-                    <th style="min-width: 200px; max-width: 200px;" class="bg-success">Resource Name</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-green">Resource Type</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-green">Resource Code</th>
+                    <th style="min-width: 200px; max-width: 200px;" class="bg-green">Resource Name</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-info">Price/Unit</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-info">Unit of measure</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-success">Budget Unit</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-success">Budget Cost</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-green">Budget Unit</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-green">Budget Cost</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-black">BOQ Equivalent Unit Rate</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-primary">No. Of Labors</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-blue">No. Of Labors</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-info">Productivity (Unit/Day)</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-primary">Productivity Ref</th>
-                    <th style="min-width: 150px; max-width: 150px;" class="bg-success">Remarks</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Productivity Ref</th>
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-green">Remarks</th>
                 </tr>
                 </thead>
             </table>
@@ -71,34 +71,34 @@
                         </form>
 
                     </td>
-                    <td style="min-width: 300px; max-width: 300px;" class="bg-primary">@{{ breakdown.activity }}</td>
+                    <td style="min-width: 300px; max-width: 300px;" class="bg-blue">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-primary">@{{ breakdown.cost_account }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.eng_qty }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.budget_qty }}</td>
+                        class="bg-blue">@{{ breakdown.cost_account }}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.eng_qty }}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.budget_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-primary">@{{ breakdown.resource_qty }}</td>
+                        class="bg-blue">@{{ breakdown.resource_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">@{{ breakdown.resource_waste }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-success">@{{ breakdown.resource_type }}</td>
+                        class="bg-green">@{{ breakdown.resource_type }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-success">@{{ breakdown.resource_code }}</td>
+                        class="bg-green">@{{ breakdown.resource_code }}</td>
                     <td style="min-width: 200px; max-width: 200px;"
-                        class="bg-success">@{{ breakdown.resource_name }}</td>
+                        class="bg-green">@{{ breakdown.resource_name }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">@{{ breakdown.unit_price }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-info">@{{ breakdown.measure_unit }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.budget_unit }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.budget_cost }}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.budget_unit }}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.budget_cost }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-black">@{{ breakdown.boq_equivilant_rate }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-primary">@{{ breakdown.labors_count }}</td>
+                        class="bg-blue">@{{ breakdown.labors_count }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-info">@{{ breakdown.productivity_output }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-primary">@{{ breakdown.productivity_ref }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-success">@{{ breakdown.remarks }}</td>
+                        class="bg-blue">@{{ breakdown.productivity_ref }}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.remarks }}</td>
                 </tr>
                 </tbody>
             </table>

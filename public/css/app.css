@@ -8258,6 +8258,12 @@ body#iframe {
   -webkit-box-pack: center;
   justify-content: center; }
 
+.bg-blue {
+  background-color: #a9cbf1; }
+
+.bg-green {
+  background: #92d050; }
+
 /***************************/
 /*     Reports design      */
 /***************************/
