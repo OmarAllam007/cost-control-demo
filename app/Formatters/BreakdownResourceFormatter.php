@@ -45,7 +45,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'boq_equivilant_rate' => number_format($this->resource->boq_unit_rate, 2),
             'labors_count' => !empty($this->resource->labor_count) ? $this->resource->labor_count : '',
             'productivity_output' => isset($this->resource->project_productivity->after_reduction) ? $this->resource->project_productivity->after_reduction : '',
-            'productivity_ref' => isset($this->resource->productivity->csi_code) ? $this->resource->productivity->csi_code : '',
+            'productivity_ref' => isset($this->resource->project_productivity->csi_code) ? $this->resource->project_productivity->csi_code : '',
             'remarks' => $this->resource->remarks,
         ];
     }

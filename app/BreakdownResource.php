@@ -10,6 +10,11 @@ class BreakdownResource extends Model
 {
     protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_id', 'equation'];
 
+    protected $calculated_resource_qty;
+
+    protected $productivity_cache;
+    protected $resource_cache;
+
     function breakdown()
     {
         return $this->belongsTo(Breakdown::class);
@@ -64,6 +69,10 @@ class BreakdownResource extends Model
 
     function getProjectResourceAttribute()
     {
+        if ($this->resource_cache) {
+            return $this->resource_cache;
+        }
+
         if ($this->attributes['resource_id']) {
             $resource = Resources::find($this->attributes['resource_id']);
         } else {
@@ -72,24 +81,28 @@ class BreakdownResource extends Model
 
         $projectResource = Resources::where('resource_id', $resource->id)->where('project_id', $this->breakdown->project->id)->first();
         if ($projectResource) {
-            return $projectResource;
+            return $this->resource_cache = $projectResource;
         }
 
-        return $resource;
+        return $this->resource_cache = $resource;
     }
 
     function getProjectProductivityAttribute()
     {
+        if (!empty($this->productivity_cache)) {
+            return $this->productivity_cache;
+        }
+
         $productivity = $this->productivity;
 
         if ($productivity) {
             $projectProductivity = Productivity::where('productivity_id', $productivity->id)
                 ->where('project_id', $this->breakdown->project->id)->first();
             if ($projectProductivity) {
-                return $projectProductivity;
+                return $this->productivity_cache = $projectProductivity;
             }
 
-            return $productivity;
+            return $this->productivity_cache = $productivity;
         }
 
         return null;
@@ -97,9 +110,10 @@ class BreakdownResource extends Model
 
     function getResourceQtyAttribute()
     {
-//        if ($this->resource_qty_manual) {
-//            return $this->attributes['resource_qty'];
-//        }
+        if (isset($this->calculated_resource_qty)) {
+            return $this->calculated_resource_qty;
+        }
+
         if (!$this->equation) {
             return 0;
         }
@@ -117,7 +131,7 @@ class BreakdownResource extends Model
 
         $result = 0;
         @eval('$result=' . $this->equation . ';');
-        return $result;
+        return $this->calculated_resource_qty = $result;
     }
 
     function getQtySurveyAttribute()

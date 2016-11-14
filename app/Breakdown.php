@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use Illuminate\Database\Eloquent\Model;
 
 class Breakdown extends Model
 {
+    use CachesQueries;
+
     protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code'];
 
     function resources()
