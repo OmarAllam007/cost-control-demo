@@ -130,7 +130,10 @@ class BreakdownResource extends Model
         extract($variables);
 
         $result = 0;
-        @eval('$result=' . $this->equation . ';');
+        $eval = @eval('$result=' . $this->equation . ';');
+        if ($eval === false || !$result || $result == INF || is_nan($result)) {
+            $result = 0;
+        }
         return $this->calculated_resource_qty = $result;
     }
 
