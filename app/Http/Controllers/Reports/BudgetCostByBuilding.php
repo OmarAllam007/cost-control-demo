@@ -72,15 +72,15 @@ class BudgetCostByBuilding
 
                 }
             }
-        }
+        } //iterate over breakdowns
         foreach ($parents as $key=>$value){
             unset($data[$key]);
-        }
+        } //unset parents
 
         foreach ($data as $key => $item) {//fill total array
             $total['total'] += $item['budget_cost'];
         }
-        foreach ($data as $key => $value) {//get weight
+        foreach ($data as $key => $value) {
             if ($total['total'] != 0) {
                 $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
                 $total['weight'] += $data[ $key ]['weight'];

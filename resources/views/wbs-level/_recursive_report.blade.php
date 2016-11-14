@@ -15,8 +15,8 @@
             @endif
     >
 
-        {{$wbs_level->name}}
-        <small class="text-muted @if($tree_level==0)wbs-code @else '' @endif">({{$wbs_level->code}})
+        {{$wbs_level['name']}}
+        <small class="text-muted @if($tree_level==0)wbs-code @else '' @endif">({{$wbs_level['code']}})
         </small>
     </td>
 
@@ -35,8 +35,8 @@
     @endfor
 </tr>
 
-@if ($wbs_level->children && $wbs_level->children->count())
-    @foreach($wbs_level->children as $child)
+@if ($wbs_level['children'] && count($wbs_level['children']))
+    @foreach($wbs_level['children'] as $child)
         @include('wbs-level._recursive_report', ['wbs_level' => $child, 'tree_level' => $tree_level + 1])
     @endforeach
 @endif

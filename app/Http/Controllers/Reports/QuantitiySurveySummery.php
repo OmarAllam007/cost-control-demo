@@ -28,6 +28,7 @@ class QuantitiySurveySummery
             $boq_item = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
             $division_name = ActivityDivision::find(StdActivity::find($break_down_resource->stdactivityid)->division_id)->name;
             $activity_name = StdActivity::find($break_down_resource->stdactivityid)->name;
+
             if (!isset($level_array[ $break_down_resource->wbslevelid ])) {
                 $level_array[ $break_down_resource->wbslevelid ] = [
                     'id' => $break_down_resource->wbslevelid,
