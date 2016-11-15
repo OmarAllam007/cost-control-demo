@@ -24,11 +24,12 @@
         {{--<a href="{{route('financial.index',$project)}}" class="btn btn-outline btn-primary">Financial Period</a>--}}
     </nav>
 
-    @include('project.tabs.wbs-area')
-    @include('project.tabs._resources')
-    @include('project.tabs._productivity')
-    @include('project.tabs._report')
-
+    <div id="projectArea" class="hidden">
+        @include('project.tabs.wbs-area')
+        @include('project.tabs._resources')
+        @include('project.tabs._productivity')
+        @include('project.tabs._report')
+    </div>
 
     <div class="modal fade" tabindex="-1" id="IframeModal">
         <div class="modal-dialog modal-lg">
@@ -52,6 +53,7 @@
             $(function () {
                 $('.project-tab').hide();
                 $('#wbsArea').show();
+                $('#projectArea').removeClass('hidden');
                 $('.project-nav').on('click', 'a', function (e) {
                     e.preventDefault();
                     window.location.hash = $(this).attr('href');
@@ -83,7 +85,7 @@
                         href += '&iframe=1';
                     }
                     modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
-                    iframeModal.find('.modal-title').text($(this).attr('title')? $(this).attr('title') : $(this).data('title'));
+                    iframeModal.find('.modal-title').text($(this).attr('title') ? $(this).attr('title') : $(this).data('title'));
                     iframeModal.modal();
                 });
             });

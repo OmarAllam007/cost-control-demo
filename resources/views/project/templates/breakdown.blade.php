@@ -20,8 +20,48 @@
         </div>
         <div class="clearfix"></div>
 
-        <section class="filters" id="breakdown-filters">
+        <section class="filters row" id="breakdown-filters">
+            @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
+            @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
 
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('activity', 'Activity', ['class' => 'control-label'])}}
+                    <p>
+                        <a href="#ActivitiesModal" data-toggle="modal" class="tree-open">
+                            {{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}
+                        </a>
+                        <a href="#" class="remove-tree-input" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
+                    {{Form::text('cost_account', session('filters.breakdown.' . $project->id . '.cost_account'), ['class' => 'form-control', 'v-model' => 'cost_account'])}}
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
+                    <p>
+                        <a href="#ResourceTypeModal" data-toggle="modal" class="tree-open">
+                            {{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}
+                        </a>
+                        <a href="#" class="remove-tree-input" data-target="#ResourceTypeModal" data-label="Select Resource Type"><span class="fa fa-times-circle"></span></a>
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('resource', 'Resource Name', ['class' => 'control-label'])}}
+                    {{Form::text('resource', session('filters.breakdown.'.$project->id.'.resource'), ['class' => 'form-control', 'v-model' => 'resource'])}}
+                </div>
+            </div>
         </section>
 
         <div class="scrollpane" v-if="breakdowns.length">
@@ -53,7 +93,7 @@
             </table>
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <tbody>
-                <tr v-for="breakdown in breakdowns">
+                <tr v-for="breakdown in filtered_breakdowns">
                     <td style="min-width: 32px; max-width: 32px;">
 
                         <form action="/breakdown-resource/@{{ breakdown.id }}" @submit.prevent="destroy(breakdown.id)" class="dropdown">
