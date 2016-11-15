@@ -41,14 +41,12 @@ class QtyAndCost
                         'budget_cost_eq' => 0,
                     ];
 
-                    $dry_cost += ($boq->dry_ur * $boq->quantity);
                 }
+            $dry_cost += ($boq->dry_ur * $boq->quantity);
             foreach ($breakdown->resources as $resource){
                 $data[ $discipline ]['dry_cost'] = is_nan($dry_cost) ? 0 : $dry_cost;
                 $data[ $discipline ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
-                $data[ $discipline ]['budget_qty'] += is_nan($resource->budget_qty) ? 0 : $resource->budget_qty;
-            }
-
+                $data[ $discipline ]['budget_qty'] += is_nan($resource->budget_qty) ? 0 : $resource->budget_qty; }
         }
 
 

@@ -72,6 +72,7 @@ class BudgetCostByBuilding
 
         foreach ($data as $key => $item) {//fill total array
             if(in_array($key,$children)){
+                unset($data[$key]);
                 continue;
             }
             $total['total'] += $item['budget_cost'];
