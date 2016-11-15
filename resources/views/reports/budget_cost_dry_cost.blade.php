@@ -34,7 +34,7 @@
                 <td class="col-xs-2">{{number_format($row['dry_cost'],2)}}</td>
                 <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
                 <td class="col-xs-2">{{number_format($row['difference'],2)}}</td>
-                <td class="col-xs-2">% {{number_format($row['increase'],1)}}</td>
+                <td class="col-xs-2">% {{number_format($row['increase'],2)}}</td>
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
