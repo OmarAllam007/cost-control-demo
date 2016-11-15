@@ -1,4 +1,4 @@
-<section id="wbsArea">
+<section id="wbsArea" class="project-tab">
     <div class="row">
         <div class="col-sm-12">
             <a href="#" id="WBSTreeToggle" class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></a>

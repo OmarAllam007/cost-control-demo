@@ -17,14 +17,17 @@
 
     <nav class="project-nav">
         <a href="#wbsArea" class="btn btn-outline btn-primary">WBS &amp; Activity</a>
-        <a href="#Resources" class="btn btn-outline btn-primary">Resources</a>
-        <a href="#Productivity" class="btn btn-outline btn-primary">Productivity</a>
+        <a href="#ResourcesArea" class="btn btn-outline btn-primary">Resources</a>
+        <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
 
-        <a href="{{route('project.reports',$project)}}" data-title="Reports" title="Reports" class="btn btn-outline btn-success in-iframe">Reports</a>
+        <a href="#ReportsArea" class="btn btn-outline btn-success">Reports</a>
         {{--<a href="{{route('financial.index',$project)}}" class="btn btn-outline btn-primary">Financial Period</a>--}}
     </nav>
 
     @include('project.tabs.wbs-area')
+    @include('project.tabs._resources')
+    @include('project.tabs._productivity')
+    @include('project.tabs._report')
 
 
     <div class="modal fade" tabindex="-1" id="IframeModal">
@@ -47,8 +50,13 @@
     <script>
         (function (w, d, $) {
             $(function () {
-                $('.nav-tabs').on('click', 'a', function () {
+                $('.project-tab').hide();
+                $('#wbsArea').show();
+                $('.project-nav').on('click', 'a', function (e) {
+                    e.preventDefault();
                     window.location.hash = $(this).attr('href');
+                    $('.project-tab').hide();
+                    $($(this).attr('href')).show();
                 });
 
                 $(w).on('hashchange', function () {
@@ -66,7 +74,7 @@
 
                 var iframeModal = $('#IframeModal');
                 var modalContent = iframeModal.find('.modal-body');
-                $(document).on('click', '.in-iframe', function (e) {
+                $(d).on('click', '.in-iframe', function (e) {
                     e.preventDefault();
                     var href = this.href;
                     if (href.indexOf('?') < 0) {
@@ -76,19 +84,6 @@
                     }
                     modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
                     iframeModal.find('.modal-title').text($(this).attr('title')? $(this).attr('title') : $(this).data('title'));
-                    iframeModal.modal();
-                });
-
-                $('.project-nav').on('click', '.reports', function (e) {
-                    e.preventDefault();
-                    var href = this.href;
-                    if (href.indexOf('?') < 0) {
-                        href += '?iframe=1';
-                    } else {
-                        href += '&iframe=1';
-                    }
-                    modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
-                    iframeModal.find('.modal-title').text($(this).data('title'));
                     iframeModal.modal();
                 });
             });
