@@ -65,7 +65,6 @@ class QuantitiySurveySummery
 
         }
 
-
         return view('reports.quantity_survey', compact('project', 'level_array'));
     }
 }

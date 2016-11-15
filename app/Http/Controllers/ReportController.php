@@ -34,8 +34,9 @@ class ReportController extends Controller
 
     public function getReports(Project $project)
     {
-        return view('project.tabs._report',compact('project'));
+        return view('project.tabs._report', compact('project'));
     }
+
     public function wbsReport(Project $project)
     {
         return view('wbs-level.report', compact('project'));
@@ -112,40 +113,37 @@ class ReportController extends Controller
                 $parent_name = $parent->name;
                 if (!isset($data[ $parent_name ])) {
                     $data[ $parent_name ] = [
-                        'id'=>$parent->id,
+                        'id' => $parent->id,
                         'name' => $parent_name,
                         'budget_cost' => 0,
                         'divisions' => [],
                     ];
                 }
+                if (!isset($data[ $parent_name ]['divisions'][ $division->name ])) {
+                    $data[ $parent_name ]['divisions'][ $division->name ] = [
+                        'division_name' => $division->name,
+                        'budget_cost' => 0,
+                        'activities' => [],
+                    ];
+                }
+                if (!isset($data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ])) {
+                    $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ] = [
+                        'name' => $activity->name,
+                        'budget_cost' => is_nan($resource->budget_cost) ? 0 : $resource->budget_cost,
+                    ];
+                } else {
+                    $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
+                }
 
             }
-
-
-            if (!isset($data[ $parent_name ]['divisions'][ $division->name ])) {
-                $data[ $parent_name ]['divisions'][ $division->name ] = [
-                    'division_name' => $division->name,
-                    'budget_cost' => 0,
-                    'activities' => [],
-                ];
-            }
-            if (!isset($data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ])) {
-                $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ] = [
-                    'name' => $activity->name,
-                    'budget_cost' => is_nan($resource->budget_cost)?0:$resource->budget_cost,
-                ];
-            } else {
-                $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
-            }
-
 
         }
 
-        foreach ($data as $key=>$value) {//sum budget cost for arrays
-            foreach($data[$key]['divisions'] as $divKey=>$divValue){
-                foreach ($data[$key]['divisions'][$divKey]['activities'] as $actKey=>$actValue){
-                    $data[$key]['divisions'][$divKey]['budget_cost']+=$data[$key]['divisions'][$divKey]['activities'][$actKey]['budget_cost'];
-                    $data[$key]['budget_cost']+=$data[$key]['divisions'][$divKey]['budget_cost'];
+        foreach ($data as $key => $value) {//sum budget cost for arrays
+            foreach ($data[ $key ]['divisions'] as $divKey => $divValue) {
+                foreach ($data[ $key ]['divisions'][ $divKey ]['activities'] as $actKey => $actValue) {
+                    $data[ $key ]['divisions'][ $divKey ]['budget_cost'] += $data[ $key ]['divisions'][ $divKey ]['activities'][ $actKey ]['budget_cost'];
+                    $data[ $key ]['budget_cost'] += $data[ $key ]['divisions'][ $divKey ]['budget_cost'];
                 }
             }
         }
