@@ -17,6 +17,7 @@ class BudgetCostDryCostByBuilding
     {
         $break_downs = $project->breakdowns()->get();
         $data = [];
+        $children = [];
         $total = [
             'total_dry' => 0,
             'total_budget' => 0,
@@ -44,52 +45,51 @@ class BudgetCostDryCostByBuilding
                 }
                 $resources = $break_down->resources;
                 foreach ($resources as $resource) {
-                    $data[ $wbs_level->id ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
+                    $data[ $wbs_level->id ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
                 }
             } else {//if wbs-level has not dry
                 $parent = $wbs_level;
                 while ($parent->parent) {//get budget cost of parent
                     $parent = $parent->parent;
-                    if (!isset($data[ $wbs_level->id ])) {
-                        $data[ $wbs_level->id ] = [
-                            'name' => $break_down->wbs_level->name,
-                            'code' => $break_down->wbs_level->code,
-                            'dry_cost' => 0,
-                            'budget_cost' => 0,
-                            'difference' => 0,
-                            'increase' => 0,
-                        ];
-                        $data[ $wbs_level->id ]['dry_cost'] += Boq::where('wbs_id', $wbs_level->id)->sum(\DB::raw('dry_ur * quantity'));
-                        $parent_break_down = Breakdown::where('wbs_level_id', $parent->id)->first();
-                        if ($parent_break_down) {
-                            $parent_resources = $parent_break_down->resources;
-                            foreach ($parent_resources as $parent_resource) {
-                                $data[ $wbs_level->id ]['budget_cost'] += is_nan($parent_resource->budget_cost)?0:$resource->budget_cost;
-                            }
+                    $parent_dry = $break_down->getDry($parent->id);
+                    if ($parent_dry) {
+                        if (!isset($data[ $parent->id ])) {
+                            $data[ $parent->id ] = [
+                                'name' => $parent->name,
+                                'code' => $parent->code,
+                                'dry_cost' => 0,
+                                'budget_cost' => $parent->budget_cost['budget_cost'],
+                                'difference' => 0,
+                                'increase' => 0,
+                            ];
+                            $children = $parent->budget_cost['children'];
+
                         }
+                        foreach ($parent->children as $child){
+                            $data[ $parent->id ]['dry_cost'] += Boq::where('wbs_id', $child->id)->sum(\DB::raw('dry_ur * quantity'));
+                        }
+
                     }
+                    break;
+
                 }
 
-                if (!isset($parents[ $wbs_level->id ])) {
-                    $parents[ $wbs_level->id ][] = $parent->id; // put parent id
-                }
 
-                $data[ $wbs_level->id ]['difference'] += ($data[ $wbs_level->id ]['budget_cost'] - $data[ $wbs_level->id ]['dry_cost']);
+                $data[ $parent->id ]['difference'] += ($data[ $parent->id ]['budget_cost'] - $data[ $parent->id ]['dry_cost']);
 
-                if ($data[ $wbs_level->id ]['dry_cost']) {
-                    $data[ $wbs_level->id ]['increase'] += floatval(($data[ $wbs_level->id ]['budget_cost'] - $data[ $wbs_level->id ]['dry_cost']) / $data[ $wbs_level->id ]['dry_cost'] * 100);
+                if ($data[ $parent->id ]['dry_cost']) {
+                    $data[ $parent->id ]['increase'] += floatval(($data[ $parent->id ]['budget_cost'] - $data[ $parent->id ]['dry_cost']) / $data[ $parent->id ]['dry_cost'] * 100);
                 }
             }
         }
 
-
-        foreach ($data as $key=>$value){
-            foreach ($parents as $value){
-                if(array_search($value[0],array_keys($data))){
-                    unset($data[$value[0]]);
-                }
+        foreach ($data as $key => $item) {
+            if (in_array($key, $children)) {
+                unset($data[ $key ]);
+                continue;
             }
-        } //delete parents from array if no dry exist
+        }
+        //delete parents from array if no dry exist
         foreach ($data as $key => $item) {
 
             $data[ $key ]['difference'] = $data[ $key ]['budget_cost'] - $data[ $key ]['dry_cost'];
@@ -104,7 +104,6 @@ class BudgetCostDryCostByBuilding
 
 
         }//fill increase , difference
-
 
 
         if ($total['total_budget']) {
