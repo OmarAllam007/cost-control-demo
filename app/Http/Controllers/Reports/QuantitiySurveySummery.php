@@ -23,11 +23,10 @@ class QuantitiySurveySummery
     {
         $break_downs_resources = $project->breakdown_resources()->get();
 
-
         $level_array = [];
         foreach ($break_downs_resources as $break_down_resource) {
             $boq_item = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
-            $qs= Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
+            $qs = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
             $division_name = ActivityDivision::find(StdActivity::find($break_down_resource->stdactivityid)->division_id)->name;
             $activity_name = StdActivity::find($break_down_resource->stdactivityid)->name;
 
@@ -52,17 +51,21 @@ class QuantitiySurveySummery
             }
 
             if (!isset($level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ]['cost_accounts'][ $break_down_resource->cost_account ])) {
-                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ]['cost_accounts'][ $break_down_resource->cost_account ] = [
-                    'cost_account' => $break_down_resource->cost_account,
-                    'boq_name' =>$boq_item->description,
-                    'budget_qty'=>$break_down_resource->budget_qty,
-                    'eng_qty'=>$break_down_resource->eng_qty,
-                    'unit'=>isset(Unit::find($qs->id)->type)?Unit::find($qs->id)->type:'',
-                ];
+                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ]['cost_accounts'][ $break_down_resource->cost_account ] =
+
+                    [
+                        'cost_account' => $break_down_resource->cost_account,
+                        'boq_name' => $boq_item->description,
+                        'budget_qty' => $break_down_resource->budget_qty,
+                        'eng_qty' => $break_down_resource->eng_qty,
+                        'unit' => isset(Unit::find($qs->id)->type) ? Unit::find($qs->id)->type : '',
+                    ];
             }
 
 
         }
+
+
         return view('reports.quantity_survey', compact('project', 'level_array'));
     }
 }

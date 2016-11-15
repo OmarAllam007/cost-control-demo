@@ -2,7 +2,6 @@
 @include('layouts.buttons')
 @endif
 <p style="page-break-before:always;"></p>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
