@@ -322,6 +322,15 @@ body#iframe {
   background: #92d050;
 }
 
+.btn-group-block {
+  display: flex;
+
+  .btn {
+    white-space: initial;
+    display: flex;
+    align-items: center;
+  }
+}
 /***************************/
 /*     Reports design      */
 /***************************/

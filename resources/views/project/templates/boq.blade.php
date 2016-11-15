@@ -30,7 +30,7 @@
         </section>
 
         <section v-if="!empty_boq" class="panel-group" id="BoqAccord">
-            <div class="panel panel panel-info panel-collapse" v-for="(discipline, items) in boq">
+            <div class="panel panel panel-primary panel-collapse" v-for="(discipline, items) in boq">
                 <div class="panel-heading">
                     <h4 class="panel-title"><a data-toggle="collapse" data-parent="#BoqAccord" href="#@{{ discipline }}">@{{ discipline }}</a>
                     </h4>
@@ -52,7 +52,7 @@
                         <td>
                             <form action="/boq/@{{item.id}}" method="post" @submit.prevent="destroy(item.id)">
                                 {{csrf_field()}} {{method_field('delete')}}
-                                <a href="/boq/@{{ item.id }}/edit" class="btn btn-sm btn-primary in-iframe">
+                                <a href="/boq/@{{ item.id }}/edit" class="btn btn-sm btn-primary in-iframe" title="Edit BOQ">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                                 <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>

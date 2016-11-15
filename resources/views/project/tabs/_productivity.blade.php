@@ -11,9 +11,9 @@
             <thead>
             <tr>
                 <th class="col-xs-2">Code</th>
-                <th class="col-xs-2">Category</th>
-                <th class="col-xs-2">Daily output</th>
-                <th class="col-xs-2">After reduction</th>
+                <th class="col-xs-2">Description</th>
+                <th class="col-xs-2">Crew Structure</th>
+                <th class="col-xs-2">Productivity</th>
                 <th class="col-xs-2">Unit of measure</th>
                 <th class="col-xs-2">Actions</th>
             </tr>
@@ -22,8 +22,8 @@
             @foreach($project->productivities as $productivity)
                 <tr>
                     <td class="col-xs-2">{{$productivity->code}}</td>
-                    <td class="col-xs-2">{{$productivity->category->name}}</td>
-                    <td class="col-xs-2">{{$productivity->versionFor($project->id)->daily_output}}</td>
+                    <td class="col-xs-2">{{$productivity->description}}</td>
+                    <td class="col-xs-2">{!! nl2br(e($productivity->crew_structure)) !!}}</td>
                     <td class="col-xs-2">{{$productivity->versionFor($project->id)->after_reduction}}</td>
                     <td class="col-xs-2">{{$productivity->units->type or ''}}</td>
                     <td class="col-xs-2"><a

@@ -7,6 +7,8 @@
             @if ($project_id = request('project'))
                 <p><em>{{App\Project::find($project_id)->name}}</em></p>
                 {{Form::hidden('project_id', $project_id)}}
+            @elseif (isset($boq) && ($project_id = $boq->project_id))
+                <p><em>{{$boq->project->name}}</em></p>
             @else
                 {{ Form::select('project_id', App\Project::options(), $project_id = Form::getValueAttribute('project_id'), ['class' => 'form-control']) }}
             @endif

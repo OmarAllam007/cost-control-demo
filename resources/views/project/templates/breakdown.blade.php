@@ -9,7 +9,7 @@
                class="btn btn-info btn-sm in-iframe">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
-            <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm in-iframe">
+            <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm in-iframe" title="Add Breakdown">
                 <i class="fa fa-plus"></i> Add Breakdown
             </a>
 
@@ -20,11 +20,47 @@
         </div>
         <div class="clearfix"></div>
 
-        <section class="filters" id="breakdown-filters">
+        <section class="filters row" id="breakdown-filters">
+            @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
+            @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
 
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('activity', 'Activity', ['class' => 'control-label'])}}
+                    <div class="btn-group btn-group-sm btn-group-block">
+                        <a href="#ActivitiesModal" data-toggle="modal" class="btn btn-default btn-block tree-open">{{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}</a>
+                        <a href="#" @click="activity = ''" class="remove-tree-input btn btn-warning" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
+                    {{Form::text('cost_account', session('filters.breakdown.' . $project->id . '.cost_account'), ['class' => 'form-control', 'v-model' => 'cost_account'])}}
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
+                    <div class="btn-group btn-group-sm btn-group-block">
+                        <a href="#ResourceTypeModal" data-toggle="modal" class="tree-open btn btn-default btn-block">{{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>
+                        <a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning" data-target="#ResourceTypeModal" data-label="Select Resource Type"><span class="fa fa-times-circle"></span></a>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('resource', 'Resource Name', ['class' => 'control-label'])}}
+                    {{Form::text('resource', session('filters.breakdown.'.$project->id.'.resource'), ['class' => 'form-control', 'v-model' => 'resource'])}}
+                </div>
+            </div>
         </section>
 
-        <div class="scrollpane" v-if="breakdowns.length">
+        <div class="scrollpane" v-if="filtered_breakdowns.length">
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <thead>
                 <tr>
@@ -53,7 +89,7 @@
             </table>
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <tbody>
-                <tr v-for="breakdown in breakdowns">
+                <tr v-for="breakdown in filtered_breakdowns">
                     <td style="min-width: 32px; max-width: 32px;">
 
                         <form action="/breakdown-resource/@{{ breakdown.id }}" @submit.prevent="destroy(breakdown.id)" class="dropdown">
@@ -62,8 +98,8 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-left">
-                                <li><a href="/breakdown-resource/@{{ breakdown.id }}/edit" class="btn btn-link in-iframe"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
-                                <li><a href="/breakdown/duplicate/@{{ breakdown.breakdown_id }}" class="btn btn-link in-iframe"><i class="fa fa-fw fa-copy"></i> Duplicate</a></li>
+                                <li><a href="/breakdown-resource/@{{ breakdown.id }}/edit" class="btn btn-link in-iframe" title="Edit Resource"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
+                                <li><a href="/breakdown/duplicate/@{{ breakdown.breakdown_id }}" class="btn btn-link in-iframe" title="Duplicate breakdown"><i class="fa fa-fw fa-copy"></i> Duplicate</a></li>
                                 <li>
                                     <button class="btn btn-link"><i class="fa fa-fw fa-trash"></i> Delete</button>
                                 </li>
