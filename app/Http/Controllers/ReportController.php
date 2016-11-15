@@ -110,15 +110,17 @@ class ReportController extends Controller
             while ($parent->parent) {
                 $parent = $parent->parent;
                 $parent_name = $parent->name;
+                if (!isset($data[ $parent_name ])) {
+                    $data[ $parent_name ] = [
+                        'id'=>$parent->id,
+                        'name' => $parent_name,
+                        'budget_cost' => 0,
+                        'divisions' => [],
+                    ];
+                }
+
             }
-            if (!isset($data[ $parent_name ])) {
-                $data[ $parent_name ] = [
-                    'id'=>$parent->id,
-                    'name' => $parent_name,
-                    'budget_cost' => 0,
-                    'divisions' => [],
-                ];
-            }
+
 
             if (!isset($data[ $parent_name ]['divisions'][ $division->name ])) {
                 $data[ $parent_name ]['divisions'][ $division->name ] = [
