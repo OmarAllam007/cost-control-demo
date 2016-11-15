@@ -59,12 +59,9 @@ class WbsLevel extends Model
                             $budget_cost += $resource->budget_cost;
                         }
                     }
-
                 }
-
             }
         }
-
         return ['budget_cost'=>$budget_cost,'children'=>$children];
     }
 }
