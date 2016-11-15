@@ -23,9 +23,9 @@
                     <p class="blue-second-level"><strong>{{$wbs_level}}</strong></p>
                     <ul class="list-unstyled">
                         @foreach($attributes['activities'] as $item=>$value)
+                            <li>
+                            <p class="blue-third-level"><strong>{{$item}}</strong></p>
                             @foreach($value['cost_accounts'] as $account)
-                                <li class="tree--item">
-                                    <p class="blue-third-level"><strong>{{$item}}</strong></p>
                                     <ul>
                                         <li class="tree--item">
                                             <p class="blue-fourth-level">
