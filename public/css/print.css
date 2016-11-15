@@ -8264,6 +8264,16 @@ body#iframe {
 .bg-green {
   background: #92d050; }
 
+.btn-group-block {
+  display: -webkit-box;
+  display: flex; }
+  .btn-group-block .btn {
+    white-space: initial;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center; }
+
 /***************************/
 /*     Reports design      */
 /***************************/

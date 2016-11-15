@@ -8,7 +8,8 @@
                 <p><em>{{App\Project::find(request('project'))->name}}</em></p>
                 {{Form::hidden('project_id', request('project'), ['id' => 'ProjectInput'])}}
             @else
-                {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control', 'id' => 'ProjectInput']) }}
+                <p><em>{{$survey->project->name}}</em></p>
+                {{--{{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control', 'id' => 'ProjectInput']) }}--}}
             @endif
 
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}

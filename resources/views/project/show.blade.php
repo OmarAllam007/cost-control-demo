@@ -101,4 +101,5 @@
 
     </script>
     <script src="{{asset('/js/project.js')}}"></script>
+    <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection

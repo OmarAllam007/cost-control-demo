@@ -47,7 +47,7 @@
                 <td class="col-xs-3">
                     <form action="/survey/@{{quantity.id}}" method="post" @submit.prevent="destroy(quantity.id)">
                         {{csrf_field()}}{{method_field('delete')}}
-                        <a href="/survey/@{{quantity.id}}/edit" class="btn btn-sm btn-primary in-iframe"><i class="fa fa-edit"></i> Edit</a>
+                        <a href="/survey/@{{quantity.id}}/edit" class="btn btn-sm btn-primary in-iframe" title="Edit Quantity Survey"><i class="fa fa-edit"></i> Edit</a>
                         <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>
                     </form>
                 </td>
