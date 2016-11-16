@@ -18,15 +18,16 @@ $text-color: #444;
 
   @page {
     size: A4;
-    margin: 5px;
+    margin: 8px;
+    padding: 5px;
   }
   thead {
     display: table-row-group;
   }
 
   .container-fluid {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .table > thead > tr > th.header-text {

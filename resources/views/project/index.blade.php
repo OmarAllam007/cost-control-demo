@@ -8,6 +8,7 @@
 
 @section('body')
 
+
     @if ($projects->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>

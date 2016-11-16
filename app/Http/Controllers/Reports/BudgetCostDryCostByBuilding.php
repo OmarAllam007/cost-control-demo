@@ -102,9 +102,7 @@ class BudgetCostDryCostByBuilding
             $total['total_increase'] += $data[ $key ]['increase'];
             $total['difference'] += $data[ $key ]['difference'];
 
-
-        }//fill increase , difference
-
+        }
 
         if ($total['total_budget']) {
             $total['total_increase'] = $total['difference'] / $total['total_budget'] * 100;

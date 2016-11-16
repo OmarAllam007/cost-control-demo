@@ -34,8 +34,9 @@ class ReportController extends Controller
 
     public function getReports(Project $project)
     {
-        return view('project.tabs._report',compact('project'));
+        return view('project.tabs._report', compact('project'));
     }
+
     public function wbsReport(Project $project)
     {
         return view('wbs-level.report', compact('project'));
@@ -101,26 +102,27 @@ class ReportController extends Controller
 
     public function budgetSummery(Project $project)
     {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '-1');
         $data = [];
-        $resources = $project->breakdown_resources;
-        foreach ($resources as $resource) {
-            $parent = $resource->breakdown->std_activity->division;
-            $division = $resource->breakdown->std_activity->division;
-            $activity = $resource->breakdown->std_activity;
+        $breakdowns = $project->breakdowns;
+        $parent_name = '';
+        foreach ($breakdowns as $breakdown) {
+            $parent = $breakdown->std_activity->division;
+            $division = $breakdown->std_activity->division;
+            $activity = $breakdown->std_activity;
             while ($parent->parent) {
                 $parent = $parent->parent;
                 $parent_name = $parent->name;
                 if (!isset($data[ $parent_name ])) {
                     $data[ $parent_name ] = [
-                        'id'=>$parent->id,
+                        'id' => $parent->id,
                         'name' => $parent_name,
                         'budget_cost' => 0,
                         'divisions' => [],
                     ];
                 }
-
             }
-
 
             if (!isset($data[ $parent_name ]['divisions'][ $division->name ])) {
                 $data[ $parent_name ]['divisions'][ $division->name ] = [
@@ -129,27 +131,29 @@ class ReportController extends Controller
                     'activities' => [],
                 ];
             }
-            if (!isset($data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ])) {
-                $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ] = [
-                    'name' => $activity->name,
-                    'budget_cost' => is_nan($resource->budget_cost)?0:$resource->budget_cost,
-                ];
-            } else {
-                $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
+            foreach ($breakdown->resources as $resource) {
+                if (!isset($data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ])) {
+                    $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ] = [
+                        'name' => $activity->name,
+                        'budget_cost' => is_nan($resource->budget_cost) ? 0 : $resource->budget_cost,
+                    ];
+                }
+                else {
+                    $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
+                }
             }
 
 
         }
 
-        foreach ($data as $key=>$value) {//sum budget cost for arrays
-            foreach($data[$key]['divisions'] as $divKey=>$divValue){
-                foreach ($data[$key]['divisions'][$divKey]['activities'] as $actKey=>$actValue){
-                    $data[$key]['divisions'][$divKey]['budget_cost']+=$data[$key]['divisions'][$divKey]['activities'][$actKey]['budget_cost'];
-                    $data[$key]['budget_cost']+=$data[$key]['divisions'][$divKey]['budget_cost'];
+        foreach ($data as $key => $value) {//sum budget cost for arrays
+            foreach ($data[ $key ]['divisions'] as $divKey => $divValue) {
+                foreach ($data[ $key ]['divisions'][ $divKey ]['activities'] as $actKey => $actValue) {
+                    $data[ $key ]['divisions'][ $divKey ]['budget_cost'] += $data[ $key ]['divisions'][ $divKey ]['activities'][ $actKey ]['budget_cost'];
+                    $data[ $key ]['budget_cost'] += $data[ $key ]['divisions'][ $divKey ]['budget_cost'];
                 }
             }
         }
-
         return view('std-activity.budgetSummery', compact('data', 'project'));
     }
 
