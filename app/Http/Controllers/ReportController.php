@@ -102,12 +102,15 @@ class ReportController extends Controller
 
     public function budgetSummery(Project $project)
     {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '-1');
         $data = [];
-        $resources = $project->breakdown_resources;
-        foreach ($resources as $resource) {
-            $parent = $resource->breakdown->std_activity->division;
-            $division = $resource->breakdown->std_activity->division;
-            $activity = $resource->breakdown->std_activity;
+        $breakdowns = $project->breakdowns;
+        $parent_name = '';
+        foreach ($breakdowns as $breakdown) {
+            $parent = $breakdown->std_activity->division;
+            $division = $breakdown->std_activity->division;
+            $activity = $breakdown->std_activity;
             while ($parent->parent) {
                 $parent = $parent->parent;
                 $parent_name = $parent->name;
@@ -119,23 +122,27 @@ class ReportController extends Controller
                         'divisions' => [],
                     ];
                 }
-                if (!isset($data[ $parent_name ]['divisions'][ $division->name ])) {
-                    $data[ $parent_name ]['divisions'][ $division->name ] = [
-                        'division_name' => $division->name,
-                        'budget_cost' => 0,
-                        'activities' => [],
-                    ];
-                }
+            }
+
+            if (!isset($data[ $parent_name ]['divisions'][ $division->name ])) {
+                $data[ $parent_name ]['divisions'][ $division->name ] = [
+                    'division_name' => $division->name,
+                    'budget_cost' => 0,
+                    'activities' => [],
+                ];
+            }
+            foreach ($breakdown->resources as $resource) {
                 if (!isset($data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ])) {
                     $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ] = [
                         'name' => $activity->name,
                         'budget_cost' => is_nan($resource->budget_cost) ? 0 : $resource->budget_cost,
                     ];
-                } else {
+                }
+                else {
                     $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
                 }
-
             }
+
 
         }
 
@@ -147,7 +154,6 @@ class ReportController extends Controller
                 }
             }
         }
-
         return view('std-activity.budgetSummery', compact('data', 'project'));
     }
 
