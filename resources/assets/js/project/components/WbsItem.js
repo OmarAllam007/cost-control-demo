@@ -1,7 +1,7 @@
 export default {
     template: document.getElementById('WbsItemTemplate').innerHTML,
 
-    props: ['item'],
+    props: ['item', 'hasFilter'],
 
     name: 'wbs-item',
 

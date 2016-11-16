@@ -10,7 +10,7 @@ export default {
             this.wbs_levels = [];
         }
 
-        return { loading: false, wiping: false };
+        return { loading: false, wiping: false, filter: '' };
     },
 
     ready() {
@@ -69,6 +69,37 @@ export default {
                 });
                 $('#WipeWBSModal').modal('hide');
             });
+        },
+
+        applyFilter(level) {
+            const filter = this.filter.toLowerCase();
+            let filtered = [];
+
+            const valid = level.code.toLowerCase().indexOf(filter) >= 0 || level.name.toLowerCase().indexOf(filter) >= 0;
+            if (valid) {
+                filtered.push(level);
+            }
+
+            level.children.forEach((child) => {
+                filtered = $.merge(filtered, this.applyFilter(child));
+            });
+
+            return filtered;
+        }
+    },
+
+    computed: {
+        filtered_wbs_levels() {
+            if (!this.filter) {
+                return this.wbs_levels;
+            }
+
+            let filtered = [];
+            this.wbs_levels.forEach((level) => {
+                filtered = $.merge(filtered, this.applyFilter(level));
+            });
+
+            return filtered;
         }
     },
 
