@@ -24,8 +24,6 @@ class BudgetCostDryCostByBuilding
             'total_increase' => 0,
             'difference' => 0,
         ];
-        $parents = [];
-
         foreach ($break_downs as $break_down) {
             $wbs_level = $break_down->wbs_level;
             $dry = $break_down->getDry($wbs_level->id);
