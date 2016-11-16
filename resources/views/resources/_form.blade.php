@@ -1,6 +1,6 @@
 {{ csrf_field() }}
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-8">
         <div class="form-group {{$errors->first('resource_type_id', 'has-error')}}">
             {{ Form::label('resource_type', 'Resource type', ['class' => 'control-label']) }}
             {{--{{  Form::select('resource_type_id',$resource_types,null, ['class' => 'form-control']) }}--}}
@@ -76,27 +76,18 @@
 
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
             {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
-            <p>
-                <a href="#ParentsModal2" data-toggle="modal" class="tree-open">
-                    {{Form::getValueAttribute('business_partner_id')? App\BusinessPartner::find(Form::getValueAttribute('business_partner_id'))->path : 'Select Business Partner' }}
-                </a>
-                <a class="remove-tree-input" data-label="Select Business Partner" data-target="#ParentsModal2"><span class="fa fa-times"></span></a>
-
-            </p>
+            {{ Form::select('business_partner_id', App\BusinessPartner::options(), null, ['class' => 'form-control']) }}
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
-
-        <!-- Continue working on your fields here -->
-
-        <div class="form-group">
-            <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
-        </div>
-
     </div>
 
+    @include('resources._codes')
 
 </div>
 
+<div class="form-group">
+    <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+</div>
 
 <div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -117,28 +108,9 @@
     </div>
 </div>
 
-
-<div id="ParentsModal2" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select Business Partner</h4>
-            </div>
-            <div class="modal-body">
-                <ul class="list-unstyled tree">
-                    @foreach(App\BusinessPartner::select('id','name')->groupBy('name')
-            ->get() as $partner)
-                        @include('business-partner._recursive_input', compact('partner'))
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 @section('javascript')
+    @if (isset($resources))
+    <script src="{{asset('/js/resource-codes.js')}}"></script>
+    @endif
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @stop

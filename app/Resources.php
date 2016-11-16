@@ -35,7 +35,10 @@ class Resources extends Model
         return $this->belongsTo(ResourceType::class, 'resource_type_id');
     }
 
-
+    function codes()
+    {
+        return $this->hasMany(ResourceCode::class, 'resource_id');
+    }
 
     public function parteners()
     {
@@ -81,5 +84,19 @@ class Resources extends Model
         }
 
         return $errors;
+    }
+
+    function syncCodes($codes)
+    {
+        $codeIds = [0];
+
+        if ($codes) {
+            foreach ($codes as $code) {
+                $dbCode = $this->codes()->updateOrCreate($code);
+                $codeIds[] = $dbCode->id;
+            }
+        }
+
+        $this->codes()->whereNotIn('id', $codeIds)->delete();
     }
 }

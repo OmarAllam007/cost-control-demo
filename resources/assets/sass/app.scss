@@ -9,10 +9,15 @@
       font-size: 20px;
       line-height: 1.5;
       vertical-align: middle;
-      margin-top: 3px;
-      margin-bottom: 5px;
-      padding: 5px;
+      margin-top: 0;
+      margin-bottom: 0;
     }
+  }
+}
+
+.panel-form {
+  h4 {
+    line-height: 30px;
   }
 }
 
@@ -245,6 +250,8 @@ body#iframe {
   max-height: 500px;
   overflow: auto;
 
+
+
   li {
     list-style-type: none;
     position: relative;
@@ -274,8 +281,9 @@ body#iframe {
   }
 
   ul {
-    padding-left: 0;
-    margin-left: 15px;
+    padding-left: 10px;
+    margin-left: 10px;
+    border-left: 1px dotted #ccc;
   }
 
   .wbs-icon {
@@ -326,6 +334,11 @@ body#iframe {
     display: flex;
     align-items: center;
   }
+}
+
+#CodesPanel li {
+  display: flex;
+  justify-content: space-between;
 }
 /***************************/
 /*     Reports design      */

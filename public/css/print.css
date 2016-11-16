@@ -8047,6 +8047,9 @@ button.close {
   margin-top: 0;
   margin-bottom: 0; }
 
+.panel-form h4 {
+  line-height: 30px; }
+
 table.table > tbody > tr > td,
 table.table > tbody > tr > th,
 table.table > thead > tr > td,
@@ -8086,9 +8089,6 @@ ul.tree .tree--item {
 
 .panel-sm .panel-body {
   padding: 10px; }
-
-.tab-actions {
-  margin-top: 15px; }
 
 .bg-black {
   background: #222;
@@ -8229,8 +8229,9 @@ body#iframe {
       display: block;
       padding: 5px 5px 5px 21px; }
   .wbs-tree ul {
-    padding-left: 0;
-    margin-left: 15px; }
+    padding-left: 10px;
+    margin-left: 10px;
+    border-left: 1px dotted #ccc; }
   .wbs-tree .wbs-icon {
     position: absolute;
     top: 5px;
@@ -8273,6 +8274,12 @@ body#iframe {
     display: flex;
     -webkit-box-align: center;
     align-items: center; }
+
+#CodesPanel li {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+  justify-content: space-between; }
 
 /***************************/
 /*     Reports design      */
@@ -8375,12 +8382,13 @@ body#iframe {
 @media print {
   @page {
     size: A4;
-    margin: 5px; }
+    margin: 8px;
+    padding: 5px; }
   thead {
     display: table-row-group; }
   .container-fluid {
-    padding-left: 5px;
-    padding-right: 5px; }
+    padding-left: 8px;
+    padding-right: 8px; }
   .table > thead > tr > th.header-text {
     vertical-align: bottom; }
   .header-text h1,
