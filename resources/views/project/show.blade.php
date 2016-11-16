@@ -16,7 +16,7 @@
 @section('body')
 
     <nav class="project-nav">
-        <a href="#wbsArea" class="btn btn-outline btn-primary">WBS &amp; Activity</a>
+        <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
         <a href="#ResourcesArea" class="btn btn-outline btn-primary">Resources</a>
         <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
 
@@ -56,9 +56,12 @@
                 $('#projectArea').removeClass('hidden');
                 $('.project-nav').on('click', 'a', function (e) {
                     e.preventDefault();
-                    window.location.hash = $(this).attr('href');
+                    var _this = $(this);
+                    window.location.hash = _this.attr('href');
                     $('.project-tab').hide();
-                    $($(this).attr('href')).show();
+                    $(_this.attr('href')).show();
+                    _this.siblings().addClass('btn-outline');
+                    _this.removeClass('btn-outline');
                 });
 
                 $(w).on('hashchange', function () {

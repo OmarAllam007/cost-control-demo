@@ -81,6 +81,7 @@ class ResourcesController extends Controller
         }
 
         $resources->update($request->all());
+        $resources->syncCodes($request->get('codes'));
 
         flash('Resource has been saved', 'success');
 

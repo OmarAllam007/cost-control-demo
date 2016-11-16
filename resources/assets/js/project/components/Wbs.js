@@ -10,10 +10,11 @@ export default {
             this.wbs_levels = [];
         }
 
-        return { loading: false, wiping: false };
+        return { loading: false, wiping: false, filter: '' };
     },
 
     ready() {
+        console.log(this.$el);
         let wbsTree = $('#wbs-tree').on('click', '.wbs-icon', function (e) {
             e.preventDefault();
             $(this).find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
@@ -22,8 +23,6 @@ export default {
             wbsTree.find('.wbs-item').removeClass('active');
             $(this).parent('.wbs-item').addClass('active');
         });
-
-        wbsTree.find('[data-toggle="tooltip"]').tooltip({container: 'body'});
     },
 
     methods: {
@@ -69,6 +68,37 @@ export default {
                 });
                 $('#WipeWBSModal').modal('hide');
             });
+        },
+
+        applyFilter(level) {
+            const filter = this.filter.toLowerCase();
+            let filtered = [];
+
+            const valid = level.code.toLowerCase().indexOf(filter) >= 0 || level.name.toLowerCase().indexOf(filter) >= 0;
+            if (valid) {
+                filtered.push(level);
+            }
+
+            level.children.forEach((child) => {
+                filtered = $.merge(filtered, this.applyFilter(child));
+            });
+
+            return filtered;
+        }
+    },
+
+    computed: {
+        filtered_wbs_levels() {
+            if (!this.filter) {
+                return this.wbs_levels;
+            }
+
+            let filtered = [];
+            this.wbs_levels.forEach((level) => {
+                filtered = $.merge(filtered, this.applyFilter(level));
+            });
+
+            return filtered;
         }
     },
 

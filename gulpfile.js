@@ -12,9 +12,12 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix.sass('app.scss').webpack('project/index.js', 'public/js/project.js');
+    mix.sass('app.scss')
+        .sass('print.scss')
+        .webpack('project/index.js', 'public/js/project.js')
+        .webpack('resource-codes.js');
 
-    mix.sass('print.scss');
+
 
     /*
     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');

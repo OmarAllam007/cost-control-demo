@@ -15,12 +15,12 @@ class CreateFinancialPeriodTable extends Migration
         Schema::create('financial_periods', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('project_id');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->boolean('open');
-            $table->dateTime('opened_time');
-            $table->dateTime('closed_time');
-            $table->text('description');
+            $table->date('last_open_date')->nullable();
+            $table->dateTime('last_close_date')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

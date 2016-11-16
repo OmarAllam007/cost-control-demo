@@ -1,9 +1,13 @@
 export default {
     template: document.getElementById('WbsItemTemplate').innerHTML,
 
-    props: ['item'],
+    props: ['item', 'hasFilter'],
 
     name: 'wbs-item',
+
+    ready() {
+        $(this.$el).find('[data-toggle="tooltip"]').tooltip({container: 'body'});
+    },
 
     methods: {
         setSelected() {
