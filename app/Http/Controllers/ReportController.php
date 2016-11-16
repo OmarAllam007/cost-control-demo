@@ -138,8 +138,7 @@ class ReportController extends Controller
                         'budget_cost' => is_nan($resource->budget_cost) ? 0 : $resource->budget_cost,
                     ];
                 }
-                else {
-                    $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
+                else { $data[ $parent_name ]['divisions'][ $division->name ]['activities'][ $activity->name ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
                 }
             }
 

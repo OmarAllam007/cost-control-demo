@@ -40,8 +40,9 @@ class BudgetCostDryCostByBuilding
                         'difference' => 0,
                         'increase' => 0,
                     ];
+                    $boq = Boq::where('wbs_id', $wbs_level->id)->first();
+                    $data[ $wbs_level->id ]['dry_cost'] = $boq->quantity * $boq->dry_ur;
 
-                    $data[ $wbs_level->id ]['dry_cost'] += Boq::where('wbs_id', $wbs_level->id)->sum(\DB::raw('dry_ur * quantity'));
                 }
                 $resources = $break_down->resources;
                 foreach ($resources as $resource) {
@@ -65,15 +66,14 @@ class BudgetCostDryCostByBuilding
                             $children = $parent->budget_cost['children'];
 
                         }
-                        foreach ($parent->children as $child){
-                            $data[ $parent->id ]['dry_cost'] += Boq::where('wbs_id', $child->id)->sum(\DB::raw('dry_ur * quantity'));
+                        foreach ($parent->children as $child) {
+                            $data[ $parent->id ]['dry_cost'] += Boq::where('cost_account', $child->id)->sum(\DB::raw('dry_ur * quantity'));
                         }
 
                     }
                     break;
 
                 }
-
 
                 $data[ $parent->id ]['difference'] += ($data[ $parent->id ]['budget_cost'] - $data[ $parent->id ]['dry_cost']);
 

@@ -28,8 +28,8 @@
 
             <tr class="tbl-content">
                 <td class="col-xs-4">{{$row['name']}}</td>
-                <td class="col-xs-4">{{number_format($row['budget_qty_eq'],2)}}</td>
-                <td class="col-xs-4">{{number_format($row['budget_cost_eq'],2)}}</td>
+                <td class="col-xs-4">{{number_format($row['total_budget_qty_eq'],2)}}</td>
+                <td class="col-xs-4">{{number_format($row['total_budget_cost_eq'],2)}}</td>
 
             </tr>
         @endforeach
