@@ -38,6 +38,9 @@ Route::group(['prefix' => 'resources'], function () {
     Route::post('/filter', ['as' => 'resources.filter', 'uses' => 'ResourcesController@filter']);
 
     Route::delete('wipe', ['as' => 'resources.wipe', 'uses' => 'ResourcesController@wipe']);
+
+    Route::get('import-codes', ['as' => 'resources.import-codes', 'uses' => 'ResourcesController@importCodes']);
+    Route::post('import-codes', ['as' => 'resources.post-import-codes', 'uses' => 'ResourcesController@postImportCodes']);
 });
 
 Route::group(['prefix' => 'productivity'], function () {

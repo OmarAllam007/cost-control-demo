@@ -6,6 +6,7 @@ use App\BusinessPartner;
 use App\Filter\ResourcesFilter;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheResourcesTree;
+use App\Jobs\ImportResourceCodesJob;
 use App\Jobs\ResourcesImportJob;
 use App\Project;
 use App\Resources;
@@ -31,11 +32,11 @@ class ResourcesController extends Controller
     {
         $units_drop = Unit::options();
         $partners = BusinessPartner::options();
-        $resources = Resources::all();
+//        $resources = Resources::all();
         $resource_types = ResourceType::lists('name', 'id')->all();
         $edit = false;
 
-        return view('resources.create', compact('partners', 'resources', 'resource_types', 'units_drop', 'edit'));
+        return view('resources.create', compact('partners', 'resource_types', 'units_drop', 'edit'));
     }
 
     public function store(Request $request)
@@ -258,6 +259,25 @@ class ResourcesController extends Controller
 
         flash('All resources have been deleted', 'info');
 
+        return \Redirect::route('resources.index');
+    }
+
+    function importCodes()
+    {
+        return view('resources.import-codes');
+    }
+
+    function postImportCodes(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx',
+        ]);
+
+        $file = $request->file('file');
+
+        $count = $this->dispatch(new ImportResourceCodesJob($file->path()));
+
+        flash($count . ' Equivalent codes have been imported successfully', 'success');
         return \Redirect::route('resources.index');
     }
 }
