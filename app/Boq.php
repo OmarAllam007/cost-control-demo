@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Behaviors\HasOptions;
@@ -9,7 +10,8 @@ use App\Behaviors\Tree;
 
 class Boq extends Model
 {
-    use Tree, HasOptions;
+
+    use Tree, HasOptions, CachesQueries;
 
     protected $fillable = [
         'wbs_id', 'item', 'description', 'type', 'unit_id', 'quantity', 'dry_ur', 'price_ur', 'arabic_description'

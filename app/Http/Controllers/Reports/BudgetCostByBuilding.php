@@ -19,7 +19,7 @@ class BudgetCostByBuilding
 {
     public function getBudgetCostForBuilding(Project $project)
     {
-        $breakdowns = $project->breakdowns()->get();
+        $breakdowns = $project->breakdowns()->with('wbs_level')->get();
         $data = [];
         $children = [];
         $total = [
@@ -29,6 +29,7 @@ class BudgetCostByBuilding
         $parents = [];
 
         foreach ($breakdowns as $breakdown) {
+            /** @var Breakdown $breakdown */
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);
             $resources = $breakdown->resources;

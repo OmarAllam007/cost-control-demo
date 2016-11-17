@@ -44,18 +44,22 @@ class WbsLevel extends Model
         $this->delete();
     }
 
+    public function breakdowns()
+    {
+        return $this->hasMany(Breakdown::class);
+    }
+
     public function getBudgetCostAttribute()
     {
         $budget_cost = 0;
         $children = [];
         if ($this->children && count($this->children)) {
+            $this->children->load('breakdowns', 'breakdowns.resources', 'breakdowns.resources.template_resource', 'breakdowns.resources.template_resource.resource');
             foreach ($this->children as $child) {
-                $child_break_downs = Breakdown::where('wbs_level_id', $child->id)->get();
                 $children [] = $child->id;
-                if ($child_break_downs) {
-                    foreach ($child_break_downs as $break_down) {
-                        $child_break_down_resources = $break_down->resources;
-                        foreach ($child_break_down_resources as $resource) {
+                if (count($child->breakdowns)) {
+                    foreach ($child->breakdowns as $break_down) {
+                        foreach ($break_down->resources as $resource) {
                             $budget_cost += $resource->budget_cost;
                         }
                     }

@@ -16,15 +16,13 @@ class BoqPriceList
 {
     public function getBoqPriceList(Project $project)
     {
-        ini_set('max_execution_time',300);
-        $breakDown_resources = $project->breakdown_resources()->get();
+        $breakDown_resources = $project->breakdown_resources()->with('breakdown.resources','breakdown.wbs_level','template_resource','template_resource.resource')->get();
         $data = [];
         foreach ($breakDown_resources as $breakDown_resource) {
             $resource = $breakDown_resource->resource;
             $root = $resource->types->root;
             $wbs_level = $breakDown_resource->breakdown->wbs_level;
             $cost_account = $breakDown_resource->breakdown->cost_account;
-
             $boq = Boq::where('cost_account', $cost_account)->first();
             if (!isset($data[ $wbs_level->name ])) {
                 $data[ $wbs_level->name ] = [
