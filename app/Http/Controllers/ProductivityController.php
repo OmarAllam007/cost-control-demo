@@ -5,6 +5,7 @@ use App\ActivityDivision;
 use App\CsiCategory;
 use App\Filter\ProductivityFilter;
 use App\Http\Requests\WipeRequest;
+use App\Jobs\Export\ExportProductivityJob;
 use App\Jobs\ProductivityImportJob;
 use App\Productivity;
 use App\ProductivityList;
@@ -199,35 +200,7 @@ class ProductivityController extends Controller
 
     public function exportProductivity(Project $project)
     {
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Code');
-        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Category Name');
-        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Description');
-        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Crew Structure');
-        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Daily Output');
-        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'After Reduction');
-        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Reduction Factor');
-        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Unit');
-        $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Source');
-        $rowCount = 2;
-        foreach ($project->productivities as $productivity) {
-            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $productivity->code);
-            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $productivity->category->name);
-            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $productivity->description);
-            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $productivity->crew_structure);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $productivity->versionFor($project->id)->daily_output);
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $productivity->versionFor($project->id)->after_reduction);
-            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $productivity->reduction_factor);
-            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $productivity->units->type);
-            $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $productivity->source);
-            $rowCount++;
-        }
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $project->name . ' - Productivity.xlsx"');
-        header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save('php://output');
+        $this->dispatch(new ExportProductivityJob($project));
     }
 
     function wipe(WipeRequest $request)
