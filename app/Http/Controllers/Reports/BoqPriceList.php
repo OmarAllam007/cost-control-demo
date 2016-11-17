@@ -16,7 +16,7 @@ class BoqPriceList
 {
     public function getBoqPriceList(Project $project)
     {
-        $breakDown_resources = $project->breakdown_resources()->with('breakdown.resources','breakdown.wbs_level','template_resource','template_resource.resource')->get();
+        $breakDown_resources = $project->breakdown_resources()->with('breakdown.wbs_level','template_resource','template_resource.resource')->get();
         $data = [];
         foreach ($breakDown_resources as $breakDown_resource) {
             $resource = $breakDown_resource->resource;
