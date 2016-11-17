@@ -9,8 +9,10 @@
                 {{Form::hidden('project_id', $project_id)}}
             @elseif (isset($boq) && ($project_id = $boq->project_id))
                 <p><em>{{$boq->project->name}}</em></p>
+                {{Form::hidden('project_id', $project_id)}}
             @else
                 {{ Form::select('project_id', App\Project::options(), $project_id = Form::getValueAttribute('project_id'), ['class' => 'form-control']) }}
+                {{Form::hidden('project_id', $project_id)}}
             @endif
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
         </div>
