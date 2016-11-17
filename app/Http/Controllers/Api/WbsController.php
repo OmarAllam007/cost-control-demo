@@ -31,11 +31,11 @@ class WbsController extends Controller
 //            ->with('std_activity_resource')
             ->with('breakdown.template')
             ->with('breakdown.project')
-            ->with('breakdown.variables')
+//            ->with('breakdown.variables')
             ->with('template_resource')
             ->with('template_resource.resource')
             ->with('template_resource')
-            ->with('productivity')
+//            ->with('productivity')
             ->forWbs($wbs_level->id)->get()
             ->map(function (BreakdownResource $res) {
                 return new BreakdownResourceFormatter($res);

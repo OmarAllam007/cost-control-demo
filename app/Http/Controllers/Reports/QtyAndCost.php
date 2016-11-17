@@ -19,7 +19,6 @@ class QtyAndCost
 {
     public function compare(Project $project)
     {
-//        $break_down_resources = $project->breakdown_resources()->get();
         $data = [];
         $total = [
             'budget_qty_eq' => 0,
@@ -27,6 +26,7 @@ class QtyAndCost
         ];
 
         $breakdowns = $project->breakdowns()->get();
+
         foreach ($breakdowns as $breakdown) {
             $discipline = $breakdown->std_activity->discipline;
             $dry = Boq::where('cost_account', $breakdown->cost_account)->first();
