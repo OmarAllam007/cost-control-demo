@@ -10,6 +10,11 @@
         <a href="{{ route('resources.import') }}" class="btn btn-sm btn-success">
             <i class="fa fa-cloud-upload"></i> Import
         </a>
+
+        <a href="{{ route('resources.import-codes') }}" class="btn btn-sm btn-success">
+            <i class="fa fa-cloud-upload"></i> Import Equivalent Codes
+        </a>
+
         @can('wipe')
             <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete All</a>
         @endcan

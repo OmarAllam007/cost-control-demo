@@ -1,4 +1,4 @@
-@if (isset($resources))
+@if (isset($resources) && !$override)
     <section class="col-sm-4">
 
         <div class="panel panel-default panel-form" id="CodesPanel">
