@@ -17,7 +17,7 @@ class BudgetCostDryCostByDiscipline
 {
     public function compareBudgetCostDryCostDiscipline(Project $project)
     {
-        $break_downs = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.std_activity.resources','breakdown.wbs_level','template_resource.resource')->get();
+        $break_downs = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.std_activity.division','breakdown.wbs_level','template_resource.resource')->get();
         $data = [];
         $total = [
             'dry_cost' => 0,
