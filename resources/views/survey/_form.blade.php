@@ -6,10 +6,12 @@
 
             @if (request('project'))
                 <p><em>{{App\Project::find(request('project'))->name}}</em></p>
-                {{Form::hidden('project_id', request('project'), ['id' => 'ProjectInput'])}}
+                {{Form::hidden('project_id', $project->id, ['id' => 'ProjectInput'])}}
             @else
                 <p><em>{{$survey->project->name}}</em></p>
-                {{--{{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control', 'id' => 'ProjectInput']) }}--}}
+                {{Form::hidden('project_id', $project->id, ['id' => 'ProjectInput'])}}
+
+{{--                {{ Form::select('project_id', App\Project::options(), null, ['class' => 'form-control', 'id' => 'ProjectInput']) }}--}}
             @endif
 
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}

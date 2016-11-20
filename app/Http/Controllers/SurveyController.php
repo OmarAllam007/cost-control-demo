@@ -63,8 +63,8 @@ class SurveyController extends Controller
 
     public function update(Survey $survey, Request $request)
     {
-        $this->validate($request, $this->rules);
 
+        $this->validate($request, $this->rules);
         $survey->update($request->all());
         $survey->syncVariables($request->get('variables'));
 
