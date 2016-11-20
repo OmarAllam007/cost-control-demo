@@ -107,10 +107,8 @@ class ReportController extends Controller
 
     public function budgetSummery(Project $project)
     {
-        ini_set('max_execution_time', 300);
-        ini_set('memory_limit', '-1');
         $data = [];
-        $breakdowns = $project->breakdowns;
+        $breakdowns = $project->breakdowns()->with('resources.template_resource','resources.template_resource.resource','std_activity','std_activity.division','resources','template.resources')->get();
         $parent_name = '';
         foreach ($breakdowns as $breakdown) {
             $parent = $breakdown->std_activity->division;

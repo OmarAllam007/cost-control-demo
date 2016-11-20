@@ -20,7 +20,7 @@ class ResourceDictionary
 {
     public function getResourceDictionary(Project $project)
     {
-        $break_down_resources = $project->breakdown_resources()->get();
+        $break_down_resources = $project->breakdown_resources()->with('template_resource','template_resource.resource')->get();
         $data = [];
         $parents = [];
 
