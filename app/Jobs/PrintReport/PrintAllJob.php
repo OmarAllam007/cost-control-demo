@@ -31,12 +31,15 @@ class PrintAllJob extends Job
 
     public function handle()
     {
+        ini_set('max_execution_time',100);
         //Budget Calculations
         $wbsLevelReport = new ReportController();
         $wbsLevelReportHtml = $wbsLevelReport->wbsReport($this->project)->render();
 
+
         $stdActivityReport = new ReportController();
         $stdActivityReportHtml = $stdActivityReport->stdActivityReport($this->project)->render();
+
 
         $productivity = new Productivity();
         $productivityHtml = $productivity->getProductivity($this->project)->render();
@@ -64,8 +67,8 @@ class PrintAllJob extends Job
 
         $revisedBoq = new RevisedBoq();
         $revisedBoqHtml = $revisedBoq->getRevised($this->project)->render();
-        //Budget Reports
 
+        //Budget Reports
         $budgetCostByBuilding = new BudgetCostByBuilding();
         $budgetCostByBuildingHtml = $budgetCostByBuilding->getBudgetCostForBuilding($this->project)->render();
 
@@ -83,6 +86,7 @@ class PrintAllJob extends Job
 
         $budgetCostVsDry = new QtyAndCost();
         $budgetCostVsDryHtml = $budgetCostVsDry->compare($this->project)->render();
+
 
 
         echo $wbsLevelReportHtml .
