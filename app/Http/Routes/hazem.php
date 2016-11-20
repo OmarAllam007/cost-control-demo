@@ -98,5 +98,6 @@ Route::resource('breakdown-template', 'BreakdownTemplateController');
 Route::resource('std-activity-resource', 'StdActivityResourceController');
 Route::resource('breakdown', 'BreakdownController');
 Route::resource('breakdown-resource', 'BreakdownResourceController');
+Route::resource('period', 'PeriodController');
 
 Route::get('/blank', 'BlankController@index');

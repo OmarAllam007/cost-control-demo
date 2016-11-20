@@ -129,6 +129,9 @@ class Project extends Model
     }
 
 
-
+    function periods()
+    {
+        return $this->hasMany(Period::class);
+    }
 
 }
