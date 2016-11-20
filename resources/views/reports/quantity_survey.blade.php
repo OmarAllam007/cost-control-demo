@@ -18,9 +18,7 @@
     <ul class="list-unstyled tree">
         @foreach($level_array as $level)
             <li>
-                <div class="blue-first-level">
-                    <strong>{{$level['name']}}</strong>
-                </div>
+
                 @if($level['activity_divisions'])
                     @foreach($level['activity_divisions'] as $division)
                         <ul class="list-unstyled">
@@ -28,13 +26,16 @@
                                 <div class="blue-second-level">
                                     <strong>{{$division['name']}}</strong>
                                 </div>
+
                                 @foreach($division['activities'] as $activity)
                                     <ul class="list-unstyled">
                                         <li class="list-unstyled">
                                             <div class="blue-third-level">
                                                 <strong>{{$activity['name']}}</strong>
                                             </div>
-
+                                        <li><div class="blue-first-level">
+                                                <strong>{{$level['name']}}</strong>
+                                            </div></li>
                                             <table class="table table-condensed">
                                                 <thead class="blue-fourth-level">
 

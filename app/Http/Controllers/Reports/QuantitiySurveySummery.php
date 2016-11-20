@@ -61,7 +61,7 @@ class QuantitiySurveySummery
                         'boq_name' => $boq_item->description,
                         'budget_qty' => $break_down_resource->budget_qty,
                         'eng_qty' => $break_down_resource->eng_qty,
-                        'unit' => isset($qs->unit_id)?Unit::find($qs->unit_id)->type: '',
+                        'unit' => $break_down_resource->resource->units->type,
                     ];
             }
 
