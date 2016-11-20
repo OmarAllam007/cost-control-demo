@@ -32,12 +32,12 @@
         <section v-if="!empty_boq" class="panel-group" id="BoqAccord">
             <div class="panel panel panel-primary panel-collapse" v-for="(discipline, items) in boq">
                 <div class="panel-heading">
-                    <h4 class="panel-title"><a data-toggle="collapse" data-parent="#BoqAccord" href="#@{{ discipline || 'General' }}">@{{ discipline || 'General' }}</a>
+                    <h4 class="panel-title"><a data-toggle="collapse" data-parent="#BoqAccord" href="#@{{ (discipline || 'General')|slug }}">@{{ discipline || 'General' }}</a>
                     </h4>
                 </div>
 
                 <table class="table table-condensed table-striped table-hover table-fixed collapse"
-                       id="@{{ slug(discipline ?: 'General') }}">
+                       id="@{{ (discipline || 'General')|slug }}">
                     <thead>
                     <tr>
                         <th class="col-md-6">BOQ Item</th>
