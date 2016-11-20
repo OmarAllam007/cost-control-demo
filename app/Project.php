@@ -134,4 +134,11 @@ class Project extends Model
         return $this->hasMany(Period::class);
     }
 
+    function open_period()
+    {
+        $relation = $this->hasOne(Period::class);
+        $relation->where('is_open', true);
+        return $relation;
+    }
+
 }

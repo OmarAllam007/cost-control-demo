@@ -45,21 +45,21 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         set_time_limit(1800);
-        $divisions = $this->getBoqs($project);
+        // $divisions = $this->getBoqs($project);
         $project->load([
-            'breakdown_resources.template_resource.resource',
-            'wbs_levels',
-            'quantities',
-            'quantities.wbsLevel',
-            'breakdown_resources' => function ($q) use ($project) {
-                return $q->filter(session('filters.breakdown.' . $project->id, []));
-            },
-            'breakdown_resources.breakdown',
-            'breakdown_resources.breakdown.template',
-            'breakdown_resources.breakdown.std_activity',
-            'breakdown_resources.template_resource',
-            'breakdown_resources.productivity',
-        ]);
+                       'breakdown_resources.template_resource.resource',
+                       'wbs_levels',
+                       // 'quantities',
+                       // 'quantities.wbsLevel',
+                    //    'breakdown_resources' => function ($q) use ($project) {
+                    //     return $q->filter(session('filters.breakdown.' . $project->id, []));
+                    // },
+                    'breakdown_resources.breakdown',
+                    'breakdown_resources.breakdown.template',
+                    'breakdown_resources.breakdown.std_activity',
+                    'breakdown_resources.template_resource',
+                    'breakdown_resources.productivity',
+                    ]);
 
         return view('project.show', compact('project', 'divisions'));
     }
@@ -70,8 +70,8 @@ class ProjectController extends Controller
         foreach ($project->boqs as $boq) {
             if (!isset($items[ $boq->type ])) {
                 $items[ $boq->type ] = [
-                    'name' => $boq->type,
-                    'items' => collect(),
+                'name' => $boq->type,
+                'items' => collect(),
                 ];
             }
 
@@ -114,6 +114,11 @@ class ProjectController extends Controller
     }
 
 
+    function costControl(Project $project)
+    {
+        $period = $project->open_period;
+        return view('project.cost-control', compact('project', 'period'));
+    }
 
 
 }

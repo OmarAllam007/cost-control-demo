@@ -17,7 +17,9 @@ class CreatePeriodsTable extends Migration
             $table->integer('project_id')->unsigned();
             $table->string('name');
             $table->string('start_date');
+            $table->string('end_date')->nullable();
             $table->boolean('is_open')->nullable();
+            $table->datetime('closed_at')->nullable();
             $table->timestamps();
         });
     }
