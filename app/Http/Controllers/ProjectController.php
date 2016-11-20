@@ -47,6 +47,7 @@ class ProjectController extends Controller
         set_time_limit(1800);
         $divisions = $this->getBoqs($project);
         $project->load([
+            'breakdown_resources.template_resource.resource',
             'wbs_levels',
             'quantities',
             'quantities.wbsLevel',

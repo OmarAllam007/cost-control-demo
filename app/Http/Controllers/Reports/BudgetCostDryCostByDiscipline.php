@@ -17,7 +17,7 @@ class BudgetCostDryCostByDiscipline
 {
     public function compareBudgetCostDryCostDiscipline(Project $project)
     {
-        $break_downs = $project->breakdown_resources()->get();
+        $break_downs = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.std_activity.division','breakdown.wbs_level','template_resource.resource')->get();
         $data = [];
         $total = [
             'dry_cost' => 0,
@@ -26,10 +26,13 @@ class BudgetCostDryCostByDiscipline
             'increase' => 0,
         ];
         foreach ($break_downs as $break_down) {
-            if (!isset($data[ $break_down->breakdown->std_activity->discipline ])) {
-                $data[ $break_down->breakdown->std_activity->discipline ] = [
-                    'code' => $break_down->breakdown->std_activity->code,
-                    'name' => $break_down->breakdown->std_activity->discipline,
+            $discipline = $break_down->breakdown->std_activity->discipline;
+            $code = $break_down->breakdown->std_activity->code;
+            $budget_cost = $break_down->budget_cost;
+            if (!isset($data[ $discipline ])) {
+                $data[ $discipline ] = [
+                    'code' => $code,
+                    'name' => $discipline,
                     'dry_cost' => 0,
                     'budget_cost' => 0,
                     'difference' => 0,
@@ -37,11 +40,11 @@ class BudgetCostDryCostByDiscipline
                 ];
                 $boq = Boq::where('cost_account', $break_down->breakdown->cost_account)->first();
                 $dry_cost = $boq->dry_ur * $boq->quantity;
-                $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] = is_nan($break_down->budget_cost)?0:$break_down->budget_cost;
-                $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] = is_nan($dry_cost)?0:$dry_cost;
+                $data[ $discipline ]['budget_cost'] = is_nan($budget_cost)?0:$budget_cost;
+                $data[ $discipline ]['dry_cost'] = is_nan($dry_cost)?0:$dry_cost;
             } else {
-                $data[ $break_down->breakdown->std_activity->discipline ]['budget_cost'] += is_nan($break_down->budget_cost)?0:$break_down->budget_cost;
-                $data[ $break_down->breakdown->std_activity->discipline ]['dry_cost'] += is_nan($dry_cost)?0:$dry_cost;
+                $data[ $discipline ]['budget_cost'] += is_nan($budget_cost)?0:$budget_cost;
+                $data[ $discipline ]['dry_cost'] += is_nan($dry_cost)?0:$dry_cost;
             }
         }
         foreach ($data as $key => $value) {

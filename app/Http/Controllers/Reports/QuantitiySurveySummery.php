@@ -21,37 +21,39 @@ class QuantitiySurveySummery
 {
     public function qsSummeryReport(Project $project)
     {
-        $break_downs_resources = $project->breakdown_resources()->get();
+        $break_downs_resources = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.std_activity.division','breakdown.wbs_level','template_resource.resource')->get();
 
         $level_array = [];
         foreach ($break_downs_resources as $break_down_resource) {
+            $wbs_level = $break_down_resource->breakdown->wbs_level;
+            $std_activity = $break_down_resource->breakdown->std_activity;
             $boq_item = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
             $qs = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
-            $division_name = ActivityDivision::find(StdActivity::find($break_down_resource->stdactivityid)->division_id)->name;
-            $activity_name = StdActivity::find($break_down_resource->stdactivityid)->name;
+            $division_name = $std_activity->division->name;
+            $activity_name = $std_activity->name;
 
-            if (!isset($level_array[ $break_down_resource->wbslevelid ])) {
-                $level_array[ $break_down_resource->wbslevelid ] = [
-                    'id' => $break_down_resource->wbslevelid,
-                    'name' => $break_down_resource->breakdown->wbs_level->name,
+            if (!isset($level_array[ $wbs_level->id ])) {
+                $level_array[ $wbs_level->id ] = [
+                    'id' => $wbs_level->id,
+                    'name' => $wbs_level->name,
                     'activity_divisions' => [
                     ],
                 ];
             }
-            if (!isset($level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ])) {
-                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['name'] = $division_name;
+            if (!isset($level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ])) {
+                $level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['name'] = $division_name;
 
             }
-            if (!isset($level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ])) {
-                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ] = [
+            if (!isset($level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ])) {
+                $level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ] = [
                     'name' => $activity_name,
                     'cost_accounts' => [],
                 ];
 
             }
 
-            if (!isset($level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ]['cost_accounts'][ $break_down_resource->cost_account ])) {
-                $level_array[ $break_down_resource->wbslevelid ]['activity_divisions'][ $division_name ]['activities'][ $break_down_resource->stdactivityid ]['cost_accounts'][ $break_down_resource->cost_account ] =
+            if (!isset($level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ]['cost_accounts'][ $break_down_resource->cost_account ])) {
+                $level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ]['cost_accounts'][ $break_down_resource->cost_account ] =
 
                     [
                         'cost_account' => $break_down_resource->cost_account,

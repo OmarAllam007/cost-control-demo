@@ -25,7 +25,7 @@ class QtyAndCost
             'budget_cost_eq' => 0,
         ];
 
-        $breakdowns = $project->breakdowns()->get();
+        $breakdowns = $project->breakdowns()->with('wbs_level','resources.template_resource','resources.template_resource.resource','std_activity','template.resources')->get();
 
         foreach ($breakdowns as $breakdown) {
             $discipline = $breakdown->std_activity->discipline;
