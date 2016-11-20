@@ -10,3 +10,8 @@ function __($id, $parameters = [], $domain = 'messages', $locale = null)
 {
     return trans($id, $parameters, $domain, $locale);
 }
+
+function slug($value='')
+{
+    return Illuminate\Support\Str::slug($value);
+}

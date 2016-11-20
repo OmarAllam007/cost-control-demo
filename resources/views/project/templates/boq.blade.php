@@ -37,7 +37,7 @@
                 </div>
 
                 <table class="table table-condensed table-striped table-hover table-fixed collapse"
-                       id="@{{ discipline || 'General' }}">
+                       id="@{{ slug(discipline ?: 'General') }}">
                     <thead>
                     <tr>
                         <th class="col-md-6">BOQ Item</th>
