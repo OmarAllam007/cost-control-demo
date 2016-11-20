@@ -48,10 +48,10 @@
                                                         <tr class="tbl-content">
                                                             <td class="col-md-3">{{$resource['name']}}</td>
 
-                                                            <td class="col-md-2">{{$resource['price_unit']}}</td>
+                                                            <td class="col-md-2">{{number_format($resource['price_unit'],2)}}</td>
                                                             <td class="col-md-3">{{$resource['unit']}}</td>
-                                                            <td class="col-md-2">{{$resource['budget_unit']}}</td>
-                                                            <td class="col-md-2">{{$resource['budget_cost']}}</td>
+                                                            <td class="col-md-2">{{number_format($resource['budget_unit'],2)}}</td>
+                                                            <td class="col-md-2">{{number_format($resource['budget_cost'],2)}}</td>
                                                         </tr>
                                                     @endforeach
                                                     </tbody>

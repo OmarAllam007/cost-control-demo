@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\BreakdownResource;
 use App\CsiCategory;
 use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\CacheWBSTree;
+use App\Observers\BreakDownResourceObserver;
 use App\Project;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
         $this->csiCategoryActions();
         $this->ResourceTypeActions();
         $this->wbsActions();
+        BreakdownResource::observe(BreakDownResourceObserver::class);
     }
 
     /**

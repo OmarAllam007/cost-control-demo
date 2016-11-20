@@ -52,6 +52,7 @@ class QuantitiySurveySummery
 
             }
 
+
             if (!isset($level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ]['cost_accounts'][ $break_down_resource->cost_account ])) {
                 $level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ]['cost_accounts'][ $break_down_resource->cost_account ] =
 
@@ -60,7 +61,7 @@ class QuantitiySurveySummery
                         'boq_name' => $boq_item->description,
                         'budget_qty' => $break_down_resource->budget_qty,
                         'eng_qty' => $break_down_resource->eng_qty,
-                        'unit' => isset(Unit::find($qs->id)->type) ? Unit::find($qs->id)->type : '',
+                        'unit' => $break_down_resource->resource->units->type,
                     ];
             }
 

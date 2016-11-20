@@ -156,6 +156,7 @@ class ReportController extends Controller
                 }
             }
         }
+
         return view('std-activity.budgetSummery', compact('data', 'project'));
     }
 

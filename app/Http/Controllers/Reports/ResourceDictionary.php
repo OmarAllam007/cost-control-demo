@@ -20,7 +20,7 @@ class ResourceDictionary
 {
     public function getResourceDictionary(Project $project)
     {
-        $break_down_resources = $project->breakdown_resources()->with('template_resource','template_resource.resource')->get();
+        $break_down_resources = $project->breakdown_resources()->with('breakdown.qty_survey', 'template_resource', 'template_resource.resource')->get();
         $data = [];
         $parents = [];
 
@@ -64,9 +64,9 @@ class ResourceDictionary
                     'code' => $resource->resource_code,
                     'name' => $resource->name,
                     'rate' => !is_null($latest_resource) ? $latest_resource->rate : $resource->rate,
-                    'unit' => isset(Unit::find($resource->unit)->type) ? Unit::find($resource->unit)->type : '',
+                    'unit' => isset($resource->template_resource->resource->unit->type) ? $resource->template_resource->resource->unit->type : '',
                     'waste' => $resource->waste,
-                    'partner' => isset(BusinessPartner::find($resource->business_partner_id)->name) ? BusinessPartner::find($resource->business_partner_id)->name : '',
+                    'partner' => isset($resource->template_resource->resource->parteners->name) ? BusinessPartner::find($resource->business_partner_id)->name : '',
                     'reference' => $resource->reference,
                     'budget_cost' => 0,
                     'budget_unit' => 0,
@@ -79,24 +79,22 @@ class ResourceDictionary
             $data[$root->name]['divisions'][$division->id]['resources'][$resource->id]['budget_unit'] += $break_down_resource->budget_unit;
         }
 
-        //algorithms for delete duplicate data
         foreach ($data as $key => $value) {
             foreach ($value['divisions'] as $dKey => $dValue) {
+                ksort($data[$key]['divisions'][$dKey]['resources']);
                 foreach ($dValue['parents'] as $pKey => $parent) {
                     if (!in_array($parent['name'], $parents)) {
                         $parents[] = $parent['name'];
 //
-                    }
-                    else{
+                    } else {
                         unset($data[$key]['divisions'][$dKey]['parents'][$pKey]);
                     }
 
                 }
+                ksort($data[$key]['divisions'][$dKey]['parents']);
             }
         }
-
         ksort($data);
-
         return view('reports.resource_dictionary', compact('project', 'data'));
     }
 }

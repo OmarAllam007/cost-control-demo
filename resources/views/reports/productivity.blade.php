@@ -16,42 +16,50 @@
     <img src="{{asset('images/reports/productivity.jpg')}}" height="80%">
 @endsection
 @section('body')
+
     <ul class="list-unstyled tree">
         @foreach($data as $category=>$attributes)
-            <li class="list-unstyled">
-                <div class="tbl-division">{{$category}}</div>
-                <ul>
-                    <table class="table table-condensed">
-                        <thead>
-                        <tr class="tbl-header">
-                            {{--<th class="col-xs-2">Category</th>--}}
-                            <th class="col-xs-3">Item Description</th>
-                            <th class="col-xs-3">Crew Structure</th>
+            <ul class="list-unstyled">
+                @foreach($attributes['parents'] as $parent)
+                        <li class="blue-second-level tree--item">{{$parent['name']}}</li>
 
-                            <th class="col-xs-2 text-center">Unit of
-                                measure
-                            </th>
-                            <th class="col-xs-2 text-center">Output
-                            </th>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($attributes['items'] as $item)
-                            <tr class="tbl-content">
-                                {{--<td class="col-xs-2" ></td>--}}
-                                <td>{{$item['name']}}</td>
-                                <td>{!! nl2br(e($item['crew_structure'])) !!}</td>
-                                {{--<td class="text-center">{{$item['daily_output']}}</td>--}}
-                                <td class="text-center">{{$item['unit']}}</td>
-                                <td class="text-center">{{$item['productivity']}}</td>
+
+                @endforeach
+                <li class="list-unstyled tree--child">
+                    <div class="tbl-division">{{$category}}</div>
+                    <ul class="list-unstyled">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr class="tbl-header">
+                                {{--<th class="col-xs-2">Category</th>--}}
+                                <th class="col-xs-3">Item Description</th>
+                                <th class="col-xs-3">Crew Structure</th>
+
+                                <th class="col-xs-2 text-center">Unit of
+                                    measure
+                                </th>
+                                <th class="col-xs-2 text-center">Output
+                                </th>
+                                </th>
                             </tr>
-                        @endforeach
+                            </thead>
+                            <tbody>
+                            @foreach($attributes['items'] as $item)
+                                <tr class="tbl-content">
+                                    {{--<td class="col-xs-2" ></td>--}}
+                                    <td>{{$item['name']}}</td>
+                                    <td>{!! nl2br(e($item['crew_structure'])) !!}</td>
+                                    {{--<td class="text-center">{{$item['daily_output']}}</td>--}}
+                                    <td class="text-center">{{$item['unit']}}</td>
+                                    <td class="text-center">{{$item['productivity']}}</td>
+                                </tr>
+                            @endforeach
 
-                        </tbody>
-                    </table>
-                </ul>
-            </li>
+                            </tbody>
+                        </table>
+                    </ul>
+                </li>
+            </ul>
         @endforeach
     </ul>
 @endsection

@@ -18,7 +18,7 @@ class ActivityResourceBreakDown
 {
     public function getActivityResourceBreakDown(Project $project)
     {
-        $breakDown_resources = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.wbs_level','template_resource.resource')->get();
+        $breakDown_resources = $project->breakdown_resources()->with('breakdown.qty_survey','breakdown.std_activity','breakdown.wbs_level','template_resource.resource')->get();
         $data = [];
         foreach ($breakDown_resources as $breakDown_resource) {
             $break_down = $breakDown_resource->breakdown;
@@ -46,10 +46,11 @@ class ActivityResourceBreakDown
                     'resources' => [],
                 ];
             }
+            ksort($data[ $wbs_level ]['activities']);
             if (!isset($data[ $wbs_level ]['activities'][ $std_activity_item ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ])) {
                 $data[ $wbs_level ]['activities'][ $std_activity_item ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ] = [
                     'name' => $resource->name,
-                    'unit'=>isset($breakDown_resource->qty_survey->unit_id)?Unit::find($breakDown_resource->qty_survey->unit_id)->type:'',
+                    'unit'=>isset($breakDown_resource->template_resource->resource->units->type)?$breakDown_resource->template_resource->resource->units->type:'',
                     'price_unit' => 0,
                     'budget_cost' => 0,
                     'budget_unit' => 0,
@@ -60,9 +61,10 @@ class ActivityResourceBreakDown
 
                     $data[ $wbs_level ]['activities'][ $std_activity_item ]['cost_accounts'][ $break_down->cost_account ]['resources'][ $resource->name ]['price_unit'] = $breakDown_resource->project_resource->rate;
             }
-
+            ksort($data[ $wbs_level ]['activities'][ $std_activity_item ]['cost_accounts']);
 
         }
+        ksort($data);
         return view('std-activity.activity_resource_breakdown', compact('data', 'project'));
 
     }

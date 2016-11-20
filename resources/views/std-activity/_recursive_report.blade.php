@@ -1,3 +1,5 @@
+
+
 <li>
     <p class="
        @if($tree_level ==0)
@@ -21,11 +23,7 @@
 
         @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
             <table class="table table-condensed">
-                <thead >
-                <tr class="blue-third-level">
-                    <th class="col-md-8 activity-header">Activity</th>
-                </tr>
-                </thead>
+
                 <tbody>
                 @foreach($division->activities()->whereIn('id',$activity_ids)->get() as $activity)
                     <tr>
