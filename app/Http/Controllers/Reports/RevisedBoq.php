@@ -19,121 +19,93 @@ class RevisedBoq
 {
     public function getRevised(Project $project)
     {
-/* iterate over breakdowns
- * check for dry
- * calculate original and revised boq
- * delete parents wbs ....
- * calculate total revised and original
- *
- */
-        $breakdowns = $project->breakdowns()->get();
+
+        $breakdowns = $project->breakdowns()->with('wbs_level', 'resources')->get();
         $data = [];
         $total = [
             'revised_boq' => 0,
             'original_boq' => 0,
             'weight' => 0,
         ];
-        $parents = [];
         foreach ($breakdowns as $breakdown) {
             $wbs_level = $breakdown->wbs_level;
-            $resources = $breakdown->resources;
             $dry = $breakdown->getDry($wbs_level->id);
-            if (!isset($data[ $wbs_level->id ])) {
-                $data[ $wbs_level->id ] = [
-                    'code' => $wbs_level->code,
-                    'name' => $wbs_level->name,
-                    'cost_account' => [],
-                    'revised_boq' => 0,
-                    'original_boq' => 0,
-                    'weight' => 0,
-                ];
-            }
+
             if ($dry) {
-                foreach ($resources as $break_down_resource) {
-
-                    if (!isset($data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ])) {
-                        $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ] = [
-                            'revised_boq' => 0,
-                            'original_boq' => 0,
-                            'weight' => 0,
-                        ];
-
-                        $boq = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
-                        $survey = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
-
-                        if ($boq && $survey) {
-                            $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['original_boq'] = $boq->price_ur * $boq->quantity;
-                            $data[ $wbs_level->id ]['cost_account'][ $break_down_resource->breakdown->cost_account ]['revised_boq'] = $boq->price_ur * $survey->eng_qty;
-                        }
-                    }
+                if (!isset($data[$wbs_level->id])) {
+                    $data[$wbs_level->id] = [
+                        'code' => $wbs_level->code,
+                        'name' => $wbs_level->name,
+                        'cost_account' => [],
+                        'revised_boq' => 0,
+                        'original_boq' => 0,
+                        'weight' => 0,
+                    ];
                 }
+
+                if (!isset($data[$wbs_level->id]['cost_account'][$breakdown->cost_account])) {
+                    $data[$wbs_level->id]['cost_account'][$breakdown->cost_account] = [
+                        'revised_boq' => 0,
+                        'original_boq' => 0,
+                        'weight' => 0,
+                    ];
+
+                    $boq = Boq::where('cost_account', $breakdown->cost_account)->first();
+                    $survey = Survey::where('cost_account', $breakdown->cost_account)->first();
+
+                    if ($boq && $survey) {
+                        $data[$wbs_level->id]['cost_account'][$breakdown->cost_account]['original_boq'] += $boq->price_ur * $boq->quantity;
+                        $data[$wbs_level->id]['cost_account'][$breakdown->cost_account]['revised_boq'] += $boq->price_ur * $survey->eng_qty;
+                    }
+
+                }
+
+
             } else {
+
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
-                    if (!isset($data[ $wbs_level->id ])) {
-                        $data[ $wbs_level->id ] = [
-                            'code' => $wbs_level->code,
-                            'name' => $wbs_level->name,
-                            'cost_account' => [],
-                            'revised_boq' => 0,
-                            'original_boq' => 0,
-                            'weight' => 0,
-                        ];
-                        $parents [ $parent->id ] = $parent->id;
-                    }
-                    $parent_break_down = Breakdown::where('wbs_level_id', $parent->id)->first();
-                    if ($parent_break_down) {
-                        $parent_resources = $parent_break_down->resources;
-                        foreach ($parent_resources as $parent_resource) {
-                            if (!isset($data[ $wbs_level->id ])) {
-                                $data[ $wbs_level->id ] = [
-                                    'code' => $wbs_level->code,
-                                    'name' => $wbs_level->name,
-                                    'cost_account' => [],
-                                    'revised_boq' => 0,
-                                    'original_boq' => 0,
-                                    'weight' => 0,
-                                ];
-                            }
-                            if (!isset($data[ $wbs_level->id ]['cost_account'][ $parent_resource->breakdown->cost_account ])) {
-                                $data[ $wbs_level->id ]['cost_account'][ $parent_resource->breakdown->cost_account ] = [
-                                    'revised_boq' => 0,
-                                    'original_boq' => 0,
-                                    'weight' => 0,];
-
-                                $boq = Boq::where('cost_account', $parent_resource->breakdown->cost_account)->first();
-                                $survey = Survey::where('cost_account', $parent_resource->breakdown->cost_account)->first();
-
-                                $data[ $wbs_level->id ]['cost_account'][ $parent_resource->breakdown->cost_account ]['original_boq'] = $boq->price_ur * $boq->quantity;
-
-                                $data[ $wbs_level->id ]['cost_account'][ $parent_resource->breakdown->cost_account ]['revised_boq'] = $boq->price_ur * $survey->eng_qty;
-                            }
+                    $parent_dry = $breakdown->getDry($parent->id);
+                    if ($parent_dry) {
+                        if (!isset($data[$parent->id])) {
+                            $data[$parent->id] = [
+                                'code' => $parent->code,
+                                'name' => $parent->name,
+                                'cost_account' => [],
+                                'revised_boq' => 0,
+                                'original_boq' => 0,
+                                'weight' => 0,
+                            ];
                         }
+
+                        $boq_parent   = Boq::where('wbs_id',$parent->id)->where('cost_account',$breakdown->cost_account)->sum(\DB::raw('quantity * price_ur'));
+                        $boq_price   = Boq::where('wbs_id',$parent->id)->where('cost_account',$breakdown->cost_account)->sum('price_ur');
+                        $survey_parent = Survey::where('wbs_level_id',$parent->id)->where('cost_account',$breakdown->cost_account)->sum('eng_qty');
+                        $data[$parent->id]['original_boq'] = $boq_parent;
+                        $data[$parent->id]['revised_boq'] = $boq_price*$survey_parent;
+                        break;
                     }
                 }
             }
-
         }
 
-        foreach ($parents as $key => $value) {
-            unset($data[ $key ]);
-        }
+
 
         foreach ($data as $key => $value) {
             foreach ($value['cost_account'] as $item) {
-                $data[ $key ]['revised_boq'] += $item['revised_boq'];
-                $data[ $key ]['original_boq'] += $item['original_boq'];
+                $data[$key]['revised_boq'] += $item['revised_boq'];
+                $data[$key]['original_boq'] += $item['original_boq'];
                 $total['revised_boq'] += $item['revised_boq'];
                 $total['original_boq'] += $item['original_boq'];
             }
         }
         foreach ($data as $key => $value) {
-            if ($data[ $key ]['original_boq']) {
-                $data[ $key ]['weight'] += $data[ $key ]['revised_boq'] / $data[ $key ]['original_boq']*100;
+            if ($data[$key]['original_boq']) {
+                $data[$key]['weight'] += $data[$key]['revised_boq'] / $data[$key]['original_boq'] * 100;
             }
         }
-        $total['weight'] = ( $total['revised_boq'] /$total['original_boq'] )*100;
+        $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
     }
@@ -143,7 +115,7 @@ class RevisedBoq
         $revised_boqs = \Lava::DataTable();
         $revised_boqs->addStringColumn('Boqs')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {
-            $revised_boqs->addRow([$data[ $key ]['name'], $data[ $key ]['weight']]);
+            $revised_boqs->addRow([$data[$key]['name'], $data[$key]['weight']]);
         }
         \Lava::PieChart('BOQ', $revised_boqs, [
             'width' => '1000',

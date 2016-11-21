@@ -26,7 +26,6 @@ class BudgetCostByBuilding
             'total' => 0,
             'weight' => 0,
         ];
-        $parents = [];
 
         foreach ($breakdowns as $breakdown) {
             /** @var Breakdown $breakdown */
@@ -34,8 +33,8 @@ class BudgetCostByBuilding
             $dry = $breakdown->getDry($wbs_level->id);
             $resources = $breakdown->resources;
             if ($dry) {
-                if (!isset($data[ $wbs_level->id ])) {
-                    $data[ $wbs_level->id ] = [
+                if (!isset($data[$wbs_level->id])) {
+                    $data[$wbs_level->id] = [
                         'name' => $wbs_level->name,
                         'code' => $wbs_level->code,
                         'budget_cost' => 0,
@@ -44,26 +43,26 @@ class BudgetCostByBuilding
 
                 }
                 foreach ($resources as $resource) {
-                    $data[ $wbs_level->id ]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
+                    $data[$wbs_level->id]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
                 }
 
 
-            } else {
+            }
+            else {
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
                     $parent_dry = $breakdown->getDry($parent->id);
                     if ($parent_dry) {
-                        if (!isset($data[ $parent->id ])) {
-                            $data[ $parent->id ] = [
+                        if (!isset($data[$parent->id])) {
+                            $data[$parent->id] = [
                                 'name' => $parent->name,
                                 'code' => $parent->code,
                                 'budget_cost' => $parent->budget_cost['budget_cost'],
                                 'weight' => 0,
                             ];
-                        $children = $parent->budget_cost['children'];
+                            $children = $parent->budget_cost['children'];
                         }
-
                         break;
                     }
                 }
@@ -72,19 +71,19 @@ class BudgetCostByBuilding
 
 
         foreach ($data as $key => $item) {//fill total array
-            if(in_array($key,$children)){
+            if (in_array($key, $children)) {
                 unset($data[$key]);
                 continue;
             }
             $total['total'] += $item['budget_cost'];
         }
         foreach ($data as $key => $value) {
-            if(in_array($key,$children)){
+            if (in_array($key, $children)) {
                 continue;
             }
             if ($total['total'] != 0) {
-                $data[ $key ]['weight'] = floatval(($data[ $key ]['budget_cost'] / $total['total']) * 100);
-                $total['weight'] += $data[ $key ]['weight'];
+                $data[$key]['weight'] = floatval(($data[$key]['budget_cost'] / $total['total']) * 100);
+                $total['weight'] += $data[$key]['weight'];
             }
         }
         $pieChart = $this->getBudgetCostForBuildingPieChart($data);
@@ -97,7 +96,7 @@ class BudgetCostByBuilding
         $building = \Lava::DataTable();
         $building->addStringColumn('Buildings')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {
-            $building->addRow([$data[ $key ]['name'], $data[ $key ]['weight']]);
+            $building->addRow([$data[$key]['name'], $data[$key]['weight']]);
         }
         \Lava::PieChart('BOQ', $building, [
             'width' => '1000',
@@ -120,7 +119,7 @@ class BudgetCostByBuilding
 
         $costTable->addStringColumn('BudgetCost')->addNumberColumn('WBS');
         foreach ($data as $key => $value) {
-            $costTable->addRow([$data[ $key ]['name'], $data[ $key ]['budget_cost']]);
+            $costTable->addRow([$data[$key]['name'], $data[$key]['budget_cost']]);
 
         }
         \Lava::ColumnChart('BudgetCost', $costTable, [
