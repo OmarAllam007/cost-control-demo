@@ -90,6 +90,11 @@ Route::group(['prefix' => 'breakdown'], function(){
     Route::delete('wipe/{project}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
 });
 
+Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
+    Route::get('budget/{project}', ['as' => 'budget', 'uses' => 'ProjectController@show']);
+    Route::get('cost-control/{project}', ['as' => 'cost-control', 'uses' => 'ProjectController@costControl']);
+});
+
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');
@@ -98,5 +103,6 @@ Route::resource('breakdown-template', 'BreakdownTemplateController');
 Route::resource('std-activity-resource', 'StdActivityResourceController');
 Route::resource('breakdown', 'BreakdownController');
 Route::resource('breakdown-resource', 'BreakdownResourceController');
+Route::resource('period', 'PeriodController');
 
 Route::get('/blank', 'BlankController@index');

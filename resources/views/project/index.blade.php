@@ -24,10 +24,15 @@
                     <td class="col-xs-4">
                         <form action="{{ route('project.destroy', $project) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
-                            <a class="btn btn-sm btn-info" href="{{ route('project.show', $project) }} "><i
-                                        class="fa fa-edit"></i> Show</a>
-                            <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i
-                                        class="fa fa-edit"></i> Edit</a>
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-info dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-edit"></i> Show <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ route('project.budget', $project) }}">Budget</a></li>
+                                    <li><a href="{{ route('project.cost-control', $project) }}">Cost Control</a></li>
+                                </ul>
+                            </div>
+
+                            <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i class="fa fa-edit"></i> Edit</a>
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                         </form>
                     </td>
