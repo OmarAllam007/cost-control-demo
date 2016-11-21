@@ -18,7 +18,7 @@
 @section('body')
 
     <ul class="list-unstyled tree">
-        @foreach($data as $division)
+        @foreach($data as $key=>$division)
             @include('std-activity._recursive_budget_summery',['division'=>$division ,'tree_level'=>0])
         @endforeach
 
