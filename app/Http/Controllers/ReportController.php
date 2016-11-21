@@ -108,18 +108,17 @@ class ReportController extends Controller
     public function budgetSummery(Project $project)
     {
         $data = [];
-        $breakdown_resources = $project->breakdown_resources()->with('breakdown.std_activity')->get();
+        $breakdown_resources = $project->breakdown_resources()->with('breakdown.std_activity', 'template_resource')->get();
         foreach ($breakdown_resources as $resource) {
             $division = $resource->breakdown->std_activity->division;
             $activity = $resource->breakdown->std_activity;
             $parent = $division;
             $parent_name = $division->name;
 
-
             if (!isset($data[$parent_name])) {
                 $data[$parent_name] = [
                     'budget_cost' => 0,
-                    'parents'=>[],
+                    'parents' => [],
                     'activities' => [],
                 ];
             }
@@ -127,11 +126,12 @@ class ReportController extends Controller
             if (!isset($data[$parent_name]['activities'][$activity->name])) {
                 $data[$parent_name]['activities'][$activity->name] = [
                     'name' => $activity->name,
-                    'budget_cost' => is_nan($resource->budget_cost) ? 0 : $resource->budget_cost,
+                    'budget_cost' => 0,
                 ];
-            } else {
-                $data[$parent_name]['activities'][$activity->name]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
             }
+
+            $data[$parent_name]['activities'][$activity->name]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
+
 
             if ($division->parent) {
                 while ($parent->parent) {
@@ -150,7 +150,6 @@ class ReportController extends Controller
 
 
         }
-
 
 
         foreach ($data as $key => $value) {//sum budget cost for arrays

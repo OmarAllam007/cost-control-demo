@@ -7,17 +7,17 @@
     </div>
     <ul class="list-unstyled tree">
         <li>
-            @if ($division['parents'])
+            @if($division['parents'])
                 @foreach($division['parents'] as $parent)
                     <div class="tree--item">
                         <div class="tree--item--label blue-second-level">
                             {{$parent['name']}}
-                            <strong class="pull-right">{{number_format($parent['budget_cost'],2)}}</strong>
+                            <strong class="pull-right">{{number_format($division['budget_cost'],2)}}</strong>
                         </div>
                     </div>
                 @endforeach
             @endif
-                <article " class="tree--child">
+                <article class="tree--child">
                     @if ($division['activities'])
                         <table class="table  table-condensed">
                             <thead>
@@ -40,7 +40,6 @@
                         </table>
                     @endif
                 </article>
-
         </li>
     </ul>
 </li>
