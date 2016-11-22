@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Filter\BreakdownFilter;
+use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -55,7 +56,7 @@ class BreakdownResource extends Model
 
     function getEquationAttribute()
     {
-        if ($this->attributes['equation']) {
+        if (isset($this->attributes['equation'])) {
             return $this->attributes['equation'];
         }
 
@@ -73,7 +74,7 @@ class BreakdownResource extends Model
             return $this->resource_cache;
         }
 
-        if ($this->attributes['resource_id']) {
+        if (isset($this->attributes['resource_id'])) {
             $resource = Resources::find($this->attributes['resource_id']);
         } else {
             $resource = $this->template_resource->resource;
@@ -208,6 +209,37 @@ class BreakdownResource extends Model
         return $query->whereHas('breakdown', function(Builder $q) use ($wbs_id){
             return $q->where('wbs_level_id', $wbs_id);
         });
+    }
+
+    function toArray()
+    {
+        return [
+            'breakdown_resource_id' => $this->id,
+            'project_id' =>$this->breakdown->project->id,
+            'wbs_id' =>$this->breakdown->wbs_level->id,
+            'breakdown_id' => $this->breakdown->id,
+            'template' => $this->breakdown->template->name,
+            'activity' => $this->breakdown->std_activity->name,
+            'activity_id' => $this->breakdown->std_activity->id,
+            'cost_account' => $this->breakdown->cost_account,
+            'eng_qty' => number_format($this->eng_qty, 2),
+            'budget_qty' => number_format($this->budget_qty, 2),
+            'resource_qty' => number_format($this->resource_qty, 2),
+            'resource_waste' => $this->resource_waste,
+            'resource_type' => $this->resource->types->root->name,
+            'resource_type_id' => $this->resource->types->root->id,
+            'resource_code' => $this->resource->resource_code,
+            'resource_name' => $this->resource->name,
+            'unit_price' => number_format($this->resource->rate, 2),
+            'measure_unit' => $this->resource->units->type,
+            'budget_unit' => number_format($this->budget_unit, 2),
+            'budget_cost' => number_format($this->budget_cost, 2),
+            'boq_equivilant_rate' => number_format($this->boq_unit_rate, 2),
+            'labors_count' => !empty($this->labor_count) ? $this->labor_count : '',
+            'productivity_output' => isset($this->project_productivity->after_reduction) ? $this->project_productivity->after_reduction : '',
+            'productivity_ref' => isset($this->project_productivity->csi_code) ? $this->project_productivity->csi_code : '',
+            'remarks' => $this->resource->remarks,
+        ];
     }
 
 

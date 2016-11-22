@@ -14,22 +14,33 @@ class CreateBreakDownResourceShadowsTable extends Migration
     {
         Schema::create('break_down_resource_shadows', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('breakdown_resource_id');
+            $table->integer('project_id');
+            $table->integer('wbs_id');
             $table->integer('breakdown_id');
-            $table->integer('std_activity_resource_id');
-            $table->float('budget_qty');
+            $table->integer('activity_id');
+            $table->integer('resource_type_id');
+            $table->string('template');
+            $table->string('activity');
+            $table->string('cost_account');
             $table->float('eng_qty');
-            $table->string('remarks')->nullable();
-            $table->float('labor_count')->nullable();
-            $table->integer('productivity_id')->unsigned()->nullable();
-            $table->float('resource_waste')->nullable();
-            $table->timestamps();
-            $table->string('code')->nullable();
+            $table->float('budget_qty');
             $table->float('resource_qty')->nullable();
-            $table->tinyInteger('resource_qty_manual')->nullable();
-            $table->integer('resource_id')->nullable();
-            $table->string('equation')->nullable();
-            $table->integer('project_id')->nullable();
-            $table->integer('wbs_id')->nullable();
+            $table->float('resource_waste')->nullable();
+            $table->string('resource_type')->nullable();
+            $table->string('resource_code')->nullable();
+            $table->string('resource_name')->nullable();
+            $table->float('unit_price');
+            $table->string('measure_unit');
+            $table->float('budget_unit');
+            $table->float('budget_cost');
+            $table->float('boq_equivilant_rate');
+            $table->float('labors_count');
+            $table->float('productivity_output');
+            $table->string('productivity_ref');
+            $table->string('remarks')->nullable();
+            $table->timestamps();
+
         });
     }
 

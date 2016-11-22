@@ -86,6 +86,7 @@ class Breakdown extends Model
         $newBreakdown = self::create($newData);
 
         foreach ($this->resources as $resource) {
+
             $newResource = $resource->toArray();
             unset($newResource['id'], $newResource['breakdown_id'], $newResource['created_at']);
             $newBreakdown->resources()->create($newResource);
