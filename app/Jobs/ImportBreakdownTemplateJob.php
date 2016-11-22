@@ -67,10 +67,10 @@ class ImportBreakdownTemplateJob extends ImportJob
             if ($resource_id) {
                 $resource = $template->resources()->create([
                     'resource_id' => $resource_id,
-                    'equation' => $data[5],
-                    'labor_count' => $data[6],
+                    'equation' => isset($data[5])?$data[5]:'',
+                    'labor_count' => isset($data[6])?$data[6]:'',
                     'productivity_id' => $data[7]? $this->getProductivity($data[7]) : 0,
-                    'remarks' => $data[8]
+                    'remarks' => isset($data[8])?$data[8]:''
                 ]);
             }
         }
