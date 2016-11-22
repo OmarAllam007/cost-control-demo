@@ -13,8 +13,8 @@ class ActivityDivisionSeeder extends Seeder
     {
 //        \App\ActivityDivision::truncate();
 
-        $activity_controller = new \App\Http\Controllers\ActivityDivisionController;
-        $activity_controller->import();
+//        $activity_controller = new \App\Http\Controllers\ActivityDivisionController;
+//        $activity_controller->import();
 //
 //        $divisions = [
 //            ['code' => '01', 'name' => 'GENERAL REQUIREMENT'],

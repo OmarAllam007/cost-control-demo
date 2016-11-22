@@ -26,7 +26,9 @@ class BreakdownResourceFormatter implements \JsonSerializable
     function toArray()
     {
         return [
-            'id' => $this->resource->id,
+            'breakdown_resource_id' => $this->resource->id,
+            'project_id' =>$this->resource->breakdown->project->id,
+            'wbs_id' =>$this->resource->breakdown->wbs_level->id,
             'breakdown_id' => $this->resource->breakdown->id,
             'template' => $this->resource->breakdown->template->name,
             'activity' => $this->resource->breakdown->std_activity->name,
@@ -36,7 +38,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'budget_qty' => number_format($this->resource->budget_qty, 2),
             'resource_qty' => number_format($this->resource->resource_qty, 2),
             'resource_waste' => $this->resource->resource_waste,
-            'resource_type' => $this->resoshaurce->resource->types->root->name,
+            'resource_type' => $this->resource->resource->types->root->name,
             'resource_type_id' => $this->resource->resource->types->root->id,
             'resource_code' => $this->resource->resource->resource_code,
             'resource_name' => $this->resource->resource->name,
@@ -48,7 +50,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'labors_count' => !empty($this->resource->labor_count) ? $this->resource->labor_count : '',
             'productivity_output' => isset($this->resource->project_productivity->after_reduction) ? $this->resource->project_productivity->after_reduction : '',
             'productivity_ref' => isset($this->resource->project_productivity->csi_code) ? $this->resource->project_productivity->csi_code : '',
-            'remarks' => $this->resource->remarks,
+            'remarks' => $this->resource->resource->remarks,
         ];
     }
 

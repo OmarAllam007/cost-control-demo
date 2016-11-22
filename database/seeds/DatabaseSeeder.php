@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ActivityDivisionSeeder::class);
         $this->call(WBSLevelSeeder::class);
         $this->call(ProductivityList::class);
+        $this->call(BreakDownResourceShadowSeeder::class);
     }
 
 }

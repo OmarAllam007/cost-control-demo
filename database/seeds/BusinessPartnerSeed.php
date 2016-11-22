@@ -9,14 +9,14 @@ class BusinessPartnerSeed extends Seeder
     {
 //        \App\BusinessPartner::truncate();
 
-        $seeds = [
-            ['name' => 'AlKifah', 'type'=>'Business Partner' ],
-            ['name' => 'AlRajhi', 'type'=>'Subcontract' ],
-
-        ];
-
-        foreach ($seeds as $seed) {
-            \App\BusinessPartner::create($seed);
-        }
+//        $seeds = [
+//            ['name' => 'AlKifah', 'type'=>'Business Partner' ],
+//            ['name' => 'AlRajhi', 'type'=>'Subcontract' ],
+//
+//        ];
+//
+//        foreach ($seeds as $seed) {
+//            \App\BusinessPartner::create($seed);
+//        }
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakDownResourceShadow extends Model
 {
+    protected $table = 'break_down_resource_shadows';
     protected $fillable = [
         'breakdown_resource_id',
         'project_id',
