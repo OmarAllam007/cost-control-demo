@@ -36,7 +36,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'budget_qty' => number_format($this->resource->budget_qty, 2),
             'resource_qty' => number_format($this->resource->resource_qty, 2),
             'resource_waste' => $this->resource->resource_waste,
-            'resource_type' => $this->resource->resource->types->root->name,
+            'resource_type' => $this->resoshaurce->resource->types->root->name,
             'resource_type_id' => $this->resource->resource->types->root->id,
             'resource_code' => $this->resource->resource->resource_code,
             'resource_name' => $this->resource->resource->name,
