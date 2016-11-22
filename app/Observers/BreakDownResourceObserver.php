@@ -9,7 +9,7 @@ class BreakDownResourceObserver
 {
     public function created(BreakdownResource $resource)
     {
-        dd($resource->toArray());
+
     }
 
 }
