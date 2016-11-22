@@ -24,10 +24,12 @@ use App\Project;
 use App\Resources;
 use App\StdActivity;
 use App\StdActivityResource;
+use App\Unit;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Input;
 
 class ReportController extends Controller
 {
@@ -222,11 +224,13 @@ class ReportController extends Controller
         return $boq->getRevised($project);
     }
 
-    public function highPriority(Project $project)
+    public function highPriority(Project $project , Request $request)
     {
         $high_materials = new HighPriorityMaterials();
-        return $high_materials->getTopHighPriorityMaterials($project);
+        return $high_materials->getTopHighPriorityMaterials($project,$request);
     }
+
+
 
 
 }

@@ -75,6 +75,7 @@ Route::group(['prefix' => 'project'], function () {
 
     Route::get('high_priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriority']);
 
+
 });
 
 Route::group(['prefix' => 'survey'], function () {

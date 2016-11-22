@@ -22,11 +22,7 @@ class RevisedBoq
 
         $breakdowns = $project->breakdowns()->with('wbs_level', 'resources')->get();
         $data = [];
-        $total = [
-            'revised_boq' => 0,
-            'original_boq' => 0,
-            'weight' => 0,
-        ];
+        $total = ['revised_boq' => 0,'original_boq' => 0,'weight' => 0];
         foreach ($breakdowns as $breakdown) {
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);

@@ -11,31 +11,105 @@
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
-@stop
+@endsection
 @section('image')
     <img src="{{asset('images/reports/high-priority.jpg')}}">
 @endsection
 @section('body')
-    <table class="table table-condensed">
-        <thead>
-        <tr class="tbl-children-division">
-            <th class="col-xs-6">Description</th>
-            <th class="col-xs-2">Budget Cost</th>
-            <th class="col-xs-2">Budget Unit</th>
-            <th class="col-xs-2">Unit</th>
 
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($data as $row)
-            <tr class="tbl-content">
-                <td class="col-xs-3">{{$row['name']}}</td>
-                <td class="col-xs-3">{{number_format($row['budget_cost'],2)}}</td>
-                <td class="col-xs-3">{{number_format($row['budget_unit'],2)}}</td>
-                <td class="col-xs-3">{{$row['unit']}}</td>
-            </tr>
-        @endforeach
+    <form action="{{route('high_priority.report',$project)}}" method="get">
+        @if($visible || $generate)
+            <table class="table table-condensed">
+                <thead>
+                <tr class="tbl-children-division">
+                    <th class="col-xs-1"></th>
+                    <th class="col-xs-5">Description</th>
+                    <th class="col-xs-2">Budget Cost</th>
+                    <th class="col-xs-2">Budget Unit</th>
+                    <th class="col-xs-2">Unit</th>
 
-        </tbody>
-    </table>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($data as $key=>$row)
+                    <tr class="tbl-content">
+                        <td class="col-sm-1">@if($button) @else  <input type="checkbox" name="checked[]"
+                                                                        value="{{$key}}"> @endif</td>
+                        <td class="col-xs-5">@if($button)
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#exampleModal" data-whatever="{{$row['name']}}">Edit
+                                </button>@else  @endif {{$row['name']}} </td>
+                        <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
+                        <td class="col-xs-2">{{number_format($row['budget_unit'],2)}}</td>
+                        <td class="col-xs-2">{{$row['unit']}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+            @if($button) @else<input type="submit" value="Select" class="btn btn-success">@endif
+        @else
+            @foreach($data as $key=>$row)
+                <p class="blue-third-level">{{$row['name']}} <span
+                            class="pull-right badge col-md-1">{{number_format($row['budget_cost'],2)}}</span>}</p>
+                @foreach($row['resources'] as $resource)
+                    <p class="blue-fourth-level tree--item"><input type="checkbox" name="resources[]"
+                                                                   value="{{$resource['resource_id']}}">{{$resource['name']}}
+                        <span class="pull-right badge col-md-1">{{number_format($resource['budget_cost'],2)}}</span> {{number_format($resource['budget_cost'],2)}}
+                    </p>  <br>
+                @endforeach
+            @endforeach
+            <input type="submit" value="Generate" class="btn btn-success">
+        @endif
+        <br>
+    </form>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">Description</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <textarea class="texta form-control" title="new"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section('javascript')
+
+    <script type="text/javascript">
+
+        $('.accept').on('click', function () {
+            $(this).parent('td').attr('contenteditable', 'false');
+            $(this).hide();
+            $('.edit').show();
+        });
+
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var recipient = button.data('whatever')
+            var modal = $(this)
+            modal.find('.modal-body textarea').val(recipient);
+//            modal.find('.modal-title').text('New message to ' + recipient)
+            modal.find('.modal-body input').val(recipient);
+            $('#exampleModal').on('hidden.bs.modal', function () {
+                var areaText = modal.find('.modal-body textarea').val();
+               $(button).parent('td').html(areaText);
+            })
+        })
+
+
+    </script>
+@endsection
 @stop
