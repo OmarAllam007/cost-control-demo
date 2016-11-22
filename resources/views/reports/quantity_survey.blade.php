@@ -23,53 +23,60 @@
                     @foreach($level['activity_divisions'] as $division)
                         <ul class="list-unstyled">
                             <li class="list-unstyled">
-                                <div class="blue-second-level">
-                                    <strong>{{$division['name']}}</strong>
-                                </div>
-
+                                @if(isset($division['name']))
+                                    <div class="blue-second-level">
+                                        <strong>{{$division['name']}}</strong>
+                                    </div>
+                                @endif
                                 @foreach($division['activities'] as $activity)
                                     <ul class="list-unstyled">
                                         <li class="list-unstyled">
-                                            <div class="blue-third-level">
-                                                <strong>{{$activity['name']}}</strong>
-                                            </div>
-                                        <li><div class="blue-first-level">
-                                                <strong>{{$level['name']}}</strong>
-                                            </div></li>
-                                            <table class="table table-condensed">
-                                                <thead class="blue-fourth-level">
+                                            @if(isset($activity['name']))
+                                                <div class="blue-third-level">
+                                                    <strong>{{$activity['name']}}</strong>
+                                                </div>
+                                        @endif
+                                        <li>
+                                            @if(isset($level['name']))
+                                                <div class="blue-first-level">
+                                                    <strong>{{$level['name']}}</strong>
+                                                </div>
+                                            @endif
+                                        </li>
+                                        <table class="table table-condensed">
+                                            <thead class="blue-fourth-level">
 
-                                                    <th class="col-xs-3">Cost Account</th>
-                                                    <th class="col-xs-3">Boq Description</th>
-                                                    <th class="col-xs-2">Engineering Quantity</th>
-                                                    <th class="col-xs-2">Budget Quantity</th>
-                                                    <th class="col-xs-2">Unit of Measure</th>
+                                            <th class="col-xs-3">Cost Account</th>
+                                            <th class="col-xs-3">Boq Description</th>
+                                            <th class="col-xs-2">Engineering Quantity</th>
+                                            <th class="col-xs-2">Budget Quantity</th>
+                                            <th class="col-xs-2">Unit of Measure</th>
 
-                                                </thead>
-                                                <tbody>
-                                                @foreach($activity['cost_accounts'] as $cost_account)
-                                                    <tr style="font-size:10pt">
-                                                        <td class="col-xs-3">
-                                                            {{$cost_account['cost_account']}}
-                                                        </td>
-                                                        <td class="col-xs-3">
-                                                            {{$cost_account['boq_name']}}
-                                                        </td>
-                                                        <td class="col-xs-2">
-                                                            {{$cost_account['eng_qty']}}
-                                                        </td>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($activity['cost_accounts'] as $cost_account)
+                                                <tr style="font-size:10pt">
+                                                    <td class="col-xs-3">
+                                                        {{$cost_account['cost_account']}}
+                                                    </td>
+                                                    <td class="col-xs-3">
+                                                        {{$cost_account['boq_name']}}
+                                                    </td>
+                                                    <td class="col-xs-2">
+                                                        {{$cost_account['eng_qty']}}
+                                                    </td>
 
-                                                        <td class="col-xs-2">
-                                                            {{$cost_account['budget_qty']}}
-                                                        </td>
-                                                        <td class="col-xs-2">
-                                                            {{$cost_account['unit']}}
+                                                    <td class="col-xs-2">
+                                                        {{$cost_account['budget_qty']}}
+                                                    </td>
+                                                    <td class="col-xs-2">
+                                                        {{$cost_account['unit']}}
 
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
                                         </li>
                                     </ul>
                                 @endforeach

@@ -21,9 +21,10 @@ class QuantitiySurveySummery
 {
     public function qsSummeryReport(Project $project)
     {
-        $break_downs_resources = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.std_activity.division','breakdown.wbs_level','template_resource.resource')->get();
+        $break_downs_resources = $project->breakdown_resources()->with('breakdown.std_activity', 'breakdown.std_activity.division', 'breakdown.wbs_level', 'template_resource.resource')->get();
 
         $level_array = [];
+
         foreach ($break_downs_resources as $break_down_resource) {
             $wbs_level = $break_down_resource->breakdown->wbs_level;
             $std_activity = $break_down_resource->breakdown->std_activity;
@@ -32,29 +33,28 @@ class QuantitiySurveySummery
             $division_name = $std_activity->division->name;
             $activity_name = $std_activity->name;
 
-            if (!isset($level_array[ $wbs_level->id ])) {
-                $level_array[ $wbs_level->id ] = [
+            if (!isset($level_array[$wbs_level->id])) {
+                $level_array[$wbs_level->id] = [
                     'id' => $wbs_level->id,
                     'name' => $wbs_level->name,
                     'activity_divisions' => [
                     ],
                 ];
             }
-            if (!isset($level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ])) {
-                $level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['name'] = $division_name;
+            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name])) {
+                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['name'] = $division_name;
 
             }
-            if (!isset($level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ])) {
-                $level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ] = [
+            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id])) {
+                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id] = [
                     'name' => $activity_name,
                     'cost_accounts' => [],
                 ];
-
             }
 
 
-            if (!isset($level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ]['cost_accounts'][ $break_down_resource->cost_account ])) {
-                $level_array[ $wbs_level->id ]['activity_divisions'][ $division_name ]['activities'][ $std_activity->id ]['cost_accounts'][ $break_down_resource->cost_account ] =
+            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource->cost_account])) {
+                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource->cost_account] =
 
                     [
                         'cost_account' => $break_down_resource->cost_account,
@@ -68,6 +68,33 @@ class QuantitiySurveySummery
 
         }
 
+        $divisions = [];
+        $activities = [];
+        foreach ($level_array as $key => $value) {
+            foreach ($value['activity_divisions'] as $divKey => $divValue) {
+                foreach ($divValue['activities'] as $actKey => $actValue) {
+                    if (!in_array($divKey, $divisions)) {
+                        $divisions [] = $divKey;
+                    } else {
+                        unset($level_array[$key]['activity_divisions'][$divKey]['name']);
+                    }
+
+                    if (!in_array($actValue['name'], $activities)) {
+                        $activities [] = $actValue['name'];
+                    } else {
+                        unset($level_array[$key]['activity_divisions'][$divKey]['activities'][$actKey]['name']);
+                    }
+
+
+                }
+
+            }
+
+
+        }
+
+//        dd($level_array);
         return view('reports.quantity_survey', compact('project', 'level_array'));
+
     }
 }
