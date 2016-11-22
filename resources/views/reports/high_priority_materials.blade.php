@@ -23,7 +23,7 @@
                 <thead>
                 <tr class="tbl-children-division">
                     <th class="col-xs-1"></th>
-                    <th class="col-xs-5">Description</th>
+                    <th class="col-xs-5" >Description</th>
                     <th class="col-xs-2">Budget Cost</th>
                     <th class="col-xs-2">Budget Unit</th>
                     <th class="col-xs-2">Unit</th>
@@ -35,10 +35,11 @@
                     <tr class="tbl-content">
                         <td class="col-sm-1">@if($button) @else  <input type="checkbox" name="checked[]"
                                                                         value="{{$key}}"> @endif</td>
-                        <td class="col-xs-5">@if($button)
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#exampleModal" data-whatever="{{$row['name']}}">Edit
-                                </button>@else  @endif {{$row['name']}} </td>
+                        {{--<td class="col-xs-1">@if($button)--}}
+                                {{--<button title="{{$key}}" value="{{$key}}" type="button" class="btn btn-primary" data-toggle="modal"--}}
+                                        {{--data-target="#exampleModal" data-whatever="{{$row['name']}}">Edit--}}
+                                {{--</button>@else  @endif  </td>--}}
+                        <td class="col-xs-4">{{$row['name']}}</td>
                         <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
                         <td class="col-xs-2">{{number_format($row['budget_unit'],2)}}</td>
                         <td class="col-xs-2">{{$row['unit']}}</td>
@@ -80,7 +81,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
                 </div>
             </div>
         </div>
@@ -100,14 +101,16 @@
             var button = $(event.relatedTarget)
             var recipient = button.data('whatever')
             var modal = $(this)
+            var value = button.attr('value');
             modal.find('.modal-body textarea').val(recipient);
-//            modal.find('.modal-title').text('New message to ' + recipient)
-            modal.find('.modal-body input').val(recipient);
             $('#exampleModal').on('hidden.bs.modal', function () {
                 var areaText = modal.find('.modal-body textarea').val();
-               $(button).parent('td').html(areaText);
+                var value = button.attr('value');
+                $('button[value='+value+']').parent('td').next('td').html(' ' + areaText);
             })
+
         })
+
 
 
     </script>
