@@ -92,13 +92,13 @@
                 <tr v-for="breakdown in filtered_breakdowns">
                     <td style="min-width: 32px; max-width: 32px;">
 
-                        <form action="/breakdown-resource/@{{ breakdown.id }}" @submit.prevent="destroy(breakdown.id)" class="dropdown">
+                        <form action="/breakdown-resource/@{{ breakdown.breakdown_resource_id }}" @submit.prevent="destroy(breakdown.id)" class="dropdown">
                             {{csrf_field()}} {{method_field('delete')}}
                             <button data-toggle="dropdown" type="button" class="btn btn-default btn-xs dropdown-toggle">
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-left">
-                                <li><a href="/breakdown-resource/@{{ breakdown.id }}/edit" class="btn btn-link in-iframe" title="Edit Resource"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
+                                <li><a href="/breakdown-resource/@{{ breakdown.breakdown_resource_id }}/edit" class="btn btn-link in-iframe" title="Edit Resource"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
                                 <li><a href="/breakdown/duplicate/@{{ breakdown.breakdown_id }}" class="btn btn-link in-iframe" title="Duplicate breakdown"><i class="fa fa-fw fa-copy"></i> Duplicate</a></li>
                                 <li>
                                     <button class="btn btn-link"><i class="fa fa-fw fa-trash"></i> Delete</button>

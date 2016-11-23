@@ -14,12 +14,13 @@ class CreateBreakDownResourceShadowsTable extends Migration
     {
         Schema::create('break_down_resource_shadows', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('breakdown_resource_id');
-            $table->integer('project_id');
-            $table->integer('wbs_id');
-            $table->integer('breakdown_id');
-            $table->integer('activity_id');
-            $table->integer('resource_type_id');
+            $table->integer('breakdown_resource_id')->unsigned();
+            $table->integer('project_id')->unsigned();
+            $table->integer('wbs_id')->unsigned();
+            $table->integer('breakdown_id')->unsigned();
+            $table->integer('activity_id')->unsigned();
+            $table->integer('resource_id')->unsigned();
+            $table->integer('resource_type_id')->unsigned();
             $table->string('template');
             $table->string('activity');
             $table->string('cost_account');
