@@ -10,26 +10,27 @@ namespace App\Http\Controllers\Reports;
 
 
 use App\Boq;
+use App\BreakDownResourceShadow;
 use App\Project;
 
 class BoqPriceList
 {
     public function getBoqPriceList(Project $project)
     {
-        $breakDown_resources = $project->breakdown_resources()->with('breakdown.wbs_level', 'template_resource', 'template_resource.resource')->get();
+
+
+        $breakDown_resources = BreakDownResourceShadow::where('project_id',$project->id)->get();
         $data = [];
         $parents = [];
         foreach ($breakDown_resources as $breakDown_resource) {
             $resource = $breakDown_resource->resource;
             $root = $resource->types->root;
-            $wbs_level = $breakDown_resource->breakdown->wbs_level;
+            $wbs_level = $breakDown_resource->wbs;
             $cost_account = $breakDown_resource->breakdown->cost_account;
             $boq = Boq::where('cost_account', $cost_account)->first();
             $description = strtolower($boq->description);
             if (!isset($data[$wbs_level->name])) {
-                $data[$wbs_level->name] = [
-                    'name' => $wbs_level->name,
-                ];
+                $data[$wbs_level->name] = ['name' => $wbs_level->name];
 
             }
 
@@ -67,6 +68,8 @@ class BoqPriceList
 
 
         }
+
+
         ksort($data);
         foreach ($data as $key => $value) {
             foreach ($value['parents'] as $pKey => $pValue) {

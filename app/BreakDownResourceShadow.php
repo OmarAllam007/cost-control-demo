@@ -36,5 +36,19 @@ class BreakDownResourceShadow extends Model
         'remarks',
     ];
 
+    function wbs()
+    {
+        return $this->belongsTo(WbsLevel::class);
+    }
+
+    function std_activity()
+    {
+        return $this->belongsTo(StdActivity::class, 'activity_id');
+    }
+
+    function resource()
+    {
+        return $this->belongsTo(Resources::class, 'resource_code', 'resource_code');
+    }
 
 }

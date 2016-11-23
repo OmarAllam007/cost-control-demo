@@ -15,6 +15,8 @@ Route::group(['prefix' => 'api'], function(){
         Route::get('breakdowns/{wbs_level}', 'Api\WbsController@breakdowns');
         Route::get('boq/{wbs_level}', 'Api\WbsController@boq');
         Route::get('qty-survey/{wbs_level}', 'Api\WbsController@qtySurvey');
+        Route::get('tree-by-resource/{project}', 'Api\WbsController@tree_by_resource');
+        Route::get('tree-by-wbs/{project}', 'Api\WbsController@tree_by_wbs');
     });
 });
 
