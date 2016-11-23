@@ -28,11 +28,7 @@ class WbsController extends Controller
 
     function breakdowns(WbsLevel $wbs_level)
     {
-
-
-        $resources = BreakDownResourceShadow::where('wbs_id',$wbs_level->id)->get()->map(function (BreakDownResourceShadow $res) {
-            return $res;
-        });
+        $resources = BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->get();
 
 //        $resources = BreakdownResource::with('breakdown')
 ////            ->with('std_activity_resource')
@@ -65,4 +61,7 @@ class WbsController extends Controller
     {
         return Survey::where('wbs_level_id', $wbs_level->id)->get();
     }
+
+
+
 }
