@@ -10,16 +10,12 @@ class ActualResourcesTest extends TestCase
         /** @var \App\ActualResources $resource */
         $resource = \App\ActualResources::find(2);
 
-        $this->assertEquals(10,$resource->prev_qty);
-        $this->assertEquals(100, $resource->prev_cost);
-        $this->assertEquals(2.40, $resource->total_updated_eqv);
+//        $this->assertEquals(10,$resource->prev_qty);
+//        $this->assertEquals(10, $resource->total_updated_qty);
+        $this->assertEquals(10, $resource->p_w_index);
 
     }
 
-    public function testOne(){
-        $resource = \App\ActualResources::find(2);
-        $this->assertEquals(2.40, $resource->total_updated_eqv);
-    }
 
 
 }
