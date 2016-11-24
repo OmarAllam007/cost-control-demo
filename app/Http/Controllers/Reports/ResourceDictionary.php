@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Reports;
 
 
+use App\BreakDownResourceShadow;
 use App\BusinessPartner;
 use App\Project;
 use App\Resources;
@@ -20,7 +21,7 @@ class ResourceDictionary
 {
     public function getResourceDictionary(Project $project)
     {
-        $break_down_resources = $project->breakdown_resources()->with('breakdown.qty_survey', 'template_resource', 'template_resource.resource')->get();
+        $break_down_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource','wbs','resource.types')->get();
         $data = [];
         $parents = [];
 
@@ -28,17 +29,17 @@ class ResourceDictionary
         foreach ($break_down_resources as $break_down_resource) {
             $resource = $break_down_resource->resource;
             $division = $break_down_resource->resource->types;
-            $root = $break_down_resource->resource->types->root;
-            if (!isset($data[$root->name])) {
-                $data[$root->name] = [
-                    'name' => $root->name,
+            $root = $break_down_resource['resource_type'];
+            if (!isset($data[$root])) {
+                $data[$root] = [
+                    'name' => $root,
                     'divisions' => [],
                 ];
             }
 
 
-            if (!isset($data[$root->name]['divisions'][$division->id])) {
-                $data[$root->name]['divisions'][$division->id] = [
+            if (!isset($data[$root]['divisions'][$division->id])) {
+                $data[$root]['divisions'][$division->id] = [
                     'name' => $division->name,
                     'parents' => [],
                     'resources' => [],
@@ -47,11 +48,11 @@ class ResourceDictionary
             $parent = $division;
             while ($parent->parent) {
                 $parent = $parent->parent;
-                if ($parent->name == $division->root->name) {
+                if ($parent->name == $root) {
                     continue;
                 }
-                if (!isset($data[$root->name]['divisions'][$division->id]['parents'][$parent->id])) {
-                    $data[$root->name]['divisions'][$division->id]['parents'][$parent->id] = [
+                if (!isset($data[$root]['divisions'][$division->id]['parents'][$parent->id])) {
+                    $data[$root]['divisions'][$division->id]['parents'][$parent->id] = [
                         'name' => $parent->name
                     ];
                 }
@@ -59,12 +60,12 @@ class ResourceDictionary
             }
 
             $latest_resource = Resources::orderBy('created_at', 'desc')->where('resource_id', $resource->id)->get()->first();
-            if (!isset($data[$root->name]['divisions'][$division->id]['resources'][$resource->id])) {
-                $data[$root->name]['divisions'][$division->id]['resources'][$resource->id] = [
-                    'code' => $resource->resource_code,
-                    'name' => $resource->name,
+            if (!isset($data[$root]['divisions'][$division->id]['resources'][$resource->id])) {
+                $data[$root]['divisions'][$division->id]['resources'][$resource->id] = [
+                    'code' => $break_down_resource['resource_code'],
+                    'name' => $break_down_resource['name'],
                     'rate' => !is_null($latest_resource) ? $latest_resource->rate : $resource->rate,
-                    'unit' => isset($resource->template_resource->resource->unit->type) ? $resource->template_resource->resource->unit->type : '',
+                    'unit' => $break_down_resource['measure_unit'],
                     'waste' => $resource->waste,
                     'partner' => isset($resource->template_resource->resource->parteners->name) ? BusinessPartner::find($resource->business_partner_id)->name : '',
                     'reference' => $resource->reference,
@@ -75,8 +76,8 @@ class ResourceDictionary
 
             }
 
-            $data[$root->name]['divisions'][$division->id]['resources'][$resource->id]['budget_cost'] += $break_down_resource->budget_cost;
-            $data[$root->name]['divisions'][$division->id]['resources'][$resource->id]['budget_unit'] += $break_down_resource->budget_unit;
+            $data[$root]['divisions'][$division->id]['resources'][$resource->id]['budget_cost'] += $break_down_resource->budget_cost;
+            $data[$root]['divisions'][$division->id]['resources'][$resource->id]['budget_unit'] += $break_down_resource->budget_unit;
         }
 
         foreach ($data as $key => $value) {

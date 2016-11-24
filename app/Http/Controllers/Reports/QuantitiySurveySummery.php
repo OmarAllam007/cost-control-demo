@@ -22,11 +22,11 @@ class QuantitiySurveySummery
 {
     public function qsSummeryReport(Project $project)
     {
-        $break_downs_resources = BreakDownResourceShadow::where('project_id',$project->id)->get();
+        $break_downs_resources = BreakDownResourceShadow::where('project_id',$project->id)->with('wbs','std_activity')->get();
         $level_array = [];
         foreach ($break_downs_resources as $break_down_resource) {
-            $wbs_level = WbsLevel::where('id',$break_down_resource['wbs_id'])->first();
-            $std_activity = StdActivity::where('id',$break_down_resource['activity_id'])->first();
+            $wbs_level = $break_down_resource->wbs;
+            $std_activity = $break_down_resource->std_activity;
             $boq_item = Boq::where('cost_account', $break_down_resource['cost_account'])->first();
             $qs = Survey::where('cost_account', $break_down_resource['cost_account'])->first();
             $division_name = $std_activity->division->name;

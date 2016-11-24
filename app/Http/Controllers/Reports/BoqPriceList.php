@@ -19,38 +19,37 @@ class BoqPriceList
     {
 
 
-        $breakDown_resources = BreakDownResourceShadow::where('project_id',$project->id)->get();
+        $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource', 'wbs', 'breakdown', 'std_activity')->get();
         $data = [];
         $parents = [];
         foreach ($breakDown_resources as $breakDown_resource) {
-            $resource = $breakDown_resource->resource;
-            $root = $resource->types->root;
+            $root = $breakDown_resource['resource_type'];
             $wbs_level = $breakDown_resource->wbs;
-            $cost_account = $breakDown_resource->breakdown->cost_account;
+            $cost_account = $breakDown_resource['cost_account'];
             $boq = Boq::where('cost_account', $cost_account)->first();
             $description = strtolower($boq->description);
-            if (!isset($data[$wbs_level->name])) {
-                $data[$wbs_level->name] = ['name' => $wbs_level->name];
+            if (!isset($data[$breakDown_resource['wbs_id']])) {
+                $data[$breakDown_resource['wbs_id']] = ['name' => $breakDown_resource['wbs_id']];
 
             }
 
             $parent = $wbs_level;
             while ($parent->parent) {
                 $parent = $parent->parent;
-                if (!isset($data[$wbs_level->name]['parents'][$parent->id])) {
-                    $data[$wbs_level->name]['parents'][$parent->id] = $parent->name;
+                if (!isset($data[$breakDown_resource['wbs_id']]['parents'][$parent->id])) {
+                    $data[$breakDown_resource['wbs_id']]['parents'][$parent->id] = $parent->name;
                 }
             }
-            if (!isset($data[$wbs_level->name]['boqs'][$description])) {
-                $data[$wbs_level->name]['boqs'][$description] = [];
+            if (!isset($data[$breakDown_resource['wbs_id']]['boqs'][$description])) {
+                $data[$breakDown_resource['wbs_id']]['boqs'][$description] = [];
             }
 
 
-            if (!isset($data[$wbs_level->name]['boqs'][$description]['items'][$cost_account])) {
-                $data[$wbs_level->name]['boqs'][$description]['items'][$cost_account] = [
+            if (!isset($data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account])) {
+                $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account] = [
                     'id' => $boq->id,
                     'cost_account' => $cost_account,
-                    'unit' => isset($breakDown_resource->breakdown->qty_survey->unit->type) ? $breakDown_resource->breakdown->qty_survey->unit->type : '',
+                    'unit' => $breakDown_resource['measure_unit'],
                     'LABORS' => 0,
                     'MATERIAL' => 0,
                     'Subcontractors' => 0,
@@ -61,10 +60,10 @@ class BoqPriceList
                 ];
             }
 
-            $name = substr($root->name, strpos($root->name, '.') + 1);
+            $name = substr($root, strpos($root, '.') + 1);
 
-            $data[$wbs_level->name]['boqs'][$description]['items'][$cost_account][$name] += $breakDown_resource->boq_unit_rate;
-            $data[$wbs_level->name]['boqs'][$description]['items'][$cost_account]['total_resources'] += $breakDown_resource->boq_unit_rate;
+            $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name] += $breakDown_resource['boq_equivilant_rate'];
+            $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account]['total_resources'] += $breakDown_resource['boq_equivilant_rate'];
 
 
         }
@@ -73,7 +72,7 @@ class BoqPriceList
         ksort($data);
         foreach ($data as $key => $value) {
             foreach ($value['parents'] as $pKey => $pValue) {
-                if(in_array($pValue,$parents)){
+                if (in_array($pValue, $parents)) {
                     unset($data[$key]['parents'][$pKey]);
                     continue;
                 }

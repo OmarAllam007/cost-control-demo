@@ -95,7 +95,7 @@ class ActualResources extends Model
         //get Previous qty
         $updatedResources = ActualResources::where('id', '<', $this->id)
             ->where('breakdown_resource_id', $this->breakdown_resource_id)
-            ->where('period_id','!=', $this->period_id)->get();
+            ->where('period_id', '!=', $this->period_id)->get();
 
         if (count($updatedResources)) {
 
@@ -114,7 +114,7 @@ class ActualResources extends Model
     {
         $updatedResources = ActualResources::where('id', '<', $this->id)
             ->where('breakdown_resource_id', $this->breakdown_resource_id)
-            ->where('period_id','!=', $this->period_id)->get();
+            ->where('period_id', '!=', $this->period_id)->get();
 
         if (count($updatedResources)) {
 
@@ -129,9 +129,46 @@ class ActualResources extends Model
         return 0;
     }
 
-    function getTotalUpdatedEqvAttribute(){
+    function getTotalUpdatedEqvAttribute()
+    {
 
-        return number_format($this->total_updated_cost / $this->total_updated_qty,2);
+        return number_format($this->total_updated_cost / $this->total_updated_qty, 2);
+    }
+
+    function getAllowableEqvCost()
+    {
+        $division_name = $this->breakdown_resource->breakdown->std_activity->division->name;
+        $budget_cost = $this->breakdown_resource->budget_cost;
+        $budget_unit = $this->breakdown_resource->budget_unit;
+
+        if ($division_name == '01.GENERAL REQUIREMENT') {
+            /*
+             * get progress * budget cost
+             */
+
+        } else {
+
+            if ($budget_cost == 0) {
+                return 0;
+            } else {
+                /*
+                 * if progress == 0 return budget_cost
+                 */
+
+                /*
+                 * else
+                 */
+                if ($this->total_updated_cost >= $budget_cost) {
+                    return $budget_cost;
+                } else if ($this->total_updated_qty > $budget_unit) {
+                    return $budget_cost;
+                } else {
+                    return $this->total_updated_qty * $this->breakdown_resource->rate;
+                }
+            }
+        }
+
+        return 0;
     }
 
 
