@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Import Breakdown Template</h2>
-    <a href="{{route('breakdown-template.index')}}" class="btn btn-default btn-sm pull-right">
+    <h2>{{$project->name}} &mdash; Import Activity Map</h2>
+    <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-sm pull-right">
         <i class="fa fa-chevron-left"></i> Back
     </a>
 @endsection
@@ -11,10 +11,10 @@
     <div class="row">
         <div class="col-md-6 col-sm-9">
 
-            {{Form::open(['route' => 'breakdown-template.post-import', 'files' => true])}}
+            {{Form::open(['route' => ['activity-map.post-import', $project], 'files' => true])}}
 
             <p class="text-info">
-                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/breakdown-templates.xlsx')}}">click here</a> to download a sample template
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/activity-map.xlsx')}}">click here</a> to download a sample template
             </p>
 
             <div class="form-group {{$errors->first('file', 'has-error')}}">
