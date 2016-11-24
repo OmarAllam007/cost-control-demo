@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Reports;
 
 use App\ActivityDivision;
 use App\Boq;
+use App\BreakDownResourceShadow;
 use App\Project;
 use App\StdActivity;
 use App\Survey;
@@ -21,17 +22,15 @@ class QuantitiySurveySummery
 {
     public function qsSummeryReport(Project $project)
     {
-        $break_downs_resources = $project->breakdown_resources()->with('breakdown.std_activity', 'breakdown.std_activity.division', 'breakdown.wbs_level', 'template_resource.resource')->get();
-
+        $break_downs_resources = BreakDownResourceShadow::where('project_id',$project->id)->get();
         $level_array = [];
-
         foreach ($break_downs_resources as $break_down_resource) {
-            $wbs_level = $break_down_resource->breakdown->wbs_level;
-            $std_activity = $break_down_resource->breakdown->std_activity;
-            $boq_item = Boq::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
-            $qs = Survey::where('cost_account', $break_down_resource->breakdown->cost_account)->first();
+            $wbs_level = WbsLevel::where('id',$break_down_resource['wbs_id'])->first();
+            $std_activity = StdActivity::where('id',$break_down_resource['activity_id'])->first();
+            $boq_item = Boq::where('cost_account', $break_down_resource['cost_account'])->first();
+            $qs = Survey::where('cost_account', $break_down_resource['cost_account'])->first();
             $division_name = $std_activity->division->name;
-            $activity_name = $std_activity->name;
+            $activity_name = $break_down_resource['activity'];
 
             if (!isset($level_array[$wbs_level->id])) {
                 $level_array[$wbs_level->id] = [
@@ -53,15 +52,15 @@ class QuantitiySurveySummery
             }
 
 
-            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource->cost_account])) {
-                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource->cost_account] =
+            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource['cost_account']])) {
+                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource['cost_account']] =
 
                     [
-                        'cost_account' => $break_down_resource->cost_account,
+                        'cost_account' => $break_down_resource['cost_account'],
                         'boq_name' => $boq_item->description,
-                        'budget_qty' => $break_down_resource->budget_qty,
-                        'eng_qty' => $break_down_resource->eng_qty,
-                        'unit' => $break_down_resource->resource->units->type,
+                        'budget_qty' => $break_down_resource['budget_qty'],
+                        'eng_qty' => $break_down_resource['eng_qty'],
+                        'unit' => $break_down_resource['measure_unit'],
                     ];
             }
 
@@ -93,7 +92,7 @@ class QuantitiySurveySummery
 
         }
 
-//        dd($level_array);
+
         return view('reports.quantity_survey', compact('project', 'level_array'));
 
     }

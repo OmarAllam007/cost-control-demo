@@ -51,7 +51,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'labors_count' => !empty($this->resource->labor_count) ? $this->resource->labor_count : '',
             'productivity_output' => isset($this->resource->project_productivity->after_reduction) ? $this->resource->project_productivity->after_reduction : '',
             'productivity_ref' => isset($this->resource->project_productivity->csi_code) ? $this->resource->project_productivity->csi_code : '',
-            'remarks' => $this->resource->resource->remarks,
+            'remarks' => $this->resource->remarks,
         ];
     }
 
