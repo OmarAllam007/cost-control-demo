@@ -30,9 +30,7 @@ class WbsController extends Controller
     {
 
 
-        $resources = BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->get()->map(function (BreakDownResourceShadow $res) {
-            return $res;
-        });
+        $resources = BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->get();
 
 //        $resources = BreakdownResource::with('breakdown')
 ////            ->with('std_activity_resource')
