@@ -8,7 +8,9 @@ use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\CacheWBSTree;
 use App\Observers\BreakDownResourceObserver;
+use App\Observers\ResourcesObserver;
 use App\Project;
+use App\Resources;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->ResourceTypeActions();
         $this->wbsActions();
         BreakdownResource::observe(BreakDownResourceObserver::class);
+        Resources::observe(ResourcesObserver::class);
     }
 
     /**

@@ -31,7 +31,7 @@ class BoqPriceList
                 $boq = Boq::where('cost_account', $cost_account)->first();
                 $description = strtolower($boq->description);
                 if (!isset($data[$breakDown_resource['wbs_id']])) {
-                    $data[$breakDown_resource['wbs_id']] = ['name' => $breakDown_resource['wbs_id']];
+                    $data[$breakDown_resource['wbs_id']] = ['name' => $breakDown_resource->wbs->name];
 
                 }
 

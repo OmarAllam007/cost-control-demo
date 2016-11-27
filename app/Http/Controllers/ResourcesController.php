@@ -200,6 +200,7 @@ class ResourcesController extends Controller
             $newResource->resource_id = $resources->id;
             Resources::flushEventListeners();
             $newResource->save();
+            $newResource->updateBreakdownResurces();
         } else {
             $newResource->update($request->all());
         }

@@ -79,7 +79,7 @@ class Resources extends Model
 
         foreach ($data['units'] as $unit => $unit_id) {
             if (!$unit_id) {
-                $errors[ $unit ] = $unit;
+                $errors[$unit] = $unit;
             }
         }
 
@@ -98,5 +98,15 @@ class Resources extends Model
         }
 
         $this->codes()->whereNotIn('id', $codeIds)->delete();
+    }
+
+    public function updateBreakdownResurces()
+    {
+        if ($this->project_id) {
+            BreakdownResource::whereHas('breakdown', function ($q) {
+                $q->where('project_id', $this->project_id);
+            })->where('resource_id', $this->resource_id)
+                ->update(['resource_id' => $this->id]);
+        }
     }
 }

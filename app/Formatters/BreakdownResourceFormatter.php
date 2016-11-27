@@ -30,7 +30,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'project_id' =>$this->resource->breakdown->project->id,
             'wbs_id' =>$this->resource->breakdown->wbs_level->id,
             'breakdown_id' => $this->resource->breakdown->id,
-//            'resource_id' => $this->resource->resource->id,
+            'resource_id' => $this->resource->resource->id,
             'template' => $this->resource->breakdown->template->name,
             'activity' => $this->resource->breakdown->std_activity->name,
             'activity_id' => $this->resource->breakdown->std_activity->id,
