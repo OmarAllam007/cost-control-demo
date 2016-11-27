@@ -48,7 +48,7 @@ class BreakDownResourceShadow extends Model
 
     function resource()
     {
-        return $this->belongsTo(Resources::class, 'resource_code', 'resource_code');
+        return $this->belongsTo(Resources::class);
     }
 
     function breakdown(){
