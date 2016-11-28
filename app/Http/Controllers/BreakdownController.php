@@ -17,6 +17,7 @@ use App\Http\Controllers\Reports\QuantitiySurveySummery;
 use App\Http\Controllers\Reports\ResourceDictionary;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Http\Requests\BreakdownRequest;
+use App\Jobs\Export\ExportBreakdownJob;
 use App\Jobs\PrintReport\PrintAllJob;
 use App\Project;
 use Illuminate\Http\Request;
@@ -88,6 +89,10 @@ class BreakdownController extends Controller
         \Session::set('filters.breakdown.' . $project->id, $data);
 
         return \Redirect::to(route('project.show', $project) . '#breakdown');
+    }
+    function exportBreakdown(Project $project){
+
+        $this->dispatch(new ExportBreakdownJob($project));
     }
 
     function printAll(Project $project)

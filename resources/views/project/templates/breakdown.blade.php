@@ -6,7 +6,7 @@
 
         <div class="form-group tab-actions pull-right">
             <a style="margin-left: 2px;" href="{{route('break_down.export', ['project' => $project->id])}}"
-               class="btn btn-info btn-sm in-iframe">
+               class="btn btn-info btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
             <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm in-iframe" title="Add Breakdown">

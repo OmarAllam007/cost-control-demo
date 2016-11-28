@@ -97,6 +97,9 @@ class Project extends Model
     {
         return $this->hasMany(Breakdown::class);
     }
+    function shadows(){
+        return $this->hasMany(BreakDownResourceShadow::class);
+    }
 
     function getDivisions()
     {
