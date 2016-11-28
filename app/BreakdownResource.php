@@ -75,7 +75,7 @@ class BreakdownResource extends Model
         }
 
         if (isset($this->attributes['resource_id'])) {
-            $resource = Resources::find($this->attributes['resource_id']);
+            $resource = Resources::withTrashed()->find($this->attributes['resource_id']);
         } else {
             $resource = $this->template_resource->resource;
         }
@@ -211,6 +211,10 @@ class BreakdownResource extends Model
         });
     }
 
+    function shadow()
+    {
+        return $this->hasOne(BreakDownResourceShadow::class);
+    }
 
 
 

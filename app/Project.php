@@ -140,5 +140,4 @@ class Project extends Model
         $relation->where('is_open', true);
         return $relation;
     }
-
 }
