@@ -117,7 +117,8 @@ class Resources extends Model
 
             foreach ($breakdown_resources as $breakdown_resource) {
                 $formatter = new BreakdownResourceFormatter($breakdown_resource);
-                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->update($formatter->toArray());
+                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
+                    ->update($formatter->toArray());
             }
 
         }
@@ -127,11 +128,11 @@ class Resources extends Model
     {
         parent::boot();
         static::updated(function ($resource) {
-
             $breakdown_resources = BreakdownResource::where('resource_id', $resource->id)->get();
             foreach ($breakdown_resources as $breakdown_resource) {
                 $formatter = new BreakdownResourceFormatter($breakdown_resource);
-                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->update($formatter->toArray());
+                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
+                    ->update($formatter->toArray());
 
             }
         });
