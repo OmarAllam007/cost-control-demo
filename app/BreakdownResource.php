@@ -53,6 +53,7 @@ class BreakdownResource extends Model
     {
         return $this->belongsTo(Resources::class);
     }
+
 //
     function getEquationAttribute()
     {
@@ -62,8 +63,6 @@ class BreakdownResource extends Model
 
         return $this->template_resource->equation;
     }
-
-
 
 
     function getProjectProductivityAttribute()
@@ -140,8 +139,8 @@ class BreakdownResource extends Model
 
     function getBudgetCostAttribute()
     {
-        if (isset($this->project_resource->rate)) {
-            return $this->budget_unit * $this->project_resource->rate;
+        if (isset($this->resource->rate)) {
+            return $this->budget_unit * $this->resource->rate;
         }
 
 
