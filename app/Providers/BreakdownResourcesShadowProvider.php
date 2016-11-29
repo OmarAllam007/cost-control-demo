@@ -19,7 +19,7 @@ class BreakdownResourcesShadowProvider extends ServiceProvider
     public function boot()
     {
         BreakdownResource::creating(function (BreakdownResource $resource) {
-            $resource->resource_id = $resource->std_activity_resource_id;
+            $resource->resource_id = $resource->template_resource->resource->id;
             $resource->update();
         });
 
@@ -30,7 +30,6 @@ class BreakdownResourcesShadowProvider extends ServiceProvider
                 $formatter = new BreakdownResourceFormatter($breakdown_resource);
                 BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->update($formatter->toArray());
             }
-
         });
 
     }

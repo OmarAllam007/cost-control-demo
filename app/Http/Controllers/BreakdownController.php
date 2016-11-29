@@ -41,13 +41,12 @@ class BreakdownController extends Controller
     {
         $breakdown = Breakdown::create($request->all());
         $resource_code = $breakdown->wbs_level->code . $breakdown->std_activity->id_partial;
+
         $resources = $breakdown->resources()->createMany($request->get('resources'));
         foreach ($resources as $resource) {
             $resource->update(['code' => $resource_code]);
         }
         $breakdown->syncVariables($request->get('variables'));
-
-//        return \Redirect::to(route('project.show', $breakdown->project_id) . '#breakdown');
         return \Redirect::to('/blank?reload=breakdown');
     }
 
@@ -63,8 +62,6 @@ class BreakdownController extends Controller
         $duplicate = $breakdown->duplicate($request->only('wbs_level_id', 'cost_account'));
 
         flash('Breakdown has been duplicated', 'success');
-
-//        return \Redirect::to(route('breakdown.duplicate', $breakdown) . '?close=1');
         return \Redirect::to('/blank?reload=breakdown');
     }
 

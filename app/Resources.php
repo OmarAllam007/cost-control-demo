@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Resources extends Model
 {
-    use SoftDeletes, HasOptions, Tree, Overridable, CachesQueries;
+    use SoftDeletes, HasOptions, Tree, Overridable;//CachesQueries;
 
     protected $table = 'resources';
 
@@ -48,6 +48,11 @@ class Resources extends Model
     public function units()
     {
         return $this->belongsTo(Unit::class, 'unit');
+    }
+
+    function breakdown_resource()
+    {
+        return $this->belongsToMany(BreakdownResource::class);
     }
 
     function scopeFilter(Builder $query, $term = '')

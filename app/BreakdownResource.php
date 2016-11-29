@@ -48,11 +48,12 @@ class BreakdownResource extends Model
     {
         return $this->belongsTo(Productivity::class)->withTrashed();
     }
-
-    function getResourceIdAttribute()
+    function resource()
     {
-        return $this->resource->id;
+        return $this->belongsTo(Resources::class);
     }
+
+//
 
     function getEquationAttribute()
     {
@@ -63,30 +64,36 @@ class BreakdownResource extends Model
         return $this->template_resource->equation;
     }
 
-    function getResourceAttribute()
-    {
-        return $this->project_resource;
-    }
 
-    function getProjectResourceAttribute()
-    {
-        if ($this->resource_cache) {
-            return $this->resource_cache;
-        }
 
-        if (isset($this->attributes['resource_id'])) {
-            $resource = Resources::find($this->attributes['resource_id']);
-        } else {
-            $resource = $this->template_resource->resource;
-        }
 
-        $projectResource = Resources::where('resource_id', $resource->id)->where('project_id', $this->breakdown->project->id)->first();
-        if ($projectResource) {
-            return $this->resource_cache = $projectResource;
-        }
+//    function getResourceAttribute()
+//    {
+//        return $this->project_resource;
+//    }
+//
+//    function getProjectResourceAttribute()
+//    {
+//        if ($this->resource_cache) {
+//            return $this->resource_cache;
+//        }
+//
+//        if (isset($this->attributes['resource_id'])) {
+//            $resource = Resources::find($this->attributes['resource_id']);
+//        } else {
+//            $resource = $this->template_resource->resource;
+//        }
+//
+//            $projectResource = Resources::where('resource_id', $resource->id)->where('project_id', $this->breakdown->project->id)->first();
+//            if ($projectResource) {
+//                return $this->resource_cache = $projectResource;
+//            }
+//
+//
+//
+//        return $this->resource_cache = $resource;
+//    }
 
-        return $this->resource_cache = $resource;
-    }
 
     function getProjectProductivityAttribute()
     {
@@ -204,15 +211,13 @@ class BreakdownResource extends Model
         return $filter->filter();
     }
 
-    function scopeForWbs(Builder $query, $wbs_id) {
+    function scopeForWbs(Builder $query, $wbs_id)
+    {
 
-        return $query->whereHas('breakdown', function(Builder $q) use ($wbs_id){
+        return $query->whereHas('breakdown', function (Builder $q) use ($wbs_id) {
             return $q->where('wbs_level_id', $wbs_id);
         });
     }
-
-
-
 
 
 }
