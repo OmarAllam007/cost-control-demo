@@ -7,6 +7,7 @@ use App\Project;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Support\Collection;
+use Make\Makers\Resource;
 
 class ResourcesImportJob extends ImportJob
 {
@@ -43,27 +44,29 @@ class ResourcesImportJob extends ImportJob
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
+            $resource_code = Resources::where('resource_code', $data[4])->first();
             if (!array_filter($data)) {
                 continue;
             }
-            $type_id = $this->getTypeId($data);
-            $unit_id = $this->getUnit($data[7]);
-            $item = [
-                'resource_type_id' => $type_id,
-                'resource_code' => $data[4], 'name' => $data[5],
-                'rate' => floatval($data[6]),
-                'unit' => $unit_id,
-                'waste' => $this->getWaste($data[8]),
-                'business_partner_id' => $this->getPartner($data[9]),
-                'reference' => $data[10]
-            ];
-
-            if ($unit_id) {
-                Resources::create($item);
-                ++$status['success'];
-            } else {
-                $item['orig_unit'] = $data[7];
-                $status['failed']->push($item);
+            if (!$resource_code) {
+                $type_id = $this->getTypeId($data);
+                $unit_id = $this->getUnit($data[7]);
+                $item = [
+                    'resource_type_id' => $type_id,
+                    'resource_code' => $data[4], 'name' => $data[5],
+                    'rate' => floatval($data[6]),
+                    'unit' => $unit_id,
+                    'waste' => $this->getWaste($data[8]),
+                    'business_partner_id' => $this->getPartner($data[9]),
+                    'reference' => $data[10]
+                ];
+                if ($unit_id) {
+                    Resources::create($item);
+                    ++$status['success'];
+                } else {
+                    $item['orig_unit'] = $data[7];
+                    $status['failed']->push($item);
+                }
             }
         }
 
@@ -112,7 +115,7 @@ class ResourcesImportJob extends ImportJob
     {
         if (!$this->partners) {
             $this->partners = collect();
-            BusinessPartner::all()->each(function($partner) {
+            BusinessPartner::all()->each(function ($partner) {
                 $this->partners->put(mb_strtolower($partner->name), $partner->id);
             });
         }
@@ -138,7 +141,7 @@ class ResourcesImportJob extends ImportJob
         }
 
         $this->types = collect();
-        ResourceType::all()->each(function($type) {
+        ResourceType::all()->each(function ($type) {
             $this->types->put(mb_strtolower($type->canonical), $type->id);
         });
 
