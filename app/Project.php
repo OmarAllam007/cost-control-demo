@@ -64,10 +64,9 @@ class Project extends Model
         $resources = collect();
 
         foreach ($this->breakdown_resources as $bResource) {
-            if($bResource->resource){
+            if ($bResource->resource) {
                 $resource = $bResource->resource;
                 $resources->put($resource->id, $resource);
-
             }
         }
 

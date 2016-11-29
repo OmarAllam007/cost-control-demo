@@ -109,10 +109,17 @@ class Resources extends Model
     public function updateBreakdownResurces()
     {
         if ($this->project_id) {
-            BreakdownResource::whereHas('breakdown', function ($q) {
+            $breakdown_resources = BreakdownResource::whereHas('breakdown', function ($q) {
                 $q->where('project_id', $this->project_id);
             })->where('resource_id', $this->resource_id)
-                ->update(['resource_id' => $this->id]);
+                ->get();
+
+
+            foreach ($breakdown_resources as $breakdown_resource) {
+                $formatter = new BreakdownResourceFormatter($breakdown_resource);
+                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->update($formatter->toArray());
+            }
+
         }
     }
 
@@ -120,10 +127,12 @@ class Resources extends Model
     {
         parent::boot();
         static::updated(function ($resource) {
+
             $breakdown_resources = BreakdownResource::where('resource_id', $resource->id)->get();
             foreach ($breakdown_resources as $breakdown_resource) {
                 $formatter = new BreakdownResourceFormatter($breakdown_resource);
                 BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->update($formatter->toArray());
+
             }
         });
 

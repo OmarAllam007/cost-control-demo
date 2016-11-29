@@ -15,7 +15,7 @@ class BreakdownTemplateController extends Controller
 
     public function index()
     {
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::where('project_id','=',Null), session('filters.breakdown-template'));
+        $filter = new BreakdownTemplateFilter(BreakdownTemplate::query(), session('filters.breakdown-template'));
         $breakdownTemplates = $filter->filter()->paginate(50);
         return view('breakdown-template.index', compact('breakdownTemplates'));
     }

@@ -202,6 +202,7 @@ class ResourcesController extends Controller
         } else {
 
             $newResource->update($request->all());
+            $newResource->updateBreakdownResurces();
         }
         flash('Resource has been updated successfully', 'success');
         return redirect()->route('project.show', $project);

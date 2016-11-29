@@ -143,7 +143,6 @@ class BreakdownResource extends Model
             return $this->budget_unit * $this->resource->rate;
         }
 
-
         return 0;
     }
 
