@@ -58,7 +58,7 @@ class ActualMaterialController extends Controller
         return view('actual-material.fix-mapping', $data);
     }
 
-    function postFixMapping($key)
+    function postFixMapping($key, Request $request)
     {
         $data = \Cache::get($key);
         if (!$data) {
@@ -66,6 +66,7 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
+        dd($request->all());
 
         return \Redirect::route('project.cost-control', $data['project_id']);
     }
