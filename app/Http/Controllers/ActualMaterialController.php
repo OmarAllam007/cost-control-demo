@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BreakDownResourceShadow;
 use App\Jobs\ImportActualMaterialJob;
 use App\Project;
 use Illuminate\Http\Request;
@@ -50,9 +51,11 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        dd($data);
+        $data['projectActivityCodes'] = $data['project']->breakdown_resources->load([
+            'breakdown', 'breakdown.std_activity', 'breakdown.wbs_level'
+        ])->keyBy('code');
 
-        return view('actual-material.mapping', compact('data'));
+        return view('actual-material.fix-mapping', $data);
     }
 
     function postFixMapping($key)
@@ -63,7 +66,7 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        \Cache::forget($key);
+
         return \Redirect::route('project.cost-control', $data['project_id']);
     }
 
