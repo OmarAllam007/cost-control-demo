@@ -8,6 +8,7 @@ use App\BreakdownResource;
 use App\Period;
 use App\Project;
 use App\ResourceCode;
+use App\Resources;
 use App\Unit;
 use App\UnitAlias;
 use Carbon\Carbon;
@@ -76,8 +77,10 @@ class ImportActualMaterialJob extends ImportJob
         $result = [
             'success' => 0,
             'hasIssues' => false,
-            'mapping' => collect(),
-            'resources' => collect(),
+            'mapping' => [
+                'activities' => collect(),
+                'resources' => collect(),
+            ],
             'units' => collect(),
             'multiple' => collect(),
             'invalid' => collect(),
@@ -96,14 +99,14 @@ class ImportActualMaterialJob extends ImportJob
 
             $activityCode = strtolower($data[3]);
             if (!$this->activityMap->has($activityCode)) {
-                $result['mapping']->push($data);
+                $result['mapping']['activities']->push($data);
                 continue;
             }
             $activityCodes = $this->activityMap->get($activityCode);
 
             $resourceCode = strtolower($data[13]);
             if (!$this->resourceMap->has($resourceCode)) {
-                $result['resources']->push($data);
+                $result['mapping']['resources']->push($data);
                 continue;
             }
             $resource_ids = $this->resourceMap->get($resourceCode);
@@ -122,16 +125,16 @@ class ImportActualMaterialJob extends ImportJob
                     continue;
                 }
 
-                $actual = ActualResources::create([
+                ActualResources::create([
                     'project_id' => $this->project->id,
                     'wbs_level_id' => $breakdownResource->breakdown->wbs_level_id,
                     'breakdown_resource_id' => $breakdownResource->id,
-                    'period_id' => 1, //$this->active_period->id,
+                    'period_id' => $this->active_period->id,
                     'qty' => abs($data[10]),
                     'unit_price' => $data[11],
                     'cost' => abs($data[12]),
                     'unit_id' => $unit_id,
-                    'action_date' => $excelBaseDate->addDays($data[5])
+                    'action_date' => $excelBaseDate->addDays($data[5]),
                 ]);
 
                 ++$result['success'];
@@ -156,16 +159,18 @@ class ImportActualMaterialJob extends ImportJob
 
     protected function loadActivityMap()
     {
-        $this->activityMap = ActivityMap::where('project_id', $this->project->id)
-            ->select('activity_code', 'equiv_code')->get()->reduce(function (Collection $collection, $item) {
+        $this->activityMap = collect();
+        ActivityMap::where('project_id', $this->project->id)
+            ->select('activity_code', 'equiv_code')->get()->each(function ($item) {
                 $code = strtolower($item->activity_code);
                 $equiv_code = strtolower($item->equiv_code);
 
-                return $collection->put($equiv_code, $code)->put($code, $code);
-            }, collect());
+                $this->activityMap->put($equiv_code, $code)->put($code, $code);
+            });
 
 
-        $this->activityCodes = BreakdownResource::whereHas('breakdown', function ($q) {
+        $this->activityCodes = collect();
+        BreakdownResource::whereHas('breakdown', function ($q) {
             $q->where('project_id', $this->project->id);
         })->select(['id', 'code'])->get()->reduce(function (Collection $collection, $resource) {
             $code = strtolower($resource->code);
@@ -180,16 +185,23 @@ class ImportActualMaterialJob extends ImportJob
 
     protected function loadResourceMap()
     {
-        //Todo: add original resource codes
+        $this->resourceMap = collect();
 
-        $this->resourceMap = ResourceCode::select('resource_id', 'code')->get()->reduce(function (Collection $collection, $resource_code) {
-            $code = strtolower($resource_code->code);
-            if (!$collection->has($code)) {
-                $collection->put($code, collect());
+        Resource::select('id', 'resource_code')->all()->each(function(Resources $resource){
+            $code = strtolower($resource->resource_code);
+            if (!$this->resourceMap->has($code)) {
+                $this->resourceMap->put($code, collect());
             }
-            $collection->get($code)->push($resource_code->resource_id);
-            return $collection;
-        }, collect());
+            $this->resourceMap->get($code)->push($resource->id);
+        });
+
+        ResourceCode::select('resource_id', 'code')->get()->each(function ($resource_code) {
+            $code = strtolower($resource_code->code);
+            if (!$this->resourceMap->has($code)) {
+                $this->resourceMap->put($code, collect());
+            }
+            $this->resourceMap->get($code)->push($resource_code->resource_id);
+        });
     }
 
     protected function loadUnits()
