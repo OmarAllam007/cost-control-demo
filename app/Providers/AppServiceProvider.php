@@ -39,11 +39,8 @@ class AppServiceProvider extends ServiceProvider
 
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+
+
     public function csiCategoryActions()
     {
         CsiCategory::saved(function () {

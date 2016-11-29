@@ -6,6 +6,7 @@ use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Overridable;
 use App\Behaviors\Tree;
+use App\Jobs\CacheCsiCategoryTree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -146,5 +147,16 @@ class Productivity extends Model
         }
 
         return $errors;
+    }
+
+    public static function boot(){
+        parent::boot();
+
+        static::created(function (){
+            \Cache::forget('csi-tree');
+            \Cache::remember('csi-tree', 7 * 24 * 60, function () {
+                return dispatch(new CacheCsiCategoryTree());
+            });
+        });
     }
 }

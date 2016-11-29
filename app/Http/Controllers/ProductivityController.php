@@ -41,11 +41,6 @@ class ProductivityController extends Controller
 
         Productivity::create($request->all());
 
-        \Cache::forget('csi-tree');
-        \Cache::remember('csi-tree', 7 * 24 * 60, function () {
-            return dispatch(new CacheCsiCategoryTree());
-        });
-
         flash('Productivity has been saved', 'success');
 
         return \Redirect::route('productivity.index');
