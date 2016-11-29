@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WBSLevelSeeder::class);
         $this->call(ProductivityList::class);
         $this->call(BreakDownResourceShadowSeeder::class);
+        $this->call(BreakdownResourcesSeed::class);
     }
 
 }

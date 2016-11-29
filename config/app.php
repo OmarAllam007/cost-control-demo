@@ -167,12 +167,12 @@ $config = [
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
+        App\Providers\BreakdownResourcesShadowProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\IdResourceGeneratorServiceProvider::class,
         App\Providers\IdBreakDownTemplateGenerator::class,
-        \App\Providers\BreakdownResourcesShadowProvider::class,
 
     ],
 

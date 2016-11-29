@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->ResourceTypeActions();
         $this->wbsActions();
         BreakdownResource::observe(BreakDownResourceObserver::class);
-        Resources::observe(ResourcesObserver::class);
+
     }
 
     /**

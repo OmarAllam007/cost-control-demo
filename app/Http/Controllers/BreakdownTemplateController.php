@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
 use App\Jobs\ImportBreakdownTemplateJob;
+use App\WbsLevel;
 use Illuminate\Http\Request;
 
 class BreakdownTemplateController extends Controller
@@ -21,13 +22,14 @@ class BreakdownTemplateController extends Controller
 
     public function create()
     {
-        return view('breakdown-template.create');
+        $wbsTree = WbsLevel::tree()->get();
+        return view('breakdown-template.create')->with(['wbsTree'=>$wbsTree]);
     }
 
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
-        $request['parent_template_id']= BreakdownTemplate::where('name',request('name'))->first()->id;
+//        $request['parent_template_id']= BreakdownTemplate::where('name',request('name'))->first()->id;
         $template = BreakdownTemplate::create($request->all());
         flash('Breakdown template has been saved', 'success');
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResourceType extends Model
 {
-    use Tree, HasOptions, CachesQueries;
+    use Tree, HasOptions;//, CachesQueries;
 
     protected $fillable = ['name','parent_id','code'];
 

@@ -6,6 +6,7 @@ use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Overridable;
 use App\Behaviors\Tree;
+use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -113,5 +114,19 @@ class Resources extends Model
             })->where('resource_id', $this->resource_id)
                 ->update(['resource_id' => $this->id]);
         }
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::updated(function ($resource) {
+            $breakdown_resources = BreakdownResource::where('resource_id', $resource->id)->get();
+            foreach ($breakdown_resources as $breakdown_resource) {
+                $formatter = new BreakdownResourceFormatter($breakdown_resource);
+                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->update($formatter->toArray());
+            }
+        });
+
+
     }
 }

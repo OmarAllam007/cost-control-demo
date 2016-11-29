@@ -25,7 +25,6 @@ class BreakdownResourceFormatter implements \JsonSerializable
 
     function toArray()
     {
-
         return [
             'breakdown_resource_id' => $this->resource->id,
             'project_id' =>$this->resource->breakdown->project->id,
@@ -40,11 +39,11 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'budget_qty' => number_format($this->resource->budget_qty, 2),
             'resource_qty' => number_format($this->resource->resource_qty, 2),
             'resource_waste' => $this->resource->resource_waste,
-            'resource_type' => $this->resource->resource->types->root->name,
+            'resource_type' => $this->resource->resource->types->name,
             'resource_type_id' => $this->resource->resource->types->id,
             'resource_code' => $this->resource->resource->resource_code,
             'resource_name' => $this->resource->resource->name,
-            'unit_price' => number_format($this->resource->rate, 2),
+            'unit_price' => number_format($this->resource->resource->rate, 2),
             'measure_unit' => $this->resource->resource->units->type,
             'budget_unit' => number_format($this->resource->budget_unit, 2),
             'budget_cost' => number_format($this->resource->budget_cost, 2),
