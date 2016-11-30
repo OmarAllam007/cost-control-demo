@@ -74,7 +74,6 @@ class BreakdownResourceController extends Controller
 
     public function destroy(BreakdownResource $breakdown_resource, Request $request)
     {
-        dd();
         $breakdown_resource->load('breakdown.project');
         BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->delete();
         $breakdown_resource->delete();

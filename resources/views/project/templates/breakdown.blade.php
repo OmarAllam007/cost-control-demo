@@ -92,7 +92,7 @@
                 <tr v-for="breakdown in filtered_breakdowns">
                     <td style="min-width: 32px; max-width: 32px;">
 
-                        <form action="/breakdown-resource/@{{ breakdown.breakdown_resource_id }}" @submit.prevent="destroy(breakdown.id)" class="dropdown">
+                        <form action="/breakdown-resource/@{{ breakdown.breakdown_resource_id }}" @submit.prevent="destroy(breakdown.breakdown_resource_id)" class="dropdown">
                             {{csrf_field()}} {{method_field('delete')}}
                             <button data-toggle="dropdown" type="button" class="btn btn-default btn-xs dropdown-toggle">
                                 <span class="caret"></span>
@@ -111,7 +111,7 @@
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-blue">@{{ breakdown.cost_account }}</td>
-                    <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.eng_qty }}</td>
+                    <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{breakdown.eng_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.budget_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-blue">@{{ breakdown.resource_qty }}</td>
