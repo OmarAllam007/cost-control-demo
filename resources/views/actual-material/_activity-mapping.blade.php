@@ -25,7 +25,7 @@
                     <a href="#" class="select-activity-trigger">
                         Select Activity
                     </a>
-                    {{Form::hidden("activity[$activity][resource_id]", null, ['class' => 'resource_id'])}}
+                    {{Form::hidden("activity[$activity][activity_code]", null, ['class' => 'resource_id'])}}
                 </td>
             </tr>
         @endforeach

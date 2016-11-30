@@ -106,10 +106,12 @@ Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], functi
     Route::get('import/{project}', ['as' => 'import', 'uses' => 'ActualMaterialController@import']);
     Route::get('mapping/{key}', ['as' => 'mapping', 'uses' => 'ActualMaterialController@fixMapping']);
     Route::get('multiple/{key}', ['as' => 'multiple', 'uses' => 'ActualMaterialController@fixMultiple']);
+    Route::get('units/{key}', ['as' => 'units', 'uses' => 'ActualMaterialController@fixunits']);
 
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActualMaterialController@postImport']);
     Route::post('mapping/{key}', ['as' => 'post-mapping', 'uses' => 'ActualMaterialController@postFixMapping']);
     Route::post('multiple/{key}', ['as' => 'post-multiple', 'uses' => 'ActualMaterialController@postFixMultiple']);
+    Route::post('units/{key}', ['as' => 'post-units', 'uses' => 'ActualMaterialController@postFixUnits']);
 });
 
 Route::resource('project', 'ProjectController');

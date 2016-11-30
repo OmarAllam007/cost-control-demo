@@ -66,7 +66,7 @@
                 var code = $(this).data('code');
                 var target = selectActivityModal.data('target');
 
-                target.text(code).siblings('input').val(id);
+                target.text(code).siblings('input').val(code);
 
                 selectActivityModal.modal('hide');
             });
@@ -102,12 +102,10 @@
             $('.select-resource').on('click', function (e) {
                 e.preventDefault();
 
-                var id = $(this).data('id');
                 var code = $(this).data('code');
                 var target = selectResourceModal.data('target');
-console.log(code);
-console.log(id);
-                target.text(code).siblings('input').val(id);
+
+                target.text(code).siblings('input').val(code);
 
                 selectResourceModal.modal('hide');
             });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BreakDownResourceShadow;
 use App\Jobs\ImportActualMaterialJob;
+use App\Jobs\ImportMaterialDataJob;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -66,9 +67,66 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        dd($request->all());
+        $newActivities = collect();
+        if ($request->has('activity')) {
+            foreach ($request->get('activity') as $code => $activityData) {
+                foreach ($data['mapping'] as $activity) {
+                    if ($activity[3] == $code) {
+                        $activity[3] = $activityData['activity_code'];
+                        $newActivities->push($activity);
+                    }
+                }
+            }
 
-        return \Redirect::route('project.cost-control', $data['project_id']);
+            // Issue has been resolved remove from cached data
+            unset($data['mapping']);
+        }
+
+        if ($request->has('resources')) {
+            foreach ($request->get('resources') as $code => $resourceData) {
+                foreach ($data['resources'] as $activity) {
+                    if ($activity[13] == $code) {
+                        $activity[13] = $resourceData['resource_code'];
+                        $newActivities->push($activity);
+                    }
+                }
+            }
+
+            // Issue has been resolved remove from cached data
+            unset($data['resources']);
+        }
+
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities));
+
+        $data_to_cache = [
+            'success' => $result['success'] + $data['success'],
+            'multiple' => $data['multiple']->merge($result['multiple']),
+            'units' => $data['units']->merge($result['units']),
+            'invalid' => $data['invalid']->merge($result['invalid']),
+            'project' => $data['project']
+        ];
+
+        \Cache::put($key, $data_to_cache);
+
+        if ($data_to_cache['units']->count()) {
+            return \Redirect::route('actual-material.fix-units', $key);
+        } elseif ($data_to_cache['multiple']->count()) {
+            return \Redirect::route('actual-material.fix-multiple', $key);
+        } else {
+            \Cache::forget($key);
+            flash($data_to_cache['success'] . ' records has been imported');
+            return \Redirect::route('project.cost-control', $data_to_cache['project']);
+        }
+    }
+
+    function fixUnits()
+    {
+
+    }
+
+    function postFixUnits()
+    {
+
     }
 
     function fixMultiple($key)

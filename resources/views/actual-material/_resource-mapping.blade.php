@@ -27,15 +27,13 @@
                 <td class="col-sm-2">{{$resource[9]}}</td>
                 <td class="col-sm-3">
                     <a href="#" class="select-resource-trigger">Select Resource</a>
-                    {{Form::hidden("resources[{$resource[13]}][resource_id]", null, ['class' => 'resource_id'])}}
+                    {{Form::hidden("resources[{$resource[13]}][resource_code]", null, ['class' => 'resource_id'])}}
                 </td>
             </tr>
         @endforeach
         </tbody>
     </table>
 </div>
-
-
 
 {{-- Resources Modal --}}
 <div class="modal fade" tabindex="-1" role="dialog" id="SelectResourceModal">
