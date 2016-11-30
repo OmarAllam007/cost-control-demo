@@ -29,7 +29,7 @@
         @include('project.tabs.wbs-area')
         @include('project.tabs._resources')
         @include('project.tabs._productivity')
-        @include('project.tabs._breakdown_template')
+        {{--@include('project.tabs._breakdown_template')--}}
         @include('project.tabs._report')
     </div>
 
