@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\Http\Requests\WipeRequest;
 use App\Productivity;
 use App\Project;
@@ -36,7 +37,7 @@ class BreakdownResourceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -47,7 +48,7 @@ class BreakdownResourceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -73,10 +74,13 @@ class BreakdownResourceController extends Controller
 
     public function destroy(BreakdownResource $breakdown_resource, Request $request)
     {
+        dd();
         $breakdown_resource->load('breakdown.project');
+        BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->delete();
         $breakdown_resource->delete();
 
         $msg = 'Resource has been deleted';
+
         if ($request->ajax()) {
             return ['ok' => true, 'message' => $msg];
         }

@@ -188,13 +188,7 @@ class BreakdownResource extends Model
         });
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::updated(function ($resource) {
 
-        });
-    }
 
 
 }

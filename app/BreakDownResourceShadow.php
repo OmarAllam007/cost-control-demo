@@ -57,4 +57,6 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(Breakdown::class);
     }
 
+
+
 }

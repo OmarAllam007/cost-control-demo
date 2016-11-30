@@ -32,23 +32,6 @@ class WbsController extends Controller
 
         $resources = BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->get();
 
-//        $resources = BreakdownResource::with('breakdown')
-////            ->with('std_activity_resource')
-//            ->with('breakdown.template')
-//            ->with('breakdown.project')
-////            ->with('breakdown.variables')
-//            ->with('template_resource')
-//            ->with('template_resource.resource')
-//            ->with('template_resource')
-////            ->with('productivity')
-//            ->forWbs($wbs_level->id)->get()
-//            ->map(function (BreakdownResource $res) {
-//                return new BreakdownResourceFormatter($res);
-//            });
-//        $r = new Response();
-//        $r->header('Content-Type', 'text/html');
-//        $r->setContent(json_encode($resources));
-//        return $r;
 
         return $resources;
 
