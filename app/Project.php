@@ -70,7 +70,9 @@ class Project extends Model
 //            }
 //        }
 
-        return Resources::whereIn('id', $this->breakdown_resources()->pluck('resource_id'))->get();
+        return Resources::whereIn('id', $this->breakdown_resources()->pluck('resource_id'))->with([
+            'types', 'units', 'types.parent', 'types.parent.parent'
+        ])->get();
     }
 
     function getProductivitiesAttribute()
