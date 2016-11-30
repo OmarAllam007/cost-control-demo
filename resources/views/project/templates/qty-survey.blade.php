@@ -57,7 +57,29 @@
         <div class="alert alert-info" v-else>
             <i class="fa fa-info-circle"></i> No quantities found
         </div>
+
+    <div class="modal fade" id="WipeQSModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <form method="post" action="{{route('survey.wipe', $project)}}" class="modal-content">
+                {{csrf_field()}} {{method_field('delete')}}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">Delete all quantities</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all quantities in the project?</div>
+                    <input type="hidden" name="wipe" value="1">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" v-on:click="wipeAll" :disabled="wiping">
+                        <i class="fa fa-@{{ wiping? 'spinner fa-spin' : 'trash' }}"></i> Wipe
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+    </div>
+
 </template>
 
-<qty-survey></qty-survey>
+<qty-survey project="{{$project->id}}"></qty-survey>

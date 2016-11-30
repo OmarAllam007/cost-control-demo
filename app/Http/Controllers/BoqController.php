@@ -181,8 +181,13 @@ class BoqController extends Controller
     {
         $project->boqs()->delete();
 
-        flash('All BOQs have been deleted', 'info');
+        $msg = 'All BOQs have been deleted';
 
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+
+        flash($msg, 'info');
         return \Redirect::to(route('project.show', $project) . '#boq');
     }
 }

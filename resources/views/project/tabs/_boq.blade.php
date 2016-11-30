@@ -38,11 +38,13 @@
                 <h4 class="modal-title">Delete all BOQ</h4>
             </div>
             <div class="modal-body">
-                <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all BOQ?</div>
+                <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all BOQ in the project?</div>
                 <input type="hidden" name="wipe" value="1">
                                 </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete all</button>
+                <button type="button" class="btn btn-danger" v-on:click="wipeAll" :disabled="wiping">
+                    <i class="fa fa-@{{ wiping? 'spinner fa-spin' : 'trash' }}"></i> Wipe
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </form>

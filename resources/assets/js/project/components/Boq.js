@@ -1,11 +1,14 @@
 export default {
+    props: ['project'],
+
     template: document.getElementById('BOQTemplate').innerHTML,
 
     data() {
         return {
             boq: {},
             loading: false,
-            wbs_id: 0
+            wbs_id: 0,
+            wiping: false
         };
     },
 
@@ -62,7 +65,7 @@ export default {
                 this.wiping = false;
                 this.$dispatch('request_alert', {
                     message: response.message,
-                    type: response.ok ? 'info' : 'error'
+                    type: response.ok ? 'info' : 'danger'
                 });
                 if (response.ok) {
                     this.boq = [];
@@ -73,7 +76,7 @@ export default {
                 this.wiping = false;
                 this.$dispatch('request_alert', {
                     message: response.message,
-                    type: 'error'
+                    type: 'danger'
                 });
                 $('#WipeBoqModal').modal('hide');
             });

@@ -96,8 +96,12 @@ class BreakdownResourceController extends Controller
         Resources::where('project_id', $project->id)->delete();
         Productivity::where('project_id', $project->id)->delete();
 
-        flash('All breakdowns have been removed', 'info');
+        $msg = 'All breakdowns have been removed';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
 
+        flash($msg, 'info');
         return \Redirect::to(route('project.show', $project) . '#breakdown');
     }
 
