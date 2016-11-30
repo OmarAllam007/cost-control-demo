@@ -33,7 +33,6 @@ class ResourcesController extends Controller
     {
         $units_drop = Unit::options();
         $partners = BusinessPartner::options();
-//        $resources = Resources::all();
         $resource_types = ResourceType::lists('name', 'id')->all();
         $edit = false;
 
@@ -190,7 +189,6 @@ class ResourcesController extends Controller
     function postOverride(Resources $resources, Project $project, Request $request)
     {
         $this->validate($request, $this->rules);
-
         $newResource = Resources::version($project->id, $resources->id)->first();
 
         if (!$newResource) {
@@ -200,10 +198,12 @@ class ResourcesController extends Controller
             $newResource->resource_id = $resources->id;
             Resources::flushEventListeners();
             $newResource->save();
+            $newResource->updateBreakdownResurces();
         } else {
-            $newResource->update($request->all());
-        }
 
+            $newResource->update($request->all());
+            $newResource->updateBreakdownResurces();
+        }
         flash('Resource has been updated successfully', 'success');
         return redirect()->route('project.show', $project);
     }

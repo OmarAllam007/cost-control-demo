@@ -74,6 +74,7 @@
     <script type="text/javascript">
         var productivity = {};
         @if (Form::getValueAttribute('productivity_id'))
+        {{Form::getValueAttribute('productivity_id')}}
                 productivity = {!! json_encode(\App\Productivity::find(Form::getValueAttribute('productivity_id'))->morphToJSON()) !!}
         @endif
     </script>

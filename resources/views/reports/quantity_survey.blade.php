@@ -11,9 +11,7 @@
         </a>
     </div>
 @endsection
-@section('image')
-    <img src="{{asset('images/reports/qsSummery.jpg')}}">
-@endsection
+
 @section('body')
     <ul class="list-unstyled tree">
         @foreach($level_array as $level)

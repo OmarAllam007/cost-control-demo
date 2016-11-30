@@ -6,13 +6,14 @@ use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Overridable;
 use App\Behaviors\Tree;
+use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Resources extends Model
 {
-    use SoftDeletes, HasOptions, Tree, Overridable, CachesQueries;
+    use SoftDeletes, HasOptions, Tree, Overridable;//CachesQueries;
 
     protected $table = 'resources';
 
@@ -50,6 +51,11 @@ class Resources extends Model
         return $this->belongsTo(Unit::class, 'unit');
     }
 
+    function breakdown_resource()
+    {
+        return $this->belongsToMany(BreakdownResource::class);
+    }
+
     function scopeFilter(Builder $query, $term = '')
     {
         $query->with(['units', 'types'])
@@ -79,7 +85,7 @@ class Resources extends Model
 
         foreach ($data['units'] as $unit => $unit_id) {
             if (!$unit_id) {
-                $errors[ $unit ] = $unit;
+                $errors[$unit] = $unit;
             }
         }
 
@@ -98,5 +104,39 @@ class Resources extends Model
         }
 
         $this->codes()->whereNotIn('id', $codeIds)->delete();
+    }
+
+    public function updateBreakdownResurces()
+    {
+        if ($this->project_id) {
+            $breakdown_resources = BreakdownResource::whereHas('breakdown', function ($q) {
+                $q->where('project_id', $this->project_id);
+            })->where('resource_id', $this->resource_id)
+                ->get();
+
+
+            foreach ($breakdown_resources as $breakdown_resource) {
+                $formatter = new BreakdownResourceFormatter($breakdown_resource);
+                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
+                    ->update($formatter->toArray());
+            }
+
+        }
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::updated(function ($resource) {
+            $breakdown_resources = BreakdownResource::where('resource_id', $resource->id)->get();
+            foreach ($breakdown_resources as $breakdown_resource) {
+                $formatter = new BreakdownResourceFormatter($breakdown_resource);
+                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
+                    ->update($formatter->toArray());
+
+            }
+        });
+
+
     }
 }

@@ -3,7 +3,7 @@
     <tr>
         <th class="col-xs-2">CSI CODE</th>
         <th class="col-xs-3">Description</th>
-        <th class="col-xs-3">Crew Structure</th>
+        <th class="col-xs-2">Crew Structure</th>
         <th class="col-xs-1">Unit</th>
         <th class="col-xs-1">Daily Output</th>
         <th class="col-xs-2">Actions</th>
@@ -11,11 +11,13 @@
     </thead>
     <tbody>
     @foreach($productivities as $productivity)
+
         <tr>
-            <td class="col-xs-2">{{ $productivity['csi_code']?:0 }}</td>
+
+            <td class="col-xs-2">{{ $productivity['csi_code']?:'' }}</td>
             <td class="col-xs-3">{!! nl2br(e($productivity['description']?:'')) !!}</td>
             <td class="col-xs-3">{!! nl2br(e($productivity['crew_structure']?:'')) !!}</td>
-            <td class="col-xs-1">{{ isset($productivity['unit'])?$productivity['unit']:'' }}</td>
+            <td class="col-xs-1">{{ $productivity['unit']?$productivity['unit']:'' }}</td>
             <td class="col-xs-1">{{number_format(floatval($productivity['daily_output']), 2)?:0}}</td>
             <td class="col-xs-2">
                 <form action="{{ route('productivity.destroy', $productivity) }}" method="post">

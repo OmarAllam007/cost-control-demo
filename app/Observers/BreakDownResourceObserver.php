@@ -6,6 +6,7 @@ use App\BreakdownResource;
 
 use App\BreakDownResourceShadow;
 use App\Formatters\BreakdownResourceFormatter;
+use App\Resources;
 
 class BreakDownResourceObserver
 {
@@ -25,4 +26,6 @@ class BreakDownResourceObserver
     {
         BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->delete();
     }
+
+
 }

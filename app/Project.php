@@ -64,8 +64,10 @@ class Project extends Model
         $resources = collect();
 
         foreach ($this->breakdown_resources as $bResource) {
-            $resource = $bResource->resource;
-            $resources->put($resource->id, $resource);
+            if ($bResource->resource) {
+                $resource = $bResource->resource;
+                $resources->put($resource->id, $resource);
+            }
         }
 
         return $resources;
@@ -96,6 +98,16 @@ class Project extends Model
     function breakdowns()
     {
         return $this->hasMany(Breakdown::class);
+    }
+
+    function shadows()
+    {
+        return $this->hasMany(BreakDownResourceShadow::class);
+    }
+
+    function templates()
+    {
+        return $this->hasMany(BreakdownTemplate::class);
     }
 
     function getDivisions()

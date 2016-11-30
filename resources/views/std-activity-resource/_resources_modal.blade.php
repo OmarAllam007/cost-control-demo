@@ -26,4 +26,4 @@
         </div>
     </div>
 </template>
-<resources :resource="{{($resource_id = Form::getValueAttribute('resource_id'))? json_encode(\App\Resources::find($resource_id)->morphToJSON()) : '{}' }}"></resources>
+    <resources :resource="{{($resource_id = Form::getValueAttribute('resource_id'))? json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) : '{}' }}"></resources>

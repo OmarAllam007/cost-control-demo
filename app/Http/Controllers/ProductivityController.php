@@ -5,6 +5,7 @@ use App\ActivityDivision;
 use App\CsiCategory;
 use App\Filter\ProductivityFilter;
 use App\Http\Requests\WipeRequest;
+use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\Export\ExportProductivityJob;
 use App\Jobs\ProductivityImportJob;
 use App\Productivity;
@@ -38,9 +39,7 @@ class ProductivityController extends Controller
 
         $this->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
 
-
         Productivity::create($request->all());
-
 
         flash('Productivity has been saved', 'success');
 

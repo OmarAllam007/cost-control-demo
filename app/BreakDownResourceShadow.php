@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Model;
 
 
 class BreakDownResourceShadow extends Model
 {
+    use Tree ;
     protected $table = 'break_down_resource_shadows';
     protected $fillable = [
         'breakdown_resource_id',
@@ -48,7 +50,13 @@ class BreakDownResourceShadow extends Model
 
     function resource()
     {
-        return $this->belongsTo(Resources::class, 'resource_code', 'resource_code');
+        return $this->belongsTo(Resources::class);
     }
+
+    function breakdown(){
+        return $this->belongsTo(Breakdown::class);
+    }
+
+
 
 }

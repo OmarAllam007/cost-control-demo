@@ -9,7 +9,6 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach($wbsTree as $level)
-
                         @include('wbs-level._recursive_input', compact('level'))
                     @endforeach
                 </ul>
