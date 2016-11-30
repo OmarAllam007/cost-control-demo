@@ -20,6 +20,15 @@ class BreakdownResourcesShadowProvider extends ServiceProvider
             $resource->resource_id = $resource->template_resource->resource->id;
             $resource->update();
         });
+
+        Breakdown::updated(function (Breakdown $breakdown) {
+            $shadows = BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->get();
+            /** @var BreakDownResourceShadow $shadow */
+            foreach ($shadows as $shadow) {
+                $shadow->wbs_id = $breakdown->wbs_level_id;
+                $shadow->update();
+            }
+        });
     }
 
     public function register()
