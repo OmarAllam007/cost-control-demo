@@ -69,10 +69,10 @@
             </td>
 
             <td>
-                {{Form::text("units[{$line['resource']->breakdown_resource_id}]['qty']", 0, ['class' => 'form-control input-sm qty'])}}
+                {{Form::text("units[{$line['resource']->breakdown_resource_id}][qty]", 0, ['class' => 'form-control input-sm qty'])}}
             </td>
             <td>
-                {{Form::text("units[{$line['resource']->breakdown_resource_id}]['unit_price']", 0, ['class' => 'form-control input-sm unit-price', 'readonly'])}}
+                {{Form::text("units[{$line['resource']->breakdown_resource_id}][unit_price]", 0, ['class' => 'form-control input-sm unit-price', 'readonly'])}}
             </td>
             <td>
                 {{ abs($line[12]) }}

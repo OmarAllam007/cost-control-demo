@@ -19,9 +19,7 @@ class ActualMaterialController extends Controller
 
     function postImport(Project $project, Request $request)
     {
-        $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx'
-        ]);
+        $this->validate($request, ['file' => 'required|file|mimes:xls,xlsx']);
 
         $file = $request->file('file');
 
@@ -104,7 +102,6 @@ class ActualMaterialController extends Controller
             'success' => $result['success'] + $data['success'],
             'multiple' => $data['multiple']->merge($result['multiple']),
             'units' => $data['units']->merge($result['units']),
-            'invalid' => $data['invalid']->merge($result['invalid']),
             'project' => $data['project']
         ];
 
@@ -113,7 +110,7 @@ class ActualMaterialController extends Controller
         if ($data_to_cache['units']->count()) {
             return \Redirect::route('actual-material.fix-units', $key);
         } elseif ($data_to_cache['multiple']->count()) {
-            return \Redirect::route('actual-material.fix-multiple', $key);
+            return \Redirect::route('actual-material.multiple', $key);
         } else {
             \Cache::forget($key);
             flash($data_to_cache['success'] . ' records has been imported');
@@ -132,9 +129,42 @@ class ActualMaterialController extends Controller
         return view('actual-material.fix-units', $data);
     }
 
-    function postFixUnits()
+    function postFixUnits($key, Request $request)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
 
+        $newActivities = collect();
+        $units = $request->get("units");
+        foreach ($data['units'] as $row) {
+            $id = $row['resource']->breakdown_resource_id;
+            $new_data = $units[$id];
+            $row[10] = $new_data['qty'];
+            $row[11] = abs($row[12])/abs($row[10]);
+            $row[9] = $row['resource']->measure_unit;
+
+            $newActivities->push($row);
+        }
+
+        $result = dispatch(new ImportMaterialDataJob($data['project'], $newActivities));
+
+        $data_to_cache = [
+            'success' => $result['success'] + $data['success'],
+            'multiple' => $data['multiple']->merge($result['multiple']),
+            'project' => $data['project']
+        ];
+
+        \Cache::put($key, $data_to_cache);
+        if ($data_to_cache['multiple']->count()) {
+            return \Redirect::route('actual-material.multiple', $key);
+        } else {
+            \Cache::forget($key);
+            flash($data_to_cache['success'] . ' records has been imported');
+            return \Redirect::route('project.cost-control', $data_to_cache['project']);
+        }
     }
 
     function fixMultiple($key)
@@ -155,5 +185,8 @@ class ActualMaterialController extends Controller
             flash('No data found');
             return \Redirect::route('project.index');
         }
+
+        flash($data_to_cache['success'] . ' records has been imported');
+        return \Redirect::route('project.cost-control', $data_to_cache['project']);
     }
 }
