@@ -43,10 +43,11 @@ class ModifyPublicStdActivitiesJob extends ImportJob
                 continue;
             }
             $std_Activity = StdActivity::where('code', $data[0])->first();
+            $division_id = ActivityDivision::where('name',$data[2])->first()->id;
             if ($std_Activity) {
                 $item = [
                     'name' => $data[1],
-                    'division_id' => $this->getDivisionId($data[2]),
+                    'division_id' => $division_id,
                     'discipline' => $data[3],
                     'work_package_name' => $data[4],
                     'id_partial' => $data[5],
@@ -64,34 +65,5 @@ class ModifyPublicStdActivitiesJob extends ImportJob
 
     }
 
-    protected function getDivisionId($data)
-    {
-        if (!$this->divisions) {
-            $this->divisions = collect();
-            ActivityDivision::all()->each(function ($division) {
-                $this->divisions->put(mb_strtolower($division->canonical), $division->id);
-            });
 
-        }
-
-        $division_id = 0;
-        $path = [];
-
-        $path[] = mb_strtolower($data);
-        $key = implode('/', $path);
-        if ($this->divisions->has($key)) {
-            $division_id = $this->divisions->get($key);
-        } else {
-            $division = ActivityDivision::create([
-                'parent_id' => $division_id,
-                'name' => $data,
-
-            ]);
-            $division_id = $division->id;
-            $this->divisions->put($key, $division_id);
-        }
-
-
-        return $division_id;
-    }
 }

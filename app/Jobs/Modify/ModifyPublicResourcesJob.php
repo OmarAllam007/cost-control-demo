@@ -46,12 +46,13 @@ class ModifyPublicResourcesJob extends ImportJob
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
             $resource = Resources::where('resource_code', $data[0])->first();
+            $division_id = ResourceType::where('name',$data[2])->first();
             if (!array_filter($data)) {
                 continue;
             }
 
             if ($resource) {
-                $resource_type_id = $this->getTypeId($data[2]);
+                $resource_type_id = isset($division_id)?$division_id->id:'';
                 $unit_id = $this->getUnit($data[4]);
                 $resource->resource_type_id = $resource_type_id;
                 $resource->resource_code = $data[0];
