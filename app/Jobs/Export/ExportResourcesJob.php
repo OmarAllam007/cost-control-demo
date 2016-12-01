@@ -12,10 +12,13 @@ class ExportResourcesJob extends Job
 {
 
     public $project;
+    public $project_name;
+    public $objPHPExcel;
 
     public function __construct($project)
     {
         $this->project = $project;
+        $this->project_name = $this->project->name;
 
     }
 
@@ -23,14 +26,11 @@ class ExportResourcesJob extends Job
     {
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Code');
-        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Resource Name');
-        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Type');
-        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Rate');
-        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Unit');
-        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Waste');
-        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'reference');
-        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Business Partner');
+        $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Type', 'Rate', 'Unit'
+            , 'Waste', 'reference', 'Business Partner', 'Project Name', 'resource_id'], 'A1');
+        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setVisible(false);
+
+
         $rowCount = 2;
         foreach ($this->project->plain_resources as $resource) {
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource->resource_code);
@@ -44,13 +44,30 @@ class ExportResourcesJob extends Job
 
             $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $resource->reference);
             $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, isset(BusinessPartner::find($resource->business_partner_id)->name) ? BusinessPartner::find($resource->business_partner_id)->name : '');
+            $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, isset($this->project_name) ? $this->project_name : '');
+            $objPHPExcel->getActiveSheet()->SetCellValue('J' . $rowCount, $resource->id);
             $rowCount++;
 
         }
+
+
+        $rowCount--;
+        $this->cellColor('A2:A'.$rowCount.'',$objPHPExcel);
+        $this->cellColor('B2:B'.$rowCount.'',$objPHPExcel);
+        $this->cellColor('C2:C'.$rowCount.'',$objPHPExcel);
+        $this->cellColor('I2:I'.$rowCount.'',$objPHPExcel);
+        $this->cellColor('J2:J'.$rowCount.'',$objPHPExcel);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $this->project->name . ' - Resources.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+    }
+
+    function cellColor($cells,$objPHPExcel){
+        $objPHPExcel->getActiveSheet()->getStyle($cells)->getFill()->applyFromArray(array(
+            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+            'color' => array('rgb' => '000000')
+        ));
     }
 }
