@@ -59,6 +59,9 @@ Route::group(['prefix' => 'std-activity'], function () {
 
     Route::post('filters', ['as' => 'std-activity.filters', 'uses' => 'StdActivityController@filters']);
     Route::delete('wipe', ['as' => 'std-activity.wipe', 'uses' => 'StdActivityController@wipe']);
+
+    Route::get('export-all-stdActivities/',['uses' => 'StdActivityController@exportAllActivities', 'as' => 'std-activity.exportAll']);
+
 });
 
 Route::group(['prefix' => 'survey'], function () {

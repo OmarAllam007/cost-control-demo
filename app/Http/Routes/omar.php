@@ -22,7 +22,12 @@ Route::group(['prefix' => 'breakdown'], function () {
 Route::group(['prefix' => 'productivity'], function () {Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
     Route::get('export/{project}', ['as' => 'productivity.export', 'uses' => 'ProductivityController@exportProductivity']);
-    Route::delete('delete-all', ['uses' => 'ProductivityController@wipe', 'as' => 'productivity.wipe']);});
+    Route::delete('delete-all', ['uses' => 'ProductivityController@wipe', 'as' => 'productivity.wipe']);
+    Route::get('export-all-productivities/',['uses' => 'ProductivityController@exportPublicProductivities', 'as' => 'productivity.exportAll']);
+    Route::get('modify/', ['as' => 'all-productivities.modify', 'uses' => 'ProductivityController@modifyAllProductivities']);
+    Route::post('modify/', ['as' => 'all-productivities.post-modify', 'uses' => 'ProductivityController@postModifyAllProductivities']);
+});
+
 
 Route::group(['prefix' => 'business-partner'], function () {
     Route::post('/filter', ['as' => 'business-partner.filter', 'uses' => 'BusinessPartnerController@filter']);
@@ -100,6 +105,9 @@ Route::group(['prefix' => 'project'], function () {
     Route::post('financial-period/{project}/store',['uses'=>'FinancialPeriodController@store','as'=>'financial.store']);
 });
 
+Route::group(['prefix'=>'std-activity'],function(){
+
+});
 
 
 Route::resource('unit', 'UnitController');

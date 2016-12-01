@@ -7,9 +7,13 @@
             Activity</a>
         <a href="{{ route('std-activity.import') }} " class="btn btn-sm btn-success"><i class="fa fa-cloud-upload"></i>
             Import</a>
+        <a href="{{route('std-activity.exportAll')}}" class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
 
         @can('wipe')
-            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete All</a>
+            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete
+                All</a>
         @endcan
     </div>
 @stop
@@ -36,9 +40,11 @@
                     <td class="col-xs-4">
                         <form action="{{ route('std-activity.destroy', $std_activity) }}" method="post">
                             {{csrf_field()}} {{method_field('delete')}}
-                            <a class="btn btn-sm btn-info" href="{{ route('std-activity.show', $std_activity) }} "><i class="fa fa-eye"></i>
+                            <a class="btn btn-sm btn-info" href="{{ route('std-activity.show', $std_activity) }} "><i
+                                        class="fa fa-eye"></i>
                                 View</a>
-                            <a class="btn btn-sm btn-primary" href="{{ route('std-activity.edit', $std_activity) }} "><i class="fa fa-edit"></i>
+                            <a class="btn btn-sm btn-primary" href="{{ route('std-activity.edit', $std_activity) }} "><i
+                                        class="fa fa-edit"></i>
                                 Edit</a>
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                         </form>

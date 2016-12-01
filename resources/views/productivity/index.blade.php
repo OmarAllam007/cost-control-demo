@@ -10,6 +10,14 @@
         <a href="{{ route('productivity.import') }} " class="btn btn-sm btn-success">
             <i class="fa fa-cloud-upload"></i> Import
         </a>
+
+        <a href="{{route('all-productivities.modify')}}" class="btn btn-success btn-sm">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Modify
+        </a>
+        <a href="{{route('productivity.exportAll')}}" class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
         @can('wipe')
             <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete All</a>
         @endcan
