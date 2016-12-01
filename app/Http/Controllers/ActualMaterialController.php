@@ -33,8 +33,10 @@ class ActualMaterialController extends Controller
             $key = 'mat_' . time();
             \Cache::add($key, $result, 180);
 
-            if (count($result['mapping']) || count($result['resources']) || count($result['units'])) {
+            if (count($result['mapping']) || count($result['resources'])) {
                 return \Redirect::route('actual-material.mapping', $key);
+            } elseif (count($result['units'])) {
+                return \Redirect::route('actual-material.units', $key);
             } else {
                 return \Redirect::route('actual-material.multiple', $key);
             }
@@ -119,9 +121,15 @@ class ActualMaterialController extends Controller
         }
     }
 
-    function fixUnits()
+    function fixUnits($key)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
 
+        return view('actual-material.fix-units', $data);
     }
 
     function postFixUnits()

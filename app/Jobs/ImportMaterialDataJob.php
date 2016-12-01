@@ -140,12 +140,12 @@ class ImportMaterialDataJob extends Job
             }
         }
 
-        return $result;
+        // dd($result);
 
         return $result;
     }
 
-    //<editor-fold desc="Data loaders">
+    //<editor-fold defaultstate="collapsed" desc="Data loaders">
     protected function loadActivityMap()
     {
         $this->activityMap = collect();

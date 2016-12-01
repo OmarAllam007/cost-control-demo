@@ -5,8 +5,6 @@
 @endsection
 
 @section('body')
-
-    {{dump($multiple)}}
     {{Form::open(['method' => 'post'])}}
     @foreach($multiple as $line)
         <div class="panel panel-default">
