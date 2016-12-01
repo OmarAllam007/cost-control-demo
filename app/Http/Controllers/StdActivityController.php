@@ -6,6 +6,7 @@ use App\Filter\StdActivityFilter;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\ActivityImportJob;
 use App\Jobs\Export\ExportStdActivitiesJob;
+use App\Jobs\Modify\ModifyPublicStdActivitiesJob;
 use App\StdActivity;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class StdActivityController extends Controller
 
     public function index()
     {
-        $filter  = new StdActivityFilter(StdActivity::query(), session('filters.std-activity'));
+        $filter = new StdActivityFilter(StdActivity::query(), session('filters.std-activity'));
         $stdActivities = $filter->filter()->paginate(100);
 
         return view('std-activity.index', compact('stdActivities'));
@@ -109,7 +110,22 @@ class StdActivityController extends Controller
         return \Redirect::route('std-activity.index');
     }
 
-    function exportAllActivities(){
+    function exportAllActivities()
+    {
         $this->dispatch(new ExportStdActivitiesJob());
+    }
+
+    function modifyAllActivities()
+    {
+        return view('std-activity.modify');
+    }
+
+    function postModifyAllActivities(Request $request)
+    {
+        $file = $request->file('file');
+        $this->dispatch(new ModifyPublicStdActivitiesJob($file));
+
+        return redirect()->back();
+
     }
 }

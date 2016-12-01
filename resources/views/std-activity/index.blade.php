@@ -7,6 +7,12 @@
             Activity</a>
         <a href="{{ route('std-activity.import') }} " class="btn btn-sm btn-success"><i class="fa fa-cloud-upload"></i>
             Import</a>
+
+        <a href="{{route('all-stdActivites.modify')}}" class="btn btn-success btn-sm">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Modify
+        </a>
+
         <a href="{{route('std-activity.exportAll')}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>

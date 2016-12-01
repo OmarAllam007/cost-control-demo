@@ -61,7 +61,8 @@ Route::group(['prefix' => 'std-activity'], function () {
     Route::delete('wipe', ['as' => 'std-activity.wipe', 'uses' => 'StdActivityController@wipe']);
 
     Route::get('export-all-stdActivities/',['uses' => 'StdActivityController@exportAllActivities', 'as' => 'std-activity.exportAll']);
-
+    Route::get('modify/', ['as' => 'all-stdActivites.modify', 'uses' => 'StdActivityController@modifyAllActivities']);
+    Route::post('modify/', ['as' => 'all-stdActivites.post-modify', 'uses' => 'StdActivityController@postModifyAllActivities']);
 });
 
 Route::group(['prefix' => 'survey'], function () {

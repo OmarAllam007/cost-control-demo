@@ -105,10 +105,6 @@ Route::group(['prefix' => 'project'], function () {
     Route::post('financial-period/{project}/store',['uses'=>'FinancialPeriodController@store','as'=>'financial.store']);
 });
 
-Route::group(['prefix'=>'std-activity'],function(){
-
-});
-
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');

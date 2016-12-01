@@ -44,7 +44,7 @@ class ExportPublicResourcesJob extends Job implements ShouldQueue
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name);
 
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource->rate);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $resource->units->type );
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, isset($resource->units->type)?$resource->units->type:'' );
 
             $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $resource->waste);
 
