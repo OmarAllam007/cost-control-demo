@@ -175,8 +175,13 @@ class SurveyController extends Controller
     {
         $project->quantities()->delete();
 
-        flash('All quantities have been deleted', 'info');
+        $msg = 'All quantities have been deleted';
 
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+
+        flash($msg, 'info');
         return \Redirect::to(route('project.show', $project) . '#quantity-survey');
     }
 

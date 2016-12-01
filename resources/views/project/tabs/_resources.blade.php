@@ -28,11 +28,11 @@
                     <td class="col-xs-2">{{$resource->resource_code}}</td>
                     <td class="col-xs-3">{{$resource->name}}</td>
                     <td class="col-xs-2">{{$resource->types->root->name or ''}}</td>
-                    <td class="col-xs-2">{{number_format($resource->versionFor($project->id)->rate, 2)}}</td>
-                    <td class="col-xs-1">{{$resource->versionFor($project->id)->units->type or ''}}</td>
-                    <td class="col-xs-1">{{number_format($resource->versionFor($project->id)->waste, 2)}} %</td>
+                    <td class="col-xs-2">{{number_format($resource->rate, 2)}}</td>
+                    <td class="col-xs-1">{{$resource->units->type or ''}}</td>
+                    <td class="col-xs-1">{{number_format($resource->waste, 2)}} %</td>
                     <td class="col-xs-1">
-                        <a href="{{route('resources.override', ['resources' => $resource->id ?: $resource->id, 'project' => $project])}}"
+                        <a href="{{route('resources.override', ['resources' => $resource->resource_id ?: $resource->id, 'project' => $project])}}"
                            class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
                     </td>
                 </tr>

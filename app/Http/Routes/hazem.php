@@ -97,6 +97,11 @@ Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
     Route::get('cost-control/{project}', ['as' => 'cost-control', 'uses' => 'ProjectController@costControl']);
 });
 
+Route::group(['prefix' => 'activity-map', 'as' => 'activity-map.'], function () {
+    Route::get('import/{project}', ['as' => 'import', 'uses' => 'ActivityMapController@import']);
+    Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActivityMapController@postImport']);
+});
+
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');

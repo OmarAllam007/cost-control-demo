@@ -14,7 +14,6 @@ export default {
     },
 
     ready() {
-        console.log(this.$el);
         let wbsTree = $('#wbs-tree').on('click', '.wbs-icon', function (e) {
             e.preventDefault();
             $(this).find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');

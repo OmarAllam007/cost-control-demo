@@ -1,4 +1,6 @@
 export default {
+    props: ['project'],
+
     template: document.getElementById('QtySurveyTemplate').innerHTML,
 
     data() {
@@ -55,7 +57,7 @@ export default {
                 this.wiping = false;
                 this.$dispatch('request_alert', {
                     message: response.message,
-                    type: response.ok ? 'info' : 'error'
+                    type: response.ok ? 'info' : 'danger'
                 });
                 if (response.ok) {
                     this.quantities = [];
@@ -66,7 +68,7 @@ export default {
                 this.wiping = false;
                 this.$dispatch('request_alert', {
                     message: response.message,
-                    type: 'error'
+                    type: 'danger'
                 });
                 $('#WipeQSModal').modal('hide');
             });

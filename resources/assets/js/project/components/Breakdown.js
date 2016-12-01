@@ -1,11 +1,14 @@
 export default {
     template: document.getElementById('BreakdownTemplate').innerHTML,
 
+    props: ['project'],
+
     data() {
         return {
             breakdowns: [],
             loading: false,
-            wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: ''
+            wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
+            wiping: false
         }
     },
 
@@ -37,6 +40,36 @@ export default {
                     this.loadBreakdown();
                 }
             }).error(() => {});
+        },
+
+        wipeAll() {
+            this.wiping = true;
+            $.ajax({
+                url: '/breakdown/wipe/' + this.project,
+                data: {
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    _method: 'delete', wipe: true
+                },
+                method: 'post', dataType: 'json'
+            }).success((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: response.ok ? 'info' : 'danger'
+                });
+                if (response.ok) {
+                    this.breakdowns = [];
+                    this.selected = 0;
+                }
+                $('#WipeBreakdownModal').modal('hide');
+            }).error((response) => {
+                this.wiping = false;
+                this.$dispatch('request_alert', {
+                    message: response.message,
+                    type: 'danger'
+                });
+                $('#WipeBreakdownModal').modal('hide');
+            });
         }
     },
 
