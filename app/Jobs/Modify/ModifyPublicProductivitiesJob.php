@@ -88,8 +88,6 @@ class ModifyPublicProductivitiesJob extends ImportJob
     protected function getDivisionId($data)
     {
         $this->loadDivision();
-
-//        $levels = array_filter(array_slice($data, 1, 4));
         $division_id = 0;
         $path = [];
         $path[] = mb_strtolower($data);
@@ -97,15 +95,7 @@ class ModifyPublicProductivitiesJob extends ImportJob
 
         if ($this->division->has($key)) {
             $division_id = $this->division->get($key);
-        } else {
-            $division = CsiCategory::create([
-                'name' => $data,
-                'parent_id' => $division_id,
-            ]);
-            $division_id = $division->id;
-            $this->division->put($key, $division_id);
         }
-
         return $division_id;
     }
 

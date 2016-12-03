@@ -59,6 +59,7 @@ class Project extends Model
         return $this->hasMany(Survey::class);
     }
 
+
     function getPlainResourcesAttribute()
     {
 //        $resources = collect();
