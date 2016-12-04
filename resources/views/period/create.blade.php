@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-<h2>Create Fiscal Period</h2>
+<h2>{{$project->name}} &mdash; Create Fiscal Period</h2>
 
 <a href="{{ route('project.show', $project) }}" class="btn btn-sm btn-default pull-right"><i class="fa fa-chevron-left"></i> Back</a>
 @stop

@@ -19,3 +19,17 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+
+$factory->define(App\Project::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->text(50),
+    ];
+});
+
+$factory->define(App\Period::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->text(50),
+        'start_date' => \Carbon\Carbon::today()->firstOfMonth()
+    ];
+});
