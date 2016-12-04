@@ -127,5 +127,6 @@ Route::resource('std-activity-resource', 'StdActivityResourceController');
 Route::resource('breakdown', 'BreakdownController');
 Route::resource('breakdown-resource', 'BreakdownResourceController');
 Route::resource('period', 'PeriodController');
+Route::resource('users', 'UsersController', ['parameters' => 'singular']);
 
 Route::get('/blank', 'BlankController@index');

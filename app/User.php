@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'is_admin'
     ];
 
     /**
@@ -23,4 +23,31 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    function modules()
+    {
+        return $this->belongsToMany(Module::class, 'modules_users')->withPivot(['read', 'write', 'delete']);
+    }
+
+    function getPermissionsAttribute()
+    {
+        return $this->modules->keyBy('pivot.module_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (User $user) {
+            $user->password = bcrypt($user->password);
+        });
+
+        static::updating(function (User $user) {
+            if ($user->password) {
+                $user->password = bcrypt($user->password);
+            } else {
+                $user->password = $user->getOriginal('password');
+            }
+        });
+    }
 }
