@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\Jobs\ImportActualMaterialJob;
 use App\Jobs\ImportMaterialDataJob;
 use App\Project;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -178,7 +180,7 @@ class ActualMaterialController extends Controller
         return view('actual-material.fix-multiple', $data);
     }
 
-    function postFixMultiple($key)
+    function postFixMultiple($key,Request $request)
     {
         $data = \Cache::get($key);
         if (!$data) {
@@ -186,7 +188,36 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        flash($data_to_cache['success'] . ' records has been imported');
-        return \Redirect::route('project.cost-control', $data_to_cache['project']);
+        $project = $data['project'];
+        $requestResources = $request->get('resource');
+        $excelBaseDate = Carbon::create(1899, 12, 30);
+
+        foreach ($data['multiple'] as $activityCode => $resources) {
+            foreach ($resources as $resourceCode => $resource) {
+                foreach ($resource['resources'] as $shadow) {
+                    $material = $requestResources[$activityCode][$resourceCode][$shadow->breakdown_resource_id];
+                    if (empty($material['includee'])) {
+                        continue;
+                    }
+
+                    ActualResources::create([
+                        'project_id' => $project->id,
+                        'wbs_level_id' => $shadow->wbs_id,
+                        'breakdown_resource_id' => $shadow->breakdown_resource_id,
+                        'period_id' => $project->active_period->id,
+                        'qty' => $material['qty'],
+                        'unit_price' => $resource[11],
+                        'cost' => abs($resource[12]),
+                        'unit_id' => $shadow->breakdown_resource->unit_id,
+                        'action_date' => $excelBaseDate->addDays($resource[5])
+                    ]);
+                }
+            }
+
+            $data['success']++;
+        }
+
+        flash($data['success'] . ' records has been imported', 'success');
+        return \Redirect::route('project.cost-control', $data['project']);
     }
 }

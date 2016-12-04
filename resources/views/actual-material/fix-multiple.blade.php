@@ -7,21 +7,23 @@
 @section('body')
 {{ dump($multiple) }}
     {{Form::open(['method' => 'post'])}}
-    @foreach($multiple as $line)
+    @foreach($multiple as $activityCode => $activity)
+        @foreach($activity as $resourceCode => $resource)
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">{{$line[3]}}</h4>
+                <h4 class="panel-title">{{$resource['resources']->first()->wbs->name}} / {{$resource['8']}}</h4>
             </div>
 
             <table class="table table-bordered table-condensed table-hover table-striped"
-                   data-total-qty="{{$totalQty = $line['resources']->sum('budget_qty')}}" data-qty="{{abs($line[10])}}">
+                   data-total-qty="{{$totalQty = $resource['resources']->sum('budget_qty')}}" data-qty="{{abs($resource[10])}}">
                 <thead>
                 <tr>
                     <th class="text-center">&nbsp;</th>
                     <th>Activity</th>
+                    <th>Original Resource Code</th>
+                    <th>Original Resource Name</th>
                     <th>Resource Code</th>
                     <th>Resource Name</th>
-                    <th>Original Resource Name</th>
                     <th>Cost Account</th>
                     <th>Budget Qty</th>
                     <th>Quantity</th>
@@ -30,53 +32,57 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($line['resources'] as $resource)
-                    <tr data-budget="{{$resource->budget_qty}}">
+                @foreach($resource['resources'] as $res)
+                    <tr data-budget="{{$res->budget_qty}}">
                         <td class="text-center">
-                            {{Form::checkbox("resource[{$resource->breakdown_resource_id}]['included']", 1, true, ['class' => 'include'])}}
+                            {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}]['included']", 1, true, ['class' => 'include'])}}
                         </td>
                         <td>
-                            {{$resource->breakdown_resource->code}}
+                            {{$res->breakdown_resource->code}}
                         </td>
                         <td>
-                            {{$resource->resource_code}}
+                            {{$resource[13]}}
                         </td>
                         <td>
-                            {{$resource->resource_name}}
+                            {{$resource[8]}}
                         </td>
                         <td>
-                            {{$line[8]}}
+                            {{$res->resource_code}}
                         </td>
                         <td>
-                            {{$resource->cost_account}}
+                            {{$res->resource_name}}
                         </td>
                         <td>
-                            {{$resource->budget_qty}}
+                            {{$res->cost_account}}
                         </td>
                         <td>
-                            {{Form::text("resource[{$resource->breakdown_resource_id}]['qty']", $qty = round($resource->budget_qty * abs($line[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
+                            {{$res->budget_qty}}
                         </td>
-                        <td class="unit-price-cell">{{ number_format($line[11], 2) }}</td>
-                        <td class="total-cell">{{ number_format($qty * $line[11], 2) }}</td>
+                        <td>
+                            {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}]['qty']", $qty = round($res->budget_qty * abs($resource[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
+                        </td>
+                        <td class="unit-price-cell">{{ number_format($resource[11], 2) }}</td>
+                        <td class="total-cell">{{ number_format($qty * $resource[11], 2) }}</td>
                     </tr>
                 @endforeach
                 </tbody>
                 <tfoot>
                     <tr class="totals-row">
-                        <th th colspan="2">&nbsp;</th>
+                        <th th colspan="3">&nbsp;</th>
                         <th class="text-right">Original Qty</th>
-                        <th class="total-qty-cell">{{ number_format(abs($line[10]), 2) }}</th>
+                        <th class="total-qty-cell">{{ number_format(abs($resource[10]), 2) }}</th>
                         <th class="text-right">Original Total</th>
-                        <th class="total-amount-cell">{{ number_format(abs($line[12]), 2) }}</th>
+                        <th class="total-amount-cell">{{ number_format(abs($resource[12]), 2) }}</th>
 
                         <th class="text-right">Qty</th>
-                        <th class="total-qty-cell">{{ number_format(abs($line[10]), 2) }}</th>
+                        <th class="total-qty-cell">{{ number_format(abs($resource[10]), 2) }}</th>
                         <th class="text-right">Total</th>
-                        <th class="total-amount-cell">{{ number_format(abs($line[12]), 2) }}</th>
+                        <th class="total-amount-cell">{{ number_format(abs($resource[12]), 2) }}</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
+    @endforeach
     @endforeach
 
     <div class="form-group">

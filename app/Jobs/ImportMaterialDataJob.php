@@ -129,7 +129,10 @@ class ImportMaterialDataJob extends Job
                 // Multiple activities/breakdown resources - with the same resource found
                 $breakdownResources->load('shadow');
                 $row['resources'] = $breakdownResources->pluck('shadow');
-                $result['multiple']->put($activityCode, $row);
+                if (!$result['multiple']->has($activityCode)) {
+                    $result['multiple']->put($activityCode, collect());
+                }
+                $result['multiple']->get($activityCode)->put($resourceCode, $row);
             }
         }
 
