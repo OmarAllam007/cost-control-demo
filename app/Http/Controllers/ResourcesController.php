@@ -6,8 +6,11 @@ use App\BusinessPartner;
 use App\Filter\ResourcesFilter;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheResourcesTree;
+use App\Jobs\Export\ExportPublicResourcesJob;
 use App\Jobs\ImportResourceCodesJob;
 use App\Jobs\Export\ExportResourcesJob;
+use App\Jobs\Modify\ModifyPublicResourcesJob;
+use App\Jobs\Modify\ModifyResourcesJob;
 use App\Jobs\ResourcesImportJob;
 use App\Project;
 use App\Resources;
@@ -16,11 +19,12 @@ use App\StdActivityResource;
 use App\Unit;
 use App\UnitAlias;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 class ResourcesController extends Controller
 {
 
-    protected $rules = ['name' => 'required'];
+    protected $rules = ['name' => 'required','resource_code'=>'unique:resources'];
 
     public function index()
     {
@@ -250,5 +254,26 @@ class ResourcesController extends Controller
 
         flash($count . ' Equivalent codes have been imported successfully', 'success');
         return \Redirect::route('resources.index');
+    }
+
+
+    public function exportAllResources()
+    {
+        return $this->dispatch(new ExportPublicResourcesJob());
+
+    }
+    public function modifyAllResources()
+    {
+        return view('resources.modify');
+    }
+
+    public function postModifyAllResources(Request $request)
+    {
+        $file = $request->file('file');
+        $this->dispatch(new ModifyPublicResourcesJob($file));
+
+        $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
+        $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
+        return view('resources.index',['resources'=>$resources]);
     }
 }

@@ -148,4 +148,7 @@ class Resources extends Model
 
         return $query->whereIn('resource_type_id', $ids);
     }
+
+
+
 }

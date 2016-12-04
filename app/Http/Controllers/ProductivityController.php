@@ -7,6 +7,8 @@ use App\Filter\ProductivityFilter;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\Export\ExportProductivityJob;
+use App\Jobs\Export\ExportPublicProductivitiesJob;
+use App\Jobs\Modify\ModifyPublicProductivitiesJob;
 use App\Jobs\ProductivityImportJob;
 use App\Productivity;
 use App\ProductivityList;
@@ -211,5 +213,19 @@ class ProductivityController extends Controller
         flash('All productivities have been deleted', 'info');
 
         return \Redirect::route('productivity.index');
+    }
+
+    function exportPublicProductivities()
+    {
+        $this->dispatch(new ExportPublicProductivitiesJob());
+    }
+
+    function modifyAllProductivities(){
+        return view('productivity.modify');
+    }
+    function postModifyAllProductivities(Request $request){
+        $file = $request->file('file');
+        $this->dispatch(new ModifyPublicProductivitiesJob($file));
+        return redirect()->action('ProductivityController@index');
     }
 }

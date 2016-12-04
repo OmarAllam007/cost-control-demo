@@ -22,7 +22,12 @@ Route::group(['prefix' => 'breakdown'], function () {
 Route::group(['prefix' => 'productivity'], function () {Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
     Route::get('export/{project}', ['as' => 'productivity.export', 'uses' => 'ProductivityController@exportProductivity']);
-    Route::delete('delete-all', ['uses' => 'ProductivityController@wipe', 'as' => 'productivity.wipe']);});
+    Route::delete('delete-all', ['uses' => 'ProductivityController@wipe', 'as' => 'productivity.wipe']);
+    Route::get('export-all-productivities/',['uses' => 'ProductivityController@exportPublicProductivities', 'as' => 'productivity.exportAll']);
+    Route::get('modify/', ['as' => 'all-productivities.modify', 'uses' => 'ProductivityController@modifyAllProductivities']);
+    Route::post('modify/', ['as' => 'all-productivities.post-modify', 'uses' => 'ProductivityController@postModifyAllProductivities']);
+});
+
 
 Route::group(['prefix' => 'business-partner'], function () {
     Route::post('/filter', ['as' => 'business-partner.filter', 'uses' => 'BusinessPartnerController@filter']);
@@ -84,6 +89,10 @@ Route::group(['prefix' => 'survey'], function () {
 
 Route::group(['prefix' => 'resources'], function () {
     Route::get('export/{project}', ['as' => 'resources.export', 'uses' => 'ResourcesController@exportResources']);
+    Route::get('export-all-resources/', ['as' => 'all_resources.export', 'uses' => 'ResourcesController@exportAllResources']);
+    Route::get('modify/', ['as' => 'all-resources.modify', 'uses' => 'ResourcesController@modifyAllResources']);
+    Route::post('modify/', ['as' => 'all-resources.post-modify', 'uses' => 'ResourcesController@postModifyAllResources']);
+
 });
 Route::group(['prefix'=>'resource-type'],function(){
     Route::delete('delete-all',['uses'=>'ResourceTypeController@wipe','as'=>'type.wipe']);
@@ -95,6 +104,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('financial-period/{project}/create',['uses'=>'FinancialPeriodController@create','as'=>'financial.create']);
     Route::post('financial-period/{project}/store',['uses'=>'FinancialPeriodController@store','as'=>'financial.store']);
 });
+
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
