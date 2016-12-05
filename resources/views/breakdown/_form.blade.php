@@ -1,4 +1,3 @@
-{{--{{dd(request()->all())}}--}}
 <div class="row">
     <div class="col-md-6 col-sm-9">
         <div class="form-group {{$errors->first('project_id', 'has-errors')}}">
@@ -6,6 +5,7 @@
             @if (request('project'))
                 <p><em>{{App\Project::find(request('project'))->name}}</em></p>
                 {{Form::hidden('project_id', request('project'), ['id' => 'ProjectId'])}}
+
             @else
                 {{--{{Form::select('project_id', App\Project::options(), request('project'), ['class' => 'form-control', 'id' => 'Activity-ID'])}}--}}
                 <p><em>{{$breakdown->project->name}}</em></p>
@@ -17,7 +17,7 @@
             <p>
                 <a href="#WBSModal" data-toggle="modal" id="select-parent">
 
-                    {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select WBS Level' }}
+                    {{request('wbs_id')? \App\WbsLevel::find(request('wbs_id'))->path: 'Select WBS Level' }}
                 </a>
             </p>
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}

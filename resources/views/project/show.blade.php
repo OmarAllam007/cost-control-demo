@@ -102,6 +102,7 @@
                 $('#wbs-display-container').toggleClass('col-sm-9 col-sm-12');
                 $(this).find('i.fa').toggleClass('fa-angle-double-right fa-angle-double-left');
             })
+
         }(window, document, jQuery));
 
     </script>
