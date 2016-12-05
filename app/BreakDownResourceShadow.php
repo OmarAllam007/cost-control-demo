@@ -48,6 +48,11 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(StdActivity::class, 'activity_id');
     }
 
+    function breakdown_resource()
+    {
+        return $this->belongsTo(BreakdownResource::class);
+    }
+
     function resource()
     {
         return $this->belongsTo(Resources::class);

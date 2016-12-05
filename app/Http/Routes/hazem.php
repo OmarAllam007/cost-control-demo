@@ -106,6 +106,18 @@ Route::group(['prefix' => 'activity-map', 'as' => 'activity-map.'], function () 
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActivityMapController@postImport']);
 });
 
+Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], function () {
+    Route::get('import/{project}', ['as' => 'import', 'uses' => 'ActualMaterialController@import']);
+    Route::get('mapping/{key}', ['as' => 'mapping', 'uses' => 'ActualMaterialController@fixMapping']);
+    Route::get('multiple/{key}', ['as' => 'multiple', 'uses' => 'ActualMaterialController@fixMultiple']);
+    Route::get('units/{key}', ['as' => 'units', 'uses' => 'ActualMaterialController@fixunits']);
+
+    Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActualMaterialController@postImport']);
+    Route::post('mapping/{key}', ['as' => 'post-mapping', 'uses' => 'ActualMaterialController@postFixMapping']);
+    Route::post('multiple/{key}', ['as' => 'post-multiple', 'uses' => 'ActualMaterialController@postFixMultiple']);
+    Route::post('units/{key}', ['as' => 'post-units', 'uses' => 'ActualMaterialController@postFixUnits']);
+});
+
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');

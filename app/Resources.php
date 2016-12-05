@@ -140,6 +140,15 @@ class Resources extends Model
 
     }
 
+    function scopeMaterial(Builder $query)
+    {
+        $ids = ResourceType::where('parent_id', 0)
+            ->where('name', 'like', '%material%')->first()
+            ->getChildrenIds();
+
+        return $query->whereIn('resource_type_id', $ids);
+    }
+
 
 
 }

@@ -54,7 +54,6 @@ class BreakdownResource extends Model
         return $this->belongsTo(Resources::class);
     }
 
-//
     function getEquationAttribute()
     {
         if (isset($this->attributes['equation'])) {
@@ -188,6 +187,10 @@ class BreakdownResource extends Model
         });
     }
 
+    function shadow()
+    {
+        return $this->hasOne(BreakDownResourceShadow::class);
+    }
 
 
 
