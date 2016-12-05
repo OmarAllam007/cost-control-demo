@@ -19,17 +19,17 @@
         <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
         <a href="#ResourcesArea" class="btn btn-outline btn-primary">Resources</a>
         <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
-        {{--<a href="#BreakdownTemplateArea" class="btn btn-outline btn-primary">Breakdown Templates</a>--}}
+        <a href="#BreakdownTemplateArea" class="btn btn-outline btn-primary">Breakdown Templates</a>
 
         <a href="#ReportsArea" class="btn btn-outline btn-success">Reports</a>
-        {{--<a href="{{route('financial.index',$project)}}" class="btn btn-outline btn-primary">Financial Period</a>--}}
+
     </nav>
 
     <div id="projectArea" class="hidden">
         @include('project.tabs.wbs-area')
         @include('project.tabs._resources')
         @include('project.tabs._productivity')
-        {{--@include('project.tabs._breakdown_template')--}}
+        @include('project.tabs._breakdown_template')
         @include('project.tabs._report')
     </div>
 

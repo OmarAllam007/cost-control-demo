@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
 use App\Jobs\ImportBreakdownTemplateJob;
+use App\StdActivityResource;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -23,14 +24,30 @@ class BreakdownTemplateController extends Controller
     public function create()
     {
         $wbsTree = WbsLevel::tree()->get();
-        return view('breakdown-template.create')->with(['wbsTree'=>$wbsTree]);
+        return view('breakdown-template.create')->with(['wbsTree' => $wbsTree]);
     }
 
     public function store(Request $request)
     {
-        $this->validate($request, $this->rules);
+
+        if ($request->project_id) {
+            $parent = BreakdownTemplate::find($request->parent_template_id);
+            $resources = StdActivityResource::where('template_id', $parent->id)->get();
+
+            $parent->parent_template_id = $parent->id;
+            $parent->project_id = $request->project_id;
+            unset($parent->id);
+            $template = BreakdownTemplate::create($parent->toArray());
+            foreach ($resources as $resource) {
+                $resource->template_id = $template->id;
+                StdActivityResource::create($resource->toArray());
+            }
+
+        } else {
+            $this->validate($request, $this->rules);
+            $template = BreakdownTemplate::create($request->all());
+        }
 //        $request['parent_template_id']= BreakdownTemplate::where('name',request('name'))->first()->id;
-        $template = BreakdownTemplate::create($request->all());
         flash('Breakdown template has been saved', 'success');
 
         return \Redirect::route('breakdown-template.show', $template);
@@ -59,11 +76,14 @@ class BreakdownTemplateController extends Controller
 
     public function destroy(BreakdownTemplate $breakdown_template)
     {
+        $breakdown_template->resources()->delete();
         $breakdown_template->delete();
-
         flash('Breakdown template has been deleted', 'success');
 
-        return \Redirect::route('std-activity.show', $breakdown_template->activity);
+        $filter = new BreakdownTemplateFilter(BreakdownTemplate::query(), session('filters.breakdown-template'));
+        $breakdownTemplates = $filter->filter()->paginate(50);
+        return view('breakdown-template.index', compact('breakdownTemplates'));
+//        return \Redirect::route('std-activity.show', $breakdown_template->activity);
     }
 
     function filters(Request $request)

@@ -37,10 +37,10 @@
         </tr>
         </tbody>
     </table>
-
     <h4 class="page-header">Resources</h4>
     <div class="form-group clearfix">
-        <a href="{{route('std-activity-resource.create', ['template' => $breakdown_template->id])}}"
+        <a href="/std-activity-resource/create?template={{$breakdown_template->id}}&&project_id={{request('project_id')}}
+                "
            class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus-circle"></i>
             Add Resource</a>
     </div>

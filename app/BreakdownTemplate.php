@@ -12,7 +12,7 @@ class BreakdownTemplate extends Model
 
     use SoftDeletes, HasOptions;
 
-    protected $fillable = ['name', 'code', 'std_activity_id', 'project_id', 'wbs_id', 'parent_template_id'];
+    protected $fillable = ['name', 'code', 'std_activity_id', 'project_id', 'parent_template_id'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -30,4 +30,5 @@ class BreakdownTemplate extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
 }

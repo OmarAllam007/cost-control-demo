@@ -16,8 +16,12 @@
             {{ Form::label('wbs_level_id', 'WBS Level', ['class' => 'control-label']) }}
             <p>
                 <a href="#WBSModal" data-toggle="modal" id="select-parent">
+                    @if(request('wbs_id'))
+                        {{request('wbs_id')? \App\WbsLevel::find(request('wbs_id'))->path: 'Select WBS Level' }}
+                    @else
+                        {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select WBS Level' }}
+                    @endif
 
-                    {{request('wbs_id')? \App\WbsLevel::find(request('wbs_id'))->path: 'Select WBS Level' }}
                 </a>
             </p>
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}

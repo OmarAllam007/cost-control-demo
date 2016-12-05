@@ -27,8 +27,7 @@ class BreakdownResourcesShadowProvider extends ServiceProvider
 
         BreakdownResource::updated(function (BreakdownResource $resource) {
             $formatter = new BreakdownResourceFormatter($resource);
-            dd($formatter);
-            BreakDownResourceShadow::where('breakdown_resource_id',$resource->id)->update($formatter);
+            BreakDownResourceShadow::where('breakdown_resource_id',$resource->id)->update($formatter->toArray());
         });
 
         Breakdown::updated(function (Breakdown $breakdown) {

@@ -17,7 +17,7 @@
                     <section>
                         <ul class="list-unstyled tree">
                             @foreach($resourcesTree as $type)
-                                @include('resources._recursive_resource_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_id')])
+                            @include('resources._recursive_resource_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_id')])
                             @endforeach
                         </ul>
                     </section>
@@ -26,4 +26,9 @@
         </div>
     </div>
 </template>
-    <resources :resource="{{($resource_id = Form::getValueAttribute('resource_id'))? json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) : '{}' }}"></resources>
+{{--@if(request('project_id'))--}}
+{{--<resources :resource="{{($resource_id = request('project_id'))? json_encode(\App\Resources::find(request('project_id'))->morphToJSON()) : '{}' }}"></resources>--}}
+{{--@else--}}
+<resources
+        :resource="{{($resource_id = Form::getValueAttribute('resource_id'))? json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) : '{}' }}"></resources>
+{{--@endif--}}

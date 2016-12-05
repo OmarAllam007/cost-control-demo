@@ -151,7 +151,7 @@ $config = [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -221,6 +221,8 @@ $config = [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => \Collective\Html\FormFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'DebugBar' => Barryvdh\Debugbar\Facade::class,
+        
     ],
 
     'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil', 'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical', 'ELECTRICAL' => 'Electrical'],
