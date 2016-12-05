@@ -9,12 +9,12 @@
                class="btn btn-info btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
-            <a href="{{route('breakdown.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm in-iframe" title="Add Breakdown">
+            <a href="/breakdown/create?project={{$project->id}}&&wbs_id=@{{ wbs_id }}" class="btn btn-primary btn-sm in-iframe" id="add_breakdown" title="Add Breakdown" >
                 <i class="fa fa-plus"></i> Add Breakdown
             </a>
 
             @can('wipe')
-                <a href="#WipeBreakdownModal" data-toggle="modal" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
+                <a href="#WipeBreakdownModal"@{{breakdown.id}} data-toggle="modal" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
                     Delete all</a>
             @endcan
         </div>
@@ -145,14 +145,14 @@
 
         <div class="modal fade" id="WipeBreakdownModal" tabindex="-1" role="dialog">
             <div class="modal-dialog">
-                <form method="post" action="{{route('breakdown.wipe', $project)}}" class="modal-content">
+                <form method="post" action="/breakdown/wipe/@{{ wbs_id }}" class="modal-content">
                     {{csrf_field()}} {{method_field('delete')}}
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         <h4 class="modal-title">Delete all breakdown</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all breakdowns in the project?</div>
+                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all breakdowns in this wbs-level?</div>
                         <input type="hidden" name="wipe" value="1">
                     </div>
                     <div class="modal-footer">
