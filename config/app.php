@@ -173,6 +173,7 @@ $config = [
         App\Providers\RouteServiceProvider::class,
         App\Providers\IdResourceGeneratorServiceProvider::class,
         App\Providers\IdBreakDownTemplateGenerator::class,
+        \App\Providers\checkSurveyCostAccount::class,
 
     ],
 

@@ -36,10 +36,8 @@ class QuantitySurveyImportJob extends ImportJob
 
         $failed = collect();
         $success = 0;
-
+        $status = ['status'=>0,'failed'=>collect(),'dublicated'=>[]];
         $rows = $excel->getSheet(0)->getRowIterator(2);
-        $surveys = QuantitySurvey::query()->pluck('cost_account');
-
         foreach ($rows as $row) {
             $cells = $this->getDataFromCells($row->getCellIterator());
 
@@ -48,8 +46,25 @@ class QuantitySurveyImportJob extends ImportJob
                 continue;
             }
 
-            if (!$surveys->contains($cells[1])) {
-                $wbs_level_id = $this->getWBSLevel($cells[0]);
+            $wbs_level_id = $this->getWBSLevel($cells[0]);
+            $level = WbsLevel::find($wbs_level_id);
+            $level_survey = Survey::where('wbs_level_id', $level->id)->first();
+            if ($level_survey) {
+                $cost_accounts[] = $level_survey->cost_account;
+            }
+            $parent = $level;
+            while ($parent->parent) {
+                $parent = $parent->parent;
+                $parent_survey = Survey::where('wbs_level_id', $parent->id)->first();
+                if ($parent_survey) {
+                    $cost_accounts[] = $parent_survey->cost_account;
+                }
+            }
+
+            if (in_array($cells[1], $cost_accounts)) {
+                flash('Found dublicated Cost Account', 'danger');
+
+            } else {
                 $unit_id = $this->getUnit($cells[3]);
 
                 $data = [
@@ -64,10 +79,9 @@ class QuantitySurveyImportJob extends ImportJob
                     $failed->push($data);
                 } else {
                     Survey::create($data);
-                    ++$success;
+                    ++$status;
                 }
             }
-
         }
 
         return ['project_id' => $this->project->id, 'failed' => $failed, 'success' => $success];

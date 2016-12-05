@@ -2,6 +2,7 @@
 
 namespace App\Behaviors;
 
+use App\Survey;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Tree
@@ -73,5 +74,7 @@ trait Tree
 
         return $this->tree_path = $stack->reverse()->implode('/');
     }
+
+
 
 }

@@ -91,8 +91,8 @@ class BoqController extends Controller
 
     public function deleteAll(Project $project)
     {
-        $items = Boq::where('project_id',$project->id)->get();
-        foreach ($items as $item){
+        $items = Boq::where('project_id', $project->id)->get();
+        foreach ($items as $item) {
             $item->delete();
         }
         flash('All Boqs Deleted successfully', 'success');
@@ -149,7 +149,7 @@ class BoqController extends Controller
             $status = \Cache::get($key);
 
             foreach ($status['failed'] as $item) {
-                if (isset($item['orig_unit_id']) && isset($data['units'][ $item['orig_unit_id'] ])) {
+                if (isset($item['orig_unit_id']) && isset($data['units'][$item['orig_unit_id']])) {
                     $item['unit'] = $data['units'][$item['orig_unit_id']];
                     UnitAlias::createAliasFor($item['unit'], $item['orig_unit_id']);
                 }
@@ -173,7 +173,7 @@ class BoqController extends Controller
 
     function exportBoq(Project $project)
     {
-       $this->dispatch(new ExportBoqJob($project));
+        $this->dispatch(new ExportBoqJob($project));
     }
 
     function wipe(WipeRequest $request, Project $project)

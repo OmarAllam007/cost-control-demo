@@ -52,6 +52,9 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'productivity_output' => isset($this->resource->project_productivity->after_reduction) ? $this->resource->project_productivity->after_reduction : '',
             'productivity_ref' => isset($this->resource->project_productivity->csi_code) ? $this->resource->project_productivity->csi_code : '',
             'remarks' => $this->resource->remarks,
+//            'productivity_id'=>$this->resource->project_productivity->id,
+//            'template_id'=>$this->resource->breakdown->template->id,
+//            'unit_id'=>$this->resource->resource->units->id,
         ];
     }
 
