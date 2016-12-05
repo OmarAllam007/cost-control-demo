@@ -124,10 +124,21 @@ class SurveyController extends Controller
             \Cache::add($key, $status, 180);
             flash('Could not import some items.', 'warning');
             return redirect()->to(route('survey.fix-import', $key) . '?iframe=1');
-        } else {
-            flash($status['success'] . ' Quantity survey items have been imported', 'success');
         }
-        return \Redirect::to('/blank?reload=quantities');
+        if (count($status['dublicated'])) {
+            $dublicatedKey = 'qs-dublicated';
+            \Cache::add($dublicatedKey, $status['dublicated'], 100);
+            return redirect()->to(route('survey.dublicate', $dublicatedKey). '?iframe=1');
+        }
+        else {
+            flash($status['success'] . ' Quantity survey items have been imported', 'success');
+            return \Redirect::to('/blank?reload=quantities');
+        }
+    }
+
+    function dublicateQuantitySurvey($key)
+    {
+        return view('survey.dublicated', compact('key'));
     }
 
     function fixImport($key)
