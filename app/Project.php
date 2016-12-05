@@ -61,15 +61,6 @@ class Project extends Model
 
     function getPlainResourcesAttribute()
     {
-//        $resources = collect();
-//
-//        foreach ($this->breakdown_resources as $bResource) {
-//            if ($bResource->resource) {
-//                $resource = $bResource->resource;
-//                $resources->put($resource->id, $resource);
-//            }
-//        }
-
         return Resources::whereIn('id', $this->breakdown_resources()->pluck('resource_id'))->with([
             'types', 'units', 'types.parent', 'types.parent.parent'
         ])->get();
@@ -153,5 +144,29 @@ class Project extends Model
         $relation = $this->hasOne(Period::class);
         $relation->where('is_open', true);
         return $relation;
+    }
+
+    function users()
+    {
+        return $this->belongsToMany(User::class, 'project_users')
+            ->withPivot(['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources'])
+            ->withTimestamps();
+    }
+
+    function getPermissionsAttribute()
+    {
+        $pivotFields = ['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources'];
+        return $this->users->map(function(User $user) use ($pivotFields) {
+            $row = [
+                'name' => $user->name,
+                'user_id' => $user->id
+            ];
+
+            foreach ($pivotFields as $field) {
+                $row[$field] = $user->pivot->getAttribute($field);
+            }
+
+            return $row;
+        });
     }
 }
