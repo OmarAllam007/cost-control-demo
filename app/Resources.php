@@ -18,15 +18,7 @@ class Resources extends Model
     protected $table = 'resources';
 
     protected $fillable = [
-        'resource_code',
-        'name',
-        'rate',
-        'unit',
-        'waste',
-        'business_partner_id',
-        'resource_type_id',
-        'reference',
-        'project_id',
+        'resource_code', 'name', 'rate', 'unit', 'waste', 'business_partner_id', 'resource_type_id', 'reference', 'project_id', 'resource_id'
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -148,7 +140,4 @@ class Resources extends Model
 
         return $query->whereIn('resource_type_id', $ids);
     }
-
-
-
 }

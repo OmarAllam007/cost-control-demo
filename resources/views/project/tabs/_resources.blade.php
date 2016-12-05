@@ -4,15 +4,10 @@
         <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
-
-        {{--<a href="{{route('resources.modify', ['project' => $project])}}" class="btn btn-success btn-sm">--}}
-            {{--<i class="fa fa-pencil" aria-hidden="true"></i>--}}
-             {{--Modify--}}
-        {{--</a>--}}
     </div>
     <div class="clearfix"></div>
 
-    @if ($project->plain_resources->count())
+    @if ($project->resources->count())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
@@ -26,7 +21,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($project->plain_resources as $resource)
+            @foreach ($project->resources as $resource)
                 <tr>
                     <td class="col-xs-2">{{$resource->resource_code}}</td>
                     <td class="col-xs-3">{{$resource->name}}</td>
@@ -35,8 +30,9 @@
                     <td class="col-xs-1">{{$resource->units->type or ''}}</td>
                     <td class="col-xs-1">{{number_format($resource->waste, 2)}} %</td>
                     <td class="col-xs-1">
-                        <a href="{{route('resources.override', ['resources' => $resource->resource_id ?: $resource->id, 'project' => $project])}}"
-                           class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
+                        <a href="{{route('resources.edit',$resource->id)}}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil"></i> Edit
+                        </a>
                     </td>
                 </tr>
             @endforeach

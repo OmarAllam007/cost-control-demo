@@ -60,20 +60,10 @@ class Project extends Model
     }
 
 
-    function getPlainResourcesAttribute()
-    {
-//        $resources = collect();
-//
-//        foreach ($this->breakdown_resources as $bResource) {
-//            if ($bResource->resource) {
-//                $resource = $bResource->resource;
-//                $resources->put($resource->id, $resource);
-//            }
-//        }
 
-        return Resources::whereIn('id', $this->breakdown_resources()->pluck('resource_id'))->with([
-            'types', 'units', 'types.parent', 'types.parent.parent'
-        ])->get();
+    function resources()
+    {
+        return $this->hasMany(Resources::class)->with('type');
     }
 
     function getProductivitiesAttribute()
