@@ -2,12 +2,12 @@
 
 @section('header')
     <h2>Breakdown template - {{$breakdown_template->name}}</h2>
-
     <form action="{{ route('breakdown-template.destroy', $breakdown_template)}}" class="pull-right" method="post">
         {{csrf_field()}}
         {{method_field('delete')}}
 
-        <a href="{{ route('breakdown-template.create', ['activity' => $breakdown_template->std_activity_id])}}" class="btn btn-sm btn-primary">
+        <a href="{{ route('breakdown-template.create', ['activity' => $breakdown_template->std_activity_id])}}"
+           class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> Add template
         </a>
         <a href="{{ route('breakdown-template.edit', $breakdown_template)}}" class="btn btn-sm btn-primary">
@@ -40,7 +40,8 @@
 
     <h4 class="page-header">Resources</h4>
     <div class="form-group clearfix">
-        <a href="{{route('std-activity-resource.create', ['template' => $breakdown_template->id])}}" class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus-circle"></i>
+        <a href="{{route('std-activity-resource.create', ['template' => $breakdown_template->id])}}"
+           class="btn btn-primary btn-sm pull-right"><i class="fa fa-plus-circle"></i>
             Add Resource</a>
     </div>
 
@@ -60,7 +61,8 @@
                     <td class="col-xs-3">{{$resource->equation}}</td>
                     <td class="col-xs-3">
                         {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}
-                        <a href="{{route('std-activity-resource.edit', $resource)}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                        <a href="{{route('std-activity-resource.edit', $resource)}}" class="btn btn-primary btn-sm"><i
+                                    class="fa fa-edit"></i> Edit</a>
                         <button class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Remove</button>
                         {{Form::close()}}
                     </td>
@@ -71,4 +73,5 @@
     @else
         <div class="alert alert-info"><i class="fa fa-info-circle"></i> No resources found</div>
     @endif
+
 @stop

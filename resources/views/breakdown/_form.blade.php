@@ -1,3 +1,4 @@
+{{--{{dd(request()->all())}}--}}
 <div class="row">
     <div class="col-md-6 col-sm-9">
         <div class="form-group {{$errors->first('project_id', 'has-errors')}}">
@@ -11,11 +12,11 @@
                 {{Form::hidden('project_id', $breakdown->project->name, ['id' => 'ProjectId'])}}
             @endif
         </div>
-
         <div class="form-group {{$errors->first('wbs_level_id', 'has-error')}}">
             {{ Form::label('wbs_level_id', 'WBS Level', ['class' => 'control-label']) }}
             <p>
                 <a href="#WBSModal" data-toggle="modal" id="select-parent">
+
                     {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select WBS Level' }}
                 </a>
             </p>
@@ -75,7 +76,9 @@
 
 @section('javascript')
     <script src="/js/breakdown.js"></script>
+
     <script>
+
         jQuery(function ($) {
             $('#CostAccount').completeList({
                 url: '/api/cost-accounts?project={{request('project')}}'

@@ -93,7 +93,7 @@ Route::group(['prefix' => 'breakdown'], function(){
     Route::post('duplicate/{breakdown}', ['as' => 'breakdown.post-duplicate', 'uses' => 'BreakdownController@postDuplicate']);
 
     Route::post('filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
-    Route::delete('wipe/{project}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
+    Route::delete('wipe/{wbs_id}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
 });
 
 Route::group(['prefix' => 'project', 'as' => 'project.'], function () {

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.' . (request('iframe')? 'iframe' : 'app'))
 
 @section('header')
     <h2>Add template</h2>

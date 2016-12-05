@@ -87,16 +87,22 @@ class Productivity extends Model
 
     public function getCrewManAttribute()
     {
-        $man_powers = array_map('strtolower',
-            array_column(ProductivityList::where('name', '=', 'Manpower')->get(array('type'))->toArray(), 'type'));
-        $man_numbers = [];
         $lines = array_filter(explode("\n", strtolower($this->crew_structure)));
+
+        $man_numbers = [];
         foreach ($lines as $line) {
             $tokens = [];
             preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
             $key = strtolower(trim($tokens[2]));
             $man_number = trim($tokens[1]);
-            if (in_array($key, $man_powers)) {//if(array_search($key,$crew) !== false){
+            $resource = Resources::where('name', 'like', "%$key%")->first();
+            if (!$resource) {
+                continue;
+            }
+            $type = $resource->types->root->name;
+            $is_labour = stristr($type, '02.LABORS');
+
+            if ($is_labour) {//if(array_search($key,$crew) !== false){
                 $man_numbers[] = $man_number * 10;
             }
         }

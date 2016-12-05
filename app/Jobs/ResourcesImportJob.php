@@ -38,7 +38,7 @@ class ResourcesImportJob extends ImportJob
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
-        $status = ['failed' => collect(), 'success' => 0];
+        $status = ['failed' => collect(), 'success' => 0,'dublicated'=>[]];
 
         Resources::flushEventListeners();
         foreach ($rows as $row) {
@@ -68,13 +68,12 @@ class ResourcesImportJob extends ImportJob
                     $status['failed']->push($item);
                 }
             }
+            else{
+                $status['dublicated'][] = $data[4];
+            }
         }
 
         dispatch(new CacheResourcesTree());
-
-//        if ($failed->count()) {
-//            return $failed;
-//        }
 
         return $status;
     }

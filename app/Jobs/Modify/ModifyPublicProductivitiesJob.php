@@ -34,7 +34,6 @@ class ModifyPublicProductivitiesJob extends ImportJob
         CsiCategory::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
-            /** @var \PHPExcel_Cell $cell */
             $data = $this->getDataFromCells($cells);
             if (!array_filter($data)) {
                 continue;
@@ -58,10 +57,10 @@ class ModifyPublicProductivitiesJob extends ImportJob
 
             if ($unit) {
                 $productivity->update($item);
-                ++$status['success'];
+//                ++$status['success'];
             } else {
-                $item['orig_unit'] = $data[6];
-                $status['failed']->push($item);
+//                $item['orig_unit'] = $data[6];
+//                $status['failed']->push($item);
             }
         }
 

@@ -25,7 +25,16 @@
 @stop
 
 @section('body')
+    @if(count(request('dublicate')))
+        <div class="container" id="notify" style="">
+            @foreach(request('dublicate') as $item)
+                <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>Item With Code
+                        ( {{$item}} ) Exist.</strong>
+                </div>
+            @endforeach
 
+        </div>
+    @endif
     @include('std-activity._filters')
 
     @if ($stdActivities->total())
@@ -97,6 +106,12 @@
     <script>
         (function (w, d, $) {
             $(function () {
+                $(function () {
+                    setTimeout(function () {
+                        $("#notify").hide('slow')
+                    }, 10000);
+                });
+
                 var divisionModal = $('#ParentsModal');
                 var selectDivision = $('#selectDivision');
 

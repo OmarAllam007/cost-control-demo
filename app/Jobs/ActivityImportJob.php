@@ -38,35 +38,42 @@ class ActivityImportJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
-            $division_id = $this->getDivisionId($data);
-            $work_package_name = $data[3];
-            $name = $data[4];
-            $code = $data[5];
-            $id_partial = $data[6];
-            $discipline = strtoupper($data[7]);
-            $key = mb_strtolower($code);
+//to make columns dynamic
+            $status = ['failed' => collect(), 'success' => 0, 'dublicated' => []];
+            $activities = StdActivity::query()->pluck('code');
+            $highest = \PHPExcel_Cell::columnIndexFromString($excel->getSheet(0)->getHighestColumn());
 
-            $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
-
-            $cellCount = count($data);
-            if ($cellCount > 8) {
-                $display_order = 1;
-                for ($i = 8; $i < $cellCount; ++$i) {
-                    $label = trim($data[$i]);
-                    if ($label) {
-                        $activity->variables()->create(compact('label', 'display_order'));
-                        ++$display_order;
+            if (!$activities->contains($data[$highest - 3])) {
+                $division_id = $this->getDivisionId($data, $highest);
+                $work_package_name = $data[$highest - 5];
+                $name = $data[$highest - 4];
+                $code = $data[$highest - 3];
+                $id_partial = $data[$highest - 2];
+                $discipline = strtoupper($data[$highest - 1]);
+                $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
+                $cellCount = count($data);
+                if ($cellCount > 10) {
+                    $display_order = 1;
+                    for ($i = 10; $i < $cellCount; ++$i) {
+                        $label = trim($data[$i]);
+                        if ($label) {
+                            $activity->variables()->create(compact('label', 'display_order'));
+                            ++$display_order;
+                        }
                     }
                 }
+
+                ++$status['success'];
+            } else {
+                $status['dublicated'][] = $data[$highest - 3];
             }
 
-            ++$count;
         }
 
-        return $count;
+        return $status;
     }
 
-    protected function getDivisionId($data)
+    protected function getDivisionId($data, $highest)
     {
         if (!$this->divisions) {
             $this->divisions = collect();
@@ -76,7 +83,7 @@ class ActivityImportJob extends ImportJob
 
         }
 
-        $tokens = array_filter(array_slice($data, 0, 3));
+        $tokens = array_filter(array_slice($data, 0, $highest - 5));
         $division_id = 0;
         $path = [];
 

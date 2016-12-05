@@ -110,7 +110,7 @@ class ResourcesController extends Controller
     function postImport(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx',
+            'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
@@ -123,6 +123,10 @@ class ResourcesController extends Controller
 
             flash('Could not import some resources', 'warning');
             return redirect()->route('resources.fix-import', $key);
+        }
+        if (count($status['dublicated'])) {
+            flash($status['success'] . ' items have been imported', 'success');
+            return \Redirect::route('resources.index', ['dublicate'=>$status['dublicated']]);
         }
 
         flash($status['success'] . ' Resources have been imported', 'success');

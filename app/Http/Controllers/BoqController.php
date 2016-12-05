@@ -107,11 +107,10 @@ class BoqController extends Controller
     function postImport(Project $project, Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx',
+            'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-
         $status = $this->dispatch(new BoqImportJob($project, $file->path()));
         if (count($status['failed'])) {
             $key = 'boq_' . time();

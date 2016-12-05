@@ -79,14 +79,17 @@ class StdActivityController extends Controller
     function postImport(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx'
+            'file' => 'required|file'//|mimes:xls,xlsx'
         ]);
 
         $file = $request->file('file');
 
-        $count = $this->dispatch(new ActivityImportJob($file->path()));
-
-        flash($count . ' Activities have been imported', 'success');
+        $status = $this->dispatch(new ActivityImportJob($file->path()));
+        if ($status['dublicated']) {
+            flash($status['success'] . ' items have been imported', 'success');
+            return \Redirect::route('std-activity.index', ['dublicate'=>$status['dublicated']]);
+        }
+        flash($status['success'] . ' Activities have been imported', 'success');
         return redirect()->route('std-activity.index');
     }
 

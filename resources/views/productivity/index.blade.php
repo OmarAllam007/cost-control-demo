@@ -19,7 +19,8 @@
             <i class="fa fa-cloud-download"></i> Export
         </a>
         @can('wipe')
-            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete All</a>
+            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete
+                All</a>
         @endcan
     </div>
 
@@ -29,9 +30,18 @@
 
 
 @section('body')
+    @if(count(request('dublicate')))
+        <div class="container" id="notify" style="">
+            @foreach(request('dublicate') as $item)
+                <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>Item With Code
+                        ( {{$item}} ) Exist.</strong>
+                </div>
+            @endforeach
+
+        </div>
+    @endif
     @include('productivity._filters')
     @if ($productivities->total())
-
         @include('productivity._list')
         {{ $productivities->links() }}
 
@@ -66,5 +76,12 @@
 @stop
 
 @section('javascript')
+    <script type="text/javascript">
+        $(function() {
+            setTimeout(function() {
+                $("#notify").hide('slow')
+            }, 10000);
+        });
+    </script>
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection

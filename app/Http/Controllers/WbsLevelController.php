@@ -122,4 +122,5 @@ class WbsLevelController extends Controller
 
         return \Redirect::route('project.show', $project);
     }
+
 }

@@ -28,8 +28,8 @@ class ProductivityImportJob extends ImportJob
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
         $productivities = Productivity::query()->pluck('code');
-
-        $status = ['success' => 0, 'failed' => collect()];
+        $productivities2 = Productivity::query()->pluck('csi_code');
+        $status = ['success' => 0, 'failed' => collect(),'dublicated'=>[]];
         CsiCategory::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
@@ -39,7 +39,7 @@ class ProductivityImportJob extends ImportJob
                 continue;
             }
 
-            if (!$productivities->has($data[0])) {
+            if (!$productivities->contains($data[0]) && !$productivities2->contains($data[0])) {
                 $unit = $this->getUnit($data[6]);
                 $item = [
                     'code' => $data[0],
@@ -60,7 +60,14 @@ class ProductivityImportJob extends ImportJob
                     $item['orig_unit'] = $data[6];
                     $status['failed']->push($item);
                 }
+            }else{
+
+                if(!isset($status['dublicated'][$data[0]])){
+                    $status['dublicated'][$data[0]] = $data[0];
+                }
             }
+
+
         }
         dispatch(new CacheCsiCategoryTree());
         unlink($this->file);

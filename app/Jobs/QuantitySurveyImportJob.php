@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\Exports\QuantitySurvey;
 use App\Project;
 use App\Survey;
 use App\WbsLevel;
@@ -37,6 +38,8 @@ class QuantitySurveyImportJob extends ImportJob
         $success = 0;
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
+        $surveys = QuantitySurvey::query()->pluck('cost_account');
+
         foreach ($rows as $row) {
             $cells = $this->getDataFromCells($row->getCellIterator());
 
@@ -45,23 +48,26 @@ class QuantitySurveyImportJob extends ImportJob
                 continue;
             }
 
-            $wbs_level_id = $this->getWBSLevel($cells[0]);
-            $unit_id = $this->getUnit($cells[3]);
+            if (!$surveys->contains($cells[1])) {
+                $wbs_level_id = $this->getWBSLevel($cells[0]);
+                $unit_id = $this->getUnit($cells[3]);
 
-            $data = [
-                'project_id' => $this->project->id, 'cost_account' => $cells[1], 'wbs_level_id' => $wbs_level_id,
-                'description' => $cells[2], 'unit_id' => $unit_id, 'budget_qty' => $cells[4], 'eng_qty' => $cells[5],
-                'discipline' => isset($cells[6])? strtoupper($cells[6]) : ''
-            ];
+                $data = [
+                    'project_id' => $this->project->id, 'cost_account' => $cells[1], 'wbs_level_id' => $wbs_level_id,
+                    'description' => $cells[2], 'unit_id' => $unit_id, 'budget_qty' => $cells[4], 'eng_qty' => $cells[5],
+                    'discipline' => isset($cells[6]) ? strtoupper($cells[6]) : ''
+                ];
 
-            if (!$wbs_level_id || !$unit_id) {
-                $data['wbs_code'] = $cells[0];
-                $data['unit'] = $cells[3];
-                $failed->push($data);
-            } else {
-                Survey::create($data);
-                ++$success;
+                if (!$wbs_level_id || !$unit_id) {
+                    $data['wbs_code'] = $cells[0];
+                    $data['unit'] = $cells[3];
+                    $failed->push($data);
+                } else {
+                    Survey::create($data);
+                    ++$success;
+                }
             }
+
         }
 
         return ['project_id' => $this->project->id, 'failed' => $failed, 'success' => $success];
@@ -70,7 +76,7 @@ class QuantitySurveyImportJob extends ImportJob
     protected function getWBSLevel($code)
     {
         if (!$this->wbsLevels->count()) {
-            $this->project->wbs_levels->each(function($level) {
+            $this->project->wbs_levels->each(function ($level) {
                 $this->wbsLevels->put(mb_strtolower($level->code), $level->id);
             });
         }

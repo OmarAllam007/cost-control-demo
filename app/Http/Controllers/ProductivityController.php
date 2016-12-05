@@ -91,7 +91,7 @@ class ProductivityController extends Controller
     function postImport(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx',
+            'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
@@ -102,6 +102,10 @@ class ProductivityController extends Controller
             \Cache::add($key, $status, 180);
             flash('Could not import all items', 'warning');
             return \Redirect::route('productivity.fix-import', $key);
+        }
+        if (count($status['dublicated'])) {
+            flash($status['success'] . ' items have been imported', 'success');
+            return \Redirect::route('productivity.index', ['dublicate'=>$status['dublicated']]);
         }
 
         flash($status['success'] . ' items have been imported', 'success');
@@ -174,7 +178,6 @@ class ProductivityController extends Controller
         $errors = Productivity::checkFixImport($data);
         if (!$errors) {
             $status = \Cache::get($key);
-
             foreach ($status['failed'] as $item) {
                 if (isset($data['units'][$item['orig_unit']])) {
                     $item['unit'] = $data['units'][$item['orig_unit']];
@@ -187,7 +190,6 @@ class ProductivityController extends Controller
             flash($status['success'] . ' items have been imported', 'success');
             return \Redirect::route('productivity.index');
         }
-
         flash('Could not import all items');
         return \Redirect::route('productivity.fix-import', $key)
             ->withErrors($errors)->withInput($request->all());

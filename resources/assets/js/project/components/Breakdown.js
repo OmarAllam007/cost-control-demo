@@ -30,6 +30,8 @@ export default {
         },
 
         destroy(breakdown_id) {
+
+
             this.loading = true;
             $.ajax({
                 url: '/breakdown-resource/' + breakdown_id,
@@ -42,36 +44,38 @@ export default {
             }).error(() => {});
         },
 
-        wipeAll() {
-            this.wiping = true;
-            $.ajax({
-                url: '/breakdown/wipe/' + this.project,
-                data: {
-                    _token: $('meta[name=csrf-token]').attr('content'),
-                    _method: 'delete', wipe: true
-                },
-                method: 'post', dataType: 'json'
-            }).success((response) => {
-                this.wiping = false;
-                this.$dispatch('request_alert', {
-                    message: response.message,
-                    type: response.ok ? 'info' : 'danger'
-                });
-                if (response.ok) {
-                    this.breakdowns = [];
-                    this.selected = 0;
-                }
-                $('#WipeBreakdownModal').modal('hide');
-            }).error((response) => {
-                this.wiping = false;
-                this.$dispatch('request_alert', {
-                    message: response.message,
-                    type: 'danger'
-                });
-                $('#WipeBreakdownModal').modal('hide');
-            });
-        }
     },
+    wipeAll() {
+        this.wiping = true;
+
+        $.ajax({
+            url: '/breakdown/wipe/' + this.wbs_id,
+            data: {
+                _token: $('meta[name=csrf-token]').attr('content'),
+                _method: 'delete', wipe: true,
+                wbs:this.wbs_id,
+            },
+            method: 'post', dataType: 'json'
+        }).success(response) => {
+            this.wiping = false;
+        this.$dispatch('request_alert', {
+            message: response.message,
+            type: response.ok ? 'info' : 'danger'
+        });
+        if (response.ok) {
+            this.breakdowns = [];
+            this.selected = 0;
+        }
+        $('#WipeBreakdownModal').modal('hide');
+    }).error((response) => {
+            this.wiping = false;
+        this.$dispatch('request_alert', {
+            message: response.message,
+            type: 'danger'
+        });
+        $('#WipeBreakdownModal').modal('hide');
+    });
+    }
 
     computed: {
         filtered_breakdowns() {

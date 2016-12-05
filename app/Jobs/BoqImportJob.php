@@ -8,6 +8,7 @@ use App\Jobs\Job;
 use App\Project;
 use App\Unit;
 use App\WbsLevel;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -41,14 +42,18 @@ class BoqImportJob extends ImportJob implements ShouldQueue
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-        $boqs = Boq::query()->pluck('item_code')->toArray();
+        $status = ['success' => 0, 'failed' => collect(),'dublicated'=>[]];
         Boq::flushEventListeners();
+        $boqs = Boq::where('project_id',$this->project_id)->pluck('cost_account');
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
             $data = $this->getDataFromCells($cells);
-            $key = in_array($data[0], $boqs);
-            if (!$key) {
+            /** @var Collection $boqs */
+            if (!array_filter($data)) {
+                continue;
+            }
+            if (!$boqs->contains($data[2])) {
                 Boq::create([
                     'wbs_id' => $this->getWbsId($data[0]) ?: 0,
                     'item_code' => $data[1] ?: '',
@@ -66,11 +71,15 @@ class BoqImportJob extends ImportJob implements ShouldQueue
                     'manpower' => $data[15] ?: '',
                     'project_id' => $this->project_id,
                 ]);
+            ++$status['success'];
+            }else {
+                $status['dublicated'][] =$data[2];
             }
         }
         \Cache::forget('boq-' . $this->project_id);
         \Cache::add('boq-' . $this->project_id, dispatch(new CacheBoqTree($this->project)), 7 * 24 * 60);
         unlink($this->file);
+        return $status;
     }
 
 

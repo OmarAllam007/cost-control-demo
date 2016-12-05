@@ -104,6 +104,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('financial-period/{project}/create',['uses'=>'FinancialPeriodController@create','as'=>'financial.create']);
     Route::post('financial-period/{project}/store',['uses'=>'FinancialPeriodController@store','as'=>'financial.store']);
 });
+Route::delete('/wbs-level/reources/{id}',['uses'=>'BreakdownController@wpsdelete','as'=>'wbsresource.delete']);
 
 
 Route::resource('unit', 'UnitController');
