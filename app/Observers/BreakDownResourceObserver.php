@@ -14,18 +14,21 @@ class BreakDownResourceObserver
     function created(BreakdownResource $resource)
     {
         $formatter = new BreakdownResourceFormatter($resource);
-        $shadow = BreakDownResourceShadow::create($formatter->toArray());
+        BreakDownResourceShadow::create($formatter->toArray());
     }
 
     function updated(BreakdownResource $resource)
     {
         $formatter = new BreakdownResourceFormatter($resource);
-        $shadow = BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->update($formatter->toArray());
+        BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->update($formatter->toArray());
     }
 
     function saving(BreakdownResource $breakdownResource)
     {
-        $resource = Resources::find($breakdownResource->template_resource->resource_id);
+        $resource = Resources::withTrashed()->find($breakdownResource->template_resource->resource_id);
+        if (!$resource) {
+            dd($breakdownResource);
+        }
         if (!$resource->project_id) {
             $projectResource = Resources::whereResourceId($resource->id)->whereProjectId($resource->project_id)->first();
             if (!$projectResource) {

@@ -45,8 +45,9 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         set_time_limit(1800);
+        ini_set('memory_limit', '256m');
         // $divisions = $this->getBoqs($project);
-        $project->load([
+//        $project->load([
 //            'breakdown_resources.template_resource.resource',
 //            'wbs_levels',
             // 'quantities',
@@ -59,7 +60,7 @@ class ProjectController extends Controller
 //            'breakdown_resources.breakdown.std_activity',
 //            'breakdown_resources.template_resource',
 //            'breakdown_resources.productivity',
-        ]);
+//        ]);
 
         return view('project.show', compact('project', 'divisions'));
     }

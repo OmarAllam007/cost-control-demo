@@ -51,7 +51,7 @@ class BreakdownResource extends Model
 
     function resource()
     {
-        return $this->belongsTo(Resources::class);
+        return $this->belongsTo(Resources::class)->withTrashed();
     }
 
     function getEquationAttribute()

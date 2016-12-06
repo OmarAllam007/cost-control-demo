@@ -51,14 +51,16 @@ export default {
 
         paste() {
             if (this.copied_wbs_id && this.wbs_id) {
+                this.loading = true;
                 $.ajax({
                     url: '/breakdown/copy-wbs/' + this.copied_wbs_id + '/' + this.wbs_id
                 }).success(response => {
-                    this.loadWbs();
+                    this.loading = false;
                     this.$dispatch('request_alert', {
                         message: 'WBS data has been copied',
                         type: 'success'
                     });
+                    this.loadBreakdown();
                 }).error(response => {
                     this.$dispatch('request_alert', {
                         message: 'Failed to paste WBS data',
