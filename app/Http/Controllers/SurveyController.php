@@ -46,6 +46,7 @@ class SurveyController extends Controller
 
         $level = WbsLevel::find($request->wbs_level_id);
         $level_survey = Survey::where('wbs_level_id', $level->id)->first();
+        $cost_accounts=[];
         if ($level_survey) {
             $cost_accounts[] = $level_survey->cost_account;
         }
