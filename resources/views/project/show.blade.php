@@ -101,7 +101,18 @@
                 $('#wbs-panel-container').toggle();
                 $('#wbs-display-container').toggleClass('col-sm-9 col-sm-12');
                 $(this).find('i.fa').toggleClass('fa-angle-double-right fa-angle-double-left');
-            })
+            });
+
+            $('#resourceData').on('click', '.resource-paging-links a', function(e){
+                e.preventDefault();
+                $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+                $.ajax({url: this.href}).success(function(page) {
+                    var newHtml = $(page).find('#resourceData').html();
+                    $('#resourceData').html(newHtml);
+                });
+            });
+
+            $('<div class="a"></div>');
 
         }(window, document, jQuery));
 

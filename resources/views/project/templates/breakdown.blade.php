@@ -13,6 +13,9 @@
                 <i class="fa fa-plus"></i> Add Breakdown
             </a>
 
+            <a href="#" v-if="breakdowns.length" class="btn btn-success btn-sm" @click.prevent="copy"><i class="fa fa-copy"></i> Copy</a>
+            <a href="#" v-if="copied_wbs_id" class="btn btn-primary btn-sm" @click.prevent="paste"><i class="fa fa-paste"></i> Paste</a>
+
             @can('wipe')
                 <a href="#WipeBreakdownModal"@{{breakdown.id}} data-toggle="modal" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
                     Delete all</a>

@@ -52,10 +52,13 @@ class ResourcesController extends Controller
             $request['waste'] = ($request->waste / 100);
         }
 
-        Resources::create($request->all());
+        $resource = Resources::create($request->all());
 
         flash('Resource has been saved', 'success');
 
+        if ($resource->project_id) {
+            return \Redirect::route('project.show', $resource->project_id);
+        }
         return \Redirect::route('resources.index');
     }
 
@@ -76,7 +79,6 @@ class ResourcesController extends Controller
 
     public function update(Resources $resources, Request $request)
     {
-
         $this->validate($request, $this->rules);
 
         if ($request['waste'] <= 1) {
@@ -89,7 +91,9 @@ class ResourcesController extends Controller
         $resources->syncCodes($request->get('codes'));
 
         flash('Resource has been saved', 'success');
-
+        if ($resources->project_id) {
+            return \Redirect::route('project.show', $resources->project_id);
+        }
         return \Redirect::route('resources.index');
     }
 
@@ -231,10 +235,9 @@ class ResourcesController extends Controller
 
     function wipe(WipeRequest $request)
     {
-        \DB::table('resources')->delete();
-        \DB::table('std_activity_resources')->delete();
-        \DB::table('resource_types')->delete();
-//        StdActivityResource::query()->delete();
+        \DB::table('resources')->truncate();
+        \DB::table('std_activity_resources')->truncate();
+        \DB::table('resource_types')->truncate();
 
         flash('All resources have been deleted', 'info');
 

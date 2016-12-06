@@ -220,8 +220,6 @@ $config = [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => \Collective\Html\FormFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'DebugBar' => Barryvdh\Debugbar\Facade::class,
-        
     ],
 
     'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil', 'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical', 'ELECTRICAL' => 'Electrical'],
@@ -229,6 +227,7 @@ $config = [
 
 if ($config['env'] == 'local') {
     $config['providers'][] = \Barryvdh\Debugbar\ServiceProvider::class;
+    $config['aliases']['DebugBar'] = Barryvdh\Debugbar\Facade::class;
 }
 
 return $config;

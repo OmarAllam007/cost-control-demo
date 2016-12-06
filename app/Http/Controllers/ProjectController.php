@@ -35,7 +35,8 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
-        Project::create($request->all());
+        $project = Project::create($request->all());
+        $project->users()->sync($request->get('users', []));
 
         flash('Project has been saved', 'success');
 
@@ -45,22 +46,6 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         set_time_limit(1800);
-        // $divisions = $this->getBoqs($project);
-        $project->load([
-//            'breakdown_resources.template_resource.resource',
-//            'wbs_levels',
-            // 'quantities',
-            // 'quantities.wbsLevel',
-            //    'breakdown_resources' => function ($q) use ($project) {
-            //     return $q->filter(session('filters.breakdown.' . $project->id, []));
-            // },
-//            'breakdown_resources',
-//            'breakdown_resources.breakdown.template',
-//            'breakdown_resources.breakdown.std_activity',
-//            'breakdown_resources.template_resource',
-//            'breakdown_resources.productivity',
-        ]);
-
         return view('project.show', compact('project', 'divisions'));
     }
 
@@ -90,6 +75,7 @@ class ProjectController extends Controller
         $this->validate($request, $this->rules);
 
         $project->update($request->all());
+        $project->users()->sync($request->get('users', []));
 
         flash('Project has been saved', 'success');
 

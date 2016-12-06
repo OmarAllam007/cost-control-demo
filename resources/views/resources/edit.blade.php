@@ -9,14 +9,22 @@
         {{--<a href="{{ route('resources.show', $resources)}}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i>
             Show</a>--}}
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
-        <a href="{{ route('resources.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+        @if ($resource->project_id)
+            <a href="{{ route('project.show', $resource->project)}}#resources" class="btn btn-sm btn-default">
+                <i class="fa fa-chevron-left"></i> Back
+            </a>
+        @else
+            <a href="{{ route('resources.index')}}" class="btn btn-sm btn-default">
+                <i class="fa fa-chevron-left"></i> Back
+            </a>
+        @endif
     </form>
 @stop
 
 @section('body')
     {{ Form::model($resources, ['route' => ['resources.update', $resources], 'method' => 'PATCH']) }}
 
-        @include('resources._form', ['override' => false])
+    @include('resources._form', ['override' => $resources->project_id])
 
     {{ Form::close() }}
 @stop

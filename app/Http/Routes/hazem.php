@@ -93,7 +93,9 @@ Route::group(['prefix' => 'breakdown'], function(){
     Route::post('duplicate/{breakdown}', ['as' => 'breakdown.post-duplicate', 'uses' => 'BreakdownController@postDuplicate']);
 
     Route::post('filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
-    Route::delete('wipe/{wbs_id}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
+    Route::delete('wipe/{wbs_level}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
+
+    Route::get('copy-wbs/{source_wbs}/{target_wbs}', 'BreakdownResourceController@copy_wbs');
 });
 
 Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
@@ -127,5 +129,6 @@ Route::resource('std-activity-resource', 'StdActivityResourceController');
 Route::resource('breakdown', 'BreakdownController');
 Route::resource('breakdown-resource', 'BreakdownResourceController');
 Route::resource('period', 'PeriodController');
+Route::resource('users', 'UsersController', ['parameters' => 'singular']);
 
 Route::get('/blank', 'BlankController@index');

@@ -9,7 +9,7 @@
                     {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
                 </div>
                 @if ($override)
-                    <p><em>{{$base->types->path}}</em></p>
+                    <p><em>{{$resources->types->path}}</em></p>
                 @else
                     <p>
                         <a href="#LevelsModal" data-toggle="modal" class="tree-open">
@@ -30,7 +30,7 @@
                 {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
             @elseif($override)
                 {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-                {{ Form::text('resource_code',$base->code, ['class' => 'form-control','readonly'=>'readonly']) }}
+                {{ Form::text('resource_code',$resources->code, ['class' => 'form-control','readonly'=>'readonly']) }}
             @endif
             {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
 
@@ -39,7 +39,7 @@
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             @if($override)
-                {{ Form::text('name', $base->name, ['class' => 'form-control', 'readonly' => 'readonly']) }}
+                {{ Form::text('name', $resources->name, ['class' => 'form-control', 'readonly' => 'readonly']) }}
             @else
                 {{ Form::text('name', null, ['class' => 'form-control']) }}
                 {!! $errors->first('name', '<div class="help-block">:message</div>') !!}

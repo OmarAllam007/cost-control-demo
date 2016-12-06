@@ -32,7 +32,7 @@ window.app = new Vue({
         wbs_changed(params) {
             this.selected = params.selection;
             this.$broadcast('wbs_changed', params);
-        }
+        },
     },
 
     components: {
