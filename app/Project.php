@@ -63,7 +63,7 @@ class Project extends Model
 
     function resources()
     {
-        return $this->hasMany(Resources::class)->with('type');
+        return $this->hasMany(Resources::class)->with('types');
     }
 
     function getProductivitiesAttribute()
@@ -72,14 +72,14 @@ class Project extends Model
             ->pluck('productivity')->unique()->filter();
     }
 
-    function getResourcesAttribute()
+    /*function getResourcesAttribute()
     {
         if (empty($this->projectResources)) {
             $this->projectResources = Resources::where('project_id', $this->id)->get();
         }
 
         return $this->projectResources;
-    }
+    }*/
 
     function getActivities()//get ids of Activities
     {

@@ -37,7 +37,6 @@ export default {
         show_alert(alert) {
             this.message = alert.message;
             this.type = alert.type;
-            console.log(alert)
             this.showAlert();
         }
     },

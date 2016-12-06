@@ -7,7 +7,8 @@
     </div>
     <div class="clearfix"></div>
 
-    @if ($project->resources->count())
+    <section id="resourceData">
+    @if ($project->resources()->count())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
@@ -21,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($project->resources as $resource)
+            @foreach ($projectResources = $project->resources()->paginate(200) as $resource)
                 <tr>
                     <td class="col-xs-2">{{$resource->resource_code}}</td>
                     <td class="col-xs-3">{{$resource->name}}</td>
@@ -38,7 +39,12 @@
             @endforeach
             </tbody>
         </table>
+
+        <div class="text-center resource-paging-links">
+            {{$projectResources->links()}}
+        </div>
     @else
         <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No resources found</div>
     @endif
+    </section>
 </section>

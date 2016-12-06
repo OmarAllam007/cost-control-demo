@@ -60,7 +60,6 @@ export default {
                         message: 'WBS data has been copied',
                         type: 'success'
                     });
-                    this.loadBreakdown();
                 }).error(response => {
                     this.$dispatch('request_alert', {
                         message: 'Failed to paste WBS data',
