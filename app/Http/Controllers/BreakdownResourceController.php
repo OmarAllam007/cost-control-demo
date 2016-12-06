@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Http\Requests\WipeRequest;
@@ -104,5 +105,27 @@ class BreakdownResourceController extends Controller
         return \Redirect::to(route('project.index') . '#breakdown');
     }
 
+    function copy_wbs(WbsLevel $source_wbs, WbsLevel $target_wbs, Request $request)
+    {
+        $source_wbs->load(['breakdowns', 'breakdowns.resources']);
+        foreach ($source_wbs->breakdowns as $breakdown) {
+            $breakdownData = $breakdown->toArray();
+            unset($breakdownData['id'], $breakdownData['wbs_level_id'], $breakdownData['created_at'], $breakdownData['updated_at']);
 
+            /** @var Breakdown $newBreakdown */
+            $newBreakdown = $target_wbs->breakdowns()->create($breakdownData);
+
+            foreach ($breakdown->resources as $resource) {
+                $resourceData = $resource->toArray();
+                unset($resourceData['id'], $resourceData['breakdown_id'], $resourceData['created_at'], $resourceData['updated_at']);
+                $newBreakdown->resources()->create($resourceData);
+            }
+        }
+
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => 'WBS data has been copied'];
+        }
+
+        return \Redirect::route('project.show', $source_wbs->project_id);
+    }
 }

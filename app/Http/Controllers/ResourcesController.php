@@ -235,10 +235,9 @@ class ResourcesController extends Controller
 
     function wipe(WipeRequest $request)
     {
-        \DB::table('resources')->delete();
-        \DB::table('std_activity_resources')->delete();
-        \DB::table('resource_types')->delete();
-//        StdActivityResource::query()->delete();
+        \DB::table('resources')->truncate();
+        \DB::table('std_activity_resources')->truncate();
+        \DB::table('resource_types')->truncate();
 
         flash('All resources have been deleted', 'info');
 
