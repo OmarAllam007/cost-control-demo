@@ -53,4 +53,12 @@
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
     </div>
+
+    <div class="col-sm-6">
+        @include('project.permissions')
+    </div>
 </div>
+
+@section('javascript')
+    <script src="{{asset('/js/project-permissions.js')}}"></script>
+@endsection

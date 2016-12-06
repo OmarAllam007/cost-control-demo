@@ -145,4 +145,28 @@ class Project extends Model
         $relation->where('is_open', true);
         return $relation;
     }
+
+    function users()
+    {
+        return $this->belongsToMany(User::class, 'project_users')
+            ->withPivot(['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources'])
+            ->withTimestamps();
+    }
+
+    function getPermissionsAttribute()
+    {
+        $pivotFields = ['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources'];
+        return $this->users->map(function(User $user) use ($pivotFields) {
+            $row = [
+                'name' => $user->name,
+                'user_id' => $user->id
+            ];
+
+            foreach ($pivotFields as $field) {
+                $row[$field] = $user->pivot->getAttribute($field);
+            }
+
+            return $row;
+        });
+    }
 }
