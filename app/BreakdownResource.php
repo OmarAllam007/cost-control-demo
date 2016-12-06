@@ -152,16 +152,30 @@ class BreakdownResource extends Model
         }
         return $this->budget_cost / $this->eng_qty;
     }
-
-    function getEngQtyAttribute()
-    {
-        $costAccount = Survey::where('cost_account', $this->breakdown->cost_account)->first();
-        $engQuantity = 0;
-        if ($costAccount) {
-            $engQuantity = $costAccount->eng_qty;
-        }
-        return $engQuantity;
-    }
+//
+//    function getEngQtyAttribute()
+//    {
+//
+//        $wbs_level = WbsLevel::find($this->breakdown->wbs_level->id);
+//        $survey_level = Survey::where('wbs_level_id', $wbs_level->id)->where('cost_Account', $this->breakdown->cost_account)->first();
+//        $eng_qty = 0;
+//        if ($survey_level) {
+//            $eng_qty = $survey_level->eng_qty;
+//        } else {
+//            $parent = $wbs_level;
+//            while ($parent->parent) {
+//                $parent_wbs_level = WbsLevel::find($parent->id);
+//                $parent_survey = Survey::where('wbs_level_id', $parent_wbs_level->id)->where('cost_Account', $this->breakdown->cost_account)->first();
+//                if ($parent_survey) {
+//                    $eng_qty = $parent_survey->eng_qty;
+//                    break;
+//                }
+//                $parent = $parent->parent;
+//            }
+//        }
+//        return $eng_qty;
+////        return $engQuantity;
+//    }
 
     function getBudgetQtyAttribute()
     {

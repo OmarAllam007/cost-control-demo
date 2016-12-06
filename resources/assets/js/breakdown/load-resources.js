@@ -4,6 +4,7 @@
     var templateInput = $('#TemplateID');
     var resourcesContainer = $('#resourcesContainer');
     var costInput = $('#CostAccount');
+    var wbsLevel = $('#WbsID');
 
     //Get templates contents
     var emptyAlert = $('#resourcesEmptyAlert').html();
@@ -21,11 +22,12 @@
     {
         var value = templateInput.val();
         var costAccount = costInput.val();
+        var wbs = wbsLevel.val();
         if (value && costAccount) {
             showLoading();
             $.ajax({
                 url: '/api/std-activity-resource',
-                data: {template: value, cost_account: costAccount},
+                data: {template: value, cost_account: costAccount ,wbs_level_id:wbs},
                 dataType: 'json'
             }).done(function(response){
                 buildResources(response);

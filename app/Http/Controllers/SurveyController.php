@@ -43,7 +43,6 @@ class SurveyController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, $this->rules);
-
         $level = WbsLevel::find($request->wbs_level_id);
         $level_survey = Survey::where('wbs_level_id', $level->id)->first();
         $cost_accounts=[];

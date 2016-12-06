@@ -18,8 +18,10 @@
                 <a href="#WBSModal" data-toggle="modal" id="select-parent">
                     @if(request('wbs_id'))
                         {{request('wbs_id')? \App\WbsLevel::find(request('wbs_id'))->path: 'Select WBS Level' }}
+                        {{Form::hidden('wbs_level_id',request('wbs_id'),['id'=>'WbsID'])}}
                     @else
-                        {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select WBS Level' }}
+                        {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path
+                        : 'Select WBS Level' }}
                     @endif
 
                 </a>
@@ -71,7 +73,7 @@
 
 @include('breakdown._template')
 
-@include('wbs-level._modal', ['value' => Form::getValueAttribute('wbs_level_id')?Form::getValueAttribute('wbs_level_id'):request('wbs_id'), 'input' => 'wbs_level_id', 'project_id' => request('project', Form::getValueAttribute('project_id'))])
+@include('wbs-level._modal', ['value' => Form::getValueAttribute('wbs_level_id')?Form::getValueAttribute('wbs_level_id'):request('wbs_level_id'), 'input' => 'wbs_level_id', 'project_id' => request('project', Form::getValueAttribute('project_id'))])
 @include('std-activity._modal', ['input' => 'std_activity_id', 'value' => Form::getValueAttribute('std_activity_id')])
 
 <div class="form-group">

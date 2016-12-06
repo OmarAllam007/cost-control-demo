@@ -16,7 +16,7 @@ class BreakdownTemplateController extends Controller
 
     public function index()
     {
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::query(), session('filters.breakdown-template'));
+        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
         $breakdownTemplates = $filter->filter()->paginate(50);
         return view('breakdown-template.index', compact('breakdownTemplates'));
     }
@@ -30,10 +30,9 @@ class BreakdownTemplateController extends Controller
     public function store(Request $request)
     {
 
-        if ($request->project_id) {
+        if ($request->project_id && $request->import) {
             $parent = BreakdownTemplate::find($request->parent_template_id);
             $resources = StdActivityResource::where('template_id', $parent->id)->get();
-
             $parent->parent_template_id = $parent->id;
             $parent->project_id = $request->project_id;
             unset($parent->id);
@@ -43,11 +42,12 @@ class BreakdownTemplateController extends Controller
                 StdActivityResource::create($resource->toArray());
             }
 
-        } else {
+        }
+
+        else {
             $this->validate($request, $this->rules);
             $template = BreakdownTemplate::create($request->all());
         }
-//        $request['parent_template_id']= BreakdownTemplate::where('name',request('name'))->first()->id;
         flash('Breakdown template has been saved', 'success');
 
         return \Redirect::route('breakdown-template.show', $template);
