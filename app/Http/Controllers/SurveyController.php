@@ -10,6 +10,7 @@ use App\Project;
 use App\Survey;
 use App\Unit;
 use App\UnitAlias;
+use App\WbsLevel;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -43,11 +44,29 @@ class SurveyController extends Controller
     {
         $this->validate($request, $this->rules);
 
-        $survey = Survey::create($request->all());
+        $level = WbsLevel::find($request->wbs_level_id);
+        $level_survey = Survey::where('wbs_level_id', $level->id)->first();
+        if ($level_survey) {
+            $cost_accounts[] = $level_survey->cost_account;
+        }
+        $parent = $level;
+        while ($parent->parent) {
+            $parent = $parent->parent;
+            $parent_survey = Survey::where('wbs_level_id', $parent->id)->first();
+            if ($parent_survey) {
+                $cost_accounts[] = $parent_survey->cost_account;
+            }
+        }
 
-        flash('Quantity survey has been saved', 'success');
+        if (in_array($request->cost_account, $cost_accounts)) {
+            flash('Found dublicated Cost Account', 'danger');
 
-//        return \Redirect::route('project.show', $survey->project_id);
+        } else {
+            $survey = Survey::create($request->all());
+            flash('Quantity survey has been saved', 'success');
+        }
+
+
         return \Redirect::to('/blank?reload=quantities');
     }
 
@@ -93,7 +112,7 @@ class SurveyController extends Controller
     function postImport(Project $project, Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx',
+            'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
@@ -106,10 +125,20 @@ class SurveyController extends Controller
             flash('Could not import some items.', 'warning');
             return redirect()->to(route('survey.fix-import', $key) . '?iframe=1');
         }
+        if (count($status['dublicated'])) {
+            $dublicatedKey = 'qs-dublicated';
+            \Cache::add($dublicatedKey, $status['dublicated'], 100);
+            return redirect()->to(route('survey.dublicate', $dublicatedKey). '?iframe=1');
+        }
+        else {
+            flash($status['success'] . ' Quantity survey items have been imported', 'success');
+            return \Redirect::to('/blank?reload=quantities');
+        }
+    }
 
-        flash($status . ' Quantity survey items have been imported', 'success');
-//        return redirect()->route('project.show', $project);
-        return \Redirect::to('/blank?reload=quantities');
+    function dublicateQuantitySurvey($key)
+    {
+        return view('survey.dublicated', compact('key'));
     }
 
     function fixImport($key)

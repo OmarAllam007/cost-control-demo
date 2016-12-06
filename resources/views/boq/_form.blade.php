@@ -24,9 +24,14 @@
             </div>
             <p>
                 <a href="#WBSModal" data-toggle="modal" id="select-parent" class="tree-open">
-                    {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
+                    @if(request('wbs_id'))
+                        {{App\WbsLevel::with('parent')->find(request('wbs_id'))->path}}
+                    @else
+                        {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
                 </a>
-                <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
+                @endif
+                <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span
+                            class="fa fa-times"></span></a>
             </p>
             {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}
         </div>
@@ -62,11 +67,10 @@
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
         {{--<div class="form-group {{$errors->first('item', 'has-error')}}">--}}
-            {{--{{ Form::label('item', 'BOQ Item', ['class' => 'control-label']) }}--}}
-            {{--{{ Form::text('item', null, ['class' => 'form-control']) }}--}}
-            {{--{!! $errors->first('item', '<div class="help-block">:message</div>') !!}--}}
+        {{--{{ Form::label('item', 'BOQ Item', ['class' => 'control-label']) }}--}}
+        {{--{{ Form::text('item', null, ['class' => 'form-control']) }}--}}
+        {{--{!! $errors->first('item', '<div class="help-block">:message</div>') !!}--}}
         {{--</div>--}}
-
 
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">

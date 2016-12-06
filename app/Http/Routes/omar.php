@@ -85,6 +85,7 @@ Route::group(['prefix' => 'project'], function () {
 
 Route::group(['prefix' => 'survey'], function () {
     Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'SurveyController@exportQuantitySurvey']);
+    Route::get('dublicate/{key}', ['as' => 'survey.dublicate', 'uses' => 'SurveyController@dublicateQuantitySurvey']);
 });
 
 Route::group(['prefix' => 'resources'], function () {
