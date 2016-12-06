@@ -50,6 +50,7 @@ class QuantitySurveyImportJob extends ImportJob
 
             $wbs_level_id = $this->getWBSLevel($cells[0]);
             $level = WbsLevel::find($wbs_level_id);
+
             Survey::where('wbs_level_id', $level->id)->get()->each(function ($survey) use ($cost_accounts) {
                 $cost_accounts->push($survey->cost_account);
             })->pluck('cost_account');
