@@ -32,7 +32,7 @@ class ExportResourcesJob extends Job
 
 
         $rowCount = 2;
-        foreach ($this->project->plain_resources as $resource) {
+        foreach ($this->project->resources as $resource) {
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource->resource_code);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource->name);
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name);
@@ -49,14 +49,15 @@ class ExportResourcesJob extends Job
             $rowCount++;
 
         }
-
-
         $rowCount--;
+
+        /*
         $this->cellColor('A2:A'.$rowCount.'',$objPHPExcel);
         $this->cellColor('B2:B'.$rowCount.'',$objPHPExcel);
         $this->cellColor('C2:C'.$rowCount.'',$objPHPExcel);
         $this->cellColor('I2:I'.$rowCount.'',$objPHPExcel);
         $this->cellColor('J2:J'.$rowCount.'',$objPHPExcel);
+        */
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $this->project->name . ' - Resources.xlsx"');
         header('Cache-Control: max-age=0');
@@ -64,10 +65,10 @@ class ExportResourcesJob extends Job
         $objWriter->save('php://output');
     }
 
-    function cellColor($cells,$objPHPExcel){
-        $objPHPExcel->getActiveSheet()->getStyle($cells)->getFill()->applyFromArray(array(
-            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-            'color' => array('rgb' => '000000')
-        ));
-    }
+//    function cellColor($cells,$objPHPExcel){
+//        $objPHPExcel->getActiveSheet()->getStyle($cells)->getFill()->applyFromArray(array(
+//            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+//            'color' => array('rgb' => '000000')
+//        ));
+//    }
 }
