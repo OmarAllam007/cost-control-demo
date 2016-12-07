@@ -10,7 +10,6 @@
 
 
 @section('body')
-
     @if ($categories->total())
         <ul class="list-unstyled tree">
             @foreach($categoryTree as $category)
