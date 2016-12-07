@@ -13,10 +13,11 @@ var elixir = require('laravel-elixir');
 
 elixir(function (mix) {
     mix.sass('app.scss')
-        .webpack('project-permissions.js');
-        // .sass('print.scss')
-        // .webpack('project/index.js', 'public/js/project.js')
-        // .webpack('resource-codes.js');
+        .webpack('project-permissions.js')
+        .webpack('project/index.js', 'public/js/project.js');
+
+    // .sass('print.scss')
+    // .webpack('resource-codes.js');
 
 
 

@@ -8245,7 +8245,8 @@ body#iframe {
   margin-bottom: 7px; }
 
 #wbs-display .tab-pane {
-  padding-top: 20px; }
+  padding-top: 20px;
+  position: relative; }
 
 #wbs-display .loader {
   height: 100%;

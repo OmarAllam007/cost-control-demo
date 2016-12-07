@@ -123,7 +123,8 @@ class BreakdownResourceController extends Controller
         }
 
         if ($request->ajax()) {
-            return ['ok' => true, 'message' => 'WBS data has been copied'];
+            $breakdowns = BreakDownResourceShadow::where('wbs_id', $target_wbs->id)->get();
+            return ['ok' => true, 'breakdowns' => $breakdowns];
         }
 
         return \Redirect::route('project.show', $source_wbs->project_id);
