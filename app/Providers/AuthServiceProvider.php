@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+
     ];
 
     /**
@@ -25,6 +25,15 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(GateContract $gate)
     {
         $this->registerPolicies($gate);
+
+        $gate->before(function ($user) {
+            if ($user->is_admin) {
+                return true;
+            }
+        });
+        $gate->define('read', 'App\Policies\DataPolicy@read');
+        $gate->define('write', 'App\Policies\DataPolicy@write');
+        $gate->define('delete', 'App\Policies\DataPolicy@delete');
 
         $gate->define('wipe', function($user) {
             return in_array(\Auth::user()->email, [

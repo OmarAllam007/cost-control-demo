@@ -21,7 +21,8 @@ class UsersController extends Controller
 
     public function store(UserRequest $request)
     {
-        User::create($request->all());
+        $user = User::create($request->all());
+        $user->modules()->sync($request->get('module'));
         flash('User has been saved', 'success');
         return \Redirect::route('users.index');
     }
