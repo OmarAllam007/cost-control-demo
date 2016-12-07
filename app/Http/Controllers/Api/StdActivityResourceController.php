@@ -12,7 +12,6 @@ class StdActivityResourceController extends Controller
 {
     function index()
     {
-
         $templateId = request('template');
         $template = BreakdownTemplate::find($templateId);
 
@@ -21,8 +20,8 @@ class StdActivityResourceController extends Controller
         }
 
         return $template->resources()->recursive()->get()->map(
-            function($resource) {
-            return $resource->morphForJSON(request('cost_account'));
-        });
+            function ($resource) {
+                return $resource->morphForJSON(request('cost_account'),request()->all());
+            });
     }
 }

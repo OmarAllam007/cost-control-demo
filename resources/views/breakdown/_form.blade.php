@@ -10,6 +10,8 @@
                 {{--{{Form::select('project_id', App\Project::options(), request('project'), ['class' => 'form-control', 'id' => 'Activity-ID'])}}--}}
                 <p><em>{{$breakdown->project->name}}</em></p>
                 {{Form::hidden('project_id', $breakdown->project->name, ['id' => 'ProjectId'])}}
+
+                <input hidden value="{{$breakdown->project->id}}" id="project_id">
             @endif
         </div>
         <div class="form-group {{$errors->first('wbs_level_id', 'has-error')}}">
@@ -23,7 +25,6 @@
                         {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path
                         : 'Select WBS Level' }}
                     @endif
-
                 </a>
             </p>
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
@@ -41,14 +42,16 @@
             {{--{{Form::select('std_activity_id', App\StdActivity::options(), null, ['class' => 'form-control', 'id' => 'ActivityID'])}}--}}
             <p>
                 <a href="#ActivitiesModal" data-toggle="modal" id="select-activity">
-                    {{Form::getValueAttribute('std_activity_id')? App\StdActivity::find(Form::getValueAttribute('std_activity_id'))->path : 'Select Activity' }}
+                    {{Form::getValueAttribute('std_activity_id')?
+                    App\StdActivity::find(Form::getValueAttribute('std_activity_id'))->path : 'Select Activity' }}
                 </a>
             </p>
         </div>
 
         <div class="form-group {{$errors->first('template_id', 'has-errors')}}">
             {{Form::label('template_id', 'Breakdown Template', ['class' => 'control-label'])}}
-            {{Form::select('template_id', ['' => 'Select Template'], null, ['class' => 'form-control', 'id' => 'TemplateID'])}}
+            {{Form::select('template_id', ['' => 'Select Template'], null,
+            ['class' => 'form-control', 'id' => 'TemplateID'])}}
         </div>
         <input type="hidden" name="code">
         <div class="form-group" id="SetVariablesPane">
@@ -72,7 +75,6 @@
 </section>
 
 @include('breakdown._template')
-
 @include('wbs-level._modal', ['value' => Form::getValueAttribute('wbs_level_id')?Form::getValueAttribute('wbs_level_id'):request('wbs_level_id'), 'input' => 'wbs_level_id', 'project_id' => request('project', Form::getValueAttribute('project_id'))])
 @include('std-activity._modal', ['input' => 'std_activity_id', 'value' => Form::getValueAttribute('std_activity_id')])
 

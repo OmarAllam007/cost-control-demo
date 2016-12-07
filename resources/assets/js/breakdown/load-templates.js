@@ -7,6 +7,7 @@
         var errorMessage = $('<span class="label label-danger"><i class="fa fa-exclamation-circle"></i> <span></span></span>');
         var templateInput = $('#TemplateID');
         var breakdownEmptyText = templateInput.find('option[value=""]').text();
+        var project = $('#ProjectId').val();
 
         var hideLoader = function () {
             loader.remove();
@@ -44,6 +45,7 @@
         };
 
         $('.activity-input').on('change', function(){
+
             if (this.checked) {
                 var value = this.value;
 
@@ -52,7 +54,7 @@
                         fillBreakdowns(breakdowns[value]);
                     } else {
                         showLoader();
-                        $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value}})
+                        $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value ,project_id:project}})
                             .then(function(response){
                                 fillBreakdowns(response);
                                 hideLoader();

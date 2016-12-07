@@ -93,8 +93,21 @@ class BreakdownResourceController extends Controller
 
     function wipe(WbsLevel $wbs_level, WipeRequest $request)
     {
+        $children = [];
+        if ($wbs_level->children()->count()) {
+         $children=$wbs_level->children_id;
+        }
         BreakdownResource::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
         BreakDownResourceShadow::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
+        if(count($children)){
+            $levels = WbsLevel::whereIn('id', $children->toArray())->get();
+            foreach ($levels as $level) {
+                if ($level->breakdowns()->count()) {
+                    BreakdownResource::whereIn('breakdown_id', $level->breakdowns()->pluck('id'))->delete();
+                    BreakDownResourceShadow::whereIn('breakdown_id', $level->breakdowns()->pluck('id'))->delete();
+                }
+            }
+        }
 
         $msg = 'All breakdowns on this wbs-level have been removed';
         if ($request->ajax()) {
