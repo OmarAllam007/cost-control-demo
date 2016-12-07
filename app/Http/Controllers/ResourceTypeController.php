@@ -31,7 +31,7 @@ class ResourceTypeController extends Controller
     public function create()
     {
         if (\Gate::denies('write', 'resources')) {
-            flash("You don't have access to this page");
+            flash("You don't have access to this page", 'warning');
             return \Redirect::to('/');
         }
 

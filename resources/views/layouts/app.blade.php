@@ -40,6 +40,7 @@
                             <li><a href="{{route('breakdown-template.index')}}">Breakdown Templates</a></li>
                         </ul>
                     </li>
+                    @can('read', 'resources')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -49,6 +50,7 @@
                             <li><a href="{{route('unit.index')}}">Units of measure</a></li>
                         </ul>
                     </li>
+                    @endcan
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle btnhover"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Productivity<span class="caret"></span></a>
