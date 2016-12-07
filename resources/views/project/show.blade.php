@@ -5,11 +5,13 @@
 
     <form action="{{ route('project.destroy', $project)}}" class="pull-right" method="post">
         {{csrf_field()}} {{method_field('delete')}}
-
+        <a href="#DeleteBreakdownModal"  class="btn btn-sm btn-danger" data-toggle="modal"><i class="fa fa-trash"></i>
+            Delete All Breakdowns</a>
         <a href="{{ route('project.edit', $project)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
             Edit</a>
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
         <a href="{{ route('project.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+
     </form>
 @stop
 
@@ -39,7 +41,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span>
                     </button>
-                    <h4 class="modal-title">Edit resource</h4>
+                    <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body iframe">
 
@@ -47,9 +49,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="DeleteBreakdownModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <form method="post" action="{{route('breakdownresources.deleteAllBreakdowns',$project)}}"  class="modal-content">
+                {{csrf_field()}} {{method_field('delete')}}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">Delete all breakdown</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all breakdowns in the project?</div>
+                    <input type="hidden" name="wipe" value="1">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger"><i class="fa fa-fw fa-trash"></i> Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @section('javascript')
+
+
     <script>
         (function (w, d, $) {
             $(function () {
@@ -103,10 +126,10 @@
                 $(this).find('i.fa').toggleClass('fa-angle-double-right fa-angle-double-left');
             });
 
-            $('#resourceData').on('click', '.resource-paging-links a', function(e){
+            $('#resourceData').on('click', '.resource-paging-links a', function (e) {
                 e.preventDefault();
                 $(this).html('<i class="fa fa-spinner fa-spin"></i>');
-                $.ajax({url: this.href}).success(function(page) {
+                $.ajax({url: this.href}).success(function (page) {
                     var newHtml = $(page).find('#resourceData').html();
                     $('#resourceData').html(newHtml);
                 });
@@ -119,4 +142,5 @@
     </script>
     <script src="{{asset('/js/project.js')}}"></script>
     <script src="{{asset('/js/tree-select.js')}}"></script>
+
 @endsection

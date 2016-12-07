@@ -5,6 +5,8 @@
         </div>
 
         <div class="form-group tab-actions pull-right">
+
+
             <a style="margin-left: 2px;" href="{{route('break_down.export', ['project' => $project->id])}}"
                class="btn btn-info btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
@@ -156,7 +158,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all breakdowns in this wbs-level?</div>
-                        <input type="hidden" name="wipe" value="1">
+                        <input type="hidden" name="delete" value="1">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" v-on:click="wipeAll" :disabled="wiping">
@@ -166,6 +168,8 @@
                 </form>
             </div>
         </div>
+
+
 
     </div>
 </template>

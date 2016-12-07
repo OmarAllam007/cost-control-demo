@@ -106,8 +106,9 @@ Route::group(['prefix' => 'project'], function () {
     Route::post('financial-period/{project}/store',['uses'=>'FinancialPeriodController@store','as'=>'financial.store']);
 });
 Route::delete('/wbs-level/reources/{id}',['uses'=>'BreakdownController@wpsdelete','as'=>'wbsresource.delete']);
-
-
+Route::group(['prefix'=>'breakdown-resource'],function (){
+    Route::delete('/delete-all/{project}',['uses'=>'BreakdownResourceController@deleteAllBreakdowns','as'=>'breakdownresources.deleteAllBreakdowns']);
+});
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

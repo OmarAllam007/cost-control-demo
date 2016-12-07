@@ -14,16 +14,10 @@ var elixir = require('laravel-elixir');
 elixir(function (mix) {
     mix.sass('app.scss')
         .webpack('project-permissions.js');
-        // .sass('print.scss')
-        // .webpack('project/index.js', 'public/js/project.js')
-        // .webpack('resource-codes.js');
-
-
-
-    /*
-    mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
-    mix.scripts('tree-select.js');
-    mix.scripts('autocomplete.js');
+    // .sass('print.scss')
+    // .webpack('project/index.js', 'public/js/project.js')
+    // .webpack('resource-codes.js');
+//comment again
     mix.scripts([
         'breakdown/load-templates.js',
         'breakdown/load-resources.js',
@@ -32,8 +26,26 @@ elixir(function (mix) {
         'tree-select.js'
     ], 'public/js/breakdown.js');
 
-    mix.rollup('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
+    // mix.scripts([
+    //     'project/components/Breakdown.js',
+    // ], 'public/js/breakdown.js');
 
-    mix.rollup('activity-variables.js');
-    mix.rollup('edit-resource.js');*/
+
+
+    /*
+     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
+     mix.scripts('tree-select.js');
+     mix.scripts('autocomplete.js');
+     // mix.scripts([
+     'breakdown/load-templates.js',
+     'breakdown/load-resources.js',
+     'breakdown/load-variables.js',
+     'autocomplete.js',
+     'tree-select.js'
+     ], 'public/js/breakdown.js');
+
+     mix.rollup('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
+
+     mix.rollup('activity-variables.js');
+     mix.rollup('edit-resource.js');*/
 });

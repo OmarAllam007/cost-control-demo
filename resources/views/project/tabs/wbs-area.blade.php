@@ -13,7 +13,7 @@
                         <a href="{{route('wbs-level.export', $project)}}" data-title="Export WBS" class="btn btn-sm btn-primary" title="export"><i class="fa fa-cloud-download"></i></a>
                         <a href="/wbs-level/@{{selected}}/edit" class="btn btn-sm btn-primary in-iframe" title="Edit WBS Level" v-show="selected"><i class="fa fa-edit"></i></a>
                         @can('wipe')
-                            <a href="#WipeWBSModal" data-toggle="modal" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
+                            <a href="#WipeWBSModal" data-toggle="modal" class="btn btn-sm btn-danger" title="Delete all WBS-Levels"><i class="fa fa-trash"></i></a>
                         @endcan
 
                     </div>

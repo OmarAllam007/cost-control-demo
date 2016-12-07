@@ -2,19 +2,34 @@
 
 @section('header')
     <h2>Productivity</h2>
-    <div class="btn-toolbar pull-right">
+    <div class="pull-right">
         <a href="{{ route('productivity.create') }} " class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> Add Productivity
         </a>
 
-        <a href="{{ route('productivity.import') }} " class="btn btn-sm btn-success">
-            <i class="fa fa-cloud-upload"></i> Import
-        </a>
+        <div class="btn dropdown" style="padding: 0px">
+            <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                Updating
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li>
+                    <a href="{{ route('productivity.import') }} " class="btn">
+                        <i class="fa fa-cloud-upload"></i> Import
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('all-productivities.modify')}}" class="btn">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        Modify
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-        <a href="{{route('all-productivities.modify')}}" class="btn btn-success btn-sm">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-            Modify
-        </a>
+
         <a href="{{route('productivity.exportAll')}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>

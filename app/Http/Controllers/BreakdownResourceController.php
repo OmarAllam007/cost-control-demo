@@ -141,4 +141,11 @@ class BreakdownResourceController extends Controller
 
         return \Redirect::route('project.show', $source_wbs->project_id);
     }
+
+    function deleteAllBreakdowns(Project $project){
+
+        BreakdownResource::whereIn('breakdown_id',$project->breakdowns()->pluck('id'))->delete();
+        BreakDownResourceShadow::where('project_id',$project->id)->delete();
+        return redirect()->back();
+    }
 }
