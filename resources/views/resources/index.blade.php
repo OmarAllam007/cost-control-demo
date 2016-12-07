@@ -3,27 +3,32 @@
     <h2>Resources</h2>
 
     <div class="btn-toolbar pull-right">
-        <a href="{{ route('resources.create') }} " class="btn btn-sm btn-primary">
-            <i class="fa fa-plus"></i> Add resource
-        </a>
+        @can('write', 'resources')
+            <a href="{{ route('resources.create') }} " class="btn btn-sm btn-primary">
+                <i class="fa fa-plus"></i> Add resource
+            </a>
 
-        <a href="{{ route('resources.import') }}" class="btn btn-sm btn-success">
-            <i class="fa fa-cloud-upload"></i> Import
-        </a>
+            <a href="{{ route('resources.import') }}" class="btn btn-sm btn-success">
+                <i class="fa fa-cloud-upload"></i> Import
+            </a>
 
-        <a href="{{ route('resources.import-codes') }}" class="btn btn-sm btn-success">
-            <i class="fa fa-cloud-upload"></i> Import Equivalent Codes
-        </a>
+            <a href="{{ route('resources.import-codes') }}" class="btn btn-sm btn-success">
+                <i class="fa fa-cloud-upload"></i> Import Equivalent Codes
+            </a>
 
-        <a href="{{route('all-resources.modify')}}" class="btn btn-success btn-sm">
-        <i class="fa fa-pencil" aria-hidden="true"></i>
-        Modify
-        </a>
+            <a href="{{route('all-resources.modify')}}" class="btn btn-success btn-sm">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+                Modify
+            </a>
+        @endcan
+
         <a href="{{route('all_resources.export')}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
+
         @can('wipe')
-            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete All</a>
+            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete
+                All</a>
         @endcan
     </div>
 @stop
@@ -51,7 +56,9 @@
                 <th class="col-xs-1">Rate</th>
                 <th class="col-xs-1">Unit</th>
                 <th class="col-xs-1">Waste</th>
-                <th class="col-xs-2">Actions</th>
+                @can('write', 'resources')
+                    <th class="col-xs-2">Actions</th>
+                @endcan
             </tr>
             </thead>
             <tbody>
@@ -64,20 +71,28 @@
                     <td class="col-xs-1">{{ $resource->units->type or ''}}</td>
                     <td class="col-xs-1">{{ number_format($resource->waste, 2)}} %</td>
                     <td class="col-xs-2">
-                        <form action="{{ route('resources.destroy', $resource) }}" method="post">
-                            {{csrf_field()}} {{method_field('delete')}}
-                            <a class="btn btn-sm btn-primary" href="{{ route('resources.edit', $resource) }} ">
-                                <i class="fa fa-edit"></i> Edit
-                            </a>
-                            <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
-                        </form>
+                        @can('write', 'resources')
+                            <form action="{{ route('resources.destroy', $resource) }}" method="post">
+                                <a class="btn btn-sm btn-primary"
+                                   href="{{ route('resources.edit', $resource) }} ">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+
+                                @can('delete', 'resources')
+                                    {{csrf_field()}} {{method_field('delete')}}
+                                    <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete
+                                    </button>
+                                @endcan
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
-
-        {{ $resources->links() }}
+        <div class="text-center">
+            {{ $resources->links() }}
+        </div>
     @else
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No resources found</strong></div>
     @endif
@@ -115,8 +130,8 @@
 
     <script>
         (function (w, d, $) {
-            $(function() {
-                setTimeout(function() {
+            $(function () {
+                setTimeout(function () {
                     $("#notify").hide('slow')
                 }, 10000);
             });

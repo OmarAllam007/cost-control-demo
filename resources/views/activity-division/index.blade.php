@@ -2,7 +2,9 @@
 
 @section('header')
     <h2>Activity Divisions</h2>
+    @can('write', 'std-activity')
     <a href="{{ route('activity-division.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add Division</a>
+    @endcan
     {{--<a href="{{ route('division.import') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Upload project</a>--}}
 @stop
 
@@ -13,7 +15,10 @@
                 @include('activity-division._recursive', compact('division'))
             @endforeach
         </ul>
-        {{ $activityDivisions->links() }}
+
+        <div class="text-center">
+            {{ $activityDivisions->links() }}
+        </div>
     @else
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No activity divisions found</strong></div>
     @endif

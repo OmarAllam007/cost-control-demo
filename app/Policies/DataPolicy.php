@@ -10,7 +10,9 @@ class DataPolicy
     protected $modules = [
         'resources' => 1,
         'std-activities' => 2,
+        'std-activity' => 2,
         'breakdown-template' => 3,
+        'breakdown-templates' => 3,
         'productivity' => 4
     ];
 
