@@ -92,7 +92,7 @@ class ActivityImportJob extends ImportJob
 
         }
 
-        $tokens = array_filter(array_slice($data, 0, $workPKGIndex - 1));
+        $tokens = array_filter(array_slice($data, 0, $workPKGIndex));
         $division_id = 0;
         $path = [];
 
