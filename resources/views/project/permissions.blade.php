@@ -7,8 +7,9 @@
                     class="fa fa-plus"></i>
             </button>
         </div>
-
-        <user-list :users="{{json_encode($project->permissions)}}"></user-list>
+        @if(isset($project->permissions))
+            <user-list :users="{{json_encode($project->permissions)}}"></user-list>
+        @endif
     </div>
 
     <user-form :users="{{App\User::options()}}"></user-form>
