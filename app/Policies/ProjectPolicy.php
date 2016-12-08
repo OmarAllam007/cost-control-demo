@@ -24,12 +24,7 @@ class ProjectPolicy
         return $this->can($user, $project, __FUNCTION__);
     }
 
-    function edit(User $user, Project $project)
-    {
-        return $project->owner_id = $user->id;
-    }
-
-    function delete(User $user, Project $project)
+    function modify(User $user, Project $project)
     {
         return $project->owner_id = $user->id;
     }
@@ -40,6 +35,16 @@ class ProjectPolicy
     }
 
     function wbs(User $user, Project $project)
+    {
+        return $this->can($user, $project, __FUNCTION__);
+    }
+
+    function bod(User $user, Project $project)
+    {
+        return $this->can($user, $project, __FUNCTION__);
+    }
+
+    function qty_survey(User $user, Project $project)
     {
         return $this->can($user, $project, __FUNCTION__);
     }

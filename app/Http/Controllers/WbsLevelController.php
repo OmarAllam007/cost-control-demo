@@ -36,7 +36,7 @@ class WbsLevelController extends Controller
 
             if (\Gate::denies('wbs', $project)) {
                 flash('You are not authorized to do this action');
-                \Redirect::route('project.index');
+                return \Redirect::route('project.index');
             }
         }
 
@@ -57,7 +57,7 @@ class WbsLevelController extends Controller
 
             if (\Gate::denies('wbs', $project)) {
                 flash('You are not authorized to do this action');
-                \Redirect::route('project.index');
+                return \Redirect::route('project.index');
             }
         }
 
@@ -81,7 +81,7 @@ class WbsLevelController extends Controller
     {
         if (\Gate::denies('wbs', $wbs_level->project)) {
             flash('You are not authorized to do this action');
-            \Redirect::route('project.index');
+            return \Redirect::route('project.index');
         }
 
         return view('wbs-level.edit', compact('wbs_level'));
@@ -91,7 +91,7 @@ class WbsLevelController extends Controller
     {
         if (\Gate::denies('wbs', $wbs_level->project)) {
             flash('You are not authorized to do this action');
-            \Redirect::route('project.index');
+            return \Redirect::route('project.index');
         }
         
         $this->validate($request, $this->rules);
@@ -107,7 +107,7 @@ class WbsLevelController extends Controller
     {
         if (\Gate::denies('wbs', $wbs_level->project)) {
             flash('You are not authorized to do this action');
-            \Redirect::route('project.index');
+            return \Redirect::route('project.index');
         }
         
         $wbs_level->deleteRecursive();
@@ -121,7 +121,7 @@ class WbsLevelController extends Controller
     {
         if (\Gate::denies('wbs', $project)) {
             flash('You are not authorized to do this action');
-            \Redirect::route('project.index');
+            return \Redirect::route('project.index');
         }
         
         return view('wbs-level.import', compact('project'));
@@ -131,7 +131,7 @@ class WbsLevelController extends Controller
     {
         if (\Gate::denies('wbs', $project)) {
             flash('You are not authorized to do this action');
-            \Redirect::route('project.index');
+            return \Redirect::route('project.index');
         }
         
         $this->validate($request, [
