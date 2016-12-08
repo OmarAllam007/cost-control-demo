@@ -80,6 +80,7 @@ class ProjectController extends Controller
 
     public function update(Project $project, Request $request)
     {
+
         if (\Gate::denies('modify', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');

@@ -34,7 +34,7 @@
                     <td class="col-xs-1">
                         @can('resources', $project)
                         <a href="{{route('resources.edit',$resource->id)}}" class="btn btn-primary btn-sm">
-                            <i class="fa fa-pencil"></i> Edit
+                            <i class="fa fa-edit"></i> Edit
                         </a>
                         @endcan
                     </td>

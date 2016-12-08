@@ -26,11 +26,12 @@ class ProjectPolicy
 
     function modify(User $user, Project $project)
     {
-        return $project->owner_id = $user->id;
+        return $project->owner_id == $user->id;
     }
 
     function resources(User $user, Project $project)
     {
+        
         return $this->can($user, $project, __FUNCTION__);
     }
 
@@ -76,14 +77,17 @@ class ProjectPolicy
 
     protected function can(User $user, Project $project, $ability)
     {
-        if ($project->owner_id == $user->id) {
+        if ($project->owner_id === $user->id) {
             return true;
         }
 
         if (!$this->project_user) {
             $this->project_user = ProjectUser::where(['user_id' => $user->id, 'project_id' => $project->id])->first();
+            if (!$this->project_user) {
+                return false;
+            }
         }
 
-        return $this->project_user->getAttribute($ability);
+        return $this->project_user->getAttribute($ability) == 1;
     }
 }
