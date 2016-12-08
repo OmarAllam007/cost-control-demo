@@ -131,7 +131,7 @@ class ResourcesController extends Controller
             return \Redirect::to('/');
         }
 
-        $this->validate($request, $this->rules);
+//        $this->validate($request, $this->rules);
         if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
         } else {
