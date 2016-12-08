@@ -81,7 +81,7 @@ class ResourcesController extends Controller
 
     public function update(Resources $resources, Request $request)
     {
-        $this->validate($request, $this->rules);
+//        $this->validate($request, $this->rules);
         if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
         } else {
