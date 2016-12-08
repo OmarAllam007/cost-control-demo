@@ -19,7 +19,6 @@
     <div id="BreakdownResourceForm">
         @include('breakdown-template._filter')
     </div>
-
     @if ($breakdownTemplates->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
@@ -29,6 +28,7 @@
             </tr>
             </thead>
             <tbody>
+
             @foreach($breakdownTemplates as $breakdown_template)
                 <tr>
                     <td class="col-xs-8"><a

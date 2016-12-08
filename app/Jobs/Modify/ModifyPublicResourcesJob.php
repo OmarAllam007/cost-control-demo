@@ -21,6 +21,7 @@ class ModifyPublicResourcesJob extends ImportJob
      * @var Collection
      */
     protected $types;
+    protected $project;
 
     /**
      * @var Collection
@@ -28,9 +29,11 @@ class ModifyPublicResourcesJob extends ImportJob
     protected $partners;
 
     protected $resources;
-    public function __construct($file)
+
+    public function __construct($file, $project)
     {
         $this->file = $file;
+        $this->project = $project;
     }
 
     public function handle()
@@ -45,14 +48,18 @@ class ModifyPublicResourcesJob extends ImportJob
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
-            $resource = Resources::where('resource_code', $data[0])->first();
-            $division_id = ResourceType::where('name',$data[2])->first();
+            if ($this->project) {
+                $resource = Resources::where('resource_code', $data[0])->where('project_id', $this->project)->first();
+            } else {
+                $resource = Resources::where('resource_code', $data[0])->first();
+            }
+            $division_id = ResourceType::where('name', $data[2])->first();
             if (!array_filter($data)) {
                 continue;
             }
 
             if ($resource) {
-                $resource_type_id = isset($division_id)?$division_id->id:'';
+                $resource_type_id = isset($division_id) ? $division_id->id : '';
                 $unit_id = $this->getUnit($data[4]);
                 $resource->resource_type_id = $resource_type_id;
                 $resource->resource_code = $data[0];
@@ -62,6 +69,9 @@ class ModifyPublicResourcesJob extends ImportJob
                 $resource->waste = $data[5];
                 $resource->business_partner_id = $this->getPartner($data[7]);
                 $resource->reference = $data[6];
+                if ($this->project) {
+                    $resource->project_id = $this->project;
+                }
                 $resource->save();
             }
 
@@ -81,19 +91,19 @@ class ModifyPublicResourcesJob extends ImportJob
         $type_id = 0;
         $path = [];
 
-            $path[] = mb_strtolower($data);
-            $key = implode('/', $path);
+        $path[] = mb_strtolower($data);
+        $key = implode('/', $path);
 
-            if ($this->types->has($key)) {
-                $type_id = $this->types->get($key);
-            } else {
-                $resource = ResourceType::create([
-                    'name' => $data,
-                    'parent_id' => $type_id
-                ]);
-                $type_id = $type_id = $resource->id;
-                $this->types->put($key, $type_id);
-            }
+        if ($this->types->has($key)) {
+            $type_id = $this->types->get($key);
+        } else {
+            $resource = ResourceType::create([
+                'name' => $data,
+                'parent_id' => $type_id
+            ]);
+            $type_id = $type_id = $resource->id;
+            $this->types->put($key, $type_id);
+        }
 
 
         return $type_id;

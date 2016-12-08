@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-6">
 
-        @if (request('project'))
+        @if (request('project') && request('import'))
             {{Form::label('project_id', 'Project', ['class' => 'control-label'])}}
             <p><em>{{\App\Project::find(request('project'))->name}}</em></p>
             {{Form::hidden('project_id', request('project'))}}
@@ -10,8 +10,12 @@
                 {{Form::select('parent_template_id', \App\BreakdownTemplate::pluck('name', 'id')->prepend('Select Template',0),null,['class'=>'form-control'])}}
                 {!! $errors->first('parent_template_id', '<div class="help-block">:message</div>') !!}
             </div>
-        @else
 
+        @else
+            @if(request('project'))
+                {{Form::hidden('project_id', request('project'))}}
+                {{Form::hidden('import', 0)}}
+            @endif
             <div class="form-group {{$errors->first('name', 'has-error')}}">
                 {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
                 {{ Form::text('name', null, ['class' => 'form-control']) }}

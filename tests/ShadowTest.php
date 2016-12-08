@@ -9,15 +9,15 @@ class ShadowTes extends TestCase
     public function testBasicExample()
     {
 
-        $breakdownResource = \App\BreakDownResourceShadow::where('resource_id', 9876)->first();
+        $breakdownResource = \App\BreakDownResourceShadow::where('resource_id', 9898)->first();
         $oldCost =$breakdownResource->budgetCost;
 
-        $resource = \App\Resources::where('id',9876)->first();
+        $resource = \App\Resources::where('id',9898)->first();
         $resource->rate = $resource->rate + 1;
         $resource->save();
 
         $newBreakdownResource = \App\BreakDownResourceShadow::find($breakdownResource->id);
         $newCost = $newBreakdownResource->budget_cost;
-        $this->assertEquals(10,$oldCost);
+        $this->assertEquals($newCost,$oldCost);
     }
 }

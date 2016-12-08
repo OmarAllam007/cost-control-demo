@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-6 col-sm-9">
 
-            {{Form::open(['route' => 'resources.post-import', 'files' => true])}}
+            {{Form::open(['route' => ['resources.post-import','project'=>request('project')], 'files' => true])}}
 
             <p class="text-info">
                 <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/resources.xlsx')}}">click here</a> to download a sample template

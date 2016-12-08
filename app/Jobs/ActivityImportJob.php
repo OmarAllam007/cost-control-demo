@@ -26,12 +26,25 @@ class ActivityImportJob extends ImportJob
 
     public function handle()
     {
-
+        $headerArray = [];
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
 
-        $rows = $excel->getSheet(0)->getRowIterator(2);
-        $count = 0;
+        $workPKGIndex = $disciplineIndex = 0;
+        $highest = \PHPExcel_Cell::columnIndexFromString($excel->getActiveSheet()->getHighestColumn());
+
+        $header = $excel->getActiveSheet()->getRowIterator(1)->current();
+        $cellIterator = $header->getCellIterator();
+        $cellIterator->setIterateOnlyExistingCells(false);
+
+        foreach ($cellIterator as $cell) {
+            $headerArray[] = mb_strtoupper($cell->getValue());
+        }
+
+        $workPKGIndex = array_search('WORK PAKAGE NAME', $headerArray);
+        $disciplineIndex = array_search('DISCIPLINE', $headerArray);
+        $rows = $excel->getActiveSheet()->getRowIterator(2);
+        $status = ['failed' => collect(), 'success' => 0, 'dublicated' => []];
 
         foreach ($rows as $row) {
             $data = $this->getDataFromCells($row->getCellIterator());
@@ -39,22 +52,20 @@ class ActivityImportJob extends ImportJob
                 continue;
             }
 //to make columns dynamic
-            $status = ['failed' => collect(), 'success' => 0, 'dublicated' => []];
-            $activities = StdActivity::query()->pluck('code');
-            $highest = \PHPExcel_Cell::columnIndexFromString($excel->getSheet(0)->getHighestColumn());
 
-            if (!$activities->contains($data[$highest - 3])) {
-                $division_id = $this->getDivisionId($data, $highest);
-                $work_package_name = $data[$highest - 5];
-                $name = $data[$highest - 4];
-                $code = $data[$highest - 3];
-                $id_partial = $data[$highest - 2];
-                $discipline = strtoupper($data[$highest - 1]);
+            $activities = StdActivity::query()->pluck('code');
+            if (!$activities->contains($data[$workPKGIndex + 2])) {
+                $division_id = $this->getDivisionId($data, $workPKGIndex);
+                $work_package_name = $data[$workPKGIndex];
+                $name = $data[$workPKGIndex + 1];
+                $code = $data[$workPKGIndex + 2];
+                $id_partial = $data[$workPKGIndex + 3];
+                $discipline = strtoupper($data[$workPKGIndex + 4]);
                 $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
-                $cellCount = count($data);
-                if ($cellCount > 10) {
+                if ($disciplineIndex+1 != $highest) {
                     $display_order = 1;
-                    for ($i = 10; $i < $cellCount; ++$i) {
+                    for ($i = $disciplineIndex + 1; $i < $highest; ++$i) {
+                        $data[$i];
                         $label = trim($data[$i]);
                         if ($label) {
                             $activity->variables()->create(compact('label', 'display_order'));
@@ -62,18 +73,16 @@ class ActivityImportJob extends ImportJob
                         }
                     }
                 }
-
                 ++$status['success'];
             } else {
-                $status['dublicated'][] = $data[$highest - 3];
+                $status['dublicated'][] = $data[$workPKGIndex + 2];
             }
 
         }
-
         return $status;
     }
 
-    protected function getDivisionId($data, $highest)
+    protected function getDivisionId($data, $workPKGIndex)
     {
         if (!$this->divisions) {
             $this->divisions = collect();
@@ -83,7 +92,7 @@ class ActivityImportJob extends ImportJob
 
         }
 
-        $tokens = array_filter(array_slice($data, 0, $highest - 5));
+        $tokens = array_filter(array_slice($data, 0, $workPKGIndex));
         $division_id = 0;
         $path = [];
 

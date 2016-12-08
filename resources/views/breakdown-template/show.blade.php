@@ -2,6 +2,9 @@
 
 @section('header')
     <h2>Breakdown template - {{$breakdown_template->name}}</h2>
+    @if(request('project_id'))
+    @else
+
     <form action="{{ route('breakdown-template.destroy', $breakdown_template)}}" class="pull-right" method="post">
 
         @can('write', 'breakdown-template')
@@ -24,6 +27,7 @@
             <i class="fa fa-chevron-left"></i> Template List
         </a>
     </form>
+    @endif
 @stop
 
 @section('body')

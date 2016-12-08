@@ -8,14 +8,27 @@
             <i class="fa fa-plus"></i> Add Productivity
         </a>
 
-        <a href="{{ route('productivity.import') }} " class="btn btn-sm btn-success">
-            <i class="fa fa-cloud-upload"></i> Import
-        </a>
-
-        <a href="{{route('all-productivities.modify')}}" class="btn btn-success btn-sm">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-            Modify
-        </a>
+        <div class="btn dropdown" style="padding: 0px">
+            <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                Updating
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li>
+                    <a href="{{ route('productivity.import') }} " class="btn">
+                        <i class="fa fa-cloud-upload"></i> Import
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('all-productivities.modify')}}" class="btn">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        Modify
+                    </a>
+                </li>
+            </ul>
+        </div>
         @endcan
 
         <a href="{{route('productivity.exportAll')}}" class="btn btn-info btn-sm">
@@ -44,7 +57,7 @@
         @include('productivity._list')
         {{ $productivities->links() }}
 
-        @can('delete', 'productivity')
+        @can('wipe')
         <div class="modal fade" tabindex="-1" role="dialog" id="WipeAlert">
             <form class="modal-dialog" action="{{route('productivity.wipe')}}" method="post">
                 {{csrf_field()}}
@@ -53,7 +66,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Delete All Standard Activities</h4>
+                        <h4 class="modal-title">Delete All Productivity Items</h4>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger">

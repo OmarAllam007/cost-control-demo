@@ -75,11 +75,11 @@ class ResourcesController extends Controller
         }
 
         $this->validate($request, $this->rules);
-        /*if ($request['waste'] <= 1) {
+        if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
         } else {
             $request['waste'] = ($request->waste / 100);
-        }*/
+        }
 
         $resource = Resources::create($request->all());
 
@@ -132,7 +132,6 @@ class ResourcesController extends Controller
         }
 
         $this->validate($request, $this->rules);
-
         if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
         } else {
@@ -182,6 +181,7 @@ class ResourcesController extends Controller
 
     function postImport(Request $request)
     {
+        $project = $request->project;
         if (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
@@ -193,7 +193,7 @@ class ResourcesController extends Controller
 
         $file = $request->file('file');
 
-        $status = $this->dispatch(new ResourcesImportJob($file->path()));
+        $status = $this->dispatch(new ResourcesImportJob($file->path(), $project));
 
         if ($status['failed']->count()) {
             $key = 'res_' . time();
@@ -389,6 +389,7 @@ class ResourcesController extends Controller
 
     public function modifyAllResources()
     {
+        return view('resources.modify', ['project_id' => request('project')]);
         if (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
@@ -404,8 +405,9 @@ class ResourcesController extends Controller
             return \Redirect::to('/');
         }
 
+        $project = $request->project;
         $file = $request->file('file');
-        $this->dispatch(new ModifyPublicResourcesJob($file));
+        $this->dispatch(new ModifyPublicResourcesJob($file, $project));
 
         $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
         $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);

@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'api'], function(){
+Route::group(['prefix' => 'api'], function () {
     Route::get('breakdown-template', 'Api\BreakdownTemplateController@index');
     Route::get('std-activity-resource', 'Api\StdActivityResourceController@index');
     Route::get('cost-accounts', 'Api\CostAccountController@index');
@@ -10,7 +10,7 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('productivity/labours-count/{productivity}', 'Api\ProductivityController@labors_count');
     Route::get('std-activity/variables/{std_activity}', 'Api\StdActivityController@variables');
 
-    Route::group(['prefix' => 'wbs'], function(){
+    Route::group(['prefix' => 'wbs'], function () {
         Route::get('/{project}', 'Api\WbsController@index');
         Route::get('breakdowns/{wbs_level}', 'Api\WbsController@breakdowns');
         Route::get('boq/{wbs_level}', 'Api\WbsController@boq');
@@ -23,7 +23,7 @@ Route::group(['prefix' => 'api'], function(){
 Route::group(['prefix' => 'wbs-level'], function () {
     Route::get('import/{project}', ['as' => 'wbs-level.import', 'uses' => 'WbsLevelController@import']);
     Route::post('import/{project}', ['as' => 'wbs-level.post-import', 'uses' => 'WbsLevelController@postImport']);
-    Route::get('export/{project}',['as'=>'wbs-level.export','uses'=>'WbsLevelController@exportWbsLevels']);
+    Route::get('export/{project}', ['as' => 'wbs-level.export', 'uses' => 'WbsLevelController@exportWbsLevels']);
 
     Route::delete('wipe/{project}', ['as' => 'wbs-level.wipe', 'uses' => 'WbsLevelController@wipe']);
 });
@@ -60,9 +60,11 @@ Route::group(['prefix' => 'std-activity'], function () {
     Route::post('filters', ['as' => 'std-activity.filters', 'uses' => 'StdActivityController@filters']);
     Route::delete('wipe', ['as' => 'std-activity.wipe', 'uses' => 'StdActivityController@wipe']);
 
-    Route::get('export-all-stdActivities/',['uses' => 'StdActivityController@exportAllActivities', 'as' => 'std-activity.exportAll']);
+    Route::get('export-all-stdActivities/', ['uses' => 'StdActivityController@exportAllActivities', 'as' => 'std-activity.exportAll']);
     Route::get('modify/', ['as' => 'all-stdActivites.modify', 'uses' => 'StdActivityController@modifyAllActivities']);
     Route::post('modify/', ['as' => 'all-stdActivites.post-modify', 'uses' => 'StdActivityController@postModifyAllActivities']);
+
+    Route::get('dublicate', ['as' => 'std-activity.dublicated', 'uses' => 'StdActivityController@dublicateActivity']);
 });
 
 Route::group(['prefix' => 'survey'], function () {
@@ -81,14 +83,14 @@ Route::group(['prefix' => 'breakdown-template'], function () {
     Route::post('import', ['as' => 'breakdown-template.post-import', 'uses' => 'BreakdownTemplateController@postImport']);
 });
 
-Route::group(['prefix' => 'boq'], function() {
+Route::group(['prefix' => 'boq'], function () {
     Route::get('fix-import/{key}', ['as' => 'boq.fix-import', 'uses' => 'BoqController@fixImport']);
     Route::post('fix-import/{key}', ['as' => 'boq.post-fix-import', 'uses' => 'BoqController@postFixImport']);
 
     Route::delete('wipe/{project}', ['as' => 'boq.wipe', 'uses' => 'BoqController@wipe']);
 });
 
-Route::group(['prefix' => 'breakdown'], function(){
+Route::group(['prefix' => 'breakdown'], function () {
     Route::get('duplicate/{breakdown}', ['as' => 'breakdown.duplicate', 'uses' => 'BreakdownController@duplicate']);
     Route::post('duplicate/{breakdown}', ['as' => 'breakdown.post-duplicate', 'uses' => 'BreakdownController@postDuplicate']);
 

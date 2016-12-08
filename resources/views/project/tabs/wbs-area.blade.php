@@ -16,7 +16,7 @@
                         @endcan
 
                         @can('wipe')
-                            <a href="#WipeWBSModal" data-toggle="modal" class="btn btn-sm btn-danger" title="Delete all"><i class="fa fa-trash"></i></a>
+                            <a href="#WipeWBSModal" data-toggle="modal" class="btn btn-sm btn-danger" title="Delete all WBS-Levels"><i class="fa fa-trash"></i></a>
                         @endcan
                     </div>
                 </div>

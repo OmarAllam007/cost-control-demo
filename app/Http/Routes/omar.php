@@ -3,8 +3,8 @@ Route::resource('boq-division', 'BoqDivisionController');
 
 Route::resource('csi-category', 'CsiCategoryController');
 
-Route::group(['prefix'=>'csi-category'],function (){
-    Route::delete('delete-all',['uses'=>'CsiCategoryController@wipe','as'=>'csi-category.wipe']);
+Route::group(['prefix' => 'csi-category'], function () {
+    Route::delete('delete-all', ['uses' => 'CsiCategoryController@wipe', 'as' => 'csi-category.wipe']);
 });
 Route::group(['prefix' => 'boq'], function () {
     Route::get('import/{project}', ['as' => 'boq.import', 'uses' => 'BoqController@import']);
@@ -19,11 +19,12 @@ Route::group(['prefix' => 'breakdown'], function () {
     Route::get('printAll/{project}', ['as' => 'break_down.printall', 'uses' => 'BreakdownController@printAll']);
 });
 
-Route::group(['prefix' => 'productivity'], function () {Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
+Route::group(['prefix' => 'productivity'], function () {
+    Route::get('import', ['as' => 'productivity.import', 'uses' => 'ProductivityController@import']);
     Route::post('import', ['as' => 'productivity.post-import', 'uses' => 'ProductivityController@postImport']);
     Route::get('export/{project}', ['as' => 'productivity.export', 'uses' => 'ProductivityController@exportProductivity']);
     Route::delete('delete-all', ['uses' => 'ProductivityController@wipe', 'as' => 'productivity.wipe']);
-    Route::get('export-all-productivities/',['uses' => 'ProductivityController@exportPublicProductivities', 'as' => 'productivity.exportAll']);
+    Route::get('export-all-productivities/', ['uses' => 'ProductivityController@exportPublicProductivities', 'as' => 'productivity.exportAll']);
     Route::get('modify/', ['as' => 'all-productivities.modify', 'uses' => 'ProductivityController@modifyAllProductivities']);
     Route::post('modify/', ['as' => 'all-productivities.post-modify', 'uses' => 'ProductivityController@postModifyAllProductivities']);
 });
@@ -43,9 +44,9 @@ Route::group(['prefix' => 'unit'], function () {
     Route::post('/filter', ['as' => 'unit.filter', 'uses' => 'UnitController@filter']);
     Route::delete('delete-all', ['uses' => 'UnitController@wipe', 'as' => 'unit.wipe']);
 });
-
+//reports
 Route::group(['prefix' => 'project'], function () {
-    Route::get('reports/{project}',['as'=>'project.reports','uses'=>'ReportController@getReports']);
+    Route::get('reports/{project}', ['as' => 'project.reports', 'uses' => 'ReportController@getReports']);
 
     Route::get('wbs_report/{project}', ['as' => 'wbs.report', 'uses' => 'ReportController@wbsReport']);
     Route::get('productivity_report/{project}', ['as' => 'productivity.report', 'uses' => 'ReportController@productivityReport']);
@@ -82,11 +83,19 @@ Route::group(['prefix' => 'project'], function () {
 
 
 });
+//export resports
+Route::group(['prefix' => 'project'], function () {
+    Route::get('wbs_levels/export/{project}', ['as' => 'wbs_report.export', 'uses' => 'ExportReportController@exportWbsReport']);
+});
+
 
 Route::group(['prefix' => 'survey'], function () {
     Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'SurveyController@exportQuantitySurvey']);
-    Route::get('dublicate/{key}', ['as' => 'survey.dublicate', 'uses' => 'SurveyController@dublicateQuantitySurvey']);
+    Route::get('dublicate', ['as' => 'survey.dublicate', 'uses' => 'SurveyController@dublicateQuantitySurvey']);
 });
+
+
+
 
 Route::group(['prefix' => 'resources'], function () {
     Route::get('export/{project}', ['as' => 'resources.export', 'uses' => 'ResourcesController@exportResources']);
@@ -95,19 +104,22 @@ Route::group(['prefix' => 'resources'], function () {
     Route::post('modify/', ['as' => 'all-resources.post-modify', 'uses' => 'ResourcesController@postModifyAllResources']);
 
 });
-Route::group(['prefix'=>'resource-type'],function(){
-    Route::delete('delete-all',['uses'=>'ResourceTypeController@wipe','as'=>'type.wipe']);
+Route::group(['prefix' => 'resource-type'], function () {
+    Route::delete('delete-all', ['uses' => 'ResourceTypeController@wipe', 'as' => 'type.wipe']);
 });
 
 Route::group(['prefix' => 'project'], function () {
-    Route::get('financial-period/{project}',['uses'=>'FinancialPeriodController@index','as'=>'financial.index']);
+    Route::get('financial-period/{project}', ['uses' => 'FinancialPeriodController@index', 'as' => 'financial.index']);
 
-    Route::get('financial-period/{project}/create',['uses'=>'FinancialPeriodController@create','as'=>'financial.create']);
-    Route::post('financial-period/{project}/store',['uses'=>'FinancialPeriodController@store','as'=>'financial.store']);
+    Route::get('financial-period/{project}/create', ['uses' => 'FinancialPeriodController@create', 'as' => 'financial.create']);
+    Route::post('financial-period/{project}/store', ['uses' => 'FinancialPeriodController@store', 'as' => 'financial.store']);
 });
-Route::delete('/wbs-level/reources/{id}',['uses'=>'BreakdownController@wpsdelete','as'=>'wbsresource.delete']);
 
+Route::delete('/wbs-level/reources/{id}', ['uses' => 'BreakdownController@wpsdelete', 'as' => 'wbsresource.delete']);
 
+Route::group(['prefix' => 'breakdown-resource'], function () {
+    Route::delete('/delete-all/{project}', ['uses' => 'BreakdownResourceController@deleteAllBreakdowns', 'as' => 'breakdownresources.deleteAllBreakdowns']);
+});
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

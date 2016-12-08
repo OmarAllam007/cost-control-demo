@@ -10,8 +10,8 @@
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
         @endcan
 
-        @if ($resource->project_id)
-            <a href="{{ route('project.show', $resource->project)}}#resources" class="btn btn-sm btn-default">
+        @if ($resources->project_id)
+            <a href="{{ route('project.show', $resources->project)}}#resources" class="btn btn-sm btn-default">
                 <i class="fa fa-chevron-left"></i> Back
             </a>
         @else
@@ -23,7 +23,7 @@
 @stop
 
 @section('body')
-    {{ Form::model($resources, ['route' => ['resources.update', $resources], 'method' => 'PATCH']) }}
+    {{ Form::model($resources, ['route' => ['resources.update', 'resources'=>$resources,'project_id'=>request('project_id')], 'method' => 'PATCH']) }}
 
     @include('resources._form', ['override' => $resources->project_id])
 

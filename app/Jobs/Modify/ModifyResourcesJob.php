@@ -16,6 +16,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ModifyResourcesJob extends ImportJob
 {
+    //not working ..
     protected $file;
 
     protected $project;
@@ -55,6 +56,9 @@ class ModifyResourcesJob extends ImportJob
                 $resource->waste = $this->getWaste($data[5]);
                 $resource->business_partner_id = $this->getPartner($data[7]);
                 $resource->reference = $data[6];
+                if($this->project){
+                    $resource->project_id = $this->project->id;
+                }
                 $resource->update();
                 BreakdownResource::where('resource_id',$resource->id)->update(['resource_id'=>$resource->resource_id]);
             } else {

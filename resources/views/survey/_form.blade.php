@@ -17,14 +17,20 @@
 
         <div class="form-group {{$errors->first('wbs_level_id', 'has-error')}}">
             {{ Form::label('wbs_level_id', 'Wbs Level', ['class' => 'control-label']) }}
-            {{--<div class="hidden">--}}
-                {{--{{ Form::select('wbs_level_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}--}}
-            {{--</div>--}}
+            <div class="hidden">
+            {{ Form::select('wbs_level_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
+            </div>
             <p>
                 <a href="#LevelsModal" data-toggle="modal" id="select-parent" class="tree-open">
-                    {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select Wbs Level' }}
+                    @if(request('wbs_id'))
+                        {{\App\WbsLevel::with('parent')->find(request('wbs_id'))->path}}
+                        {{Form::hidden('wbs_level_id',request('wbs_id'),['id'=>'WbsID'])}}
+                    @else
+                        {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path : 'Select Wbs Level' }}
+                    @endif
                 </a>
-                <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
+                <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span
+                            class="fa fa-times"></span></a>
             </p>
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
         </div>
@@ -86,7 +92,7 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach(App\WbsLevel::forProject(request('project', isset($survey)? $survey->project_id : 0))->tree()->get() as $level)
-                        @include('survey._recursive_input', ['level' => $level, 'input' => 'wbs_level_id'])
+                        @include('survey._recursive_input', ['value' => Form::getValueAttribute('wbs_level_id')?Form::getValueAttribute('wbs_level_id'):request('wbs_id'),'level' => $level, 'input' => 'wbs_level_id'])])
                     @endforeach
                 </ul>
             </div>

@@ -131,8 +131,12 @@ class StdActivityController extends Controller
 
         $status = $this->dispatch(new ActivityImportJob($file->path()));
         if ($status['dublicated']) {
-            flash($status['success'] . ' items have been imported', 'success');
-            return \Redirect::route('std-activity.index', ['dublicate'=>$status['dublicated']]);
+            $dublicatedKey = 'std-dublicated';
+            if(\Cache::has('std-dublicated')){
+                \Cache::forget('std-dublicated');
+            }
+            \Cache::add($dublicatedKey, $status['dublicated'], 100);
+            return redirect()->to(route('std-activity.dublicated'));
         }
         flash($status['success'] . ' Activities have been imported', 'success');
         return redirect()->route('std-activity.index');
@@ -194,5 +198,11 @@ class StdActivityController extends Controller
         $this->dispatch(new ModifyPublicStdActivitiesJob($file));
 
         return redirect()->back();
+
+    }
+
+    function dublicateActivity()
+    {
+        return view('std-activity.dublicated');
     }
 }

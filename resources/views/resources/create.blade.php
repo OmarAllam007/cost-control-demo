@@ -16,7 +16,7 @@
 @stop
 
 @section('body')
-    {{ Form::open(['route' => 'resources.store']) }}
+    {{ Form::open(['route' => ['resources.store','project'=>request('project')]]) }}
 
         @include('resources._form', ['override' => false])
 

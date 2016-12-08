@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\BreakdownTemplate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\StdActivityResource;
 use Illuminate\Http\Request;
 
 class StdActivityResourceController extends Controller
@@ -18,8 +19,9 @@ class StdActivityResourceController extends Controller
             return [];
         }
 
-        return $template->resources()->recursive()->get()->map(function($resource) {
-            return $resource->morphForJSON(request('cost_account'));
-        });
+        return $template->resources()->recursive()->get()->map(
+            function ($resource) {
+                return $resource->morphForJSON(request('cost_account'),request()->all());
+            });
     }
 }

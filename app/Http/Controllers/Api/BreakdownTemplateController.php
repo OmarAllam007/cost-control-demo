@@ -17,7 +17,6 @@ class BreakdownTemplateController extends Controller
         if (!$activity) {
             return [];
         }
-
-        return $activity->breakdowns()->orderBy('name')->pluck('name', 'id');
+        return $activity->breakdowns()->where('project_id',request('project_id'))->orderBy('name')->pluck('name', 'id');
     }
 }

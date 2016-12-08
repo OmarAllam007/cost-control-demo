@@ -5,9 +5,19 @@
 @section('header')
     <h1>WBS-LEVELS</h1>
     <div class="pull-right">
-        <a href="?print=1&paint=wbs" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
+        <a href="{{route('wbs_report.export',
+        ['project'=>$project])}}"
+           target="_blank" class="btn
+        btn-info
+        btn-sm"><i class="fa fa-cloud-download"></i>
+            Export</a>
+        <a href="?print=1&paint=wbs" target="_blank"
+           class="btn btn-default btn-sm"><i
+                    class="fa fa-print"></i>
             Print</a>
-        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
+
+        <a href="{{route('project.show', $project)}}#report"
+           class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
@@ -22,10 +32,18 @@
         <table class="table table-condensed table-bordered">
             <thead>
             <tr>
-                <th width="25%" class="blue-first-level">WBS Level 1</th>
-                <th width="25%" class="blue-first-level">WBS Level 2</th>
-                <th width="25%" class="blue-first-level">WBS Level 3</th>
-                <th width="25%" class="blue-first-level">WBS Level 4</th>
+                <th width="25%" class="blue-first-level">WBS
+                    Level 1
+                </th>
+                <th width="25%" class="blue-first-level">WBS
+                    Level 2
+                </th>
+                <th width="25%" class="blue-first-level">WBS
+                    Level 3
+                </th>
+                <th width="25%" class="blue-first-level">WBS
+                    Level 4
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -35,6 +53,9 @@
             </tbody>
         </table>
     @else
-        <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No WBS found</div>
+        <div class="alert alert-warning"><i
+                    class="fa fa-exclamation-triangle"></i>
+            No WBS found
+        </div>
     @endif
 @endsection

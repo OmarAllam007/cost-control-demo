@@ -44,10 +44,9 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-        if ($request->project_id) {
+        if ($request->project_id && $request->import) {
             $parent = BreakdownTemplate::find($request->parent_template_id);
             $resources = StdActivityResource::where('template_id', $parent->id)->get();
-
             $parent->parent_template_id = $parent->id;
             $parent->project_id = $request->project_id;
             unset($parent->id);

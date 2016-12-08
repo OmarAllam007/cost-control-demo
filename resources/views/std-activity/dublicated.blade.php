@@ -1,7 +1,7 @@
-@extends('layouts.iframe'))
+@extends('layouts.app')
 
 @section('header')
-    <h2>Quantity Survey</h2>
+    <h2>Standard Activity</h2>
     <a href="{{URL::previous()}}" class="btn btn-sm btn-default pull-right"><i class="fa fa-arrow-left"></i> Back </a>
 @stop
 
@@ -10,20 +10,25 @@
         <thead>
 
         <tr>
-            <th>Dublicated Cost Accounts</th>
+            <th class="col-md-1">No.</th>
+            <th class="col-md-11">Dublicated Codes</th>
 
         </tr>
         </thead>
         <tbody>
-        @foreach(\Cache::get('qs-dublicated') as $item)
+<?php $i=0;?>
+        @foreach(\Cache::get('std-dublicated') as $item)
             <tr>
+                <td>
+                    <?php echo $i++;?>
+                </td>
                 <td>
                     {{$item}}
                 </td>
             </tr>
         @endforeach
 
-        <?php \Cache::forget('qs-dublicated')?>
+
         </tbody>
     </table>
 

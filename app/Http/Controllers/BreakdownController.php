@@ -40,36 +40,20 @@ class BreakdownController extends Controller
         return view('breakdown.create');
     }
 
+    /**
+     * @param WbsLevel $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(BreakdownRequest $request)
     {
-//        dump($request->all());
-//        dd($request->all());
-        $wbs_level = WbsLevel::find($request->wbs_level_id);
-        $survey_level = Survey::where('wbs_level_id',$wbs_level->id)->where('cost_Account',$request->cost_account)->first();
-        $eng_qty = 0;
-        if($survey_level){
-            $eng_qty = $survey_level->eng_qty;
-        }
-        else{
-            $parent = $wbs_level;
-            while($parent->parent){
-                $parent_wbs_level = WbsLevel::find($parent->id);
-                $parent_survey = Survey::where('wbs_level_id',$parent_wbs_level->id)->where('cost_Account',$request->cost_account)->first();
-                if($parent_survey){
-                    $eng_qty = $parent_survey->eng_qty;
-                    break;
-                }
-                $parent = $parent->parent;
-            }
-        }
-
-
+        $level = WbsLevel::find($request->wbs_level_id);
+        $eng_qty = $level->getEngQty($request);
         $breakdown = Breakdown::create($request->all());
         $resource_code = $breakdown->wbs_level->code . $breakdown->std_activity->id_partial;
 
         $resources = $breakdown->resources()->createMany($request->get('resources'));
         foreach ($resources as $resource) {
-            $resource->update(['code' => $resource_code,'eng_qty'=>$eng_qty]);
+            $resource->update(['code' => $resource_code, 'eng_qty' => $eng_qty]);
 
         }
         $breakdown->syncVariables($request->get('variables'));
@@ -113,7 +97,9 @@ class BreakdownController extends Controller
 
         return \Redirect::to(route('project.show', $project) . '#breakdown');
     }
-    function exportBreakdown(Project $project){
+
+    function exportBreakdown(Project $project)
+    {
 
         $this->dispatch(new ExportBreakdownJob($project));
     }
