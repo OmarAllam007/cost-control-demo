@@ -19,7 +19,7 @@
 @stop
 
 @section('body')
-    {{ Form::model($resources, ['route' => ['resources.update', $resources], 'method' => 'PATCH']) }}
+    {{ Form::model($resources, ['route' => ['resources.update', 'resources'=>$resources,'project_id'=>request('project_id')], 'method' => 'PATCH']) }}
 
     @include('resources._form', ['override' => $resources->project_id])
 

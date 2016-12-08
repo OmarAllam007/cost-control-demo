@@ -20,11 +20,12 @@ use App\Unit;
 use App\UnitAlias;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use phpDocumentor\Reflection\Types\Null_;
 
 class ResourcesController extends Controller
 {
 
-    protected $rules = ['name' => 'required','resource_code'=>'unique:resources'];
+    protected $rules = ['name' => 'required', 'resource_code' => 'unique:resources'];
 
     public function index()
     {
@@ -45,13 +46,14 @@ class ResourcesController extends Controller
 
     public function store(Request $request)
     {
+        $request['project_id'] = $request->project;
+
         $this->validate($request, $this->rules);
         if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
         } else {
             $request['waste'] = ($request->waste / 100);
         }
-
         $resource = Resources::create($request->all());
 
         flash('Resource has been saved', 'success');
@@ -80,14 +82,15 @@ class ResourcesController extends Controller
     public function update(Resources $resources, Request $request)
     {
         $this->validate($request, $this->rules);
-
         if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
         } else {
             $request['waste'] = ($request->waste / 100);
         }
 
+
         $resources->update($request->all());
+
         $resources->syncCodes($request->get('codes'));
 
         flash('Resource has been saved', 'success');
@@ -113,13 +116,14 @@ class ResourcesController extends Controller
 
     function postImport(Request $request)
     {
+        $project = $request->project;
         $this->validate($request, [
             'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
 
-        $status = $this->dispatch(new ResourcesImportJob($file->path()));
+        $status = $this->dispatch(new ResourcesImportJob($file->path(), $project));
 
         if ($status['failed']->count()) {
             $key = 'res_' . time();
@@ -130,7 +134,7 @@ class ResourcesController extends Controller
         }
         if (count($status['dublicated'])) {
             flash($status['success'] . ' items have been imported', 'success');
-            return \Redirect::route('resources.index', ['dublicate'=>$status['dublicated']]);
+            return \Redirect::route('resources.index', ['dublicate' => $status['dublicated']]);
         }
 
         flash($status['success'] . ' Resources have been imported', 'success');
@@ -269,18 +273,21 @@ class ResourcesController extends Controller
         return $this->dispatch(new ExportPublicResourcesJob());
 
     }
+
     public function modifyAllResources()
     {
-        return view('resources.modify');
+
+        return view('resources.modify', ['project_id' => request('project')]);
     }
 
     public function postModifyAllResources(Request $request)
     {
+        $project = $request->project;
         $file = $request->file('file');
-        $this->dispatch(new ModifyPublicResourcesJob($file));
+        $this->dispatch(new ModifyPublicResourcesJob($file, $project));
 
         $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
         $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
-        return view('resources.index',['resources'=>$resources]);
+        return view('resources.index', ['resources' => $resources]);
     }
 }

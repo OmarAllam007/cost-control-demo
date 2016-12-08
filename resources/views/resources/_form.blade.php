@@ -39,7 +39,7 @@
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             @if($override)
-                {{ Form::text('name', $resources->name, ['class' => 'form-control', 'readonly' => 'readonly']) }}
+                {{ Form::text('name', $resources->name, ['class' => 'form-control']) }}
             @else
                 {{ Form::text('name', null, ['class' => 'form-control']) }}
                 {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
@@ -110,7 +110,7 @@
 
 @section('javascript')
     @if (isset($resources))
-    <script src="{{asset('/js/resource-codes.js')}}"></script>
+        <script src="{{asset('/js/resource-codes.js')}}"></script>
     @endif
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @stop

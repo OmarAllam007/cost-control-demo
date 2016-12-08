@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-6 col-sm-9">
 
-            {{Form::open(['route' => ['all-resources.post-modify'], 'files' => true])}}
+            {{Form::open(['route' => ['all-resources.post-modify','project'=>request('project')], 'files' => true])}}
             <div class="form-group {{$errors->first('file', 'has-errors')}}">
                 {{Form::label('file', null, ['class' => 'control-label'])}}
                 {{Form::file('file', ['class' => 'form-control'])}}

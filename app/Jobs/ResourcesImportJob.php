@@ -22,14 +22,16 @@ class ResourcesImportJob extends ImportJob
      */
     protected $types;
 
+    protected $project;
     /**
      * @var Collection
      */
     protected $partners;
 
-    public function __construct($file)
+    public function __construct($file, $project)
     {
         $this->file = $file;
+        $this->project = $project;
     }
 
     public function handle()
@@ -38,13 +40,17 @@ class ResourcesImportJob extends ImportJob
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
-        $status = ['failed' => collect(), 'success' => 0,'dublicated'=>[]];
+        $status = ['failed' => collect(), 'success' => 0, 'dublicated' => []];
 
         Resources::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
-            $resource_code = Resources::where('resource_code', $data[4])->first();
+            if ($this->project) {
+                $resource_code = Resources::where('resource_code', $data[4])->where('project_id', $this->project)->first();
+            } else {
+                $resource_code = Resources::where('resource_code', $data[4])->first();
+            }
             if (!array_filter($data)) {
                 continue;
             }
@@ -58,7 +64,8 @@ class ResourcesImportJob extends ImportJob
                     'unit' => $unit_id,
                     'waste' => $this->getWaste($data[8]),
                     'business_partner_id' => $this->getPartner($data[9]),
-                    'reference' => $data[10]
+                    'reference' => $data[10],
+                    'project_id'=>$this->project,
                 ];
                 if ($unit_id) {
                     Resources::create($item);
@@ -67,8 +74,7 @@ class ResourcesImportJob extends ImportJob
                     $item['orig_unit'] = $data[7];
                     $status['failed']->push($item);
                 }
-            }
-            else{
+            } else {
                 $status['dublicated'][] = $data[4];
             }
         }
