@@ -1,9 +1,11 @@
 @extends('layouts.app')
 @section('header')
     <h2>Projects</h2>
+    @if (Auth::user()->is_admin)
     <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right">
         <i class="fa fa-plus"></i> Add Project
     </a>
+    @endif
 @stop
 
 @section('body')
@@ -20,20 +22,29 @@
             <tbody>
             @foreach($projects as $project)
                 <tr>
-                    <td class="col-xs-8"><a href="{{ route('project.show', $project) }}">{{ $project->name }}</a></td>
+                    <td class="col-xs-8">
+                        {{ $project->name }}
+                    </td>
                     <td class="col-xs-4">
                         <form action="{{ route('project.destroy', $project) }}" method="post">
-                            {{csrf_field()}} {{method_field('delete')}}
-                            <div class="btn-group">
-                                <a class="btn btn-sm btn-info dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-edit"></i> Show <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ route('project.budget', $project) }}">Budget</a></li>
-                                    <li><a href="{{ route('project.cost-control', $project) }}">Cost Control</a></li>
-                                </ul>
-                            </div>
+                            @can('budget', $project)
+                                <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
+                            
+                            @endcan
+                            @can('cost_control')
+                                <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                            @endcan
 
-                            <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i class="fa fa-edit"></i> Edit</a>
-                            <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
+                            @can('reports')
+                            <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
+                            <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                            @endcan
+
+                            @can('modify')
+                                <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i class="fa fa-edit"></i> Edit</a>
+                                {{csrf_field()}} {{method_field('delete')}}
+                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
+                            @endcan
                         </form>
                     </td>
                 </tr>

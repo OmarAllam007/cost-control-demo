@@ -27,11 +27,20 @@ class ProjectController extends Controller
 
     public function create()
     {
+        if (!Auth::user()->is_admin) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
         return view('project.create');
     }
 
     public function store(Request $request)
     {
+        if (!Auth::user()->is_admin) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+        
         $this->validate($request, $this->rules);
         $project = Project::create($request->all());
         $project->users()->sync($request->get('users', []));
