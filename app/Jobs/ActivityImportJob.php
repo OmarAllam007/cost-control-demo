@@ -40,6 +40,7 @@ class ActivityImportJob extends ImportJob
         foreach ($cellIterator as $cell) {
             $headerArray[] = mb_strtoupper($cell->getValue());
         }
+
         $workPKGIndex = array_search('WORK PAKAGE NAME', $headerArray);
         $disciplineIndex = array_search('DISCIPLINE', $headerArray);
         $rows = $excel->getActiveSheet()->getRowIterator(2);
@@ -61,9 +62,10 @@ class ActivityImportJob extends ImportJob
                 $id_partial = $data[$workPKGIndex + 3];
                 $discipline = strtoupper($data[$workPKGIndex + 4]);
                 $activity = StdActivity::create(['name' => $name, 'division_id' => $division_id, 'code' => $code, 'work_package_name' => $work_package_name, 'id_partial' => $id_partial, 'discipline' => $discipline]);
-                if ($disciplineIndex != $highest) {
+                if ($disciplineIndex+1 != $highest) {
                     $display_order = 1;
                     for ($i = $disciplineIndex + 1; $i < $highest; ++$i) {
+                        $data[$i];
                         $label = trim($data[$i]);
                         if ($label) {
                             $activity->variables()->create(compact('label', 'display_order'));
