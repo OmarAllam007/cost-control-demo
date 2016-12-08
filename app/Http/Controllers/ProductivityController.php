@@ -24,6 +24,11 @@ class ProductivityController extends Controller
 
     public function index()
     {
+        if (\Gate::denies('read', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $filter = new ProductivityFilter(Productivity::query(), session('filters.productivity'));
         $productivities = $filter->filter()->basic()->paginate(100);
         return view('productivity.index', compact('productivities'));
@@ -31,12 +36,22 @@ class ProductivityController extends Controller
 
     public function create()
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $edit = false;
         return view('productivity.create')->with('edit', $edit);
     }
 
     public function store(Request $request)
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $this->validate($request, $this->rules);
 
         $this->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
@@ -50,12 +65,22 @@ class ProductivityController extends Controller
 
     public function show(Productivity $productivity)
     {
+        if (\Gate::denies('read', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $project = Project::where('id', $productivity->project_id)->first();
         return view('productivity.show', compact('productivity', 'project'));
     }
 
     public function edit(Productivity $productivity)
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $csi_category = CsiCategory::lists('name', 'id')->all();
         $units_drop = Unit::lists('type', 'id')->all();
         $edit = true;
@@ -65,6 +90,11 @@ class ProductivityController extends Controller
 
     public function update(Productivity $productivity, Request $request)
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $this->validate($request, $this->rules);
         $productivity->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
 
@@ -76,6 +106,11 @@ class ProductivityController extends Controller
 
     public function destroy(Productivity $productivity)
     {
+        if (\Gate::denies('delete', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $productivity->delete();
 
         flash('Productivity has been deleted', 'success');
@@ -85,11 +120,21 @@ class ProductivityController extends Controller
 
     function import()
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         return view('productivity.import');
     }
 
     function postImport(Request $request)
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $this->validate($request, [
             'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
@@ -156,6 +201,11 @@ class ProductivityController extends Controller
 
     function fixImport($key)
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         if (!\Cache::has($key)) {
             flash('Nothing to fix');
             return \Redirect::route('productivity.index');
@@ -169,6 +219,11 @@ class ProductivityController extends Controller
 
     function postFixImport(Request $request, $key)
     {
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         if (!\Cache::has($key)) {
             flash('Nothing to fix');
             return \Redirect::route('productivity.index');
@@ -203,6 +258,11 @@ class ProductivityController extends Controller
 
     public function exportProductivity(Project $project)
     {
+        if (\Gate::denies('read', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $this->dispatch(new ExportProductivityJob($project));
     }
 
@@ -219,13 +279,29 @@ class ProductivityController extends Controller
 
     function exportPublicProductivities()
     {
+        if (\Gate::denies('read', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $this->dispatch(new ExportPublicProductivitiesJob());
     }
 
     function modifyAllProductivities(){
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         return view('productivity.modify');
     }
+
     function postModifyAllProductivities(Request $request){
+        if (\Gate::denies('write', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $file = $request->file('file');
         $this->dispatch(new ModifyPublicProductivitiesJob($file));
         return redirect()->action('ProductivityController@index');

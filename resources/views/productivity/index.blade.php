@@ -3,6 +3,7 @@
 @section('header')
     <h2>Productivity</h2>
     <div class="btn-toolbar pull-right">
+        @can('write', 'productivity')
         <a href="{{ route('productivity.create') }} " class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> Add Productivity
         </a>
@@ -15,6 +16,8 @@
             <i class="fa fa-pencil" aria-hidden="true"></i>
             Modify
         </a>
+        @endcan
+
         <a href="{{route('productivity.exportAll')}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
@@ -23,11 +26,7 @@
                 All</a>
         @endcan
     </div>
-
-
 @stop
-
-
 
 @section('body')
     @if(count(request('dublicate')))
@@ -45,6 +44,7 @@
         @include('productivity._list')
         {{ $productivities->links() }}
 
+        @can('delete', 'productivity')
         <div class="modal fade" tabindex="-1" role="dialog" id="WipeAlert">
             <form class="modal-dialog" action="{{route('productivity.wipe')}}" method="post">
                 {{csrf_field()}}
@@ -69,6 +69,7 @@
                 </div>
             </form>
         </div>
+            @endcan
     @else
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No productivity found</strong>
         </div>
