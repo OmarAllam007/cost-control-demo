@@ -15,7 +15,7 @@
             <td class="col-xs-2">{{ $productivity['csi_code']?:'' }}</td>
             <td class="col-xs-3">{!! nl2br(e($productivity['description']?:'')) !!}</td>
             <td class="col-xs-3">{!! nl2br(e($productivity['crew_structure']?:'')) !!}</td>
-            <td class="col-xs-1">{{\App\Unit::find($productivity['unit'])->type}}
+            <td class="col-xs-1">{{isset(\App\Unit::find($productivity['unit'])->type)?\App\Unit::find($productivity['unit'])->type:$productivity['unit']}}
             </td>
             <td class="col-xs-1">{{number_format(floatval($productivity['daily_output']), 2)?:0}}</td>
             <td class="col-xs-2">
