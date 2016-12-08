@@ -8,8 +8,6 @@
 
 @section('body')
     {{ Form::open(['route' => 'project.store']) }}
-
-        @include('project._form')
-
+    @include('project._form', ['project' => new App\Project]);
     {{ Form::close() }}
 @stop
