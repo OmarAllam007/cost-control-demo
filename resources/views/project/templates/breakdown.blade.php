@@ -11,12 +11,13 @@
                class="btn btn-info btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
+            @can('breakdown', $project)
             <a href="/breakdown/create?project={{$project->id}}&&wbs_id=@{{ wbs_id }}" class="btn btn-primary btn-sm in-iframe" id="add_breakdown" title="Add Breakdown" >
                 <i class="fa fa-plus"></i> Add Breakdown
             </a>
-
             <a href="#" v-if="breakdowns.length" class="btn btn-success btn-sm" @click.prevent="copy"><i class="fa fa-copy"></i> Copy</a>
             <a href="#" v-if="copied_wbs_id" class="btn btn-primary btn-sm" @click.prevent="paste"><i class="fa fa-paste"></i> Paste</a>
+            @endcan
 
             @can('wipe')
                 <a href="#WipeBreakdownModal"@{{breakdown.id}} data-toggle="modal" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
@@ -28,6 +29,7 @@
         <section class="filters row" id="breakdown-filters">
             @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
             @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
+
 
             <div class="col-sm-3">
                 <div class="form-group form-group-sm">
@@ -69,7 +71,9 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <thead>
                 <tr>
+                    @can('breakdown', $project)
                     <th style="min-width: 32px; max-width: 32px;">&nbsp;</th>
+                    @endcan
                     <th style="min-width: 300px; max-width: 300px;" class="bg-blue">Activity</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-black">Breakdown Template</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Cost Account</th>
@@ -95,6 +99,7 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <tbody>
                 <tr v-for="breakdown in filtered_breakdowns">
+                    @can('breakdown')
                     <td style="min-width: 32px; max-width: 32px;">
 
                         <form action="/breakdown-resource/@{{ breakdown.breakdown_resource_id }}" @submit.prevent="destroy(breakdown.breakdown_resource_id)" class="dropdown">
@@ -110,8 +115,9 @@
                                 </li>
                             </ul>
                         </form>
-
                     </td>
+                    @endcan
+
                     <td style="min-width: 300px; max-width: 300px;" class="bg-blue">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
@@ -146,8 +152,7 @@
         </div>
         <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No breakdowns found</div>
 
-
-
+        @can('wipe')
         <div class="modal fade" id="WipeBreakdownModal" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <form method="post" action="/breakdown/wipe/@{{ wbs_id }}" class="modal-content">
@@ -168,6 +173,7 @@
                 </form>
             </div>
         </div>
+        @endcan
 
 
 

@@ -33,6 +33,8 @@
                 @if (Auth::check())
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/project') }}">Projects</a></li>
+
+                    @can('read', 'std-activity')
                     <li>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standard Activity <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -41,6 +43,8 @@
                             <li><a href="{{route('breakdown-template.index')}}">Breakdown Templates</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('read', 'resources')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -50,7 +54,9 @@
                             <li><a href="{{route('unit.index')}}">Units of measure</a></li>
                         </ul>
                     </li>
+                    @endcan
 
+                    @can('read', 'productivity')
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle btnhover"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Productivity<span class="caret"></span></a>
                         <ul class="dropdown-menu ">
@@ -61,6 +67,11 @@
                     {{--<li><a href="{{route('productivity.report')}}">Reports</a></li>--}}
 
                     </li>
+                    @endcan
+
+                    @if (Auth::user()->is_admin)
+                        <li><a href="{{route('users.index')}}">Users</a></li>
+                    @endif
 
                 </ul>
 

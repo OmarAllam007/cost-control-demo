@@ -16,19 +16,33 @@ class BreakdownTemplateController extends Controller
 
     public function index()
     {
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
+        if (\Gate::denies('read', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
+        $filter = new BreakdownTemplateFilter(BreakdownTemplate::query(), session('filters.breakdown-template'));
         $breakdownTemplates = $filter->filter()->paginate(50);
         return view('breakdown-template.index', compact('breakdownTemplates'));
     }
 
     public function create()
     {
+        if (\Gate::denies('write', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $wbsTree = WbsLevel::tree()->get();
         return view('breakdown-template.create')->with(['wbsTree' => $wbsTree]);
     }
 
     public function store(Request $request)
     {
+        if (\Gate::denies('write', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
 
         if ($request->project_id && $request->import) {
             $parent = BreakdownTemplate::find($request->parent_template_id);
@@ -42,12 +56,11 @@ class BreakdownTemplateController extends Controller
                 StdActivityResource::create($resource->toArray());
             }
 
-        }
-
-        else {
+        } else {
             $this->validate($request, $this->rules);
             $template = BreakdownTemplate::create($request->all());
         }
+//        $request['parent_template_id']= BreakdownTemplate::where('name',request('name'))->first()->id;
         flash('Breakdown template has been saved', 'success');
 
         return \Redirect::route('breakdown-template.show', $template);
@@ -55,16 +68,31 @@ class BreakdownTemplateController extends Controller
 
     public function show(BreakdownTemplate $breakdown_template)
     {
+        if (\Gate::denies('read', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         return view('breakdown-template.show', compact('breakdown_template'));
     }
 
     public function edit(BreakdownTemplate $breakdown_template)
     {
+        if (\Gate::denies('write', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         return view('breakdown-template.edit', compact('breakdown_template'));
     }
 
     public function update(BreakdownTemplate $breakdown_template, Request $request)
     {
+        if (\Gate::denies('write', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $this->validate($request, $this->rules);
 
         $breakdown_template->update($request->all());
@@ -76,6 +104,11 @@ class BreakdownTemplateController extends Controller
 
     public function destroy(BreakdownTemplate $breakdown_template)
     {
+        if (\Gate::denies('delete', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $breakdown_template->resources()->delete();
         $breakdown_template->delete();
         flash('Breakdown template has been deleted', 'success');
@@ -88,6 +121,11 @@ class BreakdownTemplateController extends Controller
 
     function filters(Request $request)
     {
+        if (\Gate::denies('read', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $data = $request->only(['name', 'resource_id']);
         \Session::set('filters.breakdown-template', $data);
         return \Redirect::back();
@@ -95,11 +133,21 @@ class BreakdownTemplateController extends Controller
 
     function import()
     {
+        if (\Gate::denies('write', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         return view('breakdown-template.import');
     }
 
     function postImport(Request $request)
     {
+        if (\Gate::denies('write', 'breakdown-template')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $this->validate($request, [
             'file' => 'required|file|mimes:xls,xlsx',
         ]);

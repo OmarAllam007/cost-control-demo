@@ -1,6 +1,7 @@
 <section id="ResourcesArea" class="project-tab">
     <div class="form-group tab-actions pull-right">
 
+        @can('resoures', $project)
         <a href="{{route('resources.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
             <i class="fa fa-plus"></i> Add resource
         </a>
@@ -26,6 +27,7 @@
                 </li>
             </ul>
         </div>
+        @endcan
 
         <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
@@ -44,7 +46,9 @@
                 <th class="col-xs-2">Rate</th>
                 <th class="col-xs-1">Unit</th>
                 <th class="col-xs-1">Waste</th>
-                <th class="col-xs-1">Actions</th>
+                <th class="col-xs-1">
+                    @can('resources', $project) Actions @endcan
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -57,9 +61,11 @@
                     <td class="col-xs-1">{{$resource->units->type or ''}}</td>
                     <td class="col-xs-1">{{number_format($resource->waste, 2)}} %</td>
                     <td class="col-xs-1">
-                        <a href="{{route('resources.edit',['resource'=>$resource->id,'project_id'=>$project->id])}}" class="btn btn-primary btn-sm">
-                            <i class="fa fa-pencil"></i> Edit
+                        @can('resources', $project)
+                        <a href="{{route('resources.edit',$resource->id)}}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-edit"></i> Edit
                         </a>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

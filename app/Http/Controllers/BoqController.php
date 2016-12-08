@@ -21,6 +21,7 @@ class BoqController extends Controller
 
     public function index()
     {
+        abort(404);
         $boqs = Boq::paginate();
 
         return view('boq.index', compact('boqs'));
@@ -38,6 +39,11 @@ class BoqController extends Controller
                 flash('Project not found');
                 return redirect()->route('project.index');
             }
+
+            if (\Gate::denies('boq', $project)) {
+                flash('You are not authorized to do this action');
+                return \Redirect::route('project.index');
+            }
         }
         $wbsLevels = WbsLevel::tree()->paginate();
 
@@ -46,6 +52,17 @@ class BoqController extends Controller
 
     public function store(Request $request)
     {
+        $project = Project::find($request->get('project'));
+        if (!$project) {
+            flash('Project not found');
+            return redirect()->route('project.index');
+        }
+
+        if (\Gate::denies('boq', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+        
         $this->validate($request, $this->rules);
 
         $boq = Boq::create($request->all());
@@ -58,16 +75,27 @@ class BoqController extends Controller
 
     public function show(Boq $boq)
     {
+        abort(404);
         return view('boq.show', compact('boq'));
     }
 
     public function edit(Boq $boq)
     {
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         return view('boq.edit', compact('boq'));
     }
 
     public function update(Boq $boq, Request $request)
     {
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $this->validate($request, $this->rules);
         $boq->update($request->all());
 
@@ -78,6 +106,11 @@ class BoqController extends Controller
 
     public function destroy(Boq $boq, Request $request)
     {
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $boq->delete();
 
         $msg = 'Boq item has been deleted';
@@ -91,21 +124,34 @@ class BoqController extends Controller
 
     public function deleteAll(Project $project)
     {
-        $items = Boq::where('project_id', $project->id)->get();
-        foreach ($items as $item) {
-            $item->delete();
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
         }
+
+        Boq::where('project_id', $project->id)->delete();
+        
         flash('All Boqs Deleted successfully', 'success');
         return \Redirect::route('project.show', $project->id);
     }
 
     function import(Project $project)
     {
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         return view('boq.import', compact('project'));
     }
 
     function postImport(Project $project, Request $request)
     {
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $this->validate($request, [
             'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
@@ -132,8 +178,14 @@ class BoqController extends Controller
         }
 
         $status = \Cache::get($key);
+        $project = Project::find($status['project_id']);
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+        
 
-        return view('boq.fix-import', ['items' => $status['failed'], 'project' => Project::find($status['project_id']), 'key' => $key]);
+        return view('boq.fix-import', ['items' => $status['failed'], 'project' => $project->id, 'key' => $key]);
     }
 
     function postFixImport(Request $request, $key)
@@ -142,11 +194,17 @@ class BoqController extends Controller
             flash('Nothing to fix');
             return \Redirect::route('project.index');
         }
+        
+        $status = \Cache::get($key);        
+        $project = Project::find($status['project_id']);
+        if (\Gate::denies('boq', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
 
         $data = $request->get('data');
         $errors = Boq::checkFixImport($data);
         if (!$errors) {
-            $status = \Cache::get($key);
 
             foreach ($status['failed'] as $item) {
                 if (isset($item['orig_unit_id']) && isset($data['units'][$item['orig_unit_id']])) {
@@ -173,6 +231,11 @@ class BoqController extends Controller
 
     function exportBoq(Project $project)
     {
+        if (\Gate::denies('budget', $boq->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+        
         $this->dispatch(new ExportBoqJob($project));
     }
 

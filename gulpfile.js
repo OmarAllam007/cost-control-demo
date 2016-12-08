@@ -29,23 +29,28 @@ elixir(function (mix) {
     // mix.scripts([
     //     'project/components/Breakdown.js',
     // ], 'public/js/breakdown.js');
+    mix.webpack('project-permissions.js')
+        .webpack('project/index.js', 'public/js/project.js');
+
+    // .sass('print.scss')
+    // .webpack('resource-codes.js');
 
 
 
     /*
-     mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
-     mix.scripts('tree-select.js');
-     mix.scripts('autocomplete.js');
-     // mix.scripts([
-     'breakdown/load-templates.js',
-     'breakdown/load-resources.js',
-     'breakdown/load-variables.js',
-     'autocomplete.js',
-     'tree-select.js'
-     ], 'public/js/breakdown.js');
+    mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
+    mix.scripts('tree-select.js');
+    mix.scripts('autocomplete.js');
+    mix.scripts([
+        'breakdown/load-templates.js',
+        'breakdown/load-resources.js',
+        'breakdown/load-variables.js',
+        'autocomplete.js',
+        'tree-select.js'
+    ], 'public/js/breakdown.js');
 
-     mix.rollup('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
+    mix.rollup('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
 
-     mix.rollup('activity-variables.js');
-     mix.rollup('edit-resource.js');*/
+    mix.rollup('activity-variables.js');
+    mix.rollup('edit-resource.js');*/
 });

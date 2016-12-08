@@ -2,7 +2,8 @@
 
 @section('header')
     <h2>Productivity</h2>
-    <div class="pull-right">
+    <div class="btn-toolbar pull-right">
+        @can('write', 'productivity')
         <a href="{{ route('productivity.create') }} " class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> Add Productivity
         </a>
@@ -28,7 +29,7 @@
                 </li>
             </ul>
         </div>
-
+        @endcan
 
         <a href="{{route('productivity.exportAll')}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
@@ -38,11 +39,7 @@
                 All</a>
         @endcan
     </div>
-
-
 @stop
-
-
 
 @section('body')
     @if(count(request('dublicate')))
@@ -60,6 +57,7 @@
         @include('productivity._list')
         {{ $productivities->links() }}
 
+        @can('wipe')
         <div class="modal fade" tabindex="-1" role="dialog" id="WipeAlert">
             <form class="modal-dialog" action="{{route('productivity.wipe')}}" method="post">
                 {{csrf_field()}}
@@ -68,7 +66,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Delete All Standard Activities</h4>
+                        <h4 class="modal-title">Delete All Productivity Items</h4>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger">
@@ -84,6 +82,7 @@
                 </div>
             </form>
         </div>
+            @endcan
     @else
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No productivity found</strong>
         </div>

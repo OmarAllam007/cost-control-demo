@@ -6,7 +6,7 @@
         <th class="col-xs-2">Crew Structure</th>
         <th class="col-xs-1">Unit</th>
         <th class="col-xs-1">Daily Output</th>
-        <th class="col-xs-2">Actions</th>
+        <th class="col-xs-2">@can('write', 'productivity') Actions @endcan</th>
     </tr>
     </thead>
     <tbody>
@@ -20,13 +20,17 @@
             <td class="col-xs-1">{{number_format(floatval($productivity['daily_output']), 2)?:0}}</td>
             <td class="col-xs-2">
                 <form action="{{ route('productivity.destroy', $productivity) }}" method="post">
-                    {{csrf_field()}} {{method_field('delete')}}
-                    <a class="btn btn-sm btn-primary" href="{{route('productivity.edit', $productivity)}}">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
-                    <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
-                    <a class="btn btn-sm btn-info" href="{{ route('productivity.show', $productivity) }} "><i class="fa fa-eye"></i>
-                        View</a>
+                    <a class="btn btn-sm btn-info" href="{{ route('productivity.show', $productivity) }} "><i
+                                class="fa fa-eye"></i>View</a>
+                    @can('write', 'productivity')
+                        <a class="btn btn-sm btn-primary" href="{{route('productivity.edit', $productivity)}}">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                    @endcan
+                    @can('delete', 'productivity')
+                        {{csrf_field()}} {{method_field('delete')}}
+                        <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
+                    @endcan
                 </form>
             </td>
         </tr>

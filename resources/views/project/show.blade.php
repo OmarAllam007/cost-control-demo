@@ -4,12 +4,12 @@
     <h2 class="panel-title">Project - {{$project->name}}</h2>
 
     <form action="{{ route('project.destroy', $project)}}" class="pull-right" method="post">
-        {{csrf_field()}} {{method_field('delete')}}
-        <a href="#DeleteBreakdownModal"  class="btn btn-sm btn-danger" data-toggle="modal"><i class="fa fa-trash"></i>
-            Delete All Breakdowns</a>
-        <a href="{{ route('project.edit', $project)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i>
-            Edit</a>
-        <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
+        @can('modify', $project)
+            {{csrf_field()}} {{method_field('delete')}}
+            <a href="{{ route('project.edit', $project)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
+            <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
+        @endcan
+
         <a href="{{ route('project.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
 
     </form>
@@ -18,21 +18,29 @@
 @section('body')
 
     <nav class="project-nav">
+        @can('budget', $project)
         <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
         <a href="#ResourcesArea" class="btn btn-outline btn-primary">Resources</a>
         <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
         <a href="#BreakdownTemplateArea" class="btn btn-outline btn-primary">Breakdown Templates</a>
+        @endcan
 
-        <a href="#ReportsArea" class="btn btn-outline btn-success">Reports</a>
-
+        @can('reports', $project)
+            <a href="#ReportsArea" class="btn btn-outline btn-success">Reports</a>
+        @endcan
     </nav>
 
     <div id="projectArea" class="hidden">
-        @include('project.tabs.wbs-area')
-        @include('project.tabs._resources')
-        @include('project.tabs._productivity')
-        @include('project.tabs._breakdown_template')
-        @include('project.tabs._report')
+        @can('budget', $project)
+            @include('project.tabs.wbs-area')
+            @include('project.tabs._resources')
+            @include('project.tabs._productivity')
+            @include('project.tabs._breakdown_template')
+        @endcan
+
+        @can('reports', $project)
+            @include('project.tabs._report')
+        @endcan
     </div>
 
     <div class="modal fade" tabindex="-1" id="IframeModal">
@@ -50,6 +58,7 @@
         </div>
     </div>
 
+    @can('wipe')
     <div class="modal fade" id="DeleteBreakdownModal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <form method="post" action="{{route('breakdownresources.deleteAllBreakdowns',$project)}}"  class="modal-content">
@@ -68,11 +77,10 @@
             </form>
         </div>
     </div>
+    @endcan
 @endsection
 
 @section('javascript')
-
-
     <script>
         (function (w, d, $) {
             $(function () {
@@ -142,5 +150,4 @@
     </script>
     <script src="{{asset('/js/project.js')}}"></script>
     <script src="{{asset('/js/tree-select.js')}}"></script>
-
 @endsection

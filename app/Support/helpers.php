@@ -20,5 +20,5 @@ function roundup($number, $precision)
 {
     $multiplier = pow(10, $precision);
     $convert = $number * $multiplier;
-    return round($convert, 0) / $multiplier;
+    return ceil($convert) / $multiplier;
 }

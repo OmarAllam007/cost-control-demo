@@ -3,6 +3,7 @@
 @section('header')
     <h2>Standard Activity</h2>
     <div class="pull-right">
+        @can('write', 'std-activities')
         <a href="{{ route('std-activity.create') }} " class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Add
             Activity</a>
 
@@ -26,14 +27,16 @@
                 </li>
             </ul>
         </div>
+        @endcan
 
 
         <a href="{{route('std-activity.exportAll')}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
         @can('wipe')
-            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete
-                All</a>
+            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger">
+                <i class="fa fa-trash"></i> Delete All
+            </a>
         @endcan
     </div>
 @stop
@@ -64,18 +67,29 @@
             @foreach($stdActivities as $std_activity)
                 <tr>
                     <td class="col-xs-4">
-                        <a href="{{ route('std-activity.edit', $std_activity) }}">{{ $std_activity->name }}</a></td>
+                        <a href="{{ route('std-activity.edit', $std_activity) }}">{{ $std_activity->name }}</a>
+                    </td>
+
                     <td class="col-xs-4">{{ $std_activity->division->path }}</td>
+
                     <td class="col-xs-4">
                         <form action="{{ route('std-activity.destroy', $std_activity) }}" method="post">
-                            {{csrf_field()}} {{method_field('delete')}}
-                            <a class="btn btn-sm btn-info" href="{{ route('std-activity.show', $std_activity) }} "><i
-                                        class="fa fa-eye"></i>
-                                View</a>
-                            <a class="btn btn-sm btn-primary" href="{{ route('std-activity.edit', $std_activity) }} "><i
-                                        class="fa fa-edit"></i>
-                                Edit</a>
-                            <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
+                            @can('read', 'std-activities')
+                                <a class="btn btn-sm btn-info" href="{{ route('std-activity.show', $std_activity) }}">
+                                    <i class="fa fa-eye"></i> View
+                                </a>
+                            @endcan
+
+                            @can('write', 'std-activities')
+                                <a class="btn btn-sm btn-primary" href="{{ route('std-activity.edit', $std_activity) }}">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            @endcan
+
+                            @can('delete', 'std-activities')
+                                {{csrf_field()}} {{method_field('delete')}}
+                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
+                            @endcan
                         </form>
                     </td>
                 </tr>
@@ -83,7 +97,9 @@
             </tbody>
         </table>
 
+        <div class="text-center">
         {{ $stdActivities->links() }}
+        </div>
 
         <div class="modal fade" tabindex="-1" role="dialog" id="WipeAlert">
             <form class="modal-dialog" action="{{route('std-activity.wipe')}}" method="post">

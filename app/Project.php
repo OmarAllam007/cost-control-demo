@@ -27,6 +27,7 @@ class Project extends Model
         'project_start_date',
         'project_duration',
         'description',
+        'owner_id'
     ];
 
     protected $dates = ['created_at', 'updated_at'];

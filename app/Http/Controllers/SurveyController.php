@@ -23,6 +23,7 @@ class SurveyController extends Controller
 
     public function index()
     {
+        abort(404);
         $surveys = Survey::paginate();
         return view('survey.index', compact('surveys'));
     }
@@ -33,7 +34,13 @@ class SurveyController extends Controller
             return \Redirect::route('project.index');
         }
 
-        if (!Project::find($request->get('project'))) {
+        $project = Project::find($request->get('project'));
+        if (!$project) {
+            return \Redirect::route('project.index');
+        }
+
+        if (\Gate::denies('qty_survey', $project)) {
+            flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
 
@@ -42,6 +49,20 @@ class SurveyController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->has('project_id')) {
+            return \Redirect::route('project.index');
+        }
+
+        $project = Project::find($request->get('project_id'));
+        if (!$project) {
+            return \Redirect::route('project.index');
+        }
+
+        if (\Gate::denies('qty_survey', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $this->validate($request, $this->rules);
         $level = WbsLevel::find($request->wbs_level_id);
         $level_survey = Survey::where('wbs_level_id', $level->id)->first();
@@ -72,16 +93,25 @@ class SurveyController extends Controller
 
     public function show(Survey $survey)
     {
+        abort(404);
         return view('survey.show', compact('survey', 'units'));
     }
 
     public function edit(Survey $survey)
     {
+        if (\Gate::denies('qty_survey', $survey->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
         return view('survey.edit', compact('survey'));
     }
 
     public function update(Survey $survey, Request $request)
     {
+        if (\Gate::denies('qty_survey', $survey->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
 
         $this->validate($request, $this->rules);
         $survey->update($request->all());
@@ -94,6 +124,11 @@ class SurveyController extends Controller
 
     public function destroy(Survey $survey, Request $request)
     {
+        if (\Gate::denies('qty_survey', $survey->project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $survey->delete();
 
         $msg = 'Quantity survey has been deleted';
@@ -106,11 +141,21 @@ class SurveyController extends Controller
 
     function import(Project $project)
     {
+        if (\Gate::denies('qty_survey', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         return view('survey.import', compact('project'));
     }
 
     function postImport(Project $project, Request $request)
     {
+        if (\Gate::denies('qty_survey', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $this->validate($request, [
             'file' => 'required|file'//|mimes:xls,xlsx',
         ]);
@@ -150,6 +195,11 @@ class SurveyController extends Controller
 
         $status = \Cache::get($key);
         $project = Project::find($status['project_id']);
+        if (\Gate::denies('qty_survey', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $items = $status['failed'];
         return view('survey.fix-import', compact('items', 'key', 'project'));
     }
@@ -163,6 +213,11 @@ class SurveyController extends Controller
 
         $status = \Cache::get($key);
         $project = Project::find($status['project_id']);
+        if (\Gate::denies('qty_survey', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $data = $request->get('data');
         $errors = Survey::checkImportData($data);
 
@@ -196,6 +251,11 @@ class SurveyController extends Controller
 
     public function exportQuantitySurvey(Project $project)
     {
+        if (\Gate::denies('budget', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $this->dispatch(new ExportSurveyJob($project));
     }
 

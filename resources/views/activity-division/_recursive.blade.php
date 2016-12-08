@@ -2,10 +2,11 @@
     <div class="tree--item">
         <a href="#children-{{$division->id}}" class="tree--item--label" data-toggle="collapse"><i class="fa fa-chevron-circle-right"></i> {{$division->label}}
         </a>
+        @can('write', 'std-activity')
         <span class="tree--item--actions">
-
             <a href="{{route('activity-division.edit', $division)}}" class="label label-primary"><i class="fa fa-pencil"></i> Edit</a>
         </span>
+        @endcan
     </div>
 
     <article id="children-{{$division->id}}" class="tree--child collapse">
@@ -14,17 +15,20 @@
                 <thead>
                 <tr>
                     <th class="col-md-8">Activity</th>
+                    @can('write', 'std-activity')
                     <th>
                         <div class="pull-right">
                             Actions
                         </div>
                     </th>
+                    @endcan
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($division->activities as $activity)
                     <tr>
                         <td>{{$activity->name}}</td>
+                        @can('write', 'std-activity')
                         <td>
                             <div class="pull-right">
                                 <a href="{{route('std-activity.edit', $activity)}}" class="btn btn-xs btn-primary">
@@ -32,6 +36,7 @@
                                 </a>
                             </div>
                         </td>
+                        @endcan
                     </tr>
                 @endforeach
                 </tbody>

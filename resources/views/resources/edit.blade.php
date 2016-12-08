@@ -1,11 +1,15 @@
 @extends('layouts.app')
+
 @section('header')
     <h2>Edit Resources</h2>
 
     <form action="{{ route('resources.destroy', $resources)}}" class="pull-right" method="post">
-        {{csrf_field()}} {{method_field('delete')}}
 
+        @can('delete', 'resources')
+        {{csrf_field()}} {{method_field('delete')}}
         <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
+        @endcan
+
         @if ($resources->project_id)
             <a href="{{ route('project.show', $resources->project)}}#resources" class="btn btn-sm btn-default">
                 <i class="fa fa-chevron-left"></i> Back
