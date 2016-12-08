@@ -6,6 +6,7 @@
             </a>
         </div>
     </div>
+    
     @if ($project->productivities->count())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
@@ -15,7 +16,9 @@
                 <th class="col-xs-2">Crew Structure</th>
                 <th class="col-xs-2">Productivity</th>
                 <th class="col-xs-2">Unit of measure</th>
-                <th class="col-xs-2">Actions</th>
+                <th class="col-xs-2">
+                @can('productivity', $project) Actions @endcan
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -26,9 +29,11 @@
                     <td class="col-xs-2">{!! nl2br(e($productivity->crew_structure)) !!}}</td>
                     <td class="col-xs-2">{{$productivity->versionFor($project->id)->after_reduction}}</td>
                     <td class="col-xs-2">{{$productivity->units->type or ''}}</td>
-                    <td class="col-xs-2"><a
-                                href="{{route('productivity.override', compact('project', 'productivity'))}}"
-                                class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a></td>
+                    <td class="col-xs-2">
+                        @can('productivity', $project)
+                            <a href="{{route('productivity.override', compact('project', 'productivity'))}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
+                        @endcan
+                    </td>
                 </tr>
             @endforeach
             </tbody>

@@ -16,8 +16,6 @@ use PHPExcel;
 
 class ProjectController extends Controller
 {
-
-
     protected $rules = ['name' => 'required'];
 
     public function index()
@@ -45,6 +43,11 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        if (\Gate::denies('budget', $project) && \Gate::denies('reports', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         set_time_limit(1800);
         return view('project.show', compact('project', 'divisions'));
     }
@@ -67,11 +70,21 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
+        if (\Gate::denies('modify', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         return view('project.edit', compact('project'));
     }
 
     public function update(Project $project, Request $request)
     {
+        if (\Gate::denies('modify', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $this->validate($request, $this->rules);
 
         $project->update($request->all());
@@ -84,6 +97,11 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
+        if (\Gate::denies('modify', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $project->delete();
 
         flash('Project has been deleted', 'success');
@@ -102,10 +120,12 @@ class ProjectController extends Controller
 
     function costControl(Project $project)
     {
+        if (\Gate::denies('cost_control', $project) && \Gate::denies('reports', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.index');
+        }
+
         $period = $project->open_period;
         return view('project.cost-control', compact('project', 'period'));
     }
-
-
-
 }

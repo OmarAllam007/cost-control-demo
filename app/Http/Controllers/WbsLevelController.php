@@ -17,8 +17,8 @@ class WbsLevelController extends Controller
 
     public function index()
     {
+        abort(404);
         $wbsLevels = WbsLevel::tree()->paginate();
-
         return view('wbs-level.index', compact('wbsLevels'));
     }
 
@@ -35,7 +35,8 @@ class WbsLevelController extends Controller
             }
 
             if (\Gate::denies('wbs', $project)) {
-
+                flash('You are not authorized to do this action');
+                \Redirect::route('project.index');
             }
         }
 
@@ -44,6 +45,22 @@ class WbsLevelController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->has('project_id')) {
+            flash('Project not found');
+            return \Redirect::route('project.index');
+        } else {
+            $project = Project::find($request->get('project_id'));
+            if (!$project) {
+                flash('Project not found');
+                return \Redirect::route('project.index');
+            }
+
+            if (\Gate::denies('wbs', $project)) {
+                flash('You are not authorized to do this action');
+                \Redirect::route('project.index');
+            }
+        }
+
         $this->validate($request, $this->rules);
 
         $wbs_level = WbsLevel::create($request->all());
@@ -56,16 +73,27 @@ class WbsLevelController extends Controller
 
     public function show(WbsLevel $wbs_level)
     {
+        abort(404);
         return view('wbs-level.show', compact('wbs_level'));
     }
 
     public function edit(WbsLevel $wbs_level)
     {
+        if (\Gate::denies('wbs', $wbs_level->project)) {
+            flash('You are not authorized to do this action');
+            \Redirect::route('project.index');
+        }
+
         return view('wbs-level.edit', compact('wbs_level'));
     }
 
     public function update(WbsLevel $wbs_level, Request $request)
     {
+        if (\Gate::denies('wbs', $wbs_level->project)) {
+            flash('You are not authorized to do this action');
+            \Redirect::route('project.index');
+        }
+        
         $this->validate($request, $this->rules);
 
         $wbs_level->update($request->all());
@@ -77,6 +105,11 @@ class WbsLevelController extends Controller
 
     public function destroy(WbsLevel $wbs_level)
     {
+        if (\Gate::denies('wbs', $wbs_level->project)) {
+            flash('You are not authorized to do this action');
+            \Redirect::route('project.index');
+        }
+        
         $wbs_level->deleteRecursive();
 
         flash('WBS level has been deleted', 'success');
@@ -86,11 +119,21 @@ class WbsLevelController extends Controller
 
     function import(Project $project)
     {
+        if (\Gate::denies('wbs', $project)) {
+            flash('You are not authorized to do this action');
+            \Redirect::route('project.index');
+        }
+        
         return view('wbs-level.import', compact('project'));
     }
 
     function postImport(Project $project, Request $request)
     {
+        if (\Gate::denies('wbs', $project)) {
+            flash('You are not authorized to do this action');
+            \Redirect::route('project.index');
+        }
+        
         $this->validate($request, [
             'file' => 'required|file|mimes:xls,xlsx',
         ]);
@@ -106,8 +149,12 @@ class WbsLevelController extends Controller
 
     public function exportWbsLevels(Project $project)
     {
-        $this->dispatch(new WbsLevelExportJob($project));
+        if (\Gate::allows('budget', $project) || \Gate::allows('cost_control', $project)) {
+            return $this->dispatch(new WbsLevelExportJob($project));
+        }
 
+        flash('You are not authorized to do this action');
+        \Redirect::route('project.index');
     }
 
     function wipe(WipeRequest $request, Project $project)

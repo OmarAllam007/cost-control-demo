@@ -1,6 +1,5 @@
 <section id="ResourcesArea" class="project-tab">
     <div class="form-group tab-actions pull-right">
-
         <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
@@ -18,7 +17,9 @@
                 <th class="col-xs-2">Rate</th>
                 <th class="col-xs-1">Unit</th>
                 <th class="col-xs-1">Waste</th>
-                <th class="col-xs-1">Actions</th>
+                <th class="col-xs-1">
+                    @can('resources', $project) Actions @endcan
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -31,9 +32,11 @@
                     <td class="col-xs-1">{{$resource->units->type or ''}}</td>
                     <td class="col-xs-1">{{number_format($resource->waste, 2)}} %</td>
                     <td class="col-xs-1">
+                        @can('resources', $project)
                         <a href="{{route('resources.edit',$resource->id)}}" class="btn btn-primary btn-sm">
                             <i class="fa fa-pencil"></i> Edit
                         </a>
+                        @endcan
                     </td>
                 </tr>
             @endforeach

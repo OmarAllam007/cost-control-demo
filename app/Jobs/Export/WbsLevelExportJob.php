@@ -87,5 +87,6 @@ class WbsLevelExportJob extends Job
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
+        exit;
     }
 }
