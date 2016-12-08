@@ -13,6 +13,12 @@
             {!! $errors->first('project_code', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('owner_id', 'has-error')}}">
+            {{ Form::label('owner_id', 'Owner', ['class' => 'control-label']) }}
+            {{ Form::select('owner_id', App\User::options(), old('owner_id', $project->owner_id ?? Auth::user()->id), ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('owner_id', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('client_name', 'has-error')}}">
             {{ Form::label('client_name', null, ['class' => 'control-label']) }}
             {{ Form::text('client_name', null, ['class' => 'form-control','contenteditable'=>'true']) }}

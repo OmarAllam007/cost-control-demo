@@ -27,7 +27,7 @@ class User extends Authenticatable
 
     function scopeOptions(Builder $query)
     {
-        return $query->orderBy('name')->pluck('name', 'id');
+        return $query->orderBy('name')->pluck('name', 'id')->prepend('Select User', '');
     }
 
     function modules()

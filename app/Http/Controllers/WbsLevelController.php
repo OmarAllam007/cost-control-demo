@@ -33,6 +33,10 @@ class WbsLevelController extends Controller
                 flash('Project not found');
                 return redirect()->route('project.index');
             }
+
+            if (\Gate::denies('wbs', $project)) {
+
+            }
         }
 
         return view('wbs-level.create');
