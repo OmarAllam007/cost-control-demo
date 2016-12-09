@@ -27,13 +27,13 @@
                     </td>
                     <td class="col-xs-4">
                         <form action="{{ route('project.destroy', $project) }}" method="post">
-                            @can('budget', $project)
-                                <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
-                            
-                            @endcan
-                            @can('cost_control')
-                                <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
-                            @endcan
+                            {{--@can('budget', $project)--}}
+                                {{--<a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>--}}
+
+                            {{--@endcan--}}
+                            {{--@can('cost_control')--}}
+                                {{--<a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>--}}
+                            {{--@endcan--}}
 
                             @can('reports')
                             <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
