@@ -14,16 +14,16 @@
             </a>
         @endcan
     </div>
-@stop
+@endsection
 
 @section('body')
     @include('unit._filters')
-    @if ($units->total())
+    @if($units->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
                 <th class="col-xs-8">Name</th>
-                <th class="col-xs-4">@can('write', 'resources')Actions@endcan</th>
+                @can('write', 'resources')<th class="col-xs-4">Actions</th>@endcan
             </tr>
             </thead>
             <tbody>
@@ -36,7 +36,6 @@
                                 <a class="btn btn-sm btn-primary" href="{{ route('unit.edit', $unit) }} ">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
-
                                 @can('delete', 'resources')
                                     {{csrf_field()}} {{method_field('delete')}}
                                     <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
@@ -78,4 +77,4 @@
     @else
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No unit found</strong></div>
     @endif
-@stop
+@endsection
