@@ -2,9 +2,9 @@
 @section('header')
     <h2>Projects</h2>
     @if (Auth::user()->is_admin)
-    <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right">
-        <i class="fa fa-plus"></i> Add Project
-    </a>
+        <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right">
+            <i class="fa fa-plus"></i> Add Project
+        </a>
     @endif
 @stop
 
@@ -29,19 +29,24 @@
                         <form action="{{ route('project.destroy', $project) }}" method="post">
                             @can('budget', $project)
                                 <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
-                            
-                            @endcan
-                            @can('cost_control')
-                                <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                            @else
+                                @can('reports')
+                                    <a class="btn btn-sm btn-info"
+                                       href="{{ route('project.budget', $project) }}">Budget</a>
+                                @endcan
                             @endcan
 
-                            @can('reports')
-                            <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
-                            <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                            @can('cost_control')
+                                <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                            @else
+                                @can('reports')
+                                    <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                                @endcan
                             @endcan
 
                             @can('modify')
-                                <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i class="fa fa-edit"></i> Edit</a>
+                                <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i
+                                            class="fa fa-edit"></i> Edit</a>
                                 {{csrf_field()}} {{method_field('delete')}}
                                 <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                             @endcan
