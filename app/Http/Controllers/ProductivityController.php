@@ -60,6 +60,7 @@ class ProductivityController extends Controller
 
         flash('Productivity has been saved', 'success');
 
+        $this->dispatch(new CacheCsiCategoryTree());
         return \Redirect::route('productivity.index');
     }
 
