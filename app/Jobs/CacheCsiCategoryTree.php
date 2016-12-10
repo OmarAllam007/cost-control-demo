@@ -16,7 +16,7 @@ class CacheCsiCategoryTree extends Job
 {
     public function handle()
     {
-        $csi_categories = CsiCategory::orderBy('name','asc')->tree()->get();
+        $csi_categories = CsiCategory::tree()->get()->sort();
         foreach ($csi_categories as $category) {
             $levelTree = $this->buildTree($category);
             $tree[] = $levelTree;
