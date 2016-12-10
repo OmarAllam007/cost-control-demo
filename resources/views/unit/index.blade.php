@@ -23,7 +23,7 @@
             <thead>
             <tr>
                 <th class="col-xs-8">Name</th>
-                <th class="col-xs-4">@can('write', 'resources')Actions@endcan</th>
+                <th class="col-xs-4">@can('write', 'resources') Actions @endcan</th>
             </tr>
             </thead>
             <tbody>
