@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\ActivityDivision;
-use App\Boq;
-use App\BoqDivision;
-use App\Productivity;
 use App\Project;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Storage;
-use PHPExcel;
+use \Auth;
 
 
 class ProjectController extends Controller
