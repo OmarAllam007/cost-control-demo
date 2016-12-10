@@ -13,7 +13,8 @@ class CsiCategoryController extends Controller
 
     public function index()
     {
-        $categories = CsiCategory::tree()->orderBy('name')->paginate();
+
+        $categories = CsiCategory::orderBy('name')->tree()->paginate();
 
         return view('csi-category.index', compact('categories'));
     }
