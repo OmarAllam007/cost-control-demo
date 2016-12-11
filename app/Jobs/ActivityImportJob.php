@@ -95,18 +95,23 @@ class ActivityImportJob extends ImportJob
 
         $tokens = array_filter(array_slice($data, 0, $workPKGIndex));
         $division_id = 0;
+        $code = '';
         if($this->divisions->has($tokens[0])){
             $path[] = mb_strtolower($tokens[0]);
             $key = implode('/', $path);
             $this->divisions->get($key);
             unset($tokens[0]);
             foreach ($tokens as $token){
+                if(strpos($token,'.')){
+                    $code= substr($token,0,strpos($token,'.')+1);
+                    $token= substr($token,strpos($token,'.')+1);
+                }
                 $path[] = mb_strtolower($token);
                 $key = implode('/', $path);
-
                 $division = ActivityDivision::create([
                     'parent_id' => $division_id,
                     'name' => $token,
+                    'code'=>isset($code)?$code:'',
                 ]);
                 $division_id = $division->id;
                 $this->divisions->put($key, $division_id);
@@ -114,6 +119,11 @@ class ActivityImportJob extends ImportJob
         }
         else{
             foreach ($tokens as $token) {
+
+                if(strpos($token,'.')){
+                    $code= substr($token,0,strpos($token,'.')+1);
+                    $token= substr($token,strpos($token,'.')+1);
+                }
                 $path[] = mb_strtolower($token);
                 $key = implode('/', $path);
                 if ($this->divisions->has($key)) {
@@ -124,6 +134,7 @@ class ActivityImportJob extends ImportJob
                 $division = ActivityDivision::create([
                     'parent_id' => $division_id,
                     'name' => $token,
+                    'code'=>isset($code)?$code:'',
                 ]);
                 $division_id = $division->id;
                 $this->divisions->put($key, $division_id);
