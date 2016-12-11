@@ -59,6 +59,10 @@ class Resources extends Model
         }
     }
 
+    function scopeBasic(Builder $query)
+    {
+    }
+
     function morphToJSON()
     {
         return [

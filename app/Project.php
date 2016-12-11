@@ -140,13 +140,6 @@ class Project extends Model
         return $this->hasMany(Period::class);
     }
 
-    function active_period()
-    {
-        $relation = $this->belongsTo(Period::class);
-//        $relation->where('is_open', true);
-        return $relation;
-    }
-
     function open_period()
     {
         return $this->periods()->where('is_open', true)->first();
