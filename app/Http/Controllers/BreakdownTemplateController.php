@@ -117,7 +117,8 @@ class BreakdownTemplateController extends Controller
 
         $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
         $breakdownTemplates = $filter->filter()->paginate(50);
-        return view('breakdown-template.index', compact('breakdownTemplates'));
+        return \Redirect::back();
+//        return view('breakdown-template.index', compact('breakdownTemplates'));
 //        return \Redirect::route('std-activity.show', $breakdown_template->activity);
     }
 
