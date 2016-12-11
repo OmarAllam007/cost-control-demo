@@ -24,7 +24,6 @@ class WbsComposer
         } else {
             $project = Project::find($view->project_id);
         }
-
         $wbsTree = \Cache::remember('wbs-tree-' . $project->id, 7 * 24 * 60, function () use ($project) {
             return dispatch(new CacheWBSTree($project));
         });

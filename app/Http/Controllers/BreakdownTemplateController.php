@@ -21,7 +21,7 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::query(), session('filters.breakdown-template'));
+        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
         $breakdownTemplates = $filter->filter()->paginate(50);
         return view('breakdown-template.index', compact('breakdownTemplates'));
     }
@@ -33,18 +33,19 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-        $wbsTree = WbsLevel::tree()->get();
-        return view('breakdown-template.create')->with(['wbsTree' => $wbsTree]);
+//        $wbsTree = WbsLevel::tree()->get();
+        return view('breakdown-template.create');
     }
 
     public function store(Request $request)
     {
+
         if (\Gate::denies('write', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
-        if ($request->project_id && $request->import) {
+        if ($request->project_id && request('import')) {
             $parent = BreakdownTemplate::find($request->parent_template_id);
             $resources = StdActivityResource::where('template_id', $parent->id)->get();
             $parent->parent_template_id = $parent->id;

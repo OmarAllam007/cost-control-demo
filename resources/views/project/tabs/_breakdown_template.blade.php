@@ -7,7 +7,7 @@
             </a>
 
             <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
-               class="btn btn-success btn-sm in-iframe" title="Add Template">
+               class="btn btn-success btn-sm in-iframe" title="Import Template">
                 <i class="fa fa-level-down" aria-hidden="true"></i>
                 Import Template
             </a>
