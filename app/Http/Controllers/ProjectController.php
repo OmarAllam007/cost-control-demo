@@ -128,7 +128,7 @@ class ProjectController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $period = $project->open_period;
+        $period = $project->open_period();
         return view('project.cost-control', compact('project', 'period'));
     }
 }

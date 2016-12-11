@@ -27,6 +27,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
     {
         return [
             'breakdown_resource_id' => $this->resource->id,
+            'code' => $this->resource->code,
             'project_id' => $this->resource->breakdown->project->id,
             'wbs_id' => $this->resource->breakdown->wbs_level->id,
             'breakdown_id' => $this->resource->breakdown->id,
@@ -52,9 +53,9 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'productivity_output' => isset($this->resource->project_productivity->after_reduction) ? $this->resource->project_productivity->after_reduction : '',
             'productivity_ref' => isset($this->resource->project_productivity->csi_code) ? $this->resource->project_productivity->csi_code : '',
             'remarks' => $this->resource->remarks,
-//            'productivity_id'=>$this->resource->project_productivity->id,
-//            'template_id'=>$this->resource->breakdown->template->id,
-//            'unit_id'=>$this->resource->resource->units->id,
+            'productivity_id'=>$this->resource->project_productivity->id ?? 0,
+            'template_id'=>$this->resource->breakdown->template->id,
+            'unit_id'=>$this->resource->resource->units->id,
         ];
     }
 

@@ -142,9 +142,14 @@ class Project extends Model
 
     function active_period()
     {
-        $relation = $this->hasOne(Period::class);
-        $relation->where('is_open', true);
+        $relation = $this->belongsTo(Period::class);
+//        $relation->where('is_open', true);
         return $relation;
+    }
+
+    function open_period()
+    {
+        return $this->periods()->where('is_open', true)->first();
     }
 
     function users()
