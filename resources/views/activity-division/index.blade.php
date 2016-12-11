@@ -11,7 +11,7 @@
 @section('body')
     @if ($activityDivisions->total())
         <ul class="list-unstyled tree">
-            @foreach($activityDivisions as $division)
+            @foreach($activityDivisions->sort() as $division)
                 @include('activity-division._recursive', compact('division'))
             @endforeach
         </ul>

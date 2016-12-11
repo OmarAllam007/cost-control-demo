@@ -19,7 +19,6 @@ class CsiCategoryComposer
         $categoryTree = \Cache::remember('csi-tree', 7 * 24 * 60, function () {
             return dispatch(new CacheCsiCategoryTree());
         });
-
         $view->with(compact('categoryTree'));
     }
 

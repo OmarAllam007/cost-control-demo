@@ -18,6 +18,7 @@ class ActivityDivisionController extends Controller
             return \Redirect::to('/');
         }
         $activityDivisions = ActivityDivision::tree()->appendActivity()->paginate(25);
+
         return view('activity-division.index', compact('activityDivisions'));
     }
 

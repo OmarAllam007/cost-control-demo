@@ -22,7 +22,7 @@ class ActivityDivision extends Model
 
     public function getLabelAttribute()
     {
-        return $this->code . '.' . $this->name;
+        return $this->code . '' . $this->name;
 
     }
 

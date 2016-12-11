@@ -15,7 +15,7 @@
 @stop
 
 @section('body')
-    {{ Form::open(['route' => ['breakdown-template.store', 'activity' => request('activity')]]) }}
+    {{ Form::open(['route' => ['breakdown-template.store', 'activity' => request('activity'),'import'=>request('import')]]) }}
         @include('breakdown-template._form')
     {{ Form::close() }}
 @stop

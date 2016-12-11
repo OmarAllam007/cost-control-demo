@@ -9,6 +9,7 @@ use App\Jobs\CacheResourcesTree;
 use App\Jobs\CacheWBSTree;
 use App\Observers\BreakDownResourceObserver;
 use App\Observers\ResourcesObserver;
+use App\Productivity;
 use App\Project;
 use App\Resources;
 use App\WbsLevel;
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         \View::composer('csi-category.index', 'App\Http\ViewComposers\CsiCategoryComposer');
 
         $this->csiCategoryActions();
+        $this->ProductivityActions();
         $this->ResourceTypeActions();
         $this->wbsActions();
         BreakdownResource::observe(BreakDownResourceObserver::class);
@@ -49,6 +51,19 @@ class AppServiceProvider extends ServiceProvider
         });
 
         CsiCategory::deleted(function () {
+            \Cache::forget('csi-tree');
+            dispatch(new CacheCsiCategoryTree());
+        });
+
+    }
+    public function ProductivityActions()
+    {
+        Productivity::saved(function () {
+            \Cache::forget('csi-tree');
+            dispatch(new CacheCsiCategoryTree());
+        });
+
+        Productivity::deleted(function () {
             \Cache::forget('csi-tree');
             dispatch(new CacheCsiCategoryTree());
         });

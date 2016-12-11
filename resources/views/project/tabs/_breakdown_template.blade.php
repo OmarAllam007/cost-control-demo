@@ -7,7 +7,7 @@
             </a>
 
             <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
-               class="btn btn-success btn-sm in-iframe" title="Add Template">
+               class="btn btn-success btn-sm in-iframe" title="Import Template">
                 <i class="fa fa-level-down" aria-hidden="true"></i>
                 Import Template
             </a>
@@ -30,16 +30,16 @@
                                 href="/breakdown-template/{{$breakdown_template->id}}?project_id={{$project->id}}">{{ $breakdown_template->name }}</a>
                     </td>
                     <td class="col-xs-4">
-                        <form action="{{ route('breakdown-template.destroy', $breakdown_template) }}" method="post">
-
+                        <form action="{{ route('breakdown-template.destroy', $breakdown_template->id) }}" method="post">
+                            {{csrf_field()}} {{method_field('delete')}}
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
-                            </form>
+                        </form>
 
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
-        @endif
+    @endif
 </section>
 

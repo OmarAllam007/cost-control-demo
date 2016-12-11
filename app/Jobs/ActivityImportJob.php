@@ -67,6 +67,7 @@ class ActivityImportJob extends ImportJob
                     for ($i = $disciplineIndex + 1; $i < $highest; ++$i) {
                         $data[$i];
                         $label = trim($data[$i]);
+
                         if ($label) {
                             $activity->variables()->create(compact('label', 'display_order'));
                             ++$display_order;
@@ -86,7 +87,7 @@ class ActivityImportJob extends ImportJob
     {
         if (!$this->divisions) {
             $this->divisions = collect();
-            ActivityDivision::all()->each(function ($division) {
+            ActivityDivision::where('parent_id',0)->each(function ($division) {
                 $this->divisions->put(mb_strtolower($division->canonical), $division->id);
             });
 
@@ -94,24 +95,71 @@ class ActivityImportJob extends ImportJob
 
         $tokens = array_filter(array_slice($data, 0, $workPKGIndex));
         $division_id = 0;
-        $path = [];
-
-        foreach ($tokens as $token) {
-            $path[] = mb_strtolower($token);
+        $code = '';
+        if($this->divisions->has($tokens[0])){
+            $path[] = mb_strtolower($tokens[0]);
             $key = implode('/', $path);
-            if ($this->divisions->has($key)) {
-                $division_id = $this->divisions->get($key);
-                continue;
+            $this->divisions->get($key);
+            unset($tokens[0]);
+            foreach ($tokens as $token){
+                if(strpos($token,'.')){
+                    $code= substr($token,0,strpos($token,'.')+1);
+                    $token= substr($token,strpos($token,'.')+1);
+                }
+                $path[] = mb_strtolower($token);
+                $key = implode('/', $path);
+                $division = ActivityDivision::create([
+                    'parent_id' => $division_id,
+                    'name' => $token,
+                    'code'=>isset($code)?$code:'',
+                ]);
+                $division_id = $division->id;
+                $this->divisions->put($key, $division_id);
             }
-
-            $division = ActivityDivision::create([
-                'parent_id' => $division_id,
-                'name' => $token,
-
-            ]);
-            $division_id = $division->id;
-            $this->divisions->put($key, $division_id);
         }
+        else{
+            foreach ($tokens as $token) {
+
+                if(strpos($token,'.')){
+                    $code= substr($token,0,strpos($token,'.')+1);
+                    $token= substr($token,strpos($token,'.')+1);
+                }
+                $path[] = mb_strtolower($token);
+                $key = implode('/', $path);
+                if ($this->divisions->has($key)) {
+                    $division_id = $this->divisions->get($key);
+                    continue;
+                }
+
+                $division = ActivityDivision::create([
+                    'parent_id' => $division_id,
+                    'name' => $token,
+                    'code'=>isset($code)?$code:'',
+                ]);
+                $division_id = $division->id;
+                $this->divisions->put($key, $division_id);
+            }
+        }
+
+
+//        $division_id = 0;
+//        $path = [];
+//
+//        foreach ($tokens as $token) {
+//            $path[] = mb_strtolower($token);
+//            $key = implode('/', $path);
+//            if ($this->divisions->has($key)) {
+//                $division_id = $this->divisions->get($key);
+//                continue;
+//            }
+//
+//            $division = ActivityDivision::create([
+//                'parent_id' => $division_id,
+//                'name' => $token,
+//            ]);
+//            $division_id = $division->id;
+//            $this->divisions->put($key, $division_id);
+//        }
 
         return $division_id;
     }

@@ -29,6 +29,9 @@ class QuantitySurveyImportJob extends ImportJob
         $this->wbsLevels = collect();
     }
 
+    /**
+     * @return array
+     */
     function handle()
     {
         $loader = new \PHPExcel_Reader_Excel2007();
@@ -49,26 +52,14 @@ class QuantitySurveyImportJob extends ImportJob
             }
 
             $wbs_level_id = $this->getWBSLevel($cells[0]);
-            $level = WbsLevel::find($wbs_level_id);
-
-            Survey::where('wbs_level_id', $level->id)->get()->each(function ($survey) use ($cost_accounts) {
-                $cost_accounts->push($survey->cost_account);
-            })->pluck('cost_account');
-
-            $parent = $level;
-            while ($parent->parent) {
-                $parent = $parent->parent;
-                Survey::where('wbs_level_id', $parent->id)->get()->each(function ($survey) use($cost_accounts) {
-                    $cost_accounts->push($survey->cost_account);
-                })->pluck('cost_account');
-
-            }
-                if (in_array($cells[1], $cost_accounts->toArray())) {
+            if ($wbs_level_id) {
+                $level = WbsLevel::find($wbs_level_id);
+                $level->cost_account_check;
+                if ($level->cost_account_check) {
                     if (!isset($dublicated[$cells[1]])) {
                         $dublicated[$cells[1]] = $cells[1];
                     }
-                }
-                else {
+                } else {
                     $unit_id = $this->getUnit($cells[3]);
                     $data = [
                         'project_id' => $this->project->id, 'cost_account' => $cells[1], 'wbs_level_id' => $wbs_level_id,
@@ -83,7 +74,13 @@ class QuantitySurveyImportJob extends ImportJob
                         Survey::create($data);
                         ++$success;
                     }
+
                 }
+            }
+
+
+
+
         }
 
         return ['project_id' => $this->project->id, 'failed' => $failed, 'success' => $success, 'dublicated' => $dublicated];

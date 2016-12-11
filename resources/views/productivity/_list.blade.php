@@ -19,11 +19,11 @@
             </td>
             <td class="col-xs-1">{{number_format(floatval($productivity['daily_output']), 2)?:0}}</td>
             <td class="col-xs-2">
-                <form action="{{ route('productivity.destroy', $productivity) }}" method="post">
-                    <a class="btn btn-sm btn-info" href="{{ route('productivity.show', $productivity) }} "><i
+                <form action="{{ route('productivity.destroy', $productivity['id']) }}" method="post">
+                    <a class="btn btn-sm btn-info" href="{{ route('productivity.show', $productivity['id']) }} "><i
                                 class="fa fa-eye"></i>View</a>
                     @can('write', 'productivity')
-                        <a class="btn btn-sm btn-primary" href="{{route('productivity.edit', $productivity)}}">
+                        <a class="btn btn-sm btn-primary" href="{{route('productivity.edit', $productivity['id'])}}">
                             <i class="fa fa-edit"></i> Edit
                         </a>
                     @endcan

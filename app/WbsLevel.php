@@ -77,8 +77,7 @@ class WbsLevel extends Model
         $survey_level = Survey::where('wbs_level_id', $wbs_level->id)->where('cost_account', $request['cost_account'])->first();
         if ($survey_level) {
             $eng_qty = $survey_level->eng_qty;
-        }
-        else {
+        } else {
             $parent = $wbs_level;
             while ($parent->parent) {
                 $parent = $parent->parent;
@@ -94,7 +93,8 @@ class WbsLevel extends Model
         return $eng_qty;
     }
 
-    function getChildrenIdAttribute(){
+    function getChildrenIdAttribute()
+    {
         $children = collect();
         if ($this->children()->count()) {
             foreach ($this->children as $fChild) {
@@ -108,5 +108,26 @@ class WbsLevel extends Model
             }
         }
         return $children->toArray();
+    }
+
+    function getCostAccountCheckAttribute()
+    {
+        $cost_accounts = collect();
+        Survey::where('wbs_level_id', $this->id)->get()->each(function ($survey) use ($cost_accounts) {
+            $cost_accounts->push($survey->cost_account);
+        })->pluck('cost_account');
+
+        $parent = $this;
+        while ($parent->parent) {
+            $parent = $parent->parent;
+            Survey::where('wbs_level_id', $parent->id)->get()->each(function ($survey) use ($cost_accounts) {
+                $cost_accounts->push($survey->cost_account);
+            })->pluck('cost_account');
+
+        }
+        if (in_array($this->cost_account, $cost_accounts->toArray())) {
+              return true;
+        }
+        return false;
     }
 }
