@@ -114,7 +114,7 @@ class BreakdownTemplateController extends Controller
         $breakdown_template->delete();
         flash('Breakdown template has been deleted', 'success');
 
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::query(), session('filters.breakdown-template'));
+        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
         $breakdownTemplates = $filter->filter()->paginate(50);
         return view('breakdown-template.index', compact('breakdownTemplates'));
 //        return \Redirect::route('std-activity.show', $breakdown_template->activity);

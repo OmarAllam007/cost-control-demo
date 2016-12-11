@@ -48,7 +48,7 @@
                                 <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i
                                             class="fa fa-edit"></i> Edit</a>
                                 {{csrf_field()}} {{method_field('delete')}}
-                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
+                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete </button>
                             @endcan
                         </form>
                     </td>

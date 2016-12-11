@@ -65,4 +65,5 @@ class Survey extends Model
             $var->update(['value' => $variables[$var->id]]);
         }
     }
+
 }

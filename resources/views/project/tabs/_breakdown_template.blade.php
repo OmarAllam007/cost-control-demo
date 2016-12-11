@@ -30,16 +30,16 @@
                                 href="/breakdown-template/{{$breakdown_template->id}}?project_id={{$project->id}}">{{ $breakdown_template->name }}</a>
                     </td>
                     <td class="col-xs-4">
-                        <form action="{{ route('breakdown-template.destroy', $breakdown_template) }}" method="post">
-
+                        <form action="{{ route('breakdown-template.destroy', $breakdown_template->id) }}" method="post">
+                            {{csrf_field()}} {{method_field('delete')}}
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
-                            </form>
+                        </form>
 
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
-        @endif
+    @endif
 </section>
 

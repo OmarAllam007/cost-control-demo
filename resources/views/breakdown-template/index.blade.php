@@ -47,7 +47,7 @@
                             @endcan
 
                             @can('delete', 'breakdown-template')
-                            {{csrf_field()}} {{method_field('delete')}}
+                                {{csrf_field()}} {{method_field('delete')}}
                             <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                             @endcan
                         </form>
