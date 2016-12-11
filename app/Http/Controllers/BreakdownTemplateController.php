@@ -46,22 +46,23 @@ class BreakdownTemplateController extends Controller
         }
 
         if ($request->project_id && request('import')) {
-            $parent = BreakdownTemplate::find($request->parent_template_id);
-            $resources = StdActivityResource::where('template_id', $parent->id)->get();
-            $parent->parent_template_id = $parent->id;
-            $parent->project_id = $request->project_id;
-            unset($parent->id);
-            $template = BreakdownTemplate::create($parent->toArray());
-            foreach ($resources as $resource) {
-                $resource->template_id = $template->id;
-                StdActivityResource::create($resource->toArray());
+            $parents = BreakdownTemplate::whereIn('id', $request->parent_template_id)->get();
+            foreach ($parents as $parent) {
+                $resources = StdActivityResource::where('template_id', $parent->id)->get();
+                $parent->parent_template_id = $parent->id;
+                $parent->project_id = $request->project_id;
+                unset($parent->id);
+                $template = BreakdownTemplate::create($parent->toArray());
+                foreach ($resources as $resource) {
+                    $resource->template_id = $template->id;
+                    StdActivityResource::create($resource->toArray());
+                }
             }
 
         } else {
             $this->validate($request, $this->rules);
             $template = BreakdownTemplate::create($request->all());
         }
-//        $request['parent_template_id']= BreakdownTemplate::where('name',request('name'))->first()->id;
         flash('Breakdown template has been saved', 'success');
 
         return \Redirect::route('breakdown-template.show', $template);

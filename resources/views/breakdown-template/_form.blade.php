@@ -7,7 +7,7 @@
             {{Form::hidden('project_id', request('project'))}}
             <div class="form-group {{$errors->first('parent_template_id', 'has-error')}}">
                 {{Form::label('parent_template_id', 'Template Name', ['class' => 'control-label']) }}
-                {{Form::select('parent_template_id', \App\BreakdownTemplate::whereNull('project_id')->pluck('name', 'id')->prepend('Select Template',0),null,['class'=>'form-control'])}}
+                {{Form::select('parent_template_id[]', \App\BreakdownTemplate::whereNull('project_id')->pluck('name', 'id'),null,['class'=>'form-control selectpicker','multiple'=>true])}}
                 {!! $errors->first('parent_template_id', '<div class="help-block">:message</div>') !!}
             </div>
 
