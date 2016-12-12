@@ -10,7 +10,7 @@ class BreakdownTemplate extends Model
 {
     protected static $alias = 'Template';
 
-    use /*SoftDeletes,*/ HasOptions;
+    use SoftDeletes, HasOptions;
 
     protected $fillable = ['name', 'code', 'std_activity_id', 'project_id', 'parent_template_id'];
 

@@ -47,7 +47,6 @@ class ImportBreakdownTemplateJob extends ImportJob
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
-
             if (!array_filter($data)) {
                 continue;
             }
