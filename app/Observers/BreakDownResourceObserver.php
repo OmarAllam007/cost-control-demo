@@ -20,7 +20,8 @@ class BreakDownResourceObserver
     function updated(BreakdownResource $resource)
     {
         $formatter = new BreakdownResourceFormatter($resource);
-        BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->update($formatter->toArray());
+        $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $resource->id]);
+        $shadow->update($formatter->toArray());
     }
 
     function saving(BreakdownResource $breakdownResource)

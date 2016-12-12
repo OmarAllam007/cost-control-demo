@@ -17,7 +17,7 @@ use Illuminate\Support\Collection;
 
 class ImportMaterialDataJob extends Job
 {
-    //<editor-fold desc="Variables declaration">
+    //<editor-fold defaultstate="collapsed" desc="Variables declaration">
     /** @var Collection */
     protected $activityMap;
 
@@ -45,10 +45,9 @@ class ImportMaterialDataJob extends Job
 
     public function __construct(Project $project, Collection $data)
     {
-
         $this->project = $project;
         $this->data = $data;
-        $this->active_period = $project->active_period;
+        $this->active_period = $project->open_period();
         $this->loadActivityMap();
         $this->loadResourceMap();
         $this->loadUnits();

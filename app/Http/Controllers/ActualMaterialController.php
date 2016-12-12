@@ -110,7 +110,7 @@ class ActualMaterialController extends Controller
         \Cache::put($key, $data_to_cache);
 
         if ($data_to_cache['units']->count()) {
-            return \Redirect::route('actual-material.fix-units', $key);
+            return \Redirect::route('actual-material.units', $key);
         } elseif ($data_to_cache['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
         } else {
