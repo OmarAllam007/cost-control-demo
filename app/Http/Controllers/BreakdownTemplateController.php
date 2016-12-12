@@ -164,7 +164,7 @@ class BreakdownTemplateController extends Controller
 
     function deleteAll()
     {
-        BreakdownTemplate::whereNull('project_id')->delete();
+        BreakdownTemplate::whereNull('project_id')->orWhereNotNull('deleted_at')->delete();
         flash('Breakdown templates Deleted successfully', 'success');
         return \Redirect::route('breakdown-template.index');
     }
