@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
 use App\Jobs\ImportBreakdownTemplateJob;
+use App\StdActivity;
 use App\StdActivityResource;
 use App\WbsLevel;
 use Illuminate\Http\Request;
@@ -164,7 +165,12 @@ class BreakdownTemplateController extends Controller
 
     function deleteAll()
     {
-        BreakdownTemplate::whereNull('project_id')->orWhereNotNull('deleted_at')->delete();
+        $templates = BreakdownTemplate::whereNull('project_id')->get();
+        foreach ($templates as $template){
+            StdActivityResource::where('template_id',$template->id)->delete();
+            $template->delete();
+        }
+
         flash('Breakdown templates Deleted successfully', 'success');
         return \Redirect::route('breakdown-template.index');
     }
