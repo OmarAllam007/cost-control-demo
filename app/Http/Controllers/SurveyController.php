@@ -66,7 +66,7 @@ class SurveyController extends Controller
         $this->validate($request, $this->rules);
         $level = WbsLevel::find($request->wbs_level_id);
         $level_survey = Survey::where('wbs_level_id', $level->id)->first();
-        $cost_accounts=[];
+        $cost_accounts = [];
         if ($level_survey) {
             $cost_accounts[] = $level_survey->cost_account;
         }
@@ -170,12 +170,14 @@ class SurveyController extends Controller
             flash('Could not import some items.', 'warning');
             return redirect()->to(route('survey.fix-import', $key) . '?iframe=1');
         }
+
         if (count($status['dublicated'])) {
-            $dublicatedKey = 'qs-dublicated';
-            \Cache::add($dublicatedKey, $status['dublicated'], 100);
-            return redirect()->to(route('survey.dublicate', $dublicatedKey). '?iframe=1');
-        }
-        else {
+            $dublicatedKey = 'qs-dublicateded';
+            \Cache::add($dublicatedKey, $status, 60);
+            flash('Dublicated Cost Accounts', 'warning');
+
+            return redirect()->to(route('survey.dublicate', $dublicatedKey) . '?iframe=1');
+        } else {
             flash($status['success'] . ' Quantity survey items have been imported', 'success');
             return \Redirect::to('/blank?reload=quantities');
         }
@@ -183,7 +185,45 @@ class SurveyController extends Controller
 
     function dublicateQuantitySurvey($key)
     {
-        return view('survey.dublicated', compact('key'));
+        if (!\Cache::has($key)) {
+            flash('Nothing to fix');
+            return redirect()->route('project.index');
+        }
+        $status = \Cache::get($key);
+        $project = Project::find($status['project_id']);
+        $dublicated_items = $status['dublicated'];
+        return view('survey.dublicated', compact('dublicated_items', 'project', 'key'));
+    }
+
+    function postDublicateQuantitySurvey($key, Request $request)
+    {
+
+        $status = \Cache::get($key);
+        $project = Project::find($status['project_id']);
+        $data = $request->all();
+        $levels = $data['data'];
+
+        foreach ($levels as $costKey => $accounts) {
+            foreach ($accounts as $lkey => $level) {
+                $wbsLevel = WbsLevel::where('id', $level)->first();
+                $check = $wbsLevel->getCostAccountCheck($wbsLevel, $lkey);
+                if ($check) {
+                    flash('Dublicated Exists', 'danger');
+                    return \Redirect::back()->withInput(compact('data'));
+                } else {
+                    foreach ($status['dublicated']->toArray() as $ikey => $items) {
+                        foreach ($items['wbs'] as $iKey => $item) {
+                            $items['wbs_level_id'] = $level;
+                            $project->quantities()->create($items);
+                            \Cache::forget($key);
+                            flash('Dublicated Fixed', 'success');
+                            return \Redirect::to('/blank?reload=quantities');
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     function fixImport($key)
@@ -206,6 +246,7 @@ class SurveyController extends Controller
 
     function postFixImport($key, Request $request)
     {
+
         if (!\Cache::has($key)) {
             flash('Nothing to fix');
             return redirect()->route('project.index');
@@ -220,12 +261,10 @@ class SurveyController extends Controller
 
         $data = $request->get('data');
         $errors = Survey::checkImportData($data);
-
         if (!$errors) {
             /** @var Project $project */
             $units = $data['units'];
             $wbs = $data['wbs'];
-
             foreach ($status['failed'] as $key => $item) {
                 if (!$item['unit_id']) {
                     $item['unit_id'] = $units[$item['unit']];

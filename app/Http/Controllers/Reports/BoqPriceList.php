@@ -52,6 +52,7 @@ class BoqPriceList
                         'id' => $boq->id,
                         'cost_account' => $cost_account,
                         'unit' => $breakDown_resource['measure_unit'],
+                        'GENERAL REQUIRMENT' => 0,
                         'LABORS' => 0,
                         'MATERIAL' => 0,
                         'SUBCONTRACTORS' => 0,

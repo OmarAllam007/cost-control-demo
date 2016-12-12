@@ -8,6 +8,7 @@ use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\CacheWBSTree;
 use App\Observers\BreakDownResourceObserver;
+use App\Observers\ProductivityObserver;
 use App\Observers\ResourcesObserver;
 use App\Productivity;
 use App\Project;
@@ -38,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         $this->ResourceTypeActions();
         $this->wbsActions();
         BreakdownResource::observe(BreakDownResourceObserver::class);
+        Productivity::observe(ProductivityObserver::class);
 
     }
 
