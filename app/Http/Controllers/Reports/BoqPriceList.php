@@ -62,7 +62,7 @@ class BoqPriceList
                     ];
                 }
 
-                $name = substr($root, strpos($root, '.') + 1);
+                $name = mb_strtoupper(substr($root, strpos($root, '.') + 1));
 
                 $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name] += $breakDown_resource['boq_equivilant_rate'];
                 $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account]['total_resources'] += $breakDown_resource['boq_equivilant_rate'];
