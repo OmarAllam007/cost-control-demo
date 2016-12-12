@@ -22,7 +22,7 @@ class BreakdownTemplateController extends Controller
         }
 
         $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
-        $breakdownTemplates = $filter->filter()->paginate(50);
+        $breakdownTemplates = $filter->filter()->paginate(75);
         return view('breakdown-template.index', compact('breakdownTemplates'));
     }
 

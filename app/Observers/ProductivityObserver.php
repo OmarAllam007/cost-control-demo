@@ -17,18 +17,12 @@ class ProductivityObserver
 
     function updated(Productivity $productivity)
     {
-        if ($productivity->project_id) {
-            if ($productivity->productivity_id) {
-                $resources = BreakDownResourceShadow::where('project_id', $productivity->project_id)->where('productivity_id', $productivity->productivity_id)->get();
-            } else {
-                $resources = BreakDownResourceShadow::where('project_id', $productivity->project_id)->where('productivity_id', $productivity->id)->get();
-            }
-            $output = $productivity->versionFor($productivity->project_id)->after_reduction;
 
-            foreach ($resources as $resource) {
-                $resource->productivity_output = $output;
-                $resource->save();
-            }
+        $resources = BreakDownResourceShadow::where('productivity_id', $productivity->productivity_id)->get();
+        if ($resources) {
+
         }
     }
+
+
 }

@@ -57,7 +57,7 @@
             </tbody>
         </table>
 
-        <div class="text-center">ß
+        <div class="text-center">
             {{ $breakdownTemplates->links() }}
         </div>
     @else
