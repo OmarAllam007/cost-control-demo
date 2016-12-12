@@ -54,7 +54,7 @@ class BoqPriceList
                         'unit' => $breakDown_resource['measure_unit'],
                         'LABORS' => 0,
                         'MATERIAL' => 0,
-                        'Subcontractors' => 0,
+                        'SUBCONTRACTORS' => 0,
                         'EQUIPMENT' => 0,
                         'SCAFFOLDING' => 0,
                         'OTHERS' => 0,
