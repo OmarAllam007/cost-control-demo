@@ -161,4 +161,11 @@ class BreakdownTemplateController extends Controller
         flash('Breakdown templates imported successfully', 'success');
         return \Redirect::route('breakdown-template.index');
     }
+
+    function deleteAll()
+    {
+        BreakdownTemplate::whereNull('project_id')->delete();
+        flash('Breakdown templates Deleted successfully', 'success');
+        return \Redirect::route('breakdown-template.index');
+    }
 }

@@ -121,6 +121,7 @@ Route::delete('/wbs-level/reources/{id}', ['uses' => 'BreakdownController@wpsdel
 Route::group(['prefix' => 'breakdown-resource'], function () {
     Route::delete('/delete-all/{project}', ['uses' => 'BreakdownResourceController@deleteAllBreakdowns', 'as' => 'breakdownresources.deleteAllBreakdowns']);
 });
+
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

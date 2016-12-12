@@ -18,10 +18,7 @@ class ProductivityObserver
     function updated(Productivity $productivity)
     {
 
-        $resources = BreakDownResourceShadow::where('productivity_id', $productivity->productivity_id)->get();
-        if ($resources) {
 
-        }
     }
 
 
