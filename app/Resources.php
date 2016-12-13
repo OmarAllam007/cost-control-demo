@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Resources extends Model
 {
-    use SoftDeletes, HasOptions, Tree, Overridable, CachesQueries;
+    use SoftDeletes, HasOptions, Tree, Overridable;
 
     protected $table = 'resources';
 
