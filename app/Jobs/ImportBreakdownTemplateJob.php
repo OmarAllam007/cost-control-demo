@@ -57,6 +57,7 @@ class ImportBreakdownTemplateJob extends ImportJob
             }
 
             $template = $this->getTemplate($data[2], $activity);
+
             if (!$template) {
                 continue;
             }
@@ -79,7 +80,7 @@ class ImportBreakdownTemplateJob extends ImportJob
     protected function loadActivities()
     {
         $this->activities = StdActivity::all()->keyBy(function($activity){
-            return strtolower(strval($activity->code));
+            return $activity->code;
         });
     }
 
@@ -92,7 +93,7 @@ class ImportBreakdownTemplateJob extends ImportJob
     {
         $key = strval($activity->id . '.' . strtolower($name));
         if (!$this->templates->has($key)) {
-            $template = $activity->breakdowns()->firstOrCreate(compact('name'));
+            $template = $activity->breakdowns()->create(compact('name'));
             $this->templates->put($key, $template);
         }
 
