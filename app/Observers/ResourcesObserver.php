@@ -10,6 +10,7 @@ namespace App\Observers;
 
 
 use App\BreakDownResourceShadow;
+use App\Project;
 use App\Resources;
 use App\Unit;
 
@@ -18,8 +19,10 @@ class ResourcesObserver
 
     function updated(Resources $resource)
     {
-        $shadows = BreakDownResourceShadow::where('resource_id',$resource->id)->get();
-        foreach ($shadows as $shadow){
+        $shadows = BreakDownResourceShadow::where('resource_name', $resource->name)
+            ->where('project_id', $resource->project_id)->get();
+
+        foreach ($shadows as $shadow) {
             $shadow->resource_waste = $resource->waste;
             $shadow->unit_price = $resource->rate;
             $shadow->measure_unit = Unit::find($resource->unit)->type;
