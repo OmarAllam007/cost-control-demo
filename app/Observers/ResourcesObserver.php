@@ -32,7 +32,7 @@ class ResourcesObserver
             $shadow->unit_price = $resource->rate;
             $shadow->measure_unit = Unit::find($resource->unit)->type;
             $shadow->budget_cost = $shadow->budget_unit * $shadow->unit_price;
-            $shadow->boq_equivilant_rate = $shadow->budget_cost / $shadow->budget_unit;
+            $shadow->boq_equivilant_rate = ($shadow->budget_cost / $shadow->eng_qty)??0;
             $shadow->save();
         }
 
