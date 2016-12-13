@@ -61,7 +61,6 @@ class Project extends Model
     }
 
 
-
     function resources()
     {
         return $this->hasMany(Resources::class)->withTrashed()->with('types');
