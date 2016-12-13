@@ -66,8 +66,8 @@
             <tbody>
             @foreach($breakdown_template->resources as $resource)
                 <tr>
-                    <td class="col-xs-6">{{$resource->resource->name}}</td>
-                    <td class="col-xs-3">{{$resource->equation}}</td>
+                    <td class="col-xs-6">{{$resource->resource->name??''}}</td>
+                    <td class="col-xs-3">{{$resource->equation??''}}</td>
                     <td class="col-xs-3">
                         @can('write', 'breakdown-template')
                             {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}

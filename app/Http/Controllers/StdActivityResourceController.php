@@ -25,7 +25,7 @@ class StdActivityResourceController extends Controller
 
     public function store(Request $request)
     {
-        $request['resource_id']= Resources::where('name',$request->resource_id)->first()->id;
+        $request['resource_id'] = Resources::where('resource_code', $request->resource_id)->first()->id;
         $this->validate($request, $this->rules);
 
         $resource = StdActivityResource::create($request->all());
