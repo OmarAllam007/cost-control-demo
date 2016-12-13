@@ -25,6 +25,7 @@ class ResourcesObserver
             ->get();
 
         foreach ($shadows as $shadow) {
+            $shadow->resource_name = $resource->name;
             $shadow->resource_waste = $resource->waste;
             $shadow->unit_price = $resource->rate;
             $shadow->measure_unit = Unit::find($resource->unit)->type;
