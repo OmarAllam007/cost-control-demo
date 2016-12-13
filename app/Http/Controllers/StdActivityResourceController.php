@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Resources;
 use App\StdActivityResource;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,7 @@ class StdActivityResourceController extends Controller
 
     public function store(Request $request)
     {
+        $request['resource_id']= Resources::where('name',$request->resource_id)->first()->id;
         $this->validate($request, $this->rules);
 
         $resource = StdActivityResource::create($request->all());
