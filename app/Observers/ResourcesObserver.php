@@ -20,7 +20,9 @@ class ResourcesObserver
     function updated(Resources $resource)
     {
         $shadows = BreakDownResourceShadow::where('resource_name', $resource->name)
-            ->where('project_id', $resource->project_id)->get();
+            ->where('resource_code', $resource->resource_code)
+            ->where('project_id', $resource->project_id)
+            ->get();
 
         foreach ($shadows as $shadow) {
             $shadow->resource_waste = $resource->waste;
