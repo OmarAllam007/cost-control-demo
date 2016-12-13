@@ -32,9 +32,9 @@
         <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
-         <a href="#WipeResources" class="btn btn-danger btn-sm" data-toggle="modal">
-            <i class="fa fa-trash"></i> Delete All
-        </a>
+         {{--<a href="#WipeResources" class="btn btn-danger btn-sm" data-toggle="modal">--}}
+            {{--<i class="fa fa-trash"></i> Delete All--}}
+        {{--</a>--}}
     </div>
     <div class="clearfix"></div>
 
