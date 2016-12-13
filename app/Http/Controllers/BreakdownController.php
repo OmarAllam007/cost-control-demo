@@ -20,9 +20,11 @@ use App\Http\Requests\BreakdownRequest;
 use App\Jobs\Export\ExportBreakdownJob;
 use App\Jobs\PrintReport\PrintAllJob;
 use App\Project;
+use App\Resources;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Null_;
 
 class BreakdownController extends Controller
 {
@@ -52,7 +54,9 @@ class BreakdownController extends Controller
         $resource_code = $breakdown->wbs_level->code . $breakdown->std_activity->id_partial;
 
         $resources = $breakdown->resources()->createMany($request->get('resources'));
+
         foreach ($resources as $resource) {
+            $oldResrouce=Resources::where('id', $resource->resource_id)->withTrashed()->update(['deleted_at'=>null]);
             $resource->update(['code' => $resource_code, 'eng_qty' => $eng_qty]);
 
         }

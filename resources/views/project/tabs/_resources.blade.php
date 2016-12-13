@@ -10,7 +10,7 @@
             <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">
                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                Updating
+                Modifying
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -32,14 +32,14 @@
         <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
-         {{--<a href="#WipeResources" class="btn btn-danger btn-sm" data-toggle="modal">--}}
-            {{--<i class="fa fa-trash"></i> Delete All--}}
-        {{--</a>--}}
+         <a href="#WipeResources" class="btn btn-danger btn-sm" data-toggle="modal">
+            <i class="fa fa-trash"></i> Delete All
+        </a>
     </div>
     <div class="clearfix"></div>
 
     <section id="resourceData">
-    @if ($project->resources()->count())
+    @if ($project->resources()->whereNull('deleted_at')->count())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
@@ -55,7 +55,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($projectResources = $project->resources()->paginate(100) as $resource)
+            @foreach ($projectResources = $project->resources()->whereNull('deleted_at')->paginate(100) as $resource)
                 <tr>
                     <td class="col-xs-2">{{$resource->resource_code}}</td>
                     <td class="col-xs-3">{{$resource->name}}</td>

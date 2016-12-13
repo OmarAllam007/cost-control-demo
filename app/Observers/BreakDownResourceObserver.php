@@ -45,6 +45,7 @@ class BreakDownResourceObserver
 
     function deleted(BreakdownResource $resource)
     {
+
         BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->delete();
     }
 
