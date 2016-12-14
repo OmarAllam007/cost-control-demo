@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Breakdown;
 use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\BreakdownTemplate;
 use App\CsiCategory;
 use App\Jobs\CacheCsiCategoryTree;
@@ -11,6 +12,7 @@ use App\Jobs\CacheResourcesTree;
 use App\Jobs\CacheWBSTree;
 use App\Observers\BreakdownObserver;
 use App\Observers\BreakDownResourceObserver;
+use App\Observers\BreakdownShadowObserver;
 use App\Observers\BreakdownTemplateObserver;
 use App\Observers\ProductivityObserver;
 use App\Observers\ResourcesObserver;
@@ -48,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         Resources::observe(ResourcesObserver::class);
         BreakdownTemplate::observe(BreakdownTemplateObserver::class);
         Breakdown::observe(BreakdownObserver::class);
+        BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
 
 
     }
