@@ -41,7 +41,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'resource_qty' => $this->resource->resource_qty,
             'resource_waste' => $this->resource->resource_waste,
             'resource_type' => $this->resource->resource->types->root->name ?? 'Not Assigned',
-            'resource_type_id' => $this->resource->resource->types->id ?? 0,
+            'resource_type_id' => $this->resource->resource->types->root->id ?? 0,
             'resource_code' => $this->resource->resource->resource_code ?? '',
             'resource_name' => $this->resource->resource->name ?? 'Not Assigned',
             'unit_price' => $this->resource->resource->rate ?? 0,
