@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Period extends Model
 {
-    protected $fillable = ['name', 'start_date'];
+    protected $fillable = ['name', 'start_date', 'is_open'];
+
+    protected $dates = ['created_at', 'update_at', 'start_date'];
 
     function project()
     {

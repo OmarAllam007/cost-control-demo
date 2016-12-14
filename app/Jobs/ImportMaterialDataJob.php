@@ -68,7 +68,7 @@ class ImportMaterialDataJob extends Job
         ];
 
         // Excel date is translated to number of days since 30/12/1899
-        $excelBaseDate = Carbon::create(1899, 12, 30);
+
 
         foreach ($this->data as $row) {
             $activityCode = strtolower($row[3]);
@@ -114,11 +114,13 @@ class ImportMaterialDataJob extends Job
                     'wbs_level_id' => $breakdownResource->breakdown->wbs_level_id,
                     'breakdown_resource_id' => $breakdownResource->id,
                     'period_id' => $this->active_period->id,
+                    'original_code' => $row[13],
+                    'resource_id' => $resource->id,
                     'qty' => abs($row[10]),
                     'unit_price' => $row[11],
                     'cost' => abs($row[12]),
                     'unit_id' => $unit_id,
-                    'action_date' => $excelBaseDate->addDays($row[5])
+                    'action_date' => Carbon::create(1899, 12, 30)->addDays($row[5])
                 ]);
 
                 ++$result['success'];
@@ -190,7 +192,7 @@ class ImportMaterialDataJob extends Job
                 $this->resourceMap->get($code)->push($resource->id);
             });
 
-        $project_resource_map = Resources::where('project_id', $this->project_id)->pluck('id', 'resource_id');
+        $project_resource_map = Resources::where('project_id', $this->project->id)->pluck('id', 'resource_id');
         ResourceCode::select('resource_id', 'code')->get()
             ->each(function ($resource_code) use ($project_resource_map) {
                 $code = strtolower($resource_code->code);
@@ -205,8 +207,6 @@ class ImportMaterialDataJob extends Job
 
                 $this->resourceMap->get($code)->push($resource_id);
             });
-
-        dd($this->resourceMap);
     }
 
     protected function loadUnits()

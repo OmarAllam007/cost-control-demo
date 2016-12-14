@@ -36,6 +36,7 @@
 
 
     @include('project.cost-control.datasheet')
+    @include('project.cost-control.periods')
 
 @stop
 

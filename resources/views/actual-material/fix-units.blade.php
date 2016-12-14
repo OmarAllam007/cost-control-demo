@@ -28,7 +28,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($units as $line)
+        @foreach($units as $idx => $line)
         <tr data-total-price={{ abs($line[12]) }}>
             <td>
                 {{$line['resource']->breakdown_resource->code}}
@@ -69,10 +69,10 @@
             </td>
 
             <td>
-                {{Form::text("units[{$line['resource']->breakdown_resource_id}][qty]", 0, ['class' => 'form-control input-sm qty'])}}
+                {{Form::text("units[$idx][qty]", 0, ['class' => 'form-control input-sm qty'])}}
             </td>
             <td>
-                {{Form::text("units[{$line['resource']->breakdown_resource_id}][unit_price]", 0, ['class' => 'form-control input-sm unit-price', 'readonly'])}}
+                {{Form::text("units[$idx][unit_price]", 0, ['class' => 'form-control input-sm unit-price', 'readonly'])}}
             </td>
             <td>
                 {{ abs($line[12]) }}
