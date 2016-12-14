@@ -17,6 +17,16 @@ class BreakDownResourceObserver
         BreakDownResourceShadow::create($formatter->toArray());
     }
 
+    function creating(BreakdownResource $resource)
+    {
+        $projectResource = Resources::withTrashed()->where('id', $resource->template_resource->resource_id)->first();
+        $projectResource->project_id = $resource->breakdown->project_id;
+        $projectResource->save();
+
+        $resource->resource_id = $resource->template_resource->resource->id;
+        $resource->update();
+    }
+
     function updated(BreakdownResource $resource)
     {
         $formatter = new BreakdownResourceFormatter($resource);
@@ -45,8 +55,9 @@ class BreakDownResourceObserver
 
     function deleted(BreakdownResource $resource)
     {
-
         BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->delete();
     }
+
+
 
 }
