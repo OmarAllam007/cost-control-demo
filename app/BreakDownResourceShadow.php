@@ -12,19 +12,21 @@ class BreakDownResourceShadow extends Model
     protected $table = 'break_down_resource_shadows';
     protected $fillable = [
         'breakdown_resource_id',
+        'code',
         'project_id',
         'wbs_id',
         'breakdown_id',
-        'activity_id',
-        'resource_type_id',
+        'resource_id',
         'template',
         'activity',
+        'activity_id',
         'cost_account',
         'eng_qty',
         'budget_qty',
         'resource_qty',
         'resource_waste',
         'resource_type',
+        'resource_type_id',
         'resource_code',
         'resource_name',
         'unit_price',
@@ -36,6 +38,9 @@ class BreakDownResourceShadow extends Model
         'productivity_output',
         'productivity_ref',
         'remarks',
+        'productivity_id',
+        'template_id',
+        'unit_id',
     ];
 
     function wbs()

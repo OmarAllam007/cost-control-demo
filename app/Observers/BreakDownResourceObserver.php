@@ -14,17 +14,13 @@ class BreakDownResourceObserver
     function created(BreakdownResource $resource)
     {
         $formatter = new BreakdownResourceFormatter($resource);
-        BreakDownResourceShadow::create($formatter->toArray());
+        $shadow = BreakDownResourceShadow::create($formatter->toArray());
     }
 
     function creating(BreakdownResource $resource)
     {
-        $projectResource = Resources::withTrashed()->where('id', $resource->template_resource->resource_id)->first();
-        $projectResource->project_id = $resource->breakdown->project_id;
-        $projectResource->save();
-
-        $resource->resource_id = $resource->template_resource->resource->id;
-        $resource->update();
+        $resource->code = $resource->breakdown->wbs_level->code . $resource->breakdown->std_activity->id_partial;
+        $resource->eng_qty = $resource->breakdown->wbs_level->getEngQty($resource->breakdown->cost_account);
     }
 
     function updated(BreakdownResource $resource)
@@ -37,14 +33,13 @@ class BreakDownResourceObserver
     function saving(BreakdownResource $breakdownResource)
     {
         $resource = Resources::withTrashed()->find($breakdownResource->template_resource->resource_id);
-        if (!$resource) {
-        }
         if (!$resource->project_id) {
-            $projectResource = Resources::whereResourceId($resource->id)->whereProjectId($resource->project_id)->first();
+            $project_id = $breakdownResource->breakdown->project_id;
+            $projectResource = Resources::whereResourceId($resource->id)->whereProjectId($project_id)->first();
             if (!$projectResource) {
                 $newResource = $resource->toArray();
                 unset($newResource['id'], $newResource['created_at'], $newResource['updated_at']);
-                $newResource['project_id'] = $resource->project_id;
+                $newResource['project_id'] = $project_id;
                 $newResource['resource_id'] = $resource->id;
                 Resources::flushEventListeners();
                 $projectResource = Resources::create($newResource);

@@ -70,19 +70,18 @@ class WbsLevel extends Model
     }
 
 
-    function getEngQty($request)
+    function getEngQty($cost_account)
     {
         $eng_qty = 0;
-        $wbs_level = WbsLevel::find($request['wbs_level_id']);
-        $survey_level = Survey::where('wbs_level_id', $wbs_level->id)->where('cost_account', $request['cost_account'])->first();
+        $survey_level = Survey::where('wbs_level_id', $this->id)->where('cost_account', $cost_account)->first();
         if ($survey_level) {
             $eng_qty = $survey_level->eng_qty;
         } else {
-            $parent = $wbs_level;
+            $parent = $this;
             while ($parent->parent) {
                 $parent = $parent->parent;
                 $parent_survey = Survey::where('wbs_level_id', $parent->id)
-                    ->where('cost_account', $request['cost_account'])->first();
+                    ->where('cost_account', $cost_account)->first();
                 if ($parent_survey) {
                     $eng_qty = $parent_survey->eng_qty;
                     break;

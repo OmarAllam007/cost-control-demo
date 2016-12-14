@@ -48,18 +48,9 @@ class BreakdownController extends Controller
      */
     public function store(BreakdownRequest $request)
     {
-        $level = WbsLevel::find($request->wbs_level_id);
-        $eng_qty = $level->getEngQty($request);
         $breakdown = Breakdown::create($request->all());
-        $resource_code = $breakdown->wbs_level->code . $breakdown->std_activity->id_partial;
-
         $resources = $breakdown->resources()->createMany($request->get('resources'));
 
-        foreach ($resources as $resource) {
-            $oldResrouce=Resources::where('id', $resource->resource_id)->withTrashed()->update(['deleted_at'=>null]);
-            $resource->update(['code' => $resource_code, 'eng_qty' => $eng_qty]);
-
-        }
         $breakdown->syncVariables($request->get('variables'));
         return \Redirect::to('/blank?reload=breakdown');
     }
