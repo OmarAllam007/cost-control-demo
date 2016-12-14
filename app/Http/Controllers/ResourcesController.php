@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessPartner;
 use App\Filter\ResourcesFilter;
+use App\Http\Controllers\Caching\ResourcesCache;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\Export\ExportPublicResourcesJob;
@@ -82,7 +83,6 @@ class ResourcesController extends Controller
         }
 
         $resource = Resources::create($request->all());
-
         flash('Resource has been saved', 'success');
 
         if ($resource->project_id) {
@@ -141,6 +141,8 @@ class ResourcesController extends Controller
         $resources->update($request->all());
         $resources->syncCodes($request->get('codes'));
 
+
+
         flash('Resource has been saved', 'success');
         if ($resources->project_id) {
             return \Redirect::route('project.show', $resources->project_id);
@@ -163,6 +165,8 @@ class ResourcesController extends Controller
         }
 
         $resources->delete();
+
+
 
         flash('Resources has been deleted', 'success');
 
@@ -414,8 +418,9 @@ class ResourcesController extends Controller
         return view('resources.index', ['resources' => $resources]);
     }
 
-    function projectWipeAll(Project $project){
-        Resources::where('project_id',$project->id)->delete();
+    function projectWipeAll(Project $project)
+    {
+        Resources::where('project_id', $project->id)->delete();
         \Cache::forget('resources-tree');
         return redirect()->route('project.show', $project);
     }

@@ -38,6 +38,7 @@ class CacheResourcesTree extends Job
             });
         }
 
+
         return $tree;
     }
 

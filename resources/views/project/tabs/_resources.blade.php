@@ -62,7 +62,7 @@
                     <td class="col-xs-2">{{$resource->types->root->name or ''}}</td>
                     <td class="col-xs-2">{{number_format($resource->rate, 2)}}</td>
                     <td class="col-xs-1">{{$resource->units->type or ''}}</td>
-                    <td class="col-xs-1">{{number_format($resource->waste, 2)}} %</td>
+                    <td class="col-xs-1">{{$resource->waste}} </td>
                     <td class="col-xs-1">
                         @can('resources', $project)
                         <a href="{{route('resources.edit',$resource->id)}}" class="btn btn-primary btn-sm">
