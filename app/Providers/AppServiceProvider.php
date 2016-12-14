@@ -2,12 +2,18 @@
 
 namespace App\Providers;
 
+use App\Breakdown;
 use App\BreakdownResource;
+use App\BreakDownResourceShadow;
+use App\BreakdownTemplate;
 use App\CsiCategory;
 use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\CacheWBSTree;
+use App\Observers\BreakdownObserver;
 use App\Observers\BreakDownResourceObserver;
+use App\Observers\BreakdownShadowObserver;
+use App\Observers\BreakdownTemplateObserver;
 use App\Observers\ProductivityObserver;
 use App\Observers\ResourcesObserver;
 use App\Productivity;
@@ -38,9 +44,14 @@ class AppServiceProvider extends ServiceProvider
         $this->ProductivityActions();
         $this->ResourceTypeActions();
         $this->wbsActions();
+
         BreakdownResource::observe(BreakDownResourceObserver::class);
         Productivity::observe(ProductivityObserver::class);
         Resources::observe(ResourcesObserver::class);
+        BreakdownTemplate::observe(BreakdownTemplateObserver::class);
+        Breakdown::observe(BreakdownObserver::class);
+        BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
+
 
     }
 
@@ -72,7 +83,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
     }
-
     public function ResourceTypeActions()
     {
         CsiCategory::saved(function () {
@@ -84,7 +94,6 @@ class AppServiceProvider extends ServiceProvider
             dispatch(new CacheResourcesTree());
         });
     }
-
     public function wbsActions()
     {
 
