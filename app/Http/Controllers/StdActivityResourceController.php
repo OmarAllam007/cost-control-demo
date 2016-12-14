@@ -25,12 +25,9 @@ class StdActivityResourceController extends Controller
 
     public function store(Request $request)
     {
-//        $request['resource_id'] = Resources::where('id', $request->resource_id)->first()->id;
         $this->validate($request, $this->rules);
 
         $resource = StdActivityResource::create($request->all());
-
-//        $resource->syncVariables($request->get('variables'));
 
         flash('Std activity resource has been saved', 'success');
 

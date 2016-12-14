@@ -22,8 +22,11 @@ class ResourcesObserver
         $cache = new ResourcesCache();
         $cache->cacheResources();
     }
+
     function creating(Resources $resource){
-        $this->generateResourceCode($resource);
+        if (!$resource->project_id) {
+            $this->generateResourceCode($resource);
+        }
     }
 
     function updated(Resources $resource)

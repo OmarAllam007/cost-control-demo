@@ -9,17 +9,14 @@
 namespace App\Http\ViewComposers;
 
 
-use App\Jobs\CacheResourcesTree;
+use App\Http\Controllers\Caching\ResourcesCache;
 use Illuminate\View\View;
 
 class ResourcesComposer
 {
     function compose(View $view)
     {
-        $resourcesTree = \Cache::remember('resources-tree', 7 * 24 * 60, function(){
-            return dispatch(new CacheResourcesTree());
-        });
-
+        $resourcesTree = (new ResourcesCache())->cacheResources(false);
         $view->with(compact('resourcesTree'));
     }
 }
