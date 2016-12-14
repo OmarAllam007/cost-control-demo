@@ -51,7 +51,6 @@ class ResourcesObserver
 
     }
     function saving(Resources $resource){
-        $this->generateResourceCode($resource);
         $cache = new ResourcesCache();
         $cache->cacheResources();
     }

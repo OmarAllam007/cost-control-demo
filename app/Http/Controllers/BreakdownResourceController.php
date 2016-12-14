@@ -97,7 +97,8 @@ class BreakdownResourceController extends Controller
         if ($wbs_level->children()->count()) {
          $children=$wbs_level->children_id;
         }
-        BreakdownResource::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
+        $breakdown_resources = BreakdownResource::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
+        dd($breakdown_resources);
         BreakDownResourceShadow::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
         if(count($children)){
             $levels = WbsLevel::whereIn('id', $children->toArray())->get();
