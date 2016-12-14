@@ -11,12 +11,17 @@ namespace App\Observers;
 
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\Http\Controllers\Caching\ResourcesCache;
 use App\Project;
 use App\Resources;
 use App\Unit;
 
 class ResourcesObserver
 {
+    function created(Resources $resource){
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
+    }
 
     function updated(Resources $resource)
     {
@@ -35,7 +40,18 @@ class ResourcesObserver
             $shadow->boq_equivilant_rate = ($shadow->budget_cost / $shadow->eng_qty)??0;
             $shadow->save();
         }
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
 
+    }
+    function saving(Resources $resource){
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
+    }
+
+    function deleted(Resources $resource){
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
     }
 
 }

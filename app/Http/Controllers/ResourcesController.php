@@ -83,8 +83,6 @@ class ResourcesController extends Controller
         }
 
         $resource = Resources::create($request->all());
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
         flash('Resource has been saved', 'success');
 
         if ($resource->project_id) {
@@ -143,8 +141,7 @@ class ResourcesController extends Controller
         $resources->update($request->all());
         $resources->syncCodes($request->get('codes'));
 
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
+
 
         flash('Resource has been saved', 'success');
         if ($resources->project_id) {
@@ -169,8 +166,7 @@ class ResourcesController extends Controller
 
         $resources->delete();
 
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
+
 
         flash('Resources has been deleted', 'success');
 
