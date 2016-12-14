@@ -15,6 +15,7 @@ class BreakdownResource extends Model
 
     protected $productivity_cache;
     protected $resource_cache;
+//    public $original_resource = 0;
 
     function breakdown()
     {
@@ -152,6 +153,14 @@ class BreakdownResource extends Model
         }
         return $this->budget_cost / $this->eng_qty;
     }
+
+//    function getOriginalResourceIdAttribute()
+//    {
+//        if ($this->original_resource == 0) {
+//            $this->original_resource = $this->getOriginal('resource_id');
+//        }
+//        return $this->original_resource;
+//    }
 //
 //    function getEngQtyAttribute()
 //    {
@@ -205,7 +214,6 @@ class BreakdownResource extends Model
     {
         return $this->hasOne(BreakDownResourceShadow::class);
     }
-
 
 
 }

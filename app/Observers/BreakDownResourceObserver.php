@@ -25,14 +25,26 @@ class BreakDownResourceObserver
 
     function updated(BreakdownResource $resource)
     {
+
         $formatter = new BreakdownResourceFormatter($resource);
         $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $resource->id]);
         $shadow->update($formatter->toArray());
+//        if ($resource->resoure_id != $resource->original_resource_id) {
+//            $oldResource = Resources::find($resource->original_resource);
+//            $this->checkForResources($oldResource);
+//        }
+        $oldResource= Resources::find($resource->getOriginal('resource_id'));
+        $this->checkForResources($oldResource);
     }
 
     function saving(BreakdownResource $breakdownResource)
     {
-        $resource = Resources::withTrashed()->find($breakdownResource->template_resource->resource_id);
+        $resource_id = $breakdownResource->resource_id;
+        if (!$resource_id) {
+            $resource_id = $breakdownResource->template_resource->resource_id;
+        }
+
+        $resource = Resources::withTrashed()->find($resource_id);
         if (!$resource->project_id) {
             $project_id = $breakdownResource->breakdown->project_id;
             $projectResource = Resources::whereResourceId($resource->id)->whereProjectId($project_id)->first();
@@ -48,12 +60,25 @@ class BreakDownResourceObserver
         }
     }
 
-    function deleted(BreakdownResource $resource)
+
+    function deleting(BreakdownResource $resource)
     {
         BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->delete();
     }
 
+    function deleted(BreakdownResource $resource)
+    {
+        $this->checkForResources($resource->resource);
+    }
 
+    function checkForResources($resource)
+    {
+        $breakdown_resource = BreakdownResource::where('resource_id', $resource->id)->first();
+        if (!$breakdown_resource) {
+            Resources::where('id', $resource->id)->where('project_id', $resource->project_id)->forceDelete();
+        }
+
+    }
 
 
 }
