@@ -42,4 +42,8 @@
         <input class="form-control input-sm" type="text" name="resources[{{$index}}][remarks]"
                id="laborsCount{{$index}}" value="{{old("resources.$index.remarks")}}" j-model="remarks">
     </td>
+    <td>
+        <input class="form-control input-sm" type="text" name="resources[{{$index}}][equation]"
+               id="laborsCount{{$index}}" value="{{old("resources.$index.equation")}}" j-model="equation">
+    </td>
 </tr>
