@@ -67,9 +67,8 @@ class StdActivityResource extends Model
 //            'variables' => $this->variables()->pluck('label', 'display_order')
         ];
         /** @var WbsLevel $wbs_level */
-
         $wbs_level = WbsLevel::find($request['wbs_level_id']);
-        $eng_qty = $wbs_level->getEngQty($request);
+        $eng_qty = $wbs_level->getEngQty($request['cost_account']);
 
         $costAccount = Survey::where('cost_account', $account)->first();
         if ($costAccount) {
