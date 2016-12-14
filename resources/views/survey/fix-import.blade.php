@@ -39,7 +39,7 @@
             <table class="table table-striped table-condensed table-hover">
                 <thead>
                 <tr>
-                    <th>Unit</th>
+                    <th>Wbs-Code</th>
                     <th>Equivalent</th>
                 </tr>
                 </thead>

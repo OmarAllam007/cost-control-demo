@@ -91,7 +91,8 @@ Route::group(['prefix' => 'project'], function () {
 
 Route::group(['prefix' => 'survey'], function () {
     Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'SurveyController@exportQuantitySurvey']);
-    Route::get('dublicate', ['as' => 'survey.dublicate', 'uses' => 'SurveyController@dublicateQuantitySurvey']);
+    Route::get('dublicate/{key}', ['as' => 'survey.dublicate', 'uses' => 'SurveyController@dublicateQuantitySurvey']);
+    Route::post('dublicate/{key}', ['as' => 'survey.post-dublicate', 'uses' => 'SurveyController@postDublicateQuantitySurvey']);
 });
 
 
@@ -102,6 +103,7 @@ Route::group(['prefix' => 'resources'], function () {
     Route::get('export-all-resources/', ['as' => 'all_resources.export', 'uses' => 'ResourcesController@exportAllResources']);
     Route::get('modify/', ['as' => 'all-resources.modify', 'uses' => 'ResourcesController@modifyAllResources']);
     Route::post('modify/', ['as' => 'all-resources.post-modify', 'uses' => 'ResourcesController@postModifyAllResources']);
+    Route::delete('deleteAll/{project}',['uses'=>'ResourcesController@projectWipeAll','as'=>'project-resources.wipeAll']);
 
 });
 Route::group(['prefix' => 'resource-type'], function () {
@@ -120,6 +122,7 @@ Route::delete('/wbs-level/reources/{id}', ['uses' => 'BreakdownController@wpsdel
 Route::group(['prefix' => 'breakdown-resource'], function () {
     Route::delete('/delete-all/{project}', ['uses' => 'BreakdownResourceController@deleteAllBreakdowns', 'as' => 'breakdownresources.deleteAllBreakdowns']);
 });
+
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

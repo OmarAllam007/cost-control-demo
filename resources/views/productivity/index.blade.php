@@ -12,7 +12,7 @@
             <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">
                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                Updating
+                Modifying
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -34,10 +34,10 @@
         <a href="{{route('productivity.exportAll')}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
-        @can('wipe')
-            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete
-                All</a>
-        @endcan
+        {{--@can('wipe')--}}
+            {{--<a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete--}}
+                {{--All</a>--}}
+        {{--@endcan--}}
     </div>
 @stop
 

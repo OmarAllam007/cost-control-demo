@@ -10,7 +10,7 @@
             <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">
                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                Updating
+                Modifying
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -32,11 +32,14 @@
         <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Export
         </a>
+         <a href="#WipeResources" class="btn btn-danger btn-sm" data-toggle="modal">
+            <i class="fa fa-trash"></i> Delete All
+        </a>
     </div>
     <div class="clearfix"></div>
 
     <section id="resourceData">
-    @if ($project->resources()->count())
+    @if ($project->resources()->whereNull('deleted_at')->count())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
@@ -52,7 +55,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($projectResources = $project->resources()->paginate(200) as $resource)
+            @foreach ($projectResources = $project->resources()->whereNull('deleted_at')->paginate(100) as $resource)
                 <tr>
                     <td class="col-xs-2">{{$resource->resource_code}}</td>
                     <td class="col-xs-3">{{$resource->name}}</td>
@@ -79,4 +82,31 @@
         <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> No resources found</div>
     @endif
     </section>
+
+    @can('wipe')
+        <div class="modal fade" tabindex="-1" role="dialog" id="WipeResources">
+            <form class="modal-dialog" action="{{route('project-resources.wipeAll',$project)}}" method="post">
+                {{csrf_field()}}
+                {{method_field('delete')}}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Delete All Project Resources</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            Are you sure you want to delete all resources ?
+                            <input type="hidden" name="wipe" value="1">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete All</button>
+                        <button type="button" class="btn btn-default"><i class="fa fa-close"></i> Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    @endcan
 </section>

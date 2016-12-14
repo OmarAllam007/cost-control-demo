@@ -19,6 +19,7 @@ class StdActivityResourceController extends Controller
             return [];
         }
 
+        /** @var BreakdownTemplate $template */
         return $template->resources()->recursive()->get()->map(
             function ($resource) {
                 return $resource->morphForJSON(request('cost_account'),request()->all());

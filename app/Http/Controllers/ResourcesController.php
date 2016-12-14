@@ -413,4 +413,10 @@ class ResourcesController extends Controller
         $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
         return view('resources.index', ['resources' => $resources]);
     }
+
+    function projectWipeAll(Project $project){
+        Resources::where('project_id',$project->id)->delete();
+        \Cache::forget('resources-tree');
+        return redirect()->route('project.show', $project);
+    }
 }

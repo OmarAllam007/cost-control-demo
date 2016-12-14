@@ -81,6 +81,8 @@ Route::group(['prefix' => 'breakdown-template'], function () {
 
     Route::get('import', ['as' => 'breakdown-template.import', 'uses' => 'BreakdownTemplateController@import']);
     Route::post('import', ['as' => 'breakdown-template.post-import', 'uses' => 'BreakdownTemplateController@postImport']);
+
+    Route::delete('delete-all',['uses'=>'BreakdownTemplateController@deleteAll' , 'as'=>'breakdown-template.deleteAll']);
 });
 
 Route::group(['prefix' => 'boq'], function () {

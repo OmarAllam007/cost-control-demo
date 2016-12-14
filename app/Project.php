@@ -27,7 +27,7 @@ class Project extends Model
         'project_start_date',
         'project_duration',
         'description',
-        'owner_id'
+        'owner_id',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -61,10 +61,9 @@ class Project extends Model
     }
 
 
-
     function resources()
     {
-        return $this->hasMany(Resources::class)->with('types');
+        return $this->hasMany(Resources::class)->withTrashed()->with('types');
     }
 
     function getProductivitiesAttribute()

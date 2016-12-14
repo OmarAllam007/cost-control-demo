@@ -28,7 +28,6 @@ class BreakDownResourceObserver
     {
         $resource = Resources::withTrashed()->find($breakdownResource->template_resource->resource_id);
         if (!$resource) {
-            dd($breakdownResource);
         }
         if (!$resource->project_id) {
             $projectResource = Resources::whereResourceId($resource->id)->whereProjectId($resource->project_id)->first();
@@ -46,8 +45,8 @@ class BreakDownResourceObserver
 
     function deleted(BreakdownResource $resource)
     {
+
         BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->delete();
     }
-
 
 }

@@ -55,7 +55,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'remarks' => $this->resource->remarks,
             'productivity_id'=>$this->resource->project_productivity->id ?? 0,
             'template_id'=>$this->resource->breakdown->template->id,
-            'unit_id'=>$this->resource->resource->units->id,
+            'unit_id'=>$this->resource->resource->units->id??0,
         ];
     }
 

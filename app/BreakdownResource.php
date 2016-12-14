@@ -41,7 +41,7 @@ class BreakdownResource extends Model
 
     function template_resource()
     {
-        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id')->withTrashed();
+        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id');
     }
 
     function productivity()

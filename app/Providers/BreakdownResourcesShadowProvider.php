@@ -16,14 +16,14 @@ class BreakdownResourcesShadowProvider extends ServiceProvider
     public function boot()
     {
 
-//        BreakdownResource::creating(function (BreakdownResource $resource) {
-//            $projectResource = Resources::withTrashed()->where('id',$resource->template_resource->resource_id)->first();
-//            $projectResource->project_id=$resource->breakdown->project_id;
-//            $projectResource->save();
-//
-//            $resource->resource_id = $resource->template_resource->resource->id;
-//            $resource->update();
-//        });
+        BreakdownResource::creating(function (BreakdownResource $resource) {
+            $projectResource = Resources::withTrashed()->where('id',$resource->template_resource->resource_id)->first();
+            $projectResource->project_id=$resource->breakdown->project_id;
+            $projectResource->save();
+
+            $resource->resource_id = $resource->template_resource->resource->id;
+            $resource->update();
+        });
 
         BreakdownResource::updated(function (BreakdownResource $resource) {
             $formatter = new BreakdownResourceFormatter($resource);

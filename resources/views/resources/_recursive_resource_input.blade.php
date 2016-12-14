@@ -1,3 +1,4 @@
+
 <li>
     <div class="tree--item">
         <label class="tree--item--label">
@@ -8,30 +9,18 @@
     <ul class=""></ul>
 
     <div class="collapse" id="children-{{$type['id']}}">
-        @if (count($type['resources']))
+    @if (count($type['resources']))
             <ul class="list-unstyled">
-                @foreach($type['resources'] as $resource)
-                    @if(request('project_id'))
-                        @if($resource['project_id']==request('project_id'))
-                            <li class="radio">
-                                <label>
-                                    <input type="radio" value="{{$resource['id']}}" name="resource_id"
-                                           v-model="resource_id" @change="setResource({{json_encode($resource['json'])}}
-                                    )">
-                                    <span class="resource-name">{{$resource['name']}}</span>
-                                </label>
-                            </li>
-                        @endif
-                    @else
+            @foreach($type['resources'] as $resource)
                         <li class="radio">
                             <label>
-                                <input type="radio" value="{{$resource['id']}}" name="resource_id"
+                                <input type="radio" value="{{$resource['code']}}" name="resource_id"
                                        v-model="resource_id" @change="setResource({{json_encode($resource['json'])}}
                                 )">
                                 <span class="resource-name">{{$resource['name']}}</span>
                             </label>
 
-                    @endif
+
                 @endforeach
             </ul>
         @endif

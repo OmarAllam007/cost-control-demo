@@ -110,14 +110,14 @@ class WbsLevel extends Model
         return $children->toArray();
     }
 
-    function getCostAccountCheckAttribute()
+    function getCostAccountCheck($wbs_level, $cost_account)
     {
         $cost_accounts = collect();
-        Survey::where('wbs_level_id', $this->id)->get()->each(function ($survey) use ($cost_accounts) {
+        Survey::where('wbs_level_id', $wbs_level->id)->get()->each(function ($survey) use ($cost_accounts) {
             $cost_accounts->push($survey->cost_account);
         })->pluck('cost_account');
 
-        $parent = $this;
+        $parent = $wbs_level;
         while ($parent->parent) {
             $parent = $parent->parent;
             Survey::where('wbs_level_id', $parent->id)->get()->each(function ($survey) use ($cost_accounts) {
@@ -125,9 +125,10 @@ class WbsLevel extends Model
             })->pluck('cost_account');
 
         }
-        if (in_array($this->cost_account, $cost_accounts->toArray())) {
-              return true;
+        if (in_array($cost_account, $cost_accounts->toArray())) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }

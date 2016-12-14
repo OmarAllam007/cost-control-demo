@@ -52,9 +52,10 @@ class BoqPriceList
                         'id' => $boq->id,
                         'cost_account' => $cost_account,
                         'unit' => $breakDown_resource['measure_unit'],
+                        'GENERAL REQUIRMENT' => 0,
                         'LABORS' => 0,
                         'MATERIAL' => 0,
-                        'Subcontractors' => 0,
+                        'SUBCONTRACTORS' => 0,
                         'EQUIPMENT' => 0,
                         'SCAFFOLDING' => 0,
                         'OTHERS' => 0,
@@ -62,7 +63,7 @@ class BoqPriceList
                     ];
                 }
 
-                $name = substr($root, strpos($root, '.') + 1);
+                $name = mb_strtoupper(substr($root, strpos($root, '.') + 1));
 
                 $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name] += $breakDown_resource['boq_equivilant_rate'];
                 $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account]['total_resources'] += $breakDown_resource['boq_equivilant_rate'];
