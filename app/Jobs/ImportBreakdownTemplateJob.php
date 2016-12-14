@@ -110,7 +110,7 @@ class ImportBreakdownTemplateJob extends ImportJob
     {
         $this->resources = collect();
 
-        Resources::select(['resource_code', 'id'])->get()->each(function (Resources $resource) {
+        Resources::select(['resource_code', 'id'])->whereNull('project_id')->get()->each(function (Resources $resource) {
             $this->resources->put(strtolower($resource->resource_code), $resource->id);
         });
     }
