@@ -6,6 +6,7 @@ use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Http\Requests\WipeRequest;
+use App\Observers\BreakDownResourceObserver;
 use App\Productivity;
 use App\Project;
 use App\Resources;
@@ -95,16 +96,25 @@ class BreakdownResourceController extends Controller
     {
         $children = [];
         if ($wbs_level->children()->count()) {
-         $children=$wbs_level->children_id;
+            $children = $wbs_level->children_id;
         }
-        $breakdown_resources = BreakdownResource::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
-        dd($breakdown_resources);
+
+        BreakdownResource::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->each(function ($resource) {
+            $resource->delete();
+            (new BreakDownResourceObserver())->checkForResources($resource->resource);
+        });
+
         BreakDownResourceShadow::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
-        if(count($children)){
+
+        if (count($children)) {
             $levels = WbsLevel::whereIn('id', $children->toArray())->get();
             foreach ($levels as $level) {
                 if ($level->breakdowns()->count()) {
-                    BreakdownResource::whereIn('breakdown_id', $level->breakdowns()->pluck('id'))->delete();
+                    BreakdownResource::whereIn('breakdown_id', $level->breakdowns()->each(function ($resource) {
+                        $resource->delete();
+                        (new BreakDownResourceObserver())->checkForResources($resource->resource);
+                    }));
+
                     BreakDownResourceShadow::whereIn('breakdown_id', $level->breakdowns()->pluck('id'))->delete();
                 }
             }
@@ -144,10 +154,11 @@ class BreakdownResourceController extends Controller
         return \Redirect::route('project.show', $source_wbs->project_id);
     }
 
-    function deleteAllBreakdowns(Project $project){
+    function deleteAllBreakdowns(Project $project)
+    {
 
-        BreakdownResource::whereIn('breakdown_id',$project->breakdowns()->pluck('id'))->delete();
-        BreakDownResourceShadow::where('project_id',$project->id)->delete();
+        BreakdownResource::whereIn('breakdown_id', $project->breakdowns()->pluck('id'))->delete();
+        BreakDownResourceShadow::where('project_id', $project->id)->delete();
         return redirect()->back();
     }
 }
