@@ -41,7 +41,6 @@ class ImportMaterialDataJob extends Job
 
     /** @var Collection */
     protected $data;
-    //</editor-fold>
 
     public function __construct(Project $project, Collection $data)
     {
@@ -52,6 +51,8 @@ class ImportMaterialDataJob extends Job
         $this->loadResourceMap();
         $this->loadUnits();
     }
+
+    //</editor-fold>
 
     public function handle()
     {
@@ -178,21 +179,34 @@ class ImportMaterialDataJob extends Job
     {
         $this->resourceMap = collect();
 
-        Resources::select('id', 'resource_code')->get()->each(function (Resources $resource) {
-            $code = strtolower($resource->resource_code);
-            if (!$this->resourceMap->has($code)) {
-                $this->resourceMap->put($code, collect());
-            }
-            $this->resourceMap->get($code)->push($resource->id);
-        });
 
-        ResourceCode::select('resource_id', 'code')->get()->each(function ($resource_code) {
-            $code = strtolower($resource_code->code);
-            if (!$this->resourceMap->has($code)) {
-                $this->resourceMap->put($code, collect());
-            }
-            $this->resourceMap->get($code)->push($resource_code->resource_id);
-        });
+        Resources::select('id', 'resource_code')
+            ->where('project_id', $this->project->id)
+            ->get()->each(function (Resources $resource) {
+                $code = strtolower($resource->resource_code);
+                if (!$this->resourceMap->has($code)) {
+                    $this->resourceMap->put($code, collect());
+                }
+                $this->resourceMap->get($code)->push($resource->id);
+            });
+
+        $project_resource_map = Resources::where('project_id', $this->project_id)->pluck('id', 'resource_id');
+        ResourceCode::select('resource_id', 'code')->get()
+            ->each(function ($resource_code) use ($project_resource_map) {
+                $code = strtolower($resource_code->code);
+                if (!$this->resourceMap->has($code)) {
+                    $this->resourceMap->put($code, collect());
+                }
+
+                $resource_id = $resource_code->resource_id;
+                if ($project_resource_map->has($resource_code->resource_id)) {
+                    $resource_id = $project_resource_map->get($resource_code->resource_id);
+                }
+
+                $this->resourceMap->get($code)->push($resource_id);
+            });
+
+        dd($this->resourceMap);
     }
 
     protected function loadUnits()

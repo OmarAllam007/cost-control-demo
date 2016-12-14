@@ -18,6 +18,10 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('tree-by-resource/{project}', 'Api\WbsController@tree_by_resource');
         Route::get('tree-by-wbs/{project}', 'Api\WbsController@tree_by_wbs');
     });
+
+    Route::group(['prefix' => 'cost'], function() {
+        Route::get('breakdowns/{wbs_level}', 'Api\CostController@breakdowns');
+    });
 });
 
 Route::group(['prefix' => 'wbs-level'], function () {

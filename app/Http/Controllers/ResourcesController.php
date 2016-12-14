@@ -34,7 +34,7 @@ class ResourcesController extends Controller
         }
 
         $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
-        $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
+        $resources = $filter->filter()->whereNull('project_id')->orderBy('resource_code')->orderBy('name')->paginate(100);
         return view('resources.index', compact('resources'));
     }
 
