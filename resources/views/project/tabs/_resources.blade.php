@@ -37,7 +37,6 @@
         {{--</a>--}}
     </div>
     <div class="clearfix"></div>
-
     <section id="resourceData">
     @if ($project->resources()->whereNull('deleted_at')->count())
         <table class="table table-condensed table-striped table-fixed">

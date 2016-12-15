@@ -40,7 +40,7 @@ window.app = new Vue({
         Breakdown,
         Boq,
         QtySurvey,
-        Wbs
+        Wbs,
     }
 });
 
