@@ -35,7 +35,7 @@
             </thead>
             <tbody>
 
-            @foreach($breakdownTemplates as $breakdown_template)
+            @foreach($breakdownTemplates->sortBy('name') as $breakdown_template)
                 <tr>
                     <td class="col-xs-8"><a
                                 href="{{ route('breakdown-template.show', $breakdown_template) }}">{{ $breakdown_template->name }}</a>

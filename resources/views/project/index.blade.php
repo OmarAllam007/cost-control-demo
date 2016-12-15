@@ -20,7 +20,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($projects as $project)
+            @foreach($projects->sortBy('name') as $project)
                 <tr>
                     <td class="col-xs-8">
                         {{ $project->name }}
