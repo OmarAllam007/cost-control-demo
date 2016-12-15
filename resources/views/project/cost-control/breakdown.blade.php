@@ -67,6 +67,15 @@
                     <th style="min-width: 150px; max-width: 150px;" class="bg-info">Productivity (Unit/Day)</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Productivity Ref</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-green">Remarks</th>
+                    <th style="min-width: 150px; max-width: 150px;">Prev. Price/Unit</th>
+                    <th style="min-width: 150px; max-width: 150px;">Prev. Qty</th>
+                    <th style="min-width: 150px; max-width: 150px;">Prev. Cost</th>
+                    <th style="min-width: 150px; max-width: 150px;">Curr. Price/Unit</th>
+                    <th style="min-width: 150px; max-width: 150px;">Curr. Qty</th>
+                    <th style="min-width: 150px; max-width: 150px;">Curr. Cost</th>
+                    <th style="min-width: 150px; max-width: 150px;">To Date Price / Unit ( Eqv. )</th>
+                    <th style="min-width: 150px; max-width: 150px;">To Date. Qty</th>
+                    <th style="min-width: 150px; max-width: 150px;">To Date. Cost</th>
                 </tr>
                 </thead>
             </table>
@@ -101,6 +110,15 @@
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-blue">@{{ breakdown.productivity_ref }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.remarks }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_unit_price|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_qty|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_cost|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_unit_price|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_qty|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_cost|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.to_date_unit_price|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.to_date_qty|number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.to_date_cost|number_format }}</td>
                 </tr>
                 </tbody>
             </table>
