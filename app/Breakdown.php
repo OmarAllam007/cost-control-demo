@@ -53,6 +53,7 @@ class Breakdown extends Model
 
     function syncVariables($variables)
     {
+
         if ($variables) {
             $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $this->wbs_level_id)->first();
             $variableNames = $this->std_activity->variables->pluck('label', 'display_order');

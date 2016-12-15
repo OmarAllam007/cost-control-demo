@@ -73,7 +73,6 @@ class BoqPriceList
 
         }
 
-
         ksort($data);
         foreach ($data as $key => $value) {
             foreach ($value['parents'] as $pKey => $pValue) {

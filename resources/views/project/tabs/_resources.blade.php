@@ -55,7 +55,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($projectResources = $project->resources()->whereNull('deleted_at')->paginate(100) as $resource)
+            @foreach ($projectResources = $project->resources()->orderBy('name')->paginate(100) as $resource)
                 <tr>
                     <td class="col-xs-2">{{$resource->resource_code}}</td>
                     <td class="col-xs-3">{{$resource->name}}</td>

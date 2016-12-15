@@ -38,12 +38,11 @@
                                     <tbody>
                                     @foreach($boq_details['items'] as $kCostAccount=>$costAccount)
                                         <tr class="tbl-content">
-                                            {{--<td class="col-md-3">{{$resource['type'] or ''}}</td>--}}
                                             <td class="col-md-2 ">{{$costAccount['cost_account']}}</td>
                                             <td class="col-md-2 ">{{$costAccount['unit']}}</td>
                                             <td class="col-md-1">{{number_format($costAccount['LABORS'],2)}}</td>
                                             <td class="col-md-1">{{number_format($costAccount['MATERIAL'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['Subcontractors']),2}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['SUBCONTRACTORS']),2}}</td>
                                             <td class="col-md-1">{{number_format($costAccount['EQUIPMENT']),2}}</td>
                                             <td class="col-md-1">{{number_format($costAccount['SCAFFOLDING']),2}}</td>
                                             <td class="col-md-1">{{number_format($costAccount['OTHERS'],2)}}</td>

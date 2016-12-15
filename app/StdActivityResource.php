@@ -30,6 +30,9 @@ class StdActivityResource extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function std_activity(){
+        return $this->hasMany(StdActivity::class);
+    }
     function scopeRecursive(Builder $query)
     {
         $query->with('resource')
@@ -42,14 +45,14 @@ class StdActivityResource extends Model
         return $this->belongsTo(Productivity::class);
     }
 
-    function variables()
-    {
-        return $this->hasMany(StdActivityVariable::class);
-    }
+//    function variables()
+//    {
+//        return $this->hasMany(StdActivityVariable::class);
+//    }
+
 
     function morphForJSON($account,$request)
     {
-
         $attributes = [
             'std_activity_resource_id' => $this->id,
             'equation' => $this->equation,
@@ -64,7 +67,7 @@ class StdActivityResource extends Model
             'budget_qty' => '',
             'eng_qty' => '',
             'remarks' => $this->remarks,
-//            'variables' => $this->variables()->pluck('label', 'display_order')
+            'variables' => $this->template->activity->variables()->pluck('label', 'display_order'),
         ];
         /** @var WbsLevel $wbs_level */
         $wbs_level = WbsLevel::find($request['wbs_level_id']);

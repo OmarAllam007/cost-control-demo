@@ -46,7 +46,7 @@ class Productivity
                             'name' => $productivity->description,
                             'unit' => Unit::find($productivity->unit)->type,
                             'crew_structure' => $productivity->crew_structure,
-                            'productivity' => $productivity->after_reduction,
+                            'productivity' => $productivity->versionFor($project->id)->after_reduction,
                             'daily_output' => $productivity->daily_output,
                         ];
                     }
