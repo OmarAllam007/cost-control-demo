@@ -50,9 +50,9 @@ class BreakdownController extends Controller
     {
 
         $breakdown = Breakdown::create($request->all());
+        $breakdown->syncVariables($request->get('variables'));
         $resources = $breakdown->resources()->createMany($request->get('resources'));
 
-        $breakdown->syncVariables($request->get('variables'));
         return \Redirect::to('/blank?reload=breakdown');
     }
 

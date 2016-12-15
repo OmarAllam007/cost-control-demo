@@ -57,7 +57,7 @@ class BreakdownResource extends Model
 
     function getEquationAttribute()
     {
-        if (isset($this->attributes['equation'])) {
+        if (!empty($this->attributes['equation'])) {
             return $this->attributes['equation'];
         }
 
@@ -99,7 +99,8 @@ class BreakdownResource extends Model
         $v = $V = $this->budget_qty;
 
         $variables = [];
-        if ($this->qty_survey && $this->qty_survey->variables->count()) {
+
+        if ($this->qty_survey) {
             foreach ($this->qty_survey->variables as $variable) {
                 $variables["v{$variable->display_order}"] = $variable->value ?: 0;
                 $variables["V{$variable->display_order}"] = $variable->value ?: 0;
