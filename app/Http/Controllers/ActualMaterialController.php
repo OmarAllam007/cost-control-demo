@@ -42,7 +42,7 @@ class ActualMaterialController extends Controller
             }
         }
 
-        flash($result['count'] . ' Records have been imported', 'success');
+        flash($result['success'] . ' Records have been imported', 'success');
         return \Redirect::route('project.cost-control', $project);
     }
 
@@ -115,7 +115,7 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.multiple', $key);
         } else {
             \Cache::forget($key);
-            flash($data_to_cache['success'] . ' records has been imported');
+            flash($data_to_cache['success'] . ' records has been imported', 'success');
             return \Redirect::route('project.cost-control', $data_to_cache['project']);
         }
     }
@@ -141,11 +141,12 @@ class ActualMaterialController extends Controller
 
         $newActivities = collect();
         $units = $request->get("units");
-        foreach ($data['units'] as $row) {
-            $id = $row['resource']->breakdown_resource_id;
-            $new_data = $units[$id];
+//        dd($data['units']->toArray());
+        foreach ($data['units'] as $idx => $row) {
+
+            $new_data = $units[$idx];
             $row[10] = $new_data['qty'];
-            $row[11] = abs($row[12])/abs($row[10]);
+            $row[11] = abs($row[12])/abs($new_data['qty']);
             $row[9] = $row['resource']->measure_unit;
 
             $newActivities->push($row);
@@ -164,7 +165,7 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.multiple', $key);
         } else {
             \Cache::forget($key);
-            flash($data_to_cache['success'] . ' records has been imported');
+            flash($data_to_cache['success'] . ' records has been imported', 'success');
             return \Redirect::route('project.cost-control', $data_to_cache['project']);
         }
     }

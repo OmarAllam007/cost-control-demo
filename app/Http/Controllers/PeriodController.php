@@ -31,7 +31,7 @@ class PeriodController extends Controller
 
         $project->periods()->create($request->all());
 
-        return \Redirect::route('project.show', $project);
+        return \Redirect::route('project.cost-control', $project);
     }
 
     function edit(Period $period)
@@ -45,7 +45,7 @@ class PeriodController extends Controller
 
         $period->update($request->all());
 
-        return \Redirect::route('project.show', $period->project);
+        return \Redirect::route('project.cost-control', $period->project);
     }
 
     function delete(Period $period)
