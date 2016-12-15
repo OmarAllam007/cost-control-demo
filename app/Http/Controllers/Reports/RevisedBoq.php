@@ -22,7 +22,7 @@ class RevisedBoq
 
         $breakdowns = $project->breakdowns()->with('wbs_level', 'resources')->get();
         $data = [];
-        $total = ['revised_boq' => 0,'original_boq' => 0,'weight' => 0];
+        $total = ['revised_boq' => 0, 'original_boq' => 0, 'weight' => 0];
         foreach ($breakdowns as $breakdown) {
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);
@@ -75,17 +75,16 @@ class RevisedBoq
                             ];
                         }
 
-                        $boq_parent   = Boq::where('wbs_id',$parent->id)->where('cost_account',$breakdown->cost_account)->sum(\DB::raw('quantity * price_ur'));
-                        $boq_price   = Boq::where('wbs_id',$parent->id)->where('cost_account',$breakdown->cost_account)->sum('price_ur');
-                        $survey_parent = Survey::where('wbs_level_id',$parent->id)->where('cost_account',$breakdown->cost_account)->sum('eng_qty');
+                        $boq_parent = Boq::where('wbs_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum(\DB::raw('quantity * price_ur'));
+                        $boq_price = Boq::where('wbs_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum('price_ur');
+                        $survey_parent = Survey::where('wbs_level_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum('eng_qty');
                         $data[$parent->id]['original_boq'] = $boq_parent;
-                        $data[$parent->id]['revised_boq'] = $boq_price*$survey_parent;
+                        $data[$parent->id]['revised_boq'] = $boq_price * $survey_parent;
                         break;
                     }
                 }
             }
         }
-
 
 
         foreach ($data as $key => $value) {
@@ -100,8 +99,8 @@ class RevisedBoq
             if ($data[$key]['original_boq']) {
                 $data[$key]['weight'] += $data[$key]['revised_boq'] / $data[$key]['original_boq'] * 100;
             }
+            $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
         }
-        $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
     }
