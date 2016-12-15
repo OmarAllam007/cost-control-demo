@@ -7,6 +7,22 @@ Vue.filter('slug', function(value){
     return value.replace(/\W/g, '-').replace(/-{2,}/g, '-').toLowerCase();
 });
 
+
+Vue.filter('number_format', function(number) {
+    if (!number) {
+        number = 0;
+    }
+
+    const f= new Intl.NumberFormat();
+    let formatted = f.format(number.toFixed(2));
+
+    if (!/\./.test(formatted)) {
+        formatted += '.00';
+    }
+
+    return formatted
+});
+
 window.app = new Vue({
     el: '#datasheet',
 
