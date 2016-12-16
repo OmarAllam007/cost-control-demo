@@ -14,7 +14,9 @@ var elixir = require('laravel-elixir');
 elixir(function (mix) {
     mix.sass('app.scss');
     mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
-        // .webpack('project-permissions.js');
+    mix.webpack('project/components/Resources.js', 'public/js/resources.js');
+
+    // .webpack('project-permissions.js');
     // .sass('print.scss')
     // .webpack('project/index.js', 'public/js/project.js')
     // .webpack('resource-codes.js');
