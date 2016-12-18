@@ -12,7 +12,9 @@ class WbsResource extends Model
         'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var',
         'remaining_qty', 'remaining_cost', 'remaining_unit_price',
         'completion_qty', 'completion_cost', 'completion_unit_price',
-        'qty_var', 'cost_var', 'unit_price_var',
+        'qty_var', 'cost_var', 'unit_price_var', 'physical_unit', 'pw_index',
+        'cost_variance_to_date_due_unit_price', 'allowable_qty', 'cost_variance_remaining_due_unit_price',
+        'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty', 'cost_variance_to_date_due_qty',
     ];
 
     function resource()
@@ -157,14 +159,39 @@ class WbsResource extends Model
 
     function getAllowableQtyAttribute()
     {
-        if ($this->to_date_qty < $this->budget_unit && $this->progress != 1) {
+        if (($this->to_date_qty < $this->budget_unit) && $this->progress != 1) {
             return $this->to_date_qty;
         }
 
         return $this->budget_unit;
     }
 
-    //todo: determine if we will keep this function and implment its code or remove it and get its value from a field
+    function getCostVarianceToDateDueUnitPriceAttribute()
+    {
+        return ($this->unit_price - $this->to_date_unit_price) * $this->to_date_qty;
+    }
+
+    function getCostVarianceRemainingDueUnitPriceAttribute()
+    {
+        return ($this->unit_price - $this->remaining_unit_price) * $this->remaining_qty;
+    }
+
+    function getCostVarianceCompletionDueUnitPriceAttribute()
+    {
+        return $this->cost_variance_to_date_due_unit_price + $this->cost_variance_remaining_due_unit_price;
+    }
+
+    function getCostVarianceCompletionDueQtyAttribute()
+    {
+        return $this->unit_price * ($this->budget_unit - $this->completion_qty);
+    }
+
+    function getCostVarianceToDateDueQtyAttribute()
+    {
+        return $this->unit_price * ($this->allowable_qty - $this->to_date_qty);
+    }
+
+    //todo: determine if we will keep this function and implement its code or remove it and get its value from a field
     function getProgressAttribute()
     {
         return 0.6;
