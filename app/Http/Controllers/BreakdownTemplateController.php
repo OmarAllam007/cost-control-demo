@@ -159,6 +159,7 @@ class BreakdownTemplateController extends Controller
         $file = $request->file('file');
         $this->dispatch(new ImportBreakdownTemplateJob($file->path()));
 
+
         flash('Breakdown templates imported successfully', 'success');
         return \Redirect::route('breakdown-template.index');
     }

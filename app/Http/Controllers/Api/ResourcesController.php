@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Project;
 use App\Resources;
 use Illuminate\Http\Request;
 
@@ -15,5 +16,12 @@ class ResourcesController extends Controller
             ->get()->map(function (Resources $resource) {
                 return $resource->morphToJSON();
             });
+    }
+    function Resources(Project $project)
+    {
+        return Resources::where('project_id', $project->id)->get()->map(function (Resources $resource){
+            return $resource->morphToJSON();
+        });
+
     }
 }

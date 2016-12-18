@@ -26,7 +26,7 @@
                         {{ $project->name }}
                     </td>
                     <td class="col-xs-4">
-                        <form action="{{ route('project.destroy', $project) }}" method="post">
+
                             @can('budget', $project)
                                 <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
                             @else
@@ -47,10 +47,9 @@
                             @can('modify')
                                 <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i
                                             class="fa fa-edit"></i> Edit</a>
-                                {{csrf_field()}} {{method_field('delete')}}
-                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete </button>
+
+                                <a href="#DeleteProjectModal" class="btn btn-sm btn-warning" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete </a>
                             @endcan
-                        </form>
                     </td>
                 </tr>
             @endforeach
@@ -62,4 +61,24 @@
         <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <strong>No project found</strong></div>
     @endif
 
+    @can('wipe')
+        <div class="modal fade" id="DeleteProjectModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <form action="{{ route('project.destroy', $project) }}" method="post" class="modal-content">
+                    {{csrf_field()}} {{method_field('delete')}}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <h4 class="modal-title">Delete - {{$project->name}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete ( {{$project->name}} ) Project?</div>
+                        <input type="hidden" name="wipe" value="1">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger"><i class="fa fa-fw fa-trash"></i> Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endcan
 @stop

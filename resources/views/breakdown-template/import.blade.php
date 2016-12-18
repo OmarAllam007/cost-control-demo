@@ -12,7 +12,7 @@
         <div class="col-md-6 col-sm-9">
 
             {{Form::open(['route' => 'breakdown-template.post-import', 'files' => true])}}
-
+            {{csrf_field()}}
             <p class="text-info">
                 <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/breakdown-templates.xlsx')}}">click here</a> to download a sample template
             </p>
