@@ -19,21 +19,21 @@
 
     <nav class="project-nav">
         @can('budget', $project)
-        <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
-        <a href="#ResourcesArea" class="btn btn-outline btn-primary">Resources</a>
-        <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
-        <a href="#BreakdownTemplateArea" class="btn btn-outline btn-primary">Breakdown Templates</a>
+            <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
+            <a href="#ResourcesArea" class="btn btn-outline btn-primary">Resources</a>
+            <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
+            <a href="#BreakdownTemplateArea" class="btn btn-outline btn-primary">Breakdown Templates</a>
         @endcan
 
         @can('reports', $project)
             <a href="#ReportsArea" class="btn btn-outline btn-success">Reports</a>
         @endcan
     </nav>
-
     <div id="projectArea" class="hidden">
         @can('budget', $project)
             @include('project.tabs.wbs-area')
             @include('project.tabs._resources')
+
             @include('project.tabs._productivity')
             @include('project.tabs._breakdown_template')
         @endcan
@@ -42,7 +42,6 @@
             @include('project.tabs._report')
         @endcan
     </div>
-
     <div class="modal fade" tabindex="-1" id="IframeModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -59,24 +58,24 @@
     </div>
 
     @can('wipe')
-    <div class="modal fade" id="DeleteBreakdownModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <form method="post" action="{{route('breakdownresources.deleteAllBreakdowns',$project)}}"  class="modal-content">
-                {{csrf_field()}} {{method_field('delete')}}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                    <h4 class="modal-title">Delete all breakdown</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all breakdowns in the project?</div>
-                    <input type="hidden" name="wipe" value="1">
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-danger"><i class="fa fa-fw fa-trash"></i> Delete</button>
-                </div>
-            </form>
+        <div class="modal fade" id="DeleteBreakdownModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <form method="post" action="{{route('breakdownresources.deleteAllBreakdowns',$project)}}" class="modal-content">
+                    {{csrf_field()}} {{method_field('delete')}}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <h4 class="modal-title">Delete all breakdown</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete all breakdowns in the project?</div>
+                        <input type="hidden" name="wipe" value="1">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger"><i class="fa fa-fw fa-trash"></i> Delete</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
     @endcan
 @endsection
 
@@ -149,5 +148,6 @@
 
     </script>
     <script src="{{asset('/js/project.js')}}"></script>
+{{--    <script src="{{asset('/js/resources.js')}}"></script>--}}
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection

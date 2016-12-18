@@ -75,9 +75,9 @@ class ReportController extends Controller
         $root = '';
         $total_budget_cost = '';
         $total_budget_unit = '';
-        $breakdown_resources = $project->breakdown_resources;
+        $breakdown_resources = $project->shadows;
         foreach ($breakdown_resources as $resource) {
-            $rootName = $resource->resource->types->root->name;
+            $rootName = $resource->resource_type;
             $resourceObject = $resource->resource;
             if (str_contains($rootName, 'LABORS')) {
                 $root = $rootName;

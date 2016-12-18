@@ -24,7 +24,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($project->templates as $breakdown_template)
+            @foreach($project->templates->sortBy('name') as $breakdown_template)
                 <tr>
                     <td class="col-xs-8"><a
                                 href="/breakdown-template/{{$breakdown_template->id}}?project_id={{$project->id}}">{{ $breakdown_template->name }}</a>

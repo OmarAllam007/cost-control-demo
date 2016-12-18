@@ -28,13 +28,8 @@ class WbsController extends Controller
 
     function breakdowns(WbsLevel $wbs_level)
     {
-
-
         $resources = BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->get();
-
-
         return $resources;
-
     }
 
     function boq(WbsLevel $wbs_level)

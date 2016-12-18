@@ -75,11 +75,9 @@ class BudgetCostDryCostByBuilding
                                 'difference' => 0,
                                 'increase' => 0,
                             ];
+
                             $children = $parent->budget_cost['children'];
-
                             foreach ($parent->children as $child) {
-
-
                                 if (!isset($data[$parent->id]['cost_accounts'][$break_down->cost_account])) {
                                     $data[$parent->id]['cost_accounts'][$break_down->cost_account] = [
                                         'dry_cost' => 0
@@ -90,25 +88,25 @@ class BudgetCostDryCostByBuilding
                                 }
                             }
                         }
-
-
                     }
                     break;
 
                 }
+                if(isset($data[$parent->id])){
+                    $data[$parent->id]['difference'] += ($data[$parent->id]['budget_cost'] - $data[$parent->id]['dry_cost']);
 
-                $data[$parent->id]['difference'] += ($data[$parent->id]['budget_cost'] - $data[$parent->id]['dry_cost']);
-
-                if ($data[$parent->id]['dry_cost']) {
-                    $data[$parent->id]['increase'] += floatval(($data[$parent->id]['budget_cost'] - $data[$parent->id]['dry_cost']) / $data[$parent->id]['dry_cost'] * 100);
+                    if ($data[$parent->id]['dry_cost']) {
+                        $data[$parent->id]['increase'] += floatval(($data[$parent->id]['budget_cost'] - $data[$parent->id]['dry_cost']) / $data[$parent->id]['dry_cost'] * 100);
+                    }
                 }
+
             }
         }
 
 
         foreach ($data as $key => $item) {
-            foreach ($item['cost_accounts'] as $accountKey=>$account) {
-               $data[$key]['dry_cost'] += $account['dry_cost'];
+            foreach ($item['cost_accounts'] as $accountKey => $account) {
+                $data[$key]['dry_cost'] += $account['dry_cost'];
 
             }
             if (in_array($key, $children)) {

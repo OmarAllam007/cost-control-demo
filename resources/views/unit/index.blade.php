@@ -27,7 +27,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($units as $unit)
+            @foreach($units->sortBy('type') as $unit)
                 <tr>
                     <td class="col-xs-8"><a href="{{ route('unit.edit', $unit) }}">{{ $unit->type }}</a></td>
                     <td class="col-xs-4">

@@ -56,9 +56,21 @@ class Breakdown extends Model
 
         if ($variables) {
             $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $this->wbs_level_id)->first();
+            if(!$qtySurvey){
+                $parent = $this->wbs_level;
+                while($parent->parent){
+                    $parent = $parent->parent;
+                    $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $parent->id)->first();
+                    if($qtySurvey){
+                        break;
+                    }
+
+                }
+            }
             $variableNames = $this->std_activity->variables->pluck('label', 'display_order');
             foreach ($variables as $index => $value) {
                 $var = BreakdownVariable::where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
+
                 if ($var) {
                     $var->update(compact('value'));
                 } else {

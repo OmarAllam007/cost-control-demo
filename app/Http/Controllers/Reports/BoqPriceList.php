@@ -72,17 +72,19 @@ class BoqPriceList
 
 
         }
-
         ksort($data);
         foreach ($data as $key => $value) {
-            foreach ($value['parents'] as $pKey => $pValue) {
-                if (in_array($pValue, $parents)) {
-                    unset($data[$key]['parents'][$pKey]);
-                    continue;
+            if(isset($value['parents'])){
+                foreach ($value['parents'] as $pKey => $pValue) {
+                    if (in_array($pValue, $parents)) {
+                        unset($data[$key]['parents'][$pKey]);
+                        continue;
+                    }
+                    $parents[] = $pValue;
+                    ksort($data[$key]['parents']);
                 }
-                $parents[] = $pValue;
-                ksort($data[$key]['parents']);
             }
+
         }
 
         return view('reports.boq_price_list', compact('project', 'data'));

@@ -1,10 +1,10 @@
 <li>
     @foreach($data as $wbs_level=>$attributes)
-
-        @foreach($attributes['parents'] as $key=>$parent)
-            <p class="blue-first-level">{{$parent}}</p>
-        @endforeach
-
+        @if(isset($attributes['parents']))
+            @foreach($attributes['parents'] as $key=>$parent)
+                <p class="blue-first-level">{{$parent}}</p>
+            @endforeach
+        @endif
 
         <div class="tree--item">
             <p class="blue-second-level tree--child">{{$attributes['name']}}</p>
@@ -12,10 +12,10 @@
 
         @if(isset($attributes['boqs']))
             <ul class="list-unstyled">
-
                 @foreach($attributes['boqs'] as $item=>$boq_details)
 
                     <p class="blue-third-level">{{$item}}</p>
+
                     <li>
                         <div class="tree--item collapse">
 

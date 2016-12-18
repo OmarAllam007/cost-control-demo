@@ -57,8 +57,8 @@ class Productivity
         }
 
         foreach ($data as $key => $value) {
-            foreach ($value['parents'] as $pKey=>$parent) {
-                if(in_array($parent['name'],$parents)){
+            foreach ($value['parents'] as $pKey => $parent) {
+                if (in_array($parent['name'], $parents)) {
                     unset($data[$key]['parents'][$pKey]);
                     continue;
 

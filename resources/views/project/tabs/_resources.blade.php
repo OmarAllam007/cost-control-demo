@@ -37,7 +37,6 @@
         {{--</a>--}}
     </div>
     <div class="clearfix"></div>
-
     <section id="resourceData">
     @if ($project->resources()->whereNull('deleted_at')->count())
         <table class="table table-condensed table-striped table-fixed">
@@ -46,7 +45,7 @@
                 <th class="col-xs-2">Code</th>
                 <th class="col-xs-3">Resource</th>
                 <th class="col-xs-2">Type</th>
-                <th class="col-xs-2">Rate</th>
+                <th class="col-xs-1">Rate</th>
                 <th class="col-xs-1">Unit</th>
                 <th class="col-xs-1">Waste</th>
                 <th class="col-xs-1">
@@ -60,7 +59,7 @@
                     <td class="col-xs-2">{{$resource->resource_code}}</td>
                     <td class="col-xs-3">{{$resource->name}}</td>
                     <td class="col-xs-2">{{$resource->types->root->name or ''}}</td>
-                    <td class="col-xs-2">{{number_format($resource->rate, 2)}}</td>
+                    <td class="col-xs-1">{{number_format($resource->rate, 2)}}</td>
                     <td class="col-xs-1">{{$resource->units->type or ''}}</td>
                     <td class="col-xs-1">{{$resource->waste}} </td>
                     <td class="col-xs-1">

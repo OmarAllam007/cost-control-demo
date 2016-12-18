@@ -64,7 +64,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($stdActivities as $std_activity)
+            @foreach($stdActivities->sortBy('name') as $std_activity)
                 <tr>
                     <td class="col-xs-4">
                         <a href="{{ route('std-activity.edit', $std_activity) }}">{{ $std_activity->name }}</a>

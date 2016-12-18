@@ -16,6 +16,7 @@
     <img src="{{asset('images/reports/manpower.jpg')}}">
 @endsection
 @section('body')
+    @if(count($resources))
     <div class="tree--item blue-third-level" style="color: black">
         <strong>{{$root}}</strong>
     </div>
@@ -45,11 +46,12 @@
                 @endif
             @endforeach
             <tr class="tbl-children-division"> <td>Total</td>
-                <td>{{number_format($total_budget_cost, 2)}}</td>
-                <td>{{number_format($total_budget_unit, 2)}}</td>
+                <td>{{$total_budget_cost}}</td>
+                <td>{{$total_budget_unit}}</td>
                 <td></td>
             </tr>
             </tbody>
         </table>
     </article>
+    @endif
 @stop
