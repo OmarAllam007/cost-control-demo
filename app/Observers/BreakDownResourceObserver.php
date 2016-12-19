@@ -30,10 +30,6 @@ class BreakDownResourceObserver
         $formatter = new BreakdownResourceFormatter($resource);
         $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $resource->id]);
         $shadow->update($formatter->toArray());
-//        if ($resource->resoure_id != $resource->original_resource_id) {
-//            $oldResource = Resources::find($resource->original_resource);
-//            $this->checkForResources($oldResource);
-//        }
         $oldResource= Resources::find($resource->getOriginal('resource_id'));
         $this->checkForResources($oldResource);
     }
