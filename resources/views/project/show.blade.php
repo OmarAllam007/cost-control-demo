@@ -2,17 +2,17 @@
 
 @section('header')
     <h2 class="panel-title">Project - {{$project->name}}</h2>
-
-    <form action="{{ route('project.destroy', $project)}}" class="pull-right" method="post">
+    <div class="pull-right">
         @can('modify', $project)
             {{csrf_field()}} {{method_field('delete')}}
             <a href="{{ route('project.edit', $project)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
-            <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
+            <a href="#DeleteProjectModal" class="btn btn-sm btn-warning" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete </a>
         @endcan
 
         <a href="{{ route('project.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+    </div>
 
-    </form>
+
 @stop
 
 @section('body')
@@ -32,7 +32,10 @@
     <div id="projectArea" class="hidden">
         @can('budget', $project)
             @include('project.tabs.wbs-area')
-            @include('project.tabs._resources')
+
+            {{--<article id="ProjectResources" class="project-tab">--}}
+                @include('project.tabs._resources')
+            {{--</article>--}}
 
             @include('project.tabs._productivity')
             @include('project.tabs._breakdown_template')
@@ -77,6 +80,28 @@
             </div>
         </div>
     @endcan
+
+    @can('wipe')
+        <div class="modal fade" id="DeleteProjectModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <form action="{{ route('project.destroy', $project) }}" method="post" class="modal-content">
+                    {{csrf_field()}} {{method_field('delete')}}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <h4 class="modal-title">Delete - {{$project->name}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete ( {{$project->name}} ) Project?</div>
+                        <input type="hidden" name="wipe" value="1">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger"><i class="fa fa-fw fa-trash"></i> Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endcan
+
 @endsection
 
 @section('javascript')
@@ -148,6 +173,6 @@
 
     </script>
     <script src="{{asset('/js/project.js')}}"></script>
-{{--    <script src="{{asset('/js/resources.js')}}"></script>--}}
+    {{--    <script src="{{asset('/js/resources.js')}}"></script>--}}
     <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection

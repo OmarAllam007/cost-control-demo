@@ -5,8 +5,6 @@
         </div>
 
         <div class="form-group tab-actions pull-right">
-
-
             <a style="margin-left: 2px;" href="{{route('break_down.export', ['project' => $project->id])}}"
                class="btn btn-info btn-sm">
                 <i class="fa fa-cloud-download"></i> Export

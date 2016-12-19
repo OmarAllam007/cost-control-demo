@@ -14,7 +14,8 @@ var elixir = require('laravel-elixir');
 elixir(function (mix) {
     mix.sass('app.scss');
     mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
-    mix.webpack('project/components/Resources.js', 'public/js/resources.js');
+    mix.webpack('project/components/Resources.js').webpack('project/index.js'
+        , 'public/js/project.js');
 
     // .webpack('project-permissions.js');
     // .sass('print.scss')
@@ -32,8 +33,8 @@ elixir(function (mix) {
     // mix.scripts([
     //     'project/components/Breakdown.js',
     // ], 'public/js/breakdown.js');
-    mix.webpack('project-permissions.js')
-        .webpack('project/index.js', 'public/js/project.js');
+    // mix.webpack('project-permissions.js')
+    //     .webpack('project/index.js', 'public/js/project.js');
 
     // .sass('print.scss')
     // .webpack('resource-codes.js');

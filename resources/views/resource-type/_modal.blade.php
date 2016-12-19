@@ -1,5 +1,4 @@
-
-<div id="ResourceTypeModal" class="modal fade" tabindex="-1" role="dialog">
+<div class="modal fade resource-type"  tabindex="-1" role="dialog" id="ResourceTypeModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +9,6 @@
             <div class="modal-body">
                 <ul class="list-unstyled tree">
                     @foreach($resourcesTree as $division)
-
                         @include('resource-type._recursive_input', ['division' => $division, 'value' => $value])
                     @endforeach
                 </ul>

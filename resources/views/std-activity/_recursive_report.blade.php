@@ -10,9 +10,9 @@
             blue-fourth-level
                 @endif
             "
-    >{{$division->label}}</p>
+    ><label href="#col-{{$division->id}}" data-toggle="collapse" style="text-decoration: none;">{{$division->label}}</label></p>
 
-    <article class="tree--child">
+    <article id="col-{{$division->id}}" class="tree--child collapse">
         @if ($division->children()->whereIn('id', $all)->get() && $division->children()->whereIn('id', $all)->count())
             <ul class="list-unstyled">
                 @foreach($division->children()->whereIn('id', $all)->get() as $child)

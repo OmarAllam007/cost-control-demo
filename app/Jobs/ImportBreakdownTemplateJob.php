@@ -27,7 +27,7 @@ class ImportBreakdownTemplateJob extends ImportJob
 
     function __construct($file)
     {
-        ini_set('memory_limit', '256m');
+        ini_set('memory_limit', '1G');
         set_time_limit(300);
 
         $this->file = $file;
@@ -64,7 +64,7 @@ class ImportBreakdownTemplateJob extends ImportJob
 
             $resource_id = $this->getResource($data[3]);
             if ($resource_id) {
-                $resource = $template->resources()->create([
+                $template->resources()->create([
                     'resource_id' => $resource_id,
                     'equation' => isset($data[5])?$data[5]:'',
                     'labor_count' => isset($data[6])?$data[6]:'',
