@@ -67,19 +67,19 @@
                     <th style="min-width: 150px; max-width: 150px;" class="bg-info">Productivity (Unit/Day)</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Productivity Ref</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-green">Remarks</th>
-                    <th style="min-width: 150px; max-width: 150px;">Progress</th>
-                    <th style="min-width: 150px; max-width: 150px;">Prev. Price/Unit</th>
+                    <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Progress</th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Prev. Price/Unit</th>
                     <th style="min-width: 150px; max-width: 150px;">Prev. Qty</th>
                     <th style="min-width: 150px; max-width: 150px;">Prev. Cost</th>
-                    <th style="min-width: 150px; max-width: 150px;">Curr. Price/Unit</th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Curr. Price/Unit</th>
                     <th style="min-width: 150px; max-width: 150px;">Curr. Qty</th>
                     <th style="min-width: 150px; max-width: 150px;">Curr. Cost</th>
-                    <th style="min-width: 150px; max-width: 150px;">To Date Price / Unit ( Eqv. )</th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">To Date Price / Unit ( Eqv. )</th>
                     <th style="min-width: 150px; max-width: 150px;">To Date. Qty</th>
                     <th style="min-width: 150px; max-width: 150px;">To Date. Cost</th>
                     <th style="min-width: 150px; max-width: 150px;">Allawable (EV) cost</th>
                     <th style="min-width: 150px; max-width: 150px;">Var +/-</th>
-                    <th style="min-width: 150px; max-width: 150px;">Remaining Price/Unit</th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Remaining Price/Unit</th>
                     <th style="min-width: 150px; max-width: 150px;">Remaining Qty</th>
                     <th style="min-width: 150px; max-width: 150px;">Remaining Cost</th>
                     <th style="min-width: 150px; max-width: 150px;">BL Allowable Cost'</th>
@@ -132,23 +132,23 @@
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-blue">@{{ breakdown.productivity_ref }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.remarks }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.progress * 100 | number_format }}%</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_unit_price|number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_qty|number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_cost|number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_unit_price|number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_qty|number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_cost|number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.to_date_unit_price|number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.progress * 100 | number_format }}%</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_unit_price|number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_qty|number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.previous_cost|number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_unit_price|number_format }}</td>
+                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_qty|number_format }}</td>
+                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown.current_cost|number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.to_date_unit_price|number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.to_date_qty|number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.to_date_cost|number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.allowable_ev_cost | number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.allowable_var | number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.bl_allowable_cost | number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.bl_allowable_var | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.remaining_unit_price | number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.remaining_qty | number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.remaining_cost | number_format }}</td>
-                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.remaining_unit_price | number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.bl_allowable_cost | number_format }}</td>
+                    <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.bl_allowable_var | number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.completion_unit_price | number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.completion_qty | number_format }}</td>
                     <td style="min-width: 150px; max-width: 150px;">@{{ breakdown.completion_cost | number_format }}</td>

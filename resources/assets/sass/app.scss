@@ -108,7 +108,7 @@ ul.tree {
 .btn-primary.btn-outline {
   color: $brand-primary;
 
-  &:focus, &:hover {
+  &:focus, &:hover, &.active {
     color: $btn-primary-color;
   }
 }
@@ -116,7 +116,7 @@ ul.tree {
 .btn-info.btn-outline {
   color: $brand-info;
 
-  &:focus, &:hover {
+  &:focus, &:hover, &.active {
     color: $btn-info-color;
   }
 }
@@ -124,7 +124,7 @@ ul.tree {
 .btn-success.btn-outline {
   color: $brand-success;
 
-  &:focus, &:hover {
+  &:focus, &:hover, &.active {
     color: $btn-success-color;
   }
 }
@@ -132,7 +132,7 @@ ul.tree {
 .btn-warning.btn-outline {
   color: $brand-warning;
 
-  &:focus, &:hover {
+  &:focus, &:hover, &.active {
     color: $btn-warning-color;
   }
 }
@@ -140,7 +140,7 @@ ul.tree {
 .btn-danger.btn-outline {
   color: $brand-danger;
 
-  &:focus, &:hover {
+  &:focus, &:hover, &.active {
     color: $btn-danger-color;
   }
 }
@@ -148,7 +148,7 @@ ul.tree {
 .btn-violet.btn-outline {
   color: $btn-violet-bg;
 
-  &:focus, &:hover {
+  &:focus, &:hover, &.active {
     color: #fff;
   }
 }
@@ -338,6 +338,16 @@ body#iframe {
 
 .bg-green {
   background: #92d050;
+}
+
+.bg-orange {
+  background: #FF7F50;
+  color: #fff;
+}
+
+.bg-violet {
+  background:  $btn-violet-bg;
+  color: #fff;
 }
 
 .btn-group-block {
