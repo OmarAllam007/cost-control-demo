@@ -72,11 +72,13 @@ class StdActivityResource extends Model
         /** @var WbsLevel $wbs_level */
         $wbs_level = WbsLevel::find($request['wbs_level_id']);
         $eng_qty = $wbs_level->getEngQty($request['cost_account']);
+        $budget_qty = $wbs_level->getBudgetQty($request['cost_account']);
 
         $costAccount = Survey::where('cost_account', $account)->first();
         if ($costAccount) {
-            $attributes['budget_qty'] = $costAccount->budget_qty;
+//            $attributes['budget_qty'] = $costAccount->budget_qty;
             $attributes['eng_qty'] = $eng_qty;
+            $attributes['budget_qty'] = $budget_qty;
         }
 
         return $attributes;
