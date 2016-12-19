@@ -54,18 +54,18 @@
                 </div>
             </div>
 
-            <div class="col-sm-3">
-                <div class="form-group form-group-sm">
-                    {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
-                    <div class="btn-group btn-group-sm btn-group-block">
-                        <a href="#ResourceTypeModal2" data-toggle="modal" class="tree-open btn btn-default btn-block">{{session('filters.resources.'.$project->id.'.resource_type')?
-                        App\ResourceType::with('parent')->find(session('filters.resources.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>
-                        <a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning" data-target="#ResourceTypeModal2" data-label="Select Resource Type"><span class="fa
-                        fa-times-circle"></span></a>
-                    </div>
+            {{--<div class="col-sm-3">--}}
+                {{--<div class="form-group form-group-sm">--}}
+                    {{--{{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}--}}
+                    {{--<div class="btn-group btn-group-sm btn-group-block">--}}
+                        {{--<a href="#ResourceTypeModal2" data-toggle="modal" class="tree-open btn btn-default btn-block">{{session('filters.resources.'.$project->id.'.resource_type')?--}}
+                        {{--App\ResourceType::with('parent')->find(session('filters.resources.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>--}}
+                        {{--<a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning" data-target="#ResourceTypeModal2" data-label="Select Resource Type"><span class="fa--}}
+                        {{--fa-times-circle"></span></a>--}}
+                    {{--</div>--}}
 
-                </div>
-            </div>
+                {{--</div>--}}
+            {{--</div>--}}
         </section>
 
         <div class="scrollpane" v-if="filtered_resources.length">
