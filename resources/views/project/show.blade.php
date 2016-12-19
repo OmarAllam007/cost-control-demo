@@ -33,9 +33,9 @@
         @can('budget', $project)
             @include('project.tabs.wbs-area')
 
-            {{--<article id="ProjectResources" class="project-tab">--}}
-                @include('project.tabs._resources')
-            {{--</article>--}}
+            <article id="ProjectResources" class="project-tab">
+                @include('project.templates.resources')
+            </article>
 
             @include('project.tabs._productivity')
             @include('project.tabs._breakdown_template')

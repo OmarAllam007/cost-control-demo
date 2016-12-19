@@ -22,14 +22,10 @@ export default{
     },
     computed: {
         filtered_resources(){
-            return this.resources.filter((item)=> {
-                if (this.code) {
-                 return item.resource_code.toLowerCase().indexOf(this.code.toLowerCase()) >=0;
-                }
-                return true;
-            }).filter((item)=>{
+            return this.resources.filter((item)=>{
                 if(this.resource){
-                    return item.name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0;
+                    return item.name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0
+                        || item.resource_code.toLowerCase().indexOf(this.code.toLowerCase()) >=0;
                 }
                 return true;
             });
