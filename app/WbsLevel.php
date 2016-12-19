@@ -94,10 +94,10 @@ class WbsLevel extends Model
 
     function getBudgetQty($cost_account)
     {
-        $eng_qty = 0;
+        $budget_qty = 0;
         $survey_level = Survey::where('wbs_level_id', $this->id)->where('cost_account', $cost_account)->first();
         if ($survey_level) {
-            $eng_qty = $survey_level->budget_qty;
+            $budget_qty = $survey_level->budget_qty;
         } else {
             $parent = $this;
             while ($parent->parent) {
@@ -105,13 +105,13 @@ class WbsLevel extends Model
                 $parent_survey = Survey::where('wbs_level_id', $parent->id)
                     ->where('cost_account', $cost_account)->first();
                 if ($parent_survey) {
-                    $eng_qty = $parent_survey->budget_qty;
+                    $budget_qty = $parent_survey->budget_qty;
                     break;
                 }
 
             }
         }
-        return $eng_qty;
+        return $budget_qty;
     }
 
     function getChildrenIdAttribute()
