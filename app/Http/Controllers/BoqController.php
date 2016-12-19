@@ -124,7 +124,7 @@ class BoqController extends Controller
 
     public function deleteAll(Project $project)
     {
-        if (\Gate::denies('boq', $boq->project)) {
+        if (\Gate::denies('boq', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
@@ -137,7 +137,7 @@ class BoqController extends Controller
 
     function import(Project $project)
     {
-        if (\Gate::denies('boq', $boq->project)) {
+        if (\Gate::denies('boq', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
@@ -147,7 +147,7 @@ class BoqController extends Controller
 
     function postImport(Project $project, Request $request)
     {
-        if (\Gate::denies('boq', $boq->project)) {
+        if (\Gate::denies('boq', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
@@ -179,7 +179,7 @@ class BoqController extends Controller
 
         $status = \Cache::get($key);
         $project = Project::find($status['project_id']);
-        if (\Gate::denies('boq', $boq->project)) {
+        if (\Gate::denies('boq', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
@@ -197,7 +197,7 @@ class BoqController extends Controller
         
         $status = \Cache::get($key);        
         $project = Project::find($status['project_id']);
-        if (\Gate::denies('boq', $boq->project)) {
+        if (\Gate::denies('boq', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
@@ -231,7 +231,7 @@ class BoqController extends Controller
 
     function exportBoq(Project $project)
     {
-        if (\Gate::denies('budget', $boq->project)) {
+        if (\Gate::denies('budget', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }

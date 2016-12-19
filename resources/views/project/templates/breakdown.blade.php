@@ -28,7 +28,6 @@
             @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
             @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
 
-
             <div class="col-sm-3">
                 <div class="form-group form-group-sm">
                     {{Form::label('activity', 'Activity', ['class' => 'control-label'])}}

@@ -4,7 +4,6 @@ export default{
     data(){
         return {
             resources: [],
-            code: '',
             resource:'',
             resource_type:'',
         }
@@ -22,14 +21,16 @@ export default{
     },
     computed: {
         filtered_resources(){
-            return this.resources.filter((item)=> {
-                if (this.code) {
-                 return item.resource_code.toLowerCase().indexOf(this.code.toLowerCase()) >=0;
+            return this.resources.filter((item)=>{
+                if(this.resource){
+                    return item.name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0
+                        || item.resource_code.toLowerCase().indexOf(this.resource.toLowerCase()) >=0;
                 }
                 return true;
             }).filter((item)=>{
-                if(this.resource){
-                    return item.name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0;
+                if(this.resource_type){
+                    console.log(this.resources);
+                    return (item.resource_type_id == this.resource_type);
                 }
                 return true;
             });
