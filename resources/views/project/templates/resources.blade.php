@@ -11,7 +11,7 @@
                     <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="true">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        Modifying
+                        Importing
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -37,6 +37,7 @@
         <div class="clearfix"></div>
 
         <section class="filters row">
+
             <div class="col-sm-3">
                 <div class="form-group form-group-sm">
                     {{Form::label('resource_code', 'Resource Code', ['class' => 'control-label'])}}
@@ -53,17 +54,18 @@
                 </div>
             </div>
 
-            {{--<div class="col-sm-3">--}}
-                {{--<div class="form-group form-group-sm">--}}
-                    {{--{{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}--}}
-                    {{--<div class="btn-group btn-group-sm btn-group-block">--}}
-                        {{--<button data-toggle="modal" href="#ResourceTypeModal" class="tree-open btn btn-default btn-block"></button>--}}
-                        {{--<a href="#" @click="resource_type = ''"  class="remove-tree-input btn btn-warning" data-target=".resource-type" data-label="Select Resource--}}
-                                    {{--Type"><span class="fa fa-times-circle"></span></a>--}}
-                    {{--</div>--}}
+            <div class="col-sm-3">
+                <div class="form-group form-group-sm">
+                    {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
+                    <div class="btn-group btn-group-sm btn-group-block">
+                        <a href="#ResourceTypeModal2" data-toggle="modal" class="tree-open btn btn-default btn-block">{{session('filters.resources.'.$project->id.'.resource_type')?
+                        App\ResourceType::with('parent')->find(session('filters.resources.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>
+                        <a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning" data-target="#ResourceTypeModal2" data-label="Select Resource Type"><span class="fa
+                        fa-times-circle"></span></a>
+                    </div>
 
-                {{--</div>--}}
-            {{--</div>--}}
+                </div>
+            </div>
         </section>
 
         <div class="scrollpane" v-if="filtered_resources.length">
@@ -136,5 +138,5 @@
             </form>
         </div>
     @endcan
-
+    @include('resource-type._modal2', ['input' => 'resource_type', 'value' => ''])
 </resources>

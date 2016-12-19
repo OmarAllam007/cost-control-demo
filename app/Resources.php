@@ -72,6 +72,7 @@ class Resources extends Model
             'unit' => isset($this->units->type) ? $this->units->type : '',
             'rate' => $this->rate,
             'root_type' => $this->types->root->name,
+            'resource_type_id'=>$this->types->root->id,
             'waste'=>$this->waste,
             'resource_code'=>$this->resource_code,
         ];
