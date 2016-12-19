@@ -79,7 +79,7 @@ class ReportController extends Controller
         foreach ($breakdown_resources as $resource) {
             $rootName = $resource->resource_type;
             $resourceObject = $resource->resource;
-            if (str_contains($rootName, 'LABORS')) {
+            if (str_contains(strtolower($rootName), 'labors')) {
                 $root = $rootName;
                 if (!isset($resources[$resourceObject->id])) {
                     $resources[$resourceObject->id] = [
@@ -88,7 +88,7 @@ class ReportController extends Controller
                         'type' => $rootName,
                         'budget_cost' => 0,
                         'budget_unit' => 0,
-                        'unit' => $resource->project_resource->units->type,
+                        'unit' => $resource->measure_unit??'',
                     ];
 
 

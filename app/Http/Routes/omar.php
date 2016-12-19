@@ -86,7 +86,7 @@ Route::group(['prefix' => 'project'], function () {
 //reports cost control
 
 Route::group(['prefix'=>'project'],function (){
-   Route::get('cost');
+   Route::get('cost-control/projectInfo',['uses']);
 });
 //export resports
 Route::group(['prefix' => 'project'], function () {
