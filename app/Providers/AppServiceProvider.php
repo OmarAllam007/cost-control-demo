@@ -15,10 +15,12 @@ use App\Observers\BreakDownResourceObserver;
 use App\Observers\BreakdownShadowObserver;
 use App\Observers\BreakdownTemplateObserver;
 use App\Observers\ProductivityObserver;
+use App\Observers\QuantitySurveyObserver;
 use App\Observers\ResourcesObserver;
 use App\Productivity;
 use App\Project;
 use App\Resources;
+use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
 
@@ -52,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
         BreakdownTemplate::observe(BreakdownTemplateObserver::class);
         Breakdown::observe(BreakdownObserver::class);
         BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
+        Survey::observe(QuantitySurveyObserver::class);
 
 
     }

@@ -13,6 +13,7 @@ class BreakDownResourceObserver
 {
     function created(BreakdownResource $resource)
     {
+
         $formatter = new BreakdownResourceFormatter($resource);
         $shadow = BreakDownResourceShadow::create($formatter->toArray());
     }
@@ -22,12 +23,10 @@ class BreakDownResourceObserver
         $resource->code = $resource->breakdown->wbs_level->code . $resource->breakdown->std_activity->id_partial;
         $resource->eng_qty = $resource->breakdown->wbs_level->getEngQty($resource->breakdown->cost_account);
         $resource->budget_qty = $resource->breakdown->wbs_level->getBudgetQty($resource->breakdown->cost_account);
-        //dd($resource);
     }
 
     function updated(BreakdownResource $resource)
     {
-
         $formatter = new BreakdownResourceFormatter($resource);
         $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $resource->id]);
         $shadow->update($formatter->toArray());

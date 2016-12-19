@@ -44,7 +44,7 @@ Route::group(['prefix' => 'unit'], function () {
     Route::post('/filter', ['as' => 'unit.filter', 'uses' => 'UnitController@filter']);
     Route::delete('delete-all', ['uses' => 'UnitController@wipe', 'as' => 'unit.wipe']);
 });
-//reports
+//reports budget cost
 Route::group(['prefix' => 'project'], function () {
     Route::get('reports/{project}', ['as' => 'project.reports', 'uses' => 'ReportController@getReports']);
 
@@ -83,6 +83,11 @@ Route::group(['prefix' => 'project'], function () {
 
 
 });
+//reports cost control
+
+Route::group(['prefix'=>'project'],function (){
+   Route::get('cost');
+});
 //export resports
 Route::group(['prefix' => 'project'], function () {
     Route::get('wbs_levels/export/{project}', ['as' => 'wbs_report.export', 'uses' => 'ExportReportController@exportWbsReport']);
@@ -109,16 +114,13 @@ Route::group(['prefix' => 'resources'], function () {
 Route::group(['prefix' => 'resource-type'], function () {
     Route::delete('delete-all', ['uses' => 'ResourceTypeController@wipe', 'as' => 'type.wipe']);
 });
-
 Route::group(['prefix' => 'project'], function () {
     Route::get('financial-period/{project}', ['uses' => 'FinancialPeriodController@index', 'as' => 'financial.index']);
 
     Route::get('financial-period/{project}/create', ['uses' => 'FinancialPeriodController@create', 'as' => 'financial.create']);
     Route::post('financial-period/{project}/store', ['uses' => 'FinancialPeriodController@store', 'as' => 'financial.store']);
 });
-
 Route::delete('/wbs-level/reources/{id}', ['uses' => 'BreakdownController@wpsdelete', 'as' => 'wbsresource.delete']);
-
 Route::group(['prefix' => 'breakdown-resource'], function () {
     Route::delete('/delete-all/{project}', ['uses' => 'BreakdownResourceController@deleteAllBreakdowns', 'as' => 'breakdownresources.deleteAllBreakdowns']);
 });
