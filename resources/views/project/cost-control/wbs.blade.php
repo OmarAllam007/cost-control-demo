@@ -9,6 +9,6 @@
     </div>
 </template>
 
-@include('project.templates.wbs-item')
+@include('project.cost-control.wbs-item')
 
 <wbs :wbs_levels="{{json_encode($wbsTree)}}" project="{{$project->id}}"></wbs>
