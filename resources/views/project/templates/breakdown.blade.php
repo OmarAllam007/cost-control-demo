@@ -71,6 +71,7 @@
                     @can('breakdown', $project)
                     <th style="min-width: 32px; max-width: 32px;">&nbsp;</th>
                     @endcan
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Activity ID</th>
                     <th style="min-width: 300px; max-width: 300px;" class="bg-blue">Activity</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-black">Breakdown Template</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Cost Account</th>
@@ -114,7 +115,7 @@
                         </form>
                     </td>
                     @endcan
-
+                    <th style="min-width: 150px; max-width: 150px;" class="bg-blue">@{{ breakdown.code }}</th>
                     <td style="min-width: 300px; max-width: 300px;" class="bg-blue">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
                     <td style="min-width: 150px; max-width: 150px;"

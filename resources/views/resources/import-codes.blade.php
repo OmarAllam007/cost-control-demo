@@ -14,7 +14,7 @@
             {{Form::open(['route' => 'resources.post-import-codes', 'files' => true])}}
 
             <p class="text-info">
-                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/resource-codes.xlsx')}}">click here</a> to download a sample template
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/resource-map.xlsx')}}">click here</a> to download a sample template
             </p>
 
             <div class="form-group {{$errors->first('file', 'has-errors')}}">
