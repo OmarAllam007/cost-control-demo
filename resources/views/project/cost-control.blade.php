@@ -31,7 +31,7 @@
         <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
         <a href="#resources" class="btn btn-info btn-sm btn-outline">Resources</a>
         <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial Periods</a>
-        <a href="#reports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i> Reports</a>
+        <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i> Reports</a>
     </nav>
     <div class="clearfix"></div>
 

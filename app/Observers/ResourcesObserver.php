@@ -36,7 +36,6 @@ class ResourcesObserver
             ->orWhere('resource_code', $resource->resource_code)
             ->where('project_id', $resource->project_id)
             ->get();
-
         foreach ($shadows as $shadow) {
             $shadow->resource_name = $resource->name;
             $shadow->resource_waste = $resource->waste;

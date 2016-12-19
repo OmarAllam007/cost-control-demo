@@ -25,7 +25,9 @@ class ExportBreakdownJob extends Job
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->fromArray(['WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4', 'Activity', 'Breakdown-Template', 'Cost Account', 'Engineering Quantity', 'Budget Quantity', 'Resource Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost', 'BOQ Equivalent Unit Rate', 'No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'], 'A1');
+        $sheet->fromArray(['WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','Activity ID', 'Activity', 'Breakdown-Template', 'Cost Account', 'Engineering Quantity', 'Budget Quantity',
+            'Resource 
+        Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost', 'BOQ Equivalent Unit Rate', 'No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'], 'A1');
         $rowCount = 2;
 
         $sheet->getStyle('A1:W1')->applyFromArray(
@@ -49,12 +51,12 @@ class ExportBreakdownJob extends Job
             };
 
             $levels = array_reverse($levels);
-
             $sheet->fromArray([
                 isset($levels[0]) ? $levels[0] : '',
                 isset($levels[1]) ? $levels[1] : '',
                 isset($levels[2]) ? $levels[2] : '',
                 isset($levels[3]) ? $levels[3] : '',
+                $breakdown_resource['code'],
                 $breakdown_resource['activity'],
                 $breakdown_resource['template'],
                 $breakdown_resource['cost_account'],
