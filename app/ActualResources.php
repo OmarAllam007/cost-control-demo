@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Controllers\Reports\ActivityResourceBreakDown;
+use App\Observers\ActualResourceObserver;
 use Illuminate\Database\Eloquent\Model;
 
 class ActualResources extends Model
@@ -39,6 +40,18 @@ class ActualResources extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    function resource()
+    {
+        return $this->belongsTo(Resources::class);
+    }
+
+    protected static function boot()
+    {
+        self::observe(ActualResourceObserver::class);
+        parent::boot();
+    }
+
+    /*
     function getProgressAttribute()
     {
         return .8;
@@ -289,8 +302,5 @@ class ActualResources extends Model
         }
         return 0;
     }
-
-
-
-
+*/
 }

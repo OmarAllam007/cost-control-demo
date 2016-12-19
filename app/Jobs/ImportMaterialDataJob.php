@@ -69,7 +69,7 @@ class ImportMaterialDataJob extends Job
 
         // Excel date is translated to number of days since 30/12/1899
 
-
+        $resource_dict = collect();
         foreach ($this->data as $row) {
             $activityCode = strtolower($row[3]);
             if (!$this->activityMap->has($activityCode)) {
@@ -123,6 +123,8 @@ class ImportMaterialDataJob extends Job
                     'action_date' => Carbon::create(1899, 12, 30)->addDays($row[5])
                 ]);
 
+                $resource_dict->push($resource->id);
+
                 ++$result['success'];
             } elseif (!$breakdownResources->count()) {
                 // Nothing matches, worst case ever
@@ -144,6 +146,8 @@ class ImportMaterialDataJob extends Job
                 break;
             }
         }
+
+        dispatch(new UpdateResourceDictJob($this->project, $resource_dict));
 
         // dd($result);
 
