@@ -18,7 +18,6 @@
 @section('body')
     <ul class="list-unstyled tree">
         @foreach($data as $wbs_level=>$attributes)
-
             @if(isset($attributes['activities']))
                 <li>
                     <p class="blue-second-level"><strong>{{$wbs_level}}</strong><span class="pull-right">{{number_format($attributes['activities_total_cost'],2)}}</span></p>
@@ -36,7 +35,6 @@
                                                 <table class="table table-condensed ">
                                                     <thead>
                                                     <tr class="tbl-children-division">
-                                                        {{--<th class="col-md-3 bg-success">Cost Account</th>--}}
                                                         <th class="col-md-3">Resource Name</th>
                                                         <th class="col-md-2">Price-Unit</th>
                                                         <th class="col-md-3">Unit of Measure</th>
@@ -60,7 +58,6 @@
                                             </article>
                                         </li>
                                     </ul>
-
                                 </li>
                             @endforeach
                         @endforeach
