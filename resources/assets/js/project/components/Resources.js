@@ -29,7 +29,6 @@ export default{
                 return true;
             }).filter((item)=>{
                 if(this.resource_type){
-                    console.log(this.resources);
                     return (item.resource_type_id == this.resource_type);
                 }
                 return true;

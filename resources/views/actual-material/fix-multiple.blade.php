@@ -15,7 +15,7 @@
             </div>
 
             <table class="table table-bordered table-condensed table-hover table-striped"
-                   data-total-qty="{{$totalQty = $resource['resources']->sum('budget_qty')}}" data-qty="{{abs($resource[10])}}">
+                   data-total-qty="{{$totalQty = $resource['resources']->sum('budget_unit')}}" data-qty="{{abs($resource[10])}}">
                 <thead>
                 <tr>
                     <th class="text-center">&nbsp;</th>
@@ -25,7 +25,7 @@
                     <th>Resource Code</th>
                     <th>Resource Name</th>
                     <th>Cost Account</th>
-                    <th>Budget Qty</th>
+                    <th>Budget Unit</th>
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Total</th>
@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                 @foreach($resource['resources'] as $res)
-                    <tr data-budget="{{$res->budget_qty}}">
+                    <tr data-budget="{{$res->budget_unit}}">
                         <td class="text-center">
                             {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}]['included']", 1, true, ['class' => 'include'])}}
                         </td>
@@ -56,10 +56,10 @@
                             {{$res->cost_account}}
                         </td>
                         <td>
-                            {{$res->budget_qty}}
+                            {{$res->budget_unit}}
                         </td>
                         <td>
-                            {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}]['qty']", $qty = round($res->budget_qty * abs($resource[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
+                            {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}]['qty']", $qty = round($res->budget_unit * abs($resource[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
                         </td>
                         <td class="unit-price-cell">{{ number_format($resource[11], 2) }}</td>
                         <td class="total-cell">{{ number_format($qty * $resource[11], 2) }}</td>

@@ -50,13 +50,13 @@
                 {{$line['resource']->cost_account}}
             </td>
             <td>
-                {{$line['resource']->budget_qty}}
+                {{number_format($line['resource']->budget_qty, 2)}}
             </td>
             <td>
-                {{$line['resource']->budget_cost}}
+                {{number_format($line['resource']->budget_cost, 2)}}
             </td>
             <td>
-                {{$line['resource']->budget_unit}}
+                {{number_format($line['resource']->budget_unit, 2)}}
             </td>
             <td>
                 {{ $line[9] }}
@@ -75,7 +75,7 @@
                 {{Form::text("units[$idx][unit_price]", 0, ['class' => 'form-control input-sm unit-price', 'readonly'])}}
             </td>
             <td>
-                {{ abs($line[12]) }}
+                {{ number_format(abs($line[12]), 2) }}
             </td>
         </tr>
         @endforeach

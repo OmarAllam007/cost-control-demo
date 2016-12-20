@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Wbs from './components/Wbs';
 import Breakdown from './components/datasheet';
 import Alert from './components/Alert';
+import Resources from './components/CostResources';
 
 Vue.filter('slug', function(value){
     return value.replace(/\W/g, '-').replace(/-{2,}/g, '-').toLowerCase();
@@ -24,7 +25,7 @@ Vue.filter('number_format', function(number) {
 });
 
 window.app = new Vue({
-    el: '#datasheet',
+    el: '#projectArea',
 
     data: {
         selected: 0
@@ -52,7 +53,8 @@ window.app = new Vue({
     components: {
         Alert,
         Wbs,
-        Breakdown
+        Breakdown,
+        Resources
     }
 });
 
