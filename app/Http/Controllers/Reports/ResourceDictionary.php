@@ -33,6 +33,7 @@ class ResourceDictionary
             if (!isset($data[$root])) {
                 $data[$root] = [
                     'name' => $root,
+                    'type_id'=>$break_down_resource['resource_type_id'],
                     'divisions' => [],
                 ];
             }

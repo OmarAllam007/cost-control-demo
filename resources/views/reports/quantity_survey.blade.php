@@ -3,7 +3,7 @@
     @include('reports.all._qs_summery')
 @endif
 @section('header')
-    <h2 align="center">Quantity Survey</h2>
+    <h2 align="center">Quantity Survey Report</h2>
     <div class="pull-right">
         <a href="?print=1&paint=survey" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
@@ -16,7 +16,6 @@
     <ul class="list-unstyled tree">
         @foreach($level_array as $level)
             <li>
-
                 @if($level['activity_divisions'])
                     @foreach($level['activity_divisions'] as $division)
                         <ul class="list-unstyled">

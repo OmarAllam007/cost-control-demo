@@ -20,7 +20,7 @@
 ">
         <div class="tree--item">
             <div class="tree--item--label blue-first-level">
-                <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Cost : {{number_format($project_total)}} SR </strong></h5>
+                <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Cost : {{number_format($project_total,2)}} SR </strong></h5>
             </div>
         </div>
 
@@ -30,7 +30,8 @@
         @foreach($data as $wbs_level=>$attributes)
             @if(isset($attributes['activities']))
                 <li>
-                    <p class="blue-second-level"><strong>{{$wbs_level}}</strong><span class="pull-right">{{number_format($attributes['activities_total_cost'],2)}}</span></p>
+                    <p class="blue-second-level"><strong>{{$wbs_level}}</strong><span class="pull-right">{{number_format
+                    ($attributes['activities_total_cost'],2)}}</span></p>
                     <ul class="list-unstyled">
                         @foreach($attributes['activities'] as $item=>$value)
                             <li>

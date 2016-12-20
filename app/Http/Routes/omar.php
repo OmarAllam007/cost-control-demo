@@ -46,6 +46,8 @@ Route::group(['prefix' => 'unit'], function () {
 });
 //reports budget cost
 Route::group(['prefix' => 'project'], function () {
+    Route::get('projectInfo/{project}',['uses'=>'CostReportsController@projectInformation','as'=>'cost_control.info']);
+
     Route::get('reports/{project}', ['as' => 'project.reports', 'uses' => 'ReportController@getReports']);
 
     Route::get('wbs_report/{project}', ['as' => 'wbs.report', 'uses' => 'ReportController@wbsReport']);
@@ -85,9 +87,7 @@ Route::group(['prefix' => 'project'], function () {
 });
 //reports cost control
 
-Route::group(['prefix'=>'project'],function (){
-   Route::get('cost-control/projectInfo',['uses']);
-});
+
 //export resports
 Route::group(['prefix' => 'project'], function () {
     Route::get('wbs_levels/export/{project}', ['as' => 'wbs_report.export', 'uses' => 'ExportReportController@exportWbsReport']);
