@@ -6,7 +6,6 @@
     <nav class="btn-toolbar pull-right">
 
 
-
         <div class="btn-group">
             <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"><i
                         class="fa fa-cloud-upload"></i> Import <span class="caret"></span></a>
@@ -27,31 +26,38 @@
 
 @section('body')
 
-    <nav id="project-nav" class="project-nav btn-toolbar pull-right">
-        <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
-        <a href="#resources" class="btn btn-info btn-sm btn-outline">Resources</a>
-        <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial Periods</a>
-        <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i> Reports</a>
-    </nav>
-    <div class="clearfix"></div>
+    <div id="projectArea">
+
+        <nav id="project-nav" class="project-nav btn-toolbar pull-right">
+            <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
+            <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
+            <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial
+                Periods</a>
+            <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i>
+                Reports</a>
+        </nav>
+        <div class="clearfix"></div>
 
 
-    @include('project.cost-control.datasheet')
+        @include('project.cost-control.datasheet')
 
-    @include('project.cost-control.periods')
-    <div id="resources" class="project-nav">
+        @include('project.cost-control.resources')
+
+        @include('project.cost-control.periods')
+
         @include('project.cost-control._report')
+
     </div>
 
 @stop
 
 @section('javascript')
     <script>
-        $(function(){
+        $(function () {
             $('.project-tab').hide();
 //            $('#datasheet').show();
 
-            var projectNav = $('#project-nav').on('click', 'a', function(e) {
+            var projectNav = $('#project-nav').on('click', 'a', function (e) {
                 e.preventDefault();
                 $('.project-tab').hide();
                 $($(this).attr('href')).show();

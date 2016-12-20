@@ -21,11 +21,11 @@ class CostResource extends Model
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
-            'code' => $this->resource->code,
+            'code' => $this->resource->resource_code,
             'type' => $this->resource->types->root->name,
             'type_id' => $this->resource->types->root->id,
             'rate' => $this->rate,
-            'measure_unit' => $this->resource->units->name,
+            'measure_unit' => $this->resource->units->type,
         ];
     }
 }

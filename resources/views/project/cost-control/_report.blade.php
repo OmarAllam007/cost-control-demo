@@ -1,4 +1,4 @@
-<section >
+<section id="CostControlReports" class="project-tab">
     <table class="table table-condensed table-striped table-fixed text-center">
         <thead>
         {{--<div class="pull-right" style="padding: 5px;">--}}

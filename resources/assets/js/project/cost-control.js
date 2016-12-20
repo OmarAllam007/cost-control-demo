@@ -25,7 +25,7 @@ Vue.filter('number_format', function(number) {
 });
 
 window.app = new Vue({
-    el: '#datasheet',
+    el: '#projectArea',
 
     data: {
         selected: 0
@@ -53,7 +53,8 @@ window.app = new Vue({
     components: {
         Alert,
         Wbs,
-        Breakdown
+        Breakdown,
+        Resources
     }
 });
 

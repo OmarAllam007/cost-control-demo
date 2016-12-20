@@ -10,8 +10,8 @@ export default {
         }
     },
 
-    mounted() {
-        loadResources();
+    created() {
+        this.loadResources();
     },
 
     computed: {
@@ -23,8 +23,12 @@ export default {
 
                 return true;
             }).filter(res => {
-                return item.name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0
-                    || item.resource_code.toLowerCase().indexOf(this.resource.toLowerCase()) >=0;
+                if (this.filters.name) {
+                    return res.name.toLowerCase().indexOf(this.filters.name.toLowerCase()) >= 0
+                        || res.code.toLowerCase().indexOf(this.filters.name.toLowerCase()) >=0;
+                }
+
+                return true;
             })
         }
     },
@@ -32,7 +36,7 @@ export default {
     methods: {
         loadResources() {
             $.ajax({
-                url: '/api/cost/resources' + this.project,
+                url: `/api/cost/resources/${this.project}`,
                 dataType: 'json'
             }).success(resources => this.resources = resources);
         }
