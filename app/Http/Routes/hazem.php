@@ -22,6 +22,7 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::group(['prefix' => 'cost'], function() {
         Route::get('breakdowns/{wbs_level}', 'Api\CostController@breakdowns');
+        Route::get('resources/{project}', 'Api\CostController@resources');
     });
 });
 

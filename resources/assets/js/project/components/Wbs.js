@@ -1,8 +1,6 @@
 import WbsItem from './WbsItem';
 
 export default {
-    template: document.getElementById('WbsTemplate').innerHTML,
-
     props: ['wbs_levels', 'project'],
 
     data () {
