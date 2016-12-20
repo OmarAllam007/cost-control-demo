@@ -9,7 +9,7 @@ use App\Formatters\BreakdownResourceFormatter;
 use App\Resources;
 use Make\Makers\Resource;
 
-class BreakDownResourceObserver
+class rBreakDownResourceObserver
 {
     function created(BreakdownResource $resource)
     {
@@ -28,9 +28,7 @@ class BreakDownResourceObserver
     function updated(BreakdownResource $resource)
     {
 
-        $formatter = new BreakdownResourceFormatter($resource);
-        $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $resource->id]);
-        $shadow->update($formatter->toArray());
+        $resource->updateShadow();
 //        if ($resource->resoure_id != $resource->original_resource_id) {
 //            $oldResource = Resources::find($resource->original_resource);
 //            $this->checkForResources($oldResource);

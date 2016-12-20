@@ -51,8 +51,6 @@ class RebuildBreakdownShadow extends Seeder
                 }
 
                 if (!empty($resource_id)) {
-
-
                     $breakdownResource->resource_id = $resource_id;
                     $breakdownResource->save();
                 }

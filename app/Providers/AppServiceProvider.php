@@ -17,9 +17,11 @@ use App\Observers\BreakdownTemplateObserver;
 use App\Observers\ProductivityObserver;
 use App\Observers\QuantitySurveyObserver;
 use App\Observers\ResourcesObserver;
+use App\Observers\StandardActivityResourceObserver;
 use App\Productivity;
 use App\Project;
 use App\Resources;
+use App\StdActivityResource;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
@@ -48,14 +50,13 @@ class AppServiceProvider extends ServiceProvider
         $this->ResourceTypeActions();
         $this->wbsActions();
 
-        BreakdownResource::observe(BreakDownResourceObserver::class);
         Productivity::observe(ProductivityObserver::class);
         Resources::observe(ResourcesObserver::class);
         BreakdownTemplate::observe(BreakdownTemplateObserver::class);
         Breakdown::observe(BreakdownObserver::class);
         BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
         Survey::observe(QuantitySurveyObserver::class);
-
+        StdActivityResource::observe(StandardActivityResourceObserver::class);
 
     }
 

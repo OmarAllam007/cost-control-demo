@@ -29,7 +29,7 @@ class Project extends Model
         'description',
         'owner_id',
     ];
-
+    
     protected $dates = ['created_at', 'updated_at'];
 
     function getWbsTreeAttribute()
@@ -167,4 +167,6 @@ class Project extends Model
             return $row;
         });
     }
+
+
 }

@@ -14,7 +14,7 @@ class BudgetCostByBreakDownItem
 {
     public function compareBudgetCostByBreakDownItem(Project $project)
     {
-        $break_downs = $project->breakdown_resources()->get();
+        $shadows = $project->shadows()->get();
 
         $bd_resource = [];
         $total = [
@@ -22,18 +22,18 @@ class BudgetCostByBreakDownItem
             'weight_total'=>0
         ];
 
-            foreach ($break_downs as $resource) {
-                $root = $resource->resource->types->root;
-                if (!isset($bd_resource[ $root->name ])) {
-                    $bd_resource[ $root->name ] = [
-                        'resource_type' => $root->name,
-                        'resource_code' => $root->code,
+            foreach ($shadows as $shadow) {
+                $root = $shadow->resource_type;
+                if (!isset($bd_resource[ $root ])) {
+                    $bd_resource[ $root ] = [
+                        'resource_type' => $root,
+                        'resource_code' => $shadow->resource_code,
                         'budget_cost' => 0,
                         'weight' => 0,
 
                     ];
                 }
-                $bd_resource[ $root->name ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
+                $bd_resource[ $root ]['budget_cost'] += is_nan($shadow->budget_cost)?0:$shadow->budget_cost;
 
         }
         foreach ($bd_resource as $item) {
@@ -47,7 +47,6 @@ class BudgetCostByBreakDownItem
             }
 
         }
-
         ksort($bd_resource);
         $this->compareBudgetCostByBreakDownItemChart($bd_resource);
         return view('reports.budget_cost_by_break_down',compact('bd_resource','total','project'));
