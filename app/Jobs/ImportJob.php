@@ -27,7 +27,7 @@ class ImportJob extends Job
         /** @var \PHPExcel_Cell $cell */
         /** @var \PHPExcel_Worksheet_CellIterator $cells */
         foreach ($cells as $cell) {
-            $data[] = $cell->getValue() ?: '';
+            $data[] = $cell->getFormattedValue()?: $cell->getValue()?: '';
         }
         return $data;
     }
