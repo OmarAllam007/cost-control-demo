@@ -48,6 +48,11 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(WbsLevel::class);
     }
 
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     function std_activity()
     {
         return $this->belongsTo(StdActivity::class, 'activity_id');
@@ -68,5 +73,9 @@ class BreakDownResourceShadow extends Model
     }
 
 
+    function cost()
+    {
+        return $this->belongsTo(CostShadow::class, 'breakdown_resource_id', 'breakdown_resource_id')->where('period_id', $this->project->open_period()->id);
+    }
 
 }
