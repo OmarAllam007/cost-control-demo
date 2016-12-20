@@ -14,6 +14,10 @@ class CreateCostResourcesTable extends Migration
     {
         Schema::create('cost_resources', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('project_id')->unsigned();
+            $table->integer('period_id')->unsigned();
+            $table->integer('resource_id')->unsigned();
+            $table->float('rate')->unsigned();
             $table->timestamps();
         });
     }
