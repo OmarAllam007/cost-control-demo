@@ -39,6 +39,9 @@
     @include('project.cost-control.datasheet')
 
     @include('project.cost-control.periods')
+    <div id="resources" class="project-nav">
+        @include('project.cost-control._report')
+    </div>
 
 @stop
 

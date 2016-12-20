@@ -21,24 +21,21 @@ class BudgetCostByDiscipline
             'total' => 0,
             'weight_total' => 0,
         ];
-        $breakdowns = $project->breakdowns()->get();
-        foreach ($breakdowns as $breakdown) {
-            $qs_items = Survey::where('cost_account', $breakdown->cost_account)->get();
+        $shadows = $project->shadows()->get();
+
+        foreach ($shadows as $shadow) {
+            $qs_items = Survey::where('cost_account', $shadow->cost_account)->get();
             foreach ($qs_items as $qs_item) {
-                if (!isset($survey[ $breakdown->std_activity->discipline ])) {
-                    $survey[ $breakdown->std_activity->discipline ] = [
-                        'code' => $breakdown->std_activity->code,
+                if (!isset($survey[$shadow->std_activity->discipline])) {
+                    $survey[$shadow->std_activity->discipline] = [
+                        'code' => $shadow->std_activity->code,
                         'name' => $qs_item->discipline,
                         'budget_cost' => 0,
                         'weight' => 0,
                     ];
                 }
-                foreach ($breakdown->resources as $resource) {
-                    $survey[ $breakdown->std_activity->discipline ]['budget_cost'] += is_nan($resource->budget_cost)?0:$resource->budget_cost;
-                }
-
-
             }
+            $survey[$shadow->std_activity->discipline]['budget_cost'] += is_nan($shadow->budget_cost) ? 0 : $shadow->budget_cost;
 
         }
         foreach ($survey as $item) {
@@ -46,11 +43,10 @@ class BudgetCostByDiscipline
         }
         foreach ($survey as $key => $value) {
             if ($total['total']) {
-                $survey[ $key ]['weight'] += floatval(($survey[ $key ]['budget_cost'] / $total['total']) * 100);
-                $total['weight_total'] += $survey[ $key ]['weight'];
+                $survey[$key]['weight'] += floatval(($survey[$key]['budget_cost'] / $total['total']) * 100);
+                $total['weight_total'] += $survey[$key]['weight'];
             }
         }
-
         $this->compareBudgetCostDisciplineCharts($survey);
         return view('reports.budget_cost_by_discipline', compact('project', 'survey', 'total'));
 
@@ -61,7 +57,7 @@ class BudgetCostByDiscipline
         $costTable = \Lava::DataTable();
         $costTable->addStringColumn('BudgetCost')->addNumberColumn('Discipline');
         foreach ($data as $key => $value) {
-            $costTable->addRow([$data[ $key ]['name'], $data[ $key ]['budget_cost']]);
+            $costTable->addRow([$data[$key]['name'], $data[$key]['budget_cost']]);
         }
         \Lava::ColumnChart('BudgetCost', $costTable, [
             'title' => 'Budget Cost By Discipline',
@@ -78,7 +74,7 @@ class BudgetCostByDiscipline
         $building = \Lava::DataTable();
         $building->addStringColumn('Buildings')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {
-            $building->addRow([$data[ $key ]['name'], $data[ $key ]['weight']]);
+            $building->addRow([$data[$key]['name'], $data[$key]['weight']]);
         }
         \Lava::PieChart('Cost', $building, [
             'width' => '1000',
