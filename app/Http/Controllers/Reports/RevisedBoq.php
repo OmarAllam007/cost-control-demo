@@ -26,7 +26,6 @@ class RevisedBoq
         foreach ($breakdowns as $breakdown) {
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);
-
             if ($dry) {
                 if (!isset($data[$wbs_level->id])) {
                     $data[$wbs_level->id] = [

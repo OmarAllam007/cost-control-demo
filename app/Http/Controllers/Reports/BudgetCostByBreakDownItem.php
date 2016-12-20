@@ -27,7 +27,7 @@ class BudgetCostByBreakDownItem
                 if (!isset($bd_resource[ $root ])) {
                     $bd_resource[ $root ] = [
                         'resource_type' => $root,
-                        'resource_code' => $shadow->resource_code,
+                        'resource_code' => $shadow->resource->types->code,
                         'budget_cost' => 0,
                         'weight' => 0,
 

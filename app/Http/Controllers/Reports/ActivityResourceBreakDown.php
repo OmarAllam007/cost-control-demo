@@ -61,18 +61,19 @@ class ActivityResourceBreakDown
                     'budget_cost' => 0,
                     'budget_unit' => 0,
                 ];
-                $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]['resources'][$breakDown_resource['resource_name']]['budget_cost']
-                    += $breakDown_resource['budget_cost'];
-
-                $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]
-                ['resources'][$breakDown_resource['resource_name']]['budget_unit']
-                    += $breakDown_resource['budget_unit'];
-
-                $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts']
-                [$break_down->cost_account]['resources'][$breakDown_resource['resource_name']]['price_unit']
-                    = $breakDown_resource['boq_equivilant_rate'];
-
             }
+            $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]['resources'][$breakDown_resource['resource_name']]['budget_cost']
+                += $breakDown_resource['budget_cost'];
+
+            $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]
+            ['resources'][$breakDown_resource['resource_name']]['budget_unit']
+                += $breakDown_resource['budget_unit'];
+
+            $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts']
+            [$break_down->cost_account]['resources'][$breakDown_resource['resource_name']]['price_unit']
+                = $breakDown_resource['boq_equivilant_rate'];
+
+            $project_total+=$breakDown_resource['budget_cost'];
             ksort($data[$wbs_level]['activities'][$std_activity_item]['cost_accounts']);
 
         }
@@ -82,14 +83,14 @@ class ActivityResourceBreakDown
                 foreach ($activity['cost_accounts'] as $accountKey => $account) {
                     foreach ($account['resources'] as $resourceKey=>$resource){
                         $data[$key]['activities'][$activityKey]['cost_accounts'][$accountKey]['account_total_cost'] +=$resource['budget_cost'];
-                        $project_total+=$resource['budget_cost'];
+
                     }
                     $data[$key]['activities'][$activityKey]['activity_total_cost'] += $data[$key]['activities'][$activityKey]['cost_accounts'][$accountKey]['account_total_cost'];
                 }
                 $data[$key]['activities_total_cost']+=$data[$key]['activities'][$activityKey]['activity_total_cost'];
             }
         }
-        return view('std-activity.activity_resource_breakdown', compact('data', 'project'));
+        return view('std-activity.activity_resource_breakdown', compact('data', 'project','project_total'));
 
     }
 }
