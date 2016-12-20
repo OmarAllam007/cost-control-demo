@@ -19,24 +19,27 @@ class ActivityResourceBreakDown
 {
     public function getActivityResourceBreakDown(Project $project)
     {
-        $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource','wbs')->get();
+        $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource', 'wbs')->get();
+        $project_total = 0 ;
         $data = [];
         foreach ($breakDown_resources as $breakDown_resource) {
 
             $break_down = $breakDown_resource->breakdown;
             $wbs_level = $breakDown_resource->wbs->name;
             $std_activity_item = $breakDown_resource['activity'];
-            $resource = $breakDown_resource->resource;
+//            $resource = $breakDown_resource->resource;
             $boq = Boq::where('cost_account', $breakDown_resource['cost_account'])->first()->description;
 
             if (!isset($data[$wbs_level])) {
                 $data[$wbs_level] = [
                     'activities' => [],
+                    'activities_total_cost'=>0,
                 ];
             }
             if (!isset($data[$wbs_level]['activities'][$std_activity_item])) {
                 $data[$wbs_level]['activities'][$std_activity_item] = [
                     'name' => $std_activity_item,
+                    'activity_total_cost'=>0,
                     'cost_accounts' => [],
                 ];
             }
@@ -44,6 +47,7 @@ class ActivityResourceBreakDown
             if (!isset($data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account])) {
                 $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account] = [
                     'cost_account' => $break_down->cost_account,
+                    'account_total_cost' => 0,
                     'boq_description' => $boq,
                     'resources' => [],
                 ];
@@ -72,7 +76,19 @@ class ActivityResourceBreakDown
             ksort($data[$wbs_level]['activities'][$std_activity_item]['cost_accounts']);
 
         }
-        ksort($data);
+
+        foreach ($data as $key => $value) {
+            foreach ($value['activities'] as $activityKey => $activity) {
+                foreach ($activity['cost_accounts'] as $accountKey => $account) {
+                    foreach ($account['resources'] as $resourceKey=>$resource){
+                        $data[$key]['activities'][$activityKey]['cost_accounts'][$accountKey]['account_total_cost'] +=$resource['budget_cost'];
+                        $project_total+=$resource['budget_cost'];
+                    }
+                    $data[$key]['activities'][$activityKey]['activity_total_cost'] += $data[$key]['activities'][$activityKey]['cost_accounts'][$accountKey]['account_total_cost'];
+                }
+                $data[$key]['activities_total_cost']+=$data[$key]['activities'][$activityKey]['activity_total_cost'];
+            }
+        }
         return view('std-activity.activity_resource_breakdown', compact('data', 'project'));
 
     }

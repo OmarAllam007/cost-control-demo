@@ -110,10 +110,11 @@ class ReportController extends Controller
     public function budgetSummery(Project $project)
     {
         $data = [];
-        $breakdown_resources = $project->breakdown_resources()->with('breakdown.std_activity', 'template_resource')->get();
+        $total_project = 0;
+        $breakdown_resources = $project->shadows()->get();
         foreach ($breakdown_resources as $resource) {
-            $division = $resource->breakdown->std_activity->division;
-            $activity = $resource->breakdown->std_activity;
+            $division = $resource->std_activity->division;
+            $activity = $resource->std_activity;
             $parent = $division;
             $parent_name = $division->name;
 
@@ -134,7 +135,6 @@ class ReportController extends Controller
 
             $data[$parent_name]['activities'][$activity->name]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
 
-
             if ($division->parent) {
                 while ($parent->parent) {
                     $parent = $parent->parent;
@@ -150,7 +150,6 @@ class ReportController extends Controller
                 }
             }
 
-
         }
 
 
@@ -158,9 +157,10 @@ class ReportController extends Controller
             foreach ($data[$key]['activities'] as $actKey => $actValue) {
                 $data[$key]['budget_cost'] += $data[$key]['activities'][$actKey]['budget_cost'];
             }
+            $total_project += $data[$key]['budget_cost'];
         }
 
-        return view('std-activity.budgetSummery', compact('data', 'project'));
+        return view('std-activity.budgetSummery', compact('data', 'project', 'total_project'));
     }
 
     public function activityResourceBreakDown(Project $project)
@@ -224,13 +224,11 @@ class ReportController extends Controller
         return $boq->getRevised($project);
     }
 
-    public function highPriority(Project $project , Request $request)
+    public function highPriority(Project $project, Request $request)
     {
         $high_materials = new HighPriorityMaterials();
-        return $high_materials->getTopHighPriorityMaterials($project,$request);
+        return $high_materials->getTopHighPriorityMaterials($project, $request);
     }
-
-
 
 
 }

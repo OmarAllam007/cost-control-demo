@@ -16,7 +16,16 @@
     <img src="{{asset('images/reports/budgetsummery.jpg')}}">
 @endsection
 @section('body')
+    <li class="list-unstyled" style="text-align:center;box-shadow: 5px 5px 5px #888888;
+">
+        <div class="tree--item">
+            <div class="tree--item--label blue-first-level">
+        <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Cost : {{number_format($total_project)}} SR </strong></h5>
+            </div>
+        </div>
 
+    </li>
+    <br>
     <ul class="list-unstyled tree">
         @foreach($data as $key=>$division)
             @include('std-activity._recursive_budget_summery',['division'=>$division ,'tree_level'=>0])

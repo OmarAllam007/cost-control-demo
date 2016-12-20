@@ -18,19 +18,20 @@
 @section('body')
     <ul class="list-unstyled tree">
         @foreach($data as $wbs_level=>$attributes)
+
             @if(isset($attributes['activities']))
                 <li>
-                    <p class="blue-second-level"><strong>{{$wbs_level}}</strong></p>
+                    <p class="blue-second-level"><strong>{{$wbs_level}}</strong><span class="pull-right">{{number_format($attributes['activities_total_cost'],2)}}</span></p>
                     <ul class="list-unstyled">
                         @foreach($attributes['activities'] as $item=>$value)
                             <li>
-                            <p class="blue-third-level"><strong>{{$item}}</strong></p>
+                            <p class="blue-third-level"><strong>{{$item}}</strong><span class="pull-right">{{number_format($value['activity_total_cost'],2)}}</span></p>
                             @foreach($value['cost_accounts'] as $account)
                                     <ul>
                                         <li class="tree--item">
                                             <p class="blue-fourth-level">
                                                 {{$account['cost_account']}} - <abbr>({{$account['boq_description']}}
-                                                    )</abbr></p>
+                                                    )</abbr><span class="pull-right">{{number_format($account['account_total_cost'],2)}}</span></p>
                                             <article id="children-">
                                                 <table class="table table-condensed ">
                                                     <thead>

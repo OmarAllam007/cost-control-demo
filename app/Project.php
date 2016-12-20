@@ -95,7 +95,7 @@ class Project extends Model
 
     function shadows()
     {
-        return $this->hasMany(BreakDownResourceShadow::class);
+        return $this->hasMany(BreakDownResourceShadow::class,'project_id');
     }
 
     function templates()
