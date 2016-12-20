@@ -28,7 +28,6 @@ class BudgetCostByBuilding
         ];
 
         foreach ($breakdowns as $breakdown) {
-            /** @var Breakdown $breakdown */
             $wbs_level = $breakdown->wbs_level;
             $dry = $breakdown->getDry($wbs_level->id);
             $resources = $breakdown->resources;
@@ -45,8 +44,6 @@ class BudgetCostByBuilding
                 foreach ($resources as $resource) {
                     $data[$wbs_level->id]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
                 }
-
-
             }
             else {
                 $parent = $wbs_level;

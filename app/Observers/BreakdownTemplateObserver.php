@@ -46,7 +46,6 @@ class BreakdownTemplateObserver
 
     }
     function saving(BreakdownTemplate $template){
-
     }
     function deleted(BreakdownTemplate $template){
 

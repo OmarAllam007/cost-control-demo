@@ -16,6 +16,16 @@
     <img src="{{asset('images/reports/activity-breakdown.jpg')}}">
 @endsection
 @section('body')
+    <li class="list-unstyled" style="text-align:center;box-shadow: 5px 5px 5px #888888;
+">
+        <div class="tree--item">
+            <div class="tree--item--label blue-first-level">
+                <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Cost : {{number_format($project_total)}} SR </strong></h5>
+            </div>
+        </div>
+
+    </li>
+<br>
     <ul class="list-unstyled tree">
         @foreach($data as $wbs_level=>$attributes)
             @if(isset($attributes['activities']))

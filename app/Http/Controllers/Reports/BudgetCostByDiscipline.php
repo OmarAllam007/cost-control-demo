@@ -68,6 +68,7 @@ class BudgetCostByDiscipline
                 'height' => '600',
 
             ],
+
         ]);
 
 

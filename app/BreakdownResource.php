@@ -228,5 +228,12 @@ class BreakdownResource extends Model
         return $this->hasOne(BreakDownResourceShadow::class);
     }
 
+    public function updateShadow()
+    {
+        $formatter = new BreakdownResourceFormatter($this);
+        $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $this->id]);
+        $shadow->update($formatter->toArray());
+    }
+
 
 }
