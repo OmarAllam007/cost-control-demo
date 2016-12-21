@@ -107,7 +107,7 @@
                     <td style="min-width: 300px; max-width: 300px;" class="bg-blue">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
-                        class="bg-blue">@{{ breakdown.cost_account }}</td>
+                        class="bg-blue">@{{ breakdown_account }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{breakdown.eng_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.budget_qty }}</td>
                     <td style="min-width: 150px; max-width: 150px;"
@@ -132,37 +132,37 @@
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-blue">@{{ breakdown.productivity_ref }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.remarks }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.progress * 100 : 0 | number_format }}%</td>
-                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.previous_unit_price: 0 |number_format }}</td>
-                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.previous_qty: 0 |number_format }}</td>
-                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.previous_cost: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.current_unit_price: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.current_qty: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.current_cost: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.to_date_unit_price: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.to_date_qty: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.to_date_cost: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.allowable_ev_cost : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.allowable_var : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.remaining_unit_price : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.remaining_qty : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.remaining_cost : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.bl_allowable_cost : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.bl_allowable_var : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.completion_unit_price : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.completion_qty : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.completion_cost : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.qty_var : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.cost_var : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.unit_price_var : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.physical_unit : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown.cost? breakdown.cost.pw_index : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown.cost? breakdown.cost.cost_variance_to_date_due_unit_price : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown.cost? breakdown.cost.allowable_qty : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown.cost? breakdown.cost.cost_variance_remaining_due_unit_price : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown.cost? breakdown.cost.cost_variance_completion_due_unit_price : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown.cost? breakdown.cost.cost_variance_completion_due_qty : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown.cost? breakdown.cost.cost_variance_to_date_due_qty : 0 | number_format}}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.progress * 100 : 0 | number_format }}%</td>
+                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_unit_price: 0 |number_format }}</td>
+                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_qty: 0 |number_format }}</td>
+                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_cost: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_unit_price: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_qty: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_cost: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_unit_price: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_qty: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_cost: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.allowable_ev_cost : 0 | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.allowable_var : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_unit_price : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_qty : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_cost : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.bl_allowable_cost : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.bl_allowable_var : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_unit_price : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_qty : 0 | number_format }}</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost : 0 | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.qty_var : 0 | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.cost_var : 0 | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.unit_price_var : 0 | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.physical_unit : 0 | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.pw_index : 0 | number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_to_date_due_unit_price : 0 | number_format}}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.allowable_qty : 0 | number_format}}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_remaining_due_unit_price : 0 | number_format}}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_completion_due_unit_price : 0 | number_format}}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_completion_due_qty : 0 | number_format}}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_to_date_due_qty : 0 | number_format}}</td>
                 </tr>
                 </tbody>
             </table>
