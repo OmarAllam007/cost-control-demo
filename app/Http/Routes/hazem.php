@@ -144,10 +144,7 @@ Route::resource('users', 'UsersController', ['parameters' => 'singular']);
 Route::get('/blank', 'BlankController@index');
 
 Route::get('/summary', function() {
-    return App\CostShadow::join('break_down_resource_shadows as sh', 'sh.breakdown_resource_id', '=', 'cost_shadows.breakdown_resource_id')
-        ->groupBy('sh.resource_name')->select('sh.resource_name')
-        ->selectRaw('SUM(cost_shadows.to_date_cost) as to_date_cost')
-        ->selectRaw('SUM(cost_shadows.allowable_ev_cost) as allowable_ev_cost')
-        ->selectRaw('SUM(sh.budget_cost) as budget_cost')
-        ->get();
+    return App\CostShadow::joinBudget('budget.resource_name')->sumFields([
+        'cost.to_date_cost', 'cost.allowable_ev_cost', 'budget.budget_cost'
+    ])->get();
 });
