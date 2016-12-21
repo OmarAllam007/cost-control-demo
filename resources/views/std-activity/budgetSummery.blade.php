@@ -20,7 +20,7 @@
 ">
         <div class="tree--item">
             <div class="tree--item--label blue-first-level">
-        <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Cost : {{number_format($total_project)}} SR </strong></h5>
+        <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Cost : {{number_format($total_project,2)}} SR </strong></h5>
             </div>
         </div>
 

@@ -3,7 +3,7 @@
     @include('reports.all._resource_dictionary')
 @endif
 @section('header')
-    <h2 align="center">Resource Dictionary</h2>
+    <h2 align="center">Resource Dictionary Report</h2>
     <div class="pull-right">
         <a href="?print=1&paint=resource-dictionary" target="_blank" class="btn btn-default btn-sm"><i
                     class="fa fa-print"></i> Print</a>
@@ -19,7 +19,6 @@
     @foreach ($data as $root=>$divisions)
         <?php $counter = 0;?>
         @foreach($divisions['divisions'] as $divIndex => $resourceType)
-
             <ul class="list-unstyled tree">
                 <li>
                     @if ($counter == 0)
@@ -33,8 +32,8 @@
                                 @endif
                                 <article class="tree--child">
                                     <ul class="list-unstyled tree">
-                                        <p class="blue-second-level">{{$resourceType['name']}}</p>
-                                        <article class="tree--child">
+                                        <p class="blue-second-level"><a data-toggle="collapse">{{$resourceType['name']}}</a></p>
+                                        <article class="tree--child " >
                                             <li>
                                                 <table class="table table-condensed">
                                                     <thead>
@@ -89,7 +88,6 @@
                                     </ul>
                                 </article>
                             </ul>
-
                 </li>
             </ul>
 

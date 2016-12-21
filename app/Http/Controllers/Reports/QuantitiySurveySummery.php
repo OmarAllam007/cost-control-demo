@@ -31,6 +31,7 @@ class QuantitiySurveySummery
             $qs = Survey::where('cost_account', $break_down_resource['cost_account'])->first();
             $division_name = $std_activity->division->name;
             $activity_name = $break_down_resource['activity'];
+            $activity_id = $break_down_resource['activity_id'];
 
             if (!isset($level_array[$wbs_level->id])) {
                 $level_array[$wbs_level->id] = [
@@ -46,6 +47,7 @@ class QuantitiySurveySummery
             }
             if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id])) {
                 $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id] = [
+                    'activity_id'=>$activity_id,
                     'name' => $activity_name,
                     'cost_accounts' => [],
                 ];

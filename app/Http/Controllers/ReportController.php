@@ -120,6 +120,7 @@ class ReportController extends Controller
 
             if (!isset($data[$parent_name])) {
                 $data[$parent_name] = [
+                    'division_id'=>$parent->id,
                     'budget_cost' => 0,
                     'parents' => [],
                     'activities' => [],
@@ -128,6 +129,7 @@ class ReportController extends Controller
 
             if (!isset($data[$parent_name]['activities'][$activity->name])) {
                 $data[$parent_name]['activities'][$activity->name] = [
+                    'activity_id'=>$activity->id,
                     'name' => $activity->name,
                     'budget_cost' => 0,
                 ];
