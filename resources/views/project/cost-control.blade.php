@@ -26,7 +26,7 @@
 
 @section('body')
 
-    <div id="projectArea">
+    <div id="projectArea" class="hidden">
 
         <nav id="project-nav" class="project-nav btn-toolbar pull-right">
             <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
@@ -55,7 +55,7 @@
     <script>
         $(function () {
             $('.project-tab').hide();
-//            $('#datasheet').show();
+            $('#projectArea').removeClass('hidden');
 
             var projectNav = $('#project-nav').on('click', 'a', function (e) {
                 e.preventDefault();
@@ -63,6 +63,14 @@
                 $($(this).attr('href')).show();
                 projectNav.find('a').removeClass('active');
                 $(this).addClass('active');
+            });
+
+            $('#WBSTreeToggle').on('click', function (e) {
+                e.preventDefault();
+
+                $('#wbs-panel-container').toggle();
+                $('#wbs-display-container').toggleClass('col-sm-9 col-sm-12');
+                $(this).find('i.fa').toggleClass('fa-angle-double-right fa-angle-double-left');
             });
 
             projectNav.find('a:first').click();
