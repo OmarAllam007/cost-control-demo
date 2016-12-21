@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class CostShadow extends Model
@@ -12,6 +13,8 @@ class CostShadow extends Model
     {
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
     }
+
+
 
 
 }

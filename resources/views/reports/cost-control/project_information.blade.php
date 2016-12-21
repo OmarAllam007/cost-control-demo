@@ -37,7 +37,7 @@
     <td>{{$project->original_finished_date}}</td>
     <td>{{$project->expected_finished_date}}</td>
     <td>{{(strtotime(date("Y-m-d"))-strtotime($project->project_start_date))/86400}} Day/s</td>
-    <td>{{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400 }} Day/s</td>
+    <td>{{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400>0?:0 }} Day/s</td>
     </tbody>
 </table>
 
@@ -54,12 +54,12 @@
     <th>Total Budget Cost</th>
     </thead>
     <tbody>
-    <td>{{$project->project_contract_signed_value}}</td>
-    <td>{{$project->project_contract_budget_value}}</td>
-    <td>{{$project->change_order_amount}}</td>
-    <td>{{$project->direct_cost_material}}</td>
-    <td>{{$project->indirect_cost_general}}</td>
-    <td>{{$project->total_budget_cost}}</td>
+    <td>{{number_format($project->project_contract_signed_value,2)}}</td>
+    <td>{{number_format($project->project_contract_budget_value,2)}}</td>
+    <td>{{number_format($project->change_order_amount,2)}}</td>
+    <td>{{number_format($project->direct_cost_material,2)}}</td>
+    <td>{{number_format($project->indirect_cost_general,2)}}</td>
+    <td>{{number_format($project->total_budget_cost,2)}}</td>
     </tbody>
 </table><br><br>
 <div class="blue-third-level">

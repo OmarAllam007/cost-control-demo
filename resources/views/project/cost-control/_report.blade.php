@@ -11,7 +11,7 @@
                 <a href="{{route('cost_control.info',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">
                     Project Information</a><br>
-                <a href="{{route('stdActivity.report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
+                <a href="{{route('cost_control.cost-summery',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">Cost Summery</a><br>
                 <a href="{{route('productivity.report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Significant Material</a><br>

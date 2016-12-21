@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Reports\CostReports\CostSummery;
 use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Project;
 use Illuminate\Http\Request;
@@ -15,5 +16,10 @@ class CostReportsController extends Controller
     {
         $projectInfo = new ProjectInformation();
         return $projectInfo->getProjectInformation($project);
+    }
+
+    public function costSummery(Project $project){
+        $cost_summery = new CostSummery();
+        return $cost_summery->getCostSummery($project);
     }
 }
