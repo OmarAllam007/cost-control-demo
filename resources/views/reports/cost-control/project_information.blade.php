@@ -9,11 +9,16 @@
         <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
+    <style>
+        table{
+            font-size: 16px;
+        }
+    </style>
 @endsection
 
 @section('body')
-<div class="blue-third-level">
-   <h1>PROJECT DATES : </h1>
+<div class="blue-first-level">
+   <h1>PROJECT DATES</h1>
 </div><br><br>
 <table class="table table-bordered">
     <thead>
@@ -26,7 +31,54 @@
     <th>Time remaining</th>
     </thead>
     <tbody>
-    <tr></tr>
+    <td>{{$project->project_code}}</td>
+    <td>{{$project->name}}</td>
+    <td>{{$project->project_start_date}}</td>
+    <td>{{$project->original_finished_date}}</td>
+    <td>{{$project->expected_finished_date}}</td>
+    <td>{{(strtotime(date("Y-m-d"))-strtotime($project->project_start_date))/86400}} Day/s</td>
+    <td>{{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400 }} Day/s</td>
     </tbody>
 </table>
+
+<div class="blue-second-level">
+    <h1> PROJECT BUDGET COST DATA </h1>
+</div><br><br>
+<table class="table table-bordered">
+    <thead>
+    <th>Project  Contract Signed Value</th>
+    <th>Project  Contract  Budget Value</th>
+    <th>Change Order Amount</th>
+    <th>Direct  Cost  (Material & Labor & Subcon)</th>
+    <th>Indirect  Cost  (General Requirement)</th>
+    <th>Total Budget Cost</th>
+    </thead>
+    <tbody>
+    <td>{{$project->project_contract_signed_value}}</td>
+    <td>{{$project->project_contract_budget_value}}</td>
+    <td>{{$project->change_order_amount}}</td>
+    <td>{{$project->direct_cost_material}}</td>
+    <td>{{$project->indirect_cost_general}}</td>
+    <td>{{$project->total_budget_cost}}</td>
+    </tbody>
+</table><br><br>
+<div class="blue-third-level">
+    <h1> PROJECT BUDGET COST DATA </h1>
+</div><br><br>
+
+<table class="table table-bordered">
+    <thead>
+    <th>Allowable Cost</th>
+    <th>Actual Cost</th>
+    <th>Cost Performance Index</th>
+    <th>Cost Variance</th>
+    </thead>
+    <tbody>
+    <td>{{number_format($allowable_cost,2)}}</td>
+    <td>{{number_format($actual_cost,2)}}</td>
+    <td>{{number_format($allowable_cost/$actual_cost,2)}}</td>
+    <td>{{number_format($allowable_cost-$actual_cost,2)}}</td>
+    </tbody>
+</table>
+
 @endsection

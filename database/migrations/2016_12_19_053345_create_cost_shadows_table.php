@@ -12,7 +12,7 @@ class CreateCostShadowsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cost_shadows', function (Blueprint $table) {
+        Schema::table('cost_shadows', function (Blueprint $table) {
             $table->increments('id');
             $table->integer("project_id")->unsigned();
             $table->integer("wbs_level_id")->unsigned();

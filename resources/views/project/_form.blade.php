@@ -31,16 +31,58 @@
             {!! $errors->first('project_location', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('project_contract_value', 'has-error')}}">
-            {{ Form::label('project_contract_value', null, ['class' => 'control-label']) }}
-            {{ Form::text('project_contract_value', null, ['class' => 'form-control','contenteditable'=>'true']) }}
-            {!! $errors->first('project_contract_value', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('project_contract_budget_value', 'has-error')}}">
+            {{ Form::label('project_contract_budget_value', null, ['class' => 'control-label']) }}
+            {{ Form::text('project_contract_budget_value', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('project_contract_budget_value', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('project_contract_signed_value', 'has-error')}}">
+            {{ Form::label('project_contract_signed_value', null, ['class' => 'control-label']) }}
+            {{ Form::text('project_contract_signed_value', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('project_contract_signed_value', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('project_start_date', 'has-error')}}">
             {{ Form::label('project_start_date', null, ['class' => 'control-label']) }}
             {{ Form::date('project_start_date', null, ['class' => 'form-control','contenteditable'=>'true']) }}
             {!! $errors->first('project_start_date', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('original_finished_date', 'has-error')}}">
+            {{ Form::label('original_finished_date', null, ['class' => 'control-label']) }}
+            {{ Form::date('original_finished_date', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('original_finished_date', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('expected_finished_date', 'has-error')}}">
+            {{ Form::label('expected_finished_date', null, ['class' => 'control-label']) }}
+            {{ Form::date('expected_finished_date', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('expected_finished_date', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('change_order_amount', 'has-error')}}">
+            {{ Form::label('change_order_amount', null, ['class' => 'control-label']) }}
+            {{ Form::text('change_order_amount', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('change_order_amount', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('direct_cost_material', 'has-error')}}">
+            {{ Form::label('direct_cost_material', null, ['class' => 'control-label']) }}
+            {{ Form::text('direct_cost_material', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('direct_cost_material', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('indirect_cost_general', 'has-error')}}">
+            {{ Form::label('indirect_cost_general', null, ['class' => 'control-label']) }}
+            {{ Form::text('indirect_cost_general', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('indirect_cost_general', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('total_budget_cost', 'has-error')}}">
+            {{ Form::label('total_budget_cost', null, ['class' => 'control-label']) }}
+            {{ Form::text('total_budget_cost', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('total_budget_cost', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('project_duration', 'has-error')}}">
@@ -54,6 +96,9 @@
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}
             {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
         </div>
+
+
+
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
