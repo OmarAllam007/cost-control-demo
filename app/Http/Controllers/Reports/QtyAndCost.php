@@ -50,8 +50,8 @@ class QtyAndCost
             if (!isset($data[$discipline]['cost_accounts'][$cost_account])) {
                 $data[$discipline]['cost_accounts'][$cost_account] = [
                     'total_boq_equavalant_rate' => 0,
-                    'dry_qty' => $dry->quantity,
-                    'dry_cost' => $dry->dry_ur,
+                    'dry_qty' => $dry->quantity??0,
+                    'dry_cost' => $dry->dry_ur??0,
                     'wbs_levels' => [],
                     'account_budget_cost' => 0,
                     'account_budget_qty' => 0,
