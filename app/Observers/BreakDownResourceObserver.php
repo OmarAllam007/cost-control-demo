@@ -9,7 +9,7 @@ use App\Formatters\BreakdownResourceFormatter;
 use App\Resources;
 use Make\Makers\Resource;
 
-class rBreakDownResourceObserver
+class BreakDownResourceObserver
 {
     function created(BreakdownResource $resource)
     {

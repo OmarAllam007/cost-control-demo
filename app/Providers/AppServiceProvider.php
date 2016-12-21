@@ -51,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         $this->wbsActions();
 
         Productivity::observe(ProductivityObserver::class);
+        BreakdownResource::observe(BreakDownResourceObserver::class);
         Resources::observe(ResourcesObserver::class);
         BreakdownTemplate::observe(BreakdownTemplateObserver::class);
         Breakdown::observe(BreakdownObserver::class);
