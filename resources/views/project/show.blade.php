@@ -167,8 +167,6 @@
                 });
             });
 
-            $('<div class="a"></div>');
-
         }(window, document, jQuery));
 
     </script>

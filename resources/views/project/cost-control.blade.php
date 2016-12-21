@@ -22,25 +22,32 @@
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </nav>
-
 @stop
 
 @section('body')
 
-    <nav id="project-nav" class="project-nav btn-toolbar pull-right">
-        <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
-        <a href="#resources" class="btn btn-info btn-sm btn-outline">Resources</a>
-        <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial Periods</a>
-        <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i> Reports</a>
-    </nav>
-    <div class="clearfix"></div>
+    <div id="projectArea" class="hidden">
+
+        <nav id="project-nav" class="project-nav btn-toolbar pull-right">
+            <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
+            <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
+            <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial
+                Periods</a>
+            <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i>
+                Reports</a>
+        </nav>
+        <div class="clearfix"></div>
 
 
-    @include('project.cost-control.datasheet')
+        @include('project.cost-control.datasheet')
 
-    @include('project.cost-control.periods')
-    @include('project.cost-control._report')
+        @include('project.cost-control.resources')
 
+        @include('project.cost-control.periods')
+
+        @include('project.cost-control._report')
+
+    </div>
 
 @stop
 
@@ -48,7 +55,7 @@
     <script>
         $(function () {
             $('.project-tab').hide();
-//            $('#datasheet').show();
+            $('#projectArea').removeClass('hidden');
 
             var projectNav = $('#project-nav').on('click', 'a', function (e) {
                 e.preventDefault();
@@ -56,6 +63,14 @@
                 $($(this).attr('href')).show();
                 projectNav.find('a').removeClass('active');
                 $(this).addClass('active');
+            });
+
+            $('#WBSTreeToggle').on('click', function (e) {
+                e.preventDefault();
+
+                $('#wbs-panel-container').toggle();
+                $('#wbs-display-container').toggleClass('col-sm-9 col-sm-12');
+                $(this).find('i.fa').toggleClass('fa-angle-double-right fa-angle-double-left');
             });
 
             projectNav.find('a:first').click();
