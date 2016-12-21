@@ -32,7 +32,7 @@
                             <option v-for="(id, name) in users" :value="id" v-text="name"></option>
                         </select>
                         <div v-else>
-                            <input type="text" v-model="user.name" class="form-control" readonly>
+                            <input type="text"  v-model="user.name" class="form-control" readonly>
                             <input type="hidden" v-model="user.user_id">
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.budget"> Display budget
+                                <input type="checkbox" :checked="user.budget" v-model="user.budget" value="1"> Display budget
                             </label>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.cost_control"> Display cost control
+                                <input type="checkbox" :checked="user.cost_control" v-model="user.cost_control" value="1"> Display cost control
                             </label>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.reports"> Display reports
+                                <input type="checkbox" :checked="user.reports" v-model="user.reports" value="1"> Display reports
                             </label>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.wbs"> Manage WBS
+                                <input type="checkbox" :checked="user.wbs" v-model="user.wbs" value="1"> Manage WBS
                             </label>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.breakdown"> Manage breakdowns
+                                <input type="checkbox" :checked="user.breakdown" v-model="user.breakdown" value="1"> Manage breakdowns
                             </label>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.breakdown_templates"> Manage breakdown templates
+                                <input type="checkbox" :checked="user.breakdown_templates" v-model="user.breakdown_templates" value="1"> Manage breakdown templates
                             </label>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.resources"> Manage resources
+                                <input type="checkbox" :checked="user.resources" v-model="user.resources" value="1"> Manage resources
                             </label>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.productivity"> Manage productivity
+                                <input type="checkbox" :checked="user.productivity" v-model="user.productivity" value="1"> Manage productivity
                             </label>
                         </div>
                     </div>
@@ -104,7 +104,23 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="user.actual_resources"> Manage actual resources
+                                <input type="checkbox" :checked="user.boq" v-model="user.boq" value="1"> Manage BOQ
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" :checked="user.qty_survey" v-model="user.qty_survey" value="1"> Manage Quantity Survey
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" :checked="user.actual_resources" v-model="user.actual_resources"> Manage actual resources
                             </label>
                         </div>
                     </div>
