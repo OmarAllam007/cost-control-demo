@@ -197,25 +197,28 @@ class ActualMaterialController extends Controller
             foreach ($resources as $resourceCode => $resource) {
                 foreach ($resource['resources'] as $shadow) {
                     $material = $requestResources[$activityCode][$resourceCode][$shadow->breakdown_resource_id];
-                    if (empty($material['includee'])) {
+                    if (empty($material['included'])) {
                         continue;
                     }
 
-                    ActualResources::create([
+                    $created = ActualResources::create([
                         'project_id' => $project->id,
                         'wbs_level_id' => $shadow->wbs_id,
                         'breakdown_resource_id' => $shadow->breakdown_resource_id,
-                        'period_id' => $project->active_period->id,
+                        'period_id' => $project->open_period()->id,
                         'qty' => $material['qty'],
+                        'original_code' => $resource[13],
+                        'resource_id' => $shadow->resource_id,
                         'unit_price' => $resource[11],
                         'cost' => abs($resource[12]),
-                        'unit_id' => $shadow->breakdown_resource->unit_id,
+                        'unit_id' => $shadow->unit_id,
                         'action_date' => $excelBaseDate->addDays($resource[5])
                     ]);
+
+                    $data['success']++;
                 }
             }
 
-            $data['success']++;
         }
 
         flash($data['success'] . ' records has been imported', 'success');

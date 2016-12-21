@@ -20,8 +20,12 @@ class ActualResourceObserver
         $attributes = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
             ->where('wbs_resources.period_id', $resource->period_id)
             ->where('wbs_resources.resource_id', $resource->resource_id)
-            ->first()->toArray();
+            ->first();
 
-        CostShadow::create($attributes);
+        if (!$attributes) {
+            dd($resource);
+        }
+
+        CostShadow::create($attributes->toArray());
     }
 }
