@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-<h2>{{$project->name}} &mdash; Material</h2>
+<h2>{{$project->name}} &mdash; Material &mdash; Unit Mismatch</h2>
 @endsection
 
 @section('body')

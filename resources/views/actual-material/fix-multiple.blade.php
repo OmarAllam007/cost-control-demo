@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>{{$project->name}} &mdash; Material</h2>
+    <h2>{{$project->name}} &mdash; Material &mdash; <small>Resources with multiple cost account</small></h2>
 @endsection
 
 @section('body')
@@ -69,9 +69,9 @@
                     <tr class="totals-row">
                         <th th colspan="3">&nbsp;</th>
                         <th class="text-right">Original Qty</th>
-                        <th class="total-qty-cell">{{ number_format(abs($resource[10]), 2) }}</th>
+                        <th>{{ number_format(abs($resource[10]), 2) }}</th>
                         <th class="text-right">Original Total</th>
-                        <th class="total-amount-cell">{{ number_format(abs($resource[12]), 2) }}</th>
+                        <th>{{ number_format(abs($resource[12]), 2) }}</th>
 
                         <th class="text-right">Qty</th>
                         <th class="total-qty-cell">{{ number_format(abs($resource[10]), 2) }}</th>
