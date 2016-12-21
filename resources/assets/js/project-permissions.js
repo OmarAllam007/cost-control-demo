@@ -10,28 +10,72 @@ const UserForm = {
     },
 
     watch: {
-        'user.budget': function() {
-            if (!this.user.budget) {
-                this.user.reports = this.user.wbs = this.user.breakdown = this.user.breakdown_templates = this.user.resources = this.user.productivity = false;
+        'user.budget': function(budget) {
+            if (!budget) {
+                this.user.reports = this.user.wbs = this.user.breakdown = this.user.breakdown_templates =
+                    this.user.resources = this.user.productivity = this.user.boq = this.user.qty_survey = false;
             }
         },
-        'user.cost_control': function() {
-            if (!this.user.cost_control) {
+
+        'user.cost_control': function(cost_control) {
+            if (!cost_control) {
                 this.user.actual_resources = false;
             }
         },
 
-        user: {
-            handler: function(user) {
-                if (user.reports || user.wbs || user.breakdown || user.breakdown_templates || user.resources || user.productivity) {
-                    user.budget = true;
-                }
+        'user.reports': function (reports) {
+            if (reports) {
+                this.user.budget = true;
+                this.user.cost_control = true;
+            }
+        },
 
-                if (user.actual_resources) {
-                    user.cost_control = true;
-                }
-            },
-            deep: true
+        'user.wbs': function (wbs) {
+            if (wbs) {
+                this.user.budget = true;
+            }
+        },
+
+        'user.breakdown': function (breakdown) {
+            if (breakdown) {
+                this.user.budget = true;
+            }
+        },
+
+        'user.breakdown_templates': function (breakdown_templates) {
+            if (breakdown_templates) {
+                this.user.budget = true;
+            }
+        },
+
+        'user.resources': function (resources) {
+            if (resources) {
+                this.user.budget = true;
+            }
+        },
+
+        'user.productivity': function (productivity) {
+            if (productivity) {
+                this.user.budget = true;
+            }
+        },
+
+        'user.boq': function (boq) {
+            if (boq) {
+                this.user.budget = true;
+            }
+        },
+
+        'user.qty_survey': function (qty_survey) {
+            if (qty_survey) {
+                this.user.budget = true;
+            }
+        },
+
+        'user.actual_resources': function (actual_resources) {
+            if (actual_resources) {
+                this.user.cost_control = true;
+            }
         }
     },
 
@@ -46,7 +90,10 @@ const UserForm = {
 
     events: {
         showAddUser() {
-            this.user = {};
+            this.user = {
+                budget: false, reports: false, wbs: false, productivity: false, resources: false, boq: false,
+                qty_survey: false, breakdown: false, breakdown_templates: false, cost_control: false, actual_resources: false
+            };
             this.edit = false;
             $(this.$el).modal();
         },
