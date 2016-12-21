@@ -14,6 +14,19 @@ class CostShadow extends Model
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
     }
 
+    function scopeJoinBudget(Builder $query, $group)
+    {
+        $query->from('cost_shadows as cost')
+            ->join('break_down_resource_shadows as budget', 'budget.breakdown_resource_id', '=', 'cost.breakdown_resource_id')
+            ->groupBy($group)->select($group);
+    }
+
+    function scopeSumFields(Builder $query, $fields = [])
+    {
+        foreach ($fields as $field) {
+            $query->selectRaw("SUM($field) as " . explode('.', $field)[1]);
+        }
+    }
 
 
 
