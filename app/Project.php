@@ -155,13 +155,13 @@ class Project extends Model
     function users()
     {
         return $this->belongsToMany(User::class, 'project_users')
-            ->withPivot(['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources'])
+            ->withPivot(['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey'])
             ->withTimestamps();
     }
 
     function getPermissionsAttribute()
     {
-        $pivotFields = ['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources'];
+        $pivotFields = ['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey'];
         return $this->users->map(function(User $user) use ($pivotFields) {
             $row = [
                 'name' => $user->name,
