@@ -40,7 +40,7 @@ class ProjectPolicy
         return $this->can($user, $project, __FUNCTION__);
     }
 
-    function bod(User $user, Project $project)
+    function boq(User $user, Project $project)
     {
         return $this->can($user, $project, __FUNCTION__);
     }

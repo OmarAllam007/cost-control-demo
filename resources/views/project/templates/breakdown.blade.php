@@ -97,7 +97,7 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <tbody>
                 <tr v-for="breakdown in filtered_breakdowns">
-                    @can('breakdown')
+                    @can('breakdown', $project)
                     <td style="min-width: 32px; max-width: 32px;">
 
                         <form action="/breakdown-resource/@{{ breakdown.breakdown_resource_id }}" @submit.prevent="destroy(breakdown.breakdown_resource_id)" class="dropdown">
