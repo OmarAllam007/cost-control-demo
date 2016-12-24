@@ -210,6 +210,7 @@ class ReportController extends Controller
 
     public function budgetCostForBuilding(Project $project)
     {
+
         $budget = new BudgetCostByBuilding();
         return $budget->getBudgetCostForBuilding($project);
     }

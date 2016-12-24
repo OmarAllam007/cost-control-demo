@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummery;
 use App\Http\Controllers\Reports\CostReports\ProjectInformation;
@@ -33,9 +34,16 @@ class CostReportsController extends Controller
         return $importantMaterials->getSignifcantMaterials($project);
     }
 
-    public function standardActivity(Project $project){
+    public function standardActivity(Project $project)
+    {
 
         $standard_activity = new CostStandardActivityReport();
         return $standard_activity->getStandardActivities($project);
+    }
+
+    public function boqReport(Project $project)
+    {
+        $boq = new BoqReport();
+        return $boq->getReport($project);
     }
 }

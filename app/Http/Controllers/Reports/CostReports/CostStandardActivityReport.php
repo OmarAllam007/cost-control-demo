@@ -70,7 +70,7 @@ class CostStandardActivityReport
             }
         }
 
-        return view('cost-control.cost_standard_activity',compact('data'));
+        return view('reports.cost-control.cost_standard_activity',compact('data'));
 
     }
 
