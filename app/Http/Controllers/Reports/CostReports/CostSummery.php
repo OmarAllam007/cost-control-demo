@@ -9,6 +9,8 @@
 namespace App\Http\Controllers\Reports\CostReports;
 
 
+use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Project;
 
@@ -16,40 +18,60 @@ class CostSummery
 {
     function getCostSummery(Project $project)
     {
-        $data = [];
-        $shadows = CostShadow::where('project_id',$project->id)->where('period_id',$project->open_period()->id)->get();
+        //get current from open period
+        //get previous from prev period
+        // get remaining
 
-        $shadows = CostShadow::join('break_down_resource_shadows as sh','sh.breakdown_resource_id','=','cost_shadows.breakdown_resource_id')
-            ->where('project_id',$project->id)
-            ->where('period_id',$project->open_period())->get();
-        dd($shadows);
-        foreach ($shadows as $shadow){
-            if(!isset($data[$shadow->budget->resource_type])){
-                $data[$shadow->budget->resource_type]= [
-                    'name'=>$shadow->budget->resource_type,
-                    'baseline'=>0,
-                    'previous_cost'=>0,
-                    'previous_allowable'=>0,
-                    'todate_cost'=>0,
-                    'todate_variance'=>0,
-                    'remaining_cost'=>0,
-                    'at_completion_cost'=>0,
-                    'cost_variance'=>0,
-                    'actual_cost'=>0,
-                    'earned_value'=>0,
+        $shadows = CostShadow::joinBudget('budget.resource_type')
+            ->sumFields([
+                'cost.to_date_cost',
+                'cost.previous_cost',
+                'cost.allowable_ev_cost',
+                'cost.remaining_cost',
+                'cost.completion_cost',
+                'cost.cost_var'])
+            ->where('period_id', $project->open_period()->id)
+            ->get();
+
+        $budgets = BreakDownResourceShadow::sumFields('resource_type', ['budget_cost'])->where('project_id', $project->id)->get();
+        $previousShadows = CostShadow::where('period_id', '<', $project->open_period()->id)->where('project_id', $project->id)->get();
+
+        $data = [];
+        foreach ($budgets as $budget) {
+            if (!isset($data[$budget['resource_type']])) {
+                $data[$budget['resource_type']] = [
+                    'budget_cost' => 0,
                 ];
+                $data[$budget['resource_type']]['budget_cost'] += $budget['budget_cost'];
             }
 
-            $data[$shadow->budget->resource_type]['baseline']+=$shadow->budget->budget_cost;
-            $data[$shadow->budget->resource_type]['previous_cost']+=$shadow->previous_cost;
-            $data[$shadow->budget->resource_type]['previous_allowable']+=$shadow->todate_cost;
-            $data[$shadow->budget->resource_type]['todate_cost']+=$shadow->todate_cost;
-            $data[$shadow->budget->resource_type]['todate_variance']+=$shadow->todate_cost;
-            $data[$shadow->budget->resource_type]['remaining_cost']+=$shadow->remaining_cost;
-            $data[$shadow->budget->resource_type]['at_completion_cost']+=$shadow->completion_cost;
-            $data[$shadow->budget->resource_type]['cost_variance']+=$shadow->cost_var;
-            $data[$shadow->budget->resource_type]['earned_value']+=$shadow->allowable_ev_cost;
         }
-        return view('reports.cost-control.cost_summery',compact('data'));
+        foreach ($shadows as $shadow) {
+            if (isset($data[$shadow['resource_type']])) {
+                $data[$shadow['resource_type']] = [
+                    'budget_cost' => $data[$shadow['resource_type']]['budget_cost'],
+                    'to_date_cost' => $shadow['to_date_cost'],
+                    'previous_cost' => $shadow['previous_cost'],
+                    'previous_allowable' => 0,
+                    'previous_variance' => 0,
+                    'allowable_ev_cost' => $shadow['allowable_ev_cost'],
+                    'cost_var' => $shadow['cost_var'],
+                    'remaining_cost' => $shadow['remaining_cost'],
+                    'completion_cost' => $shadow['completion_cost'],
+
+                ];
+            }
+        }
+        if($previousShadows){
+            foreach ($previousShadows as $previousShadow){
+                if (isset($data[$previousShadow['resource_type']])) {
+                    $data[$previousShadow['resource_type']]['previous_allowable']+=$previousShadow['allowable_ev_cost'];
+                    $data[$previousShadow['resource_type']]['previous_variance']+=$previousShadow['cost_var'];
+
+                }
+            }
+        }
+
+        return view('reports.cost-control.cost_summery', compact('data'));
     }
 }
