@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>{{$project->name}} &mdash; Material</h2>
+    <h2>{{$project->name}} &mdash; Material &mdash; <small>Resources with multiple cost account</small></h2>
 @endsection
 
 @section('body')
-{{ dump($multiple) }}
     {{Form::open(['method' => 'post'])}}
     @foreach($multiple as $activityCode => $activity)
         @foreach($activity as $resourceCode => $resource)
@@ -35,7 +34,7 @@
                 @foreach($resource['resources'] as $res)
                     <tr data-budget="{{$res->budget_unit}}">
                         <td class="text-center">
-                            {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}]['included']", 1, true, ['class' => 'include'])}}
+                            {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][included]", 1, true, ['class' => 'include'])}}
                         </td>
                         <td>
                             {{$res->breakdown_resource->code}}
@@ -59,7 +58,7 @@
                             {{$res->budget_unit}}
                         </td>
                         <td>
-                            {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}]['qty']", $qty = round($res->budget_unit * abs($resource[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
+                            {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
                         </td>
                         <td class="unit-price-cell">{{ number_format($resource[11], 2) }}</td>
                         <td class="total-cell">{{ number_format($qty * $resource[11], 2) }}</td>
@@ -70,9 +69,9 @@
                     <tr class="totals-row">
                         <th th colspan="3">&nbsp;</th>
                         <th class="text-right">Original Qty</th>
-                        <th class="total-qty-cell">{{ number_format(abs($resource[10]), 2) }}</th>
+                        <th>{{ number_format(abs($resource[10]), 2) }}</th>
                         <th class="text-right">Original Total</th>
-                        <th class="total-amount-cell">{{ number_format(abs($resource[12]), 2) }}</th>
+                        <th>{{ number_format(abs($resource[12]), 2) }}</th>
 
                         <th class="text-right">Qty</th>
                         <th class="total-qty-cell">{{ number_format(abs($resource[10]), 2) }}</th>

@@ -149,8 +149,6 @@ class ImportMaterialDataJob extends Job
 
         dispatch(new UpdateResourceDictJob($this->project, $resource_dict));
 
-        // dd($result);
-
         return $result;
     }
 

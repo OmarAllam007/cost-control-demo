@@ -29,7 +29,7 @@ class WbsResource extends Model
 
     function scopeJoinShadow(Builder $query)
     {
-        return $query->join('break_down_resource_shadows', 'break_down_resource_shadows.breakdown_resource_id', '=', 'wbs_resources.breakdown_resource_id')
+        return $query->leftJoin('break_down_resource_shadows', 'break_down_resource_shadows.breakdown_resource_id', '=', 'wbs_resources.breakdown_resource_id')
             ->select('break_down_resource_shadows.*', 'wbs_resources.*')
             ->orderBy('break_down_resource_shadows.id');
     }

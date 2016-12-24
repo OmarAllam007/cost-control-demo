@@ -128,7 +128,7 @@ const UserList = {
 
         updateUser(user) {
             for (let u in this.users) {
-                if (user.user_id = this.users[u].user_id) {
+                if (user.user_id == this.users[u].user_id) {
                     this.users[u] = user;
                 }
             }

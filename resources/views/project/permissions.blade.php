@@ -153,6 +153,8 @@
                 <input type="hidden" name="users[@{{$index}}][resources]" :value="user.resources? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][productivity]" :value="user.productivity? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][actual_resources]" :value="user.actual_resources? 1: 0">
+                <input type="hidden" name="users[@{{$index}}][boq]" :value="user.boq? 1: 0">
+                <input type="hidden" name="users[@{{$index}}][qty_survey]" :value="user.qty_survey? 1: 0">
             </div>
 
             <div class="btn-toolbar pull-right">
