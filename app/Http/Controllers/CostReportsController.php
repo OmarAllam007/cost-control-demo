@@ -34,6 +34,7 @@ class CostReportsController extends Controller
     }
 
     public function standardActivity(Project $project){
+
         $standard_activity = new CostStandardActivityReport();
         return $standard_activity->getStandardActivities($project);
     }

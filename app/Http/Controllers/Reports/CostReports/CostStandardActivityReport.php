@@ -18,10 +18,10 @@ use App\StdActivity;
 
 class CostStandardActivityReport
 {
-    //todo std activity cost report to be continue ....
 
     function getStandardActivities(Project $project)
     {
+
         $shadows = CostShadow::joinBudget('budget.activity_id')
             ->sumFields([
                 'cost.previous_cost'
@@ -70,7 +70,7 @@ class CostStandardActivityReport
             }
         }
 
-        return view('reports.cost-control.cost_standard_activity',compact('data'));
+        return view('cost-control.cost_standard_activity',compact('data'));
 
     }
 

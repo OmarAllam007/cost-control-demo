@@ -12,10 +12,10 @@
                    style="width:100%; margin-bottom: 8px;">
                     Project Information</a><br>
                 <a href="{{route('cost_control.cost-summery',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
-                   style="width:100%; margin-bottom: 8px;">Cost Summery</a><br>
-                <a href="{{route('cost_control.significant-materials',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
+                   style="width:100%; margin-bottom: 8px;">Costa Summery</a><br>
+                <a href="{{route('cost_control.significant_materials',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Significant Material</a><br>
-                <a href="{{route('cost_control.standard_activity',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
+                <a href="{{route('cost_control.standard_activity_report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Standard Activity</a><br>
                 <a href="#" class="hvr-float-shadow btn btn-primary" target="" style="width:100%;margin-bottom: 8px;">BOQ</a><br>
                 <a href="{{route('boq_price_list.report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"

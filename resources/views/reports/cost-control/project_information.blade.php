@@ -54,12 +54,12 @@
         <th>Total Budget Cost</th>
         </thead>
         <tbody>
-        <td>{{number_format($project->project_contract_signed_value,2)}}</td>
-        <td>{{number_format($project->project_contract_budget_value,2)}}</td>
-        <td>{{number_format($project->change_order_amount,2)}}</td>
-        <td>{{number_format($project->direct_cost_material,2)}}</td>
-        <td>{{number_format($project->indirect_cost_general,2)}}</td>
-        <td>{{number_format($project->total_budget_cost,2)}}</td>
+        <td>{{$project->project_contract_signed_value}}</td>
+        <td>{{$project->project_contract_budget_value}}</td>
+        <td>{{$project->change_order_amount}}</td>
+        <td>{{$project->direct_cost_material}}</td>
+        <td>{{$project->indirect_cost_general}}</td>
+        <td>{{$project->total_budget_cost}}</td>
         </tbody>
     </table><br><br>
     <div class="blue-third-level">
@@ -75,6 +75,7 @@
         </thead>
         <tbody>
         @foreach($data as $key=>$value)
+
             <td>{{number_format($value['actual_cost'],2)}}</td>
             <td>{{number_format($value['allowable_cost'],2)}}</td>
             <td>{{number_format($value['actual_cost']?$value['allowable_cost']/$value['actual_cost']:0,2)}}</td>

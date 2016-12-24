@@ -81,7 +81,7 @@ class SignificantMaterials
 
         //get first twenty
         $data=array_slice($data,0,20);
-
+        ksort($data);
         return view('reports.cost-control.significant_materials',compact('data'));
     }
 
