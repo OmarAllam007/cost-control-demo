@@ -15,6 +15,9 @@ class Breakdown extends Model
     {
         return $this->hasMany(BreakdownResource::class, 'breakdown_id');
     }
+    function shadows(){
+        return $this->hasMany(BreakDownResourceShadow::class,'breakdown_id');
+    }
 
     function wbs_level()
     {

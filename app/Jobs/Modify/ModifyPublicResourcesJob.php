@@ -3,6 +3,7 @@
 namespace App\Jobs\Modify;
 
 use App\BusinessPartner;
+use App\Http\Controllers\Caching\ResourcesCache;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\ImportJob;
 use App\Jobs\Job;
@@ -58,6 +59,7 @@ class ModifyPublicResourcesJob extends ImportJob
                 continue;
             }
 
+            /** @var Resources $resource */
             if ($resource) {
                 $resource_type_id = isset($division_id) ? $division_id->id : '';
                 $unit_id = $this->getUnit($data[4]);
@@ -73,13 +75,12 @@ class ModifyPublicResourcesJob extends ImportJob
                     $resource->project_id = $this->project;
                 }
                 $resource->save();
+                $resource->updateBreakdownResources();
             }
 
         }
-
-        dispatch(new CacheResourcesTree());
-
-
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
         return $status;
     }
 

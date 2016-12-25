@@ -72,9 +72,9 @@ class Resources extends Model
             'unit' => isset($this->units->type) ? $this->units->type : '',
             'rate' => $this->rate,
             'root_type' => $this->types->root->name,
-            'resource_type_id'=>$this->types->root->id,
-            'waste'=>$this->waste,
-            'resource_code'=>$this->resource_code,
+            'resource_type_id' => $this->types->root->id,
+            'waste' => $this->waste,
+            'resource_code' => $this->resource_code,
         ];
     }
 
@@ -105,14 +105,13 @@ class Resources extends Model
         $this->codes()->whereNotIn('id', $codeIds)->delete();
     }
 
-    public function updateBreakdownResurces()
+    public function updateBreakdownResources()
     {
         if ($this->project_id) {
             $breakdown_resources = BreakdownResource::whereHas('breakdown', function ($q) {
                 $q->where('project_id', $this->project_id);
-            })->where('resource_id', $this->resource_id)
+            })->where('resource_id', $this->id)
                 ->get();
-
 
             foreach ($breakdown_resources as $breakdown_resource) {
                 $formatter = new BreakdownResourceFormatter($breakdown_resource);

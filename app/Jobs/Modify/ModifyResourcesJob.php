@@ -5,6 +5,7 @@ namespace App\Jobs\Modify;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\BusinessPartner;
+use App\Http\Controllers\Caching\ResourcesCache;
 use App\Jobs\ImportJob;
 use App\Jobs\Job;
 use App\Project;
@@ -79,6 +80,8 @@ class ModifyResourcesJob extends ImportJob
                 BreakdownResource::where('resource_id',$resource->id)->update(['resource_id'=>$newResource->id]);
             }
         }
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
 
     }
 
