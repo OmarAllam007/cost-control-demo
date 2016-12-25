@@ -219,7 +219,9 @@ $config = [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
-    'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil', 'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical', 'ELECTRICAL' => 'Electrical'],
+    'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil',
+        'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical',
+        'ELECTRICAL' => 'Electrical','Civil Work'=>'Civil Work','Arch Work'=>'Arch Work'],
 ];
 
 if ($config['env'] == 'local') {

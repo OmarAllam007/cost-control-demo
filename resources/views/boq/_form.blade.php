@@ -50,7 +50,7 @@
 
         <div class="form-group {{$errors->first('type', 'has-error')}}">
             {{ Form::label('type', 'Discipline', ['class' => 'control-label']) }}
-            {{ Form::select('type', config('app.discipline'), null, ['class' => 'form-control']) }}
+            {{ Form::select('type', App\Boq::where('project_id',$project_id)->lists('type','type')->unique(), null, ['class' => 'form-control']) }}
             {!! $errors->first('type', '<div class="help-block">:message</div>') !!}
         </div>
 
