@@ -79,6 +79,7 @@
             </tr>
             </thead>
             <tbody>
+
             @foreach($resources as $resource)
                 <tr>
                     <td class="col-xs-2">{{ $resource->resource_code}}</td>

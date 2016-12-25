@@ -75,6 +75,18 @@ trait Tree
         return $this->tree_path = $stack->reverse()->implode('/');
     }
 
+    function getChildrenIds()
+    {
+        $ids = collect($this->id);
+
+
+        foreach ($this->children as $child) {
+            $subids = $child->getChildrenIds();
+            $ids = $ids->merge($subids);
+        }
+
+        return $ids;
+    }
 
 
 }

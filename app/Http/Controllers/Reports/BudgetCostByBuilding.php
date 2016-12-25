@@ -44,47 +44,44 @@ class BudgetCostByBuilding
 
                 $data[$wbs_level->id]['budget_cost'] += is_nan($shadow['budget_cost']) ? 0 : $shadow['budget_cost'];
 
-
             } else {
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
                     $parent_dry = $shadow->breakdown->getDry($parent->id);
                     if ($parent_dry) {
-                    if (!isset($data[$parent->id])) {
-                        $data[$parent->id] = [
-                            'name' => $parent->name,
-                            'code' => $parent->code,
-                            'budget_cost' => $parent->budget_cost['budget_cost'],
-                            'weight' => 0,
-                        ];
-                        $children = $parent->budget_cost['children'];
-                    }
+                        if (!isset($data[$parent->id])) {
+                            $data[$parent->id] = [
+                                'name' => $parent->name,
+                                'code' => $parent->code,
+                                'budget_cost' => $parent->budget_cost['budget_cost'],
+                                'weight' => 0,
+                            ];
+                            $children = $parent->budget_cost['children'];
+                        }
                         break;
                     }
                 }
             }
         }
 
-
+        $children = $children->toArray();
         foreach ($data as $key => $item) {//fill total array
-            if (in_array($key, $children)) {
-                unset($data[$key]);
-                continue;
-            }
+//            if (in_array($key, $children)) {
+//                unset($data[$key]);
+//                continue;
+//            }
             $total['total'] += $item['budget_cost'];
         }
         foreach ($data as $key => $value) {
-            if (in_array($key, $children)) {
-                continue;
-            }
+//            if (in_array($key, $children)) {
+//                continue;
+//            }
             if ($total['total'] != 0) {
                 $data[$key]['weight'] = floatval(($data[$key]['budget_cost'] / $total['total']) * 100);
                 $total['weight'] += $data[$key]['weight'];
             }
         }
-
-        asort($data);
         $pieChart = $this->getBudgetCostForBuildingPieChart($data);
         $columnChart = $this->getBugetCostByBuildingColumnChart($data);
         return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));
