@@ -14,7 +14,8 @@ class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level)
     {
-        return WbsResource::where('wbs_level_id', $wbs_level->id)->where('period_id', $wbs_level->project->open_period()->id)
+        dd($wbs_level->children_id);
+        return WbsResource::whereIn('wbs_level_id', $wbs_level->children_id)->where('period_id', $wbs_level->project->open_period()->id)
             ->joinShadow()
             ->get();
 

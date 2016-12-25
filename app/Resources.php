@@ -105,7 +105,7 @@ class Resources extends Model
         $this->codes()->whereNotIn('id', $codeIds)->delete();
     }
 
-    public function updateBreakdownResurces()
+    public function updateBreakdownResources()
     {
         if ($this->project_id) {
             $breakdown_resources = BreakdownResource::whereHas('breakdown', function ($q) {

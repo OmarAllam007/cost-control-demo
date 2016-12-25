@@ -36,6 +36,9 @@ class ModifyPublicResourcesJob extends ImportJob
         $this->project = $project;
     }
 
+    /**
+     * @return array
+     */
     public function handle()
     {
         $loader = new \PHPExcel_Reader_Excel2007();
@@ -44,7 +47,7 @@ class ModifyPublicResourcesJob extends ImportJob
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $status = ['failed' => collect(), 'success' => 0];
 
-        Resources::flushEventListeners();
+//        Resources::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -58,6 +61,7 @@ class ModifyPublicResourcesJob extends ImportJob
                 continue;
             }
 
+            /** @var Resources $resource */
             if ($resource) {
                 $resource_type_id = isset($division_id) ? $division_id->id : '';
                 $unit_id = $this->getUnit($data[4]);
@@ -72,7 +76,9 @@ class ModifyPublicResourcesJob extends ImportJob
                 if ($this->project) {
                     $resource->project_id = $this->project;
                 }
+
                 $resource->save();
+                $resource->updateBreakdownResources();
             }
 
         }

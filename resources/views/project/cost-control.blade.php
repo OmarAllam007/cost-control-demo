@@ -10,9 +10,11 @@
             <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"><i
                         class="fa fa-cloud-upload"></i> Import <span class="caret"></span></a>
             <ul id="import-link" class="dropdown-menu">
+                @if ($project->is_cost_ready)
                 <li><a href="{{route('actual-material.import', $project)}}">Material</a></li>
                 <li><a href="#labour">Labour</a></li>
                 <li><a href="#invoice">Invoices</a></li>
+                @endif
                 <li><a href="{{route('activity-map.import', $project)}}">Activity Mapping</a></li>
             </ul>
         </div>
@@ -25,6 +27,20 @@
 @stop
 
 @section('body')
+    
+    @if (!$project->open_period())
+        <div class="alert alert-warning">
+            <i class="fa fa-exclamation-triangle"></i>
+            No open period in the project. Please <a href="/period/create?project={{$project->id}}">add a period here</a>.
+        </div>
+    @endif
+
+    @if (!App\ActivityMap::forProject($project)->exists())
+        <div class="alert alert-warning">
+            <i class="fa fa-exclamation-triangle"></i>
+            No activity mapping for this project project. Please <a href="/activity-map/import/{{$project->id}}">upload activity mapping here</a>.
+        </div>
+    @endif
 
     <div id="projectArea" class="hidden">
 

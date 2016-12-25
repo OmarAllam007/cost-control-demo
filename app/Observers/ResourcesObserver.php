@@ -45,6 +45,7 @@ class ResourcesObserver
             $shadow->boq_equivilant_rate = ($shadow->budget_cost / $shadow->eng_qty)??0;
             $shadow->save();
         }
+
         $cache = new ResourcesCache();
         $cache->cacheResources();
 
