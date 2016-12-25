@@ -144,7 +144,7 @@ Route::resource('users', 'UsersController', ['parameters' => 'singular']);
 Route::get('/blank', 'BlankController@index');
 
 Route::get('/summary', function() {
-    return App\CostShadow::joinBudget('budget.resource_name')->sumFields([
+    return App\CostShadow::joinBudget('budget.resource_type')->sumFields([
         'cost.to_date_cost', 'cost.allowable_ev_cost', 'budget.budget_cost'
     ])->get();
 });

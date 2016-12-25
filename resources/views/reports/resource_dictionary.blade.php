@@ -27,13 +27,13 @@
                     @if(count($resourceType['parents']))
                         @foreach($resourceType['parents'] as $parent)
                             <ul class="list-unstyled">
-                                    <li class="blue-third-level">{{$parent['name']}}</li>
+                                <li class="blue-third-level">{{$parent['name']}}</li>
                                 @endforeach
                                 @endif
                                 <article class="tree--child">
                                     <ul class="list-unstyled tree">
                                         <p class="blue-second-level"><a data-toggle="collapse">{{$resourceType['name']}}</a></p>
-                                        <article class="tree--child " >
+                                        <article class="tree--child ">
                                             <li>
                                                 <table class="table table-condensed">
                                                     <thead>

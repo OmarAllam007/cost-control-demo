@@ -40,7 +40,7 @@ class ExportResourcesJob extends Job
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource->versionFor($this->project->id)->rate);
             $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, isset($resource->versionFor($this->project->id)->units->type) ? $resource->versionFor($this->project->id)->units->type : '');
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $resource->versionFor($this->project->id)->waste . '%');
+            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $resource->versionFor($this->project->id)->waste);
 
             $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $resource->reference);
             $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, isset(BusinessPartner::find($resource->business_partner_id)->name) ? BusinessPartner::find($resource->business_partner_id)->name : '');

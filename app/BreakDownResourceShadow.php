@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\Tree;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -76,6 +77,11 @@ class BreakDownResourceShadow extends Model
     function cost()
     {
         return $this->belongsTo(CostShadow::class, 'breakdown_resource_id', 'breakdown_resource_id')->where('period_id', $this->project->open_period()->id);
+    }
+    function scopeSumFields(Builder $q,$group,$fields = []){
+        foreach ($fields as $field){
+            $q->groupBy("$group")->select($group)->selectRaw("SUM($field) as $field")->get();
+        }
     }
 
 }

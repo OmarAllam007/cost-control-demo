@@ -40,14 +40,6 @@
 
             <div class="col-sm-3">
                 <div class="form-group form-group-sm">
-                    {{Form::label('resource_code', 'Resource Code', ['class' => 'control-label'])}}
-                    {{Form::text('resource_code', null /*session('filters.breakdown.' . $project->id . '.resource_code')*/,
-                   ['class' => 'form-control', 'v-model' => 'code'])}}
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                <div class="form-group form-group-sm">
                     {{Form::label('resource_name', 'Resource Name', ['class' => 'control-label'])}}
                     {{Form::text('resource_name', null /*session('filters.breakdown.' . $project->id . '.resource_code')*/,
                    ['class' => 'form-control', 'v-model' => 'resource'])}}

@@ -3,6 +3,7 @@
 namespace App\Jobs\Modify;
 
 use App\BusinessPartner;
+use App\Http\Controllers\Caching\ResourcesCache;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\ImportJob;
 use App\Jobs\Job;
@@ -36,18 +37,16 @@ class ModifyPublicResourcesJob extends ImportJob
         $this->project = $project;
     }
 
-    /**
-     * @return array
-     */
     public function handle()
     {
+        ini_set('max_execution_time','300');
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $status = ['failed' => collect(), 'success' => 0];
 
-//        Resources::flushEventListeners();
+        Resources::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -60,6 +59,7 @@ class ModifyPublicResourcesJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
+
 
             /** @var Resources $resource */
             if ($resource) {
@@ -76,16 +76,13 @@ class ModifyPublicResourcesJob extends ImportJob
                 if ($this->project) {
                     $resource->project_id = $this->project;
                 }
-
                 $resource->save();
                 $resource->updateBreakdownResources();
             }
 
         }
-
-        dispatch(new CacheResourcesTree());
-
-
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
         return $status;
     }
 

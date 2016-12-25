@@ -37,7 +37,7 @@ class ExportPublicResourcesJob extends Job implements ShouldQueue
 
 
         $rowCount = 2;
-        $resources = Resources::all();
+        $resources = Resources::whereNull('project_id')->get();
         foreach ($resources as $resource) {
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource->resource_code);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource->name);
