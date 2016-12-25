@@ -52,28 +52,9 @@ class WbsLevel extends Model
     public function getBudgetCostAttribute()
     {
 
-        $budget_cost = 0;
         $children = [];
-
-       while($this->children && $this->children->count()){
-
-       }
-        if ($this->children && count($this->children)) {
-            $this->children->load('breakdowns', 'breakdowns.resources', 'breakdowns.resources.template_resource', 'breakdowns.resources.template_resource.resource');
-            foreach ($this->children as $child) {
-                $children [] = $child->id;
-                $deepchildren = $child;
-                if (count($child->breakdowns)) {
-                    foreach ($child->breakdowns as $break_down) {
-                        foreach ($break_down->shadows as $resource) {
-                            $budget_cost += $resource->budget_cost;
-                        }
-                    }
-                }
-
-            }
-        }
-      dd($budget_cost);
+        $children =$this->getChildrenIds();
+        $budget_cost = BreakDownResourceShadow::whereIn('wbs_id', $this->getChildrenIds())->sum('budget_cost');
         return ['budget_cost' => $budget_cost, 'children' => $children];
     }
 

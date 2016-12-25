@@ -16,7 +16,7 @@ class BoqReport
 {
     function getReport(Project $project)
     {
-        $shadows = CostShadow::joinBudget('budget.cost_account')
+        $shadows = CostShadow::joinBudget('cost.wbs_level_id')
             ->sumFields([
                 'cost.to_date_cost',
                 'cost.previous_cost',
@@ -26,6 +26,11 @@ class BoqReport
                 'cost.cost_var'])
             ->where('period_id', $project->open_period()->id)
             ->get()->toArray();
+
+        $data = [];
+        foreach ($shadows as $shadow){
+
+        }
         dd($shadows);
     }
 }
