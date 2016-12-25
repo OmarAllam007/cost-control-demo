@@ -31,7 +31,7 @@ class BudgetCostByBuilding
         foreach ($shadows as $shadow) {
             $wbs_level = $shadow->wbs;
             $dry = $shadow->breakdown->getDry($wbs_level->id);
-//            if ($dry) {
+            if ($dry) {
                 if (!isset($data[$wbs_level->id])) {
                     $data[$wbs_level->id] = [
                         'name' => $wbs_level->name,
@@ -41,10 +41,11 @@ class BudgetCostByBuilding
                     ];
 
                 }
+
                 $data[$wbs_level->id]['budget_cost'] += is_nan($shadow['budget_cost']) ? 0 : $shadow['budget_cost'];
 
 
-//            } else {
+            } else {
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
@@ -63,7 +64,7 @@ class BudgetCostByBuilding
                     }
                 }
             }
-//        }
+        }
 
 
         foreach ($data as $key => $item) {//fill total array
