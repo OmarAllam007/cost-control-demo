@@ -201,7 +201,7 @@ class ActualMaterialController extends Controller
                         continue;
                     }
 
-                    $created = ActualResources::create([
+                    ActualResources::create([
                         'project_id' => $project->id,
                         'wbs_level_id' => $shadow->wbs_id,
                         'breakdown_resource_id' => $shadow->breakdown_resource_id,
@@ -223,5 +223,25 @@ class ActualMaterialController extends Controller
 
         flash($data['success'] . ' records has been imported', 'success');
         return \Redirect::route('project.cost-control', $data['project']);
+    }
+
+    function progress()
+    {
+
+    }
+
+    function postProgress()
+    {
+
+    }
+
+    function status()
+    {
+
+    }
+
+    function postStatus()
+    {
+
     }
 }
