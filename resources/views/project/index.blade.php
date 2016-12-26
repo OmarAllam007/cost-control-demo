@@ -9,8 +9,6 @@
 @stop
 
 @section('body')
-
-
     @if ($projects->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>
@@ -37,10 +35,10 @@
                             @endcan
 
                             @can('cost_control')
-                                <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                                <a class="btn btn-sm btn-violet" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
                             @else
                                 @can('reports')
-                                    <a class="btn btn-sm btn-info" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
+                                    <a class="btn btn-sm btn-violet" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
                                 @endcan
                             @endcan
 

@@ -176,8 +176,14 @@ class Project extends Model
         });
     }
 
-    function cost_shadow(){
+    function cost_shadow()
+    {
         return $this->hasMany(CostShadow::class);
+    }
+
+    function getIsCostReadyAttribute()
+    {
+        return !is_null($this->open_period()) && ActivityMap::forProject($this)->exists();
     }
 
 
