@@ -1,20 +1,33 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Import equivalent resource codes</h2>
-    <a href="{{route('resources.index')}}" class="btn btn-default btn-sm pull-right">
-        <i class="fa fa-chevron-left"></i> Back
-    </a>
+    <h2>
+        Import equivalent resource codes
+        @if ($project_id = request('project'))
+        &mdash; {{App\Project::find($project_id)->name}}
+        @endif
+    </h2>
+
+    @if ($project_id)
+        <a href="{{route('project.cost-control', $project_id)}}" class="btn btn-default btn-sm pull-right">
+            <i class="fa fa-chevron-left"></i> Back
+        </a>
+    @else
+        <a href="{{route('resources.index')}}" class="btn btn-default btn-sm pull-right">
+            <i class="fa fa-chevron-left"></i> Back
+        </a>
+    @endif
 @endsection
 
 @section('body')
     <div class="row">
         <div class="col-md-6 col-sm-9">
 
-            {{Form::open(['route' => 'resources.post-import-codes', 'files' => true])}}
+            {{Form::open(['route' => ['resources.post-import-codes', 'project' => $project_id], 'files' => true])}}
 
             <p class="text-info">
-                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/resource-map.xlsx')}}">click here</a> to download a sample template
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/resource-map.xlsx')}}">click
+                    here</a> to download a sample template
             </p>
 
             <div class="form-group {{$errors->first('file', 'has-errors')}}">

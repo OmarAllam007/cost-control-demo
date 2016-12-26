@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
+use App\Project;
 use App\ResourceCode;
 use App\Resources;
 use Illuminate\Queue\SerializesModels;
@@ -11,21 +12,21 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ImportResourceCodesJob extends ImportJob
 {
-    /**
-     * @var string
-     */
+    /**  @var string */
     private $file;
 
-    /**
-     * @var \Illuminate\Support\Collection
-     */
+    /** @var \Illuminate\Support\Collection */
     protected $codes;
 
-    public function __construct($file)
+    /** @var integer */
+    private $project_id;
+
+    public function __construct($file, $project_id = null)
     {
         $this->file = $file;
         $this->codes = collect();
         $this->loadCodes();
+        $this->project_id = $project_id;
     }
 
     public function handle()
@@ -36,6 +37,7 @@ class ImportResourceCodesJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
 
         $counter = 0;
+
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
@@ -48,7 +50,8 @@ class ImportResourceCodesJob extends ImportJob
             $code = mb_strtolower($data[0]);
             if ($this->codes->has($code)) {
                 Resources::find($this->codes->get($code))
-                    ->codes()->updateOrCreate(['code' => $data[1]]);
+                    ->codes()->updateOrCreate(['code' => $data[1], 'project_id' => $this->project_id]);
+
                 ++$counter;
             }
         }
@@ -58,7 +61,7 @@ class ImportResourceCodesJob extends ImportJob
 
     protected function loadCodes()
     {
-        Resources::whereNull('project_id')->pluck('resource_code', 'id')->each(function($code, $id) {
+        Resources::whereNull('project_id')->pluck('resource_code', 'id')->each(function ($code, $id) {
             $this->codes->put(mb_strtolower($code), $id);
         });
     }

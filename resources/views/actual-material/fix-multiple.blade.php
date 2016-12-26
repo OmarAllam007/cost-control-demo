@@ -25,6 +25,7 @@
                     <th>Resource Name</th>
                     <th>Cost Account</th>
                     <th>Budget Unit</th>
+                    <th>Remarks</th>
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Total</th>
@@ -56,6 +57,9 @@
                         </td>
                         <td>
                             {{$res->budget_unit}}
+                        </td>
+                        <td>
+                            {{$res->remarks}}
                         </td>
                         <td>
                             {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
