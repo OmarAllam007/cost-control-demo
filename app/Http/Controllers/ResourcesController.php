@@ -375,10 +375,13 @@ class ResourcesController extends Controller
         ]);
 
         $file = $request->file('file');
-
-        $count = $this->dispatch(new ImportResourceCodesJob($file->path()));
+        $project_id = $request->get('project', null);
+        $count = $this->dispatch(new ImportResourceCodesJob($file->path(), $project_id));
 
         flash($count . ' Equivalent codes have been imported successfully', 'success');
+        if ($project_id) {
+            return \Redirect::route('project.cost-control', $project_id);
+        }
         return \Redirect::route('resources.index');
     }
 

@@ -16,6 +16,7 @@
                 <li><a href="#invoice">Invoices</a></li>
                 @endif
                 <li><a href="{{route('activity-map.import', $project)}}">Activity Mapping</a></li>
+                    <li><a href="{{route('resources.import-codes', compact('project'))}}">Resource Mapping</a></li>
             </ul>
         </div>
 
