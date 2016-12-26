@@ -41,9 +41,10 @@
 
 @endif
 <div class="form-group">
-    <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+    <button class="btn btn-success" id="createTemplate"><i class="fa fa-check"></i> Submit</button>
 </div>
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>
+
 @stop
 <breakdown project="{{request('project')}}"></breakdown>
