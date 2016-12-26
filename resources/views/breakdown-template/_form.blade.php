@@ -14,6 +14,7 @@
         @else
             @if(request('project'))
                 {{Form::hidden('project_id', request('project'))}}
+                {{Form::hidden('iframe', 'iframe')}}
                 {{Form::hidden('import', 0)}}
             @endif
             <div class="form-group {{$errors->first('name', 'has-error')}}">
@@ -43,5 +44,6 @@
     <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
 </div>
 @section('javascript')
-@endsection
+    <script src="{{asset('/js/tree-select.js')}}"></script>
+@stop
 <breakdown project="{{request('project')}}"></breakdown>

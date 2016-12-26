@@ -1,4 +1,3 @@
-
 <li>
     <div class="tree--item">
         <label class="tree--item--label">
@@ -9,9 +8,11 @@
     <ul class=""></ul>
 
     <div class="collapse" id="children-{{$type['id']}}">
-    @if (count($type['resources']))
+        @if (count($type['resources']))
             <ul class="list-unstyled">
-            @foreach($type['resources'] as $resource)
+
+                @foreach($type['resources'] as $resource)
+                    @if(!$resource['project_id'])
                         <li class="radio">
                             <label>
                                 <input type="radio" value="{{$resource['id']}}" name="resource_id"
@@ -19,7 +20,7 @@
                                 )">
                                 <span class="resource-name">{{$resource['name']}}</span>
                             </label>
-
+                    @endif
 
                 @endforeach
             </ul>

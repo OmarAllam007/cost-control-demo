@@ -26,9 +26,9 @@ class ResourcesObserver
 
     function creating(Resources $resource)
     {
-        if (!$resource->project_id) {
+//        if (!$resource->project_id) {
             $this->generateResourceCode($resource);
-        }
+//        }
     }
 
     function updated(Resources $resource)
@@ -81,6 +81,7 @@ class ResourcesObserver
 
             }
         }
+
 
         $resourceNumber = Resources::where('resource_type_id', $resource->types->id)->count();
         $resourceNumber++;
