@@ -28,6 +28,13 @@ class CostShadow extends Model
         }
     }
 
+    function scopeSumColumns(Builder $query, $fields = [])
+    {
+        foreach ($fields as $field) {
+            $query->selectRaw("SUM($field) as " . $field);
+        }
+    }
+
 
 
 }
