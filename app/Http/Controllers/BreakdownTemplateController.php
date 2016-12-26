@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
 use App\Jobs\ImportBreakdownTemplateJob;
+use App\Project;
 use App\StdActivity;
 use App\StdActivityResource;
 use App\WbsLevel;
@@ -29,7 +30,12 @@ class BreakdownTemplateController extends Controller
 
     public function create()
     {
-        if (\Gate::denies('write', 'breakdown-template')) {
+        if ($project_id = request('project')) {
+            if (\Gate::denies('breakdown_templates', Project::find($project_id))) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } else if (\Gate::denies('write', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -40,8 +46,12 @@ class BreakdownTemplateController extends Controller
 
     public function store(Request $request)
     {
-
-        if (\Gate::denies('write', 'breakdown-template')) {
+        if ($project_id = request('project')) {
+            if (\Gate::denies('breakdown_templates', Project::find($project_id))) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } else if (\Gate::denies('write', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -71,17 +81,28 @@ class BreakdownTemplateController extends Controller
 
     public function show(BreakdownTemplate $breakdown_template)
     {
-        if (\Gate::denies('read', 'breakdown-template')) {
+        if ($breakdown_template->project) {
+            if (\Gate::denies('breakdown_templates', $breakdown_template->project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } else if (\Gate::denies('write', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
+
 
         return view('breakdown-template.show', compact('breakdown_template'));
     }
 
     public function edit(BreakdownTemplate $breakdown_template)
     {
-        if (\Gate::denies('write', 'breakdown-template')) {
+        if ($breakdown_template->project) {
+            if (\Gate::denies('breakdown_templates', $breakdown_template->project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } else if (\Gate::denies('write', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -91,7 +112,12 @@ class BreakdownTemplateController extends Controller
 
     public function update(BreakdownTemplate $breakdown_template, Request $request)
     {
-        if (\Gate::denies('write', 'breakdown-template')) {
+        if ($breakdown_template->project) {
+            if (\Gate::denies('breakdown_templates', $breakdown_template->project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } else if (\Gate::denies('write', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -107,7 +133,12 @@ class BreakdownTemplateController extends Controller
 
     public function destroy(BreakdownTemplate $breakdown_template)
     {
-        if (\Gate::denies('delete', 'breakdown-template')) {
+        if ($breakdown_template->project) {
+            if (\Gate::denies('breakdown_templates', $breakdown_template->project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } else if (\Gate::denies('write', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -166,6 +197,11 @@ class BreakdownTemplateController extends Controller
 
     function deleteAll()
     {
+        if (!\Gate::denies('wipe')) {
+            lash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
         $templates = BreakdownTemplate::whereNull('project_id')->get();
         foreach ($templates as $template){
             StdActivityResource::where('template_id',$template->id)->delete();
