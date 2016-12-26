@@ -81,8 +81,10 @@ class ResourcesController extends Controller
         } else {
             $request['waste'] = ($request->waste / 100);
         }
-
+        $request['project_id'] = $request['project'];
         $resource = Resources::create($request->all());
+//        $resource->generateResourceCode();
+//        $resource->save();
         flash('Resource has been saved', 'success');
 
         if ($resource->project_id) {
