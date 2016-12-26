@@ -114,6 +114,8 @@ class Resources extends Model
                 ->get();
 
             foreach ($breakdown_resources as $breakdown_resource) {
+                $breakdown_resource->resource_waste = $this->waste;
+                $breakdown_resource->update();
                 $formatter = new BreakdownResourceFormatter($breakdown_resource);
                 BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
                     ->update($formatter->toArray());
@@ -146,4 +148,44 @@ class Resources extends Model
 
         return $query->whereIn('resource_type_id', $ids);
     }
+
+    public function generateResourceCode()
+    {
+        $rootName = substr($this->types->root->name, strpos($this->types->root->name, '.') + 1, 1);
+
+        $names = explode('»', $this->types->path);
+        $code = [];
+        $code [] = $rootName;
+        //if Labors get by letter else by number
+        if ($rootName != 'L') {
+            foreach ($names as $key => $name) {
+                if ($key == 0) {
+                    continue;
+                }
+
+                $name = trim($name);
+                $divname = substr($name, 0, strpos($this->types->root->name, '.'));
+                $code [] = $divname;
+
+            }
+        } else {
+            foreach ($names as $key => $name) {
+                if ($key == 0) {
+                    continue;
+                }
+                $name = trim($name);
+                $divname = substr($name, strpos($this->types->root->name, '.') + 1, 1);
+                $code [] = $divname;
+
+            }
+        }
+
+        $resourceNumber = Resources::where('resource_type_id', $this->types->id)->count();
+        $resourceNumber++;
+        $code[] = $resourceNumber <= 10 ? '0' . $resourceNumber : $resourceNumber;
+        $finalCode = implode('.', $code);
+
+        $this->resource_code = $finalCode;
+    }
+
 }
