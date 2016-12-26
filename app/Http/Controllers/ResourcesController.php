@@ -24,7 +24,6 @@ use Illuminate\Routing\Route;
 
 class ResourcesController extends Controller
 {
-
     protected $rules = ['name' => 'required', 'resource_code' => 'unique:resources'];
 
     public function index()
@@ -398,13 +397,13 @@ class ResourcesController extends Controller
 
     public function modifyAllResources()
     {
-        return view('resources.modify', ['project_id' => request('project')]);
         if (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
-        return view('resources.modify');
+        return view('resources.modify', ['project_id' => request('project')]);
+//        return view('resources.modify');
     }
 
     public function postModifyAllResources(Request $request)
