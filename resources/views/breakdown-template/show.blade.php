@@ -5,7 +5,7 @@
     @if(request('project_id'))
     @else
 
-    <form action="{{ route('breakdown-template.destroy', $breakdown_template)}}" class="pull-right" method="post">
+        <form action="{{ route('breakdown-template.destroy', $breakdown_template)}}" class="pull-right" method="post">
 
         @can('write', 'breakdown-template')
             <a href="{{ route('breakdown-template.create', ['activity' => $breakdown_template->std_activity_id])}}"
