@@ -26,7 +26,9 @@ class ResourcesObserver
 
     function creating(Resources $resource)
     {
-        $this->generateResourceCode($resource);
+//        if (!$resource->project_id) {
+            $this->generateResourceCode($resource);
+//        }
     }
 
     function updated(Resources $resource)
@@ -80,11 +82,8 @@ class ResourcesObserver
             }
         }
 
-        if ($resource->project_id) {
-            $resourceNumber = Resources::where('resource_type_id', $resource->types->id)->where('project_id', $resource->project_id)->count();
-        } else {
-            $resourceNumber = Resources::where('resource_type_id', $resource->types->id)->whereNull('project_id')->count();
-        }
+
+        $resourceNumber = Resources::where('resource_type_id', $resource->types->id)->count();
         $resourceNumber++;
         $code[] = $resourceNumber <= 10 ? '0' . $resourceNumber : $resourceNumber;
         $finalCode = implode('.', $code);

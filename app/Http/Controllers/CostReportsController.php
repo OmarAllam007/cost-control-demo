@@ -6,6 +6,7 @@ use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummery;
 use App\Http\Controllers\Reports\CostReports\ProjectInformation;
+use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
 use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Project;
@@ -45,5 +46,10 @@ class CostReportsController extends Controller
     {
         $boq = new BoqReport();
         return $boq->getReport($project);
+    }
+
+    public function resourceCodeReport(Project $project){
+        $code = new ResourceCodeReport();
+        return $code->getResourceCodeReport($project);
     }
 }
