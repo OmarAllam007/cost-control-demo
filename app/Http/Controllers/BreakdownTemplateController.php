@@ -46,7 +46,7 @@ class BreakdownTemplateController extends Controller
 
     public function store(Request $request)
     {
-        if ($project_id = request('project')) {
+        if ($project_id = request('project_id')) {
             if (\Gate::denies('breakdown_templates', Project::find($project_id))) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
