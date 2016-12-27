@@ -222,6 +222,10 @@ $config = [
     'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil',
         'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical',
         'ELECTRICAL' => 'Electrical','Civil Work'=>'Civil Work','Arch Work'=>'Arch Work'],
+
+    'cost_status'=> [
+        'In Progress' => 'In Progress', 'Closed' => 'Closed'
+    ]
 ];
 
 if ($config['env'] == 'local') {

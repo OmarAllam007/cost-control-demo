@@ -132,7 +132,7 @@ Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], functi
     Route::post('multiple/{key}', ['as' => 'post-multiple', 'uses' => 'ActualMaterialController@postFixMultiple']);
     Route::post('units/{key}', ['as' => 'post-units', 'uses' => 'ActualMaterialController@postFixUnits']);
     Route::post('progress/{key}', ['as' => 'post-progress', 'uses' => 'ActualMaterialController@postProgress']);
-    Route::post('status/{key}', ['as' => 'post-status', 'uses' => 'ActualMaterialController@postProgress']);
+    Route::post('status/{key}', ['as' => 'post-status', 'uses' => 'ActualMaterialController@postStatus']);
     Route::post('resources/{key}', ['as' => 'post-resources', 'uses' => 'ActualMaterialController@postResources']);
 });
 

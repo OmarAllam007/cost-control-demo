@@ -304,9 +304,21 @@ class ActualMaterialController extends Controller
         return view('actual-material.status', compact('resources'));
     }
 
-    function postStatus($key)
+    function postStatus(Request $request, $key)
     {
+        $this->validate($request, ['status.*' => 'required'], ['required' => 'This field is required']);
 
+        $status = collect($request->get('status'));
+        $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $status->keys())->get()->keyBy('breakdown_resource_id');
+        foreach ($status as $id => $value) {
+            $resources[$id]->status = $value;
+            $resources[$id]->save();
+        }
+
+        $data = \Cache::get($key);
+
+        flash('Status has been updated', 'success');
+        return \Redirect::route('project.cost-control', $data['project']);
     }
 
     function resources($key)
