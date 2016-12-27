@@ -24,6 +24,12 @@ class ActualResourceObserver
 
         $attributes['batch_id'] = $resource->batch_id;
 
-        CostShadow::create($attributes);
+        $shadow = CostShadow::firstOrCreate([
+            'breakdown_resource_id' => $resource->breakdown_resource_id,
+            'period_id' => $resource->period_id,
+            'resource_id' => $resource->resource_id,
+        ]);
+
+        $shadow->update($attributes);
     }
 }
