@@ -68,6 +68,7 @@
                     <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Productivity Ref</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-green">Remarks</th>
                     <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Progress</th>
+                    <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Status</th>
                     <th class="bg-green" style="min-width: 150px; max-width: 150px;">Prev. Price/Unit</th>
                     <th class="bg-green" style="min-width: 150px; max-width: 150px;">Prev. Qty</th>
                     <th class="bg-green" style="min-width: 150px; max-width: 150px;">Prev. Cost</th>
@@ -132,7 +133,8 @@
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-blue">@{{ breakdown.productivity_ref }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.remarks }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.progress * 100 : 0 | number_format }}%</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.progress : 0 | number_format }}%</td>
+                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.status : 'Not Started'}}</td>
                     <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_unit_price: 0 |number_format }}</td>
                     <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_qty: 0 |number_format }}</td>
                     <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_cost: 0 |number_format }}</td>
