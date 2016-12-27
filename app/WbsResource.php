@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class WbsResource extends Model
 {
     protected $appends = [
-        'previous_unit_price', 'to_date_unit_price', 'progress',
+        'previous_unit_price', 'to_date_unit_price',
         'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var',
         'remaining_qty', 'remaining_cost', 'remaining_unit_price',
         'completion_qty', 'completion_cost', 'completion_unit_price',
@@ -58,7 +58,7 @@ class WbsResource extends Model
             return 0;
         }
 
-        if ($this->progress == 1 || $this->to_date_cost > $this->budget_cost || $this->to_date_qty > $this->budget_qty) {
+        if ($this->progress_value == 1 || $this->to_date_cost > $this->budget_cost || $this->to_date_qty > $this->budget_qty) {
             return $this->budget_cost;
         }
 
@@ -82,12 +82,12 @@ class WbsResource extends Model
 
     function getRemainingQtyAttribute()
     {
-        if (!$this->budget_unit || $this->progress == 1) {
+        if (!$this->budget_unit || $this->progress_value == 1) {
             return 0;
         }
 
-        if ($this->to_date_qty > $this->budget_unit) {
-            return ($this->to_date_qty * (1 - $this->progress)) / $this->progress;
+        if ($this->to_date_qty > $this->budget_unit && $this->progress_value) {
+            return ($this->to_date_qty * (1 - $this->progress_value)) / $this->progress_value;
         }
 
         return $this->budget_unit - $this->to_date_qty;
@@ -156,7 +156,7 @@ class WbsResource extends Model
 
     function getPwIndexAttribute()
     {
-        if ($this->budget_unit == 0 || $this->progress < 1) {
+        if ($this->budget_unit == 0 || $this->progress_value < 1) {
             return 0;
         }
 
@@ -166,7 +166,7 @@ class WbsResource extends Model
 
     function getAllowableQtyAttribute()
     {
-        if (($this->to_date_qty < $this->budget_unit) && $this->progress != 1) {
+        if (($this->to_date_qty < $this->budget_unit) && $this->progress_value != 1) {
             return $this->to_date_qty;
         }
 
@@ -198,9 +198,8 @@ class WbsResource extends Model
         return $this->unit_price * ($this->allowable_qty - $this->to_date_qty);
     }
 
-    //todo: determine if we will keep this function and implement its code or remove it and get its value from a field
-    function getProgressAttribute()
+    function getProgressValueAttribute()
     {
-        return 0.6;
+        return $this->progress / 100;
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Improt Actual Material &mdash; Progresss</h2>
+    <h2>Improt Actual Material &mdash; Progress</h2>
 @endsection
 
 @section('body')
