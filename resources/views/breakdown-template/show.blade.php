@@ -7,26 +7,26 @@
 
         <form action="{{ route('breakdown-template.destroy', $breakdown_template)}}" class="pull-right" method="post">
 
-        @can('write', 'breakdown-template')
-            <a href="{{ route('breakdown-template.create', ['activity' => $breakdown_template->std_activity_id])}}"
-               class="btn btn-sm btn-primary">
-                <i class="fa fa-plus"></i> Add template
+            @can('write', 'breakdown-template')
+                <a href="{{ route('breakdown-template.create', ['activity' => $breakdown_template->std_activity_id])}}"
+                   class="btn btn-sm btn-primary">
+                    <i class="fa fa-plus"></i> Add template
+                </a>
+                <a href="{{ route('breakdown-template.edit', $breakdown_template)}}" class="btn btn-sm btn-primary">
+                    <i class="fa fa-edit"></i> Edit
+                </a>
+            @endcan
+            @can('write', 'breakdown-template')
+                {{csrf_field()}} {{method_field('delete')}}
+                <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
+            @endcan
+            <a href="{{ route('std-activity.show', $breakdown_template->activity)}}" class="btn btn-sm btn-default">
+                <i class="fa fa-chevron-left"></i> Activity
             </a>
-            <a href="{{ route('breakdown-template.edit', $breakdown_template)}}" class="btn btn-sm btn-primary">
-                <i class="fa fa-edit"></i> Edit
+            <a href="{{ route('breakdown-template.index')}}" class="btn btn-sm btn-default">
+                <i class="fa fa-chevron-left"></i> Template List
             </a>
-        @endcan
-        @can('write', 'breakdown-template')
-            {{csrf_field()}} {{method_field('delete')}}
-            <button class="btn btn-sm btn-warning" type="submit"><i class="fa fa-trash-o"></i> Delete</button>
-        @endcan
-        <a href="{{ route('std-activity.show', $breakdown_template->activity)}}" class="btn btn-sm btn-default">
-            <i class="fa fa-chevron-left"></i> Activity
-        </a>
-        <a href="{{ route('breakdown-template.index')}}" class="btn btn-sm btn-default">
-            <i class="fa fa-chevron-left"></i> Template List
-        </a>
-    </form>
+        </form>
     @endif
 @stop
 
@@ -51,6 +51,15 @@
                class="btn btn-primary btn-sm pull-right">
                 <i class="fa fa-plus-circle"></i> Add Resource
             </a>
+        @else
+            @if ($breakdown_template->project)
+                @can('breakdown_templates', $breakdown_template->project)
+                    <a href="/std-activity-resource/create?template={{$breakdown_template->id}}&project_id={{$breakdown_template->project}}"
+                       class="btn btn-primary btn-sm pull-right">
+                        <i class="fa fa-plus-circle"></i> Add Resource
+                    </a>
+                @endcan
+            @endif
         @endcan
     </div>
 
@@ -79,6 +88,19 @@
                                 <button class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Remove</button>
                             @endcan
                             {{Form::close()}}
+                        @else
+                            @if ($breakdown_template->project)
+                                @can('breakdown_templates', $breakdown_template->project)
+                                    {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}
+                                    <a href="{{route('std-activity-resource.edit', $resource)}}"
+                                       class="btn btn-primary btn-sm">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+
+                                    <button class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                                    {{Form::close()}}
+                                @endcan
+                            @endif
                         @endcan
                     </td>
                 </tr>
