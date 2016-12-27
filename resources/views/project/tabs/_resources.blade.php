@@ -1,7 +1,7 @@
 <section id="ResourcesArea" class="project-tab">
     <div class="form-group tab-actions pull-right">
 
-        @can('resoures', $project)
+        @can('resources', $project)
         <a href="{{route('resources.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
             <i class="fa fa-plus"></i> Add resource
         </a>
