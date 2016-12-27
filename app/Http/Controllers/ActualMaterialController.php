@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\ActualResources;
 use App\BreakDownResourceShadow;
+use App\CostShadow;
 use App\Jobs\ImportActualMaterialJob;
 use App\Jobs\ImportMaterialDataJob;
+use App\Jobs\UpdateResourceDictJob;
 use App\Project;
+use App\WbsLevel;
+use App\WbsResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -27,23 +31,25 @@ class ActualMaterialController extends Controller
 
         $result = $this->dispatch(new ImportActualMaterialJob($project, $file->path()));
 
+        $key = 'mat_' . time();
+        \Cache::add($key, $result, 180);
+
         if ($result['hasIssues']) {
             flash('Could not import some materials');
-
-            $key = 'mat_' . time();
-            \Cache::add($key, $result, 180);
 
             if (count($result['mapping']) || count($result['resources'])) {
                 return \Redirect::route('actual-material.mapping', $key);
             } elseif (count($result['units'])) {
                 return \Redirect::route('actual-material.units', $key);
-            } else {
+            } elseif ($result['multiple']) {
                 return \Redirect::route('actual-material.multiple', $key);
+            } else {
+                return \Redirect::route('actual-material.resources', $key);
             }
         }
 
         flash($result['success'] . ' Records have been imported', 'success');
-        return \Redirect::route('project.cost-control', $project);
+        return \Redirect::route('actual-material.progress', $key);
     }
 
     function fixMapping($key)
@@ -98,13 +104,15 @@ class ActualMaterialController extends Controller
             unset($data['resources']);
         }
 
-        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities));
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['bastch']));
 
         $data_to_cache = [
             'success' => $result['success'] + $data['success'],
             'multiple' => $data['multiple']->merge($result['multiple']),
             'units' => $data['units']->merge($result['units']),
-            'project' => $data['project']
+            'resources' => $data['resources']->merge($result['resources']),
+            'project' => $data['project'],
+            'batch' => $data['batch']
         ];
 
         \Cache::put($key, $data_to_cache);
@@ -115,8 +123,8 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.multiple', $key);
         } else {
             \Cache::forget($key);
-            flash($data_to_cache['success'] . ' records has been imported', 'success');
-            return \Redirect::route('project.cost-control', $data_to_cache['project']);
+            flash($data['success'] . ' records has been imported', 'success');
+            return \Redirect::route('actual-material.progress', $key);
         }
     }
 
@@ -146,18 +154,20 @@ class ActualMaterialController extends Controller
 
             $new_data = $units[$idx];
             $row[10] = $new_data['qty'];
-            $row[11] = abs($row[12])/abs($new_data['qty']);
+            $row[11] = abs($row[12]) / abs($new_data['qty']);
             $row[9] = $row['resource']->measure_unit;
 
             $newActivities->push($row);
         }
 
-        $result = dispatch(new ImportMaterialDataJob($data['project'], $newActivities));
+        $result = dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
 
         $data_to_cache = [
             'success' => $result['success'] + $data['success'],
             'multiple' => $data['multiple']->merge($result['multiple']),
-            'project' => $data['project']
+            'resources' => $data['resources']->merge($result['resources']),
+            'project' => $data['project'],
+            'batch' => $data['batch']
         ];
 
         \Cache::put($key, $data_to_cache);
@@ -165,8 +175,8 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.multiple', $key);
         } else {
             \Cache::forget($key);
-            flash($data_to_cache['success'] . ' records has been imported', 'success');
-            return \Redirect::route('project.cost-control', $data_to_cache['project']);
+            flash($data['success'] . ' records has been imported', 'success');
+            return \Redirect::route('actual-material.progress', $key);
         }
     }
 
@@ -181,7 +191,7 @@ class ActualMaterialController extends Controller
         return view('actual-material.fix-multiple', $data);
     }
 
-    function postFixMultiple($key,Request $request)
+    function postFixMultiple($key, Request $request)
     {
         $data = \Cache::get($key);
         if (!$data) {
@@ -193,6 +203,9 @@ class ActualMaterialController extends Controller
         $requestResources = $request->get('resource');
         $excelBaseDate = Carbon::create(1899, 12, 30);
 
+        $batch_id = $data['batch']->id;
+        $resource_dict = collect();
+
         foreach ($data['multiple'] as $activityCode => $resources) {
             foreach ($resources as $resourceCode => $resource) {
                 foreach ($resource['resources'] as $shadow) {
@@ -201,7 +214,7 @@ class ActualMaterialController extends Controller
                         continue;
                     }
 
-                    ActualResources::create([
+                    $resource = ActualResources::create([
                         'project_id' => $project->id,
                         'wbs_level_id' => $shadow->wbs_id,
                         'breakdown_resource_id' => $shadow->breakdown_resource_id,
@@ -212,35 +225,80 @@ class ActualMaterialController extends Controller
                         'unit_price' => $resource[11],
                         'cost' => abs($resource[12]),
                         'unit_id' => $shadow->unit_id,
-                        'action_date' => $excelBaseDate->addDays($resource[5])
+                        'action_date' => $excelBaseDate->addDays($resource[5]),
+                        'batch_id' => $batch_id
                     ]);
+
+                    $resource_dict->push($resource);
 
                     $data['success']++;
                 }
             }
-
         }
 
-        flash($data['success'] . ' records has been imported', 'success');
-        return \Redirect::route('project.cost-control', $data['project']);
+        $this->dispatch(new UpdateResourceDictJob($data['project'], $resource_dict));
+
+        unset($data['multiple']);
+        \Cache::put($key, $data);
+        if ($data['resources']->count()) {
+            return \Redirect::route('actual-material.resources', $key);
+        } else {
+            \Cache::forget($key);
+            flash($data['success'] . ' records has been imported', 'success');
+            return \Redirect::route('actual-material.progress', $key);
+        }
     }
 
-    function progress()
+    function progress($key)
+    {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
+        $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->whereRaw('csh.to_date_qty > bsh.budget_unit')->pluck('breakdown_resource_id', 'breakdown_resource_id');
+        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy('activity');
+
+        if (!$resources->count()) {
+            return \Redirect::route('actual-material.status', $key);
+        }
+
+        return view('actual-material.progress', compact('key', 'resources'));
+    }
+
+    function postProgress(Request $request, $key)
+    {
+        $this->validate($request, ['progress.*' => 'required|numeric|between:0,100'], [
+            'required' => 'This field is required', 'numeric' => 'Please enter a numeric value', 'between' => 'Value must be between 0 and 100'
+        ]);
+
+        $progress = collect($request->get('progress'));
+        $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $progress->keys())->find()->keyBy('breakdown_resource_id');
+        foreach ($progress as $id => $value) {
+            $resources[$id]->update(['progress' => $value]);
+        }
+
+        flash('Progress has been updated', 'success');
+        return \Redirect::route('actual-material.status', $key);
+    }
+
+    function status($key)
     {
 
     }
 
-    function postProgress()
+    function postStatus($key)
     {
 
     }
 
-    function status()
+    function resources($key)
     {
 
     }
 
-    function postStatus()
+    function postResources($key)
     {
 
     }

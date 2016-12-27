@@ -123,11 +123,17 @@ Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], functi
     Route::get('mapping/{key}', ['as' => 'mapping', 'uses' => 'ActualMaterialController@fixMapping']);
     Route::get('multiple/{key}', ['as' => 'multiple', 'uses' => 'ActualMaterialController@fixMultiple']);
     Route::get('units/{key}', ['as' => 'units', 'uses' => 'ActualMaterialController@fixunits']);
+    Route::get('progress/{key}', ['as' => 'progress', 'uses' => 'ActualMaterialController@progress']);
+    Route::get('status/{key}', ['as' => 'status', 'uses' => 'ActualMaterialController@status']);
+    Route::get('resources/{key}', ['as' => 'resources', 'uses' => 'ActualMaterialController@resources']);
 
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActualMaterialController@postImport']);
     Route::post('mapping/{key}', ['as' => 'post-mapping', 'uses' => 'ActualMaterialController@postFixMapping']);
     Route::post('multiple/{key}', ['as' => 'post-multiple', 'uses' => 'ActualMaterialController@postFixMultiple']);
     Route::post('units/{key}', ['as' => 'post-units', 'uses' => 'ActualMaterialController@postFixUnits']);
+    Route::post('progress/{key}', ['as' => 'post-progress', 'uses' => 'ActualMaterialController@postProgress']);
+    Route::post('status/{key}', ['as' => 'post-status', 'uses' => 'ActualMaterialController@postProgress']);
+    Route::post('resources/{key}', ['as' => 'post-resources', 'uses' => 'ActualMaterialController@postResources']);
 });
 
 Route::resource('project', 'ProjectController');

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\ActivityMap;
+use App\ActualBatch;
 use App\ActualResources;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
@@ -42,7 +43,10 @@ class ImportMaterialDataJob extends Job
     /** @var Collection */
     protected $data;
 
-    public function __construct(Project $project, Collection $data)
+    /** @var ActualBatch */
+    private $batch;
+
+    public function __construct(Project $project, Collection $data, ActualBatch $batch)
     {
         $this->project = $project;
         $this->data = $data;
@@ -50,6 +54,7 @@ class ImportMaterialDataJob extends Job
         $this->loadActivityMap();
         $this->loadResourceMap();
         $this->loadUnits();
+        $this->batch = $batch;
     }
 
     //</editor-fold>
@@ -120,6 +125,7 @@ class ImportMaterialDataJob extends Job
                     'unit_price' => $row[11],
                     'cost' => abs($row[12]),
                     'unit_id' => $unit_id,
+                    'batch_id' => $this->batch->id,
                     'action_date' => Carbon::create(1899, 12, 30)->addDays($row[5])
                 ]);
 
@@ -149,6 +155,7 @@ class ImportMaterialDataJob extends Job
 
         dispatch(new UpdateResourceDictJob($this->project, $resource_dict));
 
+        $result['batch'] = $this->batch;
         return $result;
     }
 

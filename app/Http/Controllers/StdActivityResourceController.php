@@ -112,7 +112,6 @@ class StdActivityResourceController extends Controller
         $this->validate($request, $this->rules);
 
         $std_activity_resource->update($request->all());
-//        $std_activity_resource->syncVariables($request->get('variables'));
 
         flash('Std activity resource has been saved', 'success');
 
