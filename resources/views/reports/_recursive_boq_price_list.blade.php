@@ -7,7 +7,7 @@
             @endforeach
         @endif
 
-        <div class="tree--item" id="boq-"{{$key}}>
+        <div class="tree--item" id="boq-">
             <p class="blue-second-level tree--child">{{$attributes['name']}}</p>
             @if(isset($attributes['boqs']))
                 <ul class="list-unstyled">

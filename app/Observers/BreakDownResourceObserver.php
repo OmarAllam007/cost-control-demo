@@ -7,6 +7,7 @@ use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Formatters\BreakdownResourceFormatter;
 use App\Resources;
+use Illuminate\Database\Eloquent\Builder;
 use Make\Makers\Resource;
 
 class BreakDownResourceObserver
@@ -29,10 +30,7 @@ class BreakDownResourceObserver
     {
 
         $resource->updateShadow();
-//        if ($resource->resoure_id != $resource->original_resource_id) {
-//            $oldResource = Resources::find($resource->original_resource);
-//            $this->checkForResources($oldResource);
-//        }
+
         $oldResource = Resources::find($resource->getOriginal('resource_id'));
         $this->checkForResources($oldResource);
     }
@@ -43,25 +41,23 @@ class BreakDownResourceObserver
         if (!$resource_id) {
             $resource_id = $breakdownResource->template_resource->resource_id;
         }
-
         $resource = Resources::withTrashed()->find($resource_id);
-        if (!$resource->project_id) {
-            $project_id = $breakdownResource->breakdown->project_id;
+        $project_id = $breakdownResource->breakdown->project_id;
 
-            $projectResource = Resources::where(function (Builder $q) use ($resource) {
-                $q->whereResourceId($resource->id)->orWhereId($resource->id);
-            })->whereProjectId($project_id)->first();
+        $projectResource = Resources::where(function (Builder $q) use ($resource, $resource_id) {
+            $q->where('resource_id', $resource->id)->orWhere('id', $resource->id);
+        })->whereProjectId($project_id)->first();
 
-            if (!$projectResource) {
-                $newResource = $resource->toArray();
-                unset($newResource['id'], $newResource['created_at'], $newResource['updated_at']);
-                $newResource['project_id'] = $project_id;
-                $newResource['resource_id'] = $resource->id;
-                Resources::flushEventListeners();
-                $projectResource = Resources::create($newResource);
-            }
-            $breakdownResource->resource_id = $projectResource->id;
+        if (!$projectResource) {
+            $newResource = $resource->toArray();
+            unset($newResource['id'], $newResource['created_at'], $newResource['updated_at']);
+            $newResource['project_id'] = $project_id;
+            $newResource['resource_id'] = $resource->id;
+            Resources::flushEventListeners();
+            $projectResource = Resources::create($newResource);
         }
+        $breakdownResource->resource_id = $projectResource->id;
+
     }
 
 

@@ -25,7 +25,7 @@ class BoqPriceList
         /** @var BreakDownResourceShadow $breakDown_resource */
         foreach ($breakDown_resources as $breakDown_resource) {
             $root = $breakDown_resource['resource_type'];
-            if(isset($breakDown_resource->wbs)){
+            if (isset($breakDown_resource->wbs)) {
                 $wbs_level = $breakDown_resource->wbs;
                 $cost_account = $breakDown_resource['cost_account'];
                 $boq = Boq::where('cost_account', $cost_account)->first();
@@ -64,9 +64,10 @@ class BoqPriceList
                 }
 
                 $name = mb_strtoupper(substr($root, strpos($root, '.') + 1));
-
-                $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name] += $breakDown_resource['boq_equivilant_rate'];
-                $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account]['total_resources'] += $breakDown_resource['boq_equivilant_rate'];
+                if (isset($data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name])) {
+                    $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name] += $breakDown_resource['boq_equivilant_rate'];
+                    $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account]['total_resources'] += $breakDown_resource['boq_equivilant_rate'];
+                }
 
             }
 
@@ -74,7 +75,7 @@ class BoqPriceList
         }
         ksort($data);
         foreach ($data as $key => $value) {
-            if(isset($value['parents'])){
+            if (isset($value['parents'])) {
                 foreach ($value['parents'] as $pKey => $pValue) {
                     if (in_array($pValue, $parents)) {
                         unset($data[$key]['parents'][$pKey]);
