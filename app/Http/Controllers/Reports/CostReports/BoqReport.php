@@ -29,11 +29,8 @@ class BoqReport
         $wbs_levels = WbsLevel::whereIn('id', $levels)->where('project_id', $project->id)->get();
         foreach ($wbs_levels as $level) {
             if ($level->root) {
-                $treeLevel = $this->buildTree($level->root, $levels);
-            } else {
-                $treeLevel = $this->buildTree($level, $levels);
+                $treeLevel = $this->buildTree($level->root);
             }
-
             if ($treeLevel) {
                 $tree[] = $treeLevel;
             }
@@ -42,7 +39,7 @@ class BoqReport
         return view('reports.cost-control.boq-report.boq_report', compact('tree', 'levels', 'project'));
     }
 
-    function buildTree($level, $levels)
+    function buildTree($level)
     {
         $tree = [];
         if (!in_array($level->id, $this->root_ids)) {
@@ -89,8 +86,8 @@ class BoqReport
             }
 
             if ($level->children->count()) {
-                $tree['children'] = $level->children->map(function (WbsLevel $childLevel) use ($levels, $budget_cost, $tree) {
-                    return $this->buildTree($childLevel, $levels);
+                $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+                    return $this->buildTree($childLevel);
                 });
             }
         }
