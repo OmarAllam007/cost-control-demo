@@ -258,7 +258,10 @@ class ActualMaterialController extends Controller
         }
 
         $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->whereRaw('csh.to_date_qty > bsh.budget_unit')->pluck('breakdown_resource_id', 'breakdown_resource_id');
-        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy('activity');
+        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function($resource){
+            $wbs = WbsLevel::find($resource->wbs_id);
+            return $wbs->name . ' / ' . $resource->activity;
+        });
 
         if (!$resources->count()) {
             return \Redirect::route('actual-material.status', $key);
@@ -274,9 +277,10 @@ class ActualMaterialController extends Controller
         ]);
 
         $progress = collect($request->get('progress'));
-        $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $progress->keys())->find()->keyBy('breakdown_resource_id');
+        $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $progress->keys())->get()->keyBy('breakdown_resource_id');
         foreach ($progress as $id => $value) {
-            $resources[$id]->update(['progress' => $value]);
+            $resources[$id]->progress = $value;
+            $resources[$id]->save();
         }
 
         flash('Progress has been updated', 'success');
@@ -285,12 +289,36 @@ class ActualMaterialController extends Controller
 
     function status($key)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
 
+        $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->pluck('breakdown_resource_id', 'breakdown_resource_id');
+        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function($resource){
+            $wbs = WbsLevel::find($resource->wbs_id);
+            return $wbs->name . ' / ' . $resource->activity;
+        });
+
+        return view('actual-material.status', compact('resources'));
     }
 
-    function postStatus($key)
+    function postStatus(Request $request, $key)
     {
+        $this->validate($request, ['status.*' => 'required'], ['required' => 'This field is required']);
 
+        $status = collect($request->get('status'));
+        $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $status->keys())->get()->keyBy('breakdown_resource_id');
+        foreach ($status as $id => $value) {
+            $resources[$id]->status = $value;
+            $resources[$id]->save();
+        }
+
+        $data = \Cache::get($key);
+
+        flash('Status has been updated', 'success');
+        return \Redirect::route('project.cost-control', $data['project']);
     }
 
     function resources($key)

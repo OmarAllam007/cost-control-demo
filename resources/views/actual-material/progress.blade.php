@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Improt Actual Material &mdash; Progresss</h2>
+    <h2>Improt Actual Material &mdash; Progress</h2>
 @endsection
 
 @section('body')
@@ -19,6 +19,7 @@
                 <th>Resource Name</th>
                 <th>Budget Unit</th>
                 <th>To date Qty</th>
+                <th>Remaining</th>
                 <th>
                     <label style="display: block;">
                         Progress
@@ -35,11 +36,12 @@
             <tr>
                 <td>{{$activityResource->resource_code}}</td>
                 <td>{{$activityResource->resource_name}}</td>
-                <td>{{number_format($activityResource->budget_unit, 2)}}</td>
-                <td>{{number_format($activityResource->to_date_qty, 2)}}</td>
+                <td class="budget-cell" data-value="{{$activityResource->budget_unit}}">{{number_format($activityResource->budget_unit, 2)}}</td>
+                <td class="todate-cell" data-value="{{$activityResource->to_date_qty}}">{{number_format($activityResource->to_date_qty, 2)}}</td>
+                <td class="remaining-cell">{!! $activityResource->remaining_qty < 0 ? '<span class="text-danger">' . number_format($activityResource->remaining_qty, 2) . '</span>' : number_format($activityResource->remaining_qty, 2) !!}</td>
                 <td>
                     <div class="input-group">
-                    {{Form::text("progress[{$activityResource->breakdown_resource_id}]", null, ['class' => 'form-control input-sm progress-val'])}}
+                    {{Form::text("progress[{$activityResource->breakdown_resource_id}]", $activityResource->progress, ['class' => 'form-control input-sm progress-val'])}}
                     <span class="input-group-addon">%</span>
                     </div>
                     {!! $errors->first("progress.{$activityResource->breakdown_resource_id}", '<div class="help-block"><span class="text-danger">:message</span></div>') !!}
@@ -59,8 +61,34 @@
     <script>
         $(function(){
             $('.activity-progress').on('change', function() {
-                $(this).parents('table').find('.progress-val').val(this.value);
+                $(this).parents('table').find('.progress-val').val(this.value).change();
             });
+
+            $('.progress-val').on('change', function(){
+                var parent = $(this).parents('tr');
+                var remainingCell = parent.find('.remaining-cell');
+                var remaining = 0;
+
+                if (this.value >= 100) {
+                    this.value = 100;
+                    remaining = 0;
+                } else if (this.value <= 0) {
+                    this.value = 0;
+                    remaining = parent.find('.budget-cell').data('value');
+                } else {
+                    var progress_value = this.value / 100;
+                    var todate_value = parent.find('.todate-cell').data('value');
+                    remaining = todate_value * (1 - progress_value) / progress_value;
+                }
+
+                var remaining_value = parseFloat(remaining.toFixed(2)).toLocaleString({style: 'currency'});
+                console.log(remaining_value);
+                if (remaining < 0) {
+                    remaining_value = '<strong class="text-danger">' + remaining_value + '</strong>';
+                }
+                remainingCell.html(remaining_value);
+            });
+
         });
     </script>
 @endsection
