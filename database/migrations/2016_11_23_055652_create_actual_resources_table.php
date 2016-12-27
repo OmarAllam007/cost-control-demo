@@ -19,10 +19,10 @@ class CreateActualResourcesTable extends Migration
             $table->integer('breakdown_resource_id')->unsigned();
             $table->integer('period_id')->unsigned();
             $table->string('original_code')->nullable();
-            $table->float('qty')->unsigned();
-            $table->float('unit_price')->unsigned();
-            $table->float('cost', 11, 2)->unsigned();
-            $table->float('unit_id', 11, 2)->unsigned();
+            $table->double('qty',12,2)->unsigned();
+            $table->double('unit_price',12,2)->unsigned();
+            $table->double('cost', 12, 2)->unsigned();
+            $table->double('unit_id', 12, 2)->unsigned();
             $table->date('action_date')->nullable();
             $table->timestamps();
         });

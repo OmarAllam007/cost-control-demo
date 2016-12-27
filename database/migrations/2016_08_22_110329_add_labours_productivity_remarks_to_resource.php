@@ -13,8 +13,8 @@ class AddLaboursProductivityRemarksToResource extends Migration
     public function up()
     {
         Schema::table('std_activity_resources', function (Blueprint $table) {
-            $table->float('resource_waste')->nullable();
-            $table->float('labor_count')->nullable();
+            $table->double('resource_waste',12,2)->nullable();
+            $table->double('labor_count',12,2)->nullable();
             $table->integer('productivity_id')->unsigned()->nullable();
             $table->string('remarks')->nullable();
         });

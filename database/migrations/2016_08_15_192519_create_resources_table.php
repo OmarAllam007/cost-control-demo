@@ -12,9 +12,9 @@ class CreateResourcesTable extends Migration
             $table->integer('resource_type_id');
             $table->string('resource_code');
             $table->string('name');
-            $table->float('rate');
+            $table->double('rate',12,2);
             $table->string('unit');
-            $table->float('waste')->nullable();
+            $table->double('waste',12,2)->nullable();
             $table->string('reference')->nullable();
             $table->integer('business_partner_id')->unsigned();
 //            $table->foreign('business_partner_id')->references('id')->on('business_partners');

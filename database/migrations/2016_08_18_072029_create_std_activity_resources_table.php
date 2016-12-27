@@ -12,7 +12,7 @@ class CreateStdActivityResourcesTable extends Migration
             $table->integer('template_id')->unsigned();
             $table->integer('resource_id')->unsigned();
             $table->string('equation');
-            $table->float('default_value')->nullable();
+            $table->double('default_value',12,2)->nullable();
             $table->boolean('allow_override')->default(0);
             $table->integer('project_id')->unsigned()->nullable();
             $table->softDeletes();

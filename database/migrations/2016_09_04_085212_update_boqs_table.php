@@ -15,11 +15,11 @@ class UpdateBoqsTable extends Migration
         Schema::table('boqs', function (Blueprint $table) {
             $table->string('item_code');
             $table->string('cost_account');
-            $table->float('kcc_qty')->nullable();
-            $table->float('subcon')->nullable();
-            $table->float('materials')->nullable();
-            $table->float('manpower')->nullable();
-            $table->integer('project_id');
+            $table->double('kcc_qty',12,2)->nullable();
+            $table->double('subcon',12,2)->nullable();
+            $table->double('materials',12,2)->nullable();
+            $table->double('manpower',12,2)->nullable();
+            $table->integer('project_id',12,2);
         });
     }
 
