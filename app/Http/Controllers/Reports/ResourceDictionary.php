@@ -21,61 +21,64 @@ class ResourceDictionary
 {
     public function getResourceDictionary(Project $project)
     {
-        $break_down_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource.parteners','resource', 'wbs', 'resource.types')->get();
+        $break_down_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource.parteners', 'resource', 'wbs', 'resource.types')->get();
         $data = [];
         $parents = [];
 
 
         foreach ($break_down_resources as $break_down_resource) {
             $resource = $break_down_resource->resource;
-            $division = $break_down_resource->resource->types;
-            $root = $break_down_resource['resource_type'];
-            if (!isset($data[$root])) {
-                $data[$root] = [
-                    'name' => $root,
-                    'type_id'=>$break_down_resource['resource_type_id'],
-                    'divisions' => [],
-                ];
-            }
+            if (isset($resource->types)) {
+                $division = $resource->types;
 
-            if (!isset($data[$root]['divisions'][$division->id])) {
-                $data[$root]['divisions'][$division->id] = [
-                    'name' => $division->name,
-                    'parents' => [],
-                    'resources' => [],
-                ];
-            }
-            $parent = $division;
-            while ($parent->parent) {
-                $parent = $parent->parent;
-                if ($parent->name == $root) {
-                    continue;
-                }
-                if (!isset($data[$root]['divisions'][$division->id]['parents'][$parent->id])) {
-                    $data[$root]['divisions'][$division->id]['parents'][$parent->id] = [
-                        'name' => $parent->name
+
+                $root = $break_down_resource['resource_type'];
+                if (!isset($data[$root])) {
+                    $data[$root] = [
+                        'name' => $root,
+                        'type_id' => $break_down_resource['resource_type_id'],
+                        'divisions' => [],
                     ];
                 }
 
-            }
+                if (!isset($data[$root]['divisions'][$division->id])) {
+                    $data[$root]['divisions'][$division->id] = [
+                        'name' => $division->name,
+                        'parents' => [],
+                        'resources' => [],
+                    ];
+                }
+                $parent = $division;
+                while ($parent->parent) {
+                    $parent = $parent->parent;
+                    if ($parent->name == $root) {
+                        continue;
+                    }
+                    if (!isset($data[$root]['divisions'][$division->id]['parents'][$parent->id])) {
+                        $data[$root]['divisions'][$division->id]['parents'][$parent->id] = [
+                            'name' => $parent->name
+                        ];
+                    }
 
-            $latest_resource = Resources::orderBy('created_at', 'desc')->where('resource_id', $resource->id)->get()->first();
-            if (!isset($data[$root]['divisions'][$division->id]['resources'][$resource->id])) {
-                $data[$root]['divisions'][$division->id]['resources'][$resource->id] = [
-                    'code' => $break_down_resource['resource_code'],
-                    'name' => $break_down_resource['resource_name'],
-                    'rate' => !is_null($latest_resource) ? $latest_resource->rate : $resource->rate,
-                    'unit' => $break_down_resource['measure_unit'],
-                    'waste' => $break_down_resource['resource_waste'],
-                    'reference' => $resource->reference,
-                    'partner' => isset($resource->parteners->name)?$resource->parteners->name:'',
-                    'budget_cost' => 0,
-                    'budget_unit' => 0,
-                ];
-            }
-            $data[$root]['divisions'][$division->id]['resources'][$break_down_resource['resource_id']]['budget_cost'] += $break_down_resource->budget_cost;
-            $data[$root]['divisions'][$division->id]['resources'][$resource->id]['budget_unit'] += $break_down_resource->budget_unit;
+                }
 
+                $latest_resource = Resources::orderBy('created_at', 'desc')->where('resource_id', $resource->id)->get()->first();
+                if (!isset($data[$root]['divisions'][$division->id]['resources'][$resource->id])) {
+                    $data[$root]['divisions'][$division->id]['resources'][$resource->id] = [
+                        'code' => $break_down_resource['resource_code'],
+                        'name' => $break_down_resource['resource_name'],
+                        'rate' => !is_null($latest_resource) ? $latest_resource->rate : $resource->rate,
+                        'unit' => $break_down_resource['measure_unit'],
+                        'waste' => $break_down_resource['resource_waste'],
+                        'reference' => $resource->reference,
+                        'partner' => isset($resource->parteners->name) ? $resource->parteners->name : '',
+                        'budget_cost' => 0,
+                        'budget_unit' => 0,
+                    ];
+                }
+                $data[$root]['divisions'][$division->id]['resources'][$break_down_resource['resource_id']]['budget_cost'] += $break_down_resource->budget_cost;
+                $data[$root]['divisions'][$division->id]['resources'][$resource->id]['budget_unit'] += $break_down_resource->budget_unit;
+            }
         }
 
 
