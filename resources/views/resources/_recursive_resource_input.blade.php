@@ -11,9 +11,11 @@
         @if (count($type['resources']))
             <ul class="list-unstyled">
 
+
                 @foreach($type['resources'] as $resource)
 
-                        @if(!$resource['project_id'] || $resource['project_id']==(\App\BreakdownTemplate::find(request('template'))->project_id??0) )
+                        @if(!$resource['project_id'] || $resource['project_id']==
+                        (\App\BreakdownTemplate::find(request('template'))->project_id??0))
                             <li class="radio">
                                 <label>
                                     <input type="radio" value="{{$resource['id']}}" name="resource_id"

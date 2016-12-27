@@ -39,7 +39,7 @@ class ModifyPublicResourcesJob extends ImportJob
 
     public function handle()
     {
-        ini_set('max_execution_time','300');
+//        set_time_limit(300);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
 
@@ -51,6 +51,7 @@ class ModifyPublicResourcesJob extends ImportJob
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
             if ($this->project) {
+                /** @var Resources $resource */
                 $resource = Resources::where('resource_code', $data[0])->where('project_id', $this->project)->first();
             } else {
                 $resource = Resources::where('resource_code', $data[0])->first();
@@ -59,7 +60,6 @@ class ModifyPublicResourcesJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
-
 
             /** @var Resources $resource */
             if ($resource) {
@@ -77,7 +77,7 @@ class ModifyPublicResourcesJob extends ImportJob
                     $resource->project_id = $this->project;
                 }
                 $resource->save();
-                $resource->updateBreakdownResources();
+//                $resource->updateBreakdownResources();
             }
 
         }

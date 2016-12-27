@@ -75,11 +75,11 @@ class ResourcesController extends Controller
         }
         $this->validate($request, $this->rules);
 
-        if ($request['waste'] <= 1) {
-            $request['waste'] = $request->waste;
-        } else {
-            $request['waste'] = ($request->waste / 100);
-        }
+//        if ($request['waste'] <= 1) {
+        $request['waste'] = $request->waste;//updated from Eng.kareem 27/12/2016
+//        } else {
+//            $request['waste'] = ($request->waste / 100);
+//        }
         $request['project_id'] = $request['project'];
         Resources::create($request->all());
 
@@ -138,11 +138,11 @@ class ResourcesController extends Controller
         }
 
 //        $this->validate($request, $this->rules);
-        if ($request['waste'] <= 1) {
+//        if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
-        } else {
-            $request['waste'] = ($request->waste / 100);
-        }
+//        } else {
+//            $request['waste'] = ($request->waste / 100);
+//        }
 
         $resources->update($request->all());
         $resources->syncCodes($request->get('codes'));

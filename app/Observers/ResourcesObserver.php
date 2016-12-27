@@ -41,8 +41,8 @@ class ResourcesObserver
 
     function saving(Resources $resource)
     {
-//        $cache = new ResourcesCache();
-//        $cache->cacheResources();
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
     }
 
     function deleted(Resources $resource)
