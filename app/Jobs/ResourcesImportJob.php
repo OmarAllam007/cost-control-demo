@@ -28,7 +28,7 @@ class ResourcesImportJob extends ImportJob
      */
     protected $partners;
 
-    public function __construct($file, $project)
+    public function __construct($file, $project = null)
     {
         $this->file = $file;
         $this->project = $project;
@@ -40,7 +40,7 @@ class ResourcesImportJob extends ImportJob
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
-        $status = ['failed' => collect(), 'success' => 0, 'dublicated' => []];
+        $status = ['failed' => collect(), 'success' => 0, 'dublicated' => [], 'project' => $this->project];
 
         Resources::flushEventListeners();
         foreach ($rows as $row) {

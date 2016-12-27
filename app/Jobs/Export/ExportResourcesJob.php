@@ -32,7 +32,7 @@ class ExportResourcesJob extends Job
 
 
         $rowCount = 2;
-dd();
+
         foreach ($this->project->resources as $resource) {
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource->resource_code);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource->name);

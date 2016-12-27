@@ -27,6 +27,6 @@ class CreateActualBatchesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('actual_resource_batches');
+        Schema::drop('actual_batches');
     }
 }

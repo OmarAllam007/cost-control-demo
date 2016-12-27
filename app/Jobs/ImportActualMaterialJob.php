@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\ActivityMap;
+use App\ActualBatch;
 use App\ActualResources;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
@@ -37,6 +38,7 @@ class ImportActualMaterialJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
 
         $material = collect();
+        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id()]);
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
@@ -50,6 +52,6 @@ class ImportActualMaterialJob extends ImportJob
             $material->push($data);
         }
 
-        return dispatch(new ImportMaterialDataJob($this->project, $material));
+        return dispatch(new ImportMaterialDataJob($this->project, $material, $batch));
     }
 }

@@ -31,7 +31,6 @@ class ProjectPolicy
 
     function resources(User $user, Project $project)
     {
-        
         return $this->can($user, $project, __FUNCTION__);
     }
 
