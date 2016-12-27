@@ -11,7 +11,7 @@
         @endcan
 
         @if ($resources->project_id)
-            <a href="{{ route('project.show', $resources->project)}}#resources" class="btn btn-sm btn-default">
+            <a href="{{ route('project.show', $resources->project_id)}}#resources" class="btn btn-sm btn-default">
                 <i class="fa fa-chevron-left"></i> Back
             </a>
         @else

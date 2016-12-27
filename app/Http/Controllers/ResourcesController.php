@@ -104,9 +104,13 @@ class ResourcesController extends Controller
 
     public function edit(Resources $resources)
     {
-
-
-        if (\Gate::denies('write', 'resources')) {
+        if ($resources->project_id) {
+            $project = Project::find($resources->project_id);
+            if (\Gate::denies('resources', $project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } elseif (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -122,12 +126,12 @@ class ResourcesController extends Controller
     public function update(Resources $resources, Request $request)
     {
         if ($resources->project_id) {
-            if (\Gate::denies('resources', $resources->project)) {
+            $project = Project::find($resources->project_id);
+            if (\Gate::denies('resources', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
-        }
-        if (\Gate::denies('write', 'resources')) {
+        } elseif (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -143,7 +147,6 @@ class ResourcesController extends Controller
         $resources->syncCodes($request->get('codes'));
 
 
-
         flash('Resource has been saved', 'success');
         if ($resources->project_id) {
             return \Redirect::route('project.show', $resources->project_id);
@@ -154,19 +157,17 @@ class ResourcesController extends Controller
     public function destroy(Resources $resources)
     {
         if ($resources->project_id) {
-            if (\Gate::denies('resources', $resources->project)) {
+            $project = Project::find($resources->project_id);
+            if (\Gate::denies('resources', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
-        }
-
-        if (\Gate::denies('delete', 'resources')) {
+        } elseif (\Gate::denies('delete', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
         $resources->delete();
-
 
 
         flash('Resources has been deleted', 'success');
@@ -176,7 +177,13 @@ class ResourcesController extends Controller
 
     function import()
     {
-        if (\Gate::denies('write', 'resources')) {
+        if ($project_id = request('project')) {
+            $project = Project::find($project_id);
+            if (\Gate::denies('resources', $project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } elseif (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
@@ -186,14 +193,20 @@ class ResourcesController extends Controller
 
     function postImport(Request $request)
     {
-        $project = $request->project;
-        if (\Gate::denies('write', 'resources')) {
+        $project = null;
+        if ($project_id = request('project')) {
+            $project = Project::find($project_id);
+            if (\Gate::denies('resources', $project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } elseif (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
         $this->validate($request, [
-            'file' => 'required|file'//|mimes:xls,xlsx',
+            'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
@@ -218,17 +231,24 @@ class ResourcesController extends Controller
 
     function fixImport($key)
     {
-        if (\Gate::denies('write', 'resources')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
-        }
-
         if (!\Cache::has($key)) {
-            flash('Nothing to fix');
+            flash('No data found');
             return \Redirect::route('resources.index');
         }
 
         $status = \Cache::get($key);
+
+        if ($status['project']) {
+            if (\Gate::denies('resources', $status['project'])) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } elseif (\Gate::denies('write', 'resources')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
+
         $items = $status['failed'];
 
         return view('resources.fix-import', compact('items', 'key'));
@@ -236,14 +256,21 @@ class ResourcesController extends Controller
 
     function postFixImport(Request $request, $key)
     {
-        if (\Gate::denies('write', 'resources')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
+        if (!\Cache::has($key)) {
+            flash('No data found');
+            return \Redirect::route('resources.index');
         }
 
-        if (!\Cache::has($key)) {
-            flash('Nothing to fix');
-            return \Redirect::route('resources.index');
+        $status = \Cache::get($key);
+
+        if ($status['project']) {
+            if (\Gate::denies('resources', $status['project'])) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } elseif (\Gate::denies('write', 'resources')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
         }
 
         $data = $request->get('data');
@@ -334,11 +361,12 @@ class ResourcesController extends Controller
 
     public function exportResources(Project $project)
     {
-        if (\Gate::denies('read', 'resources')) {
+        if (\Gate::denies('resources', $project)) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
-        $this->dispatch(new ExportResourcesJob($project));
+
+        return $this->dispatch(new ExportResourcesJob($project));
     }
 
     function wipe(WipeRequest $request)
@@ -397,25 +425,38 @@ class ResourcesController extends Controller
 
     public function modifyAllResources()
     {
-        if (\Gate::denies('write', 'resources')) {
+        $project_id = request('project');
+        if ($project_id) {
+            $project = Project::find($project_id);
+            if (\Gate::denies('resources', $project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } elseif (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
-        return view('resources.modify', ['project_id' => request('project')]);
+        return view('resources.modify', ['project_id' => $project_id]);
 //        return view('resources.modify');
     }
 
     public function postModifyAllResources(Request $request)
     {
-        if (\Gate::denies('write', 'resources')) {
+        $project_id = $request->get('project');
+        if ($project_id) {
+            $project = Project::find($project_id);
+            if (\Gate::denies('resources', $project)) {
+                flash("You don't have access to this page");
+                return \Redirect::to('/');
+            }
+        } elseif (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
-        $project = $request->project;
         $file = $request->file('file');
-        $this->dispatch(new ModifyPublicResourcesJob($file, $project));
+        $this->dispatch(new ModifyPublicResourcesJob($file, $project_id));
 
         $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
         $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);

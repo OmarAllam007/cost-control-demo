@@ -2,7 +2,7 @@
     <section id="ResourcesArea">
         <div class="form-group tab-actions pull-right">
 
-            @can('resoures', $project)
+            @can('resources', $project)
                 <a href="{{route('resources.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
                     <i class="fa fa-plus"></i> Add resource
                 </a>
@@ -71,7 +71,7 @@
                         <th class="col-xs-1">Rate</th>
                         <th class="col-xs-1">Unit</th>
                         <th class="col-xs-1">Waste</th>
-                        <th class="col-xs-1">
+                        <th class="col-xs-2">
                             @can('resources', $project) Actions @endcan
                         </th>
                     </tr>
@@ -84,7 +84,7 @@
                         <td class="col-xs-1">@{{resource.rate}}</td>
                         <td class="col-xs-1">@{{resource.unit}}</td>
                         <td class="col-xs-1">@{{resource.waste}} </td>
-                        <td class="col-xs-1">
+                        <td class="col-xs-2">
                             @can('resources', $project)
                                 <a href="/resources/@{{resource.id}}/edit" class="btn btn-primary btn-sm">
                                     <i class="fa fa-edit"></i> Edit
