@@ -34,6 +34,7 @@ class CostSummery
             ->get();
 
         $budgets = BreakDownResourceShadow::sumFields('resource_type', ['budget_cost'])->where('project_id', $project->id)->get();
+        dd($budgets);
         $previousShadows = CostShadow::where('period_id', '<', $project->open_period()->id)->where('project_id', $project->id)->get();
 
         $data = [];
@@ -62,16 +63,16 @@ class CostSummery
                 ];
             }
         }
-        if($previousShadows){
-            foreach ($previousShadows as $previousShadow){
+        if ($previousShadows) {
+            foreach ($previousShadows as $previousShadow) {
                 if (isset($data[$previousShadow['resource_type']])) {
-                    $data[$previousShadow['resource_type']]['previous_allowable']+=$previousShadow['allowable_ev_cost'];
-                    $data[$previousShadow['resource_type']]['previous_variance']+=$previousShadow['cost_var'];
+                    $data[$previousShadow['resource_type']]['previous_allowable'] += $previousShadow['allowable_ev_cost'];
+                    $data[$previousShadow['resource_type']]['previous_variance'] += $previousShadow['cost_var'];
 
                 }
             }
         }
-
+        dd($data);
         return view('reports.cost-control.cost_summery', compact('data'));
     }
 }

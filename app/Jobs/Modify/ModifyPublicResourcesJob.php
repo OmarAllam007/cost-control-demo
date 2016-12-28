@@ -39,7 +39,7 @@ class ModifyPublicResourcesJob extends ImportJob
 
     public function handle()
     {
-//        set_time_limit(300);
+        set_time_limit(600);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
 
@@ -77,9 +77,9 @@ class ModifyPublicResourcesJob extends ImportJob
                     $resource->project_id = $this->project;
                 }
                 $resource->save();
-//                $resource->updateBreakdownResources();
             }
 
+            $resource->updateBreakdownResources();
         }
         $cache = new ResourcesCache();
         $cache->cacheResources();

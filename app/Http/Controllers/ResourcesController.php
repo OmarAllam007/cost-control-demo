@@ -461,6 +461,9 @@ class ResourcesController extends Controller
 
         $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
         $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
+        if($project_id){
+            return view('project.show', ['project' => $project]);
+        }
         return view('resources.index', ['resources' => $resources]);
     }
 
