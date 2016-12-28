@@ -85,8 +85,7 @@ class BudgetCostByBuilding
                 $total['weight'] += $data[$key]['weight'];
             }
         }
-        ksort($data);
-//        dd($data);
+//        ksort($data);
         $pieChart = $this->getBudgetCostForBuildingPieChart($data);
         $columnChart = $this->getBugetCostByBuildingColumnChart($data);
         return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));

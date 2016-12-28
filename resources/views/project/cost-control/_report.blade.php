@@ -21,7 +21,7 @@
                    style="width:100%; margin-bottom: 8px;">Resource Code</a><br>
             </th>
             <th class="col-xs-6">
-                <a href="{{route('cost.activity',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
+                <a href="{{route('cost.activity_report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">Activity</a><br>
                 <a href="#" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Resource Dictionary</a><br>

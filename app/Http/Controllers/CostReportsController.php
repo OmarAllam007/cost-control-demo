@@ -62,6 +62,6 @@ class CostReportsController extends Controller
 
     public function activityReport(Project $project){
         $activity = new ActivityReport();
-        $activity->getActivityReport($project);
+        return $activity->getActivityReport($project);
     }
 }
