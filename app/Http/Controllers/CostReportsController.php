@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummery;
@@ -57,5 +58,10 @@ class CostReportsController extends Controller
     public function overdraftReport(Project $project){
         $draft = new OverdraftReport();
         return $draft->getDraft($project);
+    }
+
+    public function activityReport(Project $project){
+        $activity = new ActivityReport();
+        $activity->getActivityReport($project);
     }
 }

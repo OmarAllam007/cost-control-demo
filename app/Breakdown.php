@@ -119,8 +119,8 @@ class Breakdown extends Model
         return $newBreakdown;
     }
 
-    function getDry($wbs_id){
-        $boq = Boq::where('wbs_id',$wbs_id)->first();
+    function getDry($project ,$wbs_id,$cost_account){
+        $boq = Boq::where('wbs_id',$wbs_id)->where('project_id',$project->id)->where('cost_account',$cost_account)->first();
         if(isset($boq->dry_ur)){
             return $boq->dry_ur;
         }
