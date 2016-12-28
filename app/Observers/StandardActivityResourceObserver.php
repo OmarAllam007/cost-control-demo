@@ -18,8 +18,8 @@ class StandardActivityResourceObserver
 {
     function updated(StdActivityResource $resource)
     {
-        BreakdownResource::where('std_activity_resource_id', $resource->id)->get()->each(function (BreakdownResource $resource) {
-            $resource->updateShadow();
-        });
+        if (isset($resource->template->project_id)) {
+            $resource->updateShadows();
+        }
     }
 }
