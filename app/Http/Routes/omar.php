@@ -13,7 +13,9 @@ Route::group(['prefix' => 'boq'], function () {
     Route::delete('delete-all/{project}', ['as' => 'boq.delete-all', 'uses' => 'BoqController@deleteAll']);
 
 });
-
+Route::group(['prefix','costcontrol'],function (){
+   Route::get('export/{project}',['as'=>'costshadow.export','uses'=>'ActualMaterialController@ExportCostBreakdown']);
+});
 Route::group(['prefix' => 'breakdown'], function () {
     Route::get('export/{project}', ['as' => 'break_down.export', 'uses' => 'BreakdownController@exportBreakdown']);
     Route::get('printAll/{project}', ['as' => 'break_down.printall', 'uses' => 'BreakdownController@printAll']);

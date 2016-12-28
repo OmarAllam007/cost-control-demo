@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
+use App\Jobs\Export\ExportCostShadow;
 use App\Jobs\ImportActualMaterialJob;
 use App\Jobs\ImportMaterialDataJob;
 use App\Jobs\UpdateResourceDictJob;
@@ -329,5 +330,14 @@ class ActualMaterialController extends Controller
     function postResources($key)
     {
 
+    }
+
+    function ExportCostBreakdown(Project $project){
+        if (\Gate::denies('read', 'productivity')) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
+        $this->dispatch(new ExportCostShadow($project));
     }
 }
