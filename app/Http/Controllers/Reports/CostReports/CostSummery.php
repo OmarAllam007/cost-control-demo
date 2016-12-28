@@ -33,16 +33,17 @@ class CostSummery
             ->where('period_id', $project->open_period()->id)
             ->get();
 
-        $budgets = BreakDownResourceShadow::sumFields('resource_type', ['budget_cost'])->where('project_id', $project->id)->get();
-        dd($budgets);
+        $budgets = BreakDownResourceShadow::where('project_id',$project->id)->get();
         $previousShadows = CostShadow::where('period_id', '<', $project->open_period()->id)->where('project_id', $project->id)->get();
 
         $data = [];
         foreach ($budgets as $budget) {
-            if (!isset($data[$budget['resource_type']])) {
-                $data[$budget['resource_type']] = [
-                    'budget_cost' => 0,
-                ];
+            if($budget['resource_type']!='Not Assigned'){
+                if (!isset($data[$budget['resource_type']])) {
+                    $data[$budget['resource_type']] = [
+                        'budget_cost' => 0,
+                    ];
+                }
                 $data[$budget['resource_type']]['budget_cost'] += $budget['budget_cost'];
             }
 
@@ -72,7 +73,6 @@ class CostSummery
                 }
             }
         }
-        dd($data);
         return view('reports.cost-control.cost_summery', compact('data'));
     }
 }
