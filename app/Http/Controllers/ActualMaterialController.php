@@ -270,8 +270,10 @@ class ActualMaterialController extends Controller
 
     function postProgress(Request $request, $key)
     {
-        $this->validate($request, ['progress.*' => 'required|numeric|between:0,100'], [
-            'required' => 'This field is required', 'numeric' => 'Please enter a numeric value', 'between' => 'Value must be between 0 and 100'
+        $this->validate($request, ['progress.*' => 'required|numeric|gt:0|lte:100'], [
+            'required' => 'This field is required', 'numeric' => 'Please enter a numeric value',
+            'between' => 'Value must be between 0 and 100', 'gt' => 'Value must be greater than 0',
+            'lte' => 'Value must be less than or equal to 100'
         ]);
 
         $progress = collect($request->get('progress'));
