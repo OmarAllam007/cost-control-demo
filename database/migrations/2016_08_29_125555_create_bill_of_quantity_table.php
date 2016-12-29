@@ -17,12 +17,11 @@ class CreateBillOfQuantityTable extends Migration
             $table->integer('wbs_id');
             $table->text('item');
             $table->text('description');
-
             $table->text('type')->nullable();
             $table->integer('unit_id');
             $table->integer('quantity');
-            $table->float('dry_ur');
-            $table->float('price_ur');
+            $table->double('dry_ur',12,2);
+            $table->double('price_ur',12,2);
             $table->text('arabic_description')->nullable();
             $table->timestamps();
         });

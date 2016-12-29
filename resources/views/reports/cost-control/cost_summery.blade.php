@@ -16,10 +16,10 @@
         <thead class="output-cell">
         <tr style="border: 2px solid black">
             <td></td>
-            <td style="border: 2px solid black;text-align: center">BaseLine</td>
+            <td style="border: 2px solid black;text-align: center"></td>
             <td colspan="3" style="border: 2px solid black;text-align: center">Previous</td>
             <td colspan="3" style="border: 2px solid black;text-align: center">To-Date</td>
-            <td colspan="2" style="border: 2px solid black;text-align: center">Remaining</td>
+            <td  colspan="2" style="text-align: center"></td>
         </tr>
         <tr>
             <th class="col-xs-2" style="border: 2px solid black;text-align: center">Resource Type</th>
@@ -37,7 +37,7 @@
         <tbody>
         @foreach($data as $key=>$value)
             <tr>
-                <td style="border: 2px solid black;text-align: center">{{$key}}</td>
+                <td style="border: 2px solid black;text-align: left">{{$key}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['budget_cost']??0,2) }}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_allowable']??0,2)}}</td>

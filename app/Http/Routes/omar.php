@@ -13,7 +13,9 @@ Route::group(['prefix' => 'boq'], function () {
     Route::delete('delete-all/{project}', ['as' => 'boq.delete-all', 'uses' => 'BoqController@deleteAll']);
 
 });
-
+Route::group(['prefix','costcontrol'],function (){
+   Route::get('export/{project}',['as'=>'costshadow.export','uses'=>'ActualMaterialController@ExportCostBreakdown']);
+});
 Route::group(['prefix' => 'breakdown'], function () {
     Route::get('export/{project}', ['as' => 'break_down.export', 'uses' => 'BreakdownController@exportBreakdown']);
     Route::get('printAll/{project}', ['as' => 'break_down.printall', 'uses' => 'BreakdownController@printAll']);
@@ -52,6 +54,8 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('cost_standard_activity/{project}',['uses'=>'CostReportsController@standardActivity','as'=>'cost.standard_activity_report']);
     Route::get('cost_boq/{project}',['uses'=>'CostReportsController@boqReport','as'=>'cost.boq_report']);
     Route::get('cost_resource_code/{project}',['uses'=>'CostReportsController@resourceCodeReport','as'=>'cost.resource_code_report']);
+    Route::get('cost_overdraft/{project}',['uses'=>'CostReportsController@overdraftReport','as'=>'cost.overdraft']);
+    Route::get('cost_activity/{project}',['uses'=>'CostReportsController@activityReport','as'=>'cost.activity_report']);
 
     Route::get('reports/{project}', ['as' => 'project.reports', 'uses' => 'ReportController@getReports']);
 

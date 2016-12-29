@@ -22,7 +22,6 @@ class ExportWbsReport
         $colstart = 4;
         $data = dispatch(new CacheWBSTree($project));
         $item = $this->getDepth($data);
-        dd($item);
         foreach ($data as $level) {
             $sheet->setCellValueByColumnAndRow($col, $rowCount, $level['name']);
             if (count($level['children'])) {

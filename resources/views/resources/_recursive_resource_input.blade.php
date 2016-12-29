@@ -11,9 +11,11 @@
         @if (count($type['resources']))
             <ul class="list-unstyled">
 
+
                 @foreach($type['resources'] as $resource)
-                    @if(request('project_id'))
-                        @if(!$resource['project_id'] || $resource['project_id']==\App\BreakdownTemplate::find(request('template'))->project_id )
+
+                        @if(!$resource['project_id'] || $resource['project_id']==
+                        (\App\BreakdownTemplate::find(request('template'))->project_id??0))
                             <li class="radio">
                                 <label>
                                     <input type="radio" value="{{$resource['id']}}" name="resource_id"
@@ -23,16 +25,7 @@
                                 </label>
                             </li>
                         @endif
-                    @else
-                        <li class="radio">
-                            <label>
-                                <input type="radio" value="{{$resource['id']}}" name="resource_id"
-                                       v-model="resource_id" @change="setResource({{json_encode($resource['json'])}}
-                                )">
-                                <span class="resource-name">{{$resource['name']}}</span>
-                            </label>
-                        </li>
-                    @endif
+
                 @endforeach
             </ul>
         @endif

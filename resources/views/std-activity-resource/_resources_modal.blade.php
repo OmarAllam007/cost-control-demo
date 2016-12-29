@@ -13,7 +13,6 @@
                         <input type="text" v-model="term" placeholder="Type here to search" class="form-control search"
                                debounce="500" autocomplete="off">
                     </div>
-
                     <section>
                         <ul class="list-unstyled tree">
                             @foreach($resourcesTree as $type)

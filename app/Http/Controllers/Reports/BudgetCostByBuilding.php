@@ -19,10 +19,11 @@ class BudgetCostByBuilding
 {
     public function getBudgetCostForBuilding(Project $project)
     {
-
-        $shadows = $project->shadows()->get();
+//        ini_set("memory_limit",-1);
+        set_time_limit(200);
+        $shadows = $project->shadows()->with('wbs')->get();
         $data = [];
-        $children = [];
+//        $children = [];
         $total = [
             'total' => 0,
             'weight' => 0,
@@ -30,58 +31,61 @@ class BudgetCostByBuilding
 
         foreach ($shadows as $shadow) {
             $wbs_level = $shadow->wbs;
-            $dry = $shadow->breakdown->getDry($wbs_level->id);
+            $name = $wbs_level->name;
+            $dry = $shadow->breakdown->getDry($project,$wbs_level->id,$shadow['cost_account']);
             if ($dry) {
-                if (!isset($data[$wbs_level->id])) {
-                    $data[$wbs_level->id] = [
-                        'name' => $wbs_level->name,
+                if (!isset($data[$name])) {
+                    $data[$name] = [
+                        'name' => $name,
                         'code' => $wbs_level->code,
                         'budget_cost' => 0,
                         'weight' => 0,
                     ];
 
                 }
-
-                $data[$wbs_level->id]['budget_cost'] += is_nan($shadow['budget_cost']) ? 0 : $shadow['budget_cost'];
+                $data[$name]['budget_cost'] += is_nan($shadow['budget_cost']) ? 0 : $shadow['budget_cost'];
 
             } else {
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
-                    $parent_dry = $shadow->breakdown->getDry($parent->id);
+                    $parent_name = $parent->name;
+                    $parent_dry = $shadow->breakdown->getDry($project,$parent->id,$shadow['cost_account']);
                     if ($parent_dry) {
-                        if (!isset($data[$parent->id])) {
-                            $data[$parent->id] = [
-                                'name' => $parent->name,
+                        if (!isset($data[$parent_name])) {
+                            $data[$parent_name] = [
+                                'name' => $parent_name,
                                 'code' => $parent->code,
                                 'budget_cost' => $parent->budget_cost['budget_cost'],
                                 'weight' => 0,
                             ];
-                            $children = $parent->budget_cost['children'];
+                            $children[] = $parent->budget_cost['children'];
                         }
                         break;
                     }
+
                 }
             }
         }
 
-        $children = $children->toArray();
+
         foreach ($data as $key => $item) {//fill total array
-//            if (in_array($key, $children)) {
-//                unset($data[$key]);
-//                continue;
-//            }
+            if (in_array($key, $children)) {
+                unset($data[$key]);
+                continue;
+            }
             $total['total'] += $item['budget_cost'];
         }
         foreach ($data as $key => $value) {
-//            if (in_array($key, $children)) {
-//                continue;
-//            }
+            if (in_array($key, $children)) {
+                continue;
+            }
             if ($total['total'] != 0) {
                 $data[$key]['weight'] = floatval(($data[$key]['budget_cost'] / $total['total']) * 100);
                 $total['weight'] += $data[$key]['weight'];
             }
         }
+//        ksort($data);
         $pieChart = $this->getBudgetCostForBuildingPieChart($data);
         $columnChart = $this->getBugetCostByBuildingColumnChart($data);
         return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));

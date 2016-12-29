@@ -11,16 +11,16 @@
             <li>
 
                 <div class="tree--item">
-                    <a href="#col" {{$value['division_id']}} class="tree--item--label" data-toggle="collapse"><i class="fa fa-chevron-circle-right"></i>
+                    <a href="#col" {{$value['division_id']}} class="tree--item--label"><i class="fa fa-chevron-circle-right"></i>
                         {{$key}} </a>
                 </div>
                 @foreach($value['activities']  as $activityKey=>$actvalue)
-                    <div class="collapse" id="col"{{$value['division_id']}}>
-                        <a href="#data" {{$actvalue['activity_id']}} class="tree--child" data-toggle="collapse"><i class="fa fa-chevron-circle-right"></i>
+                    <div id="col"{{$value['division_id']}}>
+                        <a href="#data" {{$actvalue['activity_id']}} class="tree--child" ><i class="fa fa-chevron-circle-right"></i>
                             {{$activityKey}} </a>
                     </div>
                     <br>
-                    <article id="data" {{$actvalue['activity_id']}} class="tree--child collapse">
+                    <article id="data" {{$actvalue['activity_id']}} class="tree--child ">
                         <table class="table table-condensed">
                             <thead>
                             <tr class="tbl-children-division">

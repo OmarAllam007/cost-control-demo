@@ -28,7 +28,7 @@ class BudgetCostDryCostByBuilding
 
         foreach ($break_downs as $break_down) {
             $wbs_level = $break_down->wbs_level;
-            $dry = $break_down->getDry($wbs_level->id);
+            $dry = $break_down->getDry($project,$wbs_level->id,$break_down->cost_account);
 
             if ($dry) {//if wbs-level has dry
 
@@ -63,7 +63,7 @@ class BudgetCostDryCostByBuilding
                 $parent = $wbs_level;
                 while ($parent->parent) {//get budget cost of parent
                     $parent = $parent->parent;
-                    $parent_dry = $break_down->getDry($parent->id);
+                    $parent_dry = $break_down->getDry($project,$parent->id,$break_down->cost_account);
                     if ($parent_dry) {
                         if (!isset($data[$parent->id])) {
                             $data[$parent->id] = [

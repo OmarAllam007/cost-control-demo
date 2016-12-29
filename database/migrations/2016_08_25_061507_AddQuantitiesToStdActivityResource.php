@@ -13,8 +13,8 @@ class AddQuantitiesToStdActivityResource extends Migration
     public function up()
     {
         Schema::table('std_activity_resources', function (Blueprint $table) {
-            $table->float('budget_qty')->nullable();
-            $table->float('eng_qty')->nullable();
+            $table->double('budget_qty',12,2)->nullable();
+            $table->double('eng_qty',12,2)->nullable();
 
         });
     }

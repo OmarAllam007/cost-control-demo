@@ -24,14 +24,17 @@ class BudgetCostByBreakDownItem
 
             foreach ($shadows as $shadow) {
                 $root = $shadow->resource_type;
-                if (!isset($bd_resource[ $root ])) {
-                    $bd_resource[ $root ] = [
-                        'resource_type' => $root,
-                        'resource_code' => $shadow->resource->types->code,
-                        'budget_cost' => 0,
-                        'weight' => 0,
+//                dd($shadow->resource->types);
+                if($root){
+                    if (!isset($bd_resource[ $root ])) {
+                        $bd_resource[ $root ] = [
+                            'resource_type' => $root,
+                            'resource_code' => $shadow->resource->types->code??'',
+                            'budget_cost' => 0,
+                            'weight' => 0,
 
-                    ];
+                        ];
+                    }
                 }
                 $bd_resource[ $root ]['budget_cost'] += is_nan($shadow->budget_cost)?0:$shadow->budget_cost;
 

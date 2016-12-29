@@ -22,6 +22,7 @@ class ExportBreakdownJob extends Job
 
     public function handle()
     {
+        set_time_limit(300);
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $sheet = $objPHPExcel->getActiveSheet();

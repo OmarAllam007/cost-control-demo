@@ -73,20 +73,20 @@ class ResourcesController extends Controller
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
-
         $this->validate($request, $this->rules);
-        if ($request['waste'] <= 1) {
-            $request['waste'] = $request->waste;
-        } else {
-            $request['waste'] = ($request->waste / 100);
-        }
-        $request['project_id'] = $request['project'];
-        $resource = Resources::create($request->all());
-//        $resource->generateResourceCode();
-//        $resource->save();
-        flash('Resource has been saved', 'success');
 
-        if ($resource->project_id) {
+//        if ($request['waste'] <= 1) {
+        $request['waste'] = $request->waste;//updated from Eng.kareem 27/12/2016
+//        } else {
+//            $request['waste'] = ($request->waste / 100);
+//        }
+        $request['project_id'] = $request['project'];
+        $newResource = Resources::create($request->all());
+
+        $resource = new ResourcesCache();
+        $resource->cacheResources();
+        flash('Resource has been saved', 'success');
+        if ($newResource->project_id) {
             return \Redirect::route('project.show', $resource->project_id);
         }
         return \Redirect::route('resources.index');
@@ -137,11 +137,11 @@ class ResourcesController extends Controller
         }
 
 //        $this->validate($request, $this->rules);
-        if ($request['waste'] <= 1) {
+//        if ($request['waste'] <= 1) {
             $request['waste'] = $request->waste;
-        } else {
-            $request['waste'] = ($request->waste / 100);
-        }
+//        } else {
+//            $request['waste'] = ($request->waste / 100);
+//        }
 
         $resources->update($request->all());
         $resources->syncCodes($request->get('codes'));
@@ -460,6 +460,9 @@ class ResourcesController extends Controller
 
         $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
         $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
+        if($project_id){
+            return view('project.show', ['project' => $project]);
+        }
         return view('resources.index', ['resources' => $resources]);
     }
 

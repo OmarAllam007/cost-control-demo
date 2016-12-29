@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +12,7 @@ class StdActivityResource extends Model
 {
     use SoftDeletes, CachesQueries;
 
-    protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks','code'];
+    protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks', 'code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -30,9 +31,11 @@ class StdActivityResource extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function std_activity(){
+    public function std_activity()
+    {
         return $this->hasMany(StdActivity::class);
     }
+
     function scopeRecursive(Builder $query)
     {
         $query->with('resource')
@@ -51,7 +54,7 @@ class StdActivityResource extends Model
 //    }
 
 
-    function morphForJSON($account,$request)
+    function morphForJSON($account, $request)
     {
         $attributes = [
             'std_activity_resource_id' => $this->id,
@@ -62,7 +65,7 @@ class StdActivityResource extends Model
             'resource_id' => $this->resource->id,
             'resource_name' => $this->resource->name,
             'resource_waste' => $this->resource->waste,
-            'unit' => isset($this->resource->units->type)? $this->resource->units->type : '',
+            'unit' => isset($this->resource->units->type) ? $this->resource->units->type : '',
             'resource_type' => $this->resource->types->root->name,
             'budget_qty' => '',
             'eng_qty' => '',
@@ -83,4 +86,25 @@ class StdActivityResource extends Model
 
         return $attributes;
     }
+
+    function updateShadows()
+    {
+        if (isset($this->template->project_id)) {
+            $breakdown_resources = BreakdownResource::whereHas('breakdown',function ($q){
+                $q->where('project_id',$this->template->project_id);
+            })->where('std_activity_resource_id', $this->id)->get();
+
+            foreach ($breakdown_resources as $breakdown_resource) {
+                $breakdown_resource->equation = $this->equation;
+                $breakdown_resource->update();
+
+                $formatter = new BreakdownResourceFormatter($breakdown_resource);
+                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
+                    ->update($formatter->toArray());
+            }
+        }
+
+
+    }
+
 }

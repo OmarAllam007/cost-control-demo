@@ -33,6 +33,7 @@ class ResourcesObserver
 
     function updated(Resources $resource)
     {
+
         $resource->updateBreakdownResources();
         $cache = new ResourcesCache();
         $cache->cacheResources();
@@ -41,8 +42,9 @@ class ResourcesObserver
 
     function saving(Resources $resource)
     {
-//        $cache = new ResourcesCache();
-//        $cache->cacheResources();
+
+        $cache = new ResourcesCache();
+        $cache->cacheResources();
     }
 
     function deleted(Resources $resource)

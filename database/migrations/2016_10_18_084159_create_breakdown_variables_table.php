@@ -17,7 +17,7 @@ class CreateBreakdownVariablesTable extends Migration
             $table->integer('breakdown_id');
             $table->integer('qty_survey_id');
             $table->string('name');
-            $table->float('value');
+            $table->double('value',12,2);
             $table->integer('display_order');
             $table->timestamps();
         });

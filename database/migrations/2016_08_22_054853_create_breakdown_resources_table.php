@@ -16,12 +16,12 @@ class CreateBreakdownResourcesTable extends Migration
             $table->increments('id');
             $table->integer('breakdown_id');
             $table->integer('std_activity_resource_id');
-            $table->float('budget_qty');
-            $table->float('eng_qty');
+            $table->double('budget_qty',12,2);
+            $table->double('eng_qty',12,2);
             $table->string('remarks')->nullable();
-            $table->float('labor_count')->nullable();
+            $table->double('labor_count',12,2)->nullable();
             $table->integer('productivity_id')->unsigned()->nullable();
-            $table->float('resource_waste')->nullable();
+            $table->double('resource_waste',12,2)->nullable();
             $table->timestamps();
         });
     }

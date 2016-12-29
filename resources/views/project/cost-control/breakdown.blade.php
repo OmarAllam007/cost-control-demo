@@ -1,9 +1,16 @@
+
 <template id="BreakdownTemplate">
+
     <div class="breakdown">
+
         <div class="loader" v-show="loading">
             <i class="fa fa-spinner fa-spin fa-3x"></i>
         </div>
 
+            <a href="{{route('costshadow.export',$project)}}" class="btn btn-info btn-sm pull-right">
+                <i class="fa fa-cloud-download"></i> Export
+            </a>
+<div class="clearfix"></div>
         <section class="filters row" id="breakdown-filters">
             @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
             @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])

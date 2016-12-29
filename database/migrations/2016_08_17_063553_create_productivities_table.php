@@ -13,14 +13,14 @@ class CreateProductivitiesTable extends Migration
             $table->string('unit');
             $table->string('description');
             $table->string('crew_structure');
-            $table->float('crew_hours');
-            $table->float('crew_equip');
-            $table->float('daily_output');
-            $table->float('man_hours');
-            $table->float('equip_hours');
-            $table->float('reduction_factor');
-            $table->float('after_reduction');
-            $table->string('source');
+            $table->double('crew_hours',12,2);
+            $table->double('crew_equip',12,2);
+            $table->double('daily_output',12,2);
+            $table->double('man_hours',12,2);
+            $table->double('equip_hours',12,2);
+            $table->double('reduction_factor',12,2);
+            $table->double('after_reduction',12,2);
+            $table->string('source',12,2);
 
 
             $table->softDeletes();

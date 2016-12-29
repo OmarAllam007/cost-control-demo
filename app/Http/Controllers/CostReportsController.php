@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummery;
+use App\Http\Controllers\Reports\CostReports\OverdraftReport;
 use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
@@ -51,5 +53,15 @@ class CostReportsController extends Controller
     public function resourceCodeReport(Project $project){
         $code = new ResourceCodeReport();
         return $code->getResourceCodeReport($project);
+    }
+
+    public function overdraftReport(Project $project){
+        $draft = new OverdraftReport();
+        return $draft->getDraft($project);
+    }
+
+    public function activityReport(Project $project){
+        $activity = new ActivityReport();
+        return $activity->getActivityReport($project);
     }
 }

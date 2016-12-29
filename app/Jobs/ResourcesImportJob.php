@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\BusinessPartner;
+use App\Http\Controllers\Caching\ResourcesCache;
 use App\Project;
 use App\Resources;
 use App\ResourceType;
@@ -65,7 +66,7 @@ class ResourcesImportJob extends ImportJob
                     'waste' => $this->getWaste($data[8]),
                     'business_partner_id' => $this->getPartner($data[9]),
                     'reference' => $data[10],
-                    'project_id'=>$this->project,
+                    'project_id'=>$this->project->id??null,
                 ];
                 if ($unit_id) {
                     Resources::create($item);
@@ -79,7 +80,8 @@ class ResourcesImportJob extends ImportJob
             }
         }
 
-        dispatch(new CacheResourcesTree());
+        $resource = new ResourcesCache();
+        $resource->cacheResources();
 
         return $status;
     }
@@ -113,7 +115,7 @@ class ResourcesImportJob extends ImportJob
     protected function getWaste($waste)
     {
         $waste = floatval($waste);
-        return $waste < 1 ? $waste * 100 : $waste;
+        return $waste < 1 ? $waste  : $waste/100;
     }
 
     protected function getPartner($partner)

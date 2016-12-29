@@ -30,9 +30,10 @@ class BreakDownResourceObserver
     {
 
         $resource->updateShadow();
-
         $oldResource = Resources::find($resource->getOriginal('resource_id'));
-        $this->checkForResources($oldResource);
+        if($oldResource){
+            $this->checkForResources($oldResource);
+        }
     }
 
     function saving(BreakdownResource $breakdownResource)

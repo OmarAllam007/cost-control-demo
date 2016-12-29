@@ -12,8 +12,8 @@ class CreateSurveysTable extends Migration
             $table->integer('category_id');
             $table->string('description');
             $table->integer('unit_id')->unsigned();
-            $table->float('budget_qty');
-            $table->float('eng_qty');
+            $table->double('budget_qty',12,2);
+            $table->double('eng_qty',12,2);
 
             $table->softDeletes();
             $table->timestamps();
