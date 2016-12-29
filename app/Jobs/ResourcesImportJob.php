@@ -39,7 +39,6 @@ class ResourcesImportJob extends ImportJob
     {
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
-
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $status = ['failed' => collect(), 'success' => 0, 'dublicated' => [], 'project' => $this->project];
 

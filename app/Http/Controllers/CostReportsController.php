@@ -9,6 +9,7 @@ use App\Http\Controllers\Reports\CostReports\CostSummery;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
 use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
+use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
 use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Project;
@@ -63,5 +64,10 @@ class CostReportsController extends Controller
     public function activityReport(Project $project){
         $activity = new ActivityReport();
         return $activity->getActivityReport($project);
+    }
+
+    public function resourceDictionaryReport(Project $project){
+        $dictionary = new ResourceDictionaryReport();
+        return $dictionary->getReport($project);
     }
 }
