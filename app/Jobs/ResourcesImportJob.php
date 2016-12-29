@@ -66,7 +66,7 @@ class ResourcesImportJob extends ImportJob
                     'waste' => $this->getWaste($data[8]),
                     'business_partner_id' => $this->getPartner($data[9]),
                     'reference' => $data[10],
-                    'project_id'=>$this->project,
+                    'project_id'=>$this->project->id,
                 ];
                 if ($unit_id) {
                     Resources::create($item);
