@@ -81,13 +81,12 @@ class ResourcesController extends Controller
 //            $request['waste'] = ($request->waste / 100);
 //        }
         $request['project_id'] = $request['project'];
-        Resources::create($request->all());
+        $newResource = Resources::create($request->all());
 
         $resource = new ResourcesCache();
         $resource->cacheResources();
         flash('Resource has been saved', 'success');
-
-        if ($resource->project_id) {
+        if ($newResource->project_id) {
             return \Redirect::route('project.show', $resource->project_id);
         }
         return \Redirect::route('resources.index');
