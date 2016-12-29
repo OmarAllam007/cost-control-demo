@@ -265,7 +265,8 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.status', $key);
         }
 
-        return view('actual-material.progress', compact('key', 'resources'));
+        $project = $data['project'];
+        return view('actual-material.progress', compact('key', 'resources', 'project'));
     }
 
     function postProgress(Request $request, $key)

@@ -4415,11 +4415,7 @@ a.thumbnail.active {
   padding-left: 10px; }
 
 .media-left,
-.media > .pull-left, #main-panel > .panel-heading
-.media > h1, #main-panel > .panel-heading
-.media > h2, #main-panel > .panel-heading
-.media > h3, #main-panel > .panel-heading
-.media > h4 {
+.media > .pull-left {
   padding-right: 10px; }
 
 .media-left,
@@ -5518,7 +5514,7 @@ button.close {
 .pull-right {
   float: right !important; }
 
-.pull-left, #main-panel > .panel-heading h1, #main-panel > .panel-heading h2, #main-panel > .panel-heading h3, #main-panel > .panel-heading h4 {
+.pull-left {
   float: left !important; }
 
 .hide {
@@ -5796,10 +5792,10 @@ button.close {
 .pull-right {
   float: right; }
 
-.pull-left, #main-panel > .panel-heading h1, #main-panel > .panel-heading h2, #main-panel > .panel-heading h3, #main-panel > .panel-heading h4 {
+.pull-left {
   float: left; }
 
-.fa.pull-left, #main-panel > .panel-heading h1.fa, #main-panel > .panel-heading h2.fa, #main-panel > .panel-heading h3.fa, #main-panel > .panel-heading h4.fa {
+.fa.pull-left {
   margin-right: .3em; }
 
 .fa.pull-right {
@@ -8042,6 +8038,7 @@ button.close {
   clip: auto; }
 
 #main-panel > .panel-heading h1, #main-panel > .panel-heading h2, #main-panel > .panel-heading h3, #main-panel > .panel-heading h4 {
+  float: left;
   font-size: 20px;
   line-height: 1.5;
   vertical-align: middle;

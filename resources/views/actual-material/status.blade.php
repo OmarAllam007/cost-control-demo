@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Import Actual Material &mdash; Status</h2>
+    <div class="clearfix">
+        <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash; Progress</h4>
+        <h4 class="pull-right text-muted">#E06</h4>
+    </div>
 @endsection
 
 @section('body')
