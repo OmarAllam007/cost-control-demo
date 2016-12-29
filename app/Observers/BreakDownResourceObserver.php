@@ -31,7 +31,7 @@ class BreakDownResourceObserver
 
         $resource->updateShadow();
         $oldResource = Resources::find($resource->getOriginal('resource_id'));
-        if($oldResource){
+        if ($oldResource) {
             $this->checkForResources($oldResource);
         }
     }
@@ -75,10 +75,11 @@ class BreakDownResourceObserver
     function checkForResources($resource)
     {
         $breakdown_resource = BreakdownResource::where('resource_id', $resource->id)->first();
-        if (!$breakdown_resource) {
-            Resources::where('id', $resource->id)->where('project_id', $resource->project_id)->forceDelete();
+        if ($resource->resource_id) {
+            if (!$breakdown_resource) {
+                Resources::where('id', $resource->id)->where('project_id', $resource->project_id)->forceDelete();
+            }
         }
-
     }
 
 
