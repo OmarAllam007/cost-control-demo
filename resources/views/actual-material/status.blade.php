@@ -32,7 +32,7 @@
                         <td>{{number_format($resource->to_date_qty, 2)}}</td>
                         <td>{{number_format($resource->progress, 1)}}%</td>
                         <td>
-                            {{Form::select("status[{$resource->breakdown_resource_id}]", config('app.cost_status'), $resource->status ?: 'In Progress', ['class' => 'form-control input-sm'])}}
+                            {{Form::select("status[{$resource->breakdown_resource_id}]", config('app.cost_status'), $resource->progress == 100? 'Closed' : $resource->status ?: 'In Progress', ['class' => 'form-control input-sm'])}}
                         </td>
                     </tr>
                 @endforeach

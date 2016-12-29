@@ -123,7 +123,6 @@ class ActualMaterialController extends Controller
         } elseif ($data_to_cache['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
         } else {
-            \Cache::forget($key);
             flash($data['success'] . ' records has been imported', 'success');
             return \Redirect::route('actual-material.progress', $key);
         }
@@ -155,7 +154,7 @@ class ActualMaterialController extends Controller
 
             $new_data = $units[$idx];
             $row[10] = $new_data['qty'];
-            $row[11] = abs($row[12]) / abs($new_data['qty']);
+            $row[11] = $row[12] / $new_data['qty'];
             $row[9] = $row['resource']->measure_unit;
 
             $newActivities->push($row);
@@ -175,7 +174,6 @@ class ActualMaterialController extends Controller
         if ($data_to_cache['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
         } else {
-            \Cache::forget($key);
             flash($data['success'] . ' records has been imported', 'success');
             return \Redirect::route('actual-material.progress', $key);
         }
@@ -215,7 +213,7 @@ class ActualMaterialController extends Controller
                         continue;
                     }
 
-                    $resource = ActualResources::create([
+                    $actualResource = ActualResources::create([
                         'project_id' => $project->id,
                         'wbs_level_id' => $shadow->wbs_id,
                         'breakdown_resource_id' => $shadow->breakdown_resource_id,
@@ -224,13 +222,13 @@ class ActualMaterialController extends Controller
                         'original_code' => $resource[13],
                         'resource_id' => $shadow->resource_id,
                         'unit_price' => $resource[11],
-                        'cost' => abs($resource[12]),
+                        'cost' => $resource[12],
                         'unit_id' => $shadow->unit_id,
                         'action_date' => $excelBaseDate->addDays($resource[5]),
                         'batch_id' => $batch_id
                     ]);
 
-                    $resource_dict->push($resource);
+                    $resource_dict->push($actualResource);
 
                     $data['success']++;
                 }
@@ -244,7 +242,6 @@ class ActualMaterialController extends Controller
         if ($data['resources']->count()) {
             return \Redirect::route('actual-material.resources', $key);
         } else {
-            \Cache::forget($key);
             flash($data['success'] . ' records has been imported', 'success');
             return \Redirect::route('actual-material.progress', $key);
         }
@@ -317,6 +314,7 @@ class ActualMaterialController extends Controller
         }
 
         $data = \Cache::get($key);
+        \Cache::forget($key);
 
         flash('Status has been updated', 'success');
         return \Redirect::route('project.cost-control', $data['project']);
