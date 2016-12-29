@@ -15,7 +15,7 @@
             <thead>
             <tr class="output-cell">
                 <td>Base Line</td>
-                <td>To Date Cost</td>
+                <td>Toe Date Cost</td>
                 <td>Previous Cost</td>
                 <td>Allawable (EV) Cost</td>
                 <td>Remaining Cost</td>

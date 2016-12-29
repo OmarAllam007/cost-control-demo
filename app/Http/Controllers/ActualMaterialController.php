@@ -104,7 +104,7 @@ class ActualMaterialController extends Controller
             unset($data['resources']);
         }
 
-        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['bastch']));
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
 
         $data_to_cache = [
             'success' => $result['success'] + $data['success'],
