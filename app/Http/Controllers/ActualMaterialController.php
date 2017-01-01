@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Http\UploadedFile;
 
 class ActualMaterialController extends Controller
 {
@@ -28,9 +29,11 @@ class ActualMaterialController extends Controller
     {
         $this->validate($request, ['file' => 'required|file|mimes:xls,xlsx']);
 
+        /** @var UploadedFile $file */
         $file = $request->file('file');
+        $filename = $file->move(storage_path('batches'), uniqid().'.'.$file->clientExtension());
 
-        $result = $this->dispatch(new ImportActualMaterialJob($project, $file->path()));
+        $result = $this->dispatch(new ImportActualMaterialJob($project, $filename));
 
         $key = 'mat_' . time();
         \Cache::add($key, $result, 180);
