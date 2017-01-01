@@ -56,13 +56,12 @@ class ImportBreakdownTemplateJob extends ImportJob
                 continue;
             }
 
-            $template = $this->getTemplate($data[2], $activity);
 
+            $template = $this->getTemplate($data[2], $activity);
             if (!$template) {
                 continue;
             }
-
-            $resource_id = $this->getResource($data[3]);
+            $resource_id = $this->getResource(trim($data[3]));
             if ($resource_id) {
                 $template->resources()->create([
                     'resource_id' => $resource_id,
