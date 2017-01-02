@@ -63,7 +63,7 @@ class RevisedBoq
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
-                    $parent_dry = $breakdown->getDry($project,$wbs_level->id,$cost_account);
+                    $parent_dry = $breakdown->getDry($project,$parent->id,$cost_account);
                     if ($parent_dry) {
                         if (!isset($data[$parent->id])) {
                             $data[$parent->id] = [
@@ -100,7 +100,9 @@ class RevisedBoq
             if ($data[$key]['original_boq']) {
                 $data[$key]['weight'] += $data[$key]['revised_boq'] / $data[$key]['original_boq'] * 100;
             }
-            $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
+            if($total['original_boq']){
+                $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
+            }
         }
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
