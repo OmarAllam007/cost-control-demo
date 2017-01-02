@@ -12,15 +12,18 @@
     {{Form::open()}}
 
     @foreach($resources as $activity => $activityResources)
-        <article class="panel panel-default">
+        <article class="panel panel-default activity-panel">
             <div class="panel-heading">
-                <h4 class="panel-title">{{$activity}}</h4>
+                <h4 class="panel-title ">{{$activity}}</h4>
+                {{Form::select('', config('app.cost_status')->prepend('Select Status', ''), null, ['class' => 'form-control input-sm select-all'])}}
             </div>
 
             <table class="table table-condensed table-bordered table-striped">
                 <thead>
                 <tr>
-                    <th>Resource</th>
+                    <th>Resource Code</th>
+                    <th>Resource Name</th>
+                    <th>Remark</th>
                     <th>Budget Unit</th>
                     <th>To date Qty</th>
                     <th>Progress</th>
@@ -30,7 +33,9 @@
                 <tbody>
                 @foreach($activityResources as $resource)
                     <tr>
+                        <td>{{$resource->resource_code}}</td>
                         <td>{{$resource->resource_name}}</td>
+                        <td>{{$resource->remarks}}</td>
                         <td>{{number_format($resource->budget_unit, 2)}}</td>
                         <td>{{number_format($resource->to_date_qty, 2)}}</td>
                         <td>{{number_format($resource->progress, 1)}}%</td>
@@ -48,3 +53,16 @@
     {{Form::close()}}
 
 @endsection
+
+@section('javascript')
+    <script>
+        $(function(){
+            $('.select-all').on('change', function(){
+                var value = $(this).val();
+                if (value) {
+                    $(this).closest('.panel').find('table').find('select').val(value);
+                }
+            });
+        });
+    </script>
+    @endsection

@@ -117,7 +117,7 @@
             };
 
             $('.include').change(function () {
-                var table = $(this).parents('table');
+                var table = $(this).closest('table');
 
 
                 recalculateQty(table);
@@ -125,22 +125,22 @@
 
             $('.qty').change(function () {
                 var _this = $(this);
-                var row = _this.parents('tr');
+                var row = _this.closest('tr');
                 row.data('manual', true);
                 updateUnitPrice(row);
-                var table = $(this).parents('table');
+                var table = $(this).closest('table');
                 recalculateQty(table);
                 updateTotals(table);
             }).keydown(function (e) {
                 if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 9) {
                     e.preventDefault();
-                    var next = $(this).parents('tr').next().find('.qty');
+                    var next = $(this).closest('tr').next().find('.qty');
                     if (next.length) {
                         next.focus();
                     }
                 } else if (e.keyCode == 38) {
                     e.preventDefault();
-                    var prev = $(this).parents('tr').prev().find('.qty');
+                    var prev = $(this).closest('tr').prev().find('.qty');
                     if (prev.length) {
                         prev.focus();
                     }

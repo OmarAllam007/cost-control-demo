@@ -64,11 +64,11 @@
     <script>
         $(function(){
             $('.activity-progress').on('change', function() {
-                $(this).parents('table').find('.progress-val').val(this.value).change();
+                $(this).closest('table').find('.progress-val').val(this.value).change();
             });
 
             $('.progress-val').on('change', function(){
-                var parent = $(this).parents('tr');
+                var parent = $(this).closest('tr');
                 var remainingCell = parent.find('.remaining-cell');
                 var remaining = 0;
 
