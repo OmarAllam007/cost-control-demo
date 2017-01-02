@@ -14,9 +14,9 @@
                 <a href="{{route('cost.standard_activity_report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Standard Activity</a><br>
                 <a href="{{route('cost.boq_report',$project)}}" target="_blank"  class="hvr-float-shadow btn btn-primary" target="" style="width:100%;margin-bottom: 8px;">BOQ</a><br>
-                <a href="{{route('cost.overdraft',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
+                <a href="#{{--route('cost.overdraft',$project)--}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Overdraft</a><br>
-                <a href="{{route('cost.resource_code_report',$project)}}" target="_blank"
+                <a href="#{{--route('cost.resource_code_report',$project)--}}" target="_blank"
                    class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">Resource Code</a><br>
             </th>
