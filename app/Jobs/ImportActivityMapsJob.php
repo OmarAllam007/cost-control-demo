@@ -49,7 +49,7 @@ class ImportActivityMapsJob extends ImportJob
             }
 
             $code = mb_strtolower($data[0]);
-            if ($this->codes->has($code)) {
+            if ($this->codes->has($code) && $data[1]) {
                 ActivityMap::updateOrCreate([
                     'project_id' => $this->project->id, 'activity_code' => $data[0], 'equiv_code' => $data[1]
                 ]);
