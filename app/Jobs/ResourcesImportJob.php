@@ -114,7 +114,7 @@ class ResourcesImportJob extends ImportJob
     protected function getWaste($waste)
     {
         $waste = floatval($waste);
-        return $waste < 1 ? $waste  : $waste/100;
+        return $waste < 1 ?  $waste * 100  : $waste;
     }
 
     protected function getPartner($partner)
