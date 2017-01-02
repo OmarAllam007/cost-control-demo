@@ -110,7 +110,11 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        return view('actual-material.fix-units', $data);
+        $units = $data['units']->groupBy(function ($row) {
+            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity;
+        });
+
+        return view('actual-material.fix-units', ['units' => $units, 'project' => $data['project']]);
     }
 
     function postFixUnits($key, Request $request)
@@ -123,11 +127,16 @@ class ActualMaterialController extends Controller
 
         $newActivities = collect();
         $units = $request->get("units");
-        foreach ($data['units'] as $idx => $row) {
-
+        $dataUnits = $data['units']->keyBy('resource.breakdown_resource_id');
+        foreach ($dataUnits as $idx => $row) {
             $new_data = $units[$idx];
             $row[4] = $new_data['qty'];
-            $row[5] = $row[6] / $new_data['qty'];
+            if ($new_data['qty'] != 0) {
+                $row[5] = $row[6] / $new_data['qty'];
+            } else {
+                $row[5] = 0;
+                $row[6] = 0;
+            }
             $row[3] = $row['resource']->measure_unit;
 
             $newActivities->push($row);
@@ -237,7 +246,9 @@ class ActualMaterialController extends Controller
             return $wbs->name . ' / ' . $resource->activity;
         });
 
-        return view('actual-material.status', compact('resources'));
+        $project = $data['project'];
+
+        return view('actual-material.status', compact('resources', 'project'));
     }
 
     function postStatus(Request $request, $key)
