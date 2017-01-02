@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: omar
- * Date: 31/12/16
- * Time: 09:23 م
+ * Date: 01/01/17
+ * Time: 06:54 م
  */
 
 namespace App\Observers;
@@ -13,13 +13,9 @@ use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\BreakdownVariable;
 use App\Formatters\BreakdownResourceFormatter;
-use App\Survey;
+use App\Resources;
 
-class QSObserver
+class BreakdownVariableObserver
 {
-    //todo to be checked tommorrow
-    function saved(Survey $survey)
-    {
-        $survey->updateBreakdownResources();
-    }
+
 }

@@ -11,12 +11,13 @@
                         class="fa fa-cloud-upload"></i> Import <span class="caret"></span></a>
             <ul id="import-link" class="dropdown-menu">
                 @if ($project->is_cost_ready)
-                <li><a href="{{route('actual-material.import', $project)}}">Material</a></li>
-                <li><a href="#labour">Labour</a></li>
-                <li><a href="#invoice">Invoices</a></li>
+                    <li><a href="{{route('actual-material.import', $project)}}">Material</a></li>
+                    <li><a href="#labour">Labour</a></li>
+                    <li><a href="#invoice">Invoices</a></li>
                 @endif
                 <li><a href="{{route('activity-map.import', $project)}}">Activity Mapping</a></li>
-                    <li><a href="{{route('resources.import-codes', compact('project'))}}">Resource Mapping</a></li>
+                <li><a href="{{route('resources.import-codes', compact('project'))}}">Resource Mapping</a></li>
+                <li><a href="{{route('actual-revenue.import', $project)}}">Actual Revenue</a></li>
             </ul>
         </div>
 
@@ -28,7 +29,7 @@
 @stop
 
 @section('body')
-    
+
     @if (!$project->open_period())
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle"></i>

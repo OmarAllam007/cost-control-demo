@@ -135,6 +135,11 @@ Route::group(['prefix' => 'breakdown-resource'], function () {
     Route::delete('/delete-all/{project}', ['uses' => 'BreakdownResourceController@deleteAllBreakdowns', 'as' => 'breakdownresources.deleteAllBreakdowns']);
 });
 
+Route::group(['prefix'=>'actual-revenue','as'=>'actual-revenue.import'],function (){
+   Route::get('import/{project}','ActualRevenueController@import');
+   Route::post('import/{project}','ActualRevenueController@postImport');
+});
+
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
 Route::resource('business-partner', 'BusinessPartnerController');

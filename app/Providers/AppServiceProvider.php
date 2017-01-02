@@ -15,6 +15,7 @@ use App\Observers\BreakdownObserver;
 use App\Observers\BreakDownResourceObserver;
 use App\Observers\BreakdownShadowObserver;
 use App\Observers\BreakdownTemplateObserver;
+use App\Observers\BreakdownVariableObserver;
 use App\Observers\BreakdownVariablesObserver;
 use App\Observers\ProductivityObserver;
 use App\Observers\QSObserver;
@@ -62,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
         Survey::observe(QuantitySurveyObserver::class);
         StdActivityResource::observe(StandardActivityResourceObserver::class);
         Survey::observe(QSObserver::class);
+//        BreakdownVariable::observe(BreakdownVariableObserver::class);
 
     }
 
