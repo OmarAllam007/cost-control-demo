@@ -66,17 +66,19 @@ class ImportMaterialDataJob extends Job
             'hasIssues' => false,
             'mapping' => collect(['resources' => collect(), 'activity' => collect()]),
             'resources' => collect(),
+            'closed' => collect(),
             'units' => collect(),
             'multiple' => collect(),
             'invalid' => collect(),
-            'project' => $this->project
+            'to_import' => collect(),
+            'project' => $this->project,
+            'batch' => $this->batch,
         ];
-
-
 
         $resource_dict = collect();
         foreach ($this->data as $row) {
             $activityCode = strtolower($row[0]);
+
             if (!$this->activityMap->has($activityCode)) {
                 // Failed to find activity (breakdown resource)
                 // then add it to activity errors
@@ -94,9 +96,13 @@ class ImportMaterialDataJob extends Job
             }
             $resource_ids = $this->resourceMap->get($resourceCode);
 
-            // Find the activities/breakdown resources corresponding to activity code and resources
-            $breakdownResources = BreakdownResource::where('code', $activityCodes)
-                ->whereIn('resource_id', $resource_ids)->get();
+            if (!empty($row['resource'])) {
+                $breakdownResources = collect([$row['resource']->breakdown_resource]);
+            } else {
+                // Find the activities/breakdown resources corresponding to activity code and resources
+                $breakdownResources = BreakdownResource::where('code', $activityCodes)
+                    ->whereIn('resource_id', $resource_ids)->get();
+            }
 
             /** @var \Illuminate\Database\Eloquent\Collection $breakdownResources */
             if ($breakdownResources->count() == 1) {
@@ -108,13 +114,13 @@ class ImportMaterialDataJob extends Job
                 $resource = $breakdownResource->resource;
                 if ($unit_id != $resource->unit) {
                     // Unit of measure is not matching we should ask for quantity
-                    $row['resource'] = BreakDownResourceShadow::where('breakdown_resource_id', $breakdownResource->id)->first();
+                    $row['resource'] = $breakdownResource->shadow;
                     $result['units']->push($row);
                     continue;
                 }
 
                 // Optimal case everything matches, save the quantity and continue
-                ActualResources::create([
+                $result['to_import']->push([
                     'project_id' => $this->project->id,
                     'wbs_level_id' => $breakdownResource->breakdown->wbs_level_id,
                     'breakdown_resource_id' => $breakdownResource->id,
@@ -127,7 +133,7 @@ class ImportMaterialDataJob extends Job
                     'unit_id' => $unit_id,
                     'batch_id' => $this->batch->id,
                     // Excel date is translated to number of days since 30/12/1899
-                    'action_date' => Carbon::create(1899, 12, 31)->addDays($row[5]),
+                    'action_date' => Carbon::create(1899, 12, 31)->addDays($row[1]),
                     'doc_no' => $row[8]
                 ]);
 
@@ -148,16 +154,7 @@ class ImportMaterialDataJob extends Job
             }
         }
 
-        foreach (['mapping', 'resources', 'units', 'multiple', 'invalid'] as $key) {
-            if ($result[$key]->count()) {
-                $result['hasIssues'] = true;
-                break;
-            }
-        }
-
         dispatch(new UpdateResourceDictJob($this->project, $resource_dict));
-
-        $result['batch'] = $this->batch;
         return $result;
     }
 
@@ -174,18 +171,13 @@ class ImportMaterialDataJob extends Job
             });
 
 
-        $this->activityCodes = collect();
+        $this->activityCodes =
         BreakdownResource::whereHas('breakdown', function ($q) {
             $q->where('project_id', $this->project->id);
-        })->select(['id', 'code'])->get()->reduce(function (Collection $collection, $resource) {
+        })->select(['id', 'code'])->get()->each(function ($resource) {
             $code = strtolower($resource->code);
-            if (!$collection->has($code)) {
-                $collection->put($code, collect());
-            }
-
-            $collection->get($code)->push($resource->id);
-            return $collection;
-        }, collect());
+            $this->activityMap->put($code, $code);
+        });
     }
 
     protected function loadResourceMap()

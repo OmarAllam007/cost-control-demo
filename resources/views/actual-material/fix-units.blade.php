@@ -9,22 +9,22 @@
 
 @section('body')
     {{Form::open(['method' => 'post'])}}
-
+@php dump($units) @endphp
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
         <tr>
             <th>Activity</th>
             <th>Resource Code</th>
-            <th>Original Resource Name</th>
-            <th>Target Resource Code</th>
-            <th>Target Resource Name</th>
+            <th>Store Resource Name</th>
+            <th>Budget Resource Code</th>
+            <th>Budget Resource Name</th>
             <th>Cost Account</th>
             <th>Budget Qty</th>
             <th>Budget Cost</th>
             <th>Budget Unit</th>
-            <th>Original U.O.M</th>
-            <th>Target U.O.M</th>
-            <th>Original Qty</th>
+            <th>Store U.O.M</th>
+            <th>Budget U.O.M</th>
+            <th>Store Qty</th>
             <th>Quantity</th>
             <th>Unit Price</th>
             <th>Total Price</th>
@@ -32,15 +32,15 @@
         </thead>
         <tbody>
         @foreach($units as $idx => $line)
-            <tr data-total-price={{ abs($line[12]) }}>
+            <tr data-total-price={{ abs($line[6]) }}>
                 <td>
                     {{$line['resource']->breakdown_resource->code}}
                 </td>
                 <td>
-                    {{$line[13]}}
+                    {{$line[7]}}
                 </td>
                 <td>
-                    {{$line[8]}}
+                    {{$line[3]}}
                 </td>
                 <td>
                     {{$line['resource']->resource_code}}
@@ -62,13 +62,13 @@
                     {{number_format($line['resource']->budget_unit, 2)}}
                 </td>
                 <td>
-                    {{ $line[9] }}
+                    {{ $line[6] }}
                 </td>
                 <td>
                     {{ $line['resource']->measure_unit }}
                 </td>
                 <td>
-                    {{ abs($line[10]) }}
+                    {{ abs($line[4]) }}
                 </td>
 
                 <td>
@@ -78,7 +78,7 @@
                     {{Form::text("units[$idx][unit_price]", 0, ['class' => 'form-control input-sm unit-price', 'readonly'])}}
                 </td>
                 <td>
-                    {{ number_format(abs($line[12]), 2) }}
+                    {{ number_format(abs($line[6]), 2) }}
                 </td>
             </tr>
         @endforeach
