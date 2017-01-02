@@ -121,9 +121,9 @@ class ImportMaterialDataJob extends Job
                     'period_id' => $this->active_period->id,
                     'original_code' => $row[13],
                     'resource_id' => $resource->id,
-                    'qty' => abs($row[10]),
+                    'qty' => $row[10],
                     'unit_price' => $row[11],
-                    'cost' => abs($row[12]),
+                    'cost' => $row[12],
                     'unit_id' => $unit_id,
                     'batch_id' => $this->batch->id,
                     'action_date' => Carbon::create(1899, 12, 30)->addDays($row[5])

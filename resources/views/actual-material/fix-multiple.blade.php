@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>{{$project->name}} &mdash; Material &mdash;
-        <small>Resources with multiple cost account</small>
-    </h2>
+    <div class="clearfix">
+        <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash; <small>Resources with multiple cost account</small></h4>
+        <h4 class="pull-right text-muted">#E03</h4>
+    </div>
 @endsection
 
 @section('body')

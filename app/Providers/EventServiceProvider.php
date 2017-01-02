@@ -28,6 +28,20 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot($events);
 
-        //
+        \Validator::extend('gt', function($attribute, $value, $parameters) {
+            return $value > $parameters[0];
+        });
+
+        \Validator::extend('gte', function($attribute, $value, $parameters) {
+            return $value >= $parameters[0];
+        });
+
+        \Validator::extend('lt', function($attribute, $value, $parameters) {
+            return $value < $parameters[0];
+        });
+
+        \Validator::extend('lte', function($attribute, $value, $parameters) {
+            return $value <= $parameters[0];
+        });
     }
 }

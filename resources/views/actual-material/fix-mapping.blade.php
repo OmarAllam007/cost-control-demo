@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>{{$project->name}} &mdash; Material &mdash; Mapping</h2>
+    <div class="clearfix">
+        <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash; Mapping Issues</h4>
+        <h4 class="pull-right text-muted">#E01</h4>
+    </div>
 @endsection
 
 @section('body')
