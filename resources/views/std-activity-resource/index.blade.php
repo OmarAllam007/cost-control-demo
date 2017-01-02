@@ -17,7 +17,8 @@
             <tbody>
                 @foreach($stdActivityResources->sortBy('name') as $std_activity_resource)
                     <tr>
-                        <td class="col-md-5"><a href="{{ route('std-activity-resource.edit', $std_activity_resource) }}">{{ $std_activity_resource->name }}</a></td>
+                        <td class="col-md-5"><a href="{{ route('std-activity-resource.edit', $std_activity_resource) }}">{{ $std_activity_resource->name
+                        }}</a></td>
                         <td class="col-md-3">
                             <form action="{{ route('std-activity-resource.destroy', $std_activity_resource) }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
