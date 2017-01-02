@@ -16,7 +16,8 @@
 
                     @if(!$resource['project_id'] || $resource['project_id'] ==
                     ($std_activity_resource->template->project_id ?? 0)
-                    || $resource['project_id'] ==  ($breakdown_resource->breakdown->project_id ?? 0))
+                    || $resource['project_id'] ==  ($breakdown_resource->breakdown->project_id ?? 0)
+                    || $resource['project_id'] == \App\BreakdownTemplate::find(request('template'))->project_id)
                         <li class="radio">
                             <label>
                                 <input type="radio" value="{{$resource['id']}}" name="resource_id"
