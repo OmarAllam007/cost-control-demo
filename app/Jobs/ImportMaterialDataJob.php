@@ -64,7 +64,7 @@ class ImportMaterialDataJob extends Job
         $result = [
             'success' => 0,
             'hasIssues' => false,
-            'mapping' => collect(),
+            'mapping' => collect(['resources' => collect(), 'activity' => collect()]),
             'resources' => collect(),
             'units' => collect(),
             'multiple' => collect(),
@@ -72,24 +72,24 @@ class ImportMaterialDataJob extends Job
             'project' => $this->project
         ];
 
-        // Excel date is translated to number of days since 30/12/1899
+
 
         $resource_dict = collect();
         foreach ($this->data as $row) {
-            $activityCode = strtolower($row[3]);
+            $activityCode = strtolower($row[0]);
             if (!$this->activityMap->has($activityCode)) {
                 // Failed to find activity (breakdown resource)
                 // then add it to activity errors
-                $result['mapping']->push($row);
+                $result['mapping']['activity']->push($row);
                 continue;
             }
             $activityCodes = $this->activityMap->get($activityCode);
 
-            $resourceCode = strtolower($row[13]);
+            $resourceCode = strtolower($row[7]);
             if (!$this->resourceMap->has($resourceCode)) {
                 // Resource is not found even in mapping
-                // Add to resource errors
-                $result['resources']->push($row);
+                // Add to mapping resource errors
+                $result['mapping']['resources']->push($row);
                 continue;
             }
             $resource_ids = $this->resourceMap->get($resourceCode);
@@ -104,7 +104,7 @@ class ImportMaterialDataJob extends Job
                 $breakdownResource = $breakdownResources->first();
 
                 //Check unit of measure
-                $unit_id = $this->unitsMap->get(mb_strtolower($row[9]));
+                $unit_id = $this->unitsMap->get(mb_strtolower($row[3]));
                 $resource = $breakdownResource->resource;
                 if ($unit_id != $resource->unit) {
                     // Unit of measure is not matching we should ask for quantity
@@ -119,14 +119,16 @@ class ImportMaterialDataJob extends Job
                     'wbs_level_id' => $breakdownResource->breakdown->wbs_level_id,
                     'breakdown_resource_id' => $breakdownResource->id,
                     'period_id' => $this->active_period->id,
-                    'original_code' => $row[13],
+                    'original_code' => $row[7],
                     'resource_id' => $resource->id,
-                    'qty' => $row[10],
-                    'unit_price' => $row[11],
-                    'cost' => $row[12],
+                    'qty' => $row[4],
+                    'unit_price' => $row[5],
+                    'cost' => $row[6],
                     'unit_id' => $unit_id,
                     'batch_id' => $this->batch->id,
-                    'action_date' => Carbon::create(1899, 12, 30)->addDays($row[5])
+                    // Excel date is translated to number of days since 30/12/1899
+                    'action_date' => Carbon::create(1899, 12, 31)->addDays($row[5]),
+                    'doc_no' => $row[8]
                 ]);
 
                 $resource_dict->push($resource->id);
