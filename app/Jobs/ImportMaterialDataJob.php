@@ -109,6 +109,12 @@ class ImportMaterialDataJob extends Job
                 // We have only one code. This is the oprimal case
                 $breakdownResource = $breakdownResources->first();
 
+                if ($breakdownResource->shadow->status == 'Closed') {
+                    $row['resource'] = $breakdownResource->shadow;
+                    $result['closed']->push($row);
+                    continue;
+                }
+
                 //Check unit of measure
                 $unit_id = $this->unitsMap->get(mb_strtolower($row[3]));
                 $resource = $breakdownResource->resource;

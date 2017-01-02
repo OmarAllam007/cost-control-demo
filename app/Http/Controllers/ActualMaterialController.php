@@ -188,7 +188,7 @@ class ActualMaterialController extends Controller
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
         $data['multiple'] = collect();
 
-        return $this->redirect($this->merge($data, $result, $key), $key);
+        return $this->redirect($this->merge($data, $result), $key);
     }
 
     function progress($key)
@@ -279,6 +279,54 @@ class ActualMaterialController extends Controller
 
     }
 
+    function closed($key)
+    {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
+        $closed = $data['closed']->pluck('resource')->keyBy('id')->groupBy(function($resource) {
+            return $resource->wbs->name . ' / ' . $resource->activity;
+        });
+
+        $project = $data['project'];
+
+        return view('actual-material.closed', compact('closed', 'project'));
+    }
+
+    function postClosed(Request $request, $key)
+    {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
+        $closed = $data['closed']->pluck('resource')->keyBy('id');
+
+        $newResourceIds = [];
+        foreach ($request->get('closed') as $id => $is_open)
+        {
+            if ($is_open) {
+                $closed[$id]->status = 'In Progress';
+                $closed[$id]->save();
+                $newResourceIds[] = $id;
+            }
+        }
+
+        $newResources = $data['closed']->whereIn('resource.id', $newResourceIds)->map(function($row) {
+            $row['resource'] = $row['resource']->fresh();
+            return $row;
+        });
+
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
+        $data['closed'] = collect();
+
+        return $this->redirect($this->merge($data, $result), $key);
+    }
+
     function ExportCostBreakdown(Project $project){
         if (\Gate::denies('read', 'productivity')) {
             flash("You don't have access to this page");
@@ -322,7 +370,7 @@ class ActualMaterialController extends Controller
         return $count;
     }
 
-    protected function merge($data, $result, $key)
+    protected function merge($data, $result)
     {
         $returnData =  [
             'mapping' => [
