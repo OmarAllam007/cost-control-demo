@@ -20,6 +20,7 @@ class ActivityReport
     //todo to be complete after modifications ...
     protected $project;
     public $root_ids = [];
+    protected $sumArray = ['cost.to_date_cost', 'cost.previous_cost', 'cost.allowable_ev_cost', 'cost.remaining_cost', 'cost.completion_cost', 'cost.cost_var', 'cost.allowable_var'];
 
     function getActivityReport(Project $project)
     {
@@ -39,6 +40,10 @@ class ActivityReport
     }
 
 
+    /**
+     * @param $level
+     * @return array
+     */
     function buildTree($level)
     {
         $tree = [];
@@ -55,22 +60,18 @@ class ActivityReport
                 'budget_cost' => 0,
             ]];
 
-            /** @var WbsLevel $level */
-            $tree['activities'] = $this->activityArray($level);
-
-            $shadows = CostShadow::joinBudget('budget.wbs_id')
+            $tree['activities'] = $this->activities($level);
+            $shadows = CostShadow::joinBudget('budget.activity')
                 ->sumFields(
                     [
                         'cost.to_date_cost', 'cost.previous_cost',
                         'cost.allowable_ev_cost', 'cost.remaining_cost', 'cost.completion_cost',
                         'cost.cost_var', 'cost.allowable_var',
                     ]
-                )->where('budget.project_id', $this->project->id)
+                )->where('budget.project_id', $this->project->id)->where('period_id',$this->project->open_period()->id)
                 ->whereIn('wbs_id', $level->getChildrenIds())->get()->toArray();
 
-
             foreach ($shadows as $shadow) {
-//                $tree['activities']['budget_cost'] = $budget_cost;
                 $tree['data']['to_date_cost'] += $shadow['to_date_cost'];
                 $tree['data']['previous_cost'] += $shadow['previous_cost'];
                 $tree['data']['allowable_ev_cost'] += $shadow['allowable_ev_cost'];
@@ -79,7 +80,7 @@ class ActivityReport
                 $tree['data']['cost_var'] = $shadow['cost_var'];
                 $tree['data']['allowable_var'] += $shadow['allowable_var'];
                 $tree['data']['budget_cost'] += BreakDownResourceShadow::where('project_id', $this->project->id)
-                    ->where('activity_id', $tree['activities']['activity_id'])->get()->sum('budget_cost');
+                    ->where('activity', $shadow['activity'])->get()->sum('budget_cost');
             }
 
 
@@ -93,39 +94,27 @@ class ActivityReport
         return $tree;
     }
 
-    function activityArray($level)
+    function activities($level)
     {
-        //fill activities with it's data
-        $activities = ['activity_id' => 0, 'to_date_cost' => 0, 'previous_cost' => 0, 'allowable_ev_cost' => 0, 'remaining_cost' => 0, 'completion_cost' => 0, 'cost_var' => 0, 'allowable_var' => 0, 'budget_cost' => 0,];
-
-        $shadows = CostShadow::joinBudget('budget.activity_id')
-            ->sumFields(
-                [
-                    'cost.to_date_cost', 'cost.previous_cost',
-                    'cost.allowable_ev_cost', 'cost.remaining_cost', 'cost.completion_cost',
-                    'cost.cost_var', 'cost.allowable_var',
-                ]
-            )->where('cost.project_id', $this->project->id)
-            ->where('wbs_id', $level->id)->get()->toArray();
-
+        $activities = [];
+        $shadows = $shadows = CostShadow::where('project_id', $this->project->id)
+            ->where('wbs_level_id', $level->id)->where('period_id',$this->project->open_period()->id)->get();
         foreach ($shadows as $shadow) {
-            if ($shadow['activity_id'] == 0) {
-                continue;
-            }
-            if(!isset($activities[$shadow['activity_id']])){
-                $activities[$shadow['activity_id']]['activity_id'] = $shadow['activity_id'] ?: 0;
-                $activities[$shadow['activity_id']]['to_date_cost'] = $shadow['to_date_cost'] ?: 0;
-                $activities[$shadow['activity_id']]['previous_cost'] = $shadow['previous_cost'] ?: 0;
-                $activities[$shadow['activity_id']]['allowable_ev_cost'] = $shadow['allowable_ev_cost'] ?: 0;
-                $activities[$shadow['activity_id']]['remaining_cost'] = $shadow['remaining_cost'] ?: 0;
-                $activities[$shadow['activity_id']]['completion_cost'] = $shadow['completion_cost'] ?: 0;
-                $activities[$shadow['activity_id']]['cost_var'] = $shadow['cost_var'] ?: 0;
-                $activities[$shadow['activity_id']]['allowable_var'] = $shadow['allowable_var'] ?: 0;
-                $activities[$shadow['activity_id']]['budget_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)
-                    ->where('activity_id', $shadow['activity_id'])->get()->sum('budget_cost');
+            $activity = $shadow->budget->std_activity;
+            if (!isset($activities[$activity->name])) {
+                $data = CostShadow::joinBudget('budget.activity')->sumFields($this->sumArray)
+                    ->where('budget.project_id', $this->project->id)
+                    ->where('budget.wbs_id', $level->id)->where('budget.activity', $activity->name)->first()->toArray();
+                $activity_budget = BreakDownResourceShadow::where('project_id',$this->project->id)->where('activity',$activity->name)->get()->sum('budget_cost');
+                $data['budget_cost']=$activity_budget;
+                $activities[$activity->name] = $data;
             }
 
         }
+
         return $activities;
+
     }
+
+
 }

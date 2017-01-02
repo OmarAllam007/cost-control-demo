@@ -14,9 +14,8 @@
 @endsection
 @section('body')
     <ul class="list-unstyled tree">
-
-        @foreach($tree as $wbs)
-            @include('reports.cost-control.activity._recursive_report', ['level'=>$wbs,'tree_level'=>0])
+        @foreach($tree as $level)
+            @include('reports.cost-control.activity._recursive_report', ['level'=>$level,'tree_level'=>0])
         @endforeach
     </ul>
 @endsection
