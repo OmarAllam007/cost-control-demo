@@ -397,6 +397,7 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.resources', $key);
         } elseif ($data['to_import']->count()) {
             $count = $this->saveImported($data['to_import']);
+            $data['to_import'] = collect();
             flash("$count Records has been imported", 'success');
             return \Redirect::route('actual-material.progress', $key);
         } else {
