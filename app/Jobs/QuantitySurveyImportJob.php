@@ -47,12 +47,11 @@ class QuantitySurveyImportJob extends ImportJob
             if (!$filtered) {
                 continue;
             }
-
-            $wbs_level_id = $this->getWBSLevel($cells[0]);
+            $wbs_level_id = $this->getWBSLevel(mb_strtolower($cells[0]));
             $unit_id = $this->getUnit($cells[3]);
 
-            if($wbs_level_id){
-                $level = WbsLevel::find($wbs_level_id);
+            if ($wbs_level_id) {
+                $level = WbsLevel::where('id',$wbs_level_id)->where('project_id',$this->project->id)->first();
                 $check = $level->getCostAccountCheck($level, $cells[1]);
 
                 $data = [
@@ -65,13 +64,12 @@ class QuantitySurveyImportJob extends ImportJob
                 if ($check) {
                     $data['wbs'][$cells[0]] = $cells[1];
                     $dublicated->push($data);
-                }
-                else{
+                } else {
                     if (!$wbs_level_id || !$unit_id) {
                         $data['wbs_code'] = $cells[0];
                         $data['unit'] = $cells[3];
                         $failed->push($data);
-                    }else{
+                    } else {
                         Survey::create($data);
                         ++$success;
                     }
@@ -89,9 +87,9 @@ class QuantitySurveyImportJob extends ImportJob
     {
         if (!$this->wbsLevels->count()) {
             $this->project->wbs_levels->each(function ($level) {
-                $this->wbsLevels->put(mb_strtolower($level->code), $level->id);
+                $this->wbsLevels->put(mb_strtolower(trim($level->code)), $level->id);
             });
         }
-        return $this->wbsLevels->get(mb_strtolower($code), 0);
+        return $this->wbsLevels->get(mb_strtolower(trim($code)), 0);
     }
 }
