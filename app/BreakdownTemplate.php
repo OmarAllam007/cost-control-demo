@@ -31,4 +31,15 @@ class BreakdownTemplate extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function morphToJSON(){
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'parent_template_id' => $this->parent_template_id,
+            'std_activity_id'=>$this->std_activity_id,
+            'project_id'=>$this->project_id,
+        ];
+    }
+
 }
