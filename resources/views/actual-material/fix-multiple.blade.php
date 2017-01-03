@@ -19,7 +19,7 @@
 
                 <table class="table table-bordered table-condensed table-hover table-striped"
                        data-total-qty="{{$totalQty = $resource['resources']->sum('budget_unit')}}"
-                       data-qty="{{abs($resource[10])}}">
+                       data-qty="{{abs($resource[4])}}">
                     <thead>
                     <tr>
                         <th class="text-center">&nbsp;</th>
@@ -47,10 +47,10 @@
                                 {{$res->breakdown_resource->code}}
                             </td>
                             <td>
-                                {{$resource[13]}}
+                                {{$resource[7]}}
                             </td>
                             <td>
-                                {{$resource[8]}}
+                                {{$resource[3]}}
                             </td>
                             <td>
                                 {{$res->resource_code}}
@@ -65,10 +65,10 @@
                                 {{$res->budget_unit}}
                             </td>
                             <td>
-                                {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[10])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
+                                {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[4])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
                             </td>
-                            <td class="unit-price-cell">{{ number_format($resource[11], 2) }}</td>
-                            <td class="total-cell">{{ number_format($qty * $resource[11], 2) }}</td>
+                            <td class="unit-price-cell">{{ number_format($resource[5], 2) }}</td>
+                            <td class="total-cell">{{ number_format($qty * $resource[5], 2) }}</td>
                             <td>
                                 {{$res->remarks}}
                             </td>
@@ -82,14 +82,14 @@
                     <tr class="totals-row">
                         <th th colspan="3">&nbsp;</th>
                         <th class="text-right">Store Qty</th>
-                        <th class="original-qty">{{ number_format(abs($resource[10]), 2) }}</th>
+                        <th class="original-qty">{{ number_format(abs($resource[4]), 2) }}</th>
                         <th class="text-right">Store Total</th>
-                        <th class="original-total">{{ number_format(abs($resource[12]), 2) }}</th>
+                        <th class="original-total">{{ number_format(abs($resource[6]), 2) }}</th>
 
                         <th class="text-right">Qty</th>
-                        <th class="total-qty-cell">{{ number_format(abs($resource[10]), 2) }}</th>
+                        <th class="total-qty-cell">{{ number_format(abs($resource[4]), 2) }}</th>
                         <th class="text-right">Total</th>
-                        <th colspan="3" class="total-amount-cell">{{ number_format(abs($resource[12]), 2) }}</th>
+                        <th colspan="3" class="total-amount-cell">{{ number_format(abs($resource[6]), 2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -117,7 +117,7 @@
             };
 
             $('.include').change(function () {
-                var table = $(this).parents('table');
+                var table = $(this).closest('table');
 
 
                 recalculateQty(table);
@@ -125,22 +125,22 @@
 
             $('.qty').change(function () {
                 var _this = $(this);
-                var row = _this.parents('tr');
+                var row = _this.closest('tr');
                 row.data('manual', true);
                 updateUnitPrice(row);
-                var table = $(this).parents('table');
+                var table = $(this).closest('table');
                 recalculateQty(table);
                 updateTotals(table);
             }).keydown(function (e) {
                 if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 9) {
                     e.preventDefault();
-                    var next = $(this).parents('tr').next().find('.qty');
+                    var next = $(this).closest('tr').next().find('.qty');
                     if (next.length) {
                         next.focus();
                     }
                 } else if (e.keyCode == 38) {
                     e.preventDefault();
-                    var prev = $(this).parents('tr').prev().find('.qty');
+                    var prev = $(this).closest('tr').prev().find('.qty');
                     if (prev.length) {
                         prev.focus();
                     }

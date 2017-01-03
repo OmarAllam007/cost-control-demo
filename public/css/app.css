@@ -8474,4 +8474,17 @@ select[multiple].dropdown-templates {
   transform: translateY(5px);
   /* move the element down by 5px (it will stay in place because it's attached to the element that also moves up 5px) */ }
 
+.activity-panel .panel-heading {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center; }
+  .activity-panel .panel-heading h4 {
+    -webkit-box-flex: 1;
+    flex: 1; }
+  .activity-panel .panel-heading .form-control {
+    width: 200px; }
+
 /*# sourceMappingURL=app.css.map */

@@ -13,7 +13,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($mapping->pluck('3')->unique() as $activity)
+        @foreach($mapping['activity']->pluck(0)->unique() as $activity)
             <tr>
                 <td class="col-sm-2">
                     <label>

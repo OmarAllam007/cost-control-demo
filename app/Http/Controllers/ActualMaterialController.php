@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActivityMap;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
@@ -10,6 +11,7 @@ use App\Jobs\ImportActualMaterialJob;
 use App\Jobs\ImportMaterialDataJob;
 use App\Jobs\UpdateResourceDictJob;
 use App\Project;
+use App\ResourceCode;
 use App\WbsLevel;
 use App\WbsResource;
 use Carbon\Carbon;
@@ -38,22 +40,7 @@ class ActualMaterialController extends Controller
         $key = 'mat_' . time();
         \Cache::add($key, $result, 180);
 
-        if ($result['hasIssues']) {
-            flash('Could not import some materials');
-
-            if (count($result['mapping']) || count($result['resources'])) {
-                return \Redirect::route('actual-material.mapping', $key);
-            } elseif (count($result['units'])) {
-                return \Redirect::route('actual-material.units', $key);
-            } elseif ($result['multiple']) {
-                return \Redirect::route('actual-material.multiple', $key);
-            } else {
-                return \Redirect::route('actual-material.resources', $key);
-            }
-        }
-
-        flash($result['success'] . ' Records have been imported', 'success');
-        return \Redirect::route('actual-material.progress', $key);
+        return $this->redirect($result, $key);
     }
 
     function fixMapping($key)
@@ -82,53 +69,37 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         if ($request->has('activity')) {
             foreach ($request->get('activity') as $code => $activityData) {
-                foreach ($data['mapping'] as $activity) {
-                    if ($activity[3] == $code) {
-                        $activity[3] = $activityData['activity_code'];
+                foreach ($data['mapping']['activity'] as $activity) {
+                    if ($activity[0] == $code) {
+                        $activity[0] = $activityData['activity_code'];
+                        ActivityMap::updateOrCreate(['activity_code' => $activityData['activity_code'], 'equiv_code' => $code, 'project_id' => $data['project']->id]);
                         $newActivities->push($activity);
                     }
                 }
             }
 
-            // Issue has been resolved remove from cached data
-            unset($data['mapping']);
         }
+            // Issue has been resolved remove from cached data
+            $data['mapping']['activity'] = collect();
 
         if ($request->has('resources')) {
             foreach ($request->get('resources') as $code => $resourceData) {
-                foreach ($data['resources'] as $activity) {
-                    if ($activity[13] == $code) {
-                        $activity[13] = $resourceData['resource_code'];
+                foreach ($data['mapping']['resources'] as $activity) {
+                    if ($activity[7] == $code) {
+                        $activity[7] = $resourceData['resource_code'];
+                        $resource = Resource::where(['resource_code' => $resourceData['resource_code'], 'project_id' => $data['project']->id])->first();
+                        ResourceCode::updateOrCreate(['project_id' => $data['project']->id, 'code' => $activity[7], 'resource_id' => $resource->id]);
                         $newActivities->push($activity);
                     }
                 }
             }
 
-            // Issue has been resolved remove from cached data
-            unset($data['resources']);
         }
+            // Issue has been resolved remove from cached data
+            $data['mapping']['resources'] = collect();
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
-
-        $data_to_cache = [
-            'success' => $result['success'] + $data['success'],
-            'multiple' => $data['multiple']->merge($result['multiple']),
-            'units' => $data['units']->merge($result['units']),
-            'resources' => $data['resources']->merge($result['resources']),
-            'project' => $data['project'],
-            'batch' => $data['batch']
-        ];
-
-        \Cache::put($key, $data_to_cache);
-
-        if ($data_to_cache['units']->count()) {
-            return \Redirect::route('actual-material.units', $key);
-        } elseif ($data_to_cache['multiple']->count()) {
-            return \Redirect::route('actual-material.multiple', $key);
-        } else {
-            flash($data['success'] . ' records has been imported', 'success');
-            return \Redirect::route('actual-material.progress', $key);
-        }
+        return $this->redirect($this->merge($data, $result), $key);
     }
 
     function fixUnits($key)
@@ -139,7 +110,11 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        return view('actual-material.fix-units', $data);
+        $units = $data['units']->groupBy(function ($row) {
+            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
+        });
+
+        return view('actual-material.fix-units', ['units' => $units, 'project' => $data['project']]);
     }
 
     function postFixUnits($key, Request $request)
@@ -152,34 +127,30 @@ class ActualMaterialController extends Controller
 
         $newActivities = collect();
         $units = $request->get("units");
-//        dd($data['units']->toArray());
-        foreach ($data['units'] as $idx => $row) {
+        $dataUnits = $data['units']->groupBy(function ($row) {
+            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
+        });
+        foreach ($dataUnits as $activity => $subResources) {
+            $total = $subResources->average(6);
+            $totalQty = 0;
+            foreach ($subResources as $resource) {
+                $totalQty += $units[$resource['resource']->breakdown_resource_id]['qty'];
+            }
+            $unit_price = $total / $totalQty;
+            foreach ($subResources as $resource) {
+                $resource[3] = $qty = $resource['resource']->measure_unit;
+                $resource[4] = $qty = $units[$resource['resource']->breakdown_resource_id]['qty'];
+                $resource[5] = $unit_price;
+                $resource[6] = $qty * $unit_price;
 
-            $new_data = $units[$idx];
-            $row[10] = $new_data['qty'];
-            $row[11] = $row[12] / $new_data['qty'];
-            $row[9] = $row['resource']->measure_unit;
-
-            $newActivities->push($row);
+                $newActivities->push($resource);
+            }
         }
 
         $result = dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
+        $data['units'] = collect();
 
-        $data_to_cache = [
-            'success' => $result['success'] + $data['success'],
-            'multiple' => $data['multiple']->merge($result['multiple']),
-            'resources' => $data['resources']->merge($result['resources']),
-            'project' => $data['project'],
-            'batch' => $data['batch']
-        ];
-
-        \Cache::put($key, $data_to_cache);
-        if ($data_to_cache['multiple']->count()) {
-            return \Redirect::route('actual-material.multiple', $key);
-        } else {
-            flash($data['success'] . ' records has been imported', 'success');
-            return \Redirect::route('actual-material.progress', $key);
-        }
+        return $this->redirect($this->merge($data, $result, $key), $key);
     }
 
     function fixMultiple($key)
@@ -201,12 +172,8 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $project = $data['project'];
         $requestResources = $request->get('resource');
-        $excelBaseDate = Carbon::create(1899, 12, 30);
-
-        $batch_id = $data['batch']->id;
-        $resource_dict = collect();
+        $newResources = collect();
 
         foreach ($data['multiple'] as $activityCode => $resources) {
             foreach ($resources as $resourceCode => $resource) {
@@ -216,38 +183,17 @@ class ActualMaterialController extends Controller
                         continue;
                     }
 
-                    $actualResource = ActualResources::create([
-                        'project_id' => $project->id,
-                        'wbs_level_id' => $shadow->wbs_id,
-                        'breakdown_resource_id' => $shadow->breakdown_resource_id,
-                        'period_id' => $project->open_period()->id,
-                        'qty' => $material['qty'],
-                        'original_code' => $resource[13],
-                        'resource_id' => $shadow->resource_id,
-                        'unit_price' => $resource[11],
-                        'cost' => $resource[12],
-                        'unit_id' => $shadow->unit_id,
-                        'action_date' => $excelBaseDate->addDays($resource[5]),
-                        'batch_id' => $batch_id
-                    ]);
-
-                    $resource_dict->push($actualResource);
-
-                    $data['success']++;
+                    $newResource = $resource;
+                    $newResource[4] = $material['qty'];
+                    $newResource['resource'] = $shadow;
+                    $newResources->push($newResource);
                 }
             }
         }
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
+        $data['multiple'] = collect();
 
-        $this->dispatch(new UpdateResourceDictJob($data['project'], $resource_dict));
-
-        unset($data['multiple']);
-        \Cache::put($key, $data);
-        if ($data['resources']->count()) {
-            return \Redirect::route('actual-material.resources', $key);
-        } else {
-            flash($data['success'] . ' records has been imported', 'success');
-            return \Redirect::route('actual-material.progress', $key);
-        }
+        return $this->redirect($this->merge($data, $result), $key);
     }
 
     function progress($key)
@@ -305,7 +251,9 @@ class ActualMaterialController extends Controller
             return $wbs->name . ' / ' . $resource->activity;
         });
 
-        return view('actual-material.status', compact('resources'));
+        $project = $data['project'];
+
+        return view('actual-material.status', compact('resources', 'project'));
     }
 
     function postStatus(Request $request, $key)
@@ -328,12 +276,100 @@ class ActualMaterialController extends Controller
 
     function resources($key)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
 
+        $resources = $data['resources']->groupBy(function ($resource) {
+            return $resource['target']->wbs->name . ' / ' . $resource['target']->activity;
+        });
+
+        $project = $data['project'];
+        return view('actual-material.resources', compact('project', 'resources'));
     }
 
-    function postResources($key)
+    function postResources(Request $request, $key)
     {
 
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
+        $newResources = collect();
+        $quantities = $request->get('quantities');
+        foreach ($data['resources'] as $resource) {
+            $id = $resource['target']->breakdown_resource_id;
+            $qty = $quantities[$id];
+            $total = $resource['resources']->sum('original_data.6');
+            if ($qty) {
+                $unit_price = $total / $qty;
+            } else {
+                $total = $qty = $unit_price = 0;
+            }
+
+            $newResources->push([
+                $resource['target']->code, '',
+                $resource['target']->resource_name, $resource['target']->measure_unit,
+                $qty, $unit_price, $total, $resource['target']->resource_code, ''
+            ]);
+        }
+
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
+        $data['resources'] = collect();
+
+        return $this->redirect($this->merge($data, $result), $key);
+    }
+
+    function closed($key)
+    {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
+        $closed = $data['closed']->pluck('resource')->keyBy('id')->groupBy(function($resource) {
+            return $resource->wbs->name . ' / ' . $resource->activity;
+        });
+
+        $project = $data['project'];
+
+        return view('actual-material.closed', compact('closed', 'project'));
+    }
+
+    function postClosed(Request $request, $key)
+    {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
+        $closed = $data['closed']->pluck('resource')->keyBy('id');
+
+        $newResourceIds = [];
+        foreach ($request->get('closed') as $id => $is_open)
+        {
+            if ($is_open) {
+                $closed[$id]->status = 'In Progress';
+                $closed[$id]->save();
+                $newResourceIds[] = $id;
+            }
+        }
+
+        $newResources = $data['closed']->whereIn('resource.id', $newResourceIds)->map(function($row) {
+            $row['resource'] = $row['resource']->fresh();
+            return $row;
+        });
+
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
+        $data['closed'] = collect();
+
+        return $this->redirect($this->merge($data, $result), $key);
     }
 
     function ExportCostBreakdown(Project $project){
@@ -343,5 +379,86 @@ class ActualMaterialController extends Controller
         }
 
         $this->dispatch(new ExportCostShadow($project));
+    }
+
+    protected function redirect($data, $key)
+    {
+        \Cache::put($key, $data, 180);
+
+        if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
+            return \Redirect::route('actual-material.mapping', $key);
+        } elseif($data['closed']->count()){
+            return \Redirect::route('actual-material.closed', $key);
+        } elseif($data['units']->count()) {
+            return \Redirect::route('actual-material.units', $key);
+        } elseif ($data['multiple']->count()) {
+            return \Redirect::route('actual-material.multiple', $key);
+        }elseif ($data['resources']->count()) {
+            return \Redirect::route('actual-material.resources', $key);
+        } elseif ($data['to_import']->count()) {
+            $count = $this->saveImported($data['to_import']);
+            $data['to_import'] = collect();
+            flash("$count Records has been imported", 'success');
+            return \Redirect::route('actual-material.progress', $key);
+        } else {
+            flash('No data has been imported');
+            return \Redirect::route('project.cost-control', $data['project']);
+        }
+    }
+
+    protected function saveImported($to_import)
+    {
+        $count = 0;
+
+        $resource_dict = collect();
+        foreach ($to_import as $record) {
+            ActualResources::create($record);
+            $resource_dict->push($record['resource_id']);
+            ++$count;
+        }
+
+        $project = Project::find($record['project_id']);
+        $this->dispatch(new UpdateResourceDictJob($project, $resource_dict));
+
+        return $count;
+    }
+
+    protected function merge($data, $result)
+    {
+        $returnData =  [
+            'mapping' => [
+                'activity' => $data['mapping']['activity']->merge($result['mapping']['activity']),
+                'resources' => $data['mapping']['resources']->merge($result['mapping']['resources']),
+            ],
+            'multiple' => $data['multiple']->merge($result['multiple']),
+            'units' => $data['units']->merge($result['units']),
+            'resources' => $data['resources']->merge($result['resources']),
+            'closed' => $data['closed']->merge($result['closed']),
+            'to_import' => $data['to_import']->merge($result['to_import']),
+            'project' => $data['project'],
+            'batch' => $data['batch']
+        ];
+
+        $multiple_resources_ids = collect([]);
+        $returnData['to_import']->groupBy('breakdown_resource_id')->each(function($resources, $breakdown_resource_id) use ($returnData, $multiple_resources_ids) {
+
+            $resource_count = $resources->pluck('original_code', 'original_code')->count();
+
+            if ($resource_count > 1) {
+                $returnData['resources']->push([
+                    'target' => BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource_id)->first(),
+                    'resources' => $resources
+                ]);
+
+                $multiple_resources_ids->put($breakdown_resource_id, $breakdown_resource_id);
+            }
+
+        });
+
+        $returnData['to_import'] = $returnData['to_import']->filter(function($resource) use ($multiple_resources_ids) {
+            return !$multiple_resources_ids->has($resource['breakdown_resource_id']);
+        });
+
+        return $returnData;
     }
 }
