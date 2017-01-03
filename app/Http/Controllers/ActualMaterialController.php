@@ -111,7 +111,7 @@ class ActualMaterialController extends Controller
         }
 
         $units = $data['units']->groupBy(function ($row) {
-            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity;
+            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
         });
 
         return view('actual-material.fix-units', ['units' => $units, 'project' => $data['project']]);
@@ -127,23 +127,28 @@ class ActualMaterialController extends Controller
 
         $newActivities = collect();
         $units = $request->get("units");
-        $dataUnits = $data['units']->keyBy('resource.breakdown_resource_id');
-        foreach ($dataUnits as $idx => $row) {
-            $new_data = $units[$idx];
-            $row[4] = $new_data['qty'];
-            if ($new_data['qty'] != 0) {
-                $row[5] = $row[6] / $new_data['qty'];
-            } else {
-                $row[5] = 0;
-                $row[6] = 0;
+        $dataUnits = $data['units']->groupBy(function ($row) {
+            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
+        });
+        foreach ($dataUnits as $activity => $subResources) {
+            $total = $subResources->average(6);
+            $totalQty = 0;
+            foreach ($subResources as $resource) {
+                $totalQty += $units[$resource['resource']->breakdown_resource_id]['qty'];
             }
-            $row[3] = $row['resource']->measure_unit;
+            $unit_price = $total / $totalQty;
+            foreach ($subResources as $resource) {
+                $resource[3] = $qty = $resource['resource']->measure_unit;
+                $resource[4] = $qty = $units[$resource['resource']->breakdown_resource_id]['qty'];
+                $resource[5] = $unit_price;
+                $resource[6] = $qty * $unit_price;
 
-            $newActivities->push($row);
+                $newActivities->push($resource);
+            }
         }
 
-        $data['units'] = collect();
         $result = dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
+        $data['units'] = collect();
 
         return $this->redirect($this->merge($data, $result, $key), $key);
     }
@@ -271,12 +276,52 @@ class ActualMaterialController extends Controller
 
     function resources($key)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
 
+        $resources = $data['resources']->groupBy(function ($resource) {
+            return $resource['target']->wbs->name . ' / ' . $resource['target']->activity;
+        });
+
+        $project = $data['project'];
+        return view('actual-material.resources', compact('project', 'resources'));
     }
 
-    function postResources($key)
+    function postResources(Request $request, $key)
     {
 
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
+        $newResources = collect();
+        $quantities = $request->get('quantities');
+        foreach ($data['resources'] as $resource) {
+            $id = $resource['target']->breakdown_resource_id;
+            $qty = $quantities[$id];
+            $total = $resource['resources']->sum('original_data.6');
+            if ($qty) {
+                $unit_price = $total / $qty;
+            } else {
+                $total = $qty = $unit_price = 0;
+            }
+
+            $newResources->push([
+                $resource['target']->code, '',
+                $resource['target']->resource_name, $resource['target']->measure_unit,
+                $qty, $unit_price, $total, $resource['target']->resource_code, ''
+            ]);
+        }
+
+        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
+        $data['resources'] = collect();
+
+        return $this->redirect($this->merge($data, $result), $key);
     }
 
     function closed($key)
@@ -348,6 +393,8 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.units', $key);
         } elseif ($data['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
+        }elseif ($data['resources']->count()) {
+            return \Redirect::route('actual-material.resources', $key);
         } elseif ($data['to_import']->count()) {
             $count = $this->saveImported($data['to_import']);
             flash("$count Records has been imported", 'success');
@@ -385,6 +432,26 @@ class ActualMaterialController extends Controller
             'project' => $data['project'],
             'batch' => $data['batch']
         ];
+
+        $multiple_resources_ids = collect([]);
+        $returnData['to_import']->groupBy('breakdown_resource_id')->each(function($resources, $breakdown_resource_id) use ($returnData, $multiple_resources_ids) {
+
+            $resource_count = $resources->pluck('original_code', 'original_code')->count();
+
+            if ($resource_count > 1) {
+                $returnData['resources']->push([
+                    'target' => BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource_id)->first(),
+                    'resources' => $resources
+                ]);
+
+                $multiple_resources_ids->put($breakdown_resource_id, $breakdown_resource_id);
+            }
+
+        });
+
+        $returnData['to_import'] = $returnData['to_import']->filter(function($resource) use ($multiple_resources_ids) {
+            return !$multiple_resources_ids->has($resource['breakdown_resource_id']);
+        });
 
         return $returnData;
     }

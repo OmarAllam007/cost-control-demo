@@ -140,7 +140,8 @@ class ImportMaterialDataJob extends Job
                     'batch_id' => $this->batch->id,
                     // Excel date is translated to number of days since 30/12/1899
                     'action_date' => Carbon::create(1899, 12, 31)->addDays($row[1]),
-                    'doc_no' => $row[8]
+                    'doc_no' => $row[8],
+                    'original_data' => $row
                 ]);
 
                 $resource_dict->push($resource->id);
@@ -159,6 +160,23 @@ class ImportMaterialDataJob extends Job
                 $result['multiple']->get($activityCode)->put($resourceCode, $row);
             }
         }
+
+        /*$multiple_resources_ids = [];
+        $result['to_import']->groupBy('breakdown_resource_id')->each(function($resources, $breakdown_resource_id) use ($result, $multiple_resources_ids) {
+            $resource_count = $resources->pluck('original_code', 'original_code')->count();
+            if ($resource_count > 1) {
+                $result['resources']->push([
+                    'target' => BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource_id)->first(),
+                    'resources' => $resources
+                ]);
+
+                $multiple_resources_ids[$breakdown_resource_id] = $breakdown_resource_id;
+            }
+        });
+
+        $result['to_import'] = $result['to_import']->filter(function($resource) use ($multiple_resources_ids) {
+            return !isset($multiple_resources_ids[$resource['breakdown_resource_id']]);
+        });*/
 
         dispatch(new UpdateResourceDictJob($this->project, $resource_dict));
         return $result;

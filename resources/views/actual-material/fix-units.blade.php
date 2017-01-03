@@ -14,7 +14,7 @@
             <div class="panel-heading">
                 <h4 class="panel-title">{{$activity}}</h4>
             </div>
-            <table class="table table-bordered table-condensed table-hover table-striped">
+            <table class="table table-bordered table-condensed table-hover table-striped" data-total="{{$resources->first()[6]}}">
                 <thead>
                 <tr>
                     <th>Activity</th>
@@ -29,6 +29,7 @@
                     <th>Store U.O.M</th>
                     <th>Budget U.O.M</th>
                     <th>Store Qty</th>
+                    <th>Store Unit Price</th>
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Total Price</th>
@@ -36,7 +37,7 @@
                 </thead>
                 <tbody>
                 @foreach($resources as $idx => $line)
-                    <tr data-total-price={{ abs($line[6]) }}>
+                    <tr>
                         <td>
                             {{$line['resource']->breakdown_resource->code}}
                         </td>
@@ -72,7 +73,11 @@
                             {{ $line['resource']->measure_unit }}
                         </td>
                         <td>
-                            {{ abs($line[4]) }}
+                            {{ number_format($line[4], 2) }}
+                        </td>
+
+                        <td>
+                            {{number_format($line[5], 2)}}
                         </td>
 
                         <td>
@@ -81,8 +86,8 @@
                         <td>
                             {{Form::text("units[{$line['resource']->breakdown_resource_id}][unit_price]", 0, ['class' => 'form-control input-sm unit-price', 'readonly', 'tabindex' => -1])}}
                         </td>
-                        <td>
-                            {{ number_format(abs($line[6]), 2) }}
+                        <td class="total-price">
+                            {{ number_format(0, 2) }}
                         </td>
                     </tr>
                 @endforeach
@@ -103,15 +108,36 @@
     <script>
         $(function () {
             $('.qty').change(function () {
-                var val = this.value;
-                var row = $(this).parents('tr');
-                var total = row.data('total-price');
-                if (val) {
-                    row.find('.unit-price').val((total / val).toFixed(2));
-                } else {
-                    row.find('.unit-price').val(0);
-                }
+                var val = parseFloat(this.value);
+                var row = $(this).closest('tr');
+                var table = row.closest('table');
+                var unit_price = calculateUnitPrice(table);
+
+                table.find('.unit-price').val(unit_price.toFixed(2));
+                updatePrices(table, unit_price);
             });
+
+            function calculateUnitPrice(table) {
+                var totalQty = 0;
+                table.find('.qty').each(function(){
+                    totalQty += parseFloat(this.value);
+                });
+
+                if (totalQty) {
+                    return parseFloat(table.data('total')) / totalQty;
+                }
+
+                return 0;
+            }
+
+            function updatePrices(table, unit_price)
+            {
+                table.find('tbody tr').each(function(){
+                    var _this = $(this);
+                    var qty = parseFloat(_this.find('.qty').val());
+                    _this.find('.total-price').text((qty * unit_price).toFixed(2));
+                });
+            }
         });
     </script>
 @endsection
