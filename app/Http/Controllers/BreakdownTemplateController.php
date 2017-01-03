@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Breakdown;
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
 use App\Jobs\ImportBreakdownTemplateJob;
@@ -58,24 +59,31 @@ class BreakdownTemplateController extends Controller
 
         if ($request->project_id && request('import')) {
             $parents = BreakdownTemplate::whereIn('id', $request->parent_template_id)->get();
+            $prev=[];
             foreach ($parents as $parent) {
-                $resources = StdActivityResource::where('template_id', $parent->id)->get();
-                $parent->parent_template_id = $parent->id;
-                $parent->project_id = $request->project_id;
-                unset($parent->id);
-                $template = BreakdownTemplate::create($parent->toArray());
-                foreach ($resources as $resource) {
-                    $resource->template_id = $template->id;
-                    StdActivityResource::create($resource->toArray());
+                $previousTemp = BreakdownTemplate::where('parent_template_id',$parent->id)->where('project_id',$request->project_id)->first();
+                if($previousTemp){
+
+                }else{
+                    $resources = StdActivityResource::where('template_id', $parent->id)->get();
+                    $parent->parent_template_id = $parent->id;
+                    $parent->project_id = $request->project_id;
+                    unset($parent->id);
+                    $template = BreakdownTemplate::create($parent->toArray());
+                    foreach ($resources as $resource) {
+                        $resource->template_id = $template->id;
+                        StdActivityResource::create($resource->toArray());
+                    }
                 }
             }
 
+//            return \Redirect::route('project.show',compact('project'));
         } else {
             $this->validate($request, $this->rules);
             $template = BreakdownTemplate::create($request->all());
         }
-        flash('Breakdown template has been saved', 'success');
 
+        flash('Breakdown template has been saved', 'success');
         return \Redirect::route('breakdown-template.show', $template);
     }
 

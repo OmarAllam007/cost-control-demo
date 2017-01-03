@@ -17,6 +17,7 @@
 
         <ul class="list-unstyled tree">
             @foreach($resource_levels as $resource_level)
+
                 @include('resource-type._recursive')
             @endforeach
         </ul>

@@ -69,7 +69,7 @@
                         <h4 class="modal-title">Delete - {{$project->name}}</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete ( {{$project->name}} ) Project?</div>
+                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete Project?</div>
                         <input type="hidden" name="wipe" value="1">
                     </div>
                     <div class="modal-footer">

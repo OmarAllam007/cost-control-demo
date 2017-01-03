@@ -16,7 +16,6 @@
 @stop
 
 @section('body')
-
     <nav class="project-nav">
         @can('budget', $project)
             <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
@@ -100,7 +99,10 @@
                 </form>
             </div>
         </div>
+
+
     @endcan
+
 
 @endsection
 
@@ -169,6 +171,19 @@
 
         }(window, document, jQuery));
 
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('form[class=delete_form]').submit(function (e) {
+                var type = $(this).data('name');
+                var answer = confirm("Are you sure you want to delete "+type+" ?");
+                if (!answer) {
+                    return false;
+                }
+            });
+        });
     </script>
     <script src="{{asset('/js/project.js')}}"></script>
     {{--    <script src="{{asset('/js/resources.js')}}"></script>--}}

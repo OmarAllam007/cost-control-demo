@@ -15,6 +15,7 @@ class BreakdownResource extends Model
 
     protected $productivity_cache;
     protected $resource_cache;
+
 //    public $original_resource = 0;
 
     function breakdown()
@@ -107,9 +108,8 @@ class BreakdownResource extends Model
             }
         }
         extract($variables);
-
         $result = 0;
-        $eval = @eval('$result=' . $this->equation . ';');
+        $eval = @eval('$result = ' . $this->equation . ';');
         if ($eval === false || !$result || $result == INF || is_nan($result)) {
             $result = 0;
         }
@@ -118,9 +118,22 @@ class BreakdownResource extends Model
 
     function getQtySurveyAttribute()
     {
-        return Survey::where('cost_account', $this->cost_account)
-            ->where('project_id', $this->breakdown->project_id)
-            ->first();
+        $finalSurvey = '';
+        $level = WbsLevel::where('id', $this->wbs_level_id)->first();
+        while ($level->parent) {
+            $level = $level->parent;
+            $survey = Survey::where('cost_account', $this->cost_account)->where('wbs_level_id', $level->id)
+                ->where('project_id', $this->breakdown->project_id)
+                ->first();
+            if ($survey) {
+                $finalSurvey = $survey;
+                break;
+            }
+        }
+        return $finalSurvey;
+//        return Survey::where('cost_account', $this->cost_account)
+//            ->where('project_id', $this->breakdown->project_id)
+//            ->first();
     }
 
     function getBudgetUnitAttribute()
@@ -134,7 +147,7 @@ class BreakdownResource extends Model
             $result = $this->resource_qty * $this->labor_count / $reductionFactor;
             return $result > 0.25 ? round($result + 0.05, 1) : 0.25;
         } else {
-            return $this->resource_qty * (1 + ($this->resource_waste/100));
+            return $this->resource_qty * (1 + ($this->resource_waste / 100));
         }
     }
 

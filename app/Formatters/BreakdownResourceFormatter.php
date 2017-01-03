@@ -25,6 +25,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
 
     function toArray()
     {
+
         return [
             'breakdown_resource_id' => $this->resource->id,
             'code' => $this->resource->code,

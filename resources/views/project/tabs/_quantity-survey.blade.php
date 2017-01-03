@@ -37,8 +37,8 @@
                 <td class="col-xs-2">{{$quantity->description}}</td>
                 <td class="col-xs-2">{{$quantity->budget_qty}}</td>
                 <td class="col-xs-2">{{$quantity->eng_qty}}</td>
-                <td class="col-xs-2">
-                    {{Form::open(['route' => ['survey.destroy', $quantity], 'method' => 'delete'])}}
+                <td class="col-xs-2"> 
+                    {{Form::open(['route' => ['survey.destroy', $quantity], 'method' => 'delete' ,'class'=>'delete_form','data-name'=>'QS'])}}
                     <a href="{{route('survey.edit', $quantity)}}" class="btn btn-sm btn-primary"><i
                                 class="fa fa-edit"></i> Edit</a>
                     <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>

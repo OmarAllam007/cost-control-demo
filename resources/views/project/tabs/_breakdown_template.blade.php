@@ -37,7 +37,7 @@
 
                     <td class="col-xs-4">
                         @can('breakdown_templates',$project)
-                            <form action="{{ route('breakdown-template.destroy', $breakdown_template->id) }}" method="post">
+                            <form action="{{ route('breakdown-template.destroy', $breakdown_template->id) }}" method="post" class="delete_form" data-name="Template">
                                 {{csrf_field()}} {{method_field('delete')}}
                                 <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                             </form>
@@ -49,6 +49,26 @@
             </tbody>
         </table>
     @endif
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Delete Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i> Are you sure you want to delete ?</div>
+                <input type="hidden" name="wipe" value="1">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger delete"><i class="fa fa-fw fa-trash"></i> Delete</button>
+            </div>
+        </div>
+    </div>
 </section>
+
+
+
+
 
 

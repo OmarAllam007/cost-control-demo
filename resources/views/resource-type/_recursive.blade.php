@@ -8,7 +8,6 @@
     <article id="children-{{$resource_level->id}}" class="tree--child collapse">
 
 
-
         @if ($resource_level->children->count())
             <ul class="list-unstyled">
                 @foreach($resource_level->children as $child)
@@ -32,19 +31,21 @@
                 <tbody>
 
                 @foreach($resource_level->resources as $resource)
-                    <tr>
-                        <td>{{$resource->name}}</td>
-                        <td>
-                            <div class="pull-right">
-                                {{--<a href="{{route('resources.show', $resource)}}" class="btn btn-xs btn-info">
-                                    <i class="fa fa-eye"></i> Show
-                                </a>--}}
-                                <a href="{{route('resources.edit', $resource)}}" class="btn btn-xs btn-primary">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                    @if(!$resource->project_id)
+                        <tr>
+                            <td>{{$resource->name}}</td>
+                            <td>
+                                <div class="pull-right">
+                                    {{--<a href="{{route('resources.show', $resource)}}" class="btn btn-xs btn-info">
+                                        <i class="fa fa-eye"></i> Show
+                                    </a>--}}
+                                    <a href="{{route('resources.edit', $resource)}}" class="btn btn-xs btn-primary">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endif
                 @endforeach
                 </tbody>
             </table>

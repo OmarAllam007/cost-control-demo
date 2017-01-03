@@ -19,13 +19,15 @@ class RevisedBoq
 {
     public function getRevised(Project $project)
     {
+        set_time_limit(300);
 
         $breakdowns = $project->breakdowns()->with('wbs_level', 'resources')->get();
         $data = [];
         $total = ['revised_boq' => 0, 'original_boq' => 0, 'weight' => 0];
         foreach ($breakdowns as $breakdown) {
             $wbs_level = $breakdown->wbs_level;
-            $dry = $breakdown->getDry($wbs_level->id);
+            $cost_account = $breakdown->cost_account;
+            $dry = $breakdown->getDry($project,$wbs_level->id,$cost_account);
             if ($dry) {
                 if (!isset($data[$wbs_level->id])) {
                     $data[$wbs_level->id] = [
@@ -61,7 +63,7 @@ class RevisedBoq
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
-                    $parent_dry = $breakdown->getDry($parent->id);
+                    $parent_dry = $breakdown->getDry($project,$parent->id,$cost_account);
                     if ($parent_dry) {
                         if (!isset($data[$parent->id])) {
                             $data[$parent->id] = [
@@ -98,7 +100,9 @@ class RevisedBoq
             if ($data[$key]['original_boq']) {
                 $data[$key]['weight'] += $data[$key]['revised_boq'] / $data[$key]['original_boq'] * 100;
             }
-            $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
+            if($total['original_boq']){
+                $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
+            }
         }
         $chart = $this->getRevisedChart($data);
         return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));

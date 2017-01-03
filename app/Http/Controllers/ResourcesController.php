@@ -87,7 +87,7 @@ class ResourcesController extends Controller
         $resource->cacheResources();
         flash('Resource has been saved', 'success');
         if ($newResource->project_id) {
-            return \Redirect::route('project.show', $resource->project_id);
+            return \Redirect::route('project.show', $newResource->project_id);
         }
         return \Redirect::route('resources.index');
     }
