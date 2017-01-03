@@ -12,7 +12,7 @@ export default{
         loadTemplates(){
             console.log('go');
             $.ajax({
-                url: '/api/templates/template/' + this.project, dataType: 'json'
+                url: '/api/breakdown-template/template/' + this.project, dataType: 'json'
             }).success(response=> {
                 this.templates = response;
             }).error(response=> {

@@ -47,6 +47,7 @@ class BreakdownTemplateController extends Controller
 
     public function store(Request $request)
     {
+        $template = '';
         if ($project_id = request('project_id')) {
             if (\Gate::denies('breakdown_templates', Project::find($project_id))) {
                 flash("You don't have access to this page");
@@ -76,8 +77,8 @@ class BreakdownTemplateController extends Controller
                     }
                 }
             }
-
-//            return \Redirect::route('project.show',compact('project'));
+            $project = Project::find($request->project_id);
+            return \Redirect::route('project.show',compact('project','prev'));
         } else {
             $this->validate($request, $this->rules);
             $template = BreakdownTemplate::create($request->all());
