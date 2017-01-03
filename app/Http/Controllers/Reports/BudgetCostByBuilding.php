@@ -28,6 +28,7 @@ class BudgetCostByBuilding
             'total' => 0,
             'weight' => 0,
         ];
+        $children=[];
 
         foreach ($shadows as $shadow) {
             $wbs_level = $shadow->wbs;
@@ -66,8 +67,9 @@ class BudgetCostByBuilding
 
                 }
             }
-        }
 
+
+        }
 
         foreach ($data as $key => $item) {//fill total array
             if (in_array($key, $children)) {
@@ -85,6 +87,7 @@ class BudgetCostByBuilding
                 $total['weight'] += $data[$key]['weight'];
             }
         }
+
 //        ksort($data);
         $pieChart = $this->getBudgetCostForBuildingPieChart($data);
         $columnChart = $this->getBugetCostByBuildingColumnChart($data);
