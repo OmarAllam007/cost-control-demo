@@ -93,8 +93,8 @@ class Survey extends Model
                     ->update($formatter->toArray());
             }
         }
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
+//        $cache = new ResourcesCache();
+//        $cache->cacheResources();
     }
 
 }
