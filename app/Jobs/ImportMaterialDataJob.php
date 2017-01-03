@@ -64,69 +64,84 @@ class ImportMaterialDataJob extends Job
         $result = [
             'success' => 0,
             'hasIssues' => false,
-            'mapping' => collect(),
+            'mapping' => collect(['resources' => collect(), 'activity' => collect()]),
             'resources' => collect(),
+            'closed' => collect(),
             'units' => collect(),
             'multiple' => collect(),
             'invalid' => collect(),
-            'project' => $this->project
+            'to_import' => collect(),
+            'project' => $this->project,
+            'batch' => $this->batch,
         ];
-
-        // Excel date is translated to number of days since 30/12/1899
 
         $resource_dict = collect();
         foreach ($this->data as $row) {
-            $activityCode = strtolower($row[3]);
+            $activityCode = strtolower($row[0]);
+
             if (!$this->activityMap->has($activityCode)) {
                 // Failed to find activity (breakdown resource)
                 // then add it to activity errors
-                $result['mapping']->push($row);
+                $result['mapping']['activity']->push($row);
                 continue;
             }
             $activityCodes = $this->activityMap->get($activityCode);
 
-            $resourceCode = strtolower($row[13]);
+            $resourceCode = strtolower($row[7]);
             if (!$this->resourceMap->has($resourceCode)) {
                 // Resource is not found even in mapping
-                // Add to resource errors
-                $result['resources']->push($row);
+                // Add to mapping resource errors
+                $result['mapping']['resources']->push($row);
                 continue;
             }
             $resource_ids = $this->resourceMap->get($resourceCode);
 
-            // Find the activities/breakdown resources corresponding to activity code and resources
-            $breakdownResources = BreakdownResource::where('code', $activityCodes)
-                ->whereIn('resource_id', $resource_ids)->get();
+            if (!empty($row['resource'])) {
+                $breakdownResources = collect([$row['resource']->breakdown_resource]);
+            } else {
+                // Find the activities/breakdown resources corresponding to activity code and resources
+                $breakdownResources = BreakdownResource::where('code', $activityCodes)
+                    ->whereIn('resource_id', $resource_ids)->get();
+            }
 
             /** @var \Illuminate\Database\Eloquent\Collection $breakdownResources */
             if ($breakdownResources->count() == 1) {
                 // We have only one code. This is the oprimal case
                 $breakdownResource = $breakdownResources->first();
 
+                if ($breakdownResource->shadow->status == 'Closed') {
+                    $row['resource'] = $breakdownResource->shadow;
+                    $result['closed']->push($row);
+                    continue;
+                }
+
                 //Check unit of measure
-                $unit_id = $this->unitsMap->get(mb_strtolower($row[9]));
+                $unit_id = $this->unitsMap->get(mb_strtolower($row[3]));
                 $resource = $breakdownResource->resource;
                 if ($unit_id != $resource->unit) {
                     // Unit of measure is not matching we should ask for quantity
-                    $row['resource'] = BreakDownResourceShadow::where('breakdown_resource_id', $breakdownResource->id)->first();
+                    $row['resource'] = $breakdownResource->shadow;
                     $result['units']->push($row);
                     continue;
                 }
 
                 // Optimal case everything matches, save the quantity and continue
-                ActualResources::create([
+                $result['to_import']->push([
                     'project_id' => $this->project->id,
                     'wbs_level_id' => $breakdownResource->breakdown->wbs_level_id,
                     'breakdown_resource_id' => $breakdownResource->id,
                     'period_id' => $this->active_period->id,
-                    'original_code' => $row[13],
+                    'original_code' => $row[7],
                     'resource_id' => $resource->id,
-                    'qty' => $row[10],
-                    'unit_price' => $row[11],
-                    'cost' => $row[12],
+                    'qty' => $row[4],
+                    'unit_price' => $row[5],
+                    'cost' => $row[6],
                     'unit_id' => $unit_id,
                     'batch_id' => $this->batch->id,
-                    'action_date' => Carbon::create(1899, 12, 30)->addDays($row[5])
+                    // Excel date is translated to number of days since 30/12/1899
+                    'action_date' => Carbon::create(1899, 12, 31)->addDays($row[1]),
+                    'doc_no' => $row[8],
+                    'original_data' => $row
                 ]);
 
                 $resource_dict->push($resource->id);
@@ -146,16 +161,23 @@ class ImportMaterialDataJob extends Job
             }
         }
 
-        foreach (['mapping', 'resources', 'units', 'multiple', 'invalid'] as $key) {
-            if ($result[$key]->count()) {
-                $result['hasIssues'] = true;
-                break;
+        /*$multiple_resources_ids = [];
+        $result['to_import']->groupBy('breakdown_resource_id')->each(function($resources, $breakdown_resource_id) use ($result, $multiple_resources_ids) {
+            $resource_count = $resources->pluck('original_code', 'original_code')->count();
+            if ($resource_count > 1) {
+                $result['resources']->push([
+                    'target' => BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource_id)->first(),
+                    'resources' => $resources
+                ]);
+
+                $multiple_resources_ids[$breakdown_resource_id] = $breakdown_resource_id;
             }
-        }
+        });
 
-        dispatch(new UpdateResourceDictJob($this->project, $resource_dict));
+        $result['to_import'] = $result['to_import']->filter(function($resource) use ($multiple_resources_ids) {
+            return !isset($multiple_resources_ids[$resource['breakdown_resource_id']]);
+        });*/
 
-        $result['batch'] = $this->batch;
         return $result;
     }
 
@@ -172,18 +194,13 @@ class ImportMaterialDataJob extends Job
             });
 
 
-        $this->activityCodes = collect();
+        $this->activityCodes =
         BreakdownResource::whereHas('breakdown', function ($q) {
             $q->where('project_id', $this->project->id);
-        })->select(['id', 'code'])->get()->reduce(function (Collection $collection, $resource) {
+        })->select(['id', 'code'])->get()->each(function ($resource) {
             $code = strtolower($resource->code);
-            if (!$collection->has($code)) {
-                $collection->put($code, collect());
-            }
-
-            $collection->get($code)->push($resource->id);
-            return $collection;
-        }, collect());
+            $this->activityMap->put($code, $code);
+        });
     }
 
     protected function loadResourceMap()

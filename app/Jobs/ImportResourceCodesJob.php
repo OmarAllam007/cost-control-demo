@@ -48,7 +48,7 @@ class ImportResourceCodesJob extends ImportJob
             }
 
             $code = mb_strtolower($data[0]);
-            if ($this->codes->has($code)) {
+            if ($this->codes->has($code) && $data[1]) {
                 Resources::find($this->codes->get($code))
                     ->codes()->updateOrCreate(['code' => $data[1], 'project_id' => $this->project_id]);
 

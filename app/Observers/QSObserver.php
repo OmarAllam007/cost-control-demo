@@ -18,7 +18,7 @@ use App\Survey;
 class QSObserver
 {
     //todo to be checked tommorrow
-    function saved(Survey $survey)
+    function updated(Survey $survey)
     {
         $survey->updateBreakdownResources();
     }

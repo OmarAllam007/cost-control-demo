@@ -223,9 +223,9 @@ $config = [
         'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical',
         'ELECTRICAL' => 'Electrical','Civil Work'=>'Civil Work','Arch Work'=>'Arch Work'],
 
-    'cost_status'=> [
+    'cost_status'=> collect([
         'In Progress' => 'In Progress', 'Closed' => 'Closed'
-    ]
+    ])
 ];
 
 if ($config['env'] == 'local') {

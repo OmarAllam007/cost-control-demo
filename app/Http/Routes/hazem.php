@@ -127,6 +127,7 @@ Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], functi
     Route::get('progress/{key}', ['as' => 'progress', 'uses' => 'ActualMaterialController@progress']);
     Route::get('status/{key}', ['as' => 'status', 'uses' => 'ActualMaterialController@status']);
     Route::get('resources/{key}', ['as' => 'resources', 'uses' => 'ActualMaterialController@resources']);
+    Route::get('closed/{key}', ['as' => 'closed', 'uses' => 'ActualMaterialController@closed']);
 
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActualMaterialController@postImport']);
     Route::post('mapping/{key}', ['as' => 'post-mapping', 'uses' => 'ActualMaterialController@postFixMapping']);
@@ -135,6 +136,7 @@ Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], functi
     Route::post('progress/{key}', ['as' => 'post-progress', 'uses' => 'ActualMaterialController@postProgress']);
     Route::post('status/{key}', ['as' => 'post-status', 'uses' => 'ActualMaterialController@postStatus']);
     Route::post('resources/{key}', ['as' => 'post-resources', 'uses' => 'ActualMaterialController@postResources']);
+    Route::post('closed/{key}', ['as' => 'post-closed', 'uses' => 'ActualMaterialController@postClosed']);
 });
 
 Route::resource('project', 'ProjectController');
