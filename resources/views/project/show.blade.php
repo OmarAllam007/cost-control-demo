@@ -21,7 +21,7 @@
             <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
             <a href="#ProjectResources" class="btn btn-outline btn-primary">Resources</a>
             <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
-            <a href="#ProjectTemplates" class="btn btn-outline btn-primary">Breakdown Templates</a>
+            <a href="#BreakdownTemplateArea" class="btn btn-outline btn-primary">Breakdown Templates</a>
         @endcan
 
         @can('reports', $project)
@@ -36,9 +36,9 @@
                 @include('project.templates.resources')
             </article>
 
-            <article id="ProjectTemplates" class="project-tab">
-                @include('project.templates.breakdown-template')
-            </article>
+            {{--<article id="ProjectTemplates" class="project-tab">--}}
+                @include('project.tabs._breakdown_template')
+            {{--</article>--}}
             @include('project.tabs._productivity')
 {{--            @include('project.tabs._breakdown_template')--}}
         @endcan
