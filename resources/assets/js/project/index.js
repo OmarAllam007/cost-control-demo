@@ -5,7 +5,7 @@ import QtySurvey from './components/QtySurvey';
 import Alert from './components/Alert';
 import Wbs from './components/Wbs';
 import Resources from './components/Resources';
-
+import BreakdownTemplate from './components/BreakdownTemplate'
 Vue.filter('slug', function(value){
     return value.replace(/\W/g, '-').replace(/-{2,}/g, '-').toLowerCase();
 });
@@ -43,6 +43,7 @@ window.app = new Vue({
         QtySurvey,
         Wbs,
         Resources,
+        BreakdownTemplate,
 
     }
 });

@@ -16,12 +16,13 @@
 @stop
 
 @section('body')
+
     <nav class="project-nav">
         @can('budget', $project)
             <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
             <a href="#ProjectResources" class="btn btn-outline btn-primary">Resources</a>
             <a href="#ProductivityArea" class="btn btn-outline btn-primary">Productivity</a>
-            <a href="#BreakdownTemplateArea" class="btn btn-outline btn-primary">Breakdown Templates</a>
+            <a href="#ProjectTemplates" class="btn btn-outline btn-primary">Breakdown Templates</a>
         @endcan
 
         @can('reports', $project)
@@ -36,8 +37,10 @@
                 @include('project.templates.resources')
             </article>
 
+            <article id="ProjectTemplates" class="project-tab">
+            @include('project.templates.breakdown-template')
+            </article>
             @include('project.tabs._productivity')
-            @include('project.tabs._breakdown_template')
         @endcan
 
         @can('reports', $project)
@@ -178,7 +181,7 @@
         $(document).ready(function () {
             $('form[class=delete_form]').submit(function (e) {
                 var type = $(this).data('name');
-                var answer = confirm("Are you sure you want to delete "+type+" ?");
+                var answer = confirm("Are you sure you want to delete " + type + " ?");
                 if (!answer) {
                     return false;
                 }
