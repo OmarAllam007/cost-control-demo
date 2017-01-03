@@ -178,7 +178,6 @@ class ImportMaterialDataJob extends Job
             return !isset($multiple_resources_ids[$resource['breakdown_resource_id']]);
         });*/
 
-        dispatch(new UpdateResourceDictJob($this->project, $resource_dict));
         return $result;
     }
 

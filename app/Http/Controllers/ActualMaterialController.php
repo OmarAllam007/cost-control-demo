@@ -409,10 +409,15 @@ class ActualMaterialController extends Controller
     {
         $count = 0;
 
+        $resource_dict = collect();
         foreach ($to_import as $record) {
             ActualResources::create($record);
+            $resource_dict->push($record['resource_id']);
             ++$count;
         }
+
+        $project = Project::find($record['project_id']);
+        $this->dispatch(new UpdateResourceDictJob($project, $resource_dict));
 
         return $count;
     }
