@@ -3,12 +3,12 @@
         @can('breakdown_templates',$project)
         <div class="pull-right">
             <a href="{{route('breakdown-template.create', ['project' => $project])}}"
-               class="btn btn-primary btn-sm in-iframe" title="Add Template">
+               class="btn btn-primary btn-sm " title="Add Template">
                 <i class="fa fa-plus"></i> Add Breakdown Template
             </a>
 
             <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
-               class="btn btn-success btn-sm in-iframe" title="Import Template">
+               class="btn btn-success btn-sm " title="Import Template">
                 <i class="fa fa-level-down" aria-hidden="true"></i>
                 Import Template
             </a>
