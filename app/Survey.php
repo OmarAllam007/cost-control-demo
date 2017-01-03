@@ -63,8 +63,16 @@ class Survey extends Model
 
     function syncVariables($variables)
     {
+        $breakdown_ids = [];
         foreach ($this->variables as $var) {
             $var->update(['value' => $variables[$var->id]]);
+            $breakdown_ids[] = $var->breakdown_id;
+        }
+
+        $resources = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->get();
+        /** @var BreakdownResource $resource */
+        foreach ($resources as $resource) {
+            $resource->updateShadow();
         }
     }
 

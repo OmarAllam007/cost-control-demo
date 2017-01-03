@@ -17,5 +17,4 @@ use App\Resources;
 
 class BreakdownVariableObserver
 {
-
 }

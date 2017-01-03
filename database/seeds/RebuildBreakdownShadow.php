@@ -9,13 +9,14 @@ class RebuildBreakdownShadow extends Seeder
 {
     public function run()
     {
+        ini_set('memory_limit', '1G');
         BreakDownResourceShadow::truncate();
 
         set_time_limit(1800);
 
         try {
-            $resources = $this->getUpdatedResources(BreakdownResource::all());
-
+//            $resources = $this->getUpdatedResources(BreakdownResource::all());
+            $resources = BreakdownResource::all();
             foreach ($resources as $resource) {
                 $formatter = new BreakdownResourceFormatter($resource);
                 BreakDownResourceShadow::create($formatter->toArray());
@@ -29,6 +30,7 @@ class RebuildBreakdownShadow extends Seeder
     private function getUpdatedResources($breakdownResources)
     {
         \App\Resources::flushEventListeners();
+        \App\BreakdownResource::flushEventListeners();
 
         try {
 

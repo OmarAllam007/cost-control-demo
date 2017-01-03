@@ -76,7 +76,7 @@ class Project extends Model
 
     function getProductivitiesAttribute()
     {
-        return $this->breakdown_resources->load('productivity.category')
+        return $this->breakdown_resources->load('productivity')
             ->pluck('productivity')->unique()->filter();
     }
 
