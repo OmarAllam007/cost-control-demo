@@ -12,21 +12,25 @@ export default{
             $.ajax({
                 url: '/api/productivities/productivity/' + this.project, dataType: 'json'
             }).success(response=> {
-                this.productivityArray  = $.map(response,function (value,index) {
-                   return [value];
-                });
-                // console.log(this.productivityArray);
-                // this.productivityArray = response;
+                console.log(response)
+                this.productivityArray = $.map(response, function (value, index) {
+                    // if([value][0]['code']!=null){
+                        return [value]
+                    // }
+
+                })
             }).error(response=> {
-                console.log('error');
-            });
+                console.log('error')
+            })
         }
     },
     computed: {
         filterd_productivity(){
             return this.productivityArray.filter((item)=> {
                 if (this.code) {
-                    return item.code.toLowerCase().indexOf(this.code.toLowerCase()) >= 0;
+                    if(item.code!=null){
+                        return item.code.toLowerCase().indexOf(this.code.toLowerCase()) >= 0;
+                    }
                 }
                 return true;
             })
