@@ -31,7 +31,7 @@ class ExportProductivityJob extends Job
         $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Source');
         $rowCount = 2;
         foreach ($this->project->productivities as $productivity) {
-            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $productivity->code);
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $productivity->csi_code);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $productivity->category->name);
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $productivity->description);
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $productivity->crew_structure);
