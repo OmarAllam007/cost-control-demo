@@ -17,4 +17,10 @@ use App\Resources;
 
 class BreakdownVariableObserver
 {
+    function updated(BreakdownVariable $var)
+    {
+        BreakdownResource::where('breakdown_id', $this->breakdown_id)->get()->each(function(BreakdownResource $resource){
+            $resource->updateShadow();
+        });
+    }
 }
