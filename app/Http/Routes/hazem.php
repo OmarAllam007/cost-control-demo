@@ -11,6 +11,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('productivity/labours-count/{productivity}', 'Api\ProductivityController@labors_count');
     Route::get('std-activity/variables/{std_activity}', 'Api\StdActivityController@variables');
     Route::get('resources/resources/{project}', 'Api\ResourcesController@Resources');
+    Route::get('productivities/productivity/{project}', 'Api\ProductivityController@productivities');
 
     Route::group(['prefix' => 'wbs'], function () {
         Route::get('/{project}', 'Api\WbsController@index');

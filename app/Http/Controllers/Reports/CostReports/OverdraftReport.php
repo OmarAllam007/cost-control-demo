@@ -16,6 +16,7 @@ use App\WbsLevel;
 class OverdraftReport
 {
     protected $project;
+
     function getDraft(Project $project)
     {
         $this->project = $project;
@@ -33,17 +34,12 @@ class OverdraftReport
     {
         $tree = ['id' => $wbs_level->id, 'name' => $wbs_level->name, 'children' => [], 'divisions' => [], 'data' => []];
 
-        $costData = CostShadow::joinBudget('wbs_level_id')
-            ->sumFields(['cost.current_cost'])
-            ->whereIn('cost.wbs_level_id', $wbs_level->getChildrenIds())
-            ->where('cost.project_id', $this->project->id)->get()->toArray();
-        dump($costData);
         $costShadow = CostShadow::where('project_id', $this->project->id)->where('wbs_level_id', $wbs_level->id)->get();
+
         foreach ($costShadow as $shadow) {
             $division = $shadow->budget->std_Activity->division;
             if (!isset($tree['divisions'][$division->id])) {
-
-                $tree['division'][$division->id] = [
+                $tree['divisions'][$division->id] = [
                     'name' => $division->name,
                     'data' => [],
                 ];

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\BreakdownTemplate;
 use App\Productivity;
 use App\Resources;
 use App\StdActivity;
@@ -10,6 +11,7 @@ use Illuminate\Support\Collection;
 class ImportBreakdownTemplateJob extends ImportJob
 {
     protected $file;
+    protected $count;
     /**
      * @var Collection
      */
@@ -34,6 +36,7 @@ class ImportBreakdownTemplateJob extends ImportJob
         $this->loadActivities();
         $this->loadResources();
         $this->templates = collect();
+        $this->loadTemplates();
     }
 
     function handle()
@@ -43,14 +46,13 @@ class ImportBreakdownTemplateJob extends ImportJob
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-
+        $this->count = 0;
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
             if (!array_filter($data)) {
                 continue;
             }
-
             $activity = $this->getActivity($data[0]);
             if (!$activity) {
                 continue;
@@ -65,20 +67,20 @@ class ImportBreakdownTemplateJob extends ImportJob
             if ($resource_id) {
                 $template->resources()->create([
                     'resource_id' => $resource_id,
-                    'equation' => isset($data[5])?$data[5]:'',
-                    'labor_count' => isset($data[6])?$data[6]:'',
-                    'productivity_id' => $data[7]? $this->getProductivity($data[7]) : 0,
-                    'remarks' => isset($data[8])?$data[8]:''
+                    'equation' => isset($data[5]) ? $data[5] : '',
+                    'labor_count' => isset($data[6]) ? $data[6] : '',
+                    'productivity_id' => $data[7] ? $this->getProductivity($data[7]) : 0,
+                    'remarks' => isset($data[8]) ? $data[8] : ''
                 ]);
             }
         }
 
-        return true;
+        return $this->count;
     }
 
     protected function loadActivities()
     {
-        $this->activities = StdActivity::all()->keyBy(function($activity){
+        $this->activities = StdActivity::all()->keyBy(function ($activity) {
             return $activity->code;
         });
     }
@@ -93,6 +95,7 @@ class ImportBreakdownTemplateJob extends ImportJob
         $key = strval($activity->id . '.' . strtolower($name));
         if (!$this->templates->has($key)) {
             $template = $activity->breakdowns()->create(compact('name'));
+            $this->count++;
             $this->templates->put($key, $template);
         }
 
@@ -121,5 +124,11 @@ class ImportBreakdownTemplateJob extends ImportJob
             return $productivity->id;
         }
         return 0;
+    }
+
+    protected function loadTemplates(){
+        BreakdownTemplate::whereNull('project_id')->each(function (BreakdownTemplate $template){
+            $this->templates->push($template->code);
+        });
     }
 }

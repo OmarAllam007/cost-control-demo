@@ -40,7 +40,10 @@
             <article id="ProjectTemplates" class="project-tab">
             @include('project.templates.breakdown-template')
             </article>
+
+            {{--<article id="ProjectProductivities" class="project-tab">--}}
             @include('project.tabs._productivity')
+            {{--</article>--}}
         @endcan
 
         @can('reports', $project)

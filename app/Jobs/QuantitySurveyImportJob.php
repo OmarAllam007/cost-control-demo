@@ -28,7 +28,6 @@ class QuantitySurveyImportJob extends ImportJob
 
         $this->wbsLevels = collect();
     }
-
     /**
      * @return array
      */
@@ -36,7 +35,6 @@ class QuantitySurveyImportJob extends ImportJob
     {
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
-
         $failed = collect();
         $success = 0;
         $rows = $excel->getSheet(0)->getRowIterator(2);
