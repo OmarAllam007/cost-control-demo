@@ -78,12 +78,13 @@ class Productivity extends Model
 
     function getJson(Project $project)
     {
+        $projectProductivities = Productivity::where('project_id', $project->id)->get()->keyBy('productivity_id');
         return [
                 'id' => $this->id,
-                'code' => $this->code,
+                'code' => $this->csi_code,
                 'description' => $this->description,
                 'crew_structure' => $this->crew_structure,
-                'after_reduction' => $this->versionFor($project->id)->after_reduction,
+                'after_reduction' => isset($projectProductivities[$this->id])? $projectProductivities[$this->id]->after_reduction : $this->after_reduction,
                 'daily_output' => $this->daily_output,
                 'unit' => $this->units->type,
             ];

@@ -80,13 +80,8 @@ class Survey extends Model
     {
         $variables = $this->variables->pluck('name')->toArray();
 
-//        $shadows = BreakDownResourceShadow::whereIn('wbs_id',$this->wbsLevel->getChildrenIds())
-//            ->where('cost_account',$this->cost_account)
-//            ->where('project_id',$this->project_id)
-//            ->whereIn('resource_name',$variables)->get();
-//        dd($shadows);
-
         $resourceIds = Resources::whereIn('name', $variables)->pluck('id')->toArray();
+
         $breakdowns = Breakdown::where('project_id', $this->project_id)
             ->whereIn('wbs_level_id', $this->wbsLevel->getChildrenIds())
             ->where('cost_account', $this->cost_account)->get();
