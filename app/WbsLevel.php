@@ -41,6 +41,9 @@ class WbsLevel extends Model
             });
         }
 
+        $this->breakdowns()->delete();
+        Boq::where('wbs_level_id', $this->id)->delete();
+        Survey::where('wbs_level_id', $this->id)->delete();
         $this->delete();
     }
 

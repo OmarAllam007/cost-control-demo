@@ -6,3 +6,4 @@ Homestead.json
 .env
 .idea/
 Envoy.blade.php
+.vagrant

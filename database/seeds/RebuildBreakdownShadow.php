@@ -22,6 +22,7 @@ class RebuildBreakdownShadow extends Seeder
                 BreakDownResourceShadow::create($formatter->toArray());
             }
         } catch (\Exception $e) {
+            echo $e->getFile() . ':' . $e->getLine();
             echo $e->getMessage(), PHP_EOL;
             echo $e->getTraceAsString();
         }
@@ -60,6 +61,7 @@ class RebuildBreakdownShadow extends Seeder
 
             return $breakdownResources;
         } catch (\Exception $e) {
+            echo $e->getFile() . ':' . $e->getLine();
             echo $e->getMessage(), PHP_EOL;
             echo $e->getTraceAsString();
         }
