@@ -17,7 +17,7 @@
             {{ Form::label('csi_category_id', 'CSI Category', ['class' => 'control-label']) }}
             @if ($override)
                 <p>
-                    <em>{{ $base->category->path }}</em>
+                    <em>{{ $base->category->path ?? '' }}</em>
                 </p>
             @else
                 <p>
