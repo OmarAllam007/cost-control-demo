@@ -9,18 +9,20 @@ class RebuildBreakdownShadow extends Seeder
 {
     public function run()
     {
+        ini_set('memory_limit', '1G');
         BreakDownResourceShadow::truncate();
 
         set_time_limit(1800);
 
         try {
-            $resources = $this->getUpdatedResources(BreakdownResource::all());
-
+//            $resources = $this->getUpdatedResources(BreakdownResource::all());
+            $resources = BreakdownResource::all();
             foreach ($resources as $resource) {
                 $formatter = new BreakdownResourceFormatter($resource);
                 BreakDownResourceShadow::create($formatter->toArray());
             }
         } catch (\Exception $e) {
+            echo $e->getFile() . ':' . $e->getLine();
             echo $e->getMessage(), PHP_EOL;
             echo $e->getTraceAsString();
         }
@@ -29,6 +31,7 @@ class RebuildBreakdownShadow extends Seeder
     private function getUpdatedResources($breakdownResources)
     {
         \App\Resources::flushEventListeners();
+        \App\BreakdownResource::flushEventListeners();
 
         try {
 
@@ -58,6 +61,7 @@ class RebuildBreakdownShadow extends Seeder
 
             return $breakdownResources;
         } catch (\Exception $e) {
+            echo $e->getFile() . ':' . $e->getLine();
             echo $e->getMessage(), PHP_EOL;
             echo $e->getTraceAsString();
         }

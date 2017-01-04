@@ -15,8 +15,14 @@
 
         <div class="form-group {{$errors->first('owner_id', 'has-error')}}">
             {{ Form::label('owner_id', 'Owner', ['class' => 'control-label']) }}
-            {{ Form::select('owner_id', App\User::options(), old('owner_id', $project->owner_id ?: Auth::user()->id), ['class' => 'form-control','contenteditable'=>'true']) }}
+            {{ Form::select('owner_id', App\User::options(), old('owner_id', $project->owner_id ?: Auth::user()->id), ['class' => 'form-control']) }}
             {!! $errors->first('owner_id', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('cost_owner_id', 'has-error')}}">
+            {{ Form::label('cost_owner_id', 'Owner', ['class' => 'control-label']) }}
+            {{ Form::select('cost_owner_id', App\User::options(), null, ['class' => 'form-control']) }}
+            {!! $errors->first('cost_owner_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('client_name', 'has-error')}}">

@@ -19,7 +19,7 @@ export default {
         return data;
     },
 
-    ready() {
+    created() {
         this.$dispatch('resource-changed', this.resource);
     },
 

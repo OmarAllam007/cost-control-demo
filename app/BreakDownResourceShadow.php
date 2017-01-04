@@ -85,4 +85,9 @@ class BreakDownResourceShadow extends Model
         }
     }
 
+    function productivity()
+    {
+        return $this->belongsTo(Productivity::class);
+    }
+
 }

@@ -8,6 +8,9 @@
     </div>
     
     @if ($project->productivities->count())
+        @php
+        $projectProductivities = App\Productivity::where('project_id', $project->id)->get()->keyBy('productivity_id');
+        @endphp
         <table class="table table-condensed table-striped table-fixed">
             <thead>
             <tr>
@@ -24,10 +27,10 @@
             <tbody>
             @foreach($project->productivities as $productivity)
                 <tr>
-                    <td class="col-xs-2">{{$productivity->code}}</td>
+                    <td class="col-xs-2">{{$productivity->csi_code}}</td>
                     <td class="col-xs-2">{{$productivity->description}}</td>
                     <td class="col-xs-2">{!! nl2br(e($productivity->crew_structure)) !!}}</td>
-                    <td class="col-xs-2">{{$productivity->versionFor($project->id)->after_reduction}}</td>
+                    <td class="col-xs-2">{{isset($projectProductivities[$productivity->id])? $projectProductivities[$productivity->id]->after_reduction : $productivity->after_reduction}}</td>
                     <td class="col-xs-2">{{$productivity->units->type or ''}}</td>
                     <td class="col-xs-2">
                         @can('productivity', $project)

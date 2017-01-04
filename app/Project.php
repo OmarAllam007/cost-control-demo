@@ -60,6 +60,7 @@ class Project extends Model
 
     function breakdown_resources()
     {
+        dd(debug_backtrace());
         return $this->hasManyThrough(BreakdownResource::class, Breakdown::class);
     }
 
@@ -76,7 +77,7 @@ class Project extends Model
 
     function getProductivitiesAttribute()
     {
-        return $this->breakdown_resources->load('productivity.category')
+        return $this->shadows->load('productivity')
             ->pluck('productivity')->unique()->filter();
     }
 

@@ -161,7 +161,11 @@ class WbsLevelController extends Controller
     {
         $project->quantities()->delete();
         $project->boqs()->delete();
-        $project->wbs_levels()->delete();
+        $project->breakdowns()->delete();
+        foreach ($project->wbs_levels as $level) {
+            $level->deleteRelations();
+            $level->delete();
+        }
 
         \Cache::forget('wbs-tree-' . $project->id);
 

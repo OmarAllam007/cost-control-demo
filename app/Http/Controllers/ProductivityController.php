@@ -160,30 +160,41 @@ class ProductivityController extends Controller
 
     function override(Productivity $productivity, Project $project)
     {
-        $overide = true;
-        $overwrote = Productivity::version($project->id, $productivity->id)->first();
-        if (!$overwrote) {
+        if ($productivity->project_id) {
             $overwrote = $productivity;
+            $baseProductivity = Productivity::find($productivity->productivity_id);
+        } else {
+            $overwrote = Productivity::version($project->id, $productivity->id)->first();
+            if (!$overwrote) {
+                $overwrote = $productivity;
+            }
+            $baseProductivity = $productivity;
         }
 
         return view('productivity.override', [
             'productivity' => $overwrote,
-            'baseProductivity' => $productivity,
+            'baseProductivity' => $baseProductivity,
             'project' => $project,
             'edit' => false,
+            'override' => true
         ]);
     }
 
     function postOverride(Request $request, Productivity $productivity, Project $project)
     {
         $this->validate($request, $this->rules);
-
-        $newProductivity = Productivity::version($project->id, $productivity->id)->first();
+        if ($productivity->project_id) {
+            $newProductivity = $productivity;
+            $baseProductivity = Productivity::find($productivity->productivity_id);
+        } else {
+            $newProductivity = Productivity::version($project->id, $productivity->id)->first();
+            $baseProductivity = $productivity;
+        }
 
         if (!$newProductivity) {
             $newProductivity = new Productivity($request->all());
             $newProductivity->project_id = $project->id;
-            $newProductivity->productivity_id = $productivity->id;
+            $newProductivity->productivity_id = $baseProductivity->id;
             $newProductivity->save();
         } else {
             $newProductivity->update($request->all());
