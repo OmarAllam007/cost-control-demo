@@ -37,7 +37,7 @@
                 <tr v-for="productivity in filterd_productivity">
                     <td class="col-xs-2">@{{productivity.code}}</td>
                     <td class="col-xs-2">@{{productivity.description}}</td>
-                    <td class="col-xs-2" >@{{productivity.crew_structure}}</td>
+                    <td class="col-xs-2" >@{{productivity.crew_structure}} </td>
                     <td class="col-xs-2">@{{productivity.after_reduction}}</td>
                     <td class="col-xs-2">@{{productivity.unit}}</td>
                     <td class="col-xs-2">

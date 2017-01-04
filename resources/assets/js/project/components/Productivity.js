@@ -34,6 +34,12 @@ export default{
             })
         }
     },
+    filters: {
+        breakline: function(value){
+            console.log(value);
+            // return value ;
+        }
+    },
 
     watch: {},
     ready(){
