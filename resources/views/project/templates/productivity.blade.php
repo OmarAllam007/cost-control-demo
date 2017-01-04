@@ -33,25 +33,25 @@
                 </tr>
                 </thead>
                 <tbody>
-{{--                @foreach($project->productivities as $productivity)--}}
+                {{--                @foreach($project->productivities as $productivity)--}}
                 <tr v-for="productivity in filterd_productivity">
                     <td class="col-xs-2">@{{productivity.code}}</td>
-                        <td class="col-xs-2">@{{productivity.description}}</td>
-                        <td class="col-xs-2" >@{{productivity.crew_structure}}</td>
-                        <td class="col-xs-2">@{{productivity.after_reduction}}</td>
-                        <td class="col-xs-2">@{{productivity.unit}}</td>
-                        <td class="col-xs-2">
-                            @can('productivity', $project)
-                                <a href="/productivity/override/@{{productivity.id}}/{{$project->id}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
-                            @endcan
-                        </td>
-                    </tr>
+                    <td class="col-xs-2">@{{productivity.description}}</td>
+                    <td class="col-xs-2" >@{{productivity.crew_structure}}</td>
+                    <td class="col-xs-2">@{{productivity.after_reduction}}</td>
+                    <td class="col-xs-2">@{{productivity.unit}}</td>
+                    <td class="col-xs-2">
+                        @can('productivity', $project)
+                            <a href="/productivity/override/@{{productivity.id}}/{{$project->id}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
+                        @endcan
+                    </td>
+                </tr>
                 {{--@endforeach--}}
                 </tbody>
             </table>
-            </div>
+        </div>
         {{--@else--}}
-            <div class="alert alert-warning" v-else><i class="fa fa-exclamation-triangle"></i> No productivity found</div>
+        <div class="alert alert-warning" v-else><i class="fa fa-exclamation-triangle"></i> No productivity found</div>
         {{--@endif--}}
     </div>
 </productivity>

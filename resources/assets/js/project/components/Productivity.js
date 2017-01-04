@@ -14,9 +14,7 @@ export default{
             }).success(response=> {
                 console.log(response)
                 this.productivityArray = $.map(response, function (value, index) {
-                    // if([value][0]['code']!=null){
-                        return [value]
-                    // }
+                    return [value]
 
                 })
             }).error(response=> {
@@ -28,7 +26,7 @@ export default{
         filterd_productivity(){
             return this.productivityArray.filter((item)=> {
                 if (this.code) {
-                    if(item.code!=null){
+                    if (item.code != null) {
                         return item.code.toLowerCase().indexOf(this.code.toLowerCase()) >= 0;
                     }
                 }
@@ -36,6 +34,7 @@ export default{
             })
         }
     },
+
     watch: {},
     ready(){
         this.loadProductivity();
