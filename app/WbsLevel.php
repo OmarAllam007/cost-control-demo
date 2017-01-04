@@ -41,10 +41,21 @@ class WbsLevel extends Model
             });
         }
 
-        $this->breakdowns()->delete();
+        $this->deleteRelations();
+        $this->delete();
+    }
+
+    function deleteRelations()
+    {
+        $breakdown_ids = $this->breakdowns()->pluck('id');
+        $breakdown_resource_ids = BreakdownResource::whereIn('breakdown_id')->pluck('id');
+
+        Breakdown::whereIn('id', $breakdown_ids)->delete();
+        BreakdownResources::whereIn('breakdown_id', $breakdown_ids)->delete();
+        BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)->delete();
+        BreakdownVariable::whereIn('breakdown_id', $breakdown_ids);
         Boq::where('wbs_level_id', $this->id)->delete();
         Survey::where('wbs_level_id', $this->id)->delete();
-        $this->delete();
     }
 
     public function breakdowns()
