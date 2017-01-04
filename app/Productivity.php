@@ -76,6 +76,19 @@ class Productivity extends Model
         ];
     }
 
+    function getJson(Project $project)
+    {
+        return [
+                'id' => $this->id,
+                'code' => $this->code,
+                'description' => $this->description,
+                'crew_structure' => $this->crew_structure,
+                'after_reduction' => $this->versionFor($project->id)->after_reduction,
+                'daily_output' => $this->daily_output,
+                'unit' => $this->units->type,
+            ];
+    }
+
     public function getManHoursAttribute()
     {
         if (!$this->after_reduction) {
@@ -155,10 +168,11 @@ class Productivity extends Model
         return $errors;
     }
 
-    public static function boot(){
+    public static function boot()
+    {
         parent::boot();
 
-        static::created(function (){
+        static::created(function () {
             \Cache::forget('csi-tree');
             \Cache::remember('csi-tree', 7 * 24 * 60, function () {
                 return dispatch(new CacheCsiCategoryTree());
