@@ -37,6 +37,7 @@ class CostSummery
         $previousShadows = CostShadow::where('period_id', '<', $project->open_period()->id)->where('project_id', $project->id)->get();
 
         $data = [];
+
         foreach ($budgets as $budget) {
             if($budget['resource_type']!='Not Assigned'){
                 if (!isset($data[$budget['resource_type']])) {
@@ -73,6 +74,7 @@ class CostSummery
                 }
             }
         }
+        ksort($data);
         return view('reports.cost-control.cost_summery', compact('data'));
     }
 }

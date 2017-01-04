@@ -27,7 +27,7 @@ class RevisedBoq
         foreach ($breakdowns as $breakdown) {
             $wbs_level = $breakdown->wbs_level;
             $cost_account = $breakdown->cost_account;
-            $dry = $breakdown->getDry($project,$wbs_level->id,$cost_account);
+            $dry = $breakdown->getDry($project, $wbs_level->id, $cost_account);
             if ($dry) {
                 if (!isset($data[$wbs_level->id])) {
                     $data[$wbs_level->id] = [
@@ -47,8 +47,8 @@ class RevisedBoq
                         'weight' => 0,
                     ];
 
-                    $boq = Boq::where('cost_account', $breakdown->cost_account)->first();
-                    $survey = Survey::where('cost_account', $breakdown->cost_account)->first();
+                    $boq = Boq::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
+                    $survey = Survey::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
 
                     if ($boq && $survey) {
                         $data[$wbs_level->id]['cost_account'][$breakdown->cost_account]['original_boq'] += $boq->price_ur * $boq->quantity;
@@ -63,7 +63,7 @@ class RevisedBoq
                 $parent = $wbs_level;
                 while ($parent->parent) {
                     $parent = $parent->parent;
-                    $parent_dry = $breakdown->getDry($project,$parent->id,$cost_account);
+                    $parent_dry = $breakdown->getDry($project, $parent->id, $cost_account);
                     if ($parent_dry) {
                         if (!isset($data[$parent->id])) {
                             $data[$parent->id] = [
@@ -75,13 +75,24 @@ class RevisedBoq
                                 'weight' => 0,
                             ];
                         }
+                        if (!isset($data[$parent->id]['cost_account'][$breakdown->cost_account])) {
+                            $data[$parent->id]['cost_account'][$breakdown->cost_account] = [
+                                'revised_boq' => 0,
+                                'original_boq' => 0,
+                                'weight' => 0,
+                            ];
+                            $boq = Boq::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
+                            $survey = Survey::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
 
-                        $boq_parent = Boq::where('wbs_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum(\DB::raw('quantity * price_ur'));
-                        $boq_price = Boq::where('wbs_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum('price_ur');
-                        $survey_parent = Survey::where('wbs_level_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum('eng_qty');
-                        $data[$parent->id]['original_boq'] = $boq_parent;
-                        $data[$parent->id]['revised_boq'] = $boq_price * $survey_parent;
-                        break;
+                            if ($boq && $survey) {
+                                $data[$parent->id]['cost_account'][$breakdown->cost_account]['original_boq'] += $boq->price_ur * $boq->quantity;
+                                $data[$parent->id]['cost_account'][$breakdown->cost_account]['revised_boq'] += $boq->price_ur * $survey->eng_qty;
+                            }
+                            $survey_parent = Survey::where('wbs_level_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum('eng_qty');
+//                            $data[$parent->id]['original_boq'] = $boq;
+//                            $data[$parent->id]['revised_boq'] = $survey * $survey_parent;
+                            break;
+                        }
                     }
                 }
             }
@@ -100,7 +111,8 @@ class RevisedBoq
             if ($data[$key]['original_boq']) {
                 $data[$key]['weight'] += $data[$key]['revised_boq'] / $data[$key]['original_boq'] * 100;
             }
-            if($total['original_boq']){
+            if ($total['original_boq']) {
+
                 $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
             }
         }

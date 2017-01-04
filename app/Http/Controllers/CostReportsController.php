@@ -7,6 +7,7 @@ use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummery;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
+use App\Http\Controllers\Reports\CostReports\ProductivityReport;
 use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
@@ -51,23 +52,33 @@ class CostReportsController extends Controller
         return $boq->getReport($project);
     }
 
-    public function resourceCodeReport(Project $project){
+    public function resourceCodeReport(Project $project)
+    {
         $code = new ResourceCodeReport();
         return $code->getResourceCodeReport($project);
     }
 
-    public function overdraftReport(Project $project){
+    public function overdraftReport(Project $project)
+    {
         $draft = new OverdraftReport();
         return $draft->getDraft($project);
     }
 
-    public function activityReport(Project $project){
+    public function activityReport(Project $project)
+    {
         $activity = new ActivityReport();
         return $activity->getActivityReport($project);
     }
 
-    public function resourceDictionaryReport(Project $project){
+    public function resourceDictionaryReport(Project $project)
+    {
         $dictionary = new ResourceDictionaryReport();
         return $dictionary->getReport($project);
+    }
+
+    public function productivityReport(Project $project)
+    {
+        $productivity = new ProductivityReport();
+        return $productivity->getCostProductivity($project);
     }
 }

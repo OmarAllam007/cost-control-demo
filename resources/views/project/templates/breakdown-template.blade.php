@@ -20,7 +20,6 @@
         </div>
 
         <section class="filters row">
-
             <div class="col-sm-3">
                 <div class="form-group form-group-sm">
                     {{Form::label('template_name', 'Template Name', ['class' => 'control-label'])}}
@@ -28,19 +27,8 @@
                    ['class' => 'form-control', 'v-model' => 'template'])}}
                 </div>
             </div>
-
-            {{--<div class="col-sm-3">--}}
-                {{--<div class="form-group form-group-sm">--}}
-                    {{--{{Form::label('activity', 'Activity', ['class' => 'control-label'])}}--}}
-                    {{--<p>--}}
-                        {{--<a href="#ActivitiesModal2" data-toggle="modal" class="tree-open">--}}
-                            {{--{{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}--}}
-                        {{--</a>--}}
-                        {{--<a href="#" class="remove-tree-input" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>--}}
-                    {{--</p>--}}
-                {{--</div>--}}
-            {{--</div>--}}
         </section>
+
         @if ($project->templates->count())
             <table class="table table-condensed table-striped table-fixed">
                 <thead>

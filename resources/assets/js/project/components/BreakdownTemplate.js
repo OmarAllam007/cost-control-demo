@@ -10,7 +10,6 @@ export default{
     },
     methods: {
         loadTemplates(){
-            console.log('go');
             $.ajax({
                 url: '/api/breakdown-template/template/' + this.project, dataType: 'json'
             }).success(response=> {

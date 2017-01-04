@@ -191,16 +191,16 @@ class BreakdownTemplateController extends Controller
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
-
-        $this->validate($request, [
-            'file' => 'required|file|mimes:xls,xlsx',
-        ]);
+//
+//        $this->validate($request, [
+//            'file' => 'required|file|mimes:xls,xlsx',
+//        ]);
 
         $file = $request->file('file');
-        $this->dispatch(new ImportBreakdownTemplateJob($file->path()));
+        $count = $this->dispatch(new ImportBreakdownTemplateJob($file->path()));
 
 
-        flash('Breakdown templates imported successfully', 'success');
+        flash($count.' Breakdown templates imported successfully', 'success');
         return \Redirect::route('breakdown-template.index');
     }
 
