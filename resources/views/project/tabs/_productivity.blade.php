@@ -27,7 +27,7 @@
             <tbody>
             @foreach($project->productivities as $productivity)
                 <tr>
-                    <td class="col-xs-2">{{$productivity->code}}</td>
+                    <td class="col-xs-2">{{$productivity->csi_code}}</td>
                     <td class="col-xs-2">{{$productivity->description}}</td>
                     <td class="col-xs-2">{!! nl2br(e($productivity->crew_structure)) !!}}</td>
                     <td class="col-xs-2">{{isset($projectProductivities[$productivity->id])? $projectProductivities[$productivity->id]->after_reduction : $productivity->after_reduction}}</td>

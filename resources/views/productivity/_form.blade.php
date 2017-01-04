@@ -1,4 +1,5 @@
 {{ csrf_field() }}
+
 <div class="row">
     <div class="col-md-6">
         <div class="form-group {{$errors->first('csi_code', 'has-error')}}">
@@ -7,7 +8,7 @@
                 {{ Form::text('csi_code', null, ['class' => 'form-control','readonly' => 'readonly']) }}
                 {!! $errors->first('csi_code', '<div class="help-block">:message</div>') !!}
             @elseif($override)
-                {{ Form::text('csi_code', $base->csi_code, ['class' => 'form-control','readonly' => 'readonly']) }}
+                {{ Form::text('csi_code', $baseProductivity->csi_code, ['class' => 'form-control','readonly' => 'readonly']) }}
             @else
                 {{ Form::text('csi_code', null, ['class' => 'form-control']) }}
             @endif
@@ -17,7 +18,8 @@
             {{ Form::label('csi_category_id', 'CSI Category', ['class' => 'control-label']) }}
             @if ($override)
                 <p>
-                    <em>{{ $base->category->path }}</em>
+                    {{Form::hidden('csi_category_id', $baseProductivity->csi_category_id)}}
+                    <em>{{ $baseProductivity->category->path }}</em>
                 </p>
             @else
                 <p>
@@ -34,7 +36,7 @@
         <div class="form-group {{$errors->first('daily_output', 'has-error')}}">
             {{ Form::label('daily_output', 'Daily Output', ['class' => 'control-label']) }}
             @if($override)
-                {{ Form::text('daily_output', $base->daily_output, ['class' => 'form-control', 'readonly']) }}
+                {{ Form::text('daily_output', $baseProductivity->daily_output, ['class' => 'form-control', 'readonly']) }}
             @else
                 {{ Form::text('daily_output', null, ['class' => 'form-control']) }}
                 {!! $errors->first('daily_output', '<div class="help-block">:message</div>') !!}
@@ -50,7 +52,7 @@
         <div class="form-group {{$errors->first('description', 'has-error')}}">
             {{ Form::label('description', 'Description', ['class' => 'control-label', 'readonly' => 'readonly']) }}
             @if ($override)
-                {{ Form::textarea('description', $base->description, ['class' => 'form-control', 'readonly']) }}
+                {{ Form::textarea('description', $baseProductivity->description, ['class' => 'form-control', 'readonly']) }}
                 {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
             @else
                 {{ Form::textarea('description', null, ['class' => 'form-control', ]) }}
@@ -60,7 +62,7 @@
         <div class="form-group {{$errors->first('crew_structure', 'has-error')}}">
             {{ Form::label('crew_structure', 'Crew Structure', ['class' => 'control-label']) }}
             @if ($override)
-                {{ Form::textarea('crew_structure', $base->crew_structure, ['class' => 'form-control','id'=> 'crew_structure', 'readonly' => 'readonly']) }}
+                {{ Form::textarea('crew_structure', $baseProductivity->crew_structure, ['class' => 'form-control','id'=> 'crew_structure', 'readonly' => 'readonly']) }}
             @else
                 {{ Form::textarea('crew_structure',null, ['class' => 'form-control','id'=> 'crew_structure']) }}
                 {!! $errors->first('crew_structure', '<div class="help-block">:message</div>') !!}
@@ -73,7 +75,7 @@
         <div class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'Unit', ['class' => 'control-label']) }}
             @if ($override)
-                {{ Form::select('unit', App\Unit::options(), $base->unit, ['class' => 'form-control', 'readonly']) }}
+                {{ Form::select('unit', App\Unit::options(), $baseProductivity->unit, ['class' => 'form-control', 'readonly']) }}
             @else
                 {{ Form::select('unit', App\Unit::options(), null, ['class' => 'form-control']) }}
                 {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
