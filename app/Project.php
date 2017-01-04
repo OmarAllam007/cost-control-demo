@@ -60,7 +60,6 @@ class Project extends Model
 
     function breakdown_resources()
     {
-        dd(debug_backtrace());
         return $this->hasManyThrough(BreakdownResource::class, Breakdown::class);
     }
 
