@@ -20,8 +20,10 @@ class QuantitySurveyObserver
 
     function updated(Survey $quantitySurvey)
     {
-        $ids = BreakDownResourceShadow::where('project_id', $quantitySurvey->project_id)->
-        where('cost_account', $quantitySurvey->cost_account)->pluck('breakdown_resource_id');
+        $ids = BreakDownResourceShadow::whereIn('wbs_id', $quantitySurvey->wbsLevel->getChildrenIds())
+            ->where('cost_account', $quantitySurvey->cost_account)
+            ->pluck('breakdown_resource_id');
+
         $resources = BreakdownResource::whereIn('id', $ids)->get();
         foreach ($resources as $resource){
             $resource->budget_qty = $quantitySurvey->budget_qty;

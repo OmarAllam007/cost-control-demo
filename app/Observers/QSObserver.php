@@ -17,9 +17,9 @@ use App\Survey;
 
 class QSObserver
 {
-    //todo to be checked tommorrow
-    function updated(Survey $survey)
-    {
-        $survey->updateBreakdownResources();
-    }
+    //todo: remove this class at all as there is another class QuantitySurvey Observer!!!!
+//    function updated(Survey $survey)
+//    {
+//        $survey->updateBreakdownResources();
+//    }
 }
