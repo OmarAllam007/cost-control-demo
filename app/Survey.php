@@ -78,26 +78,14 @@ class Survey extends Model
 
     public function updateBreakdownResources()
     {
-        $variables = $this->variables->pluck('name')->toArray();
-
-        $resourceIds = Resources::whereIn('name', $variables)->pluck('id')->toArray();
-
         $breakdowns = Breakdown::where('project_id', $this->project_id)
             ->whereIn('wbs_level_id', $this->wbsLevel->getChildrenIds())
-            ->where('cost_account', $this->cost_account)->get();
+            ->where('cost_account', $this->cost_account)
+            ->pluck('id');
 
-        foreach ($breakdowns as $breakdown) {
-            $breakdown_resources = BreakdownResource::where('breakdown_id', $breakdown->id)
-                ->whereIn('resource_id', $resourceIds)->get();
-
-            foreach ($breakdown_resources as $breakdown_resource) {
-                $formatter = new BreakdownResourceFormatter($breakdown_resource);
-                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
-                    ->update($formatter->toArray());
-            }
-        }
-//        $cache = new ResourcesCache();
-//        $cache->cacheResources();
+        BreakdownResource::whereIn('breakdown_id', $breakdowns)->each(function (BreakdownResource $breakdown_resource) {
+            $breakdown_resource->updateShadow();
+        });
     }
 
 }

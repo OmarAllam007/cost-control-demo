@@ -74,12 +74,31 @@ class ProjectPolicy
         return $this->can($user, $project, __FUNCTION__);
     }
 
-    protected function can(User $user, Project $project, $ability)
+    function mapping(User $user, Project $project)
+    {
+        return $this->canCost($user, $project, __FUNCTION__);
+    }
+
+    protected function canBudget(User $user, Project $project, $ability)
     {
         if ($project->owner_id === $user->id) {
             return true;
         }
 
+        return $this->can($user, $project, $ability);
+    }
+
+    protected function canCost(User $user, Project $project, $ability)
+    {
+        if ($project->cost_owner_id === $user->id) {
+            return true;
+        }
+
+        return $this->can($user, $project, $ability);
+    }
+
+    protected function can(User $user, Project $project, $ability)
+    {
         if (!$this->project_user) {
             $this->project_user = ProjectUser::where(['user_id' => $user->id, 'project_id' => $project->id])->first();
             if (!$this->project_user) {

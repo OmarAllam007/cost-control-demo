@@ -16,6 +16,7 @@ elixir(function (mix) {
     mix.webpack('project/cost-control.js', 'public/js/cost-control.js')
         .webpack('project/index.js', 'public/js/project.js')
         .webpack('project-permissions.js');
+    mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
     // .sass('print.scss')
     // .webpack('resource-codes.js');
 //comment again
@@ -49,7 +50,7 @@ elixir(function (mix) {
      'tree-select.js'
      ], 'public/js/breakdown.js');
 
-     mix.rollup('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
+
 
      mix.rollup('activity-variables.js');
      mix.rollup('edit-resource.js');*/
