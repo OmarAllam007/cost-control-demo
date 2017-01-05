@@ -9,6 +9,7 @@ use App\CostShadow;
 use App\Jobs\Export\ExportCostShadow;
 use App\Jobs\ImportActualMaterialJob;
 use App\Jobs\ImportMaterialDataJob;
+use App\Jobs\SendMappingErrorNotification;
 use App\Jobs\UpdateResourceDictJob;
 use App\Project;
 use App\ResourceCode;
@@ -49,6 +50,23 @@ class ActualMaterialController extends Controller
         if (!$data) {
             flash('No data found');
             return \Redirect::route('project.index');
+        }
+
+        if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
+            if ($data['mapping']['activity']->count()) {
+                if (\Gate::denies('activity_mapping', $data['project'])) {
+                    $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
+                }
+            }
+
+            if ($data['mapping']['resources']->count()) {
+                if (\Gate::denies('resource_mapping', $data['project'])) {
+                    $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
+                }
+            }
+
+            $data['mapping'] = collect(['activity' => collect(), 'resources' => collect()]);
+            return $this->redirect($data, $key);
         }
 
         $data['projectActivityCodes'] = $data['project']->breakdown_resources->load([

@@ -11,6 +11,8 @@ class ProjectPolicy
 {
     use HandlesAuthorization;
 
+    protected $project_user;
+
     //<editor-fold defaultstate="collapsed" desc="Budget Methods">
     function budget(User $user, Project $project)
     {
@@ -136,14 +138,12 @@ class ProjectPolicy
 
     protected function can(User $user, Project $project, $ability)
     {
-        if (!$this->project_user) {
-            $this->project_user = ProjectUser::where(['user_id' => $user->id, 'project_id' => $project->id])->first();
-            if (!$this->project_user) {
-                return false;
-            }
+        $user = ProjectUser::where(['user_id' => $user->id, 'project_id' => $project->id])->first();
+        if (!$user) {
+            return false;
         }
 
-        return $this->project_user->getAttribute($ability) == 1;
+        return $user->getAttribute($ability) == 1;
     }
     //</editor-fold>
 }

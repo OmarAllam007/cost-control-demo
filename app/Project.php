@@ -36,6 +36,7 @@ class Project extends Model
         'direct_cost_material',
         'indirect_cost_general',
         'total_budget_cost',
+        'cost_owner_id'
     ];
     
     protected $dates = ['created_at', 'updated_at'];
@@ -186,5 +187,14 @@ class Project extends Model
         return !is_null($this->open_period()) && ActivityMap::forProject($this)->exists();
     }
 
+    function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    function cost_owner()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }
