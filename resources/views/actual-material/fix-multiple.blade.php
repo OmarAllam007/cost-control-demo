@@ -50,7 +50,7 @@
                                 {{$resource[7]}}
                             </td>
                             <td>
-                                {{$resource[3]}}
+                                {{$resource[2]}}
                             </td>
                             <td>
                                 {{$res->resource_code}}

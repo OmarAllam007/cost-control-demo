@@ -33,7 +33,7 @@ class ActualMaterialController extends Controller
 
         /** @var UploadedFile $file */
         $file = $request->file('file');
-        $filename = $file->move(storage_path('batches'), uniqid().'.'.$file->clientExtension());
+        $filename = $file->move(storage_path('batches'), uniqid() . '.' . $file->clientExtension());
 
         $result = $this->dispatch(new ImportActualMaterialJob($project, $filename));
 
@@ -79,8 +79,8 @@ class ActualMaterialController extends Controller
             }
 
         }
-            // Issue has been resolved remove from cached data
-            $data['mapping']['activity'] = collect();
+        // Issue has been resolved remove from cached data
+        $data['mapping']['activity'] = collect();
 
         if ($request->has('resources')) {
             foreach ($request->get('resources') as $code => $resourceData) {
@@ -95,8 +95,8 @@ class ActualMaterialController extends Controller
             }
 
         }
-            // Issue has been resolved remove from cached data
-            $data['mapping']['resources'] = collect();
+        // Issue has been resolved remove from cached data
+        $data['mapping']['resources'] = collect();
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
         return $this->redirect($this->merge($data, $result), $key);
@@ -110,11 +110,11 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $units = $data['units']->groupBy(function ($row) {
-            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
-        });
+//        $units = $data['units']->groupBy(function ($row) {
+//            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
+//        });
 
-        return view('actual-material.fix-units', ['units' => $units, 'project' => $data['project']]);
+        return view('actual-material.fix-units', $data);
     }
 
     function postFixUnits($key, Request $request)
@@ -127,24 +127,14 @@ class ActualMaterialController extends Controller
 
         $newActivities = collect();
         $units = $request->get("units");
-        $dataUnits = $data['units']->groupBy(function ($row) {
-            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
-        });
-        foreach ($dataUnits as $activity => $subResources) {
-            $total = $subResources->average(6);
-            $totalQty = 0;
-            foreach ($subResources as $resource) {
-                $totalQty += $units[$resource['resource']->breakdown_resource_id]['qty'];
-            }
-            $unit_price = $total / $totalQty;
-            foreach ($subResources as $resource) {
-                $resource[3] = $qty = $resource['resource']->measure_unit;
-                $resource[4] = $qty = $units[$resource['resource']->breakdown_resource_id]['qty'];
-                $resource[5] = $unit_price;
-                $resource[6] = $qty * $unit_price;
 
-                $newActivities->push($resource);
-            }
+        foreach ($data['units'] as $key => $row) {
+            $qty = $units[$key]['qty'];
+            $unit_price = $row[6] / $qty;
+            $row[3] = $row['unit_resource']->units->type;
+            $row[4] = $qty;
+            $row[5] = $unit_price;
+            $newActivities->push($row);
         }
 
         $result = dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
@@ -205,7 +195,7 @@ class ActualMaterialController extends Controller
         }
 
         $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->whereRaw('csh.to_date_qty > bsh.budget_unit')->pluck('breakdown_resource_id', 'breakdown_resource_id');
-        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function($resource){
+        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function ($resource) {
             $wbs = WbsLevel::find($resource->wbs_id);
             return $wbs->name . ' / ' . $resource->activity;
         });
@@ -246,7 +236,7 @@ class ActualMaterialController extends Controller
         }
 
         $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->pluck('breakdown_resource_id', 'breakdown_resource_id');
-        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function($resource){
+        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function ($resource) {
             $wbs = WbsLevel::find($resource->wbs_id);
             return $wbs->name . ' / ' . $resource->activity;
         });
@@ -332,7 +322,7 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $closed = $data['closed']->pluck('resource')->keyBy('id')->groupBy(function($resource) {
+        $closed = $data['closed']->pluck('resource')->keyBy('id')->groupBy(function ($resource) {
             return $resource->wbs->name . ' / ' . $resource->activity;
         });
 
@@ -352,8 +342,7 @@ class ActualMaterialController extends Controller
         $closed = $data['closed']->pluck('resource')->keyBy('id');
 
         $newResourceIds = [];
-        foreach ($request->get('closed') as $id => $is_open)
-        {
+        foreach ($request->get('closed') as $id => $is_open) {
             if ($is_open) {
                 $closed[$id]->status = 'In Progress';
                 $closed[$id]->save();
@@ -361,7 +350,7 @@ class ActualMaterialController extends Controller
             }
         }
 
-        $newResources = $data['closed']->whereIn('resource.id', $newResourceIds)->map(function($row) {
+        $newResources = $data['closed']->whereIn('resource.id', $newResourceIds)->map(function ($row) {
             $row['resource'] = $row['resource']->fresh();
             return $row;
         });
@@ -372,7 +361,8 @@ class ActualMaterialController extends Controller
         return $this->redirect($this->merge($data, $result), $key);
     }
 
-    function ExportCostBreakdown(Project $project){
+    function ExportCostBreakdown(Project $project)
+    {
         if (\Gate::denies('read', 'productivity')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
@@ -387,13 +377,13 @@ class ActualMaterialController extends Controller
 
         if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
             return \Redirect::route('actual-material.mapping', $key);
-        } elseif($data['closed']->count()){
+        } elseif ($data['closed']->count()) {
             return \Redirect::route('actual-material.closed', $key);
-        } elseif($data['units']->count()) {
+        } elseif ($data['units']->count()) {
             return \Redirect::route('actual-material.units', $key);
         } elseif ($data['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
-        }elseif ($data['resources']->count()) {
+        } elseif ($data['resources']->count()) {
             return \Redirect::route('actual-material.resources', $key);
         } elseif ($data['to_import']->count()) {
             $count = $this->saveImported($data['to_import']);
@@ -425,7 +415,7 @@ class ActualMaterialController extends Controller
 
     protected function merge($data, $result)
     {
-        $returnData =  [
+        $returnData = [
             'mapping' => [
                 'activity' => $data['mapping']['activity']->merge($result['mapping']['activity']),
                 'resources' => $data['mapping']['resources']->merge($result['mapping']['resources']),
@@ -440,7 +430,7 @@ class ActualMaterialController extends Controller
         ];
 
         $multiple_resources_ids = collect([]);
-        $returnData['to_import']->groupBy('breakdown_resource_id')->each(function($resources, $breakdown_resource_id) use ($returnData, $multiple_resources_ids) {
+        $returnData['to_import']->groupBy('breakdown_resource_id')->each(function ($resources, $breakdown_resource_id) use ($returnData, $multiple_resources_ids) {
 
             $resource_count = $resources->pluck('original_code', 'original_code')->count();
 
@@ -455,7 +445,7 @@ class ActualMaterialController extends Controller
 
         });
 
-        $returnData['to_import'] = $returnData['to_import']->filter(function($resource) use ($multiple_resources_ids) {
+        $returnData['to_import'] = $returnData['to_import']->filter(function ($resource) use ($multiple_resources_ids) {
             return !$multiple_resources_ids->has($resource['breakdown_resource_id']);
         });
 

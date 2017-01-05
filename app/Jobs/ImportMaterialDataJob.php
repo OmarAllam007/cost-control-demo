@@ -96,6 +96,23 @@ class ImportMaterialDataJob extends Job
             }
             $resource_ids = $this->resourceMap->get($resourceCode);
 
+            // Check unit of measure
+            $unit_resources = Resources::find($resource_ids->toArray());
+            if (!$unit_resources) {
+                dd($resource_ids);
+            }
+            if ($unit_resources && $unit_resources->count() == 1) {
+                $unit_resource =$unit_resources->first();
+                $resource_unit_id = $unit_resource->unit;
+                $store_unit_id = $this->unitsMap->get(mb_strtolower($row[3]));
+                if ($resource_unit_id != $store_unit_id) {
+                    // Unit of measure is not matching we should ask for quantity
+                    $row['unit_resource'] = $unit_resource;
+                    $result['units']->push($row);
+                    continue;
+                }
+            }
+
             if (!empty($row['resource'])) {
                 $breakdownResources = collect([$row['resource']->breakdown_resource]);
             } else {
@@ -106,9 +123,10 @@ class ImportMaterialDataJob extends Job
 
             /** @var \Illuminate\Database\Eloquent\Collection $breakdownResources */
             if ($breakdownResources->count() == 1) {
-                // We have only one code. This is the oprimal case
+                // We have only one code. This is the optimal case
                 $breakdownResource = $breakdownResources->first();
 
+                // If the resource is closed we should ask to open it first
                 if ($breakdownResource->shadow->status == 'Closed') {
                     $row['resource'] = $breakdownResource->shadow;
                     $result['closed']->push($row);
