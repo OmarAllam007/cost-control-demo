@@ -38,7 +38,7 @@ class Project extends Model
         'total_budget_cost',
         'cost_owner_id'
     ];
-    
+
     protected $dates = ['created_at', 'updated_at'];
 
     function getWbsTreeAttribute()
@@ -104,7 +104,7 @@ class Project extends Model
 
     function shadows()
     {
-        return $this->hasMany(BreakDownResourceShadow::class,'project_id');
+        return $this->hasMany(BreakDownResourceShadow::class, 'project_id');
     }
 
     function templates()
@@ -162,8 +162,12 @@ class Project extends Model
 
     function getPermissionsAttribute()
     {
-        $pivotFields = ['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey'];
-        return $this->users->map(function(User $user) use ($pivotFields) {
+        $pivotFields = [
+            'budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey',
+            'activity_mapping', 'resource_mapping', 'periods', 'remaining_unit_price', 'remaining_unit_qty', 'manual_edit', 'delete_resources',
+        ];
+
+        return $this->users->map(function (User $user) use ($pivotFields) {
             $row = [
                 'name' => $user->name,
                 'user_id' => $user->id

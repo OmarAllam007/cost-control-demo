@@ -26,7 +26,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-
                         <select id="user_id" v-model="user.user_id" class="form-control" v-if="!edit">
                             <option value="">Select User</option>
                             <option v-for="(id, name) in users" :value="id" v-text="name"></option>
@@ -37,91 +36,156 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.budget" v-model="user.budget" value="1"> Display budget
-                            </label>
-                        </div>
-                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>Budget Permission</h5>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.cost_control" v-model="user.cost_control" value="1"> Display cost control
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.budget" v-model="user.budget" value="1"> Display budget
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.reports" v-model="user.reports" value="1"> Display reports
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.reports" v-model="user.reports" value="1"> Display reports
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.wbs" v-model="user.wbs" value="1"> Manage WBS
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.wbs" v-model="user.wbs" value="1"> Manage WBS
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.breakdown" v-model="user.breakdown" value="1"> Manage breakdowns
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.breakdown" v-model="user.breakdown" value="1"> Manage breakdowns
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.breakdown_templates" v-model="user.breakdown_templates" value="1"> Manage breakdown templates
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.breakdown_templates" v-model="user.breakdown_templates" value="1"> Manage breakdown templates
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.resources" v-model="user.resources" value="1"> Manage resources
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.resources" v-model="user.resources" value="1"> Manage resources
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.productivity" v-model="user.productivity" value="1"> Manage productivity
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.productivity" v-model="user.productivity" value="1"> Manage productivity
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.boq" v-model="user.boq" value="1"> Manage BOQ
-                            </label>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.boq" v-model="user.boq" value="1"> Manage BOQ
+                                    </label>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.qty_survey" v-model="user.qty_survey" value="1"> Manage Quantity Survey
-                            </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.qty_survey" v-model="user.qty_survey" value="1"> Manage Quantity Survey
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div class="col-sm-6">
+                            <h5>Cost Permission</h5>
 
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" :checked="user.actual_resources" v-model="user.actual_resources"> Manage actual resources
-                            </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.cost_control" v-model="user.cost_control" value="1"> Display cost control
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.actual_resources" v-model="user.actual_resources"> Import resources
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.activity_mapping" v-model="user.activity_mapping"> Activity Mapping
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.resource_mapping" v-model="user.resource_mapping"> Resource Mapping
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.periods" v-model="user.periods"> Manage Financial Periods
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.remaining_unit_price" v-model="user.remaining_unit_price"> Edit remaining unit price
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.remaining_unit_qty" v-model="user.remaining_unit_qty"> Edit remaining quantities
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.manual_edit" v-model="user.manual_edit"> Edit resources manually
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.manual_edit" v-model="user.manual_edit"> Edit resources manually
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -155,6 +219,13 @@
                 <input type="hidden" name="users[@{{$index}}][actual_resources]" :value="user.actual_resources? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][boq]" :value="user.boq? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][qty_survey]" :value="user.qty_survey? 1: 0">
+                <input type="hidden" name="users[@{{$index}}][activity_mapping]" :value="user.activity_mapping ? 1 : 0">
+                <input type="hidden" name="users[@{{$index}}][resource_mapping]" :value="user.resource_mapping ? 1 : 0">
+                <input type="hidden" name="users[@{{$index}}][periods]" :value="user.periods ? 1 : 0">
+                <input type="hidden" name="users[@{{$index}}][remaining_unit_price]" :value="user.remaining_unit_price ? 1 : 0">
+                <input type="hidden" name="users[@{{$index}}][remaining_unit_qty]" :value="user.remaining_unit_qty ? 1 : 0">
+                <input type="hidden" name="users[@{{$index}}][manual_edit]" :value="user.manual_edit ? 1 : 0">
+                <input type="hidden" name="users[@{{$index}}][delete_resources]" :value="user.delete_resources ? 1 : 0">
             </div>
 
             <div class="btn-toolbar pull-right">
