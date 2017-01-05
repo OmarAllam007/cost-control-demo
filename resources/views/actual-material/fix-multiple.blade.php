@@ -208,9 +208,9 @@
                 }
 
                 if (totalAmount == originalTotalAmount && totalQty == originalTotalQty) {
-//                    $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
+                    $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
                 } else {
-//                    $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
+                    $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
                 }
             }
         });

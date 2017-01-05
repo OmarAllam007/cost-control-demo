@@ -175,11 +175,13 @@ class ActualMaterialController extends Controller
 
                     $newResource = $resource;
                     $newResource[4] = $material['qty'];
+                    $newResource[6] = $material['qty'] * $resource[5];
                     $newResource['resource'] = $shadow;
                     $newResources->push($newResource);
                 }
             }
         }
+
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
         $data['multiple'] = collect();
 
@@ -363,7 +365,7 @@ class ActualMaterialController extends Controller
 
     function ExportCostBreakdown(Project $project)
     {
-        if (\Gate::denies('read', 'productivity')) {
+        if (\Gate::denies('cost_control', $project)) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
