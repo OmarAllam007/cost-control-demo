@@ -28,21 +28,21 @@
                             @can('budget', $project)
                                 <a class="btn btn-sm btn-info" href="{{ route('project.budget', $project) }}">Budget</a>
                             @else
-                                @can('reports')
+                                @can('reports', $project)
                                     <a class="btn btn-sm btn-info"
                                        href="{{ route('project.budget', $project) }}">Budget</a>
                                 @endcan
                             @endcan
 
-                            @can('cost_control')
+                            @can('cost_control', $project)
                                 <a class="btn btn-sm btn-violet" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
                             @else
-                                @can('reports')
+                                @can('reports', $project)
                                     <a class="btn btn-sm btn-violet" href="{{ route('project.cost-control', $project) }}">Cost Control</a>
                                 @endcan
                             @endcan
 
-                            @can('modify')
+                            @can('modify', $project)
                                 <a class="btn btn-sm btn-primary" href="{{ route('project.edit', $project) }} "><i
                                             class="fa fa-edit"></i> Edit</a>
 

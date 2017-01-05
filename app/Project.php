@@ -37,6 +37,7 @@ class Project extends Model
         'direct_cost_material',
         'indirect_cost_general',
         'total_budget_cost',
+        'cost_owner_id'
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -162,7 +163,11 @@ class Project extends Model
 
     function getPermissionsAttribute()
     {
-        $pivotFields = ['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey'];
+        $pivotFields = [
+            'budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey',
+            'activity_mapping', 'resource_mapping', 'periods', 'remaining_unit_price', 'remaining_unit_qty', 'manual_edit', 'delete_resources',
+        ];
+
         return $this->users->map(function (User $user) use ($pivotFields) {
             $row = [
                 'name' => $user->name,
@@ -207,5 +212,14 @@ class Project extends Model
         return $max + 1;
     }
 
+    function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    function cost_owner()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

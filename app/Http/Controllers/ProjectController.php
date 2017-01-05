@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\ProjectUser;
 use Illuminate\Http\Request;
 use \Auth;
 

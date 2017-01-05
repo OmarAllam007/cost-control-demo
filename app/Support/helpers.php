@@ -16,6 +16,16 @@ function slug($value='')
     return Illuminate\Support\Str::slug($value);
 }
 
+ function cannot($ability, $object)
+ {
+     return \Gate::denies($ability, $object);
+ }
+
+function can($ability, $object)
+{
+    return \Gate::allows($ability, $object);
+}
+
 function roundup($number, $precision)
 {
     $multiplier = pow(10, $precision);

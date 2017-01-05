@@ -47,7 +47,7 @@ class ExportCostShadow extends Job
             'Productivity (Unit/Day)',
             'Productivity Ref',
             'Remarks',
-            'progress',
+            'Progress',
             'Status',
             'Prev. Price/Unit',
             'Prev. Quantity',
@@ -110,12 +110,12 @@ class ExportCostShadow extends Job
                     )
                 )
             );
-            $this->styleColumns($sheet, 'A' . $columnCount . ':' . 'W' . $columnCount, 'E0E0E0');
-            $this->styleColumns($sheet, 'X' . $columnCount . ':' . 'Y' . $columnCount, 'CCCCFF');
-            $this->styleColumns($sheet, 'Z' . $columnCount . ':' . 'AB' . $columnCount, 'CCFFCC');
-            $this->styleColumns($sheet, 'AC' . $columnCount . ':' . 'AJ' . $columnCount, 'FFCC99');
-            $this->styleColumns($sheet, 'AK' . $columnCount . ':' . 'AR' . $columnCount, 'CCCCFF');
-            $this->styleColumns($sheet, 'AS' . $columnCount . ':' . 'BC' . $columnCount, 'FFCC99');
+            $this->styleColumns($sheet, 'A' . $rowCount . ':' . 'W' . $rowCount, 'E0E0E0');
+            $this->styleColumns($sheet, 'X' . $rowCount . ':' . 'Y' . $rowCount, 'CCCCFF');
+            $this->styleColumns($sheet, 'Z' . $rowCount . ':' . 'AB' . $rowCount, 'CCFFCC');
+            $this->styleColumns($sheet, 'AC' . $rowCount . ':' . 'AJ' . $rowCount, 'FFCC99');
+            $this->styleColumns($sheet, 'AK' . $rowCount . ':' . 'AR' . $rowCount, 'CCCCFF');
+            $this->styleColumns($sheet, 'AS' . $rowCount . ':' . 'BC' . $rowCount, 'FFCC99');
             $columnCount++;
             $sheet->fromArray([
                 isset($levels[0]) ? $levels[0] : '',
@@ -141,8 +141,8 @@ class ExportCostShadow extends Job
                 $budget['productivity_output'] ?: '0',
                 $budget['productivity_ref'] ?: '0',
                 $budget['remarks'],
-                $costShadow['progress'],
-                $costShadow->status,
+                $budget->progress,
+                $budget->status,
                 $costShadow['previous_unit_price'] ?: '0',
                 $costShadow['previous_qty'] ?: '0',
                 $costShadow['previous_cost'] ?: '0',
@@ -178,7 +178,7 @@ class ExportCostShadow extends Job
             $rowCount++;
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - BreakDown.xlsx"');
+        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - DataSheet.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');

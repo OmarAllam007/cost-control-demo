@@ -4,22 +4,29 @@
     <h2>{{ $project->name }}</h2>
 
     <nav class="btn-toolbar pull-right">
+        @if (can('activity_mapping', $project) || can('resource_mapping', $project) || ($project->is_cost_ready && can('actual_resources', $project)))
+            <div class="btn-group">
+                <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle"
+                   data-toggle="dropdown"><i
+                            class="fa fa-cloud-upload"></i> Import <span class="caret"></span></a>
+                <ul id="import-link" class="dropdown-menu">
+                    @if ($project->is_cost_ready)
+                        @can('actual_resources', $project)
+                            <li><a href="{{route('actual-material.import', $project)}}">Resources</a></li>
+                        @endcan
+                    @endif
 
+                    @can('activity_mapping', $project)
+                        <li><a href="{{route('activity-map.import', $project)}}">Activity Mapping</a></li>
+                    @endcan
 
-        <div class="btn-group">
-            <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"><i
-                        class="fa fa-cloud-upload"></i> Import <span class="caret"></span></a>
-            <ul id="import-link" class="dropdown-menu">
-                @if ($project->is_cost_ready)
-                    <li><a href="{{route('actual-material.import', $project)}}">Material</a></li>
-                    <li><a href="#labour">Labour</a></li>
-                    <li><a href="#invoice">Invoices</a></li>
-                @endif
-                <li><a href="{{route('activity-map.import', $project)}}">Activity Mapping</a></li>
-                <li><a href="{{route('resources.import-codes', compact('project'))}}">Resource Mapping</a></li>
-                <li><a href="{{route('actual-revenue.import', $project)}}">Actual Revenue</a></li>
-            </ul>
-        </div>
+                    @can('resource_mapping', $project)
+                        <li><a href="{{route('resources.import-codes', compact('project'))}}">Resource Mapping</a></li>
+                    @endcan
+                    <li><a href="{{route('actual-revenue.import', $project)}}">Actual Revenue</a></li>
+                </ul>
+            </div>
+        @endif
 
 
         <a href="{{ route('project.index') }}" class="btn btn-default btn-sm">
@@ -30,40 +37,54 @@
 
 @section('body')
 
+    @can('periods', $project)
     @if (!$project->open_period())
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle"></i>
             No open period in the project. Please <a href="/period/create?project={{$project->id}}">add a period here</a>.
         </div>
     @endif
+    @endcan
 
+    @can('activity_mapping', $project)
     @if (!App\ActivityMap::forProject($project)->exists())
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle"></i>
-            No activity mapping for this project project. Please <a href="/activity-map/import/{{$project->id}}">upload activity mapping here</a>.
+            No activity mapping for this project project. Please <a href="/activity-map/import/{{$project->id}}">upload
+                activity mapping here</a>.
         </div>
     @endif
+    @endcan
 
     <div id="projectArea" class="hidden">
 
         <nav id="project-nav" class="project-nav btn-toolbar pull-right">
             <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
             <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
+
+            @can('periods', $project)
             <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial
                 Periods</a>
+            @endcan
+
+            @can('reports', $project)
             <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i>
                 Reports</a>
+            @endcan
         </nav>
         <div class="clearfix"></div>
-
 
         @include('project.cost-control.datasheet')
 
         @include('project.cost-control.resources')
 
-        @include('project.cost-control.periods')
+        @can('periods', $project)
+            @include('project.cost-control.periods')
+        @endcan
 
-        @include('project.cost-control._report')
+        @can('reports', $project)
+            @include('project.cost-control._report')
+        @endcan
 
     </div>
 
