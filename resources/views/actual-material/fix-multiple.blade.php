@@ -30,11 +30,11 @@
                         <th>Resource Name</th>
                         <th>Cost Account</th>
                         <th>Budget Unit</th>
+                        <th>Remarks</th>
+                        <th>Previous</th>
                         <th>Quantity</th>
                         <th>Unit Price</th>
                         <th>Total</th>
-                        <th>Remarks</th>
-                        <th>Previous</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -65,16 +65,16 @@
                                 {{$res->budget_unit}}
                             </td>
                             <td>
-                                {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[4])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
-                            </td>
-                            <td class="unit-price-cell">{{ number_format($resource[5], 2) }}</td>
-                            <td class="total-cell">{{ number_format($qty * $resource[5], 2) }}</td>
-                            <td>
                                 {{$res->remarks}}
                             </td>
                             <td>
                                 {{$res->cost ? number_format($res->cost->previous_qty, 2) : 0 }}
                             </td>
+                            <td>
+                                {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[4])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
+                            </td>
+                            <td class="unit-price-cell" data-value="{{$resource[5]}}">{{ number_format($resource[5], 2) }}</td>
+                            <td class="total-cell" data-value="{{$amount = $qty * $resource[5]}}">{{ number_format($amount, 2) }}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -82,14 +82,14 @@
                     <tr class="totals-row">
                         <th th colspan="3">&nbsp;</th>
                         <th class="text-right">Store Qty</th>
-                        <th class="original-qty">{{ number_format(abs($resource[4]), 2) }}</th>
+                        <th class="original-qty" data-value="{{$resource[4]}}">{{ number_format($resource[4], 2) }}</th>
                         <th class="text-right">Store Total</th>
-                        <th class="original-total">{{ number_format(abs($resource[6]), 2) }}</th>
+                        <th class="original-total" data-value="{{$resource[6]}}">{{ number_format($resource[6], 2) }}</th>
 
                         <th class="text-right">Qty</th>
-                        <th class="total-qty-cell">{{ number_format(abs($resource[4]), 2) }}</th>
+                        <th class="total-qty-cell" data-value="{{$resource[4]}}">{{ number_format($resource[4], 2) }}</th>
                         <th class="text-right">Total</th>
-                        <th colspan="3" class="total-amount-cell">{{ number_format(abs($resource[6]), 2) }}</th>
+                        <th colspan="3" class="total-amount-cell" data-value="{{$resource[6]}}">{{ number_format($resource[6], 2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
@@ -118,8 +118,6 @@
 
             $('.include').change(function () {
                 var table = $(this).closest('table');
-
-
                 recalculateQty(table);
             });
 
@@ -127,7 +125,7 @@
                 var _this = $(this);
                 var row = _this.closest('tr');
                 row.data('manual', true);
-                updateUnitPrice(row);
+
                 var table = $(this).closest('table');
                 recalculateQty(table);
                 updateTotals(table);
@@ -146,13 +144,6 @@
                     }
                 }
             }).first().focus();
-
-            function updateUnitPrice(row) {
-                var value = parseFloat(row.find('.qty').val()) || 0;
-                var unit_price = parseFloat(row.find('.unit-price-cell').text());
-                var total = parseFloat(value * unit_price);
-                row.find('.total-cell').text(total.toFixed(2).toLocaleString(formatOptions));
-            }
 
             function recalculateQty(table) {
                 var totalBudget = 0;
@@ -176,32 +167,33 @@
                         if (!_this.data('manual')) {
                             var budget = _this.data('budget');
                             _this.find('.qty').val((budget * qty / totalBudget).toFixed(2));
-                            updateUnitPrice(_this);
                         }
                         _this.find('.qty').prop('readonly', false);
                     } else {
                         _this.find('.qty').val('0.00').prop('readonly', true);
-                        updateUnitPrice(_this);
                     }
                 });
             }
 
             function updateTotals(table) {
-                var totalQty = 0;
                 var totalQty = 0, totalAmount = 0;
                 table.find('tbody tr').each(function () {
                     var _this = $(this);
                     if (_this.find('.include').prop('checked')) {
-                        totalQty += parseFloat(_this.find('.qty').val()) || 0;
-                        totalAmount += parseFloat(_this.find('.total-cell').text()) || 0;
+                        var qty = parseFloat(_this.find('.qty').val()) || 0;
+                        var unit_price = parseFloat(_this.find('.unit-price-cell').data('value'));
+                        var total = qty * unit_price;
+                        _this.find('.total-cell').data('value', total).text(parseFloat(total.toFixed(2)).toLocaleString(formatOptions));
+                        totalQty += qty;
+                        totalAmount += total;
                     }
                 });
 
-                table.find('.total-amount-cell').text(parseFloat(totalAmount.toFixed(2)).toLocaleString(formatOptions));
-                table.find('.total-qty-cell').text(parseFloat(totalQty.toFixed(2)).toLocaleString(formatOptions));
+                table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount.toFixed(2)).toLocaleString(formatOptions));
+                table.find('.total-qty-cell').data('value', totalQty).text(parseFloat(totalQty.toFixed(2)).toLocaleString(formatOptions));
 
-                var originalTotalAmount = parseFloat($('.original-total').text());
-                var originalTotalQty = parseFloat($('.original-qty').text());
+                var originalTotalAmount = parseFloat($('.original-total').data('value'));
+                var originalTotalQty = parseFloat($('.original-qty').data('value'));
 
                 if (totalAmount != originalTotalAmount) {
                     table.find('.total-amount-cell').addClass('text-danger');
