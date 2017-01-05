@@ -11,6 +11,7 @@ class CacheResourcesTree extends Job
 {
     public function handle()
     {
+        set_time_limit(60);
 
         $tree = [];
         $types = ResourceType::tree()->get();
@@ -33,7 +34,7 @@ class CacheResourcesTree extends Job
         }
 
         if ($type->resources->count()) {
-            $tree['resources'] = $type->resources->map(function(Resources $resource) {
+            $tree['resources'] = $type->resources()->whereNull('project_id')->get()->map(function(Resources $resource) {
                     return ['id' => $resource->id,'code'=>$resource->resource_code, 'name' => $resource->name,'project_id'=>$resource->project_id, 'json' => $resource->morphToJSON()];
             });
         }
