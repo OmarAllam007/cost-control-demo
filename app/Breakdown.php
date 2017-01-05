@@ -41,7 +41,7 @@ class Breakdown extends Model
 
     function qty_survey()
     {
-        return $this->belongsTo(Survey::class, 'cost_account', 'cost_account')->where('project_id', $this->project_id);
+        return $this->belongsTo(Survey::class, 'cost_account', 'cost_account')->where('project_id', $this->project_id)->where('wbs_level_id', $this->wbs_level_id);
     }
 
     /*function syncResources($resources)
