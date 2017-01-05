@@ -20,6 +20,7 @@ class WbsLevelExportJob extends Job
 
     public function handle()
     {
+
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()
@@ -33,12 +34,12 @@ class WbsLevelExportJob extends Job
                 )
             );
         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'WBS-LEVEL 1');
-
         $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'WBS-LEVEL 2');
         $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'WBS-LEVEL 3');
         $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'WBS-LEVEL 4');
         $rowCount = 2;
         foreach ($this->project->wbs_tree as $level) {
+
             $objPHPExcel->getActiveSheet()
                 ->getStyle('A'.$rowCount.':D'.$rowCount)
                 ->applyFromArray(
@@ -81,6 +82,18 @@ class WbsLevelExportJob extends Job
                 }
             }
 
+        }
+        foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+
+            $objPHPExcel->setActiveSheetIndex($objPHPExcel->getIndex($worksheet));
+
+            $sheet = $objPHPExcel->getActiveSheet();
+            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+            /** @var PHPExcel_Cell $cell */
+            foreach ($cellIterator as $cell) {
+                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            }
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$this->project->name.' - WBS Levels.xls"');
