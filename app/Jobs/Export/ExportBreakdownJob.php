@@ -26,12 +26,14 @@ class ExportBreakdownJob extends Job
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->fromArray(['WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','Activity ID', 'Activity', 'Breakdown-Template', 'Cost Account', 'Engineering Quantity', 'Budget Quantity',
-            'Resource 
-        Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost', 'BOQ Equivalent Unit Rate', 'No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'], 'A1');
+        $sheet->fromArray(['WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','WBS-Level-5','WBS-Level-6','WBS-Level-7','Activity-Division-1','Activity-Division-2','Activity-Division-3',
+            'Activity-Division-4','Activity ID',
+            'Activity','Discipline',
+            'Breakdown-Template', 'Cost Account',
+            'Engineering Quantity', 'BudgetQuantity','Resource Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost',
+            'BOQ Equivalent Unit Rate','No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'], 'A1');
         $rowCount = 2;
-
-        $sheet->getStyle('A1:W1')->applyFromArray(
+        $sheet->getStyle('A1:AF1')->applyFromArray(
             array(
                 'fill' => array(
                     'type' => \PHPExcel_Style_Fill::FILL_SOLID,
@@ -41,24 +43,43 @@ class ExportBreakdownJob extends Job
         );
 
         foreach ($this->project->shadows as $breakdown_resource) {
-            $parent = $breakdown_resource->wbs;
+            $discpline = $breakdown_resource->std_activity->discipline;
+            $division = $breakdown_resource->std_activity->division;
+            $level = $breakdown_resource->wbs;
             $levels = [];
-            $levels[] = $parent->name;
-            $parent = $parent->parent;
+            $divisions=[];
+            $levels[] = $level->name;
 
+            $parent = $level->parent;
             while ($parent) {
                 $levels[] = $parent->name;
                 $parent = $parent->parent;
             };
-
             $levels = array_reverse($levels);
+
+            $divisions[]=$division->name;
+
+            $parentDiv = $division->parent;
+            while($parentDiv){
+                $divisions[] = $parentDiv->name;
+                $parentDiv= $parentDiv->parent;
+            }
+            $divisions = array_reverse($divisions);
             $sheet->fromArray([
                 isset($levels[0]) ? $levels[0] : '',
                 isset($levels[1]) ? $levels[1] : '',
                 isset($levels[2]) ? $levels[2] : '',
                 isset($levels[3]) ? $levels[3] : '',
+                isset($levels[4]) ? $levels[4] : '',
+                isset($levels[5]) ? $levels[5] : '',
+                isset($levels[6]) ? $levels[6] : '',
+                isset($divisions[0]) ? $divisions[0] : '',
+                isset($divisions[1]) ? $divisions[1] : '',
+                isset($divisions[2]) ? $divisions[2] : '',
+                isset($divisions[3]) ? $divisions[3] : '',
                 $breakdown_resource['code'],
                 $breakdown_resource['activity'],
+                $discpline,
                 $breakdown_resource['template'],
                 $breakdown_resource['cost_account'],
                 $breakdown_resource['eng_qty'],
@@ -81,7 +102,7 @@ class ExportBreakdownJob extends Job
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $this->project->name . ' - BreakDown.xlsx"');
-        header('Cache-Control: max-age=0');
+//        header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
 
