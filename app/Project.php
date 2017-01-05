@@ -18,6 +18,7 @@ class Project extends Model
 
     protected static $alias = 'Project';
     protected $ids = [];
+    protected $depth = 1;
     protected $fillable = [
         'name',
         'project_code',
@@ -37,7 +38,7 @@ class Project extends Model
         'indirect_cost_general',
         'total_budget_cost',
     ];
-    
+
     protected $dates = ['created_at', 'updated_at'];
 
     function getWbsTreeAttribute()
@@ -103,7 +104,7 @@ class Project extends Model
 
     function shadows()
     {
-        return $this->hasMany(BreakDownResourceShadow::class,'project_id');
+        return $this->hasMany(BreakDownResourceShadow::class, 'project_id');
     }
 
     function templates()
@@ -162,7 +163,7 @@ class Project extends Model
     function getPermissionsAttribute()
     {
         $pivotFields = ['budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey'];
-        return $this->users->map(function(User $user) use ($pivotFields) {
+        return $this->users->map(function (User $user) use ($pivotFields) {
             $row = [
                 'name' => $user->name,
                 'user_id' => $user->id
@@ -184,6 +185,26 @@ class Project extends Model
     function getIsCostReadyAttribute()
     {
         return !is_null($this->open_period()) && ActivityMap::forProject($this)->exists();
+    }
+
+    function getTreeDepthAttribute()
+    {
+        $max = 0;
+        $levels = WbsLevel::where('project_id', $this->id)->get();
+        foreach ($levels as $level) {
+            $parent = $level;
+            while ($parent->parent) {
+                $this->depth++;
+                $parent = $parent->parent;
+            }
+
+            if ($max < $this->depth) {
+                $max = $this->depth;
+            }
+            $this->depth = 0;
+
+        }
+        return $max + 1;
     }
 
 

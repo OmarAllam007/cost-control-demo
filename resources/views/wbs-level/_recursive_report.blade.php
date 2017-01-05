@@ -4,15 +4,34 @@
     @endfor
 
     <td
-            @if($tree_level ==0)
+            @if($tree_level==0)
             class="blue-second-level"
-            @elseif($tree_level ==1)
-            class="blue-third-level"
-            @elseif($tree_level ==2)
-            class="blue-fourth-level"
-            @else
-            class="normal-row"
             @endif
+
+            @if($tree_level==1)
+                class="blue-third-level"
+            @endif
+
+            @if($tree_level==2)
+                class="blue-fourth-level"
+            @endif
+
+            @if($tree_level==3)
+                class="blue-second-level"
+            @endif
+
+            @if($tree_level==4)
+                class="blue-third-level"
+            @endif
+
+            @if($tree_level==5)
+                class="blue-fourth-level"
+            @endif
+
+            @if($tree_level==6)
+                class="blue-second-level"
+            @endif
+
     >
 
         {{$wbs_level['name']}}
@@ -20,16 +39,36 @@
         </small>
     </td>
 
-    @for ($i = $tree_level + 1; $i < 4; ++$i)
+    @for ($i = $tree_level + 2; $i < $depthTree; ++$i)
         <td
-                @if($tree_level ==0)
+                @if($tree_level==0)
                 class="blue-second-level"
-                @elseif($tree_level ==1)
+                @endif
+
+                @if($tree_level==1)
                 class="blue-third-level"
-                @elseif($tree_level ==2)
+                @endif
+
+                @if($tree_level==2)
                 class="blue-fourth-level"
                 @endif
-        >
+
+                @if($tree_level==3)
+                class="blue-second-level"
+                @endif
+
+                @if($tree_level==4)
+                class="blue-third-level"
+                @endif
+
+                @if($tree_level==5)
+                class="blue-fourth-level"
+                @endif
+
+                @if($tree_level==6)
+                class="blue-second-level"
+                @endif
+                        >
 
         </td>
     @endfor
@@ -37,6 +76,6 @@
 
 @if ($wbs_level['children'] && count($wbs_level['children']))
     @foreach($wbs_level['children'] as $child)
-        @include('wbs-level._recursive_report', ['wbs_level' => $child, 'tree_level' => $tree_level + 1])
+        @include('wbs-level._recursive_report', ['wbs_level' => $child, 'tree_level' => $tree_level +1])
     @endforeach
 @endif

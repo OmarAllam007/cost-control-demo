@@ -83,18 +83,7 @@ class WbsLevelExportJob extends Job
             }
 
         }
-        foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
 
-            $objPHPExcel->setActiveSheetIndex($objPHPExcel->getIndex($worksheet));
-
-            $sheet = $objPHPExcel->getActiveSheet();
-            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
-            foreach ($cellIterator as $cell) {
-                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-            }
-        }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$this->project->name.' - WBS Levels.xls"');
         header('Cache-Control: max-age=0');

@@ -28,23 +28,17 @@
 @endsection
 
 @section('body')
+    @php
+        $depthTree = $project->tree_depth+1;
+    @endphp
     @if ($project->wbs_tree->count())
         <table class="table table-condensed table-bordered">
             <thead>
-            <tr>
-                <th width="25%" class="blue-first-level">WBS
-                    Level 1
-                </th>
-                <th width="25%" class="blue-first-level">WBS
-                    Level 2
-                </th>
-                <th width="25%" class="blue-first-level">WBS
-                    Level 3
-                </th>
-                <th width="25%" class="blue-first-level">WBS
-                    Level 4
-                </th>
-            </tr>
+            @for($depth=1;$depth< $depthTree;++$depth)
+                <td class="blue-first-level" >WBS
+                    Level {{$depth}}
+                </td>
+            @endfor
             </thead>
             <tbody>
             @foreach($wbsTree as $wbs_level)
@@ -58,4 +52,5 @@
             No WBS found
         </div>
     @endif
+
 @endsection
