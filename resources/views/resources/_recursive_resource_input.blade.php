@@ -5,13 +5,10 @@
         </label>
     </div>
 
-    <ul class=""></ul>
 
     <div class="collapse" id="children-{{$type['id']}}">
         @if (count($type['resources']))
             <ul class="list-unstyled">
-
-
                 @foreach($type['resources'] as $resource)
 
                     @if(!$resource['project_id'] || $resource['project_id'] ==
