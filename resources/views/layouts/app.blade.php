@@ -101,7 +101,7 @@
                 @yield('header')
             </div>
 
-            <div>
+            <div class="panel-body">
                 @if (session()->has('flash-message'))
                     @include("partials/alert/" . session('flash-type'), ['message' => session('flash-message')])
                 @endif
