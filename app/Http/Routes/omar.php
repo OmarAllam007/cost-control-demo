@@ -94,6 +94,9 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('high_priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriority']);
 
 
+    //Export Project Reports
+    Route::get('export_std_activity/{project}',['as'=>'budget_std_activity.export','uses'=>'ExportReportController@exportStdActivity']);
+    Route::get('export_productivity/{project}',['as'=>'budget_productivity.export','uses'=>'ExportReportController@exportProductivity']);
 });
 //reports cost control
 
