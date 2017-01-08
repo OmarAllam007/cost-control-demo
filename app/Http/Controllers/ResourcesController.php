@@ -458,12 +458,12 @@ class ResourcesController extends Controller
         $file = $request->file('file');
         $this->dispatch(new ModifyPublicResourcesJob($file, $project_id));
 
-        $filter = new ResourcesFilter(Resources::query(), session('filters.resources'));
-        $resources = $filter->filter()->basic()->orderBy('resource_code')->orderBy('name')->paginate(100);
+        flash('Modified resources have been imported', 'success');
         if($project_id){
-            return view('project.show', ['project' => $project]);
+            return \Redirect::route('project.budget', $project);
         }
-        return view('resources.index', ['resources' => $resources]);
+
+        return \Redirect::route('resources.index');
     }
 
     function projectWipeAll(Project $project)

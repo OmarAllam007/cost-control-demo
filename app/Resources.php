@@ -110,17 +110,15 @@ class Resources extends Model
         if ($this->project_id) {
             $breakdown_resources = BreakdownResource::whereHas('breakdown', function ($q) {
                 $q->where('project_id', $this->project_id);
-            })->where('resource_id', $this->id)
-                ->get();
+            })->where('resource_id', $this->id)->get();
 
+            /** @var BreakdownResource $breakdown_resource */
             foreach ($breakdown_resources as $breakdown_resource) {
                 $breakdown_resource->resource_waste = $this->waste;
-                $breakdown_resource->update();
-                $formatter = new BreakdownResourceFormatter($breakdown_resource);
-                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
-                    ->update($formatter->toArray());
+                if ($breakdown_resource->isDirty()) {
+                    $breakdown_resource->update();
+                }
             }
-
         }
     }
 

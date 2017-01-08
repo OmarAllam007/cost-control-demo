@@ -13,6 +13,7 @@ class ResourcesCache
         if ($forget) {
             \Cache::forget('resources-tree');
         }
+
         $resourcesTree = \Cache::remember('resources-tree', 7 * 24 * 60, function () {
             return dispatch(new CacheResourcesTree());
         });
