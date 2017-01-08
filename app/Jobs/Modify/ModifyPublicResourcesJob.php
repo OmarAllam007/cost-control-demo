@@ -56,16 +56,11 @@ class ModifyPublicResourcesJob extends ImportJob
             } else {
                 $resource = Resources::where('resource_code', $data[0])->first();
             }
-            $division_id = ResourceType::where('name', $data[2])->first();
             if (!array_filter($data)) {
                 continue;
             }
-
-            /** @var Resources $resource */
             if ($resource) {
-                $resource_type_id = isset($division_id) ? $division_id->id : '';
                 $unit_id = $this->getUnit($data[4]);
-                $resource->resource_type_id = $resource_type_id;
                 $resource->resource_code = $data[0];
                 $resource->name = $data[1];
                 $resource->rate = floatval($data[3]);
@@ -86,31 +81,31 @@ class ModifyPublicResourcesJob extends ImportJob
         return $status;
     }
 
-    protected function getTypeId($data)
-    {
-        $this->loadTypes();
-
-//        $levels = array_filter(array_slice($data, 0, 4));
-        $type_id = 0;
-        $path = [];
-
-        $path[] = mb_strtolower($data);
-        $key = implode('/', $path);
-
-        if ($this->types->has($key)) {
-            $type_id = $this->types->get($key);
-        } else {
-            $resource = ResourceType::create([
-                'name' => $data,
-                'parent_id' => $type_id
-            ]);
-            $type_id = $type_id = $resource->id;
-            $this->types->put($key, $type_id);
-        }
-
-
-        return $type_id;
-    }
+//    protected function getTypeId($data)
+//    {
+//        $this->loadTypes();
+//
+////        $levels = array_filter(array_slice($data, 0, 4));
+//        $type_id = 0;
+//        $path = [];
+//
+//        $path[] = mb_strtolower($data);
+//        $key = implode('/', $path);
+//
+//        if ($this->types->has($key)) {
+//            $type_id = $this->types->get($key);
+//        } else {
+//            $resource = ResourceType::create([
+//                'name' => $data,
+//                'parent_id' => $type_id
+//            ]);
+//            $type_id = $type_id = $resource->id;
+//            $this->types->put($key, $type_id);
+//        }
+//
+//
+//        return $type_id;
+//    }
 
     protected function getWaste($waste)
     {
