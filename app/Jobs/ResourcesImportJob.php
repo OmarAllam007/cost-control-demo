@@ -4,11 +4,9 @@ namespace App\Jobs;
 
 use App\BusinessPartner;
 use App\Http\Controllers\Caching\ResourcesCache;
-use App\Project;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Support\Collection;
-use Make\Makers\Resource;
 
 class ResourcesImportJob extends ImportJob
 {
@@ -79,8 +77,7 @@ class ResourcesImportJob extends ImportJob
             }
         }
 
-        $resource = new ResourcesCache();
-        $resource->cacheResources();
+        dispatch(new CacheResourcesInQueue());
 
         return $status;
     }
