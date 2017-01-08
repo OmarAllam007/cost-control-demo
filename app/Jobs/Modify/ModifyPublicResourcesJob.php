@@ -77,9 +77,9 @@ class ModifyPublicResourcesJob extends ImportJob
                     $resource->project_id = $this->project;
                 }
                 $resource->save();
+                $resource->updateBreakdownResources();
             }
 
-            $resource->updateBreakdownResources();
         }
         $cache = new ResourcesCache();
         $cache->cacheResources();
