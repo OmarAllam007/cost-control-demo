@@ -8,6 +8,8 @@ class ResourcesCache
 {
     public function cacheResources($forget = true)
     {
+        set_time_limit(120);
+
         if ($forget) {
             \Cache::forget('resources-tree');
         }
