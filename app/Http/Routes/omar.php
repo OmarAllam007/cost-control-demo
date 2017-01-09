@@ -57,6 +57,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('cost_overdraft/{project}',['uses'=>'CostReportsController@overdraftReport','as'=>'cost.overdraft']);
     Route::get('cost_activity/{project}',['uses'=>'CostReportsController@activityReport','as'=>'cost.activity_report']);
     Route::get('cost_resource_dictionary/{project}',['uses'=>'CostReportsController@resourceDictionaryReport','as'=>'cost.dictionary']);
+    Route::get('variance_analysis/{project}',['uses'=>'CostReportsController@varianceAnalysisReport','as'=>'cost.variance']);
 
     Route::get('reports/{project}', ['as' => 'project.reports', 'uses' => 'ReportController@getReports']);
 

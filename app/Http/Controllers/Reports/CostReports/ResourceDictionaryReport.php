@@ -23,6 +23,7 @@ class ResourceDictionaryReport
 
     function getReport(Project $project)
     {
+        $tree=[];
         $this->project = $project;
         $costShadows = CostShadow::joinBudget('budget.resource_type_id')
             ->where('budget.project_id', $project->id)->get()->pluck('resource_type_id')->unique()->toArray();

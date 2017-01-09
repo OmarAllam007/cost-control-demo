@@ -13,6 +13,7 @@ use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
 use App\Http\Controllers\Reports\CostReports\StandardActivity;
+use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -80,5 +81,11 @@ class CostReportsController extends Controller
     {
         $productivity = new ProductivityReport();
         return $productivity->getCostProductivity($project);
+    }
+
+    public function varianceAnalysisReport(Project $project)
+    {
+        $variance = new VarianceAnalysisReport();
+        return $variance->getVarianceReport($project);
     }
 }
