@@ -5,6 +5,13 @@
 @section('header')
     <h2 align="center">Productivity</h2>
     <div class="pull-right">
+        <a href="{{route('budget_productivity.export',
+        ['project'=>$project])}}"
+           target="_blank" class="btn
+        btn-info
+        btn-sm"><i class="fa fa-cloud-download"></i>
+            Export</a>
+
         <a href="?print=1&paint=productivity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
             Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">

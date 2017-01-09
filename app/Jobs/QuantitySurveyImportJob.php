@@ -33,6 +33,7 @@ class QuantitySurveyImportJob extends ImportJob
      */
     function handle()
     {
+        set_time_limit(300);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
         $failed = collect();

@@ -14,6 +14,7 @@ class BreakdownResource extends Model
     protected $calculated_resource_qty;
 
     protected $productivity_cache;
+
     protected $resource_cache;
 
 //    public $original_resource = 0;
@@ -120,20 +121,28 @@ class BreakdownResource extends Model
     {
         $finalSurvey = '';
         $level = WbsLevel::where('id', $this->wbs_level_id)->first();
-        while ($level->parent) {
-            $level = $level->parent;
-            $survey = Survey::where('cost_account', $this->cost_account)->where('wbs_level_id', $level->id)
-                ->where('project_id', $this->breakdown->project_id)
-                ->first();
-            if ($survey) {
-                $finalSurvey = $survey;
-                break;
+        $survey = Survey::where('cost_account', $this->cost_account)->where('wbs_level_id', $level->id)
+            ->where('project_id', $this->breakdown->project_id)
+            ->first();
+        if(!$survey){
+            $parent = $level;
+            while ($parent->parent) {
+                $parent = $parent->parent;
+                $parentsurvey = Survey::where('cost_account', $this->cost_account)->where('wbs_level_id', $parent->id)
+                    ->where('project_id', $this->breakdown->project_id)
+                    ->first();
+                if ($parentsurvey) {
+                    $finalSurvey = $parentsurvey;
+                    break;
+                }
             }
         }
+        else{
+            $finalSurvey = $survey;
+        }
+
         return $finalSurvey;
-//        return Survey::where('cost_account', $this->cost_account)
-//            ->where('project_id', $this->breakdown->project_id)
-//            ->first();
+
     }
 
     function getBudgetUnitAttribute()
