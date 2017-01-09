@@ -18,7 +18,7 @@ class CacheResourcesInQueue extends Job implements ShouldQueue
      */
     public function handle()
     {
-        dump('In the queue');
         \Cache::put('resources-tree', dispatch(new CacheResourcesTree()), 7 * 24 * 60);
+        \Log::info('Queue processed successfully');
     }
 }
