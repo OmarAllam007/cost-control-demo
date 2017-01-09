@@ -158,6 +158,7 @@ class BoqController extends Controller
 
         $file = $request->file('file');
         $status = $this->dispatch(new BoqImportJob($project, $file->path()));
+
         if (count($status['failed'])) {
             $key = 'boq_' . time();
             \Cache::add($key, $status, 180);
