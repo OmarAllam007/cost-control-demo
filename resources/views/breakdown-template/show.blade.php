@@ -54,7 +54,7 @@
         @else
             @if ($breakdown_template->project)
                 @can('breakdown_templates', $breakdown_template->project)
-                    <a href="/std-activity-resource/create?template={{$breakdown_template->id}}&project_id={{$breakdown_template->project}}"
+                    <a href="/std-activity-resource/create?template={{$breakdown_template->id}}&project_id={{$breakdown_template->project_id}}"
                        class="btn btn-primary btn-sm pull-right">
                         <i class="fa fa-plus-circle"></i> Add Resource
                     </a>
