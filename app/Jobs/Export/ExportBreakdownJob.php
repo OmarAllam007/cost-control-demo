@@ -3,10 +3,6 @@
 namespace App\Jobs\Export;
 
 use App\Jobs\Job;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use phpDocumentor\Reflection\Types\Null_;
 
 class ExportBreakdownJob extends Job
 {

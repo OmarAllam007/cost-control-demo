@@ -2,13 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Jobs\Job;
-use App\Project;
-use App\ResourceCode;
 use App\Resources;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ImportResourceCodesJob extends ImportJob
 {
