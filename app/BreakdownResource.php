@@ -94,7 +94,7 @@ class BreakdownResource extends Model
             return $this->calculated_resource_qty;
         }
 
-        if (!$this->equation) {
+        if (!trim($this->equation)) {
             return 0;
         }
 

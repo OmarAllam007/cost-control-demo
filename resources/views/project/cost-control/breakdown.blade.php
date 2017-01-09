@@ -1,4 +1,3 @@
-
 <template id="BreakdownTemplate">
 
     <div class="breakdown">
@@ -55,6 +54,9 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <thead>
                 <tr>
+                    @can('manual_edit')
+                        <th style="min-width: 30px; max-width: 30px">&nbsp;</th>
+                    @endcan
                     <th style="min-width: 300px; max-width: 300px;" class="bg-blue">Activity</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-black">Breakdown Template</th>
                     <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Cost Account</th>
@@ -112,6 +114,18 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <tbody>
                 <tr v-for="breakdown in filtered_breakdowns">
+                    @can('manual_edit', $project)
+                    <td style="min-width: 30px; max-width: 30px">
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-default" type="button" data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" @click.prevent="editResource(breakdown)"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
+                                <li><a href="#" @click.prevent="deleteResource(breakdown)"><i class="fa fa-fw fa-trash"></i> Delete resource data</a></li>
+                                <li><a href="#" @click.prevent="deleteActivity(breakdown)"><i class="fa fa-fw fa-remove"></i> Delete activity data</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    @endcan
                     <td style="min-width: 300px; max-width: 300px;" class="bg-blue">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
                     <td style="min-width: 150px; max-width: 150px;"

@@ -56,6 +56,18 @@ export default {
                     this.breakdowns = [];
                 });
             }
+        },
+
+        deleteResource(resource) {
+
+        },
+
+        deleteActivity(resource) {
+
+        },
+
+        editResource(resource) {
+            this.$dispatch('editBreakdown')
         }
     },
 

@@ -11247,4 +11247,18 @@ select[multiple].dropdown-templates {
   width: 200px;
 }
 
+.panel-heading {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.panel-heading h1, .panel-heading h2, .panel-heading h3, .panel-heading h4, .panel-heading h5 {
+  -webkit-box-flex: 1;
+  flex: 1;
+}
+
 /*# sourceMappingURL=app.css.map */

@@ -7,6 +7,7 @@
             <aside class="panel panel-default wbs-panel">
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title  pull-left">WBS</h3>
+
                 </div>
 
                 @include('project.cost-control.wbs', compact('wbsTree'))
