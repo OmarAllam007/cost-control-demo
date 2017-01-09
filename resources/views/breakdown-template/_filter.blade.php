@@ -11,9 +11,7 @@
     <div class="form-group-sm">
         {{Form::label('resource_id', 'Has resource', ['class' => 'control-label'])}}
         <p>
-            <a href="#ResourcesModal" data-toggle="modal">
-                @{{ resource.name || "Select Resource" }}
-            </a>
+            <a href="#ResourcesModal" data-toggle="modal" v-text="resource.name || 'Select Resource'"></a>
             <a href="#" class="text-danger" v-show="resource" @click.prevent="resource = false"><i class="fa fa-times-circle"></i></a>
         </p>
     </div>

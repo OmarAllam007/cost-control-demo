@@ -3,11 +3,7 @@
 namespace App\Jobs;
 
 use App\CsiCategory;
-use App\Jobs\Job;
 use App\Productivity;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ProductivityImportJob extends ImportJob
 {

@@ -68,11 +68,11 @@ class Resources extends Model
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'type' => $this->types->name,
-            'unit' => isset($this->units->type) ? $this->units->type : '',
+            'type' => $this->types->name ?? '',
+            'unit' => $this->units->type ?? '',
             'rate' => $this->rate,
-            'root_type' => $this->types->root->name,
-            'resource_type_id' => $this->types->root->id,
+            'root_type' => $this->types? $this->types->root->name : '',
+            'resource_type_id' => $this->types?  $this->types->root->id : 0,
             'waste' => $this->waste,
             'resource_code' => $this->resource_code,
         ];

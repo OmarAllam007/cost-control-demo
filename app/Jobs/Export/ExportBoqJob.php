@@ -6,9 +6,6 @@ use App\BoqDivision;
 use App\Jobs\Job;
 use App\Unit;
 use App\WbsLevel;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ExportBoqJob extends Job
 {

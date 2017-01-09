@@ -13,10 +13,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class BoqImportJob extends ImportJob implements ShouldQueue
+class BoqImportJob extends ImportJob
 {
-    use InteractsWithQueue, SerializesModels;
-
     protected $units;
     protected $file;
     protected $division;
@@ -42,9 +40,9 @@ class BoqImportJob extends ImportJob implements ShouldQueue
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-        $status = ['success' => 0, 'failed' => collect(),'dublicated'=>[]];
+        $status = ['success' => 0, 'failed' => collect(), 'dublicated' => []];
         Boq::flushEventListeners();
-        $boqs = Boq::where('project_id',$this->project_id)->pluck('cost_account');
+        $boqs = Boq::where('project_id', $this->project_id)->pluck('cost_account');
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
@@ -71,13 +69,15 @@ class BoqImportJob extends ImportJob implements ShouldQueue
                     'manpower' => $data[15] ?: '',
                     'project_id' => $this->project_id,
                 ]);
-            ++$status['success'];
-            }else {
-                $status['dublicated'][] =$data[2];
+                ++$status['success'];
+            } else {
+                $status['dublicated'][] = $data[2];
             }
         }
+
         \Cache::forget('boq-' . $this->project_id);
         \Cache::add('boq-' . $this->project_id, dispatch(new CacheBoqTree($this->project)), 7 * 24 * 60);
+
         unlink($this->file);
         return $status;
     }

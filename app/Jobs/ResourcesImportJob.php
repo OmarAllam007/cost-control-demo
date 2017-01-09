@@ -40,30 +40,39 @@ class ResourcesImportJob extends ImportJob
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $status = ['failed' => collect(), 'success' => 0, 'dublicated' => [], 'project' => $this->project];
 
+        if ($this->project) {
+            $oldResources = Resources::where('project_id', $this->project->id)->get();
+        } else {
+            $oldResources = Resources::whereIsNull('project_id')->get();
+        }
+
+        $oldResourceCodes = $oldResources->map(function (Resources $resource) {
+            $resource->resource_code = mb_strtolower($resource->resource_code);
+            return $resource;
+        })->pluck('resource_code', 'resource_code');
+
         Resources::flushEventListeners();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
-            if ($this->project) {
-                $resource_code = Resources::where('resource_code', $data[4])->where('project_id', $this->project)->first();
-            } else {
-                $resource_code = Resources::where('resource_code', $data[4])->first();
-            }
             if (!array_filter($data)) {
                 continue;
             }
-            if (!$resource_code) {
+
+            $code = mb_strtolower($data[4]);
+            if (!$oldResourceCodes->has($code)) {
                 $type_id = $this->getTypeId($data);
                 $unit_id = $this->getUnit($data[7]);
                 $item = [
                     'resource_type_id' => $type_id,
-                    'resource_code' => $data[4], 'name' => $data[5],
+                    'resource_code' => $data[4],
+                    'name' => $data[5],
                     'rate' => floatval($data[6]),
                     'unit' => $unit_id,
                     'waste' => $this->getWaste($data[8]),
                     'business_partner_id' => $this->getPartner($data[9]),
                     'reference' => $data[10],
-                    'project_id'=>$this->project->id??null,
+                    'project_id' => $this->project->id??null,
                 ];
                 if ($unit_id) {
                     Resources::create($item);
@@ -111,7 +120,7 @@ class ResourcesImportJob extends ImportJob
     protected function getWaste($waste)
     {
         $waste = floatval($waste);
-        return $waste < 1 ?  $waste * 100  : $waste;
+        return $waste < 1 ? $waste * 100 : $waste;
     }
 
     protected function getPartner($partner)

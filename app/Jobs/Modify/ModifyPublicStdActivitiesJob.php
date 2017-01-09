@@ -4,11 +4,7 @@ namespace App\Jobs\Modify;
 
 use App\ActivityDivision;
 use App\Jobs\ImportJob;
-use App\Jobs\Job;
 use App\StdActivity;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ModifyPublicStdActivitiesJob extends ImportJob
 {

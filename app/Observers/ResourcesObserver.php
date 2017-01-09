@@ -8,10 +8,10 @@
 
 namespace App\Observers;
 
-
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Http\Controllers\Caching\ResourcesCache;
+use App\Jobs\CacheResourcesInQueue;
 use App\Project;
 use App\Resources;
 use App\Unit;
@@ -20,37 +20,23 @@ class ResourcesObserver
 {
     function created(Resources $resource)
     {
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
+        dispatch(new CacheResourcesInQueue);
     }
 
     function creating(Resources $resource)
     {
-//        if (!$resource->project_id) {
-            $this->generateResourceCode($resource);
-//        }
+        $this->generateResourceCode($resource);
     }
 
     function updated(Resources $resource)
     {
-
         $resource->updateBreakdownResources();
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
-
-    }
-
-    function saving(Resources $resource)
-    {
-
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
+        dispatch(new CacheResourcesInQueue);
     }
 
     function deleted(Resources $resource)
     {
-        $cache = new ResourcesCache();
-        $cache->cacheResources();
+        dispatch(new CacheResourcesInQueue);
     }
 
     public function generateResourceCode($resource)

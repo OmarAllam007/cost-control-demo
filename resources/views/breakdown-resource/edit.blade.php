@@ -34,7 +34,7 @@
         {{Form::label('resource_id', 'Resource', ['class' => 'control-label'])}}
         <p>
             <a href="#ResourcesModal" data-toggle="modal">
-                <em>@{{ resource.name ? resource.name : 'Select Resource'}}</em>
+                <em v-text="resource.name ? resource.name : 'Select Resource'"></em>
             </a>
         </p>
         {!! $errors->first('std_activity_id', '<div class="help-block">:message</div>') !!}
