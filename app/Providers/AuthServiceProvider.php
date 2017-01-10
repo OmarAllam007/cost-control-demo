@@ -39,7 +39,7 @@ class AuthServiceProvider extends ServiceProvider
             return in_array(\Auth::user()->email, [
                 'hazem.mohamed@alkifah.com',
                 'karim.elsharkawy@alkifah.com',
-                'omar.garana@alkifah.com',
+//                'omar.garana@alkifah.com',
             ]);
         });
     }
