@@ -94,6 +94,9 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <pagination :total="count"></pagination>
+
                 @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
 
                 <div class="text-center resource-paging-links">
