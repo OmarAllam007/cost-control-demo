@@ -19,14 +19,14 @@
 
     <nav class="project-nav">
         @can('budget', $project)
-            <a href="#wbsArea" class="btn btn-primary">WBS &amp; Activity</a>
-            <a href="#ProjectResources" class="btn btn-outline btn-primary">Resources</a>
-            <a href="#ProjectProductivities" class="btn btn-outline btn-primary">Productivity</a>
-            <a href="#ProjectTemplates" class="btn btn-outline btn-primary">Breakdown Templates</a>
+            <a href="#wbsArea" class="btn btn-sm btn-primary"><i class="fa fa-building-o"></i> WBS &amp; Activity</a>
+            <a href="#ProjectResources" class="btn btn-sm btn-outline btn-info"><i class="fa fa-bullseye"></i> Resources</a>
+            <a href="#ProjectProductivities" class="btn btn-sm btn-outline btn-info"><i class="fa fa-male"></i> Productivity</a>
+            <a href="#ProjectTemplates" class="btn btn-sm btn-outline btn-violet"><i class="fa fa-magic"></i> Breakdown Templates</a>
         @endcan
 
         @can('reports', $project)
-            <a href="#ReportsArea" class="btn btn-outline btn-success">Reports</a>
+            <a href="#ReportsArea" class="btn btn-sm btn-outline btn-success"><i class="fa fa-line-chart"></i> Reports</a>
         @endcan
     </nav>
     <div id="projectArea" class="hidden">

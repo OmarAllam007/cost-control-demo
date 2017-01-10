@@ -86,17 +86,27 @@ export default {
         }
     },
 
-    watch: {
-        currentPage(page) {
+    methods: {
+        changePage(page) {
+            console.log(this.firstItem);
             this.$dispatch('pageChanged', {
                 page,
                 first: this.firstItem,
                 last: this.lastItem
             });
+        }
+    },
+
+    watch: {
+        currentPage(page) {
+            this.changePage(page);
         },
 
         total() {
+            console.log('total changed');
             this.numPages = Math.ceil(this.total/this.perPage);
+            this.currentPage = 1;
+            this.changePage(1);
         }
     }
 };
