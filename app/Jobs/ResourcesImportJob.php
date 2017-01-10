@@ -43,7 +43,7 @@ class ResourcesImportJob extends ImportJob
         if ($this->project) {
             $oldResources = Resources::where('project_id', $this->project->id)->get();
         } else {
-            $oldResources = Resources::whereIsNull('project_id')->get();
+            $oldResources = Resources::whereNull('project_id')->get();
         }
 
         $oldResourceCodes = $oldResources->map(function (Resources $resource) {
