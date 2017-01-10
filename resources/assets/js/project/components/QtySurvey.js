@@ -86,7 +86,7 @@ export default {
                     return true;
                 }
 
-                const term = this.filter.toLOwerCase();
+                const term = this.filter.toLowerCase();
                 return qty.description.toLowerCase().indexOf(term) >= 0 ||
                     qty.cost_account.toLowerCase().indexOf(term) >= 0;
             });
