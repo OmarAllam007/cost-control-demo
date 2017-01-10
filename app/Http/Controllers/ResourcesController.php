@@ -138,7 +138,7 @@ class ResourcesController extends Controller
 
 //        $this->validate($request, $this->rules);
 //        if ($request['waste'] <= 1) {
-            $request['waste'] = $request->waste;
+        $request['waste'] = $request->waste;
 //        } else {
 //            $request['waste'] = ($request->waste / 100);
 //        }
@@ -221,11 +221,11 @@ class ResourcesController extends Controller
             return redirect()->route('resources.fix-import', $key);
         }
         if (count($status['dublicated'])) {
-            flash($status['success'] . ' items have been imported', 'success');
-            return \Redirect::route('resources.index', ['dublicate' => $status['dublicated']]);
+            flash(nl2br("<strong>{$status['success']} Resources have been imported\n\nThe following items already exists</strong>\n" . implode("\n", $status['dublicated'])), 'info');
+        } else {
+            flash($status['success'] . ' Resources have been imported', 'success');
         }
 
-        flash($status['success'] . ' Resources have been imported', 'success');
         if ($project) {
             return redirect()->route('project.budget', $project);
         }
@@ -462,7 +462,7 @@ class ResourcesController extends Controller
         $this->dispatch(new ModifyPublicResourcesJob($file, $project_id));
 
         flash('Modified resources have been imported', 'success');
-        if($project_id){
+        if ($project_id) {
             return \Redirect::route('project.budget', $project);
         }
 
