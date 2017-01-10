@@ -1,4 +1,4 @@
-<template id="QtySurveyTemplate">
+<qty-survey project="{{$project->id}}" inline-template>
     <div class="qty-survey">
         <div class="form-group tab-actions clearfix">
             <div class="pull-right">
@@ -26,41 +26,50 @@
             <i class="fa fa-spinner fa-spin fa-3x"></i>
         </div>
 
-        <section class="filters" id="qty-survey-filters">
-
+        <section class="filters row" id="qty-survey-filters">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Search" class="control-label">Search</label>
+                    <input type="text" class="form-control" id="Search" v-model="filter" placeholder="Type here to search in cost account or description">
+                </div>
+            </div>
         </section>
 
-        <table class="table table-condensed table-striped table-hover table-fixed" v-if="quantities.length">
-            <thead>
-            <tr>
-                <th class="col-xs-2">Cost Account</th>
-                <th class="col-xs-3">Description</th>
-                <th class="col-xs-2">Budget Quantity</th>
-                <th class="col-xs-2">Eng Quantity</th>
-                <th class="col-xs-3">
-                    @can('qty_survey', $project) Action @endcan
-                </th>
-            </tr>
-            </thead>
+        <section id="QtyList" v-if="filtered_qty.length || count">
+            <table class="table table-condensed table-striped table-hover table-fixed">
+                <thead>
+                <tr>
+                    <th class="col-xs-2">Cost Account</th>
+                    <th class="col-xs-3">Description</th>
+                    <th class="col-xs-2">Budget Quantity</th>
+                    <th class="col-xs-2">Eng Quantity</th>
+                    <th class="col-xs-3">
+                        @can('qty_survey', $project) Action @endcan
+                    </th>
+                </tr>
+                </thead>
 
-            <tbody>
-            <tr v-for="quantity in quantities">
-                <td class="col-xs-2">@{{ quantity.cost_account}}</td>
-                <td class="col-xs-3">@{{ quantity.description}}</td>
-                <td class="col-xs-2">@{{ quantity.budget_qty}}</td>
-                <td class="col-xs-2">@{{ quantity.eng_qty}}</td>
-                <td class="col-xs-3">
-                    @can('qty_survey', $project)
-                    <form action="/survey/@{{quantity.id}}" method="post" @submit.prevent="destroy(quantity.id)" class="delete_form" data-name="QS">
-                        {{csrf_field()}}{{method_field('delete')}}
-                        <a href="/survey/@{{quantity.id}}/edit" class="btn btn-sm btn-primary in-iframe" title="Edit Quantity Survey"><i class="fa fa-edit"></i> Edit</a>
-                        <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>
-                    </form>
-                    @endcan
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                <tbody>
+                <tr v-for="quantity in filtered_qty">
+                    <td class="col-xs-2">@{{ quantity.cost_account}}</td>
+                    <td class="col-xs-3">@{{ quantity.description}}</td>
+                    <td class="col-xs-2">@{{ quantity.budget_qty}}</td>
+                    <td class="col-xs-2">@{{ quantity.eng_qty}}</td>
+                    <td class="col-xs-3">
+                        @can('qty_survey', $project)
+                            <form action="/survey/@{{quantity.id}}" method="post" @submit.prevent="destroy(quantity.id)" class="delete_form" data-name="QS">
+                                {{csrf_field()}}{{method_field('delete')}}
+                                <a href="/survey/@{{quantity.id}}/edit" class="btn btn-sm btn-primary in-iframe" title="Edit Quantity Survey"><i class="fa fa-edit"></i> Edit</a>
+                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>
+                            </form>
+                        @endcan
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <pagination :total="count"></pagination>
+        </section>
         <div class="alert alert-info" v-else>
             <i class="fa fa-info-circle"></i> No quantities found
         </div>
@@ -88,6 +97,4 @@
             </div>
         @endcan
     </div>
-</template>
-
-<qty-survey project="{{$project->id}}"></qty-survey>
+</qty-survey>

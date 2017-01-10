@@ -37,7 +37,7 @@ export default {
         },
 
         lastItem() {
-            let lastIndex = (this.perPage * this.currentPage) - 1;
+            let lastIndex = (this.perPage * this.currentPage);
             if (lastIndex > this.total) {
                 return this.total;
             }
@@ -88,7 +88,6 @@ export default {
 
     methods: {
         changePage(page) {
-            console.log(this.firstItem);
             this.$dispatch('pageChanged', {
                 page,
                 first: this.firstItem,
@@ -103,7 +102,6 @@ export default {
         },
 
         total() {
-            console.log('total changed');
             this.numPages = Math.ceil(this.total/this.perPage);
             this.currentPage = 1;
             this.changePage(1);
