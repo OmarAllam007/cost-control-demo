@@ -226,6 +226,9 @@ class ResourcesController extends Controller
         }
 
         flash($status['success'] . ' Resources have been imported', 'success');
+        if ($project) {
+            return redirect()->route('project.budget', $project);
+        }
         return redirect()->route('resources.index');
     }
 
