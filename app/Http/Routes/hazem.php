@@ -143,6 +143,11 @@ Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], functi
     Route::post('closed/{key}', ['as' => 'post-closed', 'uses' => 'ActualMaterialController@postClosed']);
 });
 
+Route::group(['prefix' => 'cost', 'as' => 'cost.'], function () {
+    Route::get('{cost_shadow}/edit', ['as' => 'edit', 'uses' => 'CostController@edit']);
+    Route::post('{cost_shadow}', ['as' => 'update', 'uses' => 'CostController@update']);
+});
+
 Route::resource('project', 'ProjectController');
 Route::resource('wbs-level', 'WbsLevelController');
 Route::resource('std-activity', 'StdActivityController');

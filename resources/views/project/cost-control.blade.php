@@ -57,7 +57,6 @@
     @endcan
 
     <div id="projectArea" class="hidden">
-
         <nav id="project-nav" class="project-nav btn-toolbar pull-right">
             <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
             <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
@@ -68,8 +67,7 @@
             @endcan
 
             @can('reports', $project)
-            <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i>
-                Reports</a>
+                <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i> Reports</a>
             @endcan
         </nav>
         <div class="clearfix"></div>
@@ -85,8 +83,9 @@
         @can('reports', $project)
             @include('project.cost-control._report')
         @endcan
-
     </div>
+
+    @include('project.templates.iframe-modal')
 
 @stop
 
@@ -113,6 +112,21 @@
             });
 
             projectNav.find('a:first').click();
+
+            var iframeModal = $('#IframeModal');
+            var modalContent = iframeModal.find('.modal-body');
+            $(document).on('click', '.in-iframe', function (e) {
+                e.preventDefault();
+                var href = this.href;
+                if (href.indexOf('?') < 0) {
+                    href += '?iframe=1';
+                } else {
+                    href += '&iframe=1';
+                }
+                modalContent.html('<iframe src="' + href + '" width="100%" height="100%" border="0" frameborder="0" style="border: none"></iframe>');
+                iframeModal.find('.modal-title').text($(this).attr('title') ? $(this).attr('title') : $(this).data('title'));
+                iframeModal.modal();
+            });
         })
     </script>
     <script src="{{asset('/js/cost-control.js')}}"></script>

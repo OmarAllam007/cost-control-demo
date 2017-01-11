@@ -76,7 +76,7 @@ export default {
             this.loadBreakdowns();
         },
 
-        reload_breakdown() {
+        reload_breakdowns() {
             this.loadBreakdowns();
         }
     },

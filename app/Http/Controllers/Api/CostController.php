@@ -7,6 +7,7 @@ use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\CostResource;
+use App\CostShadow;
 use App\Http\Controllers\Controller;
 use App\Project;
 use App\WbsLevel;
@@ -17,9 +18,12 @@ class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level)
     {
-        return WbsResource::whereIn('wbs_level_id', $wbs_level->getChildrenIds())->where('period_id', $wbs_level->project->open_period()->id)
-            ->joinShadow()
-            ->get();
+//        return WbsResource::whereIn('wbs_level_id', $wbs_level->getChildrenIds())->where('period_id', $wbs_level->project->open_period()->id)
+//            ->joinShadow()
+//            ->get();
+
+        return CostShadow::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
+            ->where('period_id', $wbs_level->project->open_period()->id)->with('budget')->get();
 
 //        return BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->with('cost')->get();
     }

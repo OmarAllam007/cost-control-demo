@@ -50,6 +50,7 @@ window.app = new Vue({
         },
 
         reload(params) {
+            console.log(params);
             this.reload(params.component, params.alert);
         }
     },
