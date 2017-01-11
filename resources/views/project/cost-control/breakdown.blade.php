@@ -134,12 +134,9 @@
                                 <button class="btn btn-xs btn-default" type="button" data-toggle="dropdown"><span
                                             class="caret"></span></button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#" @click.prevent="editResource(breakdown)"><i
-                                                    class="fa fa-fw fa-edit"></i> Edit</a></li>
-                                    <li><a href="#" @click.prevent="deleteResource(breakdown)"><i
-                                                    class="fa fa-fw fa-trash"></i> Delete resource data</a></li>
-                                    <li><a href="#" @click.prevent="deleteActivity(breakdown)"><span
-                                                    class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete activity data</span></a>
+                                    <li><a :href="'/cost/' + breakdown.id + '/edit/'" ><i class="fa fa-fw fa-edit"></i> Edit</a></li>
+                                    <li><a href="#" @click.prevent="deleteResource(breakdown)"><i class="fa fa-fw fa-trash"></i> Delete resource data</a></li>
+                                    <li><a href="#" @click.prevent="deleteActivity(breakdown)"><span class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete activity data</span></a>
                                     </li>
                                 </ul>
                             </div>
