@@ -79,7 +79,6 @@ class StdActivityResource extends Model
 
         $costAccount = Survey::where('cost_account', $account)->first();
         if ($costAccount) {
-//            $attributes['budget_qty'] = $costAccount->budget_qty;
             $attributes['eng_qty'] = $eng_qty;
             $attributes['budget_qty'] = $budget_qty;
         }

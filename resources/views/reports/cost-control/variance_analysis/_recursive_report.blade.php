@@ -46,13 +46,13 @@
             </tr>
             </tbody>
         </table>
-        @if ($type['cost_accounts'] && count($type['cost_accounts']))
+        @if ($type['types'] && count($type['types']))
             <ul class="list-unstyled">
-                @foreach($type['cost_accounts'] as $key=>$cost_account)
+                @foreach($type['types'] as $key=>$workType)
                     <li>
                         <p class="blue-second-level"
-                        ><label href="#{{str_replace(['-','.'],'',$key)}}" data-toggle="collapse" style="text-decoration: none;">{{$cost_account['cost_account']}}</label></p>
-                        <article id="{{str_replace(['-','.'],'',$key)}}" class="tree--child collapse">
+                        ><label href="#{{str_replace([' ','.'],'',$key)}}" data-toggle="collapse" style="text-decoration: none;">{{$key}}</label></p>
+                        <article id="{{str_replace([' ','.'],'',$key)}}" class="tree--child collapse">
                             <table class="table table-condensed">
                                 <thead>
                                 <tr>
@@ -62,7 +62,6 @@
                                     <td colspan="2" class="blue-third-level" style="text-align: center;border: solid #000000">Effect of variances</td>
                                 </tr>
                                 <tr class="output-cell">
-                                    <td>Cost Account</td>
                                     <td>Price / Unit</td>
                                     <td>Todate Price / Unit</td>
                                     <td>Price / Unit +/-</td>
@@ -78,29 +77,28 @@
                                 <tbody>
 
                                 <tr>
-                                    <td>{{$cost_account['cost_account']}}</td>
-                                    <td>{{number_format($cost_account['unit_price'],2)}}</td>
-                                    <td>{{number_format($cost_account['to_date_unit_price'],2)}}</td>
-                                    <td>{{number_format($cost_account['unit_price_var'],2)}}</td>
-                                    <td>{{number_format($cost_account['cost_var'],2)}}</td>
+                                    <td>{{number_format($workType['unit_price'],2)}}</td>
+                                    <td>{{number_format($workType['to_date_unit_price'],2)}}</td>
+                                    <td>{{number_format($workType['unit_price_var'],2)}}</td>
+                                    <td>{{number_format($workType['cost_var'],2)}}</td>
                                     <td></td>
-                                    <td>{{number_format($cost_account['to_date_qty'],2)}}</td>
-                                    <td>{{number_format($cost_account['qty_var'],2)}}</td>
-                                    <td>{{number_format($cost_account['cost_var'],2)}}</td>
-                                    <td>{{number_format($cost_account['cost_variance_completion_due_qty'],2)}}</td>
-                                    <td>{{$cost_account['cost_variance_completion_due_unit_price']}}</td>
+                                    <td>{{number_format($workType['to_date_qty'],2)}}</td>
+                                    <td>{{number_format($workType['qty_var'],2)}}</td>
+                                    <td>{{number_format($workType['cost_var'],2)}}</td>
+                                    <td>{{number_format($workType['cost_variance_completion_due_qty'],2)}}</td>
+                                    <td>{{$workType['cost_variance_completion_due_unit_price']}}</td>
                                 </tr>
                                 </tbody>
                             </table>
-                            @if ($cost_account['resources'] && count($cost_account['resources']))
+                            @if ($workType['resources'] && count($workType['resources']))
                                 <ul class="list-unstyled">
-                                    @foreach($cost_account['resources'] as $rKey=>$resource)
+                                    @foreach($workType['resources'] as $rKey=>$resource)
                                         <li>
                                             <p class="blue-third-level"
-                                            ><label href="#{{str_replace(['-','.'],'',$key).''.$rKey}}" data-toggle="collapse" style="text-decoration: none;">{{\App\Resources::find
+                                            ><label href="#{{str_replace([' ','.'],'',$key).''.$rKey}}" data-toggle="collapse" style="text-decoration: none;">{{\App\Resources::find
                                             ($resource['resource_id'])->name}}</label></p>
 
-                                            <article id="{{str_replace(['-','.'],'',$key).''.$rKey}}" class="tree--child collapse">
+                                            <article id="{{str_replace([' ','.'],'',$key).''.$rKey}}" class="tree--child collapse">
                                                 <table class="table table-condensed">
                                                     <thead>
                                                     <tr>

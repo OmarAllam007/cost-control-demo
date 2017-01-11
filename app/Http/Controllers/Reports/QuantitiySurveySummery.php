@@ -20,82 +20,80 @@ use App\WbsLevel;
 
 class QuantitiySurveySummery
 {
+    public $root_ids = [];
+    public $project;
+
     public function qsSummeryReport(Project $project)
     {
-        $break_downs_resources = BreakDownResourceShadow::where('project_id',$project->id)->with('wbs','std_activity')->get();
-        $level_array = [];
-        foreach ($break_downs_resources as $break_down_resource) {
-            $wbs_level = $break_down_resource->wbs;
-            $std_activity = $break_down_resource->std_activity;
-            $boq_item = Boq::where('cost_account', $break_down_resource['cost_account'])->first();
-            $qs = Survey::where('cost_account', $break_down_resource['cost_account'])->first();
-            $division_name = $std_activity->division->name;
-            $activity_name = $break_down_resource['activity'];
-            $activity_id = $break_down_resource['activity_id'];
-
-            if (!isset($level_array[$wbs_level->id])) {
-                $level_array[$wbs_level->id] = [
-                    'id' => $wbs_level->id,
-                    'name' => $wbs_level->name,
-                    'activity_divisions' => [
-                    ],
-                ];
+        $this->project = $project;
+        $levels = BreakDownResourceShadow::where('project_id', $project->id)->pluck('wbs_id')->toArray();
+        $wbs_levels = WbsLevel::whereIn('id', $levels)->where('project_id', $project->id)->get();
+        $tree = [];
+        foreach ($wbs_levels as $level) {
+            if ($level->root) {
+                $treeLevel = $this->buildTree($level->root);
             }
-            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name])) {
-                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['name'] = $division_name;
-
+            if ($treeLevel) {
+                $tree[] = $treeLevel;
             }
-            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id])) {
-                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id] = [
-                    'activity_id'=>$activity_id,
-                    'name' => $activity_name,
-                    'cost_accounts' => [],
-                ];
-            }
+        }
+
+        return view('reports.qs_summery.qs_summery_report', compact('project', 'tree'));
+
+    }
+
+    private function buildTree($level)
+    {
+        $tree = [];
+        if (!in_array($level->id, $this->root_ids)) {
+            $this->root_ids[] = $level->id;
+            $tree = ['id' => $level->id, 'name' => $level->name, 'children' => [], 'divisions' => []];
 
 
-            if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource['cost_account']])) {
-                $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id]['cost_accounts'][$break_down_resource['cost_account']] =
+            $break_downs_resources = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->where('wbs_id', $level->id)->get();
 
-                    [
+            $level_array = [];
+            foreach ($break_downs_resources as $break_down_resource) {
+                $std_activity = $break_down_resource->std_activity;
+                $boq_item = Boq::where('cost_account', $break_down_resource['cost_account'])->first();
+//                $qs = Survey::where('cost_account', $break_down_resource['cost_account'])->first();
+                $division_name = $std_activity->division->name;
+                $division_id = $std_activity->division->id;
+                $activity_name = $break_down_resource['activity'];
+                $activity_id = $break_down_resource['activity_id'];
+
+                if (!isset($tree['divisions'][$division_id])) {
+                    $tree['divisions'][$division_id] = [
+                        'name' => $division_name,
+                        'activities' => [],
+                    ];
+                }
+
+                if (!isset($tree['divisions'][$division_id]['activities'][$activity_id])) {
+                    $tree['divisions'][$division_id]['activities'][$activity_id] = [
+                        'name' => $activity_name,
+                        'cost_accounts' => [],
+                    ];
+                }
+                if (!isset($tree['divisions'][$division_id]['activities'][$activity_id]['cost_accounts'][$break_down_resource['cost_account']])) {
+                    $tree['divisions'][$division_id]['activities'][$activity_id]['cost_accounts'][$break_down_resource['cost_account']]= [
                         'cost_account' => $break_down_resource['cost_account'],
                         'boq_name' => $boq_item->description,
                         'budget_qty' => $break_down_resource['budget_qty'],
                         'eng_qty' => $break_down_resource['eng_qty'],
                         'unit' => $break_down_resource['measure_unit'],
                     ];
-            }
-
-
-        }
-
-        $divisions = [];
-        $activities = [];
-        foreach ($level_array as $key => $value) {
-            foreach ($value['activity_divisions'] as $divKey => $divValue) {
-                foreach ($divValue['activities'] as $actKey => $actValue) {
-                    if (!in_array($divKey, $divisions)) {
-                        $divisions [] = $divKey;
-                    } else {
-                        unset($level_array[$key]['activity_divisions'][$divKey]['name']);
-                    }
-
-                    if (!in_array($actValue['name'], $activities)) {
-                        $activities [] = $actValue['name'];
-                    } else {
-                        unset($level_array[$key]['activity_divisions'][$divKey]['activities'][$actKey]['name']);
-                    }
-
-
                 }
-
             }
 
 
+            if ($level->children->count()) {
+                $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+                    return $this->buildTree($childLevel);
+                });
+            }
         }
-
-
-        return view('reports.quantity_survey', compact('project', 'level_array'));
-
+        return $tree;
     }
 }

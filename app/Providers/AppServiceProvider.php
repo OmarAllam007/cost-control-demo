@@ -67,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
         Survey::observe(QSObserver::class);
         CostShadow::observe(CostShadowObserver::class);
 //        BreakdownVariable::observe(BreakdownVariableObserver::class);
+        BreakdownVariable::observe(BreakdownVariableObserver::class);
 
     }
 

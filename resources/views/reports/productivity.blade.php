@@ -27,12 +27,12 @@
     <ul class="list-unstyled tree">
         @foreach($data as $category=>$attributes)
             <ul class="list-unstyled">
-                @foreach($attributes['parents'] as $parent)
-                        <li class="blue-second-level tree--item">{{$parent['name']}}</li>
+                @foreach($attributes['parents'] as $key=>$parent)
+                        <li class="blue-second-level tree--item"><a style="color: white;" href="#{{$key}}" data-toggle="collapse">{{$parent['name']}}</a></li>
 
 
                 @endforeach
-                <li class="list-unstyled tree--child">
+                <li class="list-unstyled tree--child collapse" id="{{$key}}">
                     <div class="tbl-division">{{$category}}</div>
                     <ul class="list-unstyled">
                         <table class="table table-condensed">

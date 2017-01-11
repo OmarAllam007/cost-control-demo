@@ -18,13 +18,13 @@ class HighPriorityMaterials
     public function getTopHighPriorityMaterials(Project $project, Request $request)
     {
 
-        $break_down_resources = $project->breakdown_resources()->with('template_resource', 'breakdown', 'breakdown.qty_survey')->get();
         $data = [];
         $visible = true;
         $generate = false;
         $button = false;
-        foreach ($break_down_resources as $break_down_resource) {
-            $resource = $break_down_resource->resource;
+        $shadows = $project->shadows;
+        foreach ($shadows as $shadow) {
+            $resource = $shadow->resource;
             if(isset($resource->types)){
                 $root = $resource->types->root;
                 $resource_type = $resource->types;
@@ -45,10 +45,10 @@ class HighPriorityMaterials
                             'budget_cost' => 0,
                         ];
                     }
-                    $data[$resource_type->name]['resources'][$resource->id]['budget_cost'] += $break_down_resource->budget_cost;
-                    $data[$resource_type->name]['budget_cost'] += $break_down_resource->budget_cost;
+                    $data[$resource_type->name]['resources'][$resource->id]['budget_cost'] += $shadow->budget_cost;
+                    $data[$resource_type->name]['budget_cost'] += $shadow->budget_cost;
                     $data[$resource_type->name]['unit'] = Unit::find($resource->unit)->type;
-                    $data[$resource_type->name]['budget_unit'] += $break_down_resource->budget_unit;
+                    $data[$resource_type->name]['budget_unit'] += $shadow->budget_unit;
                 }
             }
 

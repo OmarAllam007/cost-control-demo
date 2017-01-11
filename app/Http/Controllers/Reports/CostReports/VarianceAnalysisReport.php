@@ -9,9 +9,11 @@
 namespace App\Http\Controllers\Reports\CostReports;
 
 
+use App\Boq;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Project;
+use App\Survey;
 
 class VarianceAnalysisReport
 {
@@ -49,13 +51,16 @@ class VarianceAnalysisReport
                     'cost.cost_variance_completion_due_qty',
                     'cost.cost_variance_completion_due_unit_price',
                 'cost.to_date_qty'])
-                ->where('period_id', $project->open_period()->id)
+                ->where('period_id', $project->open_period()->id)->where('resource_type_id',$costShadow['resource_type_id'])
                 ->get()->toArray();
 
             foreach ($cost_accounts as $cost_account) {
-                if (!isset($data[$costShadow['resource_type_id']]['cost_accounts'][$cost_account['cost_account']])) {
-                    $data[$costShadow['resource_type_id']]['cost_accounts'][$cost_account['cost_account']] = $cost_account;
-                    $data[$costShadow['resource_type_id']]['cost_accounts'][$cost_account['cost_account']]['unit_price'] = BreakDownResourceShadow::where('project_id', $project->id)->where('cost_account', $cost_account['cost_account'])->sum
+                $survey = Boq::where('cost_account',$cost_account['cost_account'])->where('project_id',$project->id)->first();
+
+                if (!isset($data[$costShadow['resource_type_id']]['types'][$survey->type])) {
+
+                    $data[$costShadow['resource_type_id']]['types'][$survey->type] = $cost_account;
+                    $data[$costShadow['resource_type_id']]['types'][$survey->type]['unit_price'] = BreakDownResourceShadow::where('project_id', $project->id)->where('cost_account', $cost_account['cost_account'])->sum
                     ('boq_equivilant_rate');
                 }
 
@@ -70,13 +75,13 @@ class VarianceAnalysisReport
                         'cost.qty_var',
                         'cost.cost_variance_completion_due_qty',
                         'cost.cost_variance_completion_due_unit_price','cost.to_date_qty'])
-                    ->where('period_id', $project->open_period()->id)
+                    ->where('period_id', $project->open_period()->id)->where('budget.cost_account',$cost_account['cost_account'])
                     ->get()->toArray();
 
                 foreach ($resources_names as $resource_name) {
-                    if (!isset($data[$costShadow['resource_type_id']]['cost_accounts'][$cost_account['cost_account']]['resources'][$resource_name['resource_id']])) {
-                        $data[$costShadow['resource_type_id']]['cost_accounts'][$cost_account['cost_account']]['resources'][$resource_name['resource_id']] = $resource_name;
-                        $data[$costShadow['resource_type_id']]['cost_accounts'][$cost_account['cost_account']]['resources'][$resource_name['resource_id']]['unit_price'] =
+                    if (!isset($data[$costShadow['resource_type_id']]['types'][$survey->type]['resources'][$resource_name['resource_id']])) {
+                        $data[$costShadow['resource_type_id']]['types'][$survey->type]['resources'][$resource_name['resource_id']] = $resource_name;
+                        $data[$costShadow['resource_type_id']]['types'][$survey->type]['resources'][$resource_name['resource_id']]['unit_price'] =
                             BreakDownResourceShadow::where('project_id', $project->id)->where('resource_id', $resource_name['resource_id'])->sum
                             ('boq_equivilant_rate');
                     }
