@@ -26,7 +26,7 @@ class QuantitiySurveySummery
     public function qsSummeryReport(Project $project)
     {
         $this->project = $project;
-        $levels = BreakDownResourceShadow::where('project_id', $project->id)->pluck('wbs_id')->toArray();
+        $levels = BreakDownResourceShadow::with('wbs')->where('project_id', $project->id)->pluck('wbs_id')->toArray();
         $wbs_levels = WbsLevel::whereIn('id', $levels)->where('project_id', $project->id)->get();
         $tree = [];
         foreach ($wbs_levels as $level) {
@@ -50,10 +50,9 @@ class QuantitiySurveySummery
             $tree = ['id' => $level->id, 'name' => $level->name, 'children' => [], 'divisions' => []];
 
 
-            $break_downs_resources = BreakDownResourceShadow::where('project_id', $this->project->id)
+            $break_downs_resources = BreakDownResourceShadow::with('std_activity')->with('std_activity.division')->where('project_id', $this->project->id)
                 ->where('wbs_id', $level->id)->get();
 
-            $level_array = [];
             foreach ($break_downs_resources as $break_down_resource) {
                 $std_activity = $break_down_resource->std_activity;
                 $boq_item = Boq::where('cost_account', $break_down_resource['cost_account'])->first();
