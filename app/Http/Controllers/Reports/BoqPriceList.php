@@ -32,7 +32,7 @@ class BoqPriceList
 
                     $description = strtolower($boq->description);
                     if (!isset($data[$breakDown_resource['wbs_id']])) {
-                        $data[$breakDown_resource['wbs_id']] = ['name' => $breakDown_resource->wbs->name];
+                        $data[$breakDown_resource['wbs_id']] = ['name' => $breakDown_resource->wbs->name,'id'=>$breakDown_resource->wbs->id];
 
                     }
 

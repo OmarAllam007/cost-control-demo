@@ -22,7 +22,7 @@ class QuantitiySurveySummery
 {
     public function qsSummeryReport(Project $project)
     {
-        $break_downs_resources = BreakDownResourceShadow::where('project_id',$project->id)->with('wbs','std_activity')->get();
+        $break_downs_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('wbs', 'std_activity')->get();
         $level_array = [];
         foreach ($break_downs_resources as $break_down_resource) {
             $wbs_level = $break_down_resource->wbs;
@@ -47,7 +47,7 @@ class QuantitiySurveySummery
             }
             if (!isset($level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id])) {
                 $level_array[$wbs_level->id]['activity_divisions'][$division_name]['activities'][$std_activity->id] = [
-                    'activity_id'=>$activity_id,
+                    'activity_id' => $activity_id,
                     'name' => $activity_name,
                     'cost_accounts' => [],
                 ];
@@ -93,7 +93,6 @@ class QuantitiySurveySummery
 
 
         }
-
 
         return view('reports.quantity_survey', compact('project', 'level_array'));
 
