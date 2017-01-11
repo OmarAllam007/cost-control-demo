@@ -39,7 +39,10 @@ class ActualResourceObserver
         ];
 
         if (!$trans) {
-            CostShadow::where($conditions)->delete();
+            CostShadow::where($conditions)->get()->each(function(CostShadow $shadow){
+                $shadow->delete();
+            });
+            return;
         }
 
         $shadow = CostShadow::firstOrCreate($conditions);
