@@ -42,7 +42,7 @@ class BoqImportJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
         $status = ['success' => 0, 'failed' => collect(), 'dublicated' => []];
         Boq::flushEventListeners();
-        $boqs = Boq::width('wbs')->where('project_id', $this->project_id)->get()->map(function($item) {
+        $boqs = Boq::with('wbs')->where('project_id', $this->project_id)->get()->map(function($item) {
             return mb_strtolower($item->wbs->code . $item->cost_account);
         });
 
