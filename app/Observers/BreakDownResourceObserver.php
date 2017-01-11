@@ -28,7 +28,6 @@ class BreakDownResourceObserver
 
     function updated(BreakdownResource $resource)
     {
-
         $resource->updateShadow();
         $oldResource = Resources::find($resource->getOriginal('resource_id'));
         if ($oldResource) {
