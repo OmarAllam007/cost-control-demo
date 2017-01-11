@@ -63,7 +63,6 @@ class AppServiceProvider extends ServiceProvider
         Survey::observe(QuantitySurveyObserver::class);
         StdActivityResource::observe(StandardActivityResourceObserver::class);
         BreakdownVariable::observe(BreakdownVariableObserver::class);
-
     }
 
 
