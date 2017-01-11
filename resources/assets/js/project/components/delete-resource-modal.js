@@ -13,7 +13,7 @@ export default {
                 method: 'DELETE', dataType: 'json'
             }).success(response => {
                 this.$dispatch('reload', {
-                    component: 'breakdown',
+                    component: 'breakdowns',
                     alert : {
                         type: response.ok? 'info' : 'danger',
                         message: response.message
