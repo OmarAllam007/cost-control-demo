@@ -7,6 +7,7 @@ use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\BreakdownTemplate;
 use App\BreakdownVariable;
+use App\CostShadow;
 use App\CsiCategory;
 use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\CacheResourcesTree;
@@ -17,6 +18,7 @@ use App\Observers\BreakdownShadowObserver;
 use App\Observers\BreakdownTemplateObserver;
 use App\Observers\BreakdownVariableObserver;
 use App\Observers\BreakdownVariablesObserver;
+use App\Observers\CostShadowObserver;
 use App\Observers\ProductivityObserver;
 use App\Observers\QSObserver;
 use App\Observers\QuantitySurveyObserver;
@@ -62,6 +64,9 @@ class AppServiceProvider extends ServiceProvider
         BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
         Survey::observe(QuantitySurveyObserver::class);
         StdActivityResource::observe(StandardActivityResourceObserver::class);
+        Survey::observe(QSObserver::class);
+        CostShadow::observe(CostShadowObserver::class);
+//        BreakdownVariable::observe(BreakdownVariableObserver::class);
         BreakdownVariable::observe(BreakdownVariableObserver::class);
     }
 
