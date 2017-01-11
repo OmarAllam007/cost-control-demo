@@ -33,6 +33,22 @@ class ValidationProvider extends ServiceProvider
         \Validator::extend('boq_unique', function($attribute, $value) {
             return !Boq::where('wbs_id', request('wbs_id'))->where('cost_account', $value)->exists();
         });
+        
+        \Validator::replacer('gte', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':gte', $parameters[0], $message);
+        });
+
+        \Validator::replacer('lte', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':lte', $parameters[0], $message);
+        });
+
+        \Validator::replacer('gt', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':gt', $parameters[0], $message);
+        });
+
+        \Validator::replacer('lt', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':lt', $parameters[0], $message);
+        });
     }
 
     /**

@@ -93,6 +93,10 @@ return [
     |
     */
     'boq_unique' => 'Cost account already exists in this WBS',
+    'gte' => ':attribute must be greater than or equal to :gte',
+    'gt' => ':attribute must be greater than or equal to :gt',
+    'lte' => ':attribute must be greater than or equal to :lte',
+    'lt' => ':attribute must be greater than or equal to :lt',
 
     'custom' => [
         'attribute-name' => [
@@ -111,6 +115,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'remaining_qty' => "Remaining Qty",
+        'remaining_unit_price' => "Remaining Unit Price",
+        'remaining_cost' => "Remaining Cost",
+    ],
 
 ];

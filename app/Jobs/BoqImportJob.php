@@ -56,7 +56,7 @@ class BoqImportJob extends ImportJob
             }
 
             $code = mb_strtolower($data[0] . $data[2]);
-            if (!$boqs->contains($code)) {
+            if (!$boqs->search($code)) {
                 Boq::create([
                     'wbs_id' => $this->getWbsId($data[0]) ?: 0,
                     'item_code' => $data[1] ?: '',

@@ -22,6 +22,11 @@ class CostShadow extends Model
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
     }
 
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     function scopeJoinBudget(Builder $query, $group)
     {
         $query->from('cost_shadows as cost')

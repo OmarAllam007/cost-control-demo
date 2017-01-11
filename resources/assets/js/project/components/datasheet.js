@@ -67,10 +67,6 @@ export default {
 
         deleteActivity(resource) {
             this.$broadcast('show_delete_activity', resource);
-        },
-
-        editResource(resource) {
-            this.$dispatch('editBreakdown')
         }
     },
 
@@ -80,7 +76,7 @@ export default {
             this.loadBreakdowns();
         },
 
-        reload_breakdown() {
+        reload_breakdowns() {
             this.loadBreakdowns();
         }
     },
