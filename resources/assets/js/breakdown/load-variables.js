@@ -14,7 +14,6 @@
                     variable = variables[key];
                     varHtml = variableTemplate;
                     for (prop in variable) {
-                        console.log(prop);
                         var regexp = new RegExp('\{' + prop + '\}', 'g');
                         varHtml = varHtml.replace(regexp, variable[prop]);
                     }

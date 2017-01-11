@@ -17,19 +17,35 @@ class ActualResourceObserver
 {
     function created(ActualResources $resource)
     {
-        $attributes = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
+        $this->updateShadow($resource);
+    }
+
+    function deleted(ActualResources $resource)
+    {
+        $this->updateShadow($resource);
+    }
+
+    protected function updateShadow(ActualResources $resource)
+    {
+        $trans = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
             ->where('wbs_resources.period_id', $resource->period_id)
             ->where('wbs_resources.resource_id', $resource->resource_id)
-            ->first()->toArray();
+            ->first();
 
-        $attributes['batch_id'] = $resource->batch_id;
-
-        $shadow = CostShadow::firstOrCreate([
+        $conditions = [
             'breakdown_resource_id' => $resource->breakdown_resource_id,
             'period_id' => $resource->period_id,
             'resource_id' => $resource->resource_id,
-        ]);
+        ];
 
+        if (!$trans) {
+            CostShadow::where($conditions)->delete();
+        }
+
+        $shadow = CostShadow::firstOrCreate($conditions);
+
+        $attributes = $trans->toArray();
+        $attributes['batch_id'] = $resource->batch_id;
         $shadow->update($attributes);
     }
 }

@@ -25,6 +25,11 @@ class Boq extends Model
         return $this->belongsTo(Unit::class, 'unit_id');
     }
 
+    function wbs()
+    {
+        return $this->belongsTo(WbsLevel::class, 'wbs_id');
+    }
+
     public function getDry($subcon, $material, $man_power)
     {
         return $subcon + $material + $man_power;

@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class BoqController extends Controller
 {
 
-    protected $rules = ['project_id' => 'required', 'wbs_id' => 'required', 'cost_account' => 'required'];
+    protected $rules = ['project_id' => 'required', 'wbs_id' => 'required', 'cost_account' => 'required|boq_unique'];
 
     public function index()
     {

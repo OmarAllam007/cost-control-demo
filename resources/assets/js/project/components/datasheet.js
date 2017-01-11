@@ -1,3 +1,6 @@
+import DeleteActivityModal from './delete-activity-modal';
+import DeleteResourceModal from './delete-resource-modal';
+
 export default {
     template: document.getElementById('BreakdownTemplate').innerHTML,
 
@@ -59,11 +62,11 @@ export default {
         },
 
         deleteResource(resource) {
-
+            this.$broadcast('show_delete_resource', resource);
         },
 
         deleteActivity(resource) {
-
+            this.$broadcast('show_delete_activity', resource);
         },
 
         editResource(resource) {
@@ -75,8 +78,14 @@ export default {
         wbs_changed(params) {
             this.wbs_id = params.selection;
             this.loadBreakdowns();
+        },
+
+        reload_breakdown() {
+            this.loadBreakdowns();
         }
+    },
+
+    components: {
+        DeleteActivityModal, DeleteResourceModal
     }
-
-
 }

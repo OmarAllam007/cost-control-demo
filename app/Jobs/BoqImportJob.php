@@ -42,7 +42,10 @@ class BoqImportJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
         $status = ['success' => 0, 'failed' => collect(), 'dublicated' => []];
         Boq::flushEventListeners();
-        $boqs = Boq::where('project_id', $this->project_id)->pluck('cost_account');
+        $boqs = Boq::with('wbs')->where('project_id', $this->project_id)->get()->map(function($item) {
+            return mb_strtolower($item->wbs->code . $item->cost_account);
+        });
+
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
@@ -51,7 +54,9 @@ class BoqImportJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
-            if (!$boqs->contains($data[2])) {
+
+            $code = mb_strtolower($data[0] . $data[2]);
+            if (!$boqs->contains($code)) {
                 Boq::create([
                     'wbs_id' => $this->getWbsId($data[0]) ?: 0,
                     'item_code' => $data[1] ?: '',

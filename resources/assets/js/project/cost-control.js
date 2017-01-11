@@ -48,6 +48,10 @@ window.app = new Vue({
             this.selected = params.selection;
             this.$broadcast('wbs_changed', params);
         },
+
+        reload(params) {
+            this.reload(params.component, params.alert);
+        }
     },
 
     components: {

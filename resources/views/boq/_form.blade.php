@@ -24,13 +24,14 @@
             </div>
             <p>
                 <a href="#WBSModal" data-toggle="modal" id="select-parent" class="tree-open">
-                    @if(request('wbs_id'))
-                        {{App\WbsLevel::with('parent')->find(request('wbs_id'))->path}}
+                    @if($wbs_id = request('wbs_id'))
+                        {{App\WbsLevel::with('parent')->find($wbs_id)->path}}
+                        {{Form::hidden('wbs_id', $wbs_id)}}
                     @else
                         {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
+                    @endif
                 </a>
-                @endif
-                <a class="remove-tree-input" data-label="Select Wbs Level" data-target="#LevelsModal"><span
+                <a class="remove-tree-input text-danger" data-label="Select Wbs Level" data-target="#LevelsModal"><span
                             class="fa fa-times"></span></a>
             </p>
             {!! $errors->first('wbs_id', '<div class="help-block">:message</div>') !!}

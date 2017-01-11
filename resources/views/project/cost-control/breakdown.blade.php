@@ -3,13 +3,13 @@
     <div class="breakdown">
 
         <div class="loader" v-show="loading">
-            <i class="fa fa-spinner fa-spin fa-3x"></i>
+            <i class="fa fa-refresh fa-spin fa-3x"></i>
         </div>
 
-            <a href="{{route('costshadow.export',$project)}}" class="btn btn-info btn-sm pull-right">
-                <i class="fa fa-cloud-download"></i> Export
-            </a>
-<div class="clearfix"></div>
+        <a href="{{route('costshadow.export',$project)}}" class="btn btn-info btn-sm pull-right">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
+        <div class="clearfix"></div>
         <section class="filters row" id="breakdown-filters">
             @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
             @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
@@ -18,8 +18,10 @@
                 <div class="form-group form-group-sm">
                     {{Form::label('activity', 'Activity', ['class' => 'control-label'])}}
                     <div class="btn-group btn-group-sm btn-group-block">
-                        <a href="#ActivitiesModal" data-toggle="modal" class="btn btn-default btn-block tree-open">{{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}</a>
-                        <a href="#" @click="activity = ''" class="remove-tree-input btn btn-warning" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
+                        <a href="#ActivitiesModal" data-toggle="modal"
+                           class="btn btn-default btn-block tree-open">{{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}</a>
+                        <a href="#" @click="activity = ''" class="remove-tree-input btn btn-warning" data-target="
+                        #ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
                     </div>
                 </div>
             </div>
@@ -35,8 +37,11 @@
                 <div class="form-group form-group-sm">
                     {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
                     <div class="btn-group btn-group-sm btn-group-block">
-                        <a href="#ResourceTypeModal" data-toggle="modal" class="tree-open btn btn-default btn-block">{{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>
-                        <a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning" data-target="#ResourceTypeModal" data-label="Select Resource Type"><span class="fa fa-times-circle"></span></a>
+                        <a href="#ResourceTypeModal" data-toggle="modal"
+                           class="tree-open btn btn-default btn-block">{{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>
+                        <a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning" data-target="
+                        #ResourceTypeModal" data-label="Select Resource Type"><span
+                                class="fa fa-times-circle"></span></a>
                     </div>
 
                 </div>
@@ -102,12 +107,21 @@
                     <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Var +/-</th>
                     <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Physical Unit</th>
                     <th class="bg-orange" style="min-width: 150px; max-width: 150px;">(P/W) Index</th>
-                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance To Date Due to Unit Price</th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance To Date Due to Unit
+                        Price
+                    </th>
                     <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Allowable Quantity</th>
-                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance Remaining Due to Unit Price</th>
-                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance Completion Due to Unit Price</th>
-                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance Completion Due to Qty</th>
-                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance to Date Due to Qty</th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance Remaining Due to
+                        Unit Price
+                    </th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance Completion Due to
+                        Unit Price
+                    </th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance Completion Due to
+                        Qty
+                    </th>
+                    <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Variance to Date Due to Qty
+                    </th>
                 </tr>
                 </thead>
             </table>
@@ -115,16 +129,21 @@
                 <tbody>
                 <tr v-for="breakdown in filtered_breakdowns">
                     @can('manual_edit', $project)
-                    <td style="min-width: 30px; max-width: 30px">
-                        <div class="dropdown">
-                            <button class="btn btn-xs btn-default" type="button" data-toggle="dropdown"><span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" @click.prevent="editResource(breakdown)"><i class="fa fa-fw fa-edit"></i> Edit</a></li>
-                                <li><a href="#" @click.prevent="deleteResource(breakdown)"><i class="fa fa-fw fa-trash"></i> Delete resource data</a></li>
-                                <li><a href="#" @click.prevent="deleteActivity(breakdown)"><i class="fa fa-fw fa-remove"></i> Delete activity data</a></li>
-                            </ul>
-                        </div>
-                    </td>
+                        <td style="min-width: 30px; max-width: 30px">
+                            <div class="dropdown">
+                                <button class="btn btn-xs btn-default" type="button" data-toggle="dropdown"><span
+                                            class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" @click.prevent="editResource(breakdown)"><i
+                                                    class="fa fa-fw fa-edit"></i> Edit</a></li>
+                                    <li><a href="#" @click.prevent="deleteResource(breakdown)"><i
+                                                    class="fa fa-fw fa-trash"></i> Delete resource data</a></li>
+                                    <li><a href="#" @click.prevent="deleteActivity(breakdown)"><span
+                                                    class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete activity data</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
                     @endcan
                     <td style="min-width: 300px; max-width: 300px;" class="bg-blue">@{{ breakdown.activity }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-black">@{{ breakdown.template }}</td>
@@ -154,44 +173,127 @@
                     <td style="min-width: 150px; max-width: 150px;"
                         class="bg-blue">@{{ breakdown.productivity_ref }}</td>
                     <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.remarks }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.progress : 0 | number_format }}%</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.status : 'Not Started'}}</td>
-                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_unit_price: 0 |number_format }}</td>
-                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_qty: 0 |number_format }}</td>
-                    <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_cost: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_unit_price: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_qty: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_cost: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_unit_price: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_qty: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_cost: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.allowable_ev_cost : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.allowable_var : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_unit_price : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_qty : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_cost : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.bl_allowable_cost : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.bl_allowable_var : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_unit_price : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_qty : 0 | number_format }}</td>
-                    <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.qty_var : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.cost_var : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.unit_price_var : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.physical_unit : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.pw_index : 0 | number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_to_date_due_unit_price : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.allowable_qty : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_remaining_due_unit_price : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_completion_due_unit_price : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_completion_due_qty : 0 | number_format}}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_to_date_due_qty : 0 | number_format}}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.progress : 0 | number_format }}
+                        %
+                    </td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.status : 'Not Started'}}</td>
+                    <td class="bg-green"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_unit_price: 0 |number_format }}</td>
+                    <td class="bg-green"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_qty: 0 |number_format }}</td>
+                    <td class="bg-green"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.previous_cost: 0 |number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_unit_price: 0 |number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_qty: 0 |number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_cost: 0 |number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_unit_price: 0 |number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_qty: 0 |number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_cost: 0 |number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.allowable_ev_cost : 0 | number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.allowable_var : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_unit_price : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_qty : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_cost : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.bl_allowable_cost : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.bl_allowable_var : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_unit_price : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_qty : 0 | number_format }}</td>
+                    <td class="bg-violet"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost : 0 | number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.qty_var : 0 | number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.cost_var : 0 | number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.unit_price_var : 0 | number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.physical_unit : 0 | number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.pw_index : 0 | number_format }}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_to_date_due_unit_price : 0 | number_format}}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.allowable_qty : 0 | number_format}}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_remaining_due_unit_price : 0 | number_format}}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_completion_due_unit_price : 0 | number_format}}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_completion_due_qty : 0 | number_format}}</td>
+                    <td class="bg-orange"
+                        style="min-width: 150px; max-width: 150px">@{{breakdown? breakdown.cost_variance_to_date_due_qty : 0 | number_format}}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
         <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No breakdowns found</div>
+
+        @can('actual_resource', $project)
+            <delete-resource-modal inline-template>
+                <form class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                                <h4 class="modal-title">Delete resource data</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p class="lead">
+                                    Are you sure you want to delete data for this resource for
+                                    period {{$project->open_period()->name}}?
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" @click="delete_resource" class="btn btn-danger" :disabled="loading"><i :class="'fa ' + (loading? 'fa-spinner fa-spin' : 'fa-trash')"></i> Delete</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </delete-resource-modal>
+
+            <delete-activity-modal inline-template>
+                <form class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                                <h4 class="modal-title">Delete activity data</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p class="lead">
+                                    Are you sure you want to delete data for this activity for
+                                    period {{$project->open_period()->name}}?
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" @click="delete_activity" class="btn btn-danger" :disabled="loading"><i :class="'fa ' + (loading? 'fa-spinner fa-spin' : 'fa-trash')"></i> Delete</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </delete-activity-modal>
+        @endcan
     </div>
 </template>
 
 <breakdown project="{{$project->id}}"></breakdown>
+

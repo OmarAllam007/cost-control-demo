@@ -1,14 +1,18 @@
+import Pagination from './pagination';
+
 export default {
     props: ['project'],
-
-    template: document.getElementById('QtySurveyTemplate').innerHTML,
 
     data() {
         return {
             quantities: [],
             loading: false,
             wbs_id: 0,
-            wiping: false
+            wiping: false,
+            filter: '',
+            count: 0,
+            first: 0,
+            last: 100
         };
     },
 
@@ -75,8 +79,22 @@ export default {
         }
     },
 
-    watch: {
+    computed: {
+        filtered_qty() {
+            const quantities = this.quantities.filter(qty => {
+                if (!this.filter || this.filter == '') {
+                    return true;
+                }
 
+                const term = this.filter.toLowerCase();
+                return qty.description.toLowerCase().indexOf(term) >= 0 ||
+                    qty.cost_account.toLowerCase().indexOf(term) >= 0;
+            });
+
+            this.count = quantities.length;
+
+            return quantities.slice(this.first, this.last);
+        }
     },
 
     events: {
@@ -87,6 +105,13 @@ export default {
 
         reload_quantities() {
             this.loadQuantities();
+        },
+
+        pageChanged(params) {
+            this.first = params.first;
+            this.last = params.last;
         }
-    }
+    },
+
+    components: { Pagination }
 }

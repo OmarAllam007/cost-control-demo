@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ActualResources;
+use App\Breakdown;
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\CostResource;
 use App\Http\Controllers\Controller;
@@ -29,5 +32,37 @@ class CostController extends Controller
                 return $resource->jsonFormat();
             });
 
+    }
+
+    function deleteResource(BreakdownResource $breakdown_resource)
+    {
+        if (cannot('actual_resources', $breakdown_resource->breakdown->project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
+            ->where('period_id', $breakdown_resource->breakdown->project->open_period()->id)
+            ->get()->map(function (ActualResources $resource) {
+                $resource->delete();
+            });
+
+        return ['ok' => true, 'message' => 'Resource data has been deleted'];
+    }
+
+    function deleteActivity(Breakdown $breakdown)
+    {
+        if (cannot('actual_resources', $breakdown->project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        $resourceIds = $breakdown->resources->pluck('id');
+
+        ActualResources::whereIn('breakdown_resource_id', $resourceIds)
+            ->where('period_id', $breakdown->project->open_period()->id)
+            ->get()->map(function (ActualResources $resource) {
+                $resource->delete();
+            });
+
+        return ['ok' => true, 'message' => 'Activity data has been deleted'];
     }
 }

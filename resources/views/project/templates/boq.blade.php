@@ -6,7 +6,7 @@
 
         <div class="form-group tab-actions pull-right">
             @can('boq', $project)
-                <a href="/boq/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe">
+                <a href="/boq/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe" title="Add BOQ item">
                     <i class="fa fa-plus"></i> Add item
                 </a>
 

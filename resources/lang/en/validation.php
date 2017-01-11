@@ -92,6 +92,7 @@ return [
     | specify a specific custom language line for a given attribute rule.
     |
     */
+    'boq_unique' => 'Cost account already exists in this WBS',
 
     'custom' => [
         'attribute-name' => [
