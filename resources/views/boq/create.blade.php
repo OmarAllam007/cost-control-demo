@@ -7,7 +7,7 @@
 @stop
 
 @section('body')
-    {{ Form::open(['route' => 'boq.store']) }}
+    {{ Form::open(['route' => ['boq.store', 'project' => request('project')]]) }}
 
         @include('boq._form')
 

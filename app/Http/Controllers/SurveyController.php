@@ -114,8 +114,8 @@ class SurveyController extends Controller
         }
 
         $this->validate($request, $this->rules);
-        $survey->update($request->all());
         $survey->syncVariables($request->get('variables'));
+        $survey->update($request->all());
 
         flash('Quantity survey has been saved', 'success');
 

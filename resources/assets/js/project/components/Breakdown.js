@@ -1,3 +1,5 @@
+import Pagination from './pagination';
+
 export default {
     template: document.getElementById('BreakdownTemplate').innerHTML,
 
@@ -9,7 +11,10 @@ export default {
             loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
             wiping: false,
-            copied_wbs_id: 0
+            copied_wbs_id: 0,
+            count: 0,
+            first: 0,
+            last: 99
         }
     },
 
@@ -60,7 +65,6 @@ export default {
                         message: 'WBS data has been copied',
                         type: 'success'
                     });
-                    console.log(response.breakdowns);
                     this.breakdowns = response.breakdowns;
                 }).error(response => {
                     this.$dispatch('request_alert', {
@@ -106,7 +110,7 @@ export default {
 
     computed: {
         filtered_breakdowns() {
-            return this.breakdowns.filter((item) => {
+            const resources = this.breakdowns.filter((item) => {
                 if (this.activity) {
                     return (item.activity_id == this.activity);
                 }
@@ -128,6 +132,9 @@ export default {
                 }
                 return true;
             });
+
+            this.count = resources.length;
+            return resources.slice(this.first, this.last);
         }
     },
 
@@ -141,6 +148,13 @@ export default {
 
         reload_breakdown() {
             this.loadBreakdown();
+        },
+
+        pageChanged(params) {
+            this.first = params.first;
+            this.last = params.last;
         }
-    }
+    },
+
+    components: { Pagination }
 }

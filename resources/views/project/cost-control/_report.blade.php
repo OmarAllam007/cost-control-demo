@@ -27,7 +27,7 @@
                    style="width:100%;margin-bottom: 8px;">Resource Dictionary</a><br>
                 <a href="#" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Dashboard</a><br>
-                <a href="#" target="_blank"
+                <a href="{{route('cost.variance',$project)}}" target="_blank"
                    class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Variance Analysis</a><br>
                 <a href="#" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Productivity

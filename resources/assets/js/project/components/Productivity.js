@@ -12,11 +12,9 @@ export default{
             $.ajax({
                 url: '/api/productivities/productivity/' + this.project, dataType: 'json'
             }).success(response=> {
-                console.log(response)
                 this.productivityArray = $.map(response, function (value, index) {
                     return [value]
-
-                })
+                });
             }).error(response=> {
                 console.log('error')
             })
@@ -35,9 +33,8 @@ export default{
         }
     },
     filters: {
-        breakline: function(value){
-            console.log(value);
-            // return value ;
+        nl2br: function(value){
+            return value.replace(/\r\n|\n|\r/g, '<br>')
         }
     },
 
