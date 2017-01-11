@@ -22,17 +22,17 @@
                 @foreach($level['divisions'] as $keyDivision=>$division)
                     <li>
                         <p class="blue-first-level">
-                            <a href="#{{$keyDivision}}" style="color: #fff;" data-toggle="collapse">{{$division['name']}}</a>
+                            <a  style="color: #fff;" data-toggle="collapse">{{$division['name']}}</a>
                         </p>
-                        <article class="tree--child collapse" id="{{$keyDivision}}">
+                        <article class="tree--child" id="{{$keyDivision}}">
                             @if ($division['activities'] && count($division['activities']))
                                 <ul class="list-unstyled">
                                     @foreach($division['activities'] as $keyActivity=>$activity)
                                         <li>
                                             <p class="blue-fourth-level">
-                                                <a href="#{{$keyActivity}}" data-toggle="collapse">{{$activity['name']}}</a>
+                                                <a  data-toggle="collapse">{{$activity['name']}}</a>
                                             </p>
-                                            <article class="tree--child collapse" id="{{$keyActivity}}">
+                                            <article class="tree--child " id="{{$keyActivity}}">
                                                 @if ($activity['cost_accounts'] && count($activity['cost_accounts']))
                                                     <article class="tree--child">
                                                         <table class="table table-condensed">
