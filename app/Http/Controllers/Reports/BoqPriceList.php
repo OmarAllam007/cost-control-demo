@@ -18,7 +18,6 @@ class BoqPriceList
     public function getBoqPriceList(Project $project)
     {
 
-
         $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource', 'wbs', 'breakdown', 'std_activity')->get();
         $data = [];
         $parents = [];
@@ -35,7 +34,6 @@ class BoqPriceList
                         $data[$breakDown_resource['wbs_id']] = ['name' => $breakDown_resource->wbs->name,'id'=>$breakDown_resource->wbs->id];
 
                     }
-
                     $parent = $wbs_level;
                     while ($parent->parent) {
                         $parent = $parent->parent;
