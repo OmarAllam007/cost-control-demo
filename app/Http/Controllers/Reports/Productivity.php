@@ -51,7 +51,6 @@ class Productivity
                         ];
                     }
                 }
-                ksort($data[$category->name]['parents']);
             }
 
         }
@@ -65,8 +64,9 @@ class Productivity
                 }
                 $parents[] = $parent['name'];
             }
-
+            asort($data[$key]);
         }
+        asort($data);
         return view('reports.productivity', compact('data', 'project'));
     }
 }
