@@ -38,7 +38,7 @@ class QuantitiySurveySummery
             }
         }
 
-        return view('reports.qs_summery.qs_summery_report', compact('project', 'tree'));
+        return view('reports.budget.qs_summery.qs_summery_report', compact('project', 'tree'));
 
     }
 
