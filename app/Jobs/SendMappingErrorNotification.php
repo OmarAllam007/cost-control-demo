@@ -31,7 +31,7 @@ class SendMappingErrorNotification
                 $to[] = $this->project->owner->email;
             }
             $message->to($to);
-            $message->subject(Str::studly($this->type) . ' Mapping Error');
+            $message->subject('[KPS]' . Str::studly($this->type) . ' Mapping Error');
             $message->cc(\Auth::user()->email);
 
             $filename = $this->createExcelFile();
