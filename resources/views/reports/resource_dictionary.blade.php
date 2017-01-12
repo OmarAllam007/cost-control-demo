@@ -12,9 +12,7 @@
         </a>
     </div>
 @endsection
-@section('image')
-    <img src="{{asset('images/reports/ResourceDictionary.jpg')}}">
-@endsection
+
 @section('body')
     @foreach ($data as $root=>$divisions)
         <?php $counter = 0;?>
@@ -22,15 +20,15 @@
             <ul class="list-unstyled tree">
                 <li>
                     @if ($counter == 0)
-                        <p class="blue-first-level">{{$root}}</p>
+                        <p class="blue-first-level"><a href="#{{$divIndex}}" style="color: white" data-toggle="collapse">{{$root}}</a></p>
                     @endif
                     @if(count($resourceType['parents']))
-                        @foreach($resourceType['parents'] as $parent)
+                        @foreach($resourceType['parents'] as $pKey=>$parent)
                             <ul class="list-unstyled">
                                 <li class="blue-third-level">{{$parent['name']}}</li>
                                 @endforeach
                                 @endif
-                                <article class="tree--child">
+                                <article class="tree--child collapse" id="{{$divIndex}}">
                                     <ul class="list-unstyled tree">
                                         <p class="blue-second-level"><a data-toggle="collapse">{{$resourceType['name']}}</a></p>
                                         <article class="tree--child ">
@@ -93,4 +91,9 @@
 
         @endforeach
     @endforeach
+@endsection
+@section('javascript')
+    <script>
+
+    </script>
 @endsection

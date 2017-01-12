@@ -60,6 +60,7 @@
         }
         $('.'+hash[1]).css('background','#3e5a20');
     }
+    $('.collapse').removeClass('collapse');
     changeButtonBackroundColor();
     window.print();
 </script>

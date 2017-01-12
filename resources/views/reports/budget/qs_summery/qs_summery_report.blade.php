@@ -15,7 +15,7 @@
 @section('body')
     <ul class="list-unstyled tree">
         @foreach($tree as $parentKey=>$level)
-            @include('reports.qs_summery._recursive_report', ['level'=>$level,'tree_level'=>0])
+            @include('reports.budget.qs_summery._recursive_report', ['level'=>$level,'tree_level'=>0])
         @endforeach
     </ul>
 @endsection

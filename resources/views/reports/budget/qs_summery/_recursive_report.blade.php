@@ -86,7 +86,7 @@
         @if ($level['children'] && count($level['children']))
             <ul class="list-unstyled">
                 @foreach($level['children'] as $child)
-                    @include('reports.qs_summery._recursive_report', ['level' => $child, 'tree_level' => $tree_level + 1])
+                    @include('reports.budget.qs_summery._recursive_report', ['level' => $child, 'tree_level' => $tree_level + 1])
                 @endforeach
             </ul>
         @endif
