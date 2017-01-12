@@ -83,8 +83,6 @@ class ResourcesController extends Controller
         $request['project_id'] = $request['project'];
         $newResource = Resources::create($request->all());
 
-        $resource = new ResourcesCache();
-        $resource->cacheResources();
         flash('Resource has been saved', 'success');
         if ($newResource->project_id) {
             return \Redirect::route('project.show', $newResource->project_id);
