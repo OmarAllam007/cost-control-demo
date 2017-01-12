@@ -25,6 +25,10 @@ class SendMappingErrorNotification
         $this->project = $this->data['project'];
         $type = $this->type;
 
+        if (!$this->project->cost_owner) {
+            return false;
+        }
+
         \Mail::send('mail.mapping.' . $this->type, compact('project', 'type'), function(Message $message) {
             $to = [$this->project->cost_owner->email];
             if ($this->type == 'resources') {
