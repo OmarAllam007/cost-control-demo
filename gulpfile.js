@@ -17,6 +17,7 @@ elixir(function (mix) {
         .webpack('project/index.js', 'public/js/project.js')
         .webpack('project-permissions.js');
     mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
+    mix.scripts('tree-select.js');
     // .sass('print.scss')
     // .webpack('resource-codes.js');
 //comment again
@@ -40,7 +41,7 @@ elixir(function (mix) {
 
     /*
      mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
-     mix.scripts('tree-select.js');
+
      mix.scripts('autocomplete.js');
      mix.scripts([
      'breakdown/load-templates.js',

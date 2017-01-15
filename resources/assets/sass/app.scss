@@ -210,6 +210,10 @@ a, .btn, a:focus, btn:focus {
     margin-top: 25px;
   }
 
+  .btn-group-block .btn {
+    margin-top: 0;
+  }
+
   .form-group-sm p {
     margin: 5px 0 5px;
   }
@@ -357,6 +361,10 @@ body#iframe {
     white-space: initial;
     display: flex;
     align-items: center;
+  }
+
+  .btn:first-child {
+    flex: 1;
   }
 }
 

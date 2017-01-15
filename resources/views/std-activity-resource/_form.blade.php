@@ -18,10 +18,10 @@
         <div class="form-group {{$errors->first('resource_id', 'has-error')}}">
             {{ Form::label('resource_id', 'Resource', ['class' => 'control-label']) }}
 
-            <p>
-                <a href="#ResourcesModal" data-toggle="modal" id="select-parent" v-text="resource.name || 'Select Resource'"></a>
-                <a id="remove-parent"><span class="fa fa-times"></span></a>
-            </p>
+            <div class="btn-group btn-group-block">
+                <a class="tree-open btn btn-default" href="#ResourcesModal" data-toggle="modal" id="select-resource" v-text="resource.name || 'Select Resource'"></a>
+                <a class="remove-tree-input btn btn-warning btn-sm" @click="$broadcast('resetResource')"><span class="fa fa-times"></span></a>
+            </div>
             {{Form::hidden('resource_id')}}
             {!! $errors->first('resource_id', '<div class="help-block">:message</div>') !!}
         </div>

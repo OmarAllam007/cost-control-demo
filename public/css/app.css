@@ -10904,6 +10904,10 @@ a, .btn, a:focus, btn:focus {
   margin-top: 25px;
 }
 
+.filter-form .btn-group-block .btn {
+  margin-top: 0;
+}
+
 .filter-form .form-group-sm p {
   margin: 5px 0 5px;
 }
@@ -11054,6 +11058,11 @@ body#iframe .container-fluid {
   display: flex;
   -webkit-box-align: center;
   align-items: center;
+}
+
+.btn-group-block .btn:first-child {
+  -webkit-box-flex: 1;
+  flex: 1;
 }
 
 #CodesPanel li {
