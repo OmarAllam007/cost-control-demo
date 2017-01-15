@@ -44,8 +44,8 @@ class CacheResourcesTree extends Job
                      $attributes['project_name'] = $resource->project->name;
                  }
 
-                 if ($this->types) {
-                     $attributes['root_type'] = $this->types->root->name;
+                 if ($resource->types) {
+                     $attributes['root_type'] = $resource->types->root->name;
                  } else{
                      $attributes['root_type'] = '';
                  }
