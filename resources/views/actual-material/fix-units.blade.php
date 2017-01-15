@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
 @section('header')
-    <div class="clearfix">
-        <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash; Unit Mismatch</h4>
-        <h4 class="pull-right text-muted">E#02</h4>
-    </div>
+    <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash; Unit Mismatch</h4>
+    <h4 class="pull-right text-muted">E#02</h4>
 @endsection
 
 @section('body')
@@ -55,7 +53,7 @@
                 </td>
 
                 <td>
-                    {{Form::text("units[$key][qty]", 0, ['class' => 'form-control input-sm qty', 'tabindex' => $key])}}
+                    {{Form::text("units[$key][qty]", 0, ['class' => 'form-control input-sm qty', 'tabindex' => $key + 1])}}
                 </td>
                 <td>
                     {{Form::text("units[$key][unit_price]", 0, ['class' => 'form-control input-sm unit-price', 'readonly', 'tabindex' => -1])}}
@@ -79,7 +77,7 @@
 @section('javascript')
     <script>
         $(function () {
-            $('.qty').change(function() {
+            $('.qty').change(function () {
                 var val = parseFloat($(this).val());
                 var parent = $(this).closest('tr');
                 if (val) {
@@ -88,6 +86,20 @@
                     parent.find('.unit-price').val(unit_price.toFixed(2));
                 } else {
                     parent.find('.unit-price').val('0.00')
+                }
+            }).keydown(function (e) {
+                if (e.keyCode == 13 || e.keyCode == 40) {
+                    e.preventDefault();
+                    var next = $(this).closest('tr').next().find('.qty');
+                    if (next.length) {
+                        next.focus();
+                    }
+                } else if (e.keyCode == 38) {
+                    e.preventDefault();
+                    var prev = $(this).closest('tr').prev().find('.qty');
+                    if (prev.length) {
+                        prev.focus();
+                    }
                 }
             });
         });

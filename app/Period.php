@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use Illuminate\Database\Eloquent\Model;
 
 class Period extends Model
 {
+    use CachesQueries;
+
     protected $fillable = ['name', 'start_date', 'is_open'];
 
     protected $dates = ['created_at', 'update_at', 'start_date'];

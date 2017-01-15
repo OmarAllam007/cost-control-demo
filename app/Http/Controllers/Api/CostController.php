@@ -22,20 +22,30 @@ class CostController extends Controller
 //            ->joinShadow()
 //            ->get();
 
+        $period = $wbs_level->project->open_period();
+        if (!$period) {
+            return [];
+        }
+
         return CostShadow::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
-            ->where('period_id', $wbs_level->project->open_period()->id)->with('budget')->get();
+            ->where('period_id', $period->id)->with('budget')->get();
 
 //        return BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->with('cost')->get();
     }
 
     function resources(Project $project)
     {
+        $period = $project->open_period();
+
+        if (!$period) {
+            return [];
+        }
+
         return CostResource::where('project_id', $project->id)
-            ->where('period_id', $project->open_period()->id)
+            ->where('period_id', $period->id)
             ->get()->map(function (CostResource $resource) {
                 return $resource->jsonFormat();
             });
-
     }
 
     function deleteResource(BreakdownResource $breakdown_resource)
