@@ -69,7 +69,7 @@ class Productivity extends Model
     {
         return [
             'id' => $this->id,
-            'code' => $this->code,
+            'code' => $this->csi_code,
             'daily_output' => $this->daily_output,
             'reduction' => $this->reduction_factor,
             'after_reduction' => $this->after_reduction,
