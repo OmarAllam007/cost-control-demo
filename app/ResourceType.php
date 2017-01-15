@@ -17,6 +17,8 @@ class ResourceType extends Model
 
     protected $orderBy = ['code', 'name'];
 
+    protected $root;
+
     public function getLabelAttribute()
     {
         return '# '.$this->name  ;
@@ -30,13 +32,17 @@ class ResourceType extends Model
 
     public function getRootAttribute()
     {
+        if ($this->root) {
+            return $this->root;
+        }
+
         $this->load(['parent', 'parent.parent', 'parent.parent.parent']);
         $parent = $this;
         while ($parent->parent_id && $parent->id != $parent->parent_id) {
             $parent = $parent->parent;
         }
 
-        return $parent;
+        return $this->root = $parent;
     }
 
     function getChildrenIds()
