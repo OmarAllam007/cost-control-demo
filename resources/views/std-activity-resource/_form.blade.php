@@ -39,7 +39,7 @@
             <div class="form-group {{$errors->first('productivity_id', 'has-error')}}">
                 {{ Form::label('productivity_id', 'Productivity', ['class' => 'control-label']) }}
                 <p>
-                    <a href="#ProductivityModal" data-toggle="modal" v-text="productivity.code || "Select Productivity Reference""></a>
+                    <a href="#ProductivityModal" data-toggle="modal" v-text="productivity.code || 'Select Productivity Reference'"></a>
                 </p>
                 {{--                {{ Form::select('productivity_id', \App\Productivity::options(), null, ['class' => 'form-control']) }}--}}
                 {!! $errors->first('productivity_id', '<div class="help-block">:message</div>') !!}
