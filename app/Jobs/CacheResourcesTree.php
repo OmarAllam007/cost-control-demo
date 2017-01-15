@@ -39,7 +39,11 @@ class CacheResourcesTree extends Job
 
         if ($type->resources->count()) {
             $tree['resources'] = $type->resources->map(function(Resources $resource) {
-                 return ['id' => $resource->id,'code'=>$resource->resource_code, 'name' => $resource->name,'project_id'=>$resource->project_id, 'project_name' => $resource->project->name];
+                 $attributes = ['id' => $resource->id,'code'=>$resource->resource_code, 'name' => $resource->name,'project_id'=>$resource->project_id];
+                 if ($resource->project_id) {
+                     $attributes['project_name'] = $resource->project->name;
+                 }
+                 return $attributes;
             });
         }
 
