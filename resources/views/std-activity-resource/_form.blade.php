@@ -19,9 +19,7 @@
             {{ Form::label('resource_id', 'Resource', ['class' => 'control-label']) }}
 
             <p>
-                <a href="#ResourcesModal" data-toggle="modal" id="select-parent">
-                    @{{ resource.name || "Select Resource" }}
-                </a>
+                <a href="#ResourcesModal" data-toggle="modal" id="select-parent" v-text="resource.name || 'Select Resource'"></a>
                 <a id="remove-parent"><span class="fa fa-times"></span></a>
             </p>
             {{Form::hidden('resource_id')}}
@@ -41,9 +39,7 @@
             <div class="form-group {{$errors->first('productivity_id', 'has-error')}}">
                 {{ Form::label('productivity_id', 'Productivity', ['class' => 'control-label']) }}
                 <p>
-                    <a href="#ProductivityModal" data-toggle="modal">
-                        @{{ productivity.code || "Select Productivity Reference" }}
-                    </a>
+                    <a href="#ProductivityModal" data-toggle="modal" v-text="productivity.code || "Select Productivity Reference""></a>
                 </p>
                 {{--                {{ Form::select('productivity_id', \App\Productivity::options(), null, ['class' => 'form-control']) }}--}}
                 {!! $errors->first('productivity_id', '<div class="help-block">:message</div>') !!}
