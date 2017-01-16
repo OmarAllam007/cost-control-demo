@@ -3,7 +3,8 @@ $(function () {
 
     $('.tree-radio').on('change', function(){
         if (this.checked) {
-            var selector = '#' + $(this).parents('.modal').attr('id');
+            var selector = '#' + $(this).closest('.modal').attr('id');
+            console.log(selector);
             var trigger = $('[href="' + selector +'"]');
 
             var label = $(this).data('label');

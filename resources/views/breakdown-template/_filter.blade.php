@@ -10,16 +10,16 @@
 <div class="col-sm-4">
     <div class="form-group-sm">
         {{Form::label('resource_id', 'Has resource', ['class' => 'control-label'])}}
-        <p>
-            <a href="#ResourcesModal" data-toggle="modal" v-text="resource.name || 'Select Resource'"></a>
-            <a href="#" class="text-danger" v-show="resource" @click.prevent="resource = false"><i class="fa fa-times-circle"></i></a>
-        </p>
+        <div class="btn-group btn-group-block">
+            <a class="btn btn-default btn-sm" href="#ResourcesModal" data-toggle="modal" v-text="resource.name || 'Select Resource'"></a>
+            <a href="#" class="btn btn-warning btn-sm" v-show="resource" @click.prevent="$broadcast('resetResource')"><i class="fa fa-times"></i></a>
+        </div>
     </div>
 </div>
 
 <div class="col-sm-2">
     <div class="form-group-sm">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary btn-sm submit">
             <i class="fa fa-filter"></i> Filter
         </button>
     </div>

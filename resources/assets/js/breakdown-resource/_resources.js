@@ -57,5 +57,12 @@ export default {
             this.resource = resource;
             this.$dispatch('resource-changed', resource);
         }
+    },
+
+    events: {
+        resetResource() {
+            this.resource_id = '';
+            this.setResource({});
+        }
     }
 };

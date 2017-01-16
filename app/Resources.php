@@ -33,6 +33,11 @@ class Resources extends Model
         return $this->hasMany(ResourceCode::class, 'resource_id');
     }
 
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     public function parteners()
     {
         return $this->belongsTo(BusinessPartner::class, 'business_partner_id');

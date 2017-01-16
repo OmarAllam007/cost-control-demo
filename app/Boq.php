@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Behaviors\HasOptions;
@@ -86,6 +87,20 @@ class Boq extends Model
         }
 
         return $errors;
+    }
+
+    function scopeCostAccountOnWbs(Builder $query, WbsLevel $wbs, $cost_account)
+    {
+        $wbs_parents = collect($wbs->id);
+        $parent = $wbs;
+        while ($parent->parent_id) {
+            $wbs_parents->push($parent->parent_id);
+            $parent = $parent->parent;
+        }
+
+        $query->whereIn('wbs_id', $wbs_parents)->where('cost_account', $cost_account);
+
+        return $query;
     }
 
 }

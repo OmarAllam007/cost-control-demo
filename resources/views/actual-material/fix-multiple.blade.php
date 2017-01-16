@@ -2,7 +2,9 @@
 
 @section('header')
     <div class="clearfix">
-        <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash; <small>Resources with multiple cost account</small></h4>
+        <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash;
+            <small>Resources with multiple cost account</small>
+        </h4>
         <h4 class="pull-right text-muted">#E03</h4>
     </div>
 @endsection
@@ -10,20 +12,28 @@
 @section('body')
     {{Form::open(['method' => 'post'])}}
     @foreach($multiple as $activityCode => $activity)
+
         @foreach($activity as $resourceCode => $resource)
+            @php
+                $firstResource=$resource['resources']->first();
+                $wbs = $firstResource->wbs;
+                $wbs_path = $wbs->path;
+                $activity_name = $firstResource->activity;
+                $boq = \App\Boq::costAccountOnWbs($wbs, $firstResource->cost_account)->first();
+
+                $totalQty = $resource['resources']->sum('budget_unit');
+            @endphp
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">{{$resource['resources']->first()->wbs->name}}
-                        / {{$resource['resources']->first()->activity }}</h4>
+                    <h4 class="panel-title">{{$wbs_path}} / {{ $activity_name }}</h4>
                 </div>
 
-                <table class="table table-bordered table-condensed table-hover table-striped"
-                       data-total-qty="{{$totalQty = $resource['resources']->sum('budget_unit')}}"
-                       data-qty="{{abs($resource[4])}}">
+                <table class="table table-bordered table-condensed table-hover table-striped" data-total-qty="{{$totalQty}}" data-qty="{{$resource[4]}}">
                     <thead>
                     <tr>
                         <th class="text-center">&nbsp;</th>
                         <th>Activity</th>
+                        <th>Description</th>
                         <th>Store Resource Code</th>
                         <th>Store Resource Name</th>
                         <th>Resource Code</th>
@@ -43,33 +53,16 @@
                             <td class="text-center">
                                 {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][included]", 1, true, ['class' => 'include'])}}
                             </td>
-                            <td>
-                                {{$res->breakdown_resource->code}}
-                            </td>
-                            <td>
-                                {{$resource[7]}}
-                            </td>
-                            <td>
-                                {{$resource[2]}}
-                            </td>
-                            <td>
-                                {{$res->resource_code}}
-                            </td>
-                            <td>
-                                {{$res->resource_name}}
-                            </td>
-                            <td>
-                                {{$res->cost_account}}
-                            </td>
-                            <td>
-                                {{$res->budget_unit}}
-                            </td>
-                            <td>
-                                {{$res->remarks}}
-                            </td>
-                            <td>
-                                {{$res->cost ? number_format($res->cost->previous_qty, 2) : 0 }}
-                            </td>
+                            <td>{{$res->breakdown_resource->code}}</td>
+                            <td>{{$boq->description}}</td>
+                            <td>{{$resource[7]}}</td>
+                            <td>{{$resource[2]}}</td>
+                            <td>{{$res->resource_code}}</td>
+                            <td>{{$res->resource_name}}</td>
+                            <td>{{$res->cost_account}}</td>
+                            <td>{{$res->budget_unit}}</td>
+                            <td>{{$res->remarks}}</td>
+                            <td>{{$res->cost ? number_format($res->cost->previous_qty, 2) : 0 }}</td>
                             <td>
                                 {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[4])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
                             </td>
@@ -153,9 +146,8 @@
                     var _this = $(this);
                     if (_this.find('.include').prop('checked') && !_this.data('manual')) {
                         totalBudget += _this.data('budget');
-                    } else if (!_this.find('.include').prop('checked'))  {
+                    } else if (!_this.find('.include').prop('checked')) {
                         _this.data('manual', false).find('.qty').val('0.00').prop('readonly', true);
-                        updateUnitPrice(_this);
                     } else {
                         qty -= _this.find('.qty').val();
                     }
@@ -189,8 +181,10 @@
                     }
                 });
 
-                table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount.toFixed(2)).toLocaleString(formatOptions));
-                table.find('.total-qty-cell').data('value', totalQty).text(parseFloat(totalQty.toFixed(2)).toLocaleString(formatOptions));
+                totalAmount = totalAmount.toFixed(2);
+                totalQty = totalQty.toFixed(2);
+                table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount).toLocaleString(formatOptions));
+                table.find('.total-qty-cell').data('value', totalQty).text(parseFloat(totalQty).toLocaleString(formatOptions));
 
                 var originalTotalAmount = parseFloat($('.original-total').data('value'));
                 var originalTotalQty = parseFloat($('.original-qty').data('value'));
