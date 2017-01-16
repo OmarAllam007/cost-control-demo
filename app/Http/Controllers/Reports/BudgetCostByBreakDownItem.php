@@ -14,6 +14,7 @@ class BudgetCostByBreakDownItem
 {
     public function compareBudgetCostByBreakDownItem(Project $project)
     {
+        set_time_limit(300);
         $shadows = $project->shadows()->get();
 
         $bd_resource = [];

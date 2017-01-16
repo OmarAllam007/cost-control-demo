@@ -15,7 +15,7 @@ class ExportStdActivitiesJob extends ImportJob
      */
     public function handle()
     {
-
+        set_time_limit(600);
         $col = 0;
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);

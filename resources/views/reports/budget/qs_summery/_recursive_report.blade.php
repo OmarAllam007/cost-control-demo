@@ -9,13 +9,13 @@
                 @endif
             "
     >
-        <a href="#{{$level['id']}}" data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
+        <a href="#{{$level['id']}}"  data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
             {{$level['name']}}
         </a>
 
     </p>
 
-    <article id="{{$level['id']}}" class="tree--child collapse">
+    <article id="{{$level['id']}}" class="tree--child collapse" data-code="{{strtolower($level['code'])}}">
 
         @if($level['divisions'] && count($level['divisions']))
             <ul class="list-unstyled">

@@ -11,6 +11,7 @@ class ExportStandardActivityReport
 {
     public function exportStandardActivityReport($project)
     {
+        set_time_limit(600);
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->getActiveSheet()->fromArray(['Division-1', 'Division-2', 'Division-3', 'Division-4','activity'], NUll, 'A1');
         $sheet = $objPHPExcel->getActiveSheet();

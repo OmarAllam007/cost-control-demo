@@ -19,6 +19,7 @@ class ActivityResourceBreakDown
 {
     public function getActivityResourceBreakDown(Project $project)
     {
+        set_time_limit(300);
         $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource', 'wbs')->get();
         $project_total = 0;
         $data = [];
@@ -94,6 +95,7 @@ class ActivityResourceBreakDown
                 $data[$key]['activities_total_cost'] += $data[$key]['activities'][$activityKey]['activity_total_cost'];
             }
         }
+        ksort($data);
         return view('std-activity.activity_resource_breakdown', compact('data', 'project', 'project_total'));
 
     }

@@ -18,6 +18,7 @@ class ExportBoqJob extends Job
 
     public function handle()
     {
+        set_time_limit(600);
         $project = $this->project;
         $divisions = BoqDivision::whereHas('items', function ($q) use ($project) {
             $q->where('project_id', $this->project->id);

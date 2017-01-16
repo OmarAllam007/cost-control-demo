@@ -21,6 +21,7 @@ class ResourceDictionary
 {
     public function getResourceDictionary(Project $project)
     {
+        set_time_limit(300);
         $break_down_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource.parteners', 'resource', 'wbs', 'resource.types')->get();
         $data = [];
         $parents = [];

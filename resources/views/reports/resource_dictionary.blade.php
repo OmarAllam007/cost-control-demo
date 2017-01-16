@@ -28,10 +28,10 @@
                                 <li class="blue-third-level">{{$parent['name']}}</li>
                                 @endforeach
                                 @endif
-                                <article class="tree--child collapse" id="{{$divIndex}}">
+                                <article class="tree--child" id="{{$divIndex}}">
                                     <ul class="list-unstyled tree">
                                         <p class="blue-second-level"><a data-toggle="collapse">{{$resourceType['name']}}</a></p>
-                                        <article class="tree--child ">
+                                        <article class="tree--child " >
                                             <li>
                                                 <table class="table table-condensed">
                                                     <thead>
@@ -50,7 +50,7 @@
                                                     <tbody>
                                                     @foreach($divisions['divisions'][$divIndex]['resources'] as $index => $resource)
                                                         <tr>
-                                                            </td>
+
                                                             <td class="col-xs-1">
                                                                 {{$resource['code']}}
                                                             </td>

@@ -19,7 +19,6 @@ class BudgetCostByBuilding
 {
     public function getBudgetCostForBuilding(Project $project)
     {
-//        ini_set("memory_limit",-1);
         set_time_limit(200);
         $shadows = $project->shadows()->with('wbs')->get();
         $data = [];
