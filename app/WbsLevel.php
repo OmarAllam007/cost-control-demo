@@ -4,6 +4,8 @@ namespace App;
 
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use App\Jobs\CacheWBSTree;
+use App\Jobs\CacheWBSTreeInQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,27 +37,22 @@ class WbsLevel extends Model
 
     public function deleteRecursive()
     {
-        if ($this->children->count()) {
-            $this->children->each(function ($level) {
-                $level->deleteRecursive();
-            });
-        }
-
+        $ids = $this->getChildrenIds();
         $this->deleteRelations();
         $this->delete();
     }
 
     function deleteRelations()
     {
-        $breakdown_ids = $this->breakdowns()->pluck('id');
-        $breakdown_resource_ids = BreakdownResource::whereIn('breakdown_id')->pluck('id');
-
-        Breakdown::whereIn('id', $breakdown_ids)->delete();
-        BreakdownResources::whereIn('breakdown_id', $breakdown_ids)->delete();
+        $ids = $this->getChildrenIds();
+        $breakdown_ids = Breakdown::whereIn('wbs_level_id', $ids)->pluck('id');
+        $breakdown_resource_ids = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->pluck('id');
+        Breakdown::whereIn($ids, $breakdown_ids)->delete();
+        BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->delete();
         BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)->delete();
         BreakdownVariable::whereIn('breakdown_id', $breakdown_ids);
-        Boq::where('wbs_level_id', $this->id)->delete();
-        Survey::where('wbs_level_id', $this->id)->delete();
+        Boq::whereIn('wbs_id', $ids)->delete();
+        Survey::whereIn('wbs_level_id', $ids)->delete();
     }
 
     public function breakdowns()

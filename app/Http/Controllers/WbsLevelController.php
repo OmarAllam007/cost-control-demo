@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\WipeRequest;
+use App\Jobs\CacheWBSTreeInQueue;
 use App\Jobs\Export\WbsLevelExportJob;
 use App\Jobs\WbsImportJob;
 use App\Project;
@@ -111,6 +112,7 @@ class WbsLevelController extends Controller
         }
         
         $wbs_level->deleteRecursive();
+        $this->dispatch(new CacheWBSTreeInQueue($wbs_level->project()));
 
         flash('WBS level has been deleted', 'success');
 

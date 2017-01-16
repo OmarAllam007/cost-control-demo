@@ -9,6 +9,8 @@ trait Tree
 {
     protected $tree_path;
 
+    protected $children_ids;
+
     public function parent()
     {
         return $this->belongsTo(static::class, 'parent_id');
@@ -77,15 +79,18 @@ trait Tree
 
     function getChildrenIds()
     {
-        $ids = collect($this->id);
+        if (count($this->children_ids)) {
+            return $this->children_ids;
+        }
 
+        $ids = collect($this->id);
 
         foreach ($this->children as $child) {
             $subids = $child->getChildrenIds();
             $ids = $ids->merge($subids);
         }
 
-        return $ids;
+        return $this->children_ids = $ids;
     }
 
 
