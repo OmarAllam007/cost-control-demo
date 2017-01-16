@@ -17,6 +17,7 @@ class Productivity
 
     public function getProductivity(Project $project)
     {
+        set_time_limit(300);
         $breakDown_resources = $project->breakdown_resources()->with('productivity')->get();
         $data = [];
         $parents = [];

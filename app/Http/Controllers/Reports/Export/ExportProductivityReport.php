@@ -15,6 +15,7 @@ class ExportProductivityReport
 {
     function exportProductivityReport($project)
     {
+        set_time_limit(600);
         $data = [];
         $parents = [];
         $productivities = Productivity::where('project_id', $project->id)->get();

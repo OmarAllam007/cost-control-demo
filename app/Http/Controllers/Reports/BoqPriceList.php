@@ -17,7 +17,7 @@ class BoqPriceList
 {
     public function getBoqPriceList(Project $project)
     {
-
+        set_time_limit(300);
         $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource', 'wbs', 'breakdown', 'std_activity')->get();
         $data = [];
         $parents = [];

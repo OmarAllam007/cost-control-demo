@@ -11,6 +11,7 @@ class ExportWbsReport
 
     function exportWbsReport(Project $project)
     {
+        set_time_limit(600);
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         /** @var $objPHPExcel ->getActiveSheet(); $sheet */

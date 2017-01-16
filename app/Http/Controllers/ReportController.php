@@ -52,11 +52,11 @@ class ReportController extends Controller
 
     public function stdActivityReport(Project $project)
     {
+        set_time_limit(300);
         $div_ids = $project->getDivisions();
         $activity_ids = $project->getActivities()->toArray();
         $all = $div_ids['all'];
         $parent_ids = $div_ids['parents'];
-
         $parents = ActivityDivision::whereIn('id', $parent_ids)->get();
 
         return view('std-activity.report', compact('parents', 'all', 'activity_ids', 'project'));
@@ -71,6 +71,7 @@ class ReportController extends Controller
 
     public function manPower(Project $project)
     {
+        set_time_limit(300);
         $resources = [];
         $root = '';
         $total_budget_cost = '';
@@ -109,6 +110,7 @@ class ReportController extends Controller
 
     public function budgetSummery(Project $project)
     {
+        set_time_limit(300);
         $data = [];
         $total_project = 0;
         $breakdown_resources = $project->shadows()->get();
@@ -120,7 +122,7 @@ class ReportController extends Controller
 
             if (!isset($data[$parent_name])) {
                 $data[$parent_name] = [
-                    'division_id'=>$parent->id,
+                    'division_id' => $parent->id,
                     'budget_cost' => 0,
                     'parents' => [],
                     'activities' => [],
@@ -129,7 +131,7 @@ class ReportController extends Controller
 
             if (!isset($data[$parent_name]['activities'][$activity->name])) {
                 $data[$parent_name]['activities'][$activity->name] = [
-                    'activity_id'=>$activity->id,
+                    'activity_id' => $activity->id,
                     'name' => $activity->name,
                     'budget_cost' => 0,
                 ];
@@ -161,7 +163,7 @@ class ReportController extends Controller
             }
             $total_project += $data[$key]['budget_cost'];
         }
-
+        ksort($data);
         return view('std-activity.budgetSummery', compact('data', 'project', 'total_project'));
     }
 

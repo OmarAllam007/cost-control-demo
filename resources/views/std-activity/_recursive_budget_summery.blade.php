@@ -2,11 +2,11 @@
 <li>
     <div class="tree--item">
         <div class="tree--item--label blue-first-level">
-            {{$key}}
+            <a href="#{{str_replace([' ','&','/','.'],'',$key)}}" data-toggle="collapse" style="color: white">{{$key}}</a>
             <strong class="pull-right">{{number_format($division['budget_cost'],2)}}</strong>
         </div>
     </div>
-    <ul class="list-unstyled tree">
+    <ul class="list-unstyled tree collapse" id="{{str_replace([' ','&','/','.'],'',$key)}}">
         <li>
             @if($division['parents'])
                 @foreach($division['parents'] as $parent)

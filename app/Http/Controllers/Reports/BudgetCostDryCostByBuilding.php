@@ -15,6 +15,7 @@ class BudgetCostDryCostByBuilding
 {
     public function compareBudgetCostDryCost($project)
     {
+        set_time_limit(300);
         $break_downs = $project->breakdowns()->get();
         $data = [];
         $children = [];

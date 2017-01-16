@@ -27,6 +27,7 @@ class ExportPublicResourcesJob extends Job
      */
     public function handle()
     {
+        set_time_limit(600);
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Type', 'Rate', 'Unit'

@@ -19,6 +19,7 @@ class QtyAndCost
 {
     public function compare(Project $project)
     {
+        set_time_limit(600);
         $data = [];
         $total = [
             'budget_qty_eq' => 0,

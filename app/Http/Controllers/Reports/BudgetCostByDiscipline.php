@@ -16,12 +16,13 @@ class BudgetCostByDiscipline
 {
     public function compareBudgetCostDiscipline(Project $project)
     {
+        set_time_limit(600);
         $survey = [];
         $total = [
             'total' => 0,
             'weight_total' => 0,
         ];
-        $shadows = $project->shadows()->get();
+        $shadows = $project->shadows()->with('std_activity')->get();
 
         foreach ($shadows as $shadow) {
             $qs_items = Survey::where('cost_account', $shadow->cost_account)->get();

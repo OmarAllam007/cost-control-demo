@@ -17,6 +17,7 @@ class ExportSurveyJob extends Job
 
     public function handle()
     {
+        set_time_limit(600);
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Cost Account');

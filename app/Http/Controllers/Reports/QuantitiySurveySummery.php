@@ -25,6 +25,7 @@ class QuantitiySurveySummery
 
     public function qsSummeryReport(Project $project)
     {
+        set_time_limit(300);
         $this->project = $project;
         $levels = BreakDownResourceShadow::with('wbs')->where('project_id', $project->id)->pluck('wbs_id')->toArray();
         $wbs_levels = WbsLevel::whereIn('id', $levels)->where('project_id', $project->id)->get();
@@ -37,7 +38,6 @@ class QuantitiySurveySummery
                 $tree[] = $treeLevel;
             }
         }
-
         return view('reports.budget.qs_summery.qs_summery_report', compact('project', 'tree'));
 
     }
@@ -47,7 +47,7 @@ class QuantitiySurveySummery
         $tree = [];
         if (!in_array($level->id, $this->root_ids)) {
             $this->root_ids[] = $level->id;
-            $tree = ['id' => $level->id, 'name' => $level->name, 'children' => [], 'divisions' => []];
+            $tree = ['id' => $level->id,'code'=>$level->code, 'name' => $level->name, 'children' => [], 'divisions' => []];
 
 
             $break_downs_resources = BreakDownResourceShadow::with('std_activity')->with('std_activity.division')->where('project_id', $this->project->id)
@@ -81,7 +81,7 @@ class QuantitiySurveySummery
                         'boq_name' => $boq_item->description,
                         'budget_qty' => $break_down_resource['budget_qty'],
                         'eng_qty' => $break_down_resource['eng_qty'],
-                        'unit' => $break_down_resource['measure_unit'],
+                        'unit' => $boq_item->unit->type,
                     ];
                 }
             }
