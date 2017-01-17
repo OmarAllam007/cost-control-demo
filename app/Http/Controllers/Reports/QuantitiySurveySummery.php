@@ -81,7 +81,7 @@ class QuantitiySurveySummery
                         'boq_name' => $boq_item->description,
                         'budget_qty' => $break_down_resource['budget_qty'],
                         'eng_qty' => $break_down_resource['eng_qty'],
-                        'unit' => $boq_item->unit->type,
+                        'unit' => $boq_item->unit->type??'',
                     ];
                 }
             }
