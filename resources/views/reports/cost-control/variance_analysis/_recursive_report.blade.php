@@ -23,7 +23,7 @@
                 <td>Todate Price / Unit</td>
                 <td>Price / Unit +/-</td>
                 <td>Todate Cost Variance</td>
-                <td>Allowable Unit</td><!--required-->
+                <td>Allowable Unit</td>
                 <td>Todate Qty</td>
                 <td>Quantity + / -</td>
                 <td>Todate Cost Variance</td>
@@ -37,7 +37,7 @@
                 <td>{{number_format($type['to_date_unit_price'],2)}}</td>
                 <td>{{number_format($type['unit_price_var'],2)}}</td>
                 <td>{{number_format($type['cost_var'],2)}}</td>
-                <td></td>
+                <td>{{number_format($type['allowable_qty'],2)}}</td>
                 <td>{{number_format($type['to_date_qty'],2)}}</td>
                 <td>{{number_format($type['qty_var'],2)}}</td>
                 <td>{{number_format($type['cost_var'],2)}}</td>

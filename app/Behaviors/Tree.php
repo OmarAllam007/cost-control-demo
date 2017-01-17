@@ -85,6 +85,7 @@ trait Tree
 
         $ids = collect($this->id);
 
+
         foreach ($this->children as $child) {
             $subids = $child->getChildrenIds();
             $ids = $ids->merge($subids);
