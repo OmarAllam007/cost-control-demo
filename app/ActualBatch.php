@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActualBatch extends Model
 {
-    protected $fillable = ['user_id', 'type'];
+    protected $fillable = ['user_id', 'type', 'file', 'project_id', 'period_id'];
 }

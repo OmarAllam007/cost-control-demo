@@ -64,13 +64,13 @@ class ActualMaterialController extends Controller
 
         if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
             if ($data['mapping']['activity']->count()) {
-                if (\Gate::denies('activity_mapping', $data['project'])) {
+                if (cannot('activity_mapping', $data['project'])) {
                     $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
                 }
             }
 
             if ($data['mapping']['resources']->count()) {
-                if (\Gate::denies('resource_mapping', $data['project'])) {
+                if (cannot('resource_mapping', $data['project'])) {
                     $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
                 }
             }
