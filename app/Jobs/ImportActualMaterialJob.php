@@ -33,12 +33,13 @@ class ImportActualMaterialJob extends ImportJob
     public function handle()
     {
         $loader = new \PHPExcel_Reader_Excel2007();
+
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
 
         $material = collect();
-        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id(), 'file' => $this->file]);
+        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id(), 'file' => $this->file, 'project_id' => $this->project->id]);
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();

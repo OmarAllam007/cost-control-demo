@@ -383,23 +383,18 @@ class ResourcesController extends Controller
 
     function importCodes()
     {
-        $project_id = $request->get('project', null);
+        $project_id = request('project', null);
         if ($project_id) {
             $project = Project::find($project_id);
             if (cannot('resource_mapping', $project)) {
                 flash("You are not authorized to do this action");
-                return \Redirect::to('/');
+                return \Redirect::route('project.cost-control', $project);
             }
         } else {
             if (cannot('write', 'resources')) {
                 flash("You are not authorized to do this action");
-                return \Redirect::to('/');
+                return \Redirect::to('/project');
             }
-        }
-
-        if (\Gate::denies('write', 'resources')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
         }
 
         return view('resources.import-codes');
@@ -412,7 +407,7 @@ class ResourcesController extends Controller
             $project = Project::find($project_id);
             if (cannot('resource_mapping', $project)) {
                 flash("You are not authorized to do this action");
-                return \Redirect::to('/');
+                return \Redirect::route('project.cost-control', $project);
             }
         } else {
             if (cannot('write', 'resources')) {

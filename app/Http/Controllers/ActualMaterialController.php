@@ -44,7 +44,8 @@ class ActualMaterialController extends Controller
 
         /** @var UploadedFile $file */
         $file = $request->file('file');
-        $filename = $file->move(storage_path('batches'), uniqid() . '.' . $file->clientExtension());
+        $file->move(storage_path('batches'), $filename = uniqid() . '.' . $file->clientExtension());
+        $filename = storage_path('batches') . '/' . $filename;
 
         $result = $this->dispatch(new ImportActualMaterialJob($project, $filename));
 
@@ -64,13 +65,13 @@ class ActualMaterialController extends Controller
 
         if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
             if ($data['mapping']['activity']->count()) {
-                if (\Gate::denies('activity_mapping', $data['project'])) {
+                if (cannot('activity_mapping', $data['project'])) {
                     $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
                 }
             }
 
             if ($data['mapping']['resources']->count()) {
-                if (\Gate::denies('resource_mapping', $data['project'])) {
+                if (cannot('resource_mapping', $data['project'])) {
                     $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
                 }
             }

@@ -65,5 +65,6 @@ class CostController extends Controller
         $result = $this->dispatch(new ImportOldDatasheet($project, $filename));
 
         flash($result['success'] . ' records has been imported');
+        return \Redirect::route('project.cost-control', $project);
     }
 }

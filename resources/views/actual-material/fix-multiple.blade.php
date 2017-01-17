@@ -189,23 +189,23 @@
                 var originalTotalAmount = parseFloat($('.original-total').data('value'));
                 var originalTotalQty = parseFloat($('.original-qty').data('value'));
 
-                if (totalAmount != originalTotalAmount) {
+                if (parseInt(totalAmount * 100) != parseInt(originalTotalAmount * 100)) {
                     table.find('.total-amount-cell').addClass('text-danger');
                 } else {
                     table.find('.total-amount-cell').removeClass('text-danger');
                 }
 
-                if (totalQty != originalTotalQty) {
+                if (parseInt(totalQty * 100) != parseInt(originalTotalQty * 100)) {
                     table.find('.total-qty-cell').addClass('text-danger');
                 } else {
                     table.find('.total-qty-cell').removeClass('text-danger');
                 }
 
-                if (totalAmount == originalTotalAmount && totalQty == originalTotalQty) {
+                /*if (parseInt(totalAmount * 100) == parseInt(originalTotalAmount * 100) && parseInt(totalQty * 100) == parseInt(originalTotalQty * 100)) {
                     $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
                 } else {
                     $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
-                }
+                }*/
             }
         });
     </script>
