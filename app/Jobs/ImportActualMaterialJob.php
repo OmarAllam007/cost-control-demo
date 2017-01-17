@@ -38,7 +38,7 @@ class ImportActualMaterialJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
 
         $material = collect();
-        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id(), 'file' => $this->file]);
+        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id(), 'file' => $this->file, 'project_id' => $this->project->id]);
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();

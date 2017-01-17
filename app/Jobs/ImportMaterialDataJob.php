@@ -98,9 +98,6 @@ class ImportMaterialDataJob extends Job
 
             // Check unit of measure
             $unit_resources = Resources::find($resource_ids->toArray());
-            if (!$unit_resources) {
-                dd($resource_ids);
-            }
             if ($unit_resources && $unit_resources->count() == 1) {
                 $unit_resource =$unit_resources->first();
                 $resource_unit_id = $unit_resource->unit;
