@@ -383,7 +383,7 @@ class ResourcesController extends Controller
 
     function importCodes()
     {
-        $project_id = $request->get('project', null);
+        $project_id = request('project', null);
         if ($project_id) {
             $project = Project::find($project_id);
             if (cannot('resource_mapping', $project)) {
