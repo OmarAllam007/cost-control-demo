@@ -388,7 +388,7 @@ class ResourcesController extends Controller
             $project = Project::find($project_id);
             if (cannot('resource_mapping', $project)) {
                 flash("You are not authorized to do this action");
-                return \Redirect::to('/project');
+                return \Redirect::route('project.cost-control', $project);
             }
         } else {
             if (cannot('write', 'resources')) {
@@ -407,7 +407,7 @@ class ResourcesController extends Controller
             $project = Project::find($project_id);
             if (cannot('resource_mapping', $project)) {
                 flash("You are not authorized to do this action");
-                return \Redirect::to('/');
+                return \Redirect::route('project.cost-control', $project);
             }
         } else {
             if (cannot('write', 'resources')) {
