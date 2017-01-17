@@ -31,6 +31,7 @@ class VarianceAnalysisReport
                 'cost.cost_variance_completion_due_qty',
                 'cost.cost_variance_completion_due_unit_price',
             'cost.to_date_qty'])
+
             ->where('period_id', $project->open_period()->id)
             ->get()->toArray();
 
