@@ -12,7 +12,7 @@
         @endif
     </div>
 
-    <user-form :users="{{App\User::options()}}"></user-form>
+    <user-form :users="{{App\User::options()->flip()}}"></user-form>
 </div>
 
 
@@ -27,8 +27,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <select id="user_id" v-model="user.user_id" class="form-control" v-if="!edit">
-                            <option value="">Select User</option>
-                            <option v-for="(id, name) in users" :value="id" v-text="name"></option>
+                            <option v-for="(name, id) in users" :value="id" v-text="name"></option>
                         </select>
                         <div v-else>
                             <input type="text"  v-model="user.name" class="form-control" readonly>
@@ -182,7 +181,7 @@
                             <div class="form-group">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" :checked="user.manual_edit" v-model="user.manual_edit"> Edit resources manually
+                                        <input type="checkbox" :checked="user.manual_edit" v-model="user.delete_resources"> Delete Resources data
                                     </label>
                                 </div>
                             </div>
