@@ -14,6 +14,7 @@ use App\Http\Controllers\Reports\BudgetCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostDiscipline;
+use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
 use App\Http\Controllers\Reports\Productivity;
 use App\Http\Controllers\Reports\QtyAndCost;
@@ -110,61 +111,8 @@ class ReportController extends Controller
 
     public function budgetSummery(Project $project)
     {
-        set_time_limit(300);
-        $data = [];
-        $total_project = 0;
-        $breakdown_resources = $project->shadows()->get();
-        foreach ($breakdown_resources as $resource) {
-            $division = $resource->std_activity->division;
-            $activity = $resource->std_activity;
-            $parent = $division;
-            $parent_name = $division->name;
-
-            if (!isset($data[$parent_name])) {
-                $data[$parent_name] = [
-                    'division_id' => $parent->id,
-                    'budget_cost' => 0,
-                    'parents' => [],
-                    'activities' => [],
-                ];
-            }
-
-            if (!isset($data[$parent_name]['activities'][$activity->name])) {
-                $data[$parent_name]['activities'][$activity->name] = [
-                    'activity_id' => $activity->id,
-                    'name' => $activity->name,
-                    'budget_cost' => 0,
-                ];
-            }
-
-            $data[$parent_name]['activities'][$activity->name]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
-
-            if ($division->parent) {
-                while ($parent->parent) {
-                    $parent = $parent->parent;
-                    $parent_name = $parent->name;
-                    if (!isset($data[$division->name]['parents'][$parent_name])) {
-                        $data[$division->name]['parents'][$parent_name] = [
-                            'id' => $parent->id,
-                            'name' => $parent_name,
-                            'budget_cost' => 0,
-                        ];
-                    }
-
-                }
-            }
-
-        }
-
-
-        foreach ($data as $key => $value) {//sum budget cost for arrays
-            foreach ($data[$key]['activities'] as $actKey => $actValue) {
-                $data[$key]['budget_cost'] += $data[$key]['activities'][$actKey]['budget_cost'];
-            }
-            $total_project += $data[$key]['budget_cost'];
-        }
-        ksort($data);
-        return view('std-activity.budgetSummery', compact('data', 'project', 'total_project'));
+        $budgetSummery = new BudgetSummeryReport();
+        return $budgetSummery->getReport($project);
     }
 
     public function activityResourceBreakDown(Project $project)
