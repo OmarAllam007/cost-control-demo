@@ -33,6 +33,7 @@ class ImportActualMaterialJob extends ImportJob
     public function handle()
     {
         $loader = new \PHPExcel_Reader_Excel2007();
+
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
