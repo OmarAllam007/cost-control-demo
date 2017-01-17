@@ -201,11 +201,11 @@
                     table.find('.total-qty-cell').removeClass('text-danger');
                 }
 
-                if (parseInt(totalAmount * 100) == parseInt(originalTotalAmount * 100) && parseInt(totalQty * 100) == parseInt(originalTotalQty * 100)) {
+                /*if (parseInt(totalAmount * 100) == parseInt(originalTotalAmount * 100) && parseInt(totalQty * 100) == parseInt(originalTotalQty * 100)) {
                     $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
                 } else {
                     $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
-                }
+                }*/
             }
         });
     </script>
