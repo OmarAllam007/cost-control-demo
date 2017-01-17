@@ -76,11 +76,6 @@ class ProjectPolicy
         return $this->can($user, $project, __FUNCTION__);
     }
 
-    function mapping(User $user, Project $project)
-    {
-        return $this->canCost($user, $project, __FUNCTION__);
-    }
-
     function activity_mapping(User $user, Project $project)
     {
         return $this->canCost($user, $project, __FUNCTION__);
