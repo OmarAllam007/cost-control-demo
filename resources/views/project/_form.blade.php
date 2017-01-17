@@ -20,7 +20,7 @@
         </div>
 
         <div class="form-group {{$errors->first('cost_owner_id', 'has-error')}}">
-            {{ Form::label('cost_owner_id', 'Owner', ['class' => 'control-label']) }}
+            {{ Form::label('cost_owner_id', 'Cost Control Owner', ['class' => 'control-label']) }}
             {{ Form::select('cost_owner_id', App\User::options(), null, ['class' => 'form-control']) }}
             {!! $errors->first('cost_owner_id', '<div class="help-block">:message</div>') !!}
         </div>

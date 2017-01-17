@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\CostShadow;
+use App\Jobs\ImportOldDatasheet;
+use App\Project;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class CostController extends Controller
 {
@@ -34,5 +37,33 @@ class CostController extends Controller
 
         flash('Resource data has been updated', 'success');
         return \Redirect::to('/blank?reload=breakdowns');
+    }
+
+    function importOldCost(Project $project)
+    {
+        if (\Auth::id() != $project->cost_owner->id) {
+            flash('You are not authorized to do this action');
+            return \Redirect::to('/project');
+        }
+
+        return view('project.import_old_cost');
+    }
+
+    function postImportOldCost(Project $project, Request $request)
+    {
+        if (\Auth::id() != $project->cost_owner->id) {
+            flash('You are not authorized to do this action');
+            return \Redirect::to('/project');
+        }
+
+        $this->validate($request, ['file' => 'required|file|mimes:xls,xlsx']);
+
+        /** @var UploadedFile $file */
+        $file = $request->file('file');
+        $filename = $file->move(storage_path('batches'), uniqid() . '.' . $file->clientExtension());
+
+        $result = $this->dispatch(new ImportOldDatasheet($project, $filename));
+
+        flash($result['success'] . ' records has been imported');
     }
 }

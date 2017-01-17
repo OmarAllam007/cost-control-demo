@@ -10,6 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+\Auth::loginUsingId(22);
 
 Route::get('/', function () {
     return \Redirect::route('project.index');

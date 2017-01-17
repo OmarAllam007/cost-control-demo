@@ -383,6 +383,20 @@ class ResourcesController extends Controller
 
     function importCodes()
     {
+        $project_id = $request->get('project', null);
+        if ($project_id) {
+            $project = Project::find($project_id);
+            if (cannot('resource_mapping', $project)) {
+                flash("You are not authorized to do this action");
+                return \Redirect::to('/');
+            }
+        } else {
+            if (cannot('write', 'resources')) {
+                flash("You are not authorized to do this action");
+                return \Redirect::to('/');
+            }
+        }
+
         if (\Gate::denies('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
@@ -393,17 +407,27 @@ class ResourcesController extends Controller
 
     function postImportCodes(Request $request)
     {
-        if (\Gate::denies('write', 'resources')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
+        $project_id = $request->get('project', null);
+        if ($project_id) {
+            $project = Project::find($project_id);
+            if (cannot('resource_mapping', $project)) {
+                flash("You are not authorized to do this action");
+                return \Redirect::to('/');
+            }
+        } else {
+            if (cannot('write', 'resources')) {
+                flash("You are not authorized to do this action");
+                return \Redirect::to('/');
+            }
         }
+
 
         $this->validate($request, [
             'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $project_id = $request->get('project', null);
+
         $count = $this->dispatch(new ImportResourceCodesJob($file->path(), $project_id));
 
         flash($count . ' Equivalent codes have been imported successfully', 'success');
