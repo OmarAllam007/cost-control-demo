@@ -6,7 +6,7 @@ const UserForm = {
     template: document.getElementById('user-form').innerHTML,
 
     data() {
-        return { user: {}, edit: false };
+        return { user: { user_id: ''}, edit: false };
     },
 
     watch: {
@@ -82,7 +82,9 @@ const UserForm = {
     methods: {
         save() {
             const action = this.edit? 'updateUser' : 'addUser';
-            this.user.name = this.users[this.user.user_id];
+            const keys = Object.keys(this.users);
+            const idx = Object.values(this.users).indexOf(this.user.user_id);
+            this.user.name = keys[idx];
             this.$dispatch(action, this.user);
             $(this.$el).modal('hide');
         }
@@ -91,7 +93,7 @@ const UserForm = {
     events: {
         showAddUser() {
             this.user = {
-                budget: false, reports: false, wbs: false, productivity: false, resources: false, boq: false,
+                budget: false, reports: false, wbs: false, productivity: false, resources: false, boq: false, user_id: '',
                 qty_survey: false, breakdown: false, breakdown_templates: false, cost_control: false, actual_resources: false
             };
             this.edit = false;

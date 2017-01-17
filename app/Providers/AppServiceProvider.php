@@ -24,6 +24,7 @@ use App\Observers\QSObserver;
 use App\Observers\QuantitySurveyObserver;
 use App\Observers\ResourcesObserver;
 use App\Observers\StandardActivityResourceObserver;
+use App\Observers\WbsObserver;
 use App\Productivity;
 use App\Project;
 use App\Resources;
@@ -68,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
         CostShadow::observe(CostShadowObserver::class);
 //        BreakdownVariable::observe(BreakdownVariableObserver::class);
         BreakdownVariable::observe(BreakdownVariableObserver::class);
+        WbsLevel::observe(WbsObserver::class);
     }
 
 

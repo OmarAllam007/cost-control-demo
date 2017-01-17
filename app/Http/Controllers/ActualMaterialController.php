@@ -25,11 +25,21 @@ class ActualMaterialController extends Controller
 {
     function import(Project $project)
     {
+        if (cannot('actual_resources', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.budget', $project);
+        }
+
         return view('actual-material.import', compact('project'));
     }
 
     function postImport(Project $project, Request $request)
     {
+        if (cannot('actual_resources', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.budget', $project);
+        }
+
         $this->validate($request, ['file' => 'required|file|mimes:xls,xlsx']);
 
         /** @var UploadedFile $file */
@@ -383,7 +393,7 @@ class ActualMaterialController extends Controller
 
     function ExportCostBreakdown(Project $project)
     {
-        if (\Gate::denies('cost_control', $project)) {
+        if (cannot('cost_control', $project)) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
