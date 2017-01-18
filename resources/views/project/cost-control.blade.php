@@ -23,6 +23,13 @@
                     @can('resource_mapping', $project)
                         <li><a href="{{route('resources.import-codes', compact('project'))}}">Resource Mapping</a></li>
                     @endcan
+
+                    @can('cost_owner', $project)
+                        @if ($project->periods()->count() == 1)
+                            <li><a href="{{route('cost.old-data', $project)}}">Import Old Data</a></li>
+                        @endif
+                    @endcan
+
                     <li><a href="{{route('actual-revenue.import', $project)}}">Actual Revenue</a></li>
                 </ul>
             </div>
@@ -38,22 +45,23 @@
 @section('body')
 
     @can('periods', $project)
-    @if (!$project->open_period())
-        <div class="alert alert-warning">
-            <i class="fa fa-exclamation-triangle"></i>
-            No open period in the project. Please <a href="/period/create?project={{$project->id}}">add a period here</a>.
-        </div>
-    @endif
+        @if (!$project->open_period())
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i>
+                No open period in the project. Please
+                <a href="/period/create?project={{$project->id}}">add a period here</a>.
+            </div>
+        @endif
     @endcan
 
     @can('activity_mapping', $project)
-    @if (!App\ActivityMap::forProject($project)->exists())
-        <div class="alert alert-warning">
-            <i class="fa fa-exclamation-triangle"></i>
-            No activity mapping for this project project. Please <a href="/activity-map/import/{{$project->id}}">upload
-                activity mapping here</a>.
-        </div>
-    @endif
+        @if (!App\ActivityMap::forProject($project)->exists())
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i>
+                No activity mapping for this project project. Please <a href="/activity-map/import/{{$project->id}}">upload
+                    activity mapping here</a>.
+            </div>
+        @endif
     @endcan
 
     <div id="projectArea" class="hidden">
@@ -62,8 +70,8 @@
             <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
 
             @can('periods', $project)
-            <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial
-                Periods</a>
+                <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial
+                    Periods</a>
             @endcan
 
             @can('reports', $project)

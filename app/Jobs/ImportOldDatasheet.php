@@ -3,12 +3,15 @@
 namespace App\Jobs;
 
 use App\ActualBatch;
+use App\ActualResources;
+use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Jobs\Job;
 use App\Project;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Collection;
 
 class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 {
@@ -28,6 +31,9 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
     protected $period_id;
 
+    /** @var Collection */
+    protected $shaodws;
+
     public function __construct(Project $project, $file)
     {
         $this->project = $project;
@@ -37,6 +43,8 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             'user_id' => \Auth::id(), 'type' => 'Old Data', 'file' => $file, 'project_id' => $project->id,
             'period_id' => $this->period_id
         ]);
+
+        $this->loadShadows();
     }
 
     public function handle()
@@ -46,8 +54,10 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-
+        $failedRows = collect();
         $success = 0;
+
+        CostShadow::flushEventListeners();
         foreach ($rows as $row) {
             $rowData = $this->getDataFromCells($row->getCellIterator());
             if (!array_filter($rowData)) {
@@ -57,16 +67,51 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             $entry = $this->getEntry($rowData);
             if ($entry) {
                 $success++;
+            } else {
+                $failedRows->push($entry);
             }
         }
 
         return $success;
     }
 
-    protected function getEntry($rowData) : CostShadow
+    protected function getEntry($row): CostShadow
     {
-        return CostShadow::create([
+        $code = mb_strtolower($row[0] . $row[1] . $row[2] . $row[3]);
+        if (!$this->shaodws->has($code)) {
+            return null;
+        }
 
+        $shadow = $this->shaodws->get($code);
+        ActualResources::create([
+            'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
+            'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
+            'original_code' => $row[2], 'qty' => $row[10], 'unit_price' => $row[11], 'cost' => $row[10]
         ]);
+
+        return CostShadow::create([
+            'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
+            'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
+            'progress' => $row[4], 'status' => $row[5],
+            'previous_cost' => $row[6], 'previous_qty' => $row[7], 'previous_unit_price' => $row[8],
+            'current_cost' => $row[9], 'current_qty' => $row[10], 'current_unit_price' => $row[11],
+            'to_date_cost' => $row[12], 'to_date_qty' => $row[13], 'to_date_unit_price' => $row[14],
+            'remaining_cost' => $row[15], 'remaining_qty' => $row[16], 'remaining_unit_price' => $row[17],
+            'completion_qty' => $row[18], 'completion_cost' => $row[19], 'completion_unit_price' => $row[20],
+            'allowable_var' => $row[21], 'allowable_ev_cost' => $row[22], 'bl_allowable_cost' => $row[23], 'bl_allowable_var' => $row[24],
+            'qty_var' => $row[25], 'cost_var' => $row[26], 'unit_price_var' => $row[27], 'physical_unit' => $row[28], 'pw_index' => $row[29],
+            'cost_variance_to_date_due_unit_price' => $row[30], 'allowable_qty' => $row[31],
+            'cost_variance_remaining_due_unit_price' => $row[32], 'cost_variance_completion_due_unit_price' => $row[33],
+            'cost_variance_completion_due_qty' => $row[34], 'cost_variance_to_date_due_qty' => $row[35],
+        ]);
+    }
+
+    protected function loadShadows()
+    {
+        return $this->shaodws = BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->get()->keyBy(function (BreakDownResourceShadow $resource) {
+                $code = $resource->code . $resource->cost_account . $resource->resoure_code . $resource->remarks;
+                return mb_strtolower($code);
+            });
     }
 }

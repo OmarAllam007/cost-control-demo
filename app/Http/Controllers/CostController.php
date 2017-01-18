@@ -39,21 +39,21 @@ class CostController extends Controller
         return \Redirect::to('/blank?reload=breakdowns');
     }
 
-    function importOldCost(Project $project)
+    function importOldData(Project $project)
     {
-        if (\Auth::id() != $project->cost_owner->id) {
+        if (cannot('cost_owner', $project)) {
             flash('You are not authorized to do this action');
-            return \Redirect::to('/project');
+            return \Redirect::route('project.cost-control', $project);
         }
 
         return view('project.import_old_cost');
     }
 
-    function postImportOldCost(Project $project, Request $request)
+    function postImportOldData(Project $project, Request $request)
     {
-        if (\Auth::id() != $project->cost_owner->id) {
+        if (cannot('cost_owner', $project)) {
             flash('You are not authorized to do this action');
-            return \Redirect::to('/project');
+            return \Redirect::route('project.cost-control', $project);
         }
 
         $this->validate($request, ['file' => 'required|file|mimes:xls,xlsx']);

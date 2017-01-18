@@ -1,5 +1,5 @@
 <template id="BreakdownTemplate">
-
+@if ($project->open_period())
     <div class="breakdown">
 
         <div class="loader" v-show="loading">
@@ -248,6 +248,7 @@
             </delete-activity-modal>
         @endcan
     </div>
+    @endif
 </template>
 
 <breakdown project="{{$project->id}}"></breakdown>
