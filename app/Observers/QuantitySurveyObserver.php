@@ -25,17 +25,23 @@ class QuantitySurveyObserver
             ->pluck('breakdown_resource_id');
 
         $resources = BreakdownResource::whereIn('id', $ids)->get();
-        foreach ($resources as $resource){
+
+        foreach ($resources as $resource) {
             $resource->budget_qty = $quantitySurvey->budget_qty;
             $resource->eng_qty = $quantitySurvey->eng_qty;
             $resource->save();
         }
     }
-    function deleting(Survey $survey){
-        $ids = BreakDownResourceShadow::where('project_id', $survey->project_id)->
-        where('cost_account', $survey->cost_account)->pluck('breakdown_resource_id');
+
+    function deleting(Survey $survey)
+    {
+        $ids = BreakDownResourceShadow::where('project_id', $survey->project_id)
+            ->whereIn('wbs_id', $survey->wbsLevel->getChildrenIds())
+            ->where('cost_account', $survey->cost_account)->pluck('breakdown_resource_id');
+
         $resources = BreakdownResource::whereIn('id', $ids)->get();
-        foreach ($resources as $resource){
+
+        foreach ($resources as $resource) {
             $resource->budget_qty = 0;
             $resource->eng_qty = 0;
             $resource->save();

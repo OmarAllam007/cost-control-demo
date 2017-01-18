@@ -228,7 +228,7 @@ class ActualMaterialController extends Controller
         $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->whereRaw('csh.to_date_qty > bsh.budget_unit')->pluck('breakdown_resource_id', 'breakdown_resource_id');
         $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function ($resource) {
             $wbs = WbsLevel::find($resource->wbs_id);
-            return $wbs->name . ' / ' . $resource->activity;
+            return $wbs->path . ' / ' . $resource->activity;
         });
 
         if (!$resources->count()) {
@@ -304,7 +304,7 @@ class ActualMaterialController extends Controller
         }
 
         $resources = $data['resources']->groupBy(function ($resource) {
-            return $resource['target']->wbs->name . ' / ' . $resource['target']->activity;
+            return $resource['target']->wbs->path . ' / ' . $resource['target']->activity;
         });
 
         $project = $data['project'];
@@ -354,7 +354,7 @@ class ActualMaterialController extends Controller
         }
 
         $closed = $data['closed']->pluck('resource')->keyBy('id')->groupBy(function ($resource) {
-            return $resource->wbs->name . ' / ' . $resource->activity;
+            return $resource->wbs->path . ' / ' . $resource->activity;
         });
 
         $project = $data['project'];
@@ -412,10 +412,10 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.closed', $key);
         } elseif ($data['units']->count()) {
             return \Redirect::route('actual-material.units', $key);
-        } elseif ($data['multiple']->count()) {
-            return \Redirect::route('actual-material.multiple', $key);
         } elseif ($data['resources']->count()) {
             return \Redirect::route('actual-material.resources', $key);
+        } elseif ($data['multiple']->count()) {
+            return \Redirect::route('actual-material.multiple', $key);
         } elseif ($data['to_import']->count()) {
             $count = $this->saveImported($data['to_import']);
             $data['to_import'] = collect();

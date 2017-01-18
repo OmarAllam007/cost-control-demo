@@ -18,6 +18,8 @@ class BreakDownResourceShadow extends Model
         'progress', 'status'
     ];
 
+    public $update_cost = false;
+
     function wbs()
     {
         return $this->belongsTo(WbsLevel::class);

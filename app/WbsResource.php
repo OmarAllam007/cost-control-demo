@@ -82,7 +82,7 @@ class WbsResource extends Model
 
     function getRemainingQtyAttribute()
     {
-        if (!$this->budget_unit || $this->progress_value == 1) {
+        if (!$this->budget_unit || $this->progress_value == 1 || strtolower($this->status) == 'closed') {
             return 0;
         }
 
