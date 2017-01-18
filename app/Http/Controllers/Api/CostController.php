@@ -54,13 +54,17 @@ class CostController extends Controller
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
 
-        ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
+        $counter = ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
             ->where('period_id', $breakdown_resource->breakdown->project->open_period()->id)
             ->get()->map(function (ActualResources $resource) {
-                $resource->delete();
-            });
+                return $resource->delete();
+            })->filter()->count();
 
-        return ['ok' => true, 'message' => 'Resource data has been deleted'];
+        if ($counter) {
+            return ['ok' => true, 'message' => 'Resource data has been deleted'];
+        } else {
+            return ['ok' => false, 'message' => 'Could not delete resource'];
+        }
     }
 
     function deleteActivity(Breakdown $breakdown)

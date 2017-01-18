@@ -22,6 +22,7 @@ class ActualResourceObserver
 
     function deleted(ActualResources $resource)
     {
+        dd('deleted?');
         $this->updateShadow($resource);
     }
 

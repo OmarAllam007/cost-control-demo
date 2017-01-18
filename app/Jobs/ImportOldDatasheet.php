@@ -32,7 +32,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
     protected $period_id;
 
     /** @var Collection */
-    protected $shaodws;
+    protected $shadows;
 
     public function __construct(Project $project, $file)
     {
@@ -54,10 +54,12 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
-        $failedRows = collect();
+        $failed = collect();
         $success = 0;
 
         CostShadow::flushEventListeners();
+        ActualResources::flushEventListeners();
+
         foreach ($rows as $row) {
             $rowData = $this->getDataFromCells($row->getCellIterator());
             if (!array_filter($rowData)) {
@@ -68,31 +70,34 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             if ($entry) {
                 $success++;
             } else {
-                $failedRows->push($entry);
+                $failed->push($entry);
             }
         }
 
-        return $success;
+        return compact('success', 'failed');
     }
 
-    protected function getEntry($row): CostShadow
+    protected function getEntry($row)
     {
         $code = mb_strtolower($row[0] . $row[1] . $row[2] . $row[3]);
-        if (!$this->shaodws->has($code)) {
+        if (!$this->shadows->has($code)) {
             return null;
         }
 
-        $shadow = $this->shaodws->get($code);
+        $shadow = $this->shadows->get($code);
         ActualResources::create([
             'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
             'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
             'original_code' => $row[2], 'qty' => $row[10], 'unit_price' => $row[11], 'cost' => $row[10]
         ]);
 
+        $shadow->progress = $row[4];
+        $shadow->status = $row[5];
+        $shadow->save();
+
         return CostShadow::create([
             'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
             'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
-            'progress' => $row[4], 'status' => $row[5],
             'previous_cost' => $row[6], 'previous_qty' => $row[7], 'previous_unit_price' => $row[8],
             'current_cost' => $row[9], 'current_qty' => $row[10], 'current_unit_price' => $row[11],
             'to_date_cost' => $row[12], 'to_date_qty' => $row[13], 'to_date_unit_price' => $row[14],
@@ -108,9 +113,9 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
     protected function loadShadows()
     {
-        return $this->shaodws = BreakDownResourceShadow::where('project_id', $this->project->id)
+        return $this->shadows = BreakDownResourceShadow::where('project_id', $this->project->id)
             ->get()->keyBy(function (BreakDownResourceShadow $resource) {
-                $code = $resource->code . $resource->cost_account . $resource->resoure_code . $resource->remarks;
+                $code = $resource->code . $resource->cost_account . $resource->resource_code . $resource->remarks;
                 return mb_strtolower($code);
             });
     }

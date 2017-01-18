@@ -46,7 +46,7 @@ class CostController extends Controller
             return \Redirect::route('project.cost-control', $project);
         }
 
-        return view('project.import_old_cost');
+        return view('project.cost-control.import_old_cost', compact('project'));
     }
 
     function postImportOldData(Project $project, Request $request)
@@ -64,7 +64,7 @@ class CostController extends Controller
 
         $result = $this->dispatch(new ImportOldDatasheet($project, $filename));
 
-        flash($result['success'] . ' records has been imported');
+        flash($result['success'] . ' records have been imported', 'info');
         return \Redirect::route('project.cost-control', $project);
     }
 }
