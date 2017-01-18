@@ -30,18 +30,19 @@
         @foreach($data as $wbs_level=>$attributes)
             @if(isset($attributes['activities']))
                 <li>
-                    <p class="blue-second-level"><strong><a style="color: #fff;" href="#{{str_replace([' ','.','/','&'],'',$wbs_level)}}" data-toggle="collapse">{{$wbs_level}}</a></strong><span
+                    <p class="blue-second-level"><strong><a style="color: #fff;" href="#{{str_replace([' ','(',')','.','/','&'],'',$wbs_level)}}" data-toggle="collapse">{{$wbs_level}}</a></strong><span
                                 class="pull-right">{{number_format
                     ($attributes['activities_total_cost'],2)}}</span></p>
-                    <ul class="list-unstyled collapse" id="{{str_replace([' ','.','/','&'],'',$wbs_level)}}">
+                    <ul class="list-unstyled collapse" id="{{str_replace([' ','(',')','.','/','&'],'',$wbs_level)}}">
                         @foreach($attributes['activities'] as $item=>$value)
 
                             <li>
-                            <p class="blue-third-level"><strong><a style="color: #000;" href="#{{str_replace([' ','.','/','&'],'',$wbs_level)}}{{$value['id']}}" data-toggle="collapse">{{$item}}</a></strong><span
+                            <p class="blue-third-level"><strong><a style="color: #000;" href="#{{str_replace([' ','(',')','.','/','&'],'',$wbs_level)}}{{$value['id']}}"
+                                                                   data-toggle="collapse">{{$item}}</a></strong><span
                                         class="pull-right">{{number_format
                             ($value['activity_total_cost'],2)}}</span></p>
                             @foreach($value['cost_accounts'] as $account)
-                                    <ul id="{{str_replace([' ','.','/','&'],'',$wbs_level)}}{{$value['id']}}" class="collapse">
+                                    <ul id="{{str_replace([' ','(',')','.','/','&'],'',$wbs_level)}}{{$value['id']}}" class="collapse">
                                         <li class="tree--item">
                                             <p class="blue-fourth-level">
                                                 {{$account['cost_account']}} - <abbr>({{$account['boq_description']}}
