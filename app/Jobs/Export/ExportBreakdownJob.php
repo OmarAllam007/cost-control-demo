@@ -19,6 +19,7 @@ class ExportBreakdownJob extends Job
     public function handle()
     {
         set_time_limit(600);
+        ini_set('memory_limit', '1G');
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $sheet = $objPHPExcel->getActiveSheet();
@@ -38,7 +39,8 @@ class ExportBreakdownJob extends Job
             )
         );
 
-        foreach ($this->project->shadows as $breakdown_resource) {
+        $shadows = $this->project->shadows;
+        foreach ($shadows as $breakdown_resource) {
             $discpline = $breakdown_resource->std_activity->discipline;
             $division = $breakdown_resource->std_activity->division;
             $level = $breakdown_resource->wbs;
@@ -94,10 +96,14 @@ class ExportBreakdownJob extends Job
                 $breakdown_resource['productivity_output'],
                 $breakdown_resource['productivity_ref'],
                 $breakdown_resource['remarks'],
-            ], Null, 'A' . $rowCount); $rowCount++;
+            ], Null, 'A' . $rowCount);
+
+            $rowCount++;
+            unset($levels, $level, $division, $divisions, $discpline);
         }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $this->project->name . ' - BreakDown.xlsx"');
+        unset($shadows);
 //        header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
