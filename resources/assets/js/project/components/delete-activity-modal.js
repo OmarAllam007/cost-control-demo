@@ -6,9 +6,9 @@ export default {
     methods: {
         delete_activity() {
             this.loading = true;
-
+            console.log(this.breakdown);
             $.ajax({
-                url: '/api/cost/delete-activity/' + this.breakdown.breakdown_id,
+                url: '/api/cost/delete-activity/' + this.breakdown.budget.breakdown_id,
                 data: {_token: document.querySelector('[name=csrf-token]').content},
                 method: 'DELETE', dataType: 'json'
             }).success(response => {

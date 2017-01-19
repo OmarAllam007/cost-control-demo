@@ -18,9 +18,12 @@ class CostShadowObserver
 
         $figures = CostShadow::where($conditions)
             ->selectRaw('SUM(to_date_cost) as cost, AVG(to_date_qty) as qty')
-            ->get()->toArray();
+            ->first()->toArray();
 
-        $rate = $figures['cost'] / $figures['qty'];
+        $rate = 0;
+        if (!$figures['qty']) {
+            $rate = $figures['cost'] / $figures['qty'];
+        }
         CostResource::where($conditions)->update(compact('rate'));
     }
 }
