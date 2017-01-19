@@ -118,28 +118,31 @@ class ImportMaterialDataJob extends Job
                     ->whereIn('resource_id', $resource_ids)->get();
             }
 
-            /** @var \Illuminate\Database\Eloquent\Collection $breakdownResources */
-            if ($breakdownResources->count() == 1) {
-                // We have only one code. This is the optimal case
-                $breakdownResource = $breakdownResources->first();
-
+            foreach ($breakdownResources as $breakdownResource) {
                 // If the resource is closed we should ask to open it first
                 if ($breakdownResource->shadow->status == 'Closed') {
                     $row['resource'] = $breakdownResource->shadow;
                     $result['closed']->push($row);
                     continue;
                 }
+            }
+
+            /** @var \Illuminate\Database\Eloquent\Collection $breakdownResources */
+            if ($breakdownResources->count() == 1) {
+                // We have only one code. This is the optimal case
+                $breakdownResource = $breakdownResources->first();
 
                 //Check unit of measure
-                $unit_id = $this->unitsMap->get(mb_strtolower($row[3]));
-                $resource = $breakdownResource->resource;
+                /*
                 if ($unit_id != $resource->unit) {
                     // Unit of measure is not matching we should ask for quantity
                     $row['resource'] = $breakdownResource->shadow;
                     $result['units']->push($row);
                     continue;
-                }
+                }*/
 
+                $unit_id = $this->unitsMap->get(mb_strtolower($row[3]));
+                $resource = $breakdownResource->resource;
                 // Optimal case everything matches, save the quantity and continue
                 $result['to_import']->push([
                     'project_id' => $this->project->id,

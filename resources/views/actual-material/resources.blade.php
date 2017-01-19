@@ -2,7 +2,7 @@
 
 @section('header')
     <h4>{{$project->name}} &mdash; Material &mdash; Physical Quantity</h4>
-    <h4 class="pull-right text-muted">#E08</h4>
+    <h4 class="pull-right text-muted">#E04</h4>
 @endsection
 
 @section('body')
@@ -88,7 +88,22 @@
 
                 var unit_price_formatted = parseFloat(unit_price.toFixed(2)).toLocaleString({style: 'currency'});
                 parent.find('.unit-price-cell').text(unit_price_formatted);
-            });
+            }).keydown(function (e) {
+                if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 9) {
+                    e.preventDefault();
+                    var nextRow = $(this).closest('tr').next();
+                    while (nextRow.length && nextRow.find('.physical-qty').length == 0) {
+                        nextRow = nextRow.next();
+                    }
+                    nextRow.find('.physical-qty').focus();
+                } else if (e.keyCode == 38) {
+                    var prevRow = $(this).closest('tr').prev();
+                    while (prevRow.length && prevRow.find('.physical-qty').length == 0) {
+                        prevRow = prevRow.prev();
+                    }
+                    prevRow.find('.physical-qty').focus();
+                }
+            }).first().focus();;
         });
     </script>
 @endsection

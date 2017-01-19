@@ -269,7 +269,7 @@ class ActualMaterialController extends Controller
         $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->pluck('breakdown_resource_id', 'breakdown_resource_id');
         $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function ($resource) {
             $wbs = WbsLevel::find($resource->wbs_id);
-            return $wbs->name . ' / ' . $resource->activity;
+            return $wbs->path . ' / ' . $resource->activity;
         });
 
         $project = $data['project'];

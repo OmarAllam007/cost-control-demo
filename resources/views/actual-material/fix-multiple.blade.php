@@ -5,7 +5,7 @@
         <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash;
             <small>Resources with multiple cost account</small>
         </h4>
-        <h4 class="pull-right text-muted">#E03</h4>
+        <h4 class="pull-right text-muted">#E05</h4>
     </div>
 @endsection
 
@@ -82,7 +82,7 @@
                         <th class="text-right">Qty</th>
                         <th class="total-qty-cell" data-value="{{$resource[4]}}">{{ number_format($resource[4], 2) }}</th>
                         <th class="text-right">Total</th>
-                        <th colspan="3" class="total-amount-cell" data-value="{{$resource[6]}}">{{ number_format($resource[6], 2) }}</th>
+                        <th colspan="4" class="total-amount-cell" data-value="{{$resource[6]}}">{{ number_format($resource[6], 2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
