@@ -8,16 +8,21 @@
                 <div class="hidden">
                     {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
                 </div>
-                @if ($override)
-                    <p><em>{{$resources->types->path}}</em></p>
-                @else
-                    <p>
-                        <a href="#LevelsModal" data-toggle="modal" class="tree-open">
-                            {{Form::getValueAttribute('resource_type_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('resource_type_id'))->path : 'Select Type' }}
-                        </a>
-                        <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times"></span></a>
-                    </p>
-                @endif
+                <p>
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open">
+                        @if ($type_id = Form::getValueAttribute('resource_type_id'))
+                            @if ($type = App\ResourceType::with('parent')->find($type_id))
+                                {{$type->path ?? ''}}
+                            @else
+                                Select Type
+                            @endif
+                        @else
+                            Select Type
+                        @endif
+                    </a>
+                    <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span
+                                class="fa fa-times"></span></a>
+                </p>
                 {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
             </div>
 
