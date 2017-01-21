@@ -132,4 +132,18 @@ class ProjectController extends Controller
         $period = $project->open_period();
         return view('project.cost-control', compact('project', 'period'));
     }
+
+    function duplicate(Project $project, Request $request)
+    {
+        if ($request->has('name')) {
+            $name = $request->get('name');
+        } else {
+            $name = $project->name;
+        }
+
+        $id = $project->duplicate($name);
+
+        flash('Project has been duplicated', 'success');
+        return \Redirect::route('project.budget', $id);
+    }
 }

@@ -5,6 +5,7 @@ namespace App;
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use App\Support\DuplicateProject;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -223,6 +224,12 @@ class Project extends Model
     function cost_owner()
     {
         return $this->belongsTo(User::class);
+    }
+
+    function duplicate($newName)
+    {
+        $duplicator = new DuplicateProject($this);
+        return $duplicator->duplicate($newName);
     }
 
 }

@@ -163,4 +163,9 @@ class WbsLevel extends Model
 
         return $parent;
     }
+
+    public function deepCopy($project_id, $parent_id = 0)
+    {
+
+    }
 }
