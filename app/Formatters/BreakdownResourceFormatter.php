@@ -28,7 +28,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
 
         return [
             'breakdown_resource_id' => $this->resource->id,
-            'code' => $this->resource->breakdown->wbs_level->code . $this->resource->breakdown->std_activity->id_partial,
+            'code' => $this->resource->code,
             'project_id' => $this->resource->breakdown->project->id,
             'wbs_id' => $this->resource->breakdown->wbs_level->id,
             'breakdown_id' => $this->resource->breakdown->id,
