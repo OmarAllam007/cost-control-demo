@@ -18,8 +18,8 @@ class ImportResourceCodesJob extends ImportJob
     public function __construct($file, $project_id = null)
     {
         $this->file = $file;
-        $this->codes = collect();
-        $this->loadCodes();
+//        $this->codes = collect();
+//        $this->loadCodes();
         $this->project_id = $project_id;
     }
 
@@ -32,7 +32,6 @@ class ImportResourceCodesJob extends ImportJob
 
         $counter = 0;
 
-
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -41,22 +40,15 @@ class ImportResourceCodesJob extends ImportJob
                 continue;
             }
 
-            $code = mb_strtolower($data[0]);
-            if ($this->codes->has($code) && $data[1]) {
-                Resources::find($this->codes->get($code))
-                    ->codes()->updateOrCreate(['code' => $data[1], 'project_id' => $this->project_id]);
-
+            if ($data[0] && $data[1]) {
+                $code = mb_strtolower($data[0]);
+                Resources::where(['resource_code' => $code, 'project_id' => $this->project_id])
+                    ->first()->codes()
+                    ->updateOrCreate(['code' => $data[1], 'project_id' => $this->project_id]);
                 ++$counter;
             }
         }
 
         return $counter;
-    }
-
-    protected function loadCodes()
-    {
-        Resources::whereNull('project_id')->pluck('resource_code', 'id')->each(function ($code, $id) {
-            $this->codes->put(mb_strtolower($code), $id);
-        });
     }
 }
