@@ -20,26 +20,21 @@ class ExportBreakdownJob extends Job
     {
         set_time_limit(600);
         ini_set('memory_limit', '1G');
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
-        $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->fromArray(['WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','WBS-Level-5','WBS-Level-6','WBS-Level-7','Activity-Division-1','Activity-Division-2','Activity-Division-3',
+
+        $headers = [
+            'WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','WBS-Level-5','WBS-Level-6','WBS-Level-7','Activity-Division-1','Activity-Division-2','Activity-Division-3',
             'Activity-Division-4','Activity ID',
             'Activity','Discipline',
             'Breakdown-Template', 'Cost Account',
             'Engineering Quantity', 'BudgetQuantity','Resource Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost',
-            'BOQ Equivalent Unit Rate','No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'], 'A1');
-        $rowCount = 2;
-        $sheet->getStyle('A1:AF1')->applyFromArray(
-            array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => 'E5FFCC')
-                )
-            )
-        );
+            'BOQ Equivalent Unit Rate','No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'
+        ];
 
-        $shadows = $this->project->shadows;
+        $lines = [
+            implode(",", array_map([$this, 'csv_quote'], $headers))
+        ];
+
+        $shadows = $this->project->shadows->load('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent');
         foreach ($shadows as $breakdown_resource) {
             $discpline = $breakdown_resource->std_activity->discipline;
             $division = $breakdown_resource->std_activity->division;
@@ -63,7 +58,7 @@ class ExportBreakdownJob extends Job
                 $parentDiv= $parentDiv->parent;
             }
             $divisions = array_reverse($divisions);
-            $sheet->fromArray([
+            $data = [
                 isset($levels[0]) ? $levels[0] : '',
                 isset($levels[1]) ? $levels[1] : '',
                 isset($levels[2]) ? $levels[2] : '',
@@ -96,17 +91,23 @@ class ExportBreakdownJob extends Job
                 $breakdown_resource['productivity_output'],
                 $breakdown_resource['productivity_ref'],
                 $breakdown_resource['remarks'],
-            ], Null, 'A' . $rowCount);
+            ];
 
-            $rowCount++;
+            $lines[] = implode(",", array_map([$this, 'csv_quote'], $data));
+
             unset($levels, $level, $division, $divisions, $discpline);
         }
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - BreakDown.xlsx"');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - BreakDown.csv"');
         unset($shadows);
 //        header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save('php://output');
 
+        file_put_contents('php://output', implode(PHP_EOL, $lines));
+
+    }
+
+    protected function csv_quote($str)
+    {
+        return '"' . str_replace('"', '""', preg_replace('/\s+/', ' ', $str)) . '"';
     }
 }

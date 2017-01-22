@@ -25,6 +25,7 @@
                     <th>Budget U.O.M</th>
                     <th>Store Resource Code</th>
                     <th>Store Resource Name</th>
+                    <th>Remarks</th>
                     <th>Store Qty</th>
                     <th>Store U.O.M</th>
                     <th>Physical Qty</th>
@@ -45,6 +46,7 @@
                                 <td rowspan="{{$resource['resources']->count()}}">{{number_format($resource['target']->cost->previous_qty ?? 0, 2)}}</td>
                                 <td rowspan="{{$resource['resources']->count()}}">{{$resource['target']->measure_unit}}</td>
                             @endif
+                            <td>{{$resource['target']->remarks}}</td>
                             <td>{{$store_resource['original_data'][7]}}</td>
                             <td>{{$store_resource['original_data'][2]}}</td>
                             <td>{{number_format($store_resource['original_data'][4], 2)}}</td>

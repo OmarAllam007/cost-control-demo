@@ -207,6 +207,10 @@
                     $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
                 }*/
             }
+
+            function cval() {
+
+            }
         });
     </script>
 @endsection
