@@ -85,12 +85,30 @@ class ModifyResourcesJob extends ImportJob
 
     }
 
-    protected function getTypeId($type)
+    protected function getTypeId($data)
     {
-        $type_id = ResourceType::where('name', $type)->first();
-        if ($type_id->id) {
-            return $type_id->id;
+        $this->loadTypes();
+
+//        $levels = array_filter(array_slice($data, 0, 4));
+        $type_id = 0;
+        $path = [];
+
+        $path[] = mb_strtolower($data);
+        $key = implode('/', $path);
+
+        if ($this->types->has($key)) {
+            $type_id = $this->types->get($key);
+//        } else {
+//            $resource = ResourceType::create([
+//                'name' => $data,
+//                'parent_id' => $type_id
+//            ]);
+//            $type_id = $type_id = $resource->id;
+//            $this->types->put($key, $type_id);
         }
+
+
+        return $type_id;
     }
 
     protected function getWaste($waste)
@@ -129,8 +147,11 @@ class ModifyResourcesJob extends ImportJob
         }
 
         $this->types = collect();
-        ResourceType::all()->each(function ($type) {
-            $this->types->put(mb_strtolower($type->canonical), $type->id);
+        ResourceType::orderBy('id')->get()->each(function ($type) {
+            $path = mb_strtolower($type->canonical);
+            if (!$this->types->has($path)) {
+                $this->types->put($path, $type->id);
+            }
         });
 
         return $this->types;

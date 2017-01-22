@@ -64,20 +64,19 @@ class ActualMaterialController extends Controller
         }
 
         if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
-            if ($data['mapping']['activity']->count()) {
-                if (cannot('activity_mapping', $data['project'])) {
-                    $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
-                }
+            if ($data['mapping']['activity']->count() && cannot('activity_mapping', $data['project'])) {
+                $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
+                $data['mapping']['activity'] = collect();
             }
 
-            if ($data['mapping']['resources']->count()) {
-                if (cannot('resource_mapping', $data['project'])) {
-                    $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
-                }
+            if ($data['mapping']['resources']->count() && cannot('resource_mapping', $data['project'])) {
+                $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
+                $data['mapping']['resources'] = collect();
             }
 
-            $data['mapping'] = collect(['activity' => collect(), 'resources' => collect()]);
-            return $this->redirect($data, $key);
+            if (!$data['mapping']['activity']->count() && !$data['mapping']['resources']->count()) {
+                return $this->redirect($data, $key);
+            }
         }
 
         $data['projectActivityCodes'] = $data['project']->breakdown_resources->load([
