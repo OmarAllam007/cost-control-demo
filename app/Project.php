@@ -74,7 +74,7 @@ class Project extends Model
 
     function resources()
     {
-        return $this->hasMany(Resources::class)->withTrashed()->with('types');
+        return $this->hasMany(Resources::class)->with('types');
     }
 
     function getProductivitiesAttribute()
