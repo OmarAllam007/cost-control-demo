@@ -39,7 +39,7 @@ class ExportBreakdownJob extends Job
             )
         );
 
-        $shadows = $this->project->shadows;
+        $shadows = $this->project->shadows->load('std_activity','std_activity.division','wbs');
         foreach ($shadows as $breakdown_resource) {
             $discpline = $breakdown_resource->std_activity->discipline;
             $division = $breakdown_resource->std_activity->division;
