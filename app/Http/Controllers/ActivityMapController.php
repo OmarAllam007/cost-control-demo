@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActivityMap;
 use App\Jobs\ImportActivityMapsJob;
 use App\Project;
 use Illuminate\Http\Request;
@@ -35,5 +36,18 @@ class ActivityMapController extends Controller
 
         flash($count . ' Records have been imported', 'success');
         return \Redirect::route('project.cost-control', $project);
+    }
+
+    function delete(Project $project)
+    {
+        if (cannot('activity_mapping', $project)) {
+            flash("You are not authorized to do this action");
+            return \Redirect::route('project.cost-control', $project);
+        }
+
+        ActivityMap::where('project_id', $project->id)->delete();
+
+        flash('All activity mapping for this project has been deleted', 'info');
+        return \Redirect::route('activity-map.import', $project);
     }
 }

@@ -122,6 +122,7 @@ Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
 Route::group(['prefix' => 'activity-map', 'as' => 'activity-map.'], function () {
     Route::get('import/{project}', ['as' => 'import', 'uses' => 'ActivityMapController@import']);
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActivityMapController@postImport']);
+    Route::delete('delete/{project}', ['as' => 'delete', 'uses' => 'ActivityMapController@delete']);
 });
 
 Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], function () {
