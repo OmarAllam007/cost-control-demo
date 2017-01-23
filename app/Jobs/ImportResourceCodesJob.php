@@ -42,10 +42,11 @@ class ImportResourceCodesJob extends ImportJob
 
             if ($data[0] && $data[1]) {
                 $code = mb_strtolower($data[0]);
-                Resources::where(['resource_code' => $code, 'project_id' => $this->project_id])
-                    ->first()->codes()
-                    ->updateOrCreate(['code' => $data[1], 'project_id' => $this->project_id]);
-                ++$counter;
+                $resource = Resources::where(['resource_code' => $code, 'project_id' => $this->project_id])->first();
+                if ($resource) {
+                    $resource->codes()->updateOrCreate(['code' => $data[1], 'project_id' => $this->project_id]);
+                    ++$counter;
+                }
             }
         }
 
