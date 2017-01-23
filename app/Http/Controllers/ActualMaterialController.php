@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ActivityMap;
 use App\ActualResources;
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Jobs\Export\ExportCostShadow;
@@ -302,12 +303,15 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $resources = $data['resources']->groupBy(function ($resource) {
-            return $resource['target']->wbs->path . ' / ' . $resource['target']->activity;
-        });
-
         $project = $data['project'];
-        return view('actual-material.resources', compact('project', 'resources'));
+        $resources = $data['resources'];
+
+        $shadows = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resources->keys())
+            ->get()->keyBy('breakdown_resource_id')->groupBy(function ($shadow) {
+                return $shadow->wbs->path . ' / ' . $shadow->activity;
+            });
+
+        return view('actual-material.resources', compact('project', 'shadows', 'resources'));
     }
 
     function postResources(Request $request, $key)
@@ -321,10 +325,12 @@ class ActualMaterialController extends Controller
 
         $newResources = collect();
         $quantities = $request->get('quantities');
-        foreach ($data['resources'] as $resource) {
-            $id = $resource['target']->breakdown_resource_id;
+        $shadows = BreakDownResourceShadow::whereIn('breakdown_resource_id', $data['resources']->keys())
+            ->get()->keyBy('breakdown_resource_id');
+        foreach ($data['resources'] as $id => $resources) {
+            $shadow = $shadows[$id];
             $qty = $quantities[$id];
-            $total = $resource['resources']->sum('original_data.6');
+            $total = $resources->sum('6');
             if ($qty) {
                 $unit_price = $total / $qty;
             } else {
@@ -332,9 +338,9 @@ class ActualMaterialController extends Controller
             }
 
             $newResources->push([
-                $resource['target']->code, '',
-                $resource['target']->resource_name, $resource['target']->measure_unit,
-                $qty, $unit_price, $total, $resource['target']->resource_code, ''
+                $shadow->code, '',
+                $shadow->resource_name, $shadow->measure_unit,
+                $qty, $unit_price, $total, $shadow->resource_code, ''
             ]);
         }
 
@@ -459,7 +465,7 @@ class ActualMaterialController extends Controller
             'batch' => $data['batch']
         ];
 
-        $multiple_resources_ids = collect([]);
+        /*$multiple_resources_ids = collect([]);
         $returnData['to_import']->groupBy('breakdown_resource_id')->each(function ($resources, $breakdown_resource_id) use ($returnData, $multiple_resources_ids) {
 
             $resource_count = $resources->pluck('original_code', 'original_code')->count();
@@ -472,12 +478,11 @@ class ActualMaterialController extends Controller
 
                 $multiple_resources_ids->put($breakdown_resource_id, $breakdown_resource_id);
             }
-
         });
 
         $returnData['to_import'] = $returnData['to_import']->filter(function ($resource) use ($multiple_resources_ids) {
             return !$multiple_resources_ids->has($resource['breakdown_resource_id']);
-        });
+        });*/
 
         return $returnData;
     }

@@ -8,7 +8,7 @@
 @section('body')
     {{Form::open()}}
 
-    @foreach($resources as $activity => $sub_resources)
+    @foreach($shadows as $activity => $shadows)
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">{{$activity}}</h4>
@@ -25,7 +25,6 @@
                     <th>Budget U.O.M</th>
                     <th>Store Resource Code</th>
                     <th>Store Resource Name</th>
-                    <th>Remarks</th>
                     <th>Store Qty</th>
                     <th>Store U.O.M</th>
                     <th>Physical Qty</th>
@@ -35,33 +34,39 @@
 
                 </thead>
                 <tbody>
-                @foreach($sub_resources as $resource)
-                    @foreach($resource['resources'] as $i => $store_resource)
+                @foreach($shadows as $shadow)
+                    @php
+                    $sub_resources = $resources->get($shadow->breakdown_resource_id);
+                    $row_span = $sub_resources->count();
+                    $counter= 0;
+                    @endphp
+                    @foreach($sub_resources as $store_resource)
                         <tr>
-                            @if ($i == 0)
-                                <td rowspan="{{$resource['resources']->count()}}">{{$resource['target']->cost_account}}</td>
-                                <td rowspan="{{$resource['resources']->count()}}">{{$resource['target']->resource_code}}</td>
-                                <td rowspan="{{$resource['resources']->count()}}">{{$resource['target']->resource_name}}</td>
-                                <td rowspan="{{$resource['resources']->count()}}">{{$resource['target']->budget_unit}}</td>
-                                <td rowspan="{{$resource['resources']->count()}}">{{number_format($resource['target']->cost->previous_qty ?? 0, 2)}}</td>
-                                <td rowspan="{{$resource['resources']->count()}}">{{$resource['target']->measure_unit}}</td>
+                            @if ($counter == 0)
+                                <td rowspan="{{$row_span}}">{{$shadow->cost_account}}</td>
+                                <td rowspan="{{$row_span}}">{{$shadow->resource_code}}</td>
+                                <td rowspan="{{$row_span}}">{{$shadow->resource_name}}</td>
+                                <td rowspan="{{$row_span}}">{{$shadow->budget_unit}}</td>
+                                <td rowspan="{{$row_span}}">{{number_format($shadow->cost->previous_qty ?? 0, 2)}}</td>
+                                <td rowspan="{{$row_span}}">{{$shadow->measure_unit}}</td>
                             @endif
-                            <td>{{$resource['target']->remarks}}</td>
-                            <td>{{$store_resource['original_data'][7]}}</td>
-                            <td>{{$store_resource['original_data'][2]}}</td>
-                            <td>{{number_format($store_resource['original_data'][4], 2)}}</td>
-                            <td>{{$store_resource['original_data'][3]}}</td>
-                            @if ($i == 0)
-                                <td rowspan="{{$resource['resources']->count()}}">
-                                    {{Form::text("quantities[{$resource['target']->breakdown_resource_id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
+                            <td>{{$store_resource[7]}}</td>
+                            <td>{{$store_resource[2]}}</td>
+                            <td>{{number_format($store_resource[4], 2)}}</td>
+                            <td>{{$store_resource[3]}}</td>
+                            @if ($counter == 0)
+                                <td rowspan="{{$row_span}}">
+                                    {{Form::text("quantities[{$shadow->breakdown_resource_id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
                                 </td>
-                                <td rowspan="{{$resource['resources']->count()}}" class="unit-price-cell">0.00</td>
-                                <td rowspan="{{$resource['resources']->count()}}" class="total-cell"
-                                    data-value="{{$resource['resources']->sum('cost')}}">
-                                    {{number_format($resource['resources']->sum('cost'), 2)}}
+                                <td rowspan="{{$row_span}}" class="unit-price-cell">0.00</td>
+                                <td rowspan="{{$row_span}}" class="total-cell"
+                                    data-value="{{$sub_resources->sum(6)}}">
+                                    {{number_format($sub_resources->sum(6), 2)}}
                                 </td>
                             @endif
                         </tr>
+
+                        @php $counter++; @endphp
                     @endforeach
                 @endforeach
                 </tbody>
