@@ -27,6 +27,11 @@ class WbsResource extends Model
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
     }
 
+    function period()
+    {
+        return $this->belongsTo(Period::class);
+    }
+
     function scopeJoinShadow(Builder $query)
     {
         return $query->leftJoin('break_down_resource_shadows', 'break_down_resource_shadows.breakdown_resource_id', '=', 'wbs_resources.breakdown_resource_id')
@@ -200,6 +205,10 @@ class WbsResource extends Model
 
     function getProgressValueAttribute()
     {
+        if (strtolower($this->status) == 'closed') {
+            return 1;
+        }
+
         return $this->progress / 100;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\CleanResourceTypes;
 use App\Console\Commands\CostUpdateReminder;
 use App\Console\Commands\FixBudgetQty;
+use App\Console\Commands\RebuildCostShadow;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
         CostUpdateReminder::class,
         CleanResourceTypes::class,
         FixBudgetQty::class,
+        RebuildCostShadow::class,
     ];
 
     /**
