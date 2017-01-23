@@ -56,7 +56,7 @@ class ExportCostShadow extends Job
             'To Date Price/Unit(Eqv)',
             'To Date Quantity',
             'To Date Cost',
-            'Allawable (EV) cost',
+            'Allowable (EV) cost',
             'Var +/-',
             'Remaining Price/Unit',
             'Remaining Qty',

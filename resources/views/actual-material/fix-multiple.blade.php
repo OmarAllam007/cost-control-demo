@@ -159,7 +159,7 @@
                     if (_this.find('.include').prop('checked')) {
                         if (!_this.data('manual')) {
                             var budget = _this.data('budget');
-                            _this.find('.qty').val((budget * qty / totalBudget).toFixed(2));
+                            _this.find('.qty').val((budget * qty / totalBudget).toFixed(2) || 0);
                         }
                         _this.find('.qty').prop('readonly', false);
                     } else {
@@ -182,35 +182,34 @@
                     }
                 });
 
-                totalAmount = totalAmount.toFixed(2);
-                totalQty = totalQty.toFixed(2);
                 table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount).toLocaleString(formatOptions));
                 table.find('.total-qty-cell').data('value', totalQty).text(parseFloat(totalQty).toLocaleString(formatOptions));
 
                 var originalTotalAmount = parseFloat($('.original-total').data('value'));
                 var originalTotalQty = parseFloat($('.original-qty').data('value'));
 
-                if (parseInt(totalAmount * 100) != parseInt(originalTotalAmount * 100)) {
+                if (cval(totalAmount) != cval(originalTotalAmount)) {
                     table.find('.total-amount-cell').addClass('text-danger');
                 } else {
                     table.find('.total-amount-cell').removeClass('text-danger');
                 }
 
-                if (parseInt(totalQty * 100) != parseInt(originalTotalQty * 100)) {
+                if (cval(totalQty) != cval(originalTotalQty)) {
                     table.find('.total-qty-cell').addClass('text-danger');
                 } else {
                     table.find('.total-qty-cell').removeClass('text-danger');
                 }
 
-                /*if (parseInt(totalAmount * 100) == parseInt(originalTotalAmount * 100) && parseInt(totalQty * 100) == parseInt(originalTotalQty * 100)) {
+                if (cval(totalAmount) == cval(originalTotalAmount) && cval(totalQty) == cval(originalTotalQty)) {
                     $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
                 } else {
                     $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
-                }*/
+                }
             }
 
-            function cval() {
-
+            function cval(number) {
+                number += 0.005;
+                return Math.round(number * 100);
             }
         });
     </script>

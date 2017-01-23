@@ -100,14 +100,14 @@ class WbsResource extends Model
 
     function getRemainingUnitPriceAttribute()
     {
-        $resource = CostResource::where('resource_id', $this->resource_id)
+        /*$resource = CostResource::where('resource_id', $this->resource_id)
             ->where('project_id', $this->project_id)->where('period_id', $this->period_id)->first();
 
         if ($resource) {
             return $resource->rate;
-        }
+        }*/
 
-        return $this->to_date_price;
+        return $this->current_unit_price;
     }
 
     function getCompletionCostAttribute()
