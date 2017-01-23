@@ -19,8 +19,6 @@
                 $wbs = $firstResource->wbs;
                 $wbs_path = $wbs->path;
                 $activity_name = $firstResource->activity;
-                $boq = \App\Boq::costAccountOnWbs($wbs, $firstResource->cost_account)->first();
-
                 $totalQty = $resource['resources']->sum('budget_unit');
             @endphp
             <div class="panel panel-default">
@@ -49,6 +47,9 @@
                     </thead>
                     <tbody>
                     @foreach($resource['resources'] as $res)
+                        @php
+                            $boq = \App\Boq::costAccountOnWbs($wbs, $res->cost_account)->first();
+                        @endphp
                         <tr data-budget="{{$res->budget_unit}}">
                             <td class="text-center">
                                 {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][included]", 1, true, ['class' => 'include'])}}
