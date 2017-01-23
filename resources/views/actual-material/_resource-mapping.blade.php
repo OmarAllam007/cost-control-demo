@@ -75,7 +75,7 @@
                             {{number_format($resource->rate, 2)}}
                         </td>
                         <td class="col-sm-2">
-                            {{$resource->units->type}}
+                            {{$resource->units->type ?? ''}}
                         </td>
                     </tr>
                     @endforeach
