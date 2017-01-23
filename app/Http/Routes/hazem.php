@@ -54,6 +54,7 @@ Route::group(['prefix' => 'resources'], function () {
 
     Route::get('import-codes', ['as' => 'resources.import-codes', 'uses' => 'ResourcesController@importCodes']);
     Route::post('import-codes', ['as' => 'resources.post-import-codes', 'uses' => 'ResourcesController@postImportCodes']);
+    Route::delete('delete-codes/{project}', ['as' => 'resources.delete-codes', 'uses' => 'ResourceCodeController@delete']);
 });
 
 Route::group(['prefix' => 'productivity'], function () {
