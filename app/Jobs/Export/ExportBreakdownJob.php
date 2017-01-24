@@ -101,6 +101,8 @@ class ExportBreakdownJob extends Job
         header('Content-Disposition: attachment;filename="' . $this->project->name . ' - BreakDown.csv"');
         unset($shadows);
 //        header('Cache-Control: max-age=0');
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save('php://output');
 
         file_put_contents('php://output', implode(PHP_EOL, $lines));
 
