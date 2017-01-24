@@ -161,8 +161,8 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         $units = $request->get("units");
 
-        foreach ($data['units'] as $key => $row) {
-            $qty = $units[$key]['qty'];
+        foreach ($data['units'] as $idx => $row) {
+            $qty = $units[$idx]['qty'];
             $unit_price = $row[6] / $qty;
             $row[3] = $row['unit_resource']->units->type;
             $row[4] = $qty;
