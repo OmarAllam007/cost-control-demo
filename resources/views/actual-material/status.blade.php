@@ -39,7 +39,7 @@
                     @endphp
                     <tr>
                         <td>{{$resource->cost_account}}</td>
-                        <td>{{$boq->decription}}</td>
+                        <td>{{$boq->description}}</td>
                         <td>{{$resource->resource_code}}</td>
                         <td>{{$resource->resource_name}}</td>
                         <td>{{$resource->remarks}}</td>

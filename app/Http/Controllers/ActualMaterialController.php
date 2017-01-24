@@ -292,6 +292,10 @@ class ActualMaterialController extends Controller
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $status->keys())->get()->keyBy('breakdown_resource_id');
         foreach ($status as $id => $value) {
             $resources[$id]->status = $value;
+            if (strtolower($status) == 'closed') {
+                $resources[$id]->progress = 100;
+            }
+
             $resources[$id]->save();
         }
 
