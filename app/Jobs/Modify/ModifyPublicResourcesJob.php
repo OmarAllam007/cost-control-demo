@@ -61,10 +61,10 @@ class ModifyPublicResourcesJob extends ImportJob
             return $resource;
         })->keyBy('resource_code');
 
-        $divisions = ResourceType::all()->map(function ($type) {
+        /*$divisions = ResourceType::all()->map(function ($type) {
             $type->name = mb_strtolower($type->name);
             return $type;
-        })->pluck('id','name');
+        })->pluck('id','name');*/
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
