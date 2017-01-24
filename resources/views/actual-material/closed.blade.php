@@ -2,7 +2,7 @@
 
 @section('header')
     <h4>Material &mdash; {{$project->name}} &mdash; Closed Resources</h4>
-    <h4 class="pull-right text-muted">#E02</h4>
+    <h4 class="pull-right text-muted">#E03</h4>
 @endsection
 
 @section('body')
