@@ -37,7 +37,7 @@
                 @foreach($shadows as $shadow)
                     @php
                     $sub_resources = $resources->get($shadow->breakdown_resource_id);
-                    $row_span = $sub_resources->count();
+                    $row_span = count($sub_resources);
                     $counter= 0;
                     @endphp
                     @foreach($sub_resources as $store_resource)
