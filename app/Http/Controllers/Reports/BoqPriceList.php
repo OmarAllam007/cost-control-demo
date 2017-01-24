@@ -39,14 +39,13 @@ class BoqPriceList
 
             $tree[] = $treeLevel;
         }
-//        dd($tree);
         return view('reports.budget.boq_price_list.boq_price_list', compact('project', 'tree'));
     }
 
     private function getReportTree($level)
     {
 
-        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'boqs' => []];
+        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'boqs' => [],'level_boq_equavalent_rate'=>0];
 
         $shadows = BreakDownResourceShadow::where('project_id', $this->project->id)->where('wbs_id', $level->id)->get();
         foreach ($shadows as $shadow) {
@@ -75,25 +74,13 @@ class BoqPriceList
             if (isset($tree['boqs'][$boq]['items'][$cost_account][$name])) {
                 $tree['boqs'][$boq]['items'][$cost_account][$name] += $shadow['boq_equivilant_rate'];
                 $tree['boqs'][$boq]['items'][$cost_account]['total_resources'] += $shadow['boq_equivilant_rate'];
+
             }
-//            $tree['boqs'][$boq]['items'][$shadow['cost_account']] = [
-//                'cost_account' => $cost_account,
-//                'unit' => $this->survies->get($shadow['cost_account']),
-//                'GEN' => 0,
-//                'LAB' => 0,
-//                'MAT' => 0,
-//                'SUB' => 0,
-//                'EQU' => 0,
-//                'SCA' => 0,
-//                'OTH' => 0,
-//                'total_resources' => 0,
-//            ];
-//
-//            $name = mb_strtoupper(substr($shadow['resource_type'], strpos($shadow['resource_type'], '.') + 1, 3));
-//            $tree['boqs'][$boq]['items'][$cost_account][$name] += $shadow['boq_equivilant_rate'];
-//            $tree['boqs'][$boq]['items'][$cost_account]['total_resources'] += $shadow['boq_equivilant_rate'];
 
         }
+        /** @var WbsLevel $level */
+        $tree['level_boq_equavalent_rate']+=BreakDownResourceShadow::where('project_id',$this->project->id)
+            ->whereIn('wbs_id',$level->getChildrenIds())->get()->sum('boq_equivilant_rate');
 
         if ($level->children && $level->children->count()) {
             $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {

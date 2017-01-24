@@ -14,8 +14,7 @@
 
 @endsection
 @section('body')
-    <div id="input">
-    </div>
+
     <br>
     <ul class="list-unstyled tree">
         @foreach($tree as $parentKey=>$level)

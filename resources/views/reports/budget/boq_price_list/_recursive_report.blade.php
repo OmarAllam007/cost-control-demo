@@ -13,6 +13,8 @@
             {{$level['name']}}
         </a>
 
+        <span class="pull-right">{{number_format($level['level_boq_equavalent_rate'],2)}}</span>
+
     </p>
 
         <article id="{{$level['id']}}" class="tree--child collapse">
