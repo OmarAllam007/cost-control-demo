@@ -395,7 +395,7 @@ class ActualMaterialController extends Controller
         $closed = $data['closed']->pluck('resource')->keyBy('id');
 
         $newResourceIds = [];
-        foreach ($request->get('closed') as $id => $is_open) {
+        foreach ($request->get('closed', []) as $id => $is_open) {
             if ($is_open) {
                 $closed[$id]->status = 'In Progress';
                 $closed[$id]->save();
