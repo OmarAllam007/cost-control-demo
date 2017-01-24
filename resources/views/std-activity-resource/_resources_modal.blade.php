@@ -1,3 +1,4 @@
+
 <template id="ResourcesTemplate">
     <div id="ResourcesModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
