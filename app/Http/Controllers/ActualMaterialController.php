@@ -98,7 +98,7 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         if ($request->has('activity')) {
             foreach ($request->get('activity') as $code => $activityData) {
-                if ($activityData['skip']) {
+                if (!empty($activityData['skip'])) {
                     continue;
                 }
 
@@ -117,6 +117,9 @@ class ActualMaterialController extends Controller
 
         if ($request->has('resources')) {
             foreach ($request->get('resources') as $code => $resourceData) {
+                if (!empty($resourceData['skip'])) {
+                    continue;
+                }
                 foreach ($data['mapping']['resources'] as $activity) {
                     if ($activity[7] == $code) {
                         $activity[7] = $resourceData['resource_code'];
