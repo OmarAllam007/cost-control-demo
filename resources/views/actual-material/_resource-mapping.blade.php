@@ -5,7 +5,7 @@
         <tr>
             <th class="col-sm-2">
                 <label>
-                    {{Form::checkbox('skip_all', 1, null, ['id' => 'skip-all'])}} Skip
+                    {{Form::checkbox('skip_all', 1, null, ['class' => 'skip-all'])}} Skip
                 </label>
             </th>
             <th class="col-sm-2">Resource Code</th>

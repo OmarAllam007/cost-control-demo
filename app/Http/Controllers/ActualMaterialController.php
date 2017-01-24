@@ -98,6 +98,10 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         if ($request->has('activity')) {
             foreach ($request->get('activity') as $code => $activityData) {
+                if ($activityData['skip']) {
+                    continue;
+                }
+
                 foreach ($data['mapping']['activity'] as $activity) {
                     if ($activity[0] == $code) {
                         $activity[0] = $activityData['activity_code'];
