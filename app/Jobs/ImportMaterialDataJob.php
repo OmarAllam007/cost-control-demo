@@ -131,9 +131,7 @@ class ImportMaterialDataJob extends Job
                     $row['resource'] = $breakdownResource->shadow;
                     $result['closed']->push($row);
                     $continue = true;
-                }
-
-                if (!$continue) {
+                } else {
                     if ($breakdownResourcesMap->has($breakdownResource->id)) {
                         $breakdownResourcesMap->get($breakdownResource->id)->put($hash, $row);
                         $result['resources']->put($breakdownResource->id, $breakdownResourcesMap->get($breakdownResource->id));
@@ -225,6 +223,8 @@ class ImportMaterialDataJob extends Job
         })->filter(function ($row) {
             return $row->count();
         });
+
+        $result['to_import']->except($removedHashes->toA);
 
 
         return $result;
