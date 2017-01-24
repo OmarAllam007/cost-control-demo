@@ -185,8 +185,8 @@
                 table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount).toLocaleString(formatOptions));
                 table.find('.total-qty-cell').data('value', totalQty).text(parseFloat(totalQty).toLocaleString(formatOptions));
 
-                var originalTotalAmount = parseFloat($('.original-total').data('value'));
-                var originalTotalQty = parseFloat($('.original-qty').data('value'));
+                var originalTotalAmount = parseFloat(table.find('.original-total').data('value'));
+                var originalTotalQty = parseFloat(table.('.original-qty').data('value'));
 
                 if (cval(totalAmount) != cval(originalTotalAmount)) {
                     table.find('.total-amount-cell').addClass('text-danger');
@@ -194,18 +194,17 @@
                     table.find('.total-amount-cell').removeClass('text-danger');
                 }
 
-                console.log(cval(totalQty) !== cval(originalTotalQty), cval(totalQty), cval(originalTotalQty));
                 if (cval(totalQty) !== cval(originalTotalQty)) {
                     table.find('.total-qty-cell').addClass('text-danger');
                 } else {
                     table.find('.total-qty-cell').removeClass('text-danger');
                 }
 
-                /*if (cval(totalAmount) == cval(originalTotalAmount) && cval(totalQty) == cval(originalTotalQty)) {
+                if (cval(totalAmount) == cval(originalTotalAmount) && cval(totalQty) == cval(originalTotalQty)) {
                     $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
                 } else {
                     $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
-                }*/
+                }
             }
 
             function cval(number) {
