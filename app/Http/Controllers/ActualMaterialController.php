@@ -99,7 +99,6 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         if ($request->has('activity')) {
             foreach ($request->get('activity') as $code => $activityData) {
-                dd($activityData['skip']);
                 if (!empty($activityData['skip']) || empty($activityData['activity_code'])) {
                     continue;
                 }
