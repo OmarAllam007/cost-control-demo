@@ -224,7 +224,7 @@ class ImportMaterialDataJob extends Job
             return $row->count();
         });
 
-        $result['to_import']->except($removedHashes->toA);
+        $result['to_import']->except($removedHashes->toArray());
 
 
         return $result;

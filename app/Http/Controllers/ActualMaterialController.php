@@ -362,6 +362,8 @@ class ActualMaterialController extends Controller
         }
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
+        dump(compact('result', 'data'));
+        dd($this->merge($data, $result));
         $data['resources'] = collect();
 
         return $this->redirect($this->merge($data, $result), $key);
