@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
 @section('body')
-    <h3>Activity Mapping Error</h3>
+    <h3>Resource Mapping Error</h3>
 
     <p>Eng. {{Auth::user()->name}} tried to upload actual resources at {{date('d/m/Y H:i')}}. Attached activities were not imported because of mapping errors.</p>
 
