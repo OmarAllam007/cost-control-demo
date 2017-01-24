@@ -5,9 +5,9 @@
         <tr>
             <th class="col-sm-2">
                 <label>
-                    {{Form::checkbox('skip_all', 1, null, ['id' => 'skip-all'])}} Skip
+                    {{Form::checkbox('skip_all', 1, null, ['class' => 'skip-all'])}} Skip
                 </label>
-            </th>
+            </th>Modif
             <th class="col-sm-2">Resource Code</th>
             <th class="col-sm-3">Name</th>
             <th class="col-sm-2">U.O.M</th>
@@ -75,7 +75,7 @@
                             {{number_format($resource->rate, 2)}}
                         </td>
                         <td class="col-sm-2">
-                            {{$resource->units->type}}
+                            {{$resource->units->type ?? ''}}
                         </td>
                     </tr>
                     @endforeach

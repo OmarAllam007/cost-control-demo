@@ -19,8 +19,6 @@
                 $wbs = $firstResource->wbs;
                 $wbs_path = $wbs->path;
                 $activity_name = $firstResource->activity;
-                $boq = \App\Boq::costAccountOnWbs($wbs, $firstResource->cost_account)->first();
-
                 $totalQty = $resource['resources']->sum('budget_unit');
             @endphp
             <div class="panel panel-default">
@@ -49,6 +47,9 @@
                     </thead>
                     <tbody>
                     @foreach($resource['resources'] as $res)
+                        @php
+                            $boq = \App\Boq::costAccountOnWbs($wbs, $res->cost_account)->first();
+                        @endphp
                         <tr data-budget="{{$res->budget_unit}}">
                             <td class="text-center">
                                 {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][included]", 1, true, ['class' => 'include'])}}
@@ -64,7 +65,7 @@
                             <td>{{$res->remarks}}</td>
                             <td>{{$res->cost ? number_format($res->cost->previous_qty, 2) : 0 }}</td>
                             <td>
-                                {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = round($res->budget_unit * abs($resource[4])/$totalQty, 2), ['class' => 'form-control input-sm qty'])}}
+                                {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = $totalQty? round($res->budget_unit * $resource[4]/$totalQty, 2) : 0, ['class' => 'form-control input-sm qty'])}}
                             </td>
                             <td class="unit-price-cell" data-value="{{$resource[5]}}">{{ number_format($resource[5], 2) }}</td>
                             <td class="total-cell" data-value="{{$amount = $qty * $resource[5]}}">{{ number_format($amount, 2) }}</td>
@@ -158,7 +159,7 @@
                     if (_this.find('.include').prop('checked')) {
                         if (!_this.data('manual')) {
                             var budget = _this.data('budget');
-                            _this.find('.qty').val((budget * qty / totalBudget).toFixed(2));
+                            _this.find('.qty').val((budget * qty / totalBudget).toFixed(2) || 0);
                         }
                         _this.find('.qty').prop('readonly', false);
                     } else {
@@ -181,31 +182,34 @@
                     }
                 });
 
-                totalAmount = totalAmount.toFixed(2);
-                totalQty = totalQty.toFixed(2);
                 table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount).toLocaleString(formatOptions));
                 table.find('.total-qty-cell').data('value', totalQty).text(parseFloat(totalQty).toLocaleString(formatOptions));
 
                 var originalTotalAmount = parseFloat($('.original-total').data('value'));
                 var originalTotalQty = parseFloat($('.original-qty').data('value'));
 
-                if (parseInt(totalAmount * 100) != parseInt(originalTotalAmount * 100)) {
+                if (cval(totalAmount) != cval(originalTotalAmount)) {
                     table.find('.total-amount-cell').addClass('text-danger');
                 } else {
                     table.find('.total-amount-cell').removeClass('text-danger');
                 }
 
-                if (parseInt(totalQty * 100) != parseInt(originalTotalQty * 100)) {
+                if (cval(totalQty) != cval(originalTotalQty)) {
                     table.find('.total-qty-cell').addClass('text-danger');
                 } else {
                     table.find('.total-qty-cell').removeClass('text-danger');
                 }
 
-                /*if (parseInt(totalAmount * 100) == parseInt(originalTotalAmount * 100) && parseInt(totalQty * 100) == parseInt(originalTotalQty * 100)) {
+                if (cval(totalAmount) == cval(originalTotalAmount) && cval(totalQty) == cval(originalTotalQty)) {
                     $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
                 } else {
                     $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
-                }*/
+                }
+            }
+
+            function cval(number) {
+                number += 0.005;
+                return Math.round(number * 100);
             }
         });
     </script>

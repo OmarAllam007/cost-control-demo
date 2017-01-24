@@ -54,6 +54,7 @@ Route::group(['prefix' => 'resources'], function () {
 
     Route::get('import-codes', ['as' => 'resources.import-codes', 'uses' => 'ResourcesController@importCodes']);
     Route::post('import-codes', ['as' => 'resources.post-import-codes', 'uses' => 'ResourcesController@postImportCodes']);
+    Route::delete('delete-codes/{project}', ['as' => 'resources.delete-codes', 'uses' => 'ResourceCodeController@delete']);
 });
 
 Route::group(['prefix' => 'productivity'], function () {
@@ -122,6 +123,7 @@ Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
 Route::group(['prefix' => 'activity-map', 'as' => 'activity-map.'], function () {
     Route::get('import/{project}', ['as' => 'import', 'uses' => 'ActivityMapController@import']);
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActivityMapController@postImport']);
+    Route::delete('delete/{project}', ['as' => 'delete', 'uses' => 'ActivityMapController@delete']);
 });
 
 Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], function () {

@@ -21,6 +21,8 @@
             <table class="table table-condensed table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th>Cost Account</th>
+                    <th>Description</th>
                     <th>Resource Code</th>
                     <th>Resource Name</th>
                     <th>Remark</th>
@@ -32,7 +34,12 @@
                 </thead>
                 <tbody>
                 @foreach($activityResources as $resource)
+                    @php
+                        $boq = \App\Boq::costAccountOnWbs($wbs, $res->cost_account)->first();
+                    @endphp
                     <tr>
+                        <td>{{$resource->cost_account}}</td>
+                        <td>{{$boq->decription}}</td>
                         <td>{{$resource->resource_code}}</td>
                         <td>{{$resource->resource_name}}</td>
                         <td>{{$resource->remarks}}</td>

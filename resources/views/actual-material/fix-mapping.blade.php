@@ -113,6 +113,9 @@
                 selectResourceModal.modal('hide');
             });
 
+            $('.skip-all').on('change', function(){
+                $(this).closest('table').find(':checkbox').prop('checked', this.checked);
+            });
         });
     </script>
 @endsection

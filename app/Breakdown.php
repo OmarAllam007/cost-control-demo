@@ -107,12 +107,14 @@ class Breakdown extends Model
             $newBreakdown->resources()->create($newResource);
         }
 
-        $qty_survey_id = $newBreakdown->qty_survey->id;
-        foreach ($this->variables as $var) {
-            $newVar = $var->toArray();
-            unset($var['id'], $var['breakdown'], $var['created_at'], $var['updated_at']);
-            $var['qty_survey_id']= $qty_survey_id;
-            $newBreakdown->variables()->create($newVar);
+        if ($newBreakdown->qty_survey) {
+            $qty_survey_id = $newBreakdown->qty_survey->id;
+            foreach ($this->variables as $var) {
+                $newVar = $var->toArray();
+                unset($var['id'], $var['breakdown_id'], $var['created_at'], $var['updated_at']);
+                $var['qty_survey_id']= $qty_survey_id;
+                $newBreakdown->variables()->create($newVar);
+            }
         }
 
         return $newBreakdown;
