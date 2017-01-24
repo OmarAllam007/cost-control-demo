@@ -341,6 +341,10 @@ class ActualMaterialController extends Controller
         $shadows = BreakDownResourceShadow::whereIn('breakdown_resource_id', $data['resources']->keys())
             ->get()->keyBy('breakdown_resource_id');
         foreach ($data['resources'] as $id => $resources) {
+            if (is_array($resources)) {
+                $resources = collect($resources);
+            }
+
             $shadow = $shadows[$id];
             $qty = $quantities[$id];
             $total = $resources->sum('6');
