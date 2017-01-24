@@ -7,7 +7,7 @@
                 <label>
                     {{Form::checkbox('skip_all', 1, null, ['class' => 'skip-all'])}} Skip
                 </label>
-            </th>Modif
+            </th>
             <th class="col-sm-2">Resource Code</th>
             <th class="col-sm-3">Name</th>
             <th class="col-sm-2">U.O.M</th>
