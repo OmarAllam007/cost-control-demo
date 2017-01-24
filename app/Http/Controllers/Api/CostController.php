@@ -75,9 +75,9 @@ class CostController extends Controller
 
         $resourceIds = $breakdown->resources->pluck('id');
 
-        ActualResources::whereIn('breakdown_resource_id', $resourceIds)
+        $resources = ActualResources::whereIn('breakdown_resource_id', $resourceIds)
             ->where('period_id', $breakdown->project->open_period()->id)
-            ->get()->map(function (ActualResources $resource) {
+            ->get()->each(function (ActualResources $resource) {
                 $resource->delete();
             });
 

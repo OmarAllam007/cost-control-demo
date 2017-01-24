@@ -35,11 +35,11 @@
                 <tbody>
                 @foreach($activityResources as $resource)
                     @php
-                        $boq = \App\Boq::costAccountOnWbs($wbs, $res->cost_account)->first();
+                        $boq = \App\Boq::costAccountOnWbs($resource->wbs, $resource->cost_account)->first();
                     @endphp
                     <tr>
                         <td>{{$resource->cost_account}}</td>
-                        <td>{{$boq->decription}}</td>
+                        <td>{{$boq->description}}</td>
                         <td>{{$resource->resource_code}}</td>
                         <td>{{$resource->resource_name}}</td>
                         <td>{{$resource->remarks}}</td>

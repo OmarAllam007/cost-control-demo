@@ -21,7 +21,7 @@ class CostShadowObserver
             ->first()->toArray();
 
         $rate = 0;
-        if (!$figures['qty']) {
+        if ($figures['qty']) {
             $rate = $figures['cost'] / $figures['qty'];
         }
         CostResource::where($conditions)->update(compact('rate'));

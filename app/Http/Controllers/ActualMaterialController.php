@@ -14,6 +14,7 @@ use App\Jobs\SendMappingErrorNotification;
 use App\Jobs\UpdateResourceDictJob;
 use App\Project;
 use App\ResourceCode;
+use App\Resources;
 use App\WbsLevel;
 use App\WbsResource;
 use Carbon\Carbon;
@@ -98,7 +99,7 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         if ($request->has('activity')) {
             foreach ($request->get('activity') as $code => $activityData) {
-                if ($activityData['skip']) {
+                if (!empty($activityData['skip']) || empty($activityData['activity_code'])) {
                     continue;
                 }
 
@@ -117,10 +118,14 @@ class ActualMaterialController extends Controller
 
         if ($request->has('resources')) {
             foreach ($request->get('resources') as $code => $resourceData) {
+                if (!empty($resourceData['skip']) || empty($resourceData['resource_code'])) {
+                    continue;
+                }
+
                 foreach ($data['mapping']['resources'] as $activity) {
                     if ($activity[7] == $code) {
                         $activity[7] = $resourceData['resource_code'];
-                        $resource = Resource::where(['resource_code' => $resourceData['resource_code'], 'project_id' => $data['project']->id])->first();
+                        $resource = Resources::where(['resource_code' => $resourceData['resource_code'], 'project_id' => $data['project']->id])->first();
                         ResourceCode::updateOrCreate(['project_id' => $data['project']->id, 'code' => $activity[7], 'resource_id' => $resource->id]);
                         $newActivities->push($activity);
                     }
@@ -161,8 +166,8 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         $units = $request->get("units");
 
-        foreach ($data['units'] as $key => $row) {
-            $qty = $units[$key]['qty'];
+        foreach ($data['units'] as $idx => $row) {
+            $qty = $units[$idx]['qty'];
             $unit_price = $row[6] / $qty;
             $row[3] = $row['unit_resource']->units->type;
             $row[4] = $qty;
@@ -289,6 +294,10 @@ class ActualMaterialController extends Controller
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $status->keys())->get()->keyBy('breakdown_resource_id');
         foreach ($status as $id => $value) {
             $resources[$id]->status = $value;
+            if (strtolower($value) == 'closed') {
+                $resources[$id]->progress = 100;
+            }
+
             $resources[$id]->save();
         }
 
@@ -332,6 +341,10 @@ class ActualMaterialController extends Controller
         $shadows = BreakDownResourceShadow::whereIn('breakdown_resource_id', $data['resources']->keys())
             ->get()->keyBy('breakdown_resource_id');
         foreach ($data['resources'] as $id => $resources) {
+            if (is_array($resources)) {
+                $resources = collect($resources);
+            }
+
             $shadow = $shadows[$id];
             $qty = $quantities[$id];
             $total = $resources->sum('6');
@@ -382,7 +395,7 @@ class ActualMaterialController extends Controller
         $closed = $data['closed']->pluck('resource')->keyBy('id');
 
         $newResourceIds = [];
-        foreach ($request->get('closed') as $id => $is_open) {
+        foreach ($request->get('closed', []) as $id => $is_open) {
             if ($is_open) {
                 $closed[$id]->status = 'In Progress';
                 $closed[$id]->save();
@@ -457,14 +470,14 @@ class ActualMaterialController extends Controller
     {
         $returnData = [
             'mapping' => [
-                'activity' => $data['mapping']['activity']->merge($result['mapping']['activity']),
-                'resources' => $data['mapping']['resources']->merge($result['mapping']['resources']),
+                'activity' => $data['mapping']['activity']->mergeWithKeys($result['mapping']['activity']),
+                'resources' => $data['mapping']['resources']->mergeWithKeys($result['mapping']['resources']),
             ],
-            'multiple' => $data['multiple']->merge($result['multiple']),
-            'units' => $data['units']->merge($result['units']),
-            'resources' => $data['resources']->merge($result['resources']),
-            'closed' => $data['closed']->merge($result['closed']),
-            'to_import' => $data['to_import']->merge($result['to_import']),
+            'multiple' => $data['multiple']->mergeWithKeys($result['multiple']),
+            'units' => $data['units']->mergeWithKeys($result['units']),
+            'resources' => $data['resources']->mergeWithKeys($result['resources']),
+            'closed' => $data['closed']->mergeWithKeys($result['closed']),
+            'to_import' => $data['to_import']->mergeWithKeys($result['to_import']),
             'project' => $data['project'],
             'batch' => $data['batch']
         ];

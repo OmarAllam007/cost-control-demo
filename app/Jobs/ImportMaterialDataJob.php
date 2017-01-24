@@ -226,6 +226,7 @@ class ImportMaterialDataJob extends Job
             return $row->count();
         });
 
+
         return $result;
     }
 

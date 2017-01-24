@@ -22,6 +22,11 @@ class WbsResource extends Model
         return $this->belongsTo(BreakdownResource::class);
     }
 
+    function wbs()
+    {
+        return $this->belongsTo(WbsLevel::class, 'wbs_id');
+    }
+
     function shadow()
     {
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
