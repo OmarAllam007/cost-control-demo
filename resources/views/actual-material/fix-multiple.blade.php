@@ -159,7 +159,7 @@
                     if (_this.find('.include').prop('checked')) {
                         if (!_this.data('manual')) {
                             var budget = _this.data('budget');
-                            _this.find('.qty').val((budget * qty / totalBudget).toFixed(2) || 0);
+                            _this.find('.qty').val(((budget * qty / totalBudget) || 0).toFixed(2));
                         }
                         _this.find('.qty').prop('readonly', false);
                     } else {
@@ -194,17 +194,18 @@
                     table.find('.total-amount-cell').removeClass('text-danger');
                 }
 
-                if (cval(totalQty) != cval(originalTotalQty)) {
+                console.log(cval(totalQty) !== cval(originalTotalQty), cval(totalQty), cval(originalTotalQty));
+                if (cval(totalQty) !== cval(originalTotalQty)) {
                     table.find('.total-qty-cell').addClass('text-danger');
                 } else {
                     table.find('.total-qty-cell').removeClass('text-danger');
                 }
 
-                if (cval(totalAmount) == cval(originalTotalAmount) && cval(totalQty) == cval(originalTotalQty)) {
+                /*if (cval(totalAmount) == cval(originalTotalAmount) && cval(totalQty) == cval(originalTotalQty)) {
                     $('#submitBtn').prop('disabled', false).addClass('btn-success').removeClass('btn-danger');
                 } else {
                     $('#submitBtn').prop('disabled', true).addClass('btn-danger').removeClass('btn-success');
-                }
+                }*/
             }
 
             function cval(number) {
