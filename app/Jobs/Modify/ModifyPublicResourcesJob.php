@@ -61,10 +61,10 @@ class ModifyPublicResourcesJob extends ImportJob
             return $resource;
         })->keyBy('resource_code');
 
-//        $divisions = ResourceType::all()->map(function ($type) {
-//            $type->name = mb_strtolower($type->name);
-//            return $type;
-//        })->pluck('id','name');
+        $divisions = ResourceType::all()->map(function ($type) {
+            $type->name = mb_strtolower($type->name);
+            return $type;
+        })->pluck('id','name');
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
@@ -73,27 +73,29 @@ class ModifyPublicResourcesJob extends ImportJob
                 continue;
             }
 
-            $code = mb_strtolower($data[4]);
+            $code = mb_strtolower($data[0]);
             /** @var Resources $resource */
             $resource = $resources->get($code);
             if (!$resource) {
                 continue;
             }
 
-            $resource->resource_type_id = $this->getTypeId($data);
+            /*if ($type_id = $divisions->get(mb_strtolower('type_name'))) {
+                $resource->resource_type_id = $type_id;
+            }*/
 
-            $resource->resource_code = $data[4];
-            $resource->name = $data[5];
-            $resource->rate = floatval($data[6]);
-            $resource->unit = $this->getUnit($data[7]);
-            $resource->waste = $data[8];
-            $resource->business_partner_id = $this->getPartner($data[9]);
-            $resource->reference = $data[10];
+            $resource->resource_code = $data[0];
+            $resource->name = $data[1];
+            $resource->rate = floatval($data[3]);
+            $resource->unit = $this->getUnit($data[4]);
+            $resource->waste = $data[5];
+            $resource->business_partner_id = $this->getPartner($data[7]);
+            $resource->reference = $data[6];
             if ($this->project) {
                 $resource->project_id = $this->project;
             }
             $resource->save();
-//            $resource->updateBreakdownResources();
+            $resource->updateBreakdownResources();
         }
 
         dispatch(new CacheResourcesInQueue());
@@ -104,13 +106,24 @@ class ModifyPublicResourcesJob extends ImportJob
     {
         $this->loadTypes();
 
-        $levels = array_filter(array_slice($data, 0, 4));
-        $key = mb_strtolower(implode('/', $levels));
-
+//        $levels = array_filter(array_slice($data, 0, 4));
         $type_id = 0;
+        $path = [];
+
+        $path[] = mb_strtolower($data);
+        $key = implode('/', $path);
+
         if ($this->types->has($key)) {
             $type_id = $this->types->get($key);
+        } else {
+            $resource = ResourceType::create([
+                'name' => $data,
+                'parent_id' => $type_id
+            ]);
+            $type_id = $type_id = $resource->id;
+            $this->types->put($key, $type_id);
         }
+
 
         return $type_id;
     }
@@ -151,11 +164,8 @@ class ModifyPublicResourcesJob extends ImportJob
         }
 
         $this->types = collect();
-        ResourceType::orderBy('id')->get()->each(function ($type) {
-            $path = mb_strtolower($type->canonical);
-            if (!$this->types->has($path)) {
-                $this->types->put($path, $type->id);
-            }
+        ResourceType::all()->each(function ($type) {
+            $this->types->put(mb_strtolower($type->canonical), $type->id);
         });
 
         return $this->types;
