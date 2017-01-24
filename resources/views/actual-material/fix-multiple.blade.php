@@ -186,7 +186,7 @@
                 table.find('.total-qty-cell').data('value', totalQty).text(parseFloat(totalQty).toLocaleString(formatOptions));
 
                 var originalTotalAmount = parseFloat(table.find('.original-total').data('value'));
-                var originalTotalQty = parseFloat(table.('.original-qty').data('value'));
+                var originalTotalQty = parseFloat(table.find('.original-qty').data('value'));
 
                 if (cval(totalAmount) != cval(originalTotalAmount)) {
                     table.find('.total-amount-cell').addClass('text-danger');
