@@ -14,6 +14,7 @@ use App\Jobs\SendMappingErrorNotification;
 use App\Jobs\UpdateResourceDictJob;
 use App\Project;
 use App\ResourceCode;
+use App\Resources;
 use App\WbsLevel;
 use App\WbsResource;
 use Carbon\Carbon;
@@ -98,7 +99,8 @@ class ActualMaterialController extends Controller
         $newActivities = collect();
         if ($request->has('activity')) {
             foreach ($request->get('activity') as $code => $activityData) {
-                if (!empty($activityData['skip'])) {
+                dd($activityData['skip']);
+                if (!empty($activityData['skip']) || empty($activityData['activity_code'])) {
                     continue;
                 }
 
@@ -117,13 +119,14 @@ class ActualMaterialController extends Controller
 
         if ($request->has('resources')) {
             foreach ($request->get('resources') as $code => $resourceData) {
-                if (!empty($resourceData['skip'])) {
+                if (!empty($resourceData['skip']) || empty($resourceData['resource_code'])) {
                     continue;
                 }
+
                 foreach ($data['mapping']['resources'] as $activity) {
                     if ($activity[7] == $code) {
                         $activity[7] = $resourceData['resource_code'];
-                        $resource = Resource::where(['resource_code' => $resourceData['resource_code'], 'project_id' => $data['project']->id])->first();
+                        $resource = Resources::where(['resource_code' => $resourceData['resource_code'], 'project_id' => $data['project']->id])->first();
                         ResourceCode::updateOrCreate(['project_id' => $data['project']->id, 'code' => $activity[7], 'resource_id' => $resource->id]);
                         $newActivities->push($activity);
                     }
