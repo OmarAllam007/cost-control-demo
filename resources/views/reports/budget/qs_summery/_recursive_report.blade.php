@@ -55,11 +55,11 @@
                                                                         {{$cost_account['boq_name']}}
                                                                     </td>
                                                                     <td class="col-xs-2">
-                                                                        {{$cost_account['eng_qty']}}
+                                                                        {{number_format($cost_account['eng_qty'],2)}}
                                                                     </td>
 
                                                                     <td class="col-xs-2">
-                                                                        {{$cost_account['budget_qty']}}
+                                                                        {{number_format($cost_account['budget_qty'],2)}}
                                                                     </td>
                                                                     <td class="col-xs-2">
                                                                         {{$cost_account['unit']}}
