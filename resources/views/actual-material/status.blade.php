@@ -35,6 +35,7 @@
                 <tbody>
                 @foreach($activityResources as $resource)
                     @php
+                        dd($resource);
                         $boq = \App\Boq::costAccountOnWbs($resource->wbs, $resource->cost_account)->first();
                     @endphp
                     <tr>
