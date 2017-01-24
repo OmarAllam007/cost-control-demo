@@ -17,12 +17,18 @@ use App\Unit;
 
 class ActivityResourceBreakDown
 {
+    public $boqs;
     public function getActivityResourceBreakDown(Project $project)
     {
         set_time_limit(300);
         $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('breakdown','resource', 'wbs')->get();
         $project_total = 0;
         $data = [];
+
+        $this->boqs = Boq::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($boq) {
+            return $boq->description;
+        });
+
         foreach ($breakDown_resources as $breakDown_resource) {
 
             $break_down = $breakDown_resource->breakdown;
@@ -31,9 +37,8 @@ class ActivityResourceBreakDown
             $std_activity_id = $breakDown_resource['activity_id'];
 
 
-            $boq = Boq::where('cost_account', $breakDown_resource['cost_account'])->first();
-            if ($boq) {
-                $boq = $boq->description;
+            if ($this->boqs->has($breakDown_resource['cost_account'])) {
+                $boq = $this->boqs->get($breakDown_resource['cost_account']);
             }
             if (!isset($data[$wbs_level])) {
                 $data[$wbs_level] = [
@@ -79,7 +84,7 @@ class ActivityResourceBreakDown
             [$break_down->cost_account]['resources'][$breakDown_resource['resource_name']]['price_unit']
                 = $breakDown_resource['unit_price'];
 
-//            $project_total += $breakDown_resource['budget_cost'];
+            $project_total += $breakDown_resource['budget_cost'];
             ksort($data[$wbs_level]['activities'][$std_activity_item]['cost_accounts']);
 
         }

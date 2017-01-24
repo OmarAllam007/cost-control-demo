@@ -12,84 +12,85 @@ namespace App\Http\Controllers\Reports;
 use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Project;
+use App\Survey;
+use App\WbsLevel;
 
 class BoqPriceList
 {
+    private $boqs;
+    private $survies;
+    private $project;
+
     public function getBoqPriceList(Project $project)
     {
         set_time_limit(300);
-        $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource', 'wbs', 'breakdown', 'std_activity')->get();
-        $data = [];
-        $parents = [];
-        /** @var BreakDownResourceShadow $breakDown_resource */
-        foreach ($breakDown_resources as $breakDown_resource) {
-            $root = $breakDown_resource['resource_type'];
-            if (isset($breakDown_resource->wbs)) {
-                $wbs_level = $breakDown_resource->wbs;
-                $cost_account = $breakDown_resource['cost_account'];
-                $boq = Boq::where('cost_account', $cost_account)->first();
+        $this->project = $project;
+        $wbs_levels = $project->wbs_tree;
+        $this->boqs = Boq::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($boq) {
+            return $boq->description;
+        });
+        $this->survies = Survey::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($survey) {
+            return $survey->unit->type;
+        });
 
-                    $description = strtolower($boq->description);
-                    if (!isset($data[$breakDown_resource['wbs_id']])) {
-                        $data[$breakDown_resource['wbs_id']] = ['name' => $breakDown_resource->wbs->name,'id'=>$breakDown_resource->wbs->id];
+        $tree = [];
+        foreach ($wbs_levels as $level) {
+            $treeLevel = $this->getReportTree($level);
 
-                    }
-                    $parent = $wbs_level;
-                    while ($parent->parent) {
-                        $parent = $parent->parent;
-                        if (!isset($data[$breakDown_resource['wbs_id']]['parents'][$parent->id])) {
-                            $data[$breakDown_resource['wbs_id']]['parents'][$parent->id] = $parent->name;
-                        }
-                    }
-                    if (!isset($data[$breakDown_resource['wbs_id']]['boqs'][$description])) {
-                        $data[$breakDown_resource['wbs_id']]['boqs'][$description] = [];
-                    }
+            $tree[] = $treeLevel;
+        }
+        return view('reports.budget.boq_price_list.boq_price_list', compact('project', 'tree'));
+    }
 
+    private function getReportTree($level)
+    {
 
-                    if (!isset($data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account])) {
-                        $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account] = [
-                            'id' => $boq->id,
-                            'cost_account' => $cost_account,
-                            'unit' => $breakDown_resource['measure_unit'],
-                            'GENERAL REQUIRMENT' => 0,
-                            'LABORS' => 0,
-                            'MATERIAL' => 0,
-                            'SUBCONTRACTORS' => 0,
-                            'EQUIPMENT' => 0,
-                            'SCAFFOLDING' => 0,
-                            'OTHERS' => 0,
-                            'total_resources' => 0,
-                        ];
-                    }
+        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'boqs' => [],'level_boq_equavalent_rate'=>0];
 
+        $shadows = BreakDownResourceShadow::where('project_id', $this->project->id)->where('wbs_id', $level->id)->get();
+        foreach ($shadows as $shadow) {
+            $cost_account = $shadow['cost_account'];
+            $boq = $this->boqs->get($shadow['cost_account']);
+            if (!isset($tree['boqs'][$boq])) {
+                $tree['boqs'][$boq] = [];
+            }
 
-
-                $name = mb_strtoupper(substr($root, strpos($root, '.') + 1));
-                if (isset($data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name])) {
-                    $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account][$name] += $breakDown_resource['boq_equivilant_rate'];
-                    $data[$breakDown_resource['wbs_id']]['boqs'][$description]['items'][$cost_account]['total_resources'] += $breakDown_resource['boq_equivilant_rate'];
-                }
+            if (!isset($tree['boqs'][$boq]['items'][$cost_account])) {
+                $tree['boqs'][$boq]['items'][$cost_account] = [
+                    //'id' => $boq->id,
+                    'cost_account' => $cost_account,
+                    'unit' => $this->survies->get($shadow['cost_account']),
+                    'GENERAL REQUIRMENT' => 0,
+                    'LABORS' => 0,
+                    'MATERIAL' => 0,
+                    'SUBCONTRACTORS' => 0,
+                    'EQUIPMENT' => 0,
+                    'SCAFFOLDING' => 0,
+                    'OTHERS' => 0,
+                    'total_resources' => 0,
+                ];
+            }
+            $name = mb_strtoupper(substr($shadow['resource_type'], strpos($shadow['resource_type'], '.') + 1));
+            if (isset($tree['boqs'][$boq]['items'][$cost_account][$name])) {
+                $tree['boqs'][$boq]['items'][$cost_account][$name] += $shadow['boq_equivilant_rate'];
+                $tree['boqs'][$boq]['items'][$cost_account]['total_resources'] += $shadow['boq_equivilant_rate'];
 
             }
 
-
         }
-        ksort($data);
-        foreach ($data as $key => $value) {
-            if (isset($value['parents'])) {
-                foreach ($value['parents'] as $pKey => $pValue) {
-                    if (in_array($pValue, $parents)) {
-                        unset($data[$key]['parents'][$pKey]);
-                        continue;
-                    }
-                    $parents[] = $pValue;
-                    ksort($data[$key]['parents']);
-                }
-            }
+        /** @var WbsLevel $level */
+        $tree['level_boq_equavalent_rate']+=BreakDownResourceShadow::where('project_id',$this->project->id)
+            ->whereIn('wbs_id',$level->getChildrenIds())->get()->sum('boq_equivilant_rate');
 
+        if ($level->children && $level->children->count()) {
+            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+                return $this->getReportTree($childLevel);
+            });
         }
 
-        return view('reports.boq_price_list', compact('project', 'data'));
+
+        return $tree;
+
     }
 
 

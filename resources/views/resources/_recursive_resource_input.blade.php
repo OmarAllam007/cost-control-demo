@@ -12,7 +12,6 @@
 
 
                 @foreach($type['resources'] as $resource)
-
                     @if(!$resource['project_id'] || $resource['project_id'] ==
                     ($std_activity_resource->template->project_id ?? 0)
                     || $resource['project_id'] ==  ($breakdown_resource->breakdown->project_id ?? 0)
