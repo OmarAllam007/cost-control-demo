@@ -460,14 +460,14 @@ class ActualMaterialController extends Controller
     {
         $returnData = [
             'mapping' => [
-                'activity' => $data['mapping']['activity']->merge($result['mapping']['activity']),
-                'resources' => $data['mapping']['resources']->merge($result['mapping']['resources']),
+                'activity' => $data['mapping']['activity']->mergeWithKeys($result['mapping']['activity']),
+                'resources' => $data['mapping']['resources']->mergeWithKeys($result['mapping']['resources']),
             ],
-            'multiple' => $data['multiple']->merge($result['multiple']),
-            'units' => $data['units']->merge($result['units']),
-            'resources' => $data['resources']->merge($result['resources']),
-            'closed' => $data['closed']->merge($result['closed']),
-            'to_import' => $data['to_import']->merge($result['to_import']),
+            'multiple' => $data['multiple']->mergeWithKeys($result['multiple']),
+            'units' => $data['units']->mergeWithKeys($result['units']),
+            'resources' => $data['resources']->mergeWithKeys($result['resources']),
+            'closed' => $data['closed']->mergeWithKeys($result['closed']),
+            'to_import' => $data['to_import']->mergeWithKeys($result['to_import']),
             'project' => $data['project'],
             'batch' => $data['batch']
         ];
