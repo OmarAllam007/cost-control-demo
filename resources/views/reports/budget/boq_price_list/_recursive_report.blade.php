@@ -46,13 +46,13 @@
                                         <tr class="tbl-content">
                                             <td class="col-md-1">{{$costAccount['cost_account']}}</td>
                                             <td class="col-md-1">{{$costAccount['unit']}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['GENERAL REQUIRMENT'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['LABORS'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['MATERIAL'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['SUBCONTRACTORS'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['EQUIPMENT'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['SCAFFOLDING'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['OTHERS'],2)}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['GEN'],2)}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['LAB'],2)}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['MAT'],2)}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['SUB'],2)}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['EQU'],2)}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['SCA'],2)}}</td>
+                                            <td class="col-md-1">{{number_format($costAccount['OTH'],2)}}</td>
                                             <td class="col-md-2">{{number_format($costAccount['total_resources'],2)}}</td>
                                         </tr>
                                     @endforeach
