@@ -102,6 +102,9 @@ class ImportMaterialDataJob extends Job
                 continue;
             }
             $resource_ids = $this->resourceMap->get($resourceCode);
+            if ($resource_ids->count() > 1) {
+                $result['invalid']->push($row);
+            }
 
             // Check unit of measure
             $unit_resources = Resources::whereIn('id', $resource_ids->toArray())->orderBy('id')->get();
@@ -109,8 +112,11 @@ class ImportMaterialDataJob extends Job
 
             if (!empty($breakdownResourcesMap[$activityCodes][$unit_resource->id])) {
                 $breakdownResourcesMap[$activityCodes][$unit_resource->id][$hash] = $row;
-                $result['resources']->put($activityCodes, $breakdownResourcesMap[$activityCodes]);
-                continue;
+                $resourcesCount = count(array_pluck($breakdownResourcesMap[$activityCodes][$unit_resource->id], '7', '7'));
+                if ($resourcesCount > 1) {
+                    $result['resources']->put($activityCodes, $breakdownResourcesMap[$activityCodes]);
+                    continue;
+                }
             } else {
                 if (!isset($breakdownResourcesMap[$activityCodes])) {
                     $breakdownResourcesMap[$activityCodes] = [];
@@ -125,7 +131,8 @@ class ImportMaterialDataJob extends Job
                 if ($resource_unit_id != $store_unit_id) {
                     // Unit of measure is not matching we should ask for quantity
                     $row['unit_resource'] = $unit_resource;
-                    $result['units']->put($hash, $row);
+//                    $result['units']->put($hash, $row);
+                    $result['units']->put($activityCodes, [$unit_resource->id => [$hash => $row]]);
                     continue;
                 }
             }
@@ -200,23 +207,6 @@ class ImportMaterialDataJob extends Job
             }
         }
 
-        /*$multiple_resources_ids = [];
-        $result['to_import']->groupBy('breakdown_resource_id')->each(function($resources, $breakdown_resource_id) use ($result, $multiple_resources_ids) {
-            $resource_count = $resources->pluck('original_code', 'original_code')->count();
-            if ($resource_count > 1) {
-                $result['resources']->push([
-                    'target' => BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource_id)->first(),
-                    'resources' => $resources
-                ]);
-
-                $multiple_resources_ids[$breakdown_resource_id] = $breakdown_resource_id;
-            }
-        });
-
-        $result['to_import'] = $result['to_import']->filter(function($resource) use ($multiple_resources_ids) {
-            return !isset($multiple_resources_ids[$resource['breakdown_resource_id']]);
-        });*/
-
         $removedHashes = collect();
         foreach ($result['resources'] as $activity => $resources) {
             foreach ($resources as $hash => $resource) {
@@ -231,8 +221,19 @@ class ImportMaterialDataJob extends Job
         });
 
         $result['closed'] = $result['closed']->except($removedHashes->toArray());
-        $result['units'] = $result['units']->except($removedHashes->toArray());
+
+        $result['units'] = $result['units']->filter(function ($activity) use ($removedHashes) {
+            list($id, $resource) = each($activity);
+            list($hash, $row) = each($resource);
+
+            return !$removedHashes->contains($hash);
+        });
+
+        $result['resources'] = collect(array_replace_recursive($result['units']->toArray(), $result['resources']->toArray()));
+        unset($result['units']);
+
         $result['to_import'] = $result['to_import']->except($removedHashes->toArray());
+
 
         return $result;
     }
