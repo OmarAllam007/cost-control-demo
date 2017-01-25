@@ -1,4 +1,4 @@
-<template id="BreakdownTemplate">
+<breakdown project="{{$project->id}}" inline-template>
 @if ($project->open_period())
     <div class="breakdown">
 
@@ -249,7 +249,5 @@
         @endcan
     </div>
     @endif
-</template>
-
-<breakdown project="{{$project->id}}"></breakdown>
+</breakdown>
 

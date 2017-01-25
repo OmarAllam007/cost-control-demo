@@ -338,6 +338,10 @@ class ActualMaterialController extends Controller
         foreach ($data['resources'] as $code => $resources) {
             $code = mb_strtolower($code);
             foreach ($resources as $id => $rows) {
+                if (empty($shadows[$code]['resources'][$id])) {
+                    continue;
+                }
+
                 $shadow = $shadows[$code]['resources'][$id];
                 $qty = $quantities[$code][$id];
                 $total = collect($rows)->sum('6');

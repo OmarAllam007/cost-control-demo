@@ -12,11 +12,12 @@ use App\Http\Controllers\Controller;
 use App\Project;
 use App\WbsLevel;
 use App\WbsResource;
+use Illuminate\Http\Request;
 
 
 class CostController extends Controller
 {
-    function breakdowns(WbsLevel $wbs_level)
+    function breakdowns(WbsLevel $wbs_level, Request $request)
     {
 //        return WbsResource::whereIn('wbs_level_id', $wbs_level->getChildrenIds())->where('period_id', $wbs_level->project->open_period()->id)
 //            ->joinShadow()
@@ -27,10 +28,12 @@ class CostController extends Controller
             return [];
         }
 
+        if ($request->has('all')) {
+            return BreakDownResourceShadow::where('wbs_id', $wbs_level->getChildrenIds())->with('cost')->get();
+        }
+
         return CostShadow::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
             ->where('period_id', $period->id)->with('budget')->get();
-
-//        return BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->with('cost')->get();
     }
 
     function resources(Project $project)
