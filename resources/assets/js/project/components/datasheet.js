@@ -2,15 +2,16 @@ import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
 
 export default {
-    template: document.getElementById('BreakdownTemplate').innerHTML,
 
     props: ['project'],
 
     data() {
+        let perspective = window.localStorage.cost_perspective;
         return {
             breakdowns: [],
             loading: false,
-            wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: ''
+            wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
+            perspective
         };
     },
 
@@ -48,13 +49,12 @@ export default {
             if (this.wbs_id) {
                 this.loading = true;
                 $.ajax({
-                    url: '/api/cost/breakdowns/' + this.wbs_id,
-                    dataType: 'json',
-                    cache: true
+                    url: '/api/cost/breakdowns/' + this.wbs_id + (this.perspective ? '?all=0' : ''),
+                    dataType: 'json', cache: true
                 }).success(response => {
                     this.loading = false;
                     this.breakdowns = response;
-                }).error(() => {
+                }).error (() => {
                     this.loading = false;
                     this.breakdowns = [];
                 });
@@ -78,6 +78,12 @@ export default {
 
         reload_breakdowns() {
             this.loadBreakdowns();
+        }
+    },
+
+    watch: {
+        perspective(view) {
+            window.localStorage.perspective = view;
         }
     },
 

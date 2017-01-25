@@ -16,7 +16,7 @@ trait Overridable
 {
     function hasVersionFor($project_id)
     {
-        return self::version($project_id, $this->id)->count();
+        return self::version($project_id, $this->id)->exists();
     }
 
     function versionFor($project_id)

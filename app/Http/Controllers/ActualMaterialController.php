@@ -318,11 +318,7 @@ class ActualMaterialController extends Controller
 
         $project = $data['project'];
         $resources = $data['resources'];
-
-        $shadows = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resources->keys())
-            ->get()->keyBy('breakdown_resource_id')->groupBy(function ($shadow) {
-                return $shadow->wbs->path . ' / ' . $shadow->activity;
-            });
+        $shadows = $this->getResourcesSahdow($resources);
 
         return view('actual-material.resources', compact('project', 'shadows', 'resources'));
     }
@@ -336,34 +332,35 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $newResources = collect();
+        $shadows = $this->getResourcesSahdow($data['resources']);
         $quantities = $request->get('quantities');
-        $shadows = BreakDownResourceShadow::whereIn('breakdown_resource_id', $data['resources']->keys())
-            ->get()->keyBy('breakdown_resource_id');
-        foreach ($data['resources'] as $id => $resources) {
-            if (is_array($resources)) {
-                $resources = collect($resources);
-            }
+        $newResources = collect();
+        foreach ($data['resources'] as $code => $resources) {
+            $code = mb_strtolower($code);
+            foreach ($resources as $id => $rows) {
+                if (empty($shadows[$code]['resources'][$id])) {
+                    continue;
+                }
 
-            $shadow = $shadows[$id];
-            $qty = $quantities[$id];
-            $total = $resources->sum('6');
-            if (floatval($qty)) {
-                $unit_price = $total / $qty;
-            } else {
-                $total = $qty = $unit_price = 0;
-            }
+                $shadow = $shadows[$code]['resources'][$id];
+                $qty = $quantities[$code][$id];
+                $total = collect($rows)->sum('6');
 
-            $newResources->push([
-                $shadow->code, '',
-                $shadow->resource_name, $shadow->measure_unit,
-                $qty, $unit_price, $total, $shadow->resource_code, ''
-            ]);
+                if (floatval($qty)) {
+                    $unit_price = $total / $qty;
+                } else {
+                    $total = $qty = $unit_price = 0;
+                }
+
+                $newResources->push([
+                    $shadow->code, '',
+                    $shadow->resource_name, $shadow->measure_unit,
+                    $qty, $unit_price, $total, $shadow->resource_code, ''
+                ]);
+            }
         }
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
-        dump(compact('result', 'data'));
-        dd($this->merge($data, $result));
         $data['resources'] = collect();
 
         return $this->redirect($this->merge($data, $result), $key);
@@ -434,8 +431,6 @@ class ActualMaterialController extends Controller
             return \Redirect::route('actual-material.mapping', $key);
         } elseif ($data['closed']->count()) {
             return \Redirect::route('actual-material.closed', $key);
-        } elseif ($data['units']->count()) {
-            return \Redirect::route('actual-material.units', $key);
         } elseif ($data['resources']->count()) {
             return \Redirect::route('actual-material.resources', $key);
         } elseif ($data['multiple']->count()) {
@@ -476,7 +471,6 @@ class ActualMaterialController extends Controller
                 'resources' => $data['mapping']['resources']->mergeWithKeys($result['mapping']['resources']),
             ],
             'multiple' => $data['multiple']->mergeWithKeys($result['multiple']),
-            'units' => $data['units']->mergeWithKeys($result['units']),
             'resources' => $data['resources']->mergeWithKeys($result['resources']),
             'closed' => $data['closed']->mergeWithKeys($result['closed']),
             'to_import' => $data['to_import']->mergeWithKeys($result['to_import']),
@@ -484,25 +478,28 @@ class ActualMaterialController extends Controller
             'batch' => $data['batch']
         ];
 
-        /*$multiple_resources_ids = collect([]);
-        $returnData['to_import']->groupBy('breakdown_resource_id')->each(function ($resources, $breakdown_resource_id) use ($returnData, $multiple_resources_ids) {
-
-            $resource_count = $resources->pluck('original_code', 'original_code')->count();
-
-            if ($resource_count > 1) {
-                $returnData['resources']->push([
-                    'target' => BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource_id)->first(),
-                    'resources' => $resources
-                ]);
-
-                $multiple_resources_ids->put($breakdown_resource_id, $breakdown_resource_id);
-            }
-        });
-
-        $returnData['to_import'] = $returnData['to_import']->filter(function ($resource) use ($multiple_resources_ids) {
-            return !$multiple_resources_ids->has($resource['breakdown_resource_id']);
-        });*/
-
         return $returnData;
+    }
+
+    /**
+     * @param $resources
+     * @return mixed
+     */
+    protected
+    function getResourcesSahdow($resources)
+    {
+        $activityCodes = $resources->keys();
+        $resourceIds = $resources->reduce(function ($ids, $activity) {
+            return $ids->merge(array_keys($activity));
+        }, collect());
+
+        $shadows = BreakDownResourceShadow::whereIn('code', $activityCodes)->whereIn('resource_id', $resourceIds)
+            ->get()->groupBy(function ($item) {
+                return mb_strtolower($item->code);
+            })->map(function ($shadows) {
+                $first = $shadows->first();
+                return collect(['name' => $first->wbs->path . ' / ' . $first->activity, 'resources' => $shadows->keyBy('resource_id')]);
+            });
+        return $shadows;
     }
 }

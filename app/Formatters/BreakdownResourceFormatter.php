@@ -25,15 +25,14 @@ class BreakdownResourceFormatter implements \JsonSerializable
 
     function toArray()
     {
-
         return [
             'breakdown_resource_id' => $this->resource->id,
             'code' => $this->resource->code,
             'project_id' => $this->resource->breakdown->project->id,
-            'wbs_id' => $this->resource->breakdown->wbs_level->id,
+            'wbs_id' => $this->resource->breakdown->wbs_level->id ?? '',
             'breakdown_id' => $this->resource->breakdown->id,
-            'resource_id' => $this->resource->resource_id,
-            'template' => $this->resource->breakdown->template->name,
+            'resource_id' => $this->resource->resource_id ?? '',
+            'template' => $this->resource->breakdown->template->name ?? '',
             'activity' => $this->resource->breakdown->std_activity->name,
             'activity_id' => $this->resource->breakdown->std_activity->id,
             'cost_account' => $this->resource->breakdown->cost_account,

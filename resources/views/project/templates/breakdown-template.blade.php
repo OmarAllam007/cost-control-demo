@@ -44,13 +44,14 @@
                 {{--                @foreach($project->templates->sortBy('name') as $breakdown_template)--}}
                 <tr v-for="template in filterd_templates">
                     <td class="col-xs-8"><a
-                                href="/breakdown-template/@{{template.id}}?project_id=@{{template.project_id}}">@{{ template.name }}</a>
+                                :href="'/breakdown-template/' + template.id + '?project_id=' + template.project_id">@{{ template.name }}</a>
                     </td>
 
                     <td class="col-xs-4">
                         @can('breakdown_templates',$project)
                             <form action="/breakdown-template/@{{ template.id }}" method="post">
                                 {{csrf_field()}} {{method_field('delete')}}
+                                <a :href="'/breakdown-template/' + template.id + '?project_id=' + template.project_id" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View</a>
                                 <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                             </form>
                         @endcan

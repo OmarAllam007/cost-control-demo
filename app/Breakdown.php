@@ -5,6 +5,9 @@ namespace App;
 use App\Behaviors\CachesQueries;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property WbsLevel $wbs_level
+ */
 class Breakdown extends Model
 {
     use CachesQueries;
