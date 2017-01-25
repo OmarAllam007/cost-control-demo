@@ -14,40 +14,51 @@ use App\BreakDownResourceShadow;
 use App\Project;
 use App\Survey;
 use App\Unit;
+use App\WbsLevel;
 
 class ActivityResourceBreakDown
 {
     public $boqs;
+    public $project;
+
     public function getActivityResourceBreakDown(Project $project)
     {
         set_time_limit(300);
-        $breakDown_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('breakdown','resource', 'wbs')->get();
-        $project_total = 0;
-        $data = [];
+        $this->project = $project;
+        $project_total = BreakDownResourceShadow::where('project_id', $project->id)->get()->sum('budget_cost');
+        $wbs_levels = $project->wbs_tree;
 
         $this->boqs = Boq::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($boq) {
             return $boq->description;
         });
 
-        foreach ($breakDown_resources as $breakDown_resource) {
+        $tree = [];
+        foreach ($wbs_levels as $level) {
+            $treeLevel = $this->getReportTree($level);
+            $tree[] = $treeLevel;
+        }
+        return view('reports.budget.activity_resource_breakdown.activity_resource_breakdown', compact('tree','project', 'project_total'));
 
-            $break_down = $breakDown_resource->breakdown;
-            $wbs_level = $breakDown_resource->wbs->name;
+    }
+
+
+    private function getReportTree(WbsLevel $level)
+    {
+        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'activities' => [], 'activities_total_cost' => 0];
+
+        $breakDown_resources = BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->where('wbs_id', $level->id)->get();
+
+        foreach ($breakDown_resources as $breakDown_resource) {
             $std_activity_item = $breakDown_resource['activity'];
             $std_activity_id = $breakDown_resource['activity_id'];
-
 
             if ($this->boqs->has($breakDown_resource['cost_account'])) {
                 $boq = $this->boqs->get($breakDown_resource['cost_account']);
             }
-            if (!isset($data[$wbs_level])) {
-                $data[$wbs_level] = [
-                    'activities' => [],
-                    'activities_total_cost' => 0,
-                ];
-            }
-            if (!isset($data[$wbs_level]['activities'][$std_activity_item])) {
-                $data[$wbs_level]['activities'][$std_activity_item] = [
+
+            if (!isset($tree['activities'][$std_activity_item])) {
+                $tree['activities'][$std_activity_item] = [
                     'id'=>$std_activity_id,
                     'name' => $std_activity_item,
                     'activity_total_cost' => 0,
@@ -55,17 +66,17 @@ class ActivityResourceBreakDown
                 ];
             }
 
-            if (!isset($data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account])) {
-                $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account] = [
-                    'cost_account' => $break_down->cost_account,
+            if (!isset($tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']])) {
+                $tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']] = [
+                    'cost_account' => $breakDown_resource['cost_account'],
                     'account_total_cost' => 0,
                     'boq_description' => $boq,
                     'resources' => [],
                 ];
             }
-            ksort($data[$wbs_level]['activities']);
-            if (!isset($data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]['resources'][$breakDown_resource['resource_name']])) {
-                $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]['resources'][$breakDown_resource['resource_name']] = [
+            ksort($tree['activities']);
+            if (!isset($tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']]['resources'][$breakDown_resource['resource_name']])) {
+                $tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']]['resources'][$breakDown_resource['resource_name']] = [
                     'name' => $breakDown_resource['resource_name'],
                     'unit' => $breakDown_resource['measure_unit'],
                     'price_unit' => 0,
@@ -73,35 +84,32 @@ class ActivityResourceBreakDown
                     'budget_unit' => 0,
                 ];
             }
-            $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]['resources'][$breakDown_resource['resource_name']]['budget_cost']
+
+            $tree['activities'][$std_activity_item]['activity_total_cost']
                 += $breakDown_resource['budget_cost'];
 
-            $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts'][$break_down->cost_account]
+
+            $tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']]['resources'][$breakDown_resource['resource_name']]['budget_cost']
+                += $breakDown_resource['budget_cost'];
+
+            $tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']]
             ['resources'][$breakDown_resource['resource_name']]['budget_unit']
                 += $breakDown_resource['budget_unit'];
 
-            $data[$wbs_level]['activities'][$std_activity_item]['cost_accounts']
-            [$break_down->cost_account]['resources'][$breakDown_resource['resource_name']]['price_unit']
+            $tree['activities'][$std_activity_item]['cost_accounts']
+            [$breakDown_resource['cost_account']]['resources'][$breakDown_resource['resource_name']]['price_unit']
                 = $breakDown_resource['unit_price'];
 
-            $project_total += $breakDown_resource['budget_cost'];
-            ksort($data[$wbs_level]['activities'][$std_activity_item]['cost_accounts']);
-
         }
 
-        foreach ($data as $key => $value) {
-            foreach ($value['activities'] as $activityKey => $activity) {
-                foreach ($activity['cost_accounts'] as $accountKey => $account) {
-                    foreach ($account['resources'] as $resourceKey => $resource) {
-                        $data[$key]['activities'][$activityKey]['cost_accounts'][$accountKey]['account_total_cost'] += $resource['budget_cost'];
-                    }
-                    $data[$key]['activities'][$activityKey]['activity_total_cost'] += $data[$key]['activities'][$activityKey]['cost_accounts'][$accountKey]['account_total_cost'];
-                }
-                $data[$key]['activities_total_cost'] += $data[$key]['activities'][$activityKey]['activity_total_cost'];
-            }
-        }
-        ksort($data);
-        return view('std-activity.activity_resource_breakdown', compact('data', 'project', 'project_total'));
+        $tree['activities_total_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->whereIn('wbs_id', $level->getChildrenIds())->get()->sum('budget_cost');
 
+        if ($level->children && $level->children->count()) {
+            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+                return $this->getReportTree($childLevel);
+            });
+        }
+        return $tree;
     }
 }

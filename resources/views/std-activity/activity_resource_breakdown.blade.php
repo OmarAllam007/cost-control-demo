@@ -46,7 +46,9 @@
                                         <li class="tree--item">
                                             <p class="blue-fourth-level">
                                                 {{$account['cost_account']}} - <abbr>({{$account['boq_description']}}
-                                                    )</abbr><span class="pull-right">{{number_format($account['account_total_cost'],2)}}</span></p>
+                                                    )</abbr>
+                                                {{--<span class="pull-right">{{number_format($account['account_total_cost'],2)}}</span>--}}
+                                            </p>
                                             <article >
                                                 <table class="table table-condensed ">
                                                     <thead>
