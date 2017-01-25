@@ -1,4 +1,4 @@
-<breakdown project="{{$project->id}}" inline-template>
+<template id="BreakdownTemplate">
 @if ($project->open_period())
     <div class="breakdown">
 
@@ -59,7 +59,7 @@
             <table class="table table-condensed table-striped table-hover table-breakdown">
                 <thead>
                 <tr>
-                    @can('manual_edit', $project)
+                    @can('manual_edit')
                         <th style="min-width: 30px; max-width: 30px">&nbsp;</th>
                     @endcan
                     <th style="min-width: 300px; max-width: 300px;" class="bg-blue">Activity</th>
@@ -249,5 +249,7 @@
         @endcan
     </div>
     @endif
-</breakdown>
+</template>
+
+<breakdown project="{{$project->id}}"></breakdown>
 
