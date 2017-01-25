@@ -348,7 +348,7 @@ class ActualMaterialController extends Controller
             $shadow = $shadows[$id];
             $qty = $quantities[$id];
             $total = $resources->sum('6');
-            if ($qty) {
+            if (floatval($qty)) {
                 $unit_price = $total / $qty;
             } else {
                 $total = $qty = $unit_price = 0;
@@ -362,6 +362,8 @@ class ActualMaterialController extends Controller
         }
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
+        dump(compact('result', 'data'));
+        dd($this->merge($data, $result));
         $data['resources'] = collect();
 
         return $this->redirect($this->merge($data, $result), $key);
