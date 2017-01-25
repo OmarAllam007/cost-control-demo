@@ -24,7 +24,7 @@ class BreakdownTemplateController extends Controller
 
     function templates(Project $project){
 
-        return BreakdownTemplate::where('project_id', $project->id)->get()->map(function (BreakdownTemplate $template){
+        return BreakdownTemplate::orderBy('name')->where('project_id', $project->id)->get()->map(function (BreakdownTemplate $template){
             return $template->morphToJSON();
         });
     }
