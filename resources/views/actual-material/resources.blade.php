@@ -7,17 +7,15 @@
 
 @section('body')
     {{Form::open()}}
-
-    @foreach($shadows as $activity => $shadows)
+    @foreach($shadows as $code => $activityData)
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">{{$activity}}</h4>
+                <h4 class="panel-title">{{$activityData['name']}}</h4>
             </div>
 
             <table class="table table-condensed table-bordered table-striped">
                 <thead>
                 <tr>
-                    <th>Cost Account</th>
                     <th>Budget Resource Code</th>
                     <th>Budget Resource Name</th>
                     <th>Budget Unit</th>
@@ -34,19 +32,16 @@
 
                 </thead>
                 <tbody>
-                @foreach($shadows as $shadow)
+                @foreach($activityData['resources'] as $resource_id => $shadow)
                     @php
-                    $sub_resources = $resources->get($shadow->breakdown_resource_id);
-                    if (is_array($sub_resources)) {
-                        $sub_resources = collect($sub_resources);
-                    }
+                    $code = mb_strtolower($code);
+                    $sub_resources = collect($resources[$code][$resource_id]);
                     $row_span = count($sub_resources);
                     $counter= 0;
                     @endphp
                     @foreach($sub_resources as $store_resource)
                         <tr>
                             @if ($counter == 0)
-                                <td rowspan="{{$row_span}}">{{$shadow->cost_account}}</td>
                                 <td rowspan="{{$row_span}}">{{$shadow->resource_code}}</td>
                                 <td rowspan="{{$row_span}}">{{$shadow->resource_name}}</td>
                                 <td rowspan="{{$row_span}}">{{$shadow->budget_unit}}</td>
@@ -59,7 +54,7 @@
                             <td>{{$store_resource[3]}}</td>
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">
-                                    {{Form::text("quantities[{$shadow->breakdown_resource_id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
+                                    {{Form::text("quantities[{$code}][{$resource_id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
                                 </td>
                                 <td rowspan="{{$row_span}}" class="unit-price-cell">0.00</td>
                                 <td rowspan="{{$row_span}}" class="total-cell"
