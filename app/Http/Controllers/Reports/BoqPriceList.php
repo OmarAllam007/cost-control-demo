@@ -25,7 +25,9 @@ class BoqPriceList
     {
         set_time_limit(300);
         $this->project = $project;
+
         $wbs_levels = $project->wbs_tree;
+
         $this->boqs = Boq::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($boq) {
             return $boq->description;
         });
@@ -36,7 +38,6 @@ class BoqPriceList
         $tree = [];
         foreach ($wbs_levels as $level) {
             $treeLevel = $this->getReportTree($level);
-
             $tree[] = $treeLevel;
         }
         return view('reports.budget.boq_price_list.boq_price_list', compact('project', 'tree'));
@@ -51,26 +52,25 @@ class BoqPriceList
         foreach ($shadows as $shadow) {
             $cost_account = $shadow['cost_account'];
             $boq = $this->boqs->get($shadow['cost_account']);
-            if (!isset($tree['boqs'][$boq])) {
-                $tree['boqs'][$boq] = [];
-            }
+//            if (!isset($tree['boqs'][$boq])) {
+//                $tree['boqs'][$boq] = [];
+//            }
 
             if (!isset($tree['boqs'][$boq]['items'][$cost_account])) {
                 $tree['boqs'][$boq]['items'][$cost_account] = [
-                    //'id' => $boq->id,
                     'cost_account' => $cost_account,
                     'unit' => $this->survies->get($shadow['cost_account']),
-                    'GENERAL REQUIRMENT' => 0,
-                    'LABORS' => 0,
-                    'MATERIAL' => 0,
-                    'SUBCONTRACTORS' => 0,
-                    'EQUIPMENT' => 0,
-                    'SCAFFOLDING' => 0,
-                    'OTHERS' => 0,
+                    'GEN' => 0,
+                    'LAB' => 0,
+                    'MAT' => 0,
+                    'SUB' => 0,
+                    'EQU' => 0,
+                    'SCA' => 0,
+                    'OTH' => 0,
                     'total_resources' => 0,
                 ];
             }
-            $name = mb_strtoupper(substr($shadow['resource_type'], strpos($shadow['resource_type'], '.') + 1));
+            $name = mb_strtoupper(substr($shadow['resource_type'], strpos($shadow['resource_type'], '.') + 1,3));
             if (isset($tree['boqs'][$boq]['items'][$cost_account][$name])) {
                 $tree['boqs'][$boq]['items'][$cost_account][$name] += $shadow['boq_equivilant_rate'];
                 $tree['boqs'][$boq]['items'][$cost_account]['total_resources'] += $shadow['boq_equivilant_rate'];
@@ -87,10 +87,7 @@ class BoqPriceList
                 return $this->getReportTree($childLevel);
             });
         }
-
-
         return $tree;
-
     }
 
 
