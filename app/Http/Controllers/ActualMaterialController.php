@@ -429,10 +429,10 @@ class ActualMaterialController extends Controller
 
         if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
             return \Redirect::route('actual-material.mapping', $key);
-        } elseif ($data['closed']->count()) {
-            return \Redirect::route('actual-material.closed', $key);
         } elseif ($data['resources']->count()) {
             return \Redirect::route('actual-material.resources', $key);
+        } elseif ($data['closed']->count()) {
+            return \Redirect::route('actual-material.closed', $key);
         } elseif ($data['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
         } elseif ($data['to_import']->count()) {

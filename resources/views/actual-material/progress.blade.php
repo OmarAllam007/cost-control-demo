@@ -3,7 +3,7 @@
 @section('header')
     <div class="clearfix">
         <h4 class="pull-left">{{$project->name}} &mdash; Material &mdash; Progress</h4>
-        <h4 class="pull-right text-muted">#E06</h4>
+        <h4 class="pull-right text-muted">#E05</h4>
     </div>
 @endsection
 
