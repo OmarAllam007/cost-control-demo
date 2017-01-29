@@ -79,8 +79,12 @@ class Project extends Model
 
     function getProductivitiesAttribute()
     {
-        return $this->shadows->load('productivity')
-            ->pluck('productivity')->unique()->filter();
+        $refs = $this->shadows()->with('productivity')
+//            ->select('id', 'productivity_ref')
+            ->where('productivity_ref', '!=', '')->whereNotNull('productivity_ref')
+            ->pluck('productivity_ref')->unique()->filter();
+
+        return Productivity::whereIn('csi_code', $refs)->get();
     }
 
     /*function getResourcesAttribute()
