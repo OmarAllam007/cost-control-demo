@@ -13,84 +13,45 @@ use App\Boq;
 
 use App\Breakdown;
 use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\Project;
+use App\WbsLevel;
 
 class BudgetCostByBuilding
 {
+    private $total_budget;
+    private $data = [];
+
     public function getBudgetCostForBuilding(Project $project)
     {
-        set_time_limit(200);
-        $shadows = $project->shadows()->with('wbs')->get();
-        $data = [];
-//        $children = [];
-        $total = [
-            'total' => 0,
-            'weight' => 0,
-        ];
-        $children=[];
-
-        foreach ($shadows as $shadow) {
-            $wbs_level = $shadow->wbs;
-            $name = $wbs_level->name;
-            $dry = $shadow->breakdown->getDry($project,$wbs_level->id,$shadow['cost_account']);
-            if ($dry) {
-                if (!isset($data[$name])) {
-                    $data[$name] = [
-                        'name' => $name,
-                        'code' => $wbs_level->code,
-                        'budget_cost' => 0,
-                        'weight' => 0,
-                    ];
-
-                }
-                $data[$name]['budget_cost'] += is_nan($shadow['budget_cost']) ? 0 : $shadow['budget_cost'];
-
-            } else {
-                $parent = $wbs_level;
-                while ($parent->parent) {
-                    $parent = $parent->parent;
-                    $parent_name = $parent->name;
-                    $parent_dry = $shadow->breakdown->getDry($project,$parent->id,$shadow['cost_account']);
-                    if ($parent_dry) {
-                        if (!isset($data[$parent_name])) {
-                            $data[$parent_name] = [
-                                'name' => $parent_name,
-                                'code' => $parent->code,
-                                'budget_cost' => $parent->budget_cost['budget_cost'],
-                                'weight' => 0,
-                            ];
-                            $children[] = $parent->budget_cost['children'];
-                        }
-                        break;
-                    }
-
-                }
-            }
-
-
+        $this->total_budget = BreakDownResourceShadow::where('project_id', $project->id)->get()->sum('budget_cost');
+        $wbs_levels = $project->wbs_tree;
+        $tree = [];
+        foreach ($wbs_levels as $level) {
+            $treeLevel = $this->buildReport($level);
+            $tree [] = $treeLevel;
         }
+        $this->getBudgetCostForBuildingPieChart($this->data);
+        $this->getBugetCostByBuildingColumnChart($this->data);
+        $total_budget = $this->total_budget;
+        return view('reports.budget.budget_cost_by_building.budget_cost_by_building', compact('project', 'tree', 'total_budget'));
+    }
 
-        foreach ($data as $key => $item) {//fill total array
-            if (in_array($key, $children)) {
-                unset($data[$key]);
-                continue;
-            }
-            $total['total'] += $item['budget_cost'];
-        }
-        foreach ($data as $key => $value) {
-            if (in_array($key, $children)) {
-                continue;
-            }
-            if ($total['total'] != 0) {
-                $data[$key]['weight'] = floatval(($data[$key]['budget_cost'] / $total['total']) * 100);
-                $total['weight'] += $data[$key]['weight'];
-            }
-        }
+    private function buildReport($level)
+    {
+        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'budget_cost' => 0, 'weight' => 0];
 
-//        ksort($data);
-        $pieChart = $this->getBudgetCostForBuildingPieChart($data);
-        $columnChart = $this->getBugetCostByBuildingColumnChart($data);
-        return view('reports.budget_cost_by_building', compact('data', 'total', 'project', 'pieChart', 'columnChart'));
+        if ($level->children && $level->children->count()) {
+            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+                return $this->buildReport($childLevel);
+            });
+        }
+        if ($level->getDry()) {
+            $tree['budget_cost'] = BreakDownResourceShadow::whereIn('wbs_id', $level->getChildrenIds())->get()->sum('budget_cost');
+            $tree['weight'] = floatval(($tree['budget_cost'] / $this->total_budget) * 100);
+            $this->data[$level->id] = ['name' => $level->name, 'weight' => $tree['weight'], 'budget_cost' => $tree['budget_cost']];
+        }
+        return $tree;
     }
 
     public function getBudgetCostForBuildingPieChart($data)
