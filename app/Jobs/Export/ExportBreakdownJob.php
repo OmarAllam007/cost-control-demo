@@ -19,7 +19,6 @@ class ExportBreakdownJob extends Job
     public function handle()
     {
         set_time_limit(600);
-        ini_set('memory_limit', '1G');
 
         $headers = [
             'WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','WBS-Level-5','WBS-Level-6','WBS-Level-7','Activity-Division-1','Activity-Division-2','Activity-Division-3',
