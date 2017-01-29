@@ -9,56 +9,54 @@
 namespace App\Http\Controllers\Reports;
 
 
+use App\BreakDownResourceShadow;
 use App\Project;
 use App\Survey;
 
 class BudgetCostByDiscipline
 {
+    private $survies;
+
     public function compareBudgetCostDiscipline(Project $project)
     {
         set_time_limit(600);
         $survey = [];
-        $total = [
-            'total' => 0,
-            'weight_total' => 0,
-        ];
+        $totalWeight = 0;
+        $total = BreakDownResourceShadow::where('project_id', $project->id)->sum('budget_cost');
+//        $this->survies = Survey::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($survey) {
+//            return $survey->discipline;
+//        });
         $shadows = $project->shadows()->with('std_activity')->get();
-
         foreach ($shadows as $shadow) {
-            $qs_items = Survey::where('cost_account', $shadow->cost_account)->get();
-            foreach ($qs_items as $qs_item) {
-                if (!isset($survey[$shadow->std_activity->discipline])) {
-                    $survey[$shadow->std_activity->discipline] = [
-                        'code' => $shadow->std_activity->code,
-                        'name' => $qs_item->discipline,
-                        'budget_cost' => 0,
-                        'weight' => 0,
-                    ];
-                }
+            $discpline = $shadow->std_activity->discipline;
+            if (!isset($survey[$discpline])) {
+                $survey[$discpline] = [
+                    'code' => $shadow->std_activity->code,
+//                    'name' => $this->survies->get($shadow['cost_account']),
+                    'budget_cost' => 0,
+                    'weight' => 0,
+                ];
             }
-            $survey[$shadow->std_activity->discipline]['budget_cost'] += is_nan($shadow->budget_cost) ? 0 : $shadow->budget_cost;
+            $budget_cost = $shadow->budget_cost;
+            $survey[$discpline]['budget_cost'] += is_nan($budget_cost) ? 0 : $budget_cost;
+        }
 
-        }
-        foreach ($survey as $item) {
-            $total['total'] += $item['budget_cost'];
-        }
         foreach ($survey as $key => $value) {
-            if ($total['total']) {
-                $survey[$key]['weight'] += floatval(($survey[$key]['budget_cost'] / $total['total']) * 100);
-                $total['weight_total'] += $survey[$key]['weight'];
-            }
+            $survey[$key]['weight'] += floatval(($survey[$key]['budget_cost'] / $total) * 100);
+            $totalWeight += $survey[$key]['weight'];
         }
-        $this->compareBudgetCostDisciplineCharts($survey);
-        return view('reports.budget_cost_by_discipline', compact('project', 'survey', 'total'));
+        $this->getBugetCostByBuildingColumnChart($survey);
+        $this->getBugetCostByBuildingPieChart($survey);
+        return view('reports.budget_cost_by_discipline', compact('project', 'survey', 'total', 'totalWeight'));
 
     }
 
-    public function compareBudgetCostDisciplineCharts($data)
+    public function getBugetCostByBuildingColumnChart($data)
     {
         $costTable = \Lava::DataTable();
         $costTable->addStringColumn('BudgetCost')->addNumberColumn('Discipline');
         foreach ($data as $key => $value) {
-            $costTable->addRow([$data[$key]['name'], $data[$key]['budget_cost']]);
+            $costTable->addRow([$key, $data[$key]['budget_cost']]);
         }
         \Lava::ColumnChart('BudgetCost', $costTable, [
             'title' => 'Budget Cost By Discipline',
@@ -67,16 +65,17 @@ class BudgetCostByDiscipline
                 'fontSize' => 14,
                 'width' => '1000',
                 'height' => '600',
-
             ],
 
         ]);
+    }
 
-
+    public function getBugetCostByBuildingPieChart($data)
+    {
         $building = \Lava::DataTable();
         $building->addStringColumn('Buildings')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {
-            $building->addRow([$data[$key]['name'], $data[$key]['weight']]);
+            $building->addRow([$key, $data[$key]['weight']]);
         }
         \Lava::PieChart('Cost', $building, [
             'width' => '1000',
@@ -90,6 +89,5 @@ class BudgetCostByDiscipline
             ],
             'pieSliceText' => "value",
         ]);
-
     }
 }

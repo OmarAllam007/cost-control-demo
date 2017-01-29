@@ -19,6 +19,7 @@ class BudgetCostDryCostByDiscipline
     {
         set_time_limit(300);
         $break_downs = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.std_activity.division','breakdown.wbs_level','template_resource.resource')->get();
+
         $data = [];
         $total = [
             'dry_cost' => 0,
