@@ -24,6 +24,7 @@ use App\Resources;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use phpDocumentor\Reflection\Types\Null_;
 
 class BreakdownController extends Controller
@@ -96,8 +97,8 @@ class BreakdownController extends Controller
 
     function exportBreakdown(Project $project)
     {
-
-        $this->dispatch(new ExportBreakdownJob($project));
+        $file = $this->dispatch(new ExportBreakdownJob($project));
+        return \Response::download($file, slug($project->name) . '-breakdown.csv', ['ContentType' => 'text/csv']);
     }
 
     function printAll(Project $project)

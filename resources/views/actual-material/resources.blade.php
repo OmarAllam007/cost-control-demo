@@ -2,7 +2,7 @@
 
 @section('header')
     <h4>{{$project->name}} &mdash; Material &mdash; Physical Quantity</h4>
-    <h4 class="pull-right text-muted">#E04</h4>
+    <h4 class="pull-right text-muted">#E02</h4>
 @endsection
 
 @section('body')

@@ -15,6 +15,7 @@ use App\Jobs\UpdateResourceDictJob;
 use App\Project;
 use App\ResourceCode;
 use App\Resources;
+use App\Support\CostIssuesLog;
 use App\WbsLevel;
 use App\WbsResource;
 use Carbon\Carbon;
@@ -65,13 +66,16 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.index');
         }
 
+        $issuesLog = new CostIssuesLog($data['batch']);
         if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
             if ($data['mapping']['activity']->count() && cannot('activity_mapping', $data['project'])) {
+                $issuesLog->recordActivityMappingUnPrivileged($data['mapping']['activity']);
                 $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
                 $data['mapping']['activity'] = collect();
             }
 
             if ($data['mapping']['resources']->count() && cannot('resource_mapping', $data['project'])) {
+                $issuesLog->recordResourceMappingUnPrivileged($data['mapping']['resources']);
                 $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
                 $data['mapping']['resources'] = collect();
             }
@@ -97,15 +101,18 @@ class ActualMaterialController extends Controller
         }
 
         $newActivities = collect();
+        $activityMappingLog = collect();
         if ($request->has('activity')) {
             foreach ($request->get('activity') as $code => $activityData) {
                 if (!empty($activityData['skip']) || empty($activityData['activity_code'])) {
+                    $activityMappingLog->put($code,  '');
                     continue;
                 }
 
                 foreach ($data['mapping']['activity'] as $activity) {
                     if ($activity[0] == $code) {
                         $activity[0] = $activityData['activity_code'];
+                        $activityMappingLog->put($code, $activityData['activity_code']);
                         ActivityMap::updateOrCreate(['activity_code' => $activityData['activity_code'], 'equiv_code' => $code, 'project_id' => $data['project']->id]);
                         $newActivities->push($activity);
                     }
@@ -116,15 +123,18 @@ class ActualMaterialController extends Controller
         // Issue has been resolved remove from cached data
         $data['mapping']['activity'] = collect();
 
+        $resourceMappingLog = collect();
         if ($request->has('resources')) {
             foreach ($request->get('resources') as $code => $resourceData) {
                 if (!empty($resourceData['skip']) || empty($resourceData['resource_code'])) {
+                    $resourceMappingLog->put($code, '');
                     continue;
                 }
 
                 foreach ($data['mapping']['resources'] as $activity) {
                     if ($activity[7] == $code) {
                         $activity[7] = $resourceData['resource_code'];
+                        $resourceMappingLog->put($code, $resourceData['resource_code']);
                         $resource = Resources::where(['resource_code' => $resourceData['resource_code'], 'project_id' => $data['project']->id])->first();
                         ResourceCode::updateOrCreate(['project_id' => $data['project']->id, 'code' => $activity[7], 'resource_id' => $resource->id]);
                         $newActivities->push($activity);
@@ -133,6 +143,12 @@ class ActualMaterialController extends Controller
             }
 
         }
+
+        // Save the data into error log
+        $issueLog = new CostIssuesLog($data['batch']);
+        $issueLog->recordActivityMappingPrivileged($activityMappingLog);
+        $issueLog->recordResourceMappingPrivileged($resourceMappingLog);
+
         // Issue has been resolved remove from cached data
         $data['mapping']['resources'] = collect();
 
@@ -203,6 +219,7 @@ class ActualMaterialController extends Controller
         $requestResources = $request->get('resource');
         $newResources = collect();
 
+        $costAccountLog = collect();
         foreach ($data['multiple'] as $activityCode => $resources) {
             foreach ($resources as $resourceCode => $resource) {
                 foreach ($resource['resources'] as $shadow) {
@@ -216,9 +233,14 @@ class ActualMaterialController extends Controller
                     $newResource[6] = $material['qty'] * $resource[5];
                     $newResource['resource'] = $shadow;
                     $newResources->push($newResource);
+
+                    $costAccountLog->push(compact('resource', 'newResource'));
                 }
             }
         }
+
+        $issueLog = new CostIssuesLog($data['batch']);
+        $issueLog->recordCostAccountDistribution($costAccountLog);
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
         $data['multiple'] = collect();
@@ -429,10 +451,10 @@ class ActualMaterialController extends Controller
 
         if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
             return \Redirect::route('actual-material.mapping', $key);
-        } elseif ($data['closed']->count()) {
-            return \Redirect::route('actual-material.closed', $key);
         } elseif ($data['resources']->count()) {
             return \Redirect::route('actual-material.resources', $key);
+        } elseif ($data['closed']->count()) {
+            return \Redirect::route('actual-material.closed', $key);
         } elseif ($data['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
         } elseif ($data['to_import']->count()) {

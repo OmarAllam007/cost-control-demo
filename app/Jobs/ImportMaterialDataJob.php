@@ -112,11 +112,10 @@ class ImportMaterialDataJob extends Job
 
             if (!empty($breakdownResourcesMap[$activityCodes][$unit_resource->id])) {
                 $breakdownResourcesMap[$activityCodes][$unit_resource->id][$hash] = $row;
-                $resourcesCount = count(array_pluck($breakdownResourcesMap[$activityCodes][$unit_resource->id], '7', '7'));
-                if ($resourcesCount > 1) {
-                    $result['resources']->put($activityCodes, $breakdownResourcesMap[$activityCodes]);
-                    continue;
-                }
+//                $resourcesCount = count(array_pluck($breakdownResourcesMap[$activityCodes][$unit_resource->id], '7', '7'));
+                $result['resources']->put($activityCodes, $breakdownResourcesMap[$activityCodes]);
+                continue;
+
             } else {
                 if (!isset($breakdownResourcesMap[$activityCodes])) {
                     $breakdownResourcesMap[$activityCodes] = [];
