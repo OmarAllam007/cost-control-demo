@@ -94,31 +94,13 @@ class BreakdownResourceController extends Controller
 
     function wipe(WbsLevel $wbs_level, WipeRequest $request)
     {
-        $children = [];
-        if ($wbs_level->children()->count()) {
-            $children = $wbs_level->children_id;
-        }
+        $wbs_ids = $wbs_level->getChildrenIds();
+        $breakdown_ids = Breakdown::whereIn('wbs_level_id', $wbs_ids)->pluck('id');
+        $breakdown_resource_ids = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->pluck('id');
 
-        BreakdownResource::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->each(function ($resource) {
-            $resource->delete();
-            (new BreakDownResourceObserver())->checkForResources($resource->resource);
-        });
-
-        BreakDownResourceShadow::whereIn('breakdown_id', $wbs_level->breakdowns()->pluck('id'))->delete();
-
-        if (count($children)) {
-            $levels = WbsLevel::whereIn('id', $children->toArray())->get();
-            foreach ($levels as $level) {
-                if ($level->breakdowns()->count()) {
-                    BreakdownResource::whereIn('breakdown_id', $level->breakdowns()->each(function ($resource) {
-                        $resource->delete();
-                        (new BreakDownResourceObserver())->checkForResources($resource->resource);
-                    }));
-
-                    BreakDownResourceShadow::whereIn('breakdown_id', $level->breakdowns()->pluck('id'))->delete();
-                }
-            }
-        }
+        BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)->delete();
+        BreakdownResource::where('id', $breakdown_resource_ids)->delete();
+        Breakdown::whereIn('id', $breakdown_ids)->delete();
 
         $msg = 'All breakdowns on this wbs-level have been removed';
         if ($request->ajax()) {
@@ -131,16 +113,21 @@ class BreakdownResourceController extends Controller
 
     function copy_wbs(WbsLevel $source_wbs, WbsLevel $target_wbs, Request $request)
     {
-        $source_wbs->load(['breakdowns', 'breakdowns.resources']);
-        foreach ($source_wbs->breakdowns as $breakdown) {
-            $breakdownData = $breakdown->toArray();
-            unset($breakdownData['id'], $breakdownData['wbs_level_id'], $breakdownData['created_at'], $breakdownData['updated_at']);
+        set_time_limit(600);
 
-            /** @var Breakdown $newBreakdown */
-            $newBreakdown = $target_wbs->breakdowns()->create($breakdownData);
+        $source_wbs->load(['breakdowns', 'breakdowns.resources']);
+
+        foreach ($source_wbs->breakdowns as $breakdown) {
+            $breakdownData = $breakdown->getAttributes();
+            $breakdownData['wbs_level_id'] = $target_wbs->id;
+            unset($breakdownData['id'], $breakdownData['wbs_level_id'], $breakdownData['created_at'], $breakdownData['updated_at']);
+            $newBreakdown = Breakdown::create($breakdownData);
+
+            $variables = $breakdown->variables->pluck('value');
+            $newBreakdown->syncVariables($variables);
 
             foreach ($breakdown->resources as $resource) {
-                $resourceData = $resource->toArray();
+                $resourceData = $resource->getAttributes();
                 unset($resourceData['id'], $resourceData['breakdown_id'], $resourceData['created_at'], $resourceData['updated_at']);
                 $newBreakdown->resources()->create($resourceData);
             }

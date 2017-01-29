@@ -25,6 +25,8 @@ class BreakdownResourceFormatter implements \JsonSerializable
 
     function toArray()
     {
+        $budget_qty = $this->resource->breakdown->wbs_level->getBudgetQty($this->resource->breakdown->cost_account);
+        $eng_qty = $this->resource->breakdown->wbs_level->getEngQty($this->resource->breakdown->cost_account);
         return [
             'breakdown_resource_id' => $this->resource->id,
             'code' => $this->resource->code,
@@ -37,8 +39,8 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'activity_id' => $this->resource->breakdown->std_activity->id,
             'cost_account' => $this->resource->breakdown->cost_account,
             'resource_waste' => $this->resource->resource_waste,
-            'eng_qty' => $this->resource->eng_qty,
-            'budget_qty' => $this->resource->budget_qty,
+            'eng_qty' => $eng_qty,
+            'budget_qty' => $budget_qty,
             'resource_qty' => $this->resource->resource_qty,
             'resource_type' => $this->resource->resource->types->root->name ?? 'Not Assigned',
             'resource_type_id' => $this->resource->resource->types->root->id ?? 0,
