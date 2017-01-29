@@ -7,24 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property WbsLevel $wbs_level
+ * @property Survey qty_survey
  */
 class Breakdown extends Model
 {
     use CachesQueries;
 
     protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code'];
+    protected $cached_qty_survey;
 
     function resources()
     {
         return $this->hasMany(BreakdownResource::class, 'breakdown_id');
     }
-    function shadows(){
-        return $this->hasMany(BreakDownResourceShadow::class,'breakdown_id');
+
+    function shadows()
+    {
+        return $this->hasMany(BreakDownResourceShadow::class, 'breakdown_id');
     }
 
     function wbs_level()
     {
-        return $this->belongsTo(WbsLevel::class)->withTrashed();
+        return $this->belongsTo(WbsLevel::class);
     }
 
     function std_activity()
@@ -42,9 +46,32 @@ class Breakdown extends Model
         return $this->belongsTo(Project::class);
     }
 
-    function qty_survey()
+    /*function qty_survey()
     {
         return $this->belongsTo(Survey::class, 'cost_account', 'cost_account')->where('project_id', $this->project_id)->where('wbs_level_id', $this->wbs_level_id);
+    }*/
+
+    function getQtySurveyAttribute()
+    {
+        if ($this->cached_qty_survey) {
+            return $this->cached_qty_survey;
+        }
+
+        $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $this->wbs_level_id)->first();
+        if ($qtySurvey) {
+            return $qtySurvey;
+        }
+
+        $parent = $this->wbs_level;
+        while ($parent->parent) {
+            $parent = $parent->parent;
+            $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $parent->id)->first();
+            if ($qtySurvey) {
+                return $this->cached_qty_survey = $qtySurvey;
+            }
+        }
+
+        return null;
     }
 
     /*function syncResources($resources)
@@ -59,28 +86,16 @@ class Breakdown extends Model
 
     function syncVariables($variables)
     {
-        if ($variables) {
-            $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $this->wbs_level_id)->first();
-            if(!$qtySurvey){
-                $parent = $this->wbs_level;
-                while($parent->parent){
-                    $parent = $parent->parent;
-                    $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $parent->id)->first();
-                    if($qtySurvey){
-                        break;
-                    }
-
-                }
-            }
+        if ($variables && $this->qty_survey) {
             $variableNames = $this->std_activity->variables->pluck('label', 'display_order');
             foreach ($variables as $index => $value) {
-                $var = BreakdownVariable::where('qty_survey_id', $qtySurvey->id)->where('display_order', $index)->first();
+                $var = BreakdownVariable::where('qty_survey_id', $this->qty_survey->id)->where('display_order', $index)->first();
 
                 if ($var) {
                     $var->update(compact('value'));
                 } else {
                     $this->variables()->create([
-                        'qty_survey_id' => $qtySurvey->id,
+                        'qty_survey_id' => $this->qty_survey->id,
                         'name' => $variableNames[$index],
                         'value' => $value,
                         'display_order' => $index,
@@ -115,7 +130,7 @@ class Breakdown extends Model
             foreach ($this->variables as $var) {
                 $newVar = $var->toArray();
                 unset($var['id'], $var['breakdown_id'], $var['created_at'], $var['updated_at']);
-                $var['qty_survey_id']= $qty_survey_id;
+                $var['qty_survey_id'] = $qty_survey_id;
                 $newBreakdown->variables()->create($newVar);
             }
         }
@@ -123,9 +138,10 @@ class Breakdown extends Model
         return $newBreakdown;
     }
 
-    function getDry($project ,$wbs_id,$cost_account){
-        $boq = Boq::where('wbs_id',$wbs_id)->where('project_id',$project->id)->where('cost_account',$cost_account)->first();
-        if(isset($boq->dry_ur)){
+    function getDry($project, $wbs_id, $cost_account)
+    {
+        $boq = Boq::where('wbs_id', $wbs_id)->where('project_id', $project->id)->where('cost_account', $cost_account)->first();
+        if (isset($boq->dry_ur)) {
             return $boq->dry_ur;
         }
         return 0;

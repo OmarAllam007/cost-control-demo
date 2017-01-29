@@ -67,6 +67,7 @@ export default {
                     });
                     this.breakdowns = response.breakdowns;
                 }).error(response => {
+                    this.loading = false;
                     this.$dispatch('request_alert', {
                         message: 'Failed to paste WBS data',
                         type: 'danger'

@@ -15,15 +15,7 @@ class BreakDownResourceObserver
     function created(BreakdownResource $resource)
     {
         $formatter = new BreakdownResourceFormatter($resource);
-        $shadow = BreakDownResourceShadow::create($formatter->toArray());
-    }
-
-    function creating(BreakdownResource $resource)
-    {
-
-        $resource->code = $resource->breakdown->wbs_level->code . $resource->breakdown->std_activity->id_partial;
-        $resource->eng_qty = $resource->breakdown->wbs_level->getEngQty($resource->breakdown->cost_account);
-        $resource->budget_qty = $resource->breakdown->wbs_level->getBudgetQty($resource->breakdown->cost_account);
+        BreakDownResourceShadow::create($formatter->toArray());
     }
 
     function updated(BreakdownResource $resource)
@@ -37,6 +29,13 @@ class BreakDownResourceObserver
 
     function saving(BreakdownResource $breakdownResource)
     {
+        if (!$breakdownResource->code) {
+            $breakdownResource->code = $breakdownResource->breakdown->wbs_level->code . $breakdownResource->breakdown->std_activity->id_partial;
+        }
+
+        $breakdownResource->eng_qty = $breakdownResource->breakdown->qty_survey->eng_qty ?? 0;
+        $breakdownResource->budget_qty = $breakdownResource->breakdown->qty_survey->budget_qty ?? 0;
+
         $resource_id = $breakdownResource->resource_id;
         if (!$resource_id) {
             $resource_id = $breakdownResource->template_resource->resource_id;
@@ -57,7 +56,6 @@ class BreakDownResourceObserver
             $projectResource = Resources::create($newResource);
         }
         $breakdownResource->resource_id = $projectResource->id;
-
     }
 
 

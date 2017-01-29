@@ -25,12 +25,10 @@ class BudgetSummeryReport
         $divisons = ActivityDivision::tree()->get();
         $tree = collect();
         $this->projectActivities = BreakDownResourceShadow::where('project_id', $project->id)
-            ->get()
             ->pluck('activity_id')
             ->toArray();
 
-        $total_budget =BreakDownResourceShadow::where('project_id', $project->id)
-            ->get()->sum('budget_cost');
+        $total_budget =BreakDownResourceShadow::where('project_id', $project->id)->sum('budget_cost');
 
         foreach ($divisons as $divison) {
             $treeLevel = $this->activityDivision($divison);
@@ -48,7 +46,7 @@ class BudgetSummeryReport
         foreach ($divisions as $rdivision) {
             $tree['total_budget'] += $rdivision->activities->whereIn('id', $this->projectActivities)->map(function ($activity)  {
                 return BreakDownResourceShadow::where('project_id', $this->project->id)
-                    ->where('activity_id', $activity->id)->get()->sum('budget_cost');
+                    ->where('activity_id', $activity->id)->sum('budget_cost');
             })->sum();
         }
 
