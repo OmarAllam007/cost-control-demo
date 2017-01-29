@@ -17,15 +17,16 @@
 
     </p>
 
-    <article id="{{$level['id']}}" class="tree--child collapse">
-        @if (isset($level['children']) && count($level['children']))
+    @if (isset($level['children']) && count($level['children']))
+        <article id="{{$level['id']}}" class="tree--child collapse">
+
             <ul class="list-unstyled">
                 @foreach($level['children'] as $child)
                     @include('reports.budget.budget_cost_by_building._recursive_budget_by_building', ['level' => $child, 'tree_level' => $tree_level + 1])
                 @endforeach
             </ul>
 
-    </article>
+        </article>
 
     @endif
 </li>

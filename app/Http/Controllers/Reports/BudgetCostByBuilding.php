@@ -24,7 +24,7 @@ class BudgetCostByBuilding
 
     public function getBudgetCostForBuilding(Project $project)
     {
-        $this->total_budget = BreakDownResourceShadow::where('project_id', $project->id)->get(['budget_cost'])->sum('budget_cost');
+        $this->total_budget = BreakDownResourceShadow::where('project_id', $project->id)->sum('budget_cost');
         $wbs_levels = $project->wbs_tree;
         $tree = [];
         foreach ($wbs_levels as $level) {
