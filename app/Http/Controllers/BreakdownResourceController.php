@@ -119,11 +119,11 @@ class BreakdownResourceController extends Controller
 
         foreach ($source_wbs->breakdowns as $breakdown) {
             $breakdownData = $breakdown->getAttributes();
+            unset($breakdownData['id'], $breakdownData['created_at'], $breakdownData['updated_at']);
             $breakdownData['wbs_level_id'] = $target_wbs->id;
-            unset($breakdownData['id'], $breakdownData['wbs_level_id'], $breakdownData['created_at'], $breakdownData['updated_at']);
             $newBreakdown = Breakdown::create($breakdownData);
 
-            $variables = $breakdown->variables->pluck('value');
+            $variables = $breakdown->variables->pluck('value', 'display_order');
             $newBreakdown->syncVariables($variables);
 
             foreach ($breakdown->resources as $resource) {
