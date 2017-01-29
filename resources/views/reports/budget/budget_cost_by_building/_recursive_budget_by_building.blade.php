@@ -1,4 +1,5 @@
 <li>
+
     <p class="
        @if($tree_level ==0)
             blue-first-level
@@ -9,8 +10,9 @@
                 @endif
             "
     >
+
         <a href="#{{$level['id']}}" data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
-            {{$level['name']}} || {{number_format($level['weight'],2)}} %
+            {{$level['name']}}  @if($level['weight']>0) &emsp;||&emsp; {{number_format($level['weight'],2)}} % @endif
         </a>
 
         <span class="pull-right">{{number_format($level['budget_cost'],2)}} </span>

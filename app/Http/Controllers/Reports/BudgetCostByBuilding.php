@@ -47,9 +47,9 @@ class BudgetCostByBuilding
             });
         }
         /** @var WbsLevel $level */
-        if ($level->getDry()) {
             $tree['budget_cost'] = BreakDownResourceShadow::whereIn('wbs_id', $level->getChildrenIds())->sum('budget_cost');
             $tree['weight'] = floatval(($tree['budget_cost'] / $this->total_budget) * 100);
+        if ($level->getDry()) {
             $this->data[$level->id] = ['name' => $level->name, 'weight' => $tree['weight'], 'budget_cost' => $tree['budget_cost']];
         }
         return $tree;
