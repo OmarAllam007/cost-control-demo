@@ -32,8 +32,9 @@ class BreakDownResourceObserver
         if (!$breakdownResource->code) {
             $breakdownResource->code = $breakdownResource->breakdown->wbs_level->code . $breakdownResource->breakdown->std_activity->id_partial;
         }
-        $breakdownResource->eng_qty = $breakdownResource->breakdown->qty_survey->eng_qty;
-        $breakdownResource->budget_qty = $breakdownResource->breakdown->qty_survey->budget_qty;
+
+        $breakdownResource->eng_qty = $breakdownResource->breakdown->qty_survey->eng_qty ?? 0;
+        $breakdownResource->budget_qty = $breakdownResource->breakdown->qty_survey->budget_qty ?? 0;
 
         $resource_id = $breakdownResource->resource_id;
         if (!$resource_id) {

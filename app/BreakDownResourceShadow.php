@@ -66,8 +66,13 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(Productivity::class);
     }
 
-/*    function getBoqDescription()
+    public function recalculate()
     {
 
-    }*/
+    }
+
+    /*    function getBoqDescription()
+        {
+
+        }*/
 }

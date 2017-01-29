@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakdownVariable extends Model
 {
-    use CachesQueries;
-
     protected $fillable = ['name', 'value', 'display_order', 'qty_survey_id', 'breakdown_id'];
 
     function survey(){
