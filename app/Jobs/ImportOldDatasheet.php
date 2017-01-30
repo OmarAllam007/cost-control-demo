@@ -70,18 +70,21 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             if ($entry) {
                 $success++;
             } else {
-                $failed->push($entry);
+                $failed->push($rowData);
             }
         }
-
+        dd($failed->slice(0, 10));
         return compact('success', 'failed');
     }
 
     protected function getEntry($row)
     {
-        $code = mb_strtolower($row[0] . $row[1] . $row[2] . $row[3]);
+        $code = mb_strtolower(trim($row[0]) . trim($row[1]) . trim($row[2]));
         if (!$this->shadows->has($code)) {
-            return null;
+            $code .= mb_strtolower(trim($row[3]));
+            if (!$this->shadows->has($code)) {
+                return null;
+            }
         }
 
         $shadow = $this->shadows->get($code);
@@ -113,10 +116,27 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
     protected function loadShadows()
     {
-        return $this->shadows = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->get()->keyBy(function (BreakDownResourceShadow $resource) {
-                $code = $resource->code . $resource->cost_account . $resource->resource_code . $resource->remarks;
-                return mb_strtolower($code);
+        $this->shadows = collect();
+        $doubles = collect();
+        BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->select(['code', 'cost_account', 'resource_code', 'remarks', 'wbs_id', 'resource_id', 'breakdown_resource_id', 'project_id'])
+            ->get()->each(function (BreakDownResourceShadow $resource) use ($doubles) {
+                $code = mb_strtolower(trim($resource->code) . trim($resource->cost_account) . trim($resource->resource_code));
+                if ($this->shadows->has($code)) {
+                    //Modify the original code
+                    $other = $this->shadows->get($code);
+                    $otherCode = $code;
+                    $otherCode .= mb_strtolower(trim($other->remarks));
+                    $this->shadows->put($otherCode, $other);
+                    $this->shadows->forget($code);
+                    $doubles->put($code, $code);
+                }
+
+                if ($doubles->has($code)) {
+                    $code .= mb_strtolower(trim($resource->remarks));
+                }
+
+                $this->shadows->put($code, $resource);
             });
     }
 }
