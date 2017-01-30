@@ -147,11 +147,11 @@ class BreakdownResource extends Model
 
     function getBudgetUnitAttribute()
     {
-        $resourceQty = $this->resource_qty;
-        if (!$resourceQty) {
+        if (!floatval($this->budget_qty)) {
             return 0;
         }
 
+        $resourceQty = $this->resource_qty;
         if ($this->productivity) {
             $reductionFactor = $this->project_productivity->after_reduction;
             if (!$reductionFactor) {
