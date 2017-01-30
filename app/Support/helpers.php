@@ -32,3 +32,16 @@ function roundup($number, $precision)
     $convert = $number * $multiplier;
     return ceil($convert) / $multiplier;
 }
+
+function check_syntax($equation)
+{
+    $content = '<?php ' . $equation;
+    $file = tempnam('/tmp/', 'eval_');
+    file_put_contents($file, $content);
+    $result = exec('php -l ' . $file);
+    if (strpos(strtolower($result), 'no syntax errors')) {
+        return true;
+    }
+
+    return false;
+}
