@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\BreakDownResourceShadow;
 use App\Project;
 
 class BudgetCostByBreakDownItem
@@ -15,52 +16,40 @@ class BudgetCostByBreakDownItem
     public function compareBudgetCostByBreakDownItem(Project $project)
     {
         set_time_limit(300);
-        $shadows = $project->shadows()->get();
+        $totalWeight = 0 ;
+        $total = BreakDownResourceShadow::whereProjectId($project->id)->sum('budget_cost');
+        $shadows = \DB::table('break_down_resource_shadows as sh')
+            ->join('projects', 'sh.project_id', '=', 'projects.id')
+            ->join('resource_types', 'sh.resource_type_id', '=', 'resource_types.id')
+            ->where('sh.project_id', '=', $project->id)
+            ->groupBy('resource_types.name')
+            ->selectRaw('SUM(sh.budget_cost) as budget_cost,resource_types.name,resource_types.code')->get();
 
-        $bd_resource = [];
-        $total = [
-            'total' => 0,
-            'weight_total'=>0
-        ];
 
-            foreach ($shadows as $shadow) {
-                $root = $shadow->resource_type;
-//                dd($shadow->resource->types);
-                if($root){
-                    if (!isset($bd_resource[ $root ])) {
-                        $bd_resource[ $root ] = [
-                            'resource_type' => $root,
-                            'resource_code' => $shadow->resource->types->code??'',
-                            'budget_cost' => 0,
-                            'weight' => 0,
+        $types = [];
 
-                        ];
-                    }
-                }
-                $bd_resource[ $root ]['budget_cost'] += is_nan($shadow->budget_cost)?0:$shadow->budget_cost;
-
-        }
-        foreach ($bd_resource as $item) {
-            $total['total'] += $item['budget_cost'];
-
-        }
-        foreach ($bd_resource as $key => $value) {
-            if($total['total']){
-                $bd_resource[$key]['weight'] += floatval(($bd_resource[$key]['budget_cost'] / $total['total']) * 100);
-                $total['weight_total'] += $bd_resource[$key]['weight'];
+        foreach ($shadows as $key => $value) {
+            if (!isset($types[$value->name])) {
+                $types[$value->name] = [
+                    'budget_cost' => 0,
+                    'weight' => 0,
+                ];
             }
-
+            $types[$value->name]['budget_cost'] += $value->budget_cost;
+            $types[$value->name]['weight'] += floatval(($value->budget_cost / $total) * 100);
+            $totalWeight += $types[$value->name]['weight'];
         }
-        ksort($bd_resource);
-        $this->compareBudgetCostByBreakDownItemChart($bd_resource);
-        return view('reports.budget_cost_by_break_down',compact('bd_resource','total','project'));
+        $this->compareBudgetCostByBreakDownItemChart($types);
+        return view('reports.budget_cost_by_break_down', compact('types', 'totalWeight', 'project','total'));
     }
 
-     public function compareBudgetCostByBreakDownItemChart($data){
+    public function compareBudgetCostByBreakDownItemChart($data)
+    {
         $item = \Lava::DataTable();
         $item->addStringColumn('Resource Type')->addNumberColumn('Weight');
         foreach ($data as $key => $value) {
-            $item->addRow([$data[ $key ]['resource_type'], $data[ $key ]['weight']]);
+
+            $item->addRow([$key, $data[$key]['weight']]);
         }
         \Lava::PieChart('BreakDown', $item, [
             'width' => '1000',
@@ -73,7 +62,7 @@ class BudgetCostByBreakDownItem
                 ['offset' => 0.0],
             ],
             'pieSliceText' => "label",
-            'sliceVisibilityThreshold'=>0,
+            'sliceVisibilityThreshold' => 0,
         ]);
 
     }

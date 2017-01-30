@@ -16,35 +16,41 @@ use App\Survey;
 class BudgetCostByDiscipline
 {
     private $survies;
+    private $activities;
+    private $total;
 
     public function compareBudgetCostDiscipline(Project $project)
     {
         set_time_limit(600);
         $survey = [];
         $totalWeight = 0;
-        $total = BreakDownResourceShadow::where('project_id', $project->id)->sum('budget_cost');
+        $total = BreakDownResourceShadow::whereProjectId($project->id)->sum('budget_cost');
 //        $this->survies = Survey::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($survey) {
 //            return $survey->discipline;
 //        });
-        $shadows = $project->shadows()->with('std_activity')->get();
-        foreach ($shadows as $shadow) {
-            $discpline = $shadow->std_activity->discipline;
-            if (!isset($survey[$discpline])) {
-                $survey[$discpline] = [
-                    'code' => $shadow->std_activity->code,
-//                    'name' => $this->survies->get($shadow['cost_account']),
+//        $this->activities = BreakDownResourceShadow::whereProjectId($project->id)->with('std_activity')->get()->keyBy('activity_id')->map(function ($shadow) use ($total) {
+//            return $shadow->std_activity->discipline;
+//        });
+
+        $shadows = \DB::table('break_down_resource_shadows as sh')
+            ->join('projects', 'sh.project_id', '=', 'projects.id')
+            ->join('std_activities', 'sh.activity_id', '=', 'std_activities.id')
+            ->where('sh.project_id', '=', $project->id)
+            ->groupBy('std_activities.discipline')
+            ->selectRaw('SUM(sh.budget_cost) as budget_cost,std_activities.discipline')->get();
+
+        foreach ($shadows as $key => $value) {
+            if (!isset($survey[$value->discipline])) {
+                $survey[$value->discipline] = [
                     'budget_cost' => 0,
                     'weight' => 0,
                 ];
             }
-            $budget_cost = $shadow->budget_cost;
-            $survey[$discpline]['budget_cost'] += is_nan($budget_cost) ? 0 : $budget_cost;
+            $survey[$value->discipline]['budget_cost'] += $value->budget_cost;
+            $survey[$value->discipline]['weight'] += floatval(($value->budget_cost / $total) * 100);
+            $totalWeight += $survey[$value->discipline]['weight'];
         }
 
-        foreach ($survey as $key => $value) {
-            $survey[$key]['weight'] += floatval(($survey[$key]['budget_cost'] / $total) * 100);
-            $totalWeight += $survey[$key]['weight'];
-        }
         $this->getBugetCostByBuildingColumnChart($survey);
         $this->getBugetCostByBuildingPieChart($survey);
         return view('reports.budget_cost_by_discipline', compact('project', 'survey', 'total', 'totalWeight'));
