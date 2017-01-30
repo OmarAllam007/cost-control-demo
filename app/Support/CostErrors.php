@@ -55,7 +55,7 @@ class CostIssuesLog
 
     }
 
-    function recordCostAccountDistribution($resources, $distribution)
+    function recordCostAccountDistribution($resources)
     {
 
     }
