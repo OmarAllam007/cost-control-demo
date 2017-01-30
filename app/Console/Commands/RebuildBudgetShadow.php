@@ -25,16 +25,17 @@ class RebuildBudgetShadow extends Command
      */
     public function handle()
     {
-        $count = BreakDownResourceShadow::count();
+        $count = BreakDownResourceShadow::where('project_id', '!=', 39)->count();
         $this->output->comment($count . ' Resources found');
         $this->bar = $this->output->createProgressBar($count);
 
-        BreakDownResourceShadow::with('breakdown_resource')->chunk(25000, function(Collection $shadows) {
-            $shadows->pluck('breakdown_resource')->each(function(BreakdownResource $resource) {
-                $resource->updateShadow();
-                $this->bar->advance();
+        BreakDownResourceShadow::with('breakdown_resource')->where('project_id', '!=', 39)
+            ->chunk(25000, function (Collection $shadows) {
+                $shadows->pluck('breakdown_resource')->each(function (BreakdownResource $resource) {
+                    $resource->updateShadow();
+                    $this->bar->advance();
+                });
             });
-        });
 
         $this->bar->finish();
     }
