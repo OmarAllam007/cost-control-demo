@@ -73,6 +73,7 @@
 @section('javascript')
     <script src="{{asset('/js/edit-resource.js')}}"></script>
     <script src="{{asset('/js/autocomplete.js')}}"></script>
+    <script src="{{asset('/js/tree-select.js')}}"></script>
     <script>
         jQuery(function ($) {
             $('#CostAccount').completeList({
