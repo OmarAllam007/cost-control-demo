@@ -18,28 +18,25 @@
     <table class="table table-condensed">
         <thead class="output-cell">
         <tr >
-            <th class="col-xs-3" >Code</th>
-            <th class="col-xs-3" >Resource Type</th>
-            <th class="col-xs-3" >Budget Cost</th>
-            <th class="col-xs-3" >% Weight</th>
+            <th class="col-xs-4" >Resource Type</th>
+            <th class="col-xs-4" >Budget Cost</th>
+            <th class="col-xs-4" >% Weight</th>
 
         </tr>
         </thead>
         <tbody>
-        @foreach($bd_resource as $row)
+        @foreach($types as $key=>$row)
 
             <tr class="tbl-content">
-                <td class="col-xs-3">{{$row['resource_code']?:''}}</td>
-                <td class="col-xs-3">{{$row['resource_type']}}</td>
-                <td class="col-xs-3">{{number_format($row['budget_cost'],2)}}</td>
-                <td class="col-xs-3">{{number_format($row['weight'],2)}} %</td>
+                <td class="col-xs-4">{{$key}}</td>
+                <td class="col-xs-4">{{number_format($row['budget_cost'],2)}}</td>
+                <td class="col-xs-4">{{number_format($row['weight'],2)}} %</td>
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
-            <td class="col-xs-3 output-cell"></td>
-            <td class="col-xs-3 output-cell">Grand Total</td>
-            <td class="col-xs-3 output-cell">{{number_format($total['total'])}}</td>
-            <td class="col-xs-3 output-cell">{{number_format($total['weight_total'])}} %</td>
+            <td class="col-xs-4 output-cell">Grand Total</td>
+            <td class="col-xs-4 output-cell">{{number_format($total)}}</td>
+            <td class="col-xs-4 output-cell">{{number_format($totalWeight)}} %</td>
             </td>
         </tr>
         </tbody>
