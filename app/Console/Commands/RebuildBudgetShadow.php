@@ -9,11 +9,11 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\Console\Helper\ProgressBar;
 
-class RebuildModShadow extends Command
+class RebuildBudgetShadow extends Command
 {
-    protected $signature = 'fix-mod';
+    protected $signature = 'rebuild-budget-shadow';
 
-    protected $description = '';
+    protected $description = 'Rebuild shadow table for budget breakdown resources';
 
     /** @var ProgressBar */
     protected $bar;
@@ -25,12 +25,11 @@ class RebuildModShadow extends Command
      */
     public function handle()
     {
-        $wbsIds = WbsLevel::find(9733)->getChildrenIds();
-        $count = BreakDownResourceShadow::whereProjectId(40)->whereIn('wbs_id', $wbsIds)->count();
+        $count = BreakDownResourceShadow::count();
         $this->output->comment($count . ' Resources found');
         $this->bar = $this->output->createProgressBar($count);
 
-        BreakDownResourceShadow::whereProjectId(40)->whereIn('wbs_id', $wbsIds)->with('breakdown_resource')->chunk(10000, function(Collection $shadows) {
+        BreakDownResourceShadow::with('breakdown_resource')->chunk(25000, function(Collection $shadows) {
             $shadows->pluck('breakdown_resource')->each(function(BreakdownResource $resource) {
                 $resource->updateShadow();
                 $this->bar->advance();
