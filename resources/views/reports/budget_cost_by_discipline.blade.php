@@ -36,16 +36,18 @@
         <tr style="border-top: solid #000000" >
 
             <td class="col-xs-4 output-cell" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-4 output-cell">{{number_format($total['total'],2)}}</td>
-            <td class="col-xs-4 output-cell" >%{{number_format($total['weight_total'],2)}}</td>
+            <td class="col-xs-4 output-cell">{{number_format($total,2)}}</td>
+            <td class="col-xs-4 output-cell" >%{{number_format($totalWeight,2)}}</td>
 
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}
         </tr>
         </tbody>
     </table>
     <div id="chart-div" style="width:800px; margin:0 auto;"></div><hr>
-    <?=  \Lava::render('PieChart','Cost','chart-div') ?>
+    <div id="chart-div" style="width:800px; margin:0 auto;"></div>
+    <hr>
+    <?=  \Lava::render('PieChart', 'Cost', 'chart-div') ?>
 
     <div id="chart-div2" style="width:800px; margin:0 auto;"></div>
-    <?= \Lava::render('ColumnChart','BudgetCost','chart-div2') ?>
+    <?= \Lava::render('ColumnChart', 'BudgetCost', 'chart-div2') ?>
 @endsection
