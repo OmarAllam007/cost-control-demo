@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Wbs from './components/Wbs';
-import Breakdown from './components/datasheet';
+import Datasheet from './components/datasheet';
 import Alert from './components/Alert';
 import Resources from './components/CostResources';
 
@@ -58,7 +58,7 @@ window.app = new Vue({
     components: {
         Alert,
         Wbs,
-        Breakdown,
+        Datasheet,
         Resources
     }
 });
