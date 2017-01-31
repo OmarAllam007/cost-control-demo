@@ -85,9 +85,11 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         }
 
         if ($entries->count()) {
-            CostShadow::insert($entries);
+            CostShadow::insert($entries->pluck('shadow')->toArray());
+            ActualResources::insert($entries->pluck('resource')->toArray());
             unset($entries);
         }
+
         return compact('success', 'failed');
     }
 
@@ -95,13 +97,27 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
     {
         $code = mb_strtolower(trim($row[0]) . trim($row[1]) . trim($row[2]));
         if (!$this->shadows->has($code)) {
-            $code .= mb_strtolower(trim($row[3]));
-            if (!$this->shadows->has($code)) {
-                return null;
+            $remark = trim($row[3]);
+            if ($remark) {
+                $code .= mb_strtolower(trim($row[3]));
             }
         }
 
-        $shadow = $this->shadows->get($code);
+        if ($this->shadows->has($code)) {
+            $shadow = $this->shadows->get($code);
+        } else {
+            $appid = trim($row[36]);
+            if (!$appid) {
+                return null;
+            }
+
+            $shadow = $this->shadows->where('breakdown_resource_id', $appid)->first();
+        }
+
+        if (!$shadow) {
+            return null;
+        }
+
         $resource = [
             'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
             'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
