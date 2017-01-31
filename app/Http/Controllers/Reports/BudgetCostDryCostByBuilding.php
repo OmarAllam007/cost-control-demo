@@ -55,7 +55,9 @@ class BudgetCostDryCostByBuilding
         $total_difference = $this->total_different;
         $total_increase = $this->total_increase;
         $total_dry = $this->total_dry;
-
+        $this->getBudgetCostDryCostColumnChart($this->data);
+        $this->getBudgetCostDryCostSecondColumnChart($this->data);
+        $this->getBudgetCostDryCostThirdColumnChart($this->data);
         return view('reports.budget.budget_cost_dry_building.budget_cost_dry_building', compact('project', 'tree', 'total_budget', 'total_dry', 'total_increase', 'total_difference'));
     }
 
@@ -125,7 +127,7 @@ class BudgetCostDryCostByBuilding
 
         $costTable->addStringColumn('WBS')->addNumberColumn('Difference');
         foreach ($data as $key => $value) {
-            $costTable->addRow([$data[$key]['name'], $data[$key]['difference']]);
+            $costTable->addRow([$data[$key]['name'], $data[$key]['different']]);
 
         }
         $options = [
@@ -164,21 +166,21 @@ class BudgetCostDryCostByBuilding
 
         $costTable = \Lava::DataTable();
 
-        $costTable->addStringColumn('WBS')->addNumberColumn('Increase')->addRoleColumn(
-            'role', 'annotation');
+        $costTable->addStringColumn('WBS')->addNumberColumn('Increase');
         foreach ($data as $key => $value) {
-            $costTable->addRow([$data[$key]['name'], number_format($data[$key]['increase'], 1), $data[$key]['name']]);
+
+            $costTable->addRow([$data[$key]['name'], $value['increase']]);
         }
         $options = [
-
-            'tooltip' => 'percent',
+            'isStacked' => 'false',
+            'tooltip' => 'value',
             'titleTextStyle' => [
                 'color' => '#eb6b2c',
                 'fontSize' => 14,
                 'width' => '1000',
                 'height' => '600',
             ],
-            'title' => trans('Increase %'),
+            'title' => trans('Increase'),
             'height' => 400,
             'hAxis' => [
                 'title' => 'WBS',
@@ -192,11 +194,9 @@ class BudgetCostDryCostByBuilding
             'legend' => [
                 'position' => 'none',
             ],
-
             'bar' => [
                 'groupWidth' => '30%',
             ],
-
         ];
         \Lava::ColumnChart('Increase', $costTable, $options);
 

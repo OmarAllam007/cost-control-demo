@@ -7,7 +7,8 @@
            @else
             blue-fourth-level
                 @endif
-            " style="padding: 5px;">
+            " style="
+            padding: 5px; display: inline-block">
         <div class="col-md-12  @if($tree_level ==0)
                 blue-first-level
              @elseif($tree_level ==1)
@@ -45,7 +46,6 @@
 
 
     </div>
-
 
     @if (isset($level['children']) && count($level['children']))
         <article id="{{$level['id']}}" class="tree--child collapse">
