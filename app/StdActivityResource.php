@@ -16,6 +16,8 @@ class StdActivityResource extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    public $old_equation;
+
     public function template()
     {
         return $this->belongsTo(BreakdownTemplate::class);
@@ -94,7 +96,9 @@ class StdActivityResource extends Model
             })->where('std_activity_resource_id', $this->id)->get();
 
             foreach ($breakdown_resources as $breakdown_resource) {
-                $breakdown_resource->equation = $this->equation;
+                if (!$breakdown_resource->equation || $breakdown_resource->equation == $this->old_equation) {
+                    $breakdown_resource->equation = $this->equation;
+                }
                 $breakdown_resource->remarks = $this->remarks;
                 $breakdown_resource->productivity_id = $this->productivity ? $this->productivity_id : '';
                 $breakdown_resource->update();

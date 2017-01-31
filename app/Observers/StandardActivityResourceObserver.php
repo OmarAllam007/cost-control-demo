@@ -35,6 +35,11 @@ class StandardActivityResourceObserver
             });
     }
 
+    function updating(StdActivityResource $resource)
+    {
+        $resource->old_equation = $resource->getOriginal('equation');
+    }
+
     function updated(StdActivityResource $resource)
     {
         if (isset($resource->template->project_id)) {
