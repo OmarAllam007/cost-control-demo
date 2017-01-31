@@ -47,12 +47,10 @@
         </tr>
         </tbody>
     </table>
-    <div id="chart-div"></div>
-    <?=  \Lava::render('ColumnChart', 'BudgetCost', 'chart-div') ?>
-<br>
-    <div id="chart-div2"></div>
-    <?=  \Lava::render('ColumnChart', 'Difference', 'chart-div2') ?>
 
-    <div id="chart-div3"></div>
-    <?=  \Lava::render('ColumnChart', 'Increase', 'chart-div3') ?>
+    <div id="chart-div" style="width:800px; margin:0 auto;"></div>
+    <hr>
+    <?=  \Lava::render('ColumnChart', 'BudgetCost', 'chart-div') ?>
+
+
 @endsection
