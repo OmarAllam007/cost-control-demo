@@ -3,7 +3,10 @@ namespace App\Http\Controllers\Reports;
 
 use App\Boq;
 use App\Breakdown;
+use App\BreakDownResourceShadow;
 use App\Project;
+use App\WbsLevel;
+use Barryvdh\Reflection\DocBlock\Type\Collection;
 
 /**
  * Created by PhpStorm.
@@ -13,135 +16,77 @@ use App\Project;
  */
 class BudgetCostDryCostByBuilding
 {
+
+    private $total_budget;
+    private $total_dry;
+    private $total_increase;
+    private $total_different;
+    private $boqs;
+    private $data = [];
+
+
     public function compareBudgetCostDryCost($project)
     {
+        $this->boqs = collect();
         set_time_limit(300);
-        $break_downs = $project->breakdowns()->get();
-        $data = [];
-        $children = [];
+        $this->total_budget = BreakDownResourceShadow::where('project_id', $project->id)->sum('budget_cost');
 
-        $total = [
-            'total_dry' => 0,
-            'total_budget' => 0,
-            'total_increase' => 0,
-            'difference' => 0,
-        ];
+        $localBoqs = \DB::table('boqs as b ')
+            ->where('project_id', '=', $project->id)
+            ->whereIn('b.cost_account', function ($query) {
+                $query->select('cost_account')->from('break_down_resource_shadows');
+            })
+            ->groupBy('wbs_id')
+            ->selectRaw('wbs_id,SUM(b.quantity * b.dry_ur) dry')->get();
 
-        foreach ($break_downs as $break_down) {
-            $wbs_level = $break_down->wbs_level;
-            $dry = $break_down->getDry($project,$wbs_level->id,$break_down->cost_account);
-
-            if ($dry) {//if wbs-level has dry
-
-                if (!isset($data[$wbs_level->id])) {
-                    $data[$wbs_level->id] = [
-                        'name' => $break_down->wbs_level->name,
-                        'code' => $break_down->wbs_level->code,
-                        'cost_accounts' => [],
-                        'budget_cost' => 0,
-                        'dry_cost' => 0,
-                        'difference' => 0,
-                        'increase' => 0,
-                    ];
-
-
-                }
-                if (!isset($data[$wbs_level->id]['cost_accounts'][$break_down->cost_account])) {
-                    $data[$wbs_level->id]['cost_accounts'][$break_down->cost_account] = [
-
-                    ];
-
-                    $boq = Boq::where('cost_account', $break_down->cost_account)->first();
-                    $data[$wbs_level->id]['cost_accounts'][$break_down->cost_account]['dry_cost'] = $boq->quantity * $boq->dry_ur;
-                }
-
-
-                $resources = $break_down->resources;
-                foreach ($resources as $resource) {
-                    $data[$wbs_level->id]['budget_cost'] += is_nan($resource->budget_cost) ? 0 : $resource->budget_cost;
-                }
-            } else {//if wbs-level has not dry
-                $parent = $wbs_level;
-                while ($parent->parent) {//get budget cost of parent
-                    $parent = $parent->parent;
-                    $parent_dry = $break_down->getDry($project,$parent->id,$break_down->cost_account);
-                    if ($parent_dry) {
-                        if (!isset($data[$parent->id])) {
-                            $data[$parent->id] = [
-                                'name' => $parent->name,
-                                'code' => $parent->code,
-                                'dry_cost' => 0,
-                                'budget_cost' => $parent->budget_cost['budget_cost'],
-                                'cost_accounts' => [],
-                                'difference' => 0,
-                                'increase' => 0,
-                            ];
-
-                            $children = $parent->budget_cost['children'];
-                            foreach ($parent->children as $child) {
-                                if (!isset($data[$parent->id]['cost_accounts'][$break_down->cost_account])) {
-                                    $data[$parent->id]['cost_accounts'][$break_down->cost_account] = [
-                                        'dry_cost' => 0
-                                    ];
-                                    $boq = Boq::where('cost_account', $break_down->cost_account)->first();
-                                    $data[$parent->id]['cost_accounts'][$break_down->cost_account]['dry_cost'] += $boq->quantity * $boq->dry_ur;
-
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                }
-                if(isset($data[$parent->id])){
-                    $data[$parent->id]['difference'] += ($data[$parent->id]['budget_cost'] - $data[$parent->id]['dry_cost']);
-
-                    if ($data[$parent->id]['dry_cost']) {
-                        $data[$parent->id]['increase'] += floatval(($data[$parent->id]['budget_cost'] - $data[$parent->id]['dry_cost']) / $data[$parent->id]['dry_cost'] * 100);
-                    }
-                }
-
-            }
+        foreach ($localBoqs as $boq) {
+            $this->boqs->put($boq->wbs_id, $boq->dry);
         }
 
-
-        foreach ($data as $key => $item) {
-            foreach ($item['cost_accounts'] as $accountKey => $account) {
-                $data[$key]['dry_cost'] += $account['dry_cost'];
-
-            }
-            if (in_array($key, $children)) {
-                unset($data[$key]);
-                continue;
-            }
+        $wbs_levels = $project->wbs_tree;
+        $tree = [];
+        foreach ($wbs_levels as $level) {
+            $treeLevel = $this->buildReport($level);
+            $tree [] = $treeLevel;
         }
-        //delete parents from array if no dry exist
-        foreach ($data as $key => $item) {
+//   $this->getBudgetCostForBuildingPieChart($this->data);
+//   $this->getBugetCostByBuildingColumnChart($this->data);
+        $total_budget = $this->total_budget;
+        $total_difference = $this->total_different;
+        $total_increase = $this->total_increase;
+        $total_dry = $this->total_dry;
 
-
-            $data[$key]['difference'] = $data[$key]['budget_cost'] - $data[$key]['dry_cost'];
-            if ($data[$key]['dry_cost']) {
-                $data[$key]['increase'] += floatval(($data[$key]['budget_cost'] - $data[$key]['dry_cost']) / $data[$key]['dry_cost'] * 100);
-            }
-
-            $total['total_dry'] += $data[$key]['dry_cost'];
-            $total['total_budget'] += $data[$key]['budget_cost'];
-            $total['total_increase'] += $data[$key]['increase'];
-            $total['difference'] += $data[$key]['difference'];
-
-        }
-
-        if ($total['total_budget']) {
-            $total['total_increase'] = $total['difference'] / $total['total_budget'] * 100;
-        }
-
-        $this->getBudgetCostDryCostColumnChart($data);
-        $this->getBudgetCostDryCostSecondColumnChart($data);
-        $this->getBudgetCostDryCostThirdColumnChart($data);
-        return view('reports.budget_cost_dry_cost', compact('project', 'break_downs', 'data', 'total'));
-
-
+        return view('reports.budget.budget_cost_dry_building.budget_cost_dry_building', compact('project', 'tree', 'total_budget', 'total_dry', 'total_increase', 'total_difference'));
     }
+
+    private function buildReport($level)
+    {
+        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'budget_cost' => 0, 'dry_cost' => 0, 'different' => 0, 'increase' => 0];
+
+        if ($level->children && $level->children->count()) {
+            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+                return $this->buildReport($childLevel);
+            });
+        }
+        /** @var WbsLevel $level */
+        $tree['budget_cost'] = BreakDownResourceShadow::whereIn('wbs_id', $level->getChildrenIds())->sum('budget_cost');
+        $tree['dry_cost'] = $this->boqs->get($level->id) ??0;
+        if ($tree['dry_cost'] != 0) {
+            $tree['different'] = $tree['budget_cost'] - $tree['dry_cost'];
+            $tree['increase'] = ceil(floatval(($tree['different'] / $tree['dry_cost']) * 100));
+            $this->total_dry += $tree['dry_cost'];
+            $this->total_different += $tree['different'];
+            $this->total_increase += $tree['increase'];
+
+
+        }
+        if ($level->getDry()) {
+            $this->data[$level->id] = ['name' => $level->name, 'budget_cost' => $tree['budget_cost'], 'dry_cost' => $tree['dry_cost'], 'different' => $tree['different'], 'increase' => $tree['increase']];
+
+        }
+        return $tree;
+    }
+
 
     public function getBudgetCostDryCostColumnChart($data)
     {
