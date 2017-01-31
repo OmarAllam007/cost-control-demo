@@ -73,7 +73,6 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                 $failed->push($rowData);
             }
         }
-        dd($failed->slice(0, 10));
         return compact('success', 'failed');
     }
 

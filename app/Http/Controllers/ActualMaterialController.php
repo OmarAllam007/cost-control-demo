@@ -272,6 +272,12 @@ class ActualMaterialController extends Controller
 
     function postProgress(Request $request, $key)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
         $this->validate($request, ['progress.*' => 'required|numeric|gt:0|lte:100'], [
             'required' => 'This field is required', 'numeric' => 'Please enter a numeric value',
             'between' => 'Value must be between 0 and 100', 'gt' => 'Value must be greater than 0',
@@ -280,10 +286,16 @@ class ActualMaterialController extends Controller
 
         $progress = collect($request->get('progress'));
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $progress->keys())->get()->keyBy('breakdown_resource_id');
+
+        $progressLog = collect();
         foreach ($progress as $id => $value) {
             $resources[$id]->progress = $value;
             $resources[$id]->save();
+            $progressLog->push($resources[$id]);
         }
+
+        $costIssues = new CostIssuesLog($data['batch']);
+        $costIssues->recordProgress($progressLog);
 
         flash('Progress has been updated', 'success');
         return \Redirect::route('actual-material.status', $key);
