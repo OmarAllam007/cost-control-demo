@@ -95,6 +95,7 @@ class StdActivityResource extends Model
 
             foreach ($breakdown_resources as $breakdown_resource) {
                 $breakdown_resource->equation = $this->equation;
+                $breakdown_resource->remarks = $this->remarks;
                 $breakdown_resource->productivity_id = $this->productivity ? $this->productivity_id : '';
                 $breakdown_resource->update();
 //                $formatter = new BreakdownResourceFormatter($breakdown_resource);
