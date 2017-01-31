@@ -105,7 +105,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
         if ($this->shadows->has($code)) {
             $shadow = $this->shadows->get($code);
-        } else {
+        } elseif (!empty($row[36])) {
             $appid = trim($row[36]);
             if (!$appid) {
                 return null;
@@ -114,7 +114,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             $shadow = $this->shadows->where('breakdown_resource_id', $appid)->first();
         }
 
-        if (!$shadow) {
+        if (empty($shadow)) {
             return null;
         }
 
