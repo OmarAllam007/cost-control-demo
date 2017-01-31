@@ -49,7 +49,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
     public function handle()
     {
-        set_time_limit(300);
+        set_time_limit(3600);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
