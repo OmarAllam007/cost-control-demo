@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Project;
 use App\WbsLevel;
 use App\WbsResource;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 
@@ -78,10 +79,12 @@ class CostController extends Controller
 
         $resourceIds = $breakdown->resources->pluck('id');
 
-        $resources = ActualResources::whereIn('breakdown_resource_id', $resourceIds)
+        ActualResources::whereIn('breakdown_resource_id', $resourceIds)
             ->where('period_id', $breakdown->project->open_period()->id)
-            ->get()->each(function (ActualResources $resource) {
-                $resource->delete();
+            ->chunk(100, function (Collection $resources) {
+                $resources->each(function (ActualResources $resource) {
+                    $resource->delete();
+                });
             });
 
         return ['ok' => true, 'message' => 'Activity data has been deleted'];

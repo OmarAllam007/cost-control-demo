@@ -44,7 +44,7 @@ class BreakdownResource extends Model
 
     function template_resource()
     {
-        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id');
+        return $this->belongsTo(StdActivityResource::class, 'std_activity_resource_id')->withTrashed();
     }
 
     function productivity()
@@ -110,11 +110,22 @@ class BreakdownResource extends Model
         }
         extract($variables);
         $result = 0;
-        $eval = @eval('$result = ' . $this->equation . ';');
-        if ($eval === false || !$result || $result == INF || is_nan($result)) {
-            $result = 0;
+        try {
+            $equation = '$result = ' . $this->equation . ';';
+//            if (!check_syntax($equation)) {
+//                \Log::warning($this->toJSON());
+//                return $this->calculated_resource_qty = 0;
+//            }
+            $eval = @eval($equation);
+            if ($eval === false || !$result || $result == INF || is_nan($result)) {
+                $result = 0;
+            }
+
+            return $this->calculated_resource_qty = $result;
+        } catch (\Exception $e) {
+            \Log::warning($this);
+            return $this->calculated_resource_qty = 0;
         }
-        return $this->calculated_resource_qty = $result;
     }
 
     function getQtySurveyAttribute()
