@@ -26,13 +26,13 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($data as $row)
+        @foreach($data as $key=>$row)
 
             <tr class="tbl-content">
 
-                <td class="col-xs-3">{{$row['name']}}</td>
-                <td class="col-xs-2">{{number_format($row['dry_cost'],2)}}</td>
-                <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
+                <td class="col-xs-3">{{$key}}</td>
+                <td class="col-xs-2">{{number_format($row['dry'],2)}}</td>
+                <td class="col-xs-2">{{number_format($row['cost'],2)}}</td>
                 <td class="col-xs-2">{{number_format($row['difference'],2)}}</td>
                 <td class="col-xs-2">%{{number_format($row['increase'],2)}}</td>
 
@@ -40,12 +40,18 @@
         @endforeach
         <tr style="border-top: solid #000000">
             <td class="col-xs-3 output-cell" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-2 output-cell">{{number_format($total['dry_cost'],2)}}</td>
-            <td class="col-xs-2 output-cell">{{number_format($total['budget_cost'],2)}}</td>
+            <td class="col-xs-2 output-cell">{{number_format($total['dry'],2)}}</td>
+            <td class="col-xs-2 output-cell">{{number_format($total['budget'],2)}}</td>
             <td class="col-xs-2 output-cell">{{number_format($total['difference'],2)}}</td>
             <td class="col-xs-2 output-cell">% {{number_format($total['increase'],2)}}</td>
         </tr>
         </tbody>
     </table>
+    <hr>
+    <div id="chart-div" style="width:800px; margin:0 auto;"></div>
+    <?=  \Lava::render('ColumnChart', 'BudgetCost', 'chart-div') ?>
 
+
+    <div id="chart-div2" style="width:800px; margin:0 auto;"></div>
+    <?=  \Lava::render('ColumnChart', 'Difference', 'chart-div2') ?>
 @endsection

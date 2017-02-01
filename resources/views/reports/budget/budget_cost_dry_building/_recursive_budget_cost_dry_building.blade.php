@@ -22,7 +22,6 @@
                     {{$level['name']}}
                 </a>
             </div>
-            @if($level['dry_cost']>0)
                 <table class="col-md-6">
                     <thead>
                     <tr>
@@ -41,8 +40,7 @@
                     </tr>
                     </tbody>
                 </table>
-            @endif
-        </div>
+            </div>
 
 
     </div>
