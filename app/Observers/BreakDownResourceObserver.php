@@ -12,6 +12,11 @@ use Make\Makers\Resource;
 
 class BreakDownResourceObserver
 {
+    function creating(BreakdownResource $resource)
+    {
+        $resource->code = $resource->breakdown->wbs_level->code . $resource->breakdown->std_activity->id_partial;
+    }
+
     function created(BreakdownResource $resource)
     {
         $formatter = new BreakdownResourceFormatter($resource);
@@ -29,10 +34,6 @@ class BreakDownResourceObserver
 
     function saving(BreakdownResource $breakdownResource)
     {
-        if (!$breakdownResource->code) {
-            $breakdownResource->code = $breakdownResource->breakdown->wbs_level->code . $breakdownResource->breakdown->std_activity->id_partial;
-        }
-
         $breakdownResource->eng_qty = $breakdownResource->breakdown->qty_survey->eng_qty ?? 0;
         $breakdownResource->budget_qty = $breakdownResource->breakdown->qty_survey->budget_qty ?? 0;
 
