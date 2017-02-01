@@ -28,8 +28,8 @@ class UpdateActivityCode extends Command
         BreakDownResourceShadow::flushEventListeners();
 
         $query->with('std_activity')->with('breakdown_resource')->with('wbs')->chunk(5000, function (Collection $shadows) {
-            $shadows->Each(function(BreakDownResourceShadow $shadow) {
-                $code = $shadow->wbs->Code . $shadow->std_activity->id_partial;
+            $shadows->each(function(BreakDownResourceShadow $shadow) {
+                $code = $shadow->wbs->code . $shadow->std_activity->id_partial;
                 if ($code != $shadow->code) {
                     $shadow->update(compact('code'));
                     $shadow->breakdown_resource->update(compact('code'));
