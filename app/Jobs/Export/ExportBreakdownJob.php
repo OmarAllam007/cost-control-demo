@@ -23,7 +23,7 @@ class ExportBreakdownJob extends Job
         $filename = storage_path('app/'. uniqid('breakdown_csv_'));
 
         $headers = [
-            'WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','WBS-Level-5','WBS-Level-6','WBS-Level-7','Activity-Division-1','Activity-Division-2','Activity-Division-3',
+            'APP_ID', 'WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','WBS-Level-5','WBS-Level-6','WBS-Level-7','Activity-Division-1','Activity-Division-2','Activity-Division-3',
             'Activity-Division-4','Activity ID',
             'Activity','Discipline',
             'Breakdown-Template', 'Cost Account',
@@ -61,6 +61,7 @@ class ExportBreakdownJob extends Job
                 }
                 $divisions = array_reverse($divisions);
                 $data = [
+                    $breakdown_resource->id,
                     isset($levels[0]) ? $levels[0] : '',
                     isset($levels[1]) ? $levels[1] : '',
                     isset($levels[2]) ? $levels[2] : '',

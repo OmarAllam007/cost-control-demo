@@ -7,6 +7,7 @@ use App\Console\Commands\CostUpdateReminder;
 use App\Console\Commands\FixBudgetQty;
 use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
+use App\Console\Commands\UpdateActivityCode;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -23,6 +24,7 @@ class Kernel extends ConsoleKernel
         FixBudgetQty::class,
         RebuildCostShadow::class,
         RebuildBudgetShadow::class,
+        UpdateActivityCode::class,
     ];
 
     /**
