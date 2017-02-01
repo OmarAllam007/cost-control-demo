@@ -322,10 +322,17 @@ class ActualMaterialController extends Controller
 
     function postStatus(Request $request, $key)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            return \Redirect::route('project.index');
+        }
+
         $this->validate($request, ['status.*' => 'required'], ['required' => 'This field is required']);
 
         $status = collect($request->get('status'));
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $status->keys())->get()->keyBy('breakdown_resource_id');
+        $statusLog = collect();
         foreach ($status as $id => $value) {
             $resources[$id]->status = $value;
             if (strtolower($value) == 'closed') {
@@ -333,7 +340,11 @@ class ActualMaterialController extends Controller
             }
 
             $resources[$id]->save();
+            $statusLog->push($resources[$id]);
         }
+
+        $costIssues = new CostIssuesLog($data['batch']);
+        $costIssues->recordStatus($statusLog);
 
         $data = \Cache::get($key);
         \Cache::forget($key);
