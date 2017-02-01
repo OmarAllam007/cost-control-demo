@@ -5,7 +5,7 @@
 
     <div class="form-group {{$errors->first('std_activity_id', 'has-error')}}">
         {{Form::label('wbs_level_id', 'WBS Level', ['class' => 'control-label'])}}
-
+        {{Form::hidden('wbs_level_id')}}
         <p>
             <a href="#WBSModal" data-toggle="modal">
                 <em>{{($wbs_id = Form::getValueAttribute('wbs_level_id'))? \App\WbsLevel::find($wbs_id)->path : 'Select WBS Level'}}</em>
