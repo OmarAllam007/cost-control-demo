@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,6 +23,9 @@ class UpdateActivityCode extends Command
     {
         $query = BreakDownResourceShadow::whereRaw('code not in (select activity_code from activity_maps)');
         $this->bar = $this->output->createProgressBar($query->count());
+
+        BreakdownResource::flushEventListeners();
+        BreakDownResourceShadow::flushEventListeners();
 
         $query->with('std_activity')->with('breakdown_resource')->with('wbs')->chunk(2000, function (Collection $shadows) {
             $shadows->Each(function(BreakDownResourceShadow $shadow) {
