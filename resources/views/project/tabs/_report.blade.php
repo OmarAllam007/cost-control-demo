@@ -44,7 +44,7 @@
                    style="width:100%; margin-bottom: 2px;">Budget Cost By Building</a><br>
                 <a href="{{route('budget_cost_by_discipline.report',$project)}}" target="_blank"
                    class="btn btn-success threeD"
-                   style="width:100%;margin-bottom: 2px;">Budget Cost by Disicpline</a><br>
+                   style="width:100%;margin-bottom: 2px;">Budget Cost by Discipline</a><br>
                 <a href="{{route('budget_cost_vs_break_down.report',$project)}}" target="_blank"
                    class="btn btn-success threeD"
                    style="width:100%;margin-bottom: 2px;">Budget Cost by Item Break Dowm
@@ -55,7 +55,7 @@
                 </a><br>
                 <a href="{{route('budget_cost_dry_cost_discipline.report',$project)}}" target="_blank"
                    class="btn btn-success threeD" style="width:100%;margin-bottom: 2px;">Budget Cost v.s Dry Cost By
-                    Disicpline
+                    Discipline
                 </a><br>
                 <a href="{{route('qty_cost_discipline.report',$project)}}" target="_blank"
                    class="btn btn-success threeD"

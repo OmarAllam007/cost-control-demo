@@ -10,56 +10,114 @@ namespace App\Http\Controllers\Reports;
 
 
 use App\Boq;
+use App\BreakDownResourceShadow;
 use App\Project;
 use App\Survey;
 
 class BudgetCostDryCostByDiscipline
 {
+
     public function compareBudgetCostDryCostDiscipline(Project $project)
     {
         set_time_limit(300);
-        $break_downs = $project->breakdown_resources()->with('breakdown.std_activity','breakdown.std_activity.division','breakdown.wbs_level','template_resource.resource')->get();
 
+        $total = BreakDownResourceShadow::whereProjectId($project->id)->sum('budget_cost');
         $data = [];
         $total = [
-            'dry_cost' => 0,
-            'budget_cost' => 0,
+            'dry' => 0,
             'difference' => 0,
             'increase' => 0,
+            'budget' => $total
         ];
-        foreach ($break_downs as $break_down) {
-            $discipline = $break_down->breakdown->std_activity->discipline;
-            $code = $break_down->breakdown->std_activity->code;
-            $budget_cost = $break_down->budget_cost;
-            if (!isset($data[ $discipline ])) {
-                $data[ $discipline ] = [
-                    'code' => $code,
-                    'name' => $discipline,
-                    'dry_cost' => 0,
-                    'budget_cost' => 0,
-                    'difference' => 0,
-                    'increase' => 0,
-                ];
-                $boq = Boq::where('cost_account', $break_down->breakdown->cost_account)->first();
-                $dry_cost = $boq->dry_ur * $boq->quantity;
-                $data[ $discipline ]['budget_cost'] = is_nan($budget_cost)?0:$budget_cost;
-                $data[ $discipline ]['dry_cost'] = is_nan($dry_cost)?0:$dry_cost;
-            } else {
-                $data[ $discipline ]['budget_cost'] += is_nan($budget_cost)?0:$budget_cost;
-                $data[ $discipline ]['dry_cost'] += is_nan($dry_cost)?0:$dry_cost;
+
+        $total_dry = \DB::select(\DB::raw('SELECT std.discipline, SUM(b.quantity * b.dry_ur) AS `dry` FROM break_down_resource_shadows sh, std_activities std, boqs b
+                                  WHERE sh.project_id =' . $project->id . ' AND sh.cost_account = b.cost_account
+                                  AND sh.wbs_id = b.wbs_id
+                                  AND sh.activity_id = std.id 
+                                  GROUP BY std.discipline'));
+
+        $total_budget = \DB::select(\DB::raw('SELECT std.discipline, SUM(sh.budget_cost) as budget 
+                                            FROM break_down_resource_shadows sh, std_activities std 
+                                              WHERE sh.project_id =' . $project->id . '
+                                              AND sh.activity_id = std.id
+                                              GROUP BY std.discipline'));
+
+        foreach ($total_dry as $key => $item) {
+            if (!isset($data[$item->discipline])) {
+                $data[$item->discipline]['dry'] = $item->dry;
+                $data[$item->discipline]['cost'] = $total_budget[$key]->budget;
+                $data[$item->discipline]['difference'] = $total_budget[$key]->budget - $item->dry;
+                $data[$item->discipline]['increase'] = ($data[$item->discipline]['difference'] / $item->dry) * 100;
+                $total['dry'] += $data[$item->discipline]['dry'];
+                $total['difference'] += $data[$item->discipline]['difference'];
+                $total['increase'] += $total['difference'] / $total['dry'];
+
             }
         }
-        foreach ($data as $key => $value) {
-            if ($data[ $key ]['dry_cost']) {
-                $data[ $key ]['difference'] += ($data[ $key ]['budget_cost'] - $data[ $key ]['dry_cost']);
-                $data[ $key ]['increase'] += ($data[ $key ]['difference'] / $data[ $key ]['dry_cost']);
-                $total['difference'] += $data[ $key ]['difference'];
-                $total['dry_cost'] += $data[ $key ]['dry_cost'];
-                $total['budget_cost'] += $data[ $key ]['budget_cost'];
-                $total['increase'] += $data[ $key ]['increase'];
-            }
-        }
+        $this->getBudgetCostDryCostColumnChart($data);
+        $this->getBudgetCostDryCostSecondColumnChart($data);
         return view('reports.budget_cost_dry_cost_by_discipline', compact('data', 'total', 'project'));
+    }
+
+    public function getBudgetCostDryCostColumnChart($data)
+    {
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('Budget Cost')->addNumberColumn('Dry Cost')->addNumberColumn('Budget Cost');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$key, $data[$key]['dry'], $data[$key]['cost']]);
+
+        }
+        $options = [
+            'toolTip' => 'value',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
+            ],
+            'title' => trans('Budget Cost VS Dry Cost'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'Discipline',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+
+        ];
+        \Lava::ColumnChart('BudgetCost', $costTable, $options);
+
+    }
+
+    public function getBudgetCostDryCostSecondColumnChart($data)
+    {
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('Difference')->addNumberColumn('Dry Cost');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$key, $data[$key]['difference']]);
+        }
+        $options = [
+            'toolTip' => 'value',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
+            ],
+            'title' => trans('Budget Cost VS Dry Cost'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'Discipline',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+
+        ];
+        \Lava::ColumnChart('Difference', $costTable, $options);
+
     }
 
 }
