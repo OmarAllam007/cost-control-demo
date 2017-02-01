@@ -53,7 +53,7 @@ class BudgetCostDryCostByBuilding
 //   $this->getBugetCostByBuildingColumnChart($this->data);
         $total_budget = $this->total_budget;
         $total_difference = $this->total_different;
-        $total_increase = $this->total_different/$tot;
+        $total_increase = $this->total_increase;
         $total_dry = $this->total_dry;
         $this->getBudgetCostDryCostColumnChart($this->data);
         $this->getBudgetCostDryCostSecondColumnChart($this->data);
@@ -78,6 +78,8 @@ class BudgetCostDryCostByBuilding
             $tree['increase'] = ceil(floatval(($tree['different'] / $tree['dry_cost']) * 100));
             $this->total_dry += $tree['dry_cost'];
             $this->total_different += $tree['different'];
+            $this->total_increase += $tree['increase'];
+
 
         }
         if ($level->getDry()) {
