@@ -14,7 +14,7 @@ class CreateResourceCodesTable extends Migration
     {
         Schema::create('resource_codes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->integer('resource_id')->unsigned();
             $table->integer('project_id')->nullable()->unsigned();
             $table->timestamps();

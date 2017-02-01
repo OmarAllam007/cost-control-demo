@@ -37,8 +37,8 @@ class CreateBreakDownResourceShadowsTable extends Migration
             $table->double('budget_cost',12,2);
             $table->double('boq_equivilant_rate',12,2);
             $table->double('labors_count',12,2);
-            $table->double('productivity_output',12,2);
-            $table->string('productivity_ref');
+            $table->double('productivity_output',12,2)->nullable();
+            $table->string('productivity_ref')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
 

@@ -15,8 +15,8 @@ class CreateBillOfQuantityTable extends Migration
         Schema::create('boqs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('wbs_id');
-            $table->text('item');
-            $table->text('description');
+            $table->text('item')->nullable();
+            $table->text('description')->nullable();
             $table->text('type')->nullable();
             $table->integer('unit_id');
             $table->integer('quantity');

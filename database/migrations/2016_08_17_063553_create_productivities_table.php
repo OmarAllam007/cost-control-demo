@@ -11,7 +11,7 @@ class CreateProductivitiesTable extends Migration
             $table->increments('id');
             $table->integer('csi_category_id');
             $table->string('unit');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('crew_structure');
             $table->double('crew_hours',12,2);
             $table->double('crew_equip',12,2);
@@ -20,9 +20,7 @@ class CreateProductivitiesTable extends Migration
             $table->double('equip_hours',12,2);
             $table->double('reduction_factor',12,2);
             $table->double('after_reduction',12,2);
-            $table->string('source',12,2);
-
-
+            $table->string('source',12,2)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

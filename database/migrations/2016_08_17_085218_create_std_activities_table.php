@@ -10,9 +10,9 @@ class CreateStdActivitiesTable extends Migration
         Schema::create('std_activities', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('division_id');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->string('name');
-            $table->string('id_partial');
+            $table->string('id_partial')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

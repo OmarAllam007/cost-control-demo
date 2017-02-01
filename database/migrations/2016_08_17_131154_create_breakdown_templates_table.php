@@ -9,7 +9,7 @@ class CreateBreakdownTemplatesTable extends Migration
     {
         Schema::create('breakdown_templates', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->string('name');
             $table->string('std_activity_id');
             $table->softDeletes();

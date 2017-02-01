@@ -8,7 +8,7 @@ class AddFileToBatches extends Migration
     public function up()
     {
         Schema::table('actual_batches', function(Blueprint $table) {
-            $table->string('file');
+            $table->string('file')->nullable();
         });
     }
 

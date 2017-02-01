@@ -15,7 +15,7 @@ class CreateActualBatchesTable extends Migration
         Schema::create('actual_batches', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }
