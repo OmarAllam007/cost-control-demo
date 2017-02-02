@@ -10,7 +10,7 @@ class CreateBusinessPartnersTable extends Migration
         Schema::create('business_partners', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

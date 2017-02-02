@@ -17,8 +17,6 @@ class CreateResourcesTable extends Migration
             $table->double('waste',12,2)->nullable();
             $table->string('reference')->nullable();
             $table->integer('business_partner_id')->unsigned();
-//            $table->foreign('business_partner_id')->references('id')->on('business_partners');
-
             $table->softDeletes();
             $table->timestamps();
         });

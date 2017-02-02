@@ -9,7 +9,7 @@ class CreateActivityDivisionsTable extends Migration
     {
         Schema::create('activity_divisions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->string('name');
             $table->integer('parent_id');
             $table->softDeletes();

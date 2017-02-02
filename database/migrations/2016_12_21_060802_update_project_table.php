@@ -15,12 +15,12 @@ class UpdateProjectTable extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->date('original_finished_date');
             $table->date('expected_finished_date');
-            $table->text('project_contract_signed_value',15,2);
-            $table->text('project_contract_budget_value',15,2);
-            $table->text('change_order_amount',15,2);
-            $table->text('direct_cost_material',15,2);
-            $table->text('indirect_cost_general',15,2);
-            $table->text('total_budget_cost',15,2);
+            $table->text('project_contract_signed_value',15,2)->nullable();
+            $table->text('project_contract_budget_value',15,2)->nullable();
+            $table->text('change_order_amount',15,2)->nullable();
+            $table->text('direct_cost_material',15,2)->nullable();
+            $table->text('indirect_cost_general',15,2)->nullable();
+            $table->text('total_budget_cost',15,2)->nullable();
         });
     }
 

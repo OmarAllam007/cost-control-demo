@@ -13,7 +13,7 @@ class AddTypeOfWordStdActivityTable extends Migration
     public function up()
     {
         Schema::table('std_activities', function (Blueprint $table) {
-            $table->string('discipline');
+            $table->string('discipline')->nullable();
         });
     }
 
