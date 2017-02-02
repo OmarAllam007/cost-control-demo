@@ -49,6 +49,7 @@ class BudgetCostDryCostByBuilding
             $treeLevel = $this->buildReport($level);
             $tree [] = $treeLevel;
         }
+        $this->total_dry += $this->boqs->sum();
 //   $this->getBudgetCostForBuildingPieChart($this->data);
 //   $this->getBugetCostByBuildingColumnChart($this->data);
         $total_budget = $this->total_budget;
@@ -66,17 +67,19 @@ class BudgetCostDryCostByBuilding
         $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'budget_cost' => 0, 'dry_cost' => 0, 'different' => 0, 'increase' => 0];
 
         if ($level->children && $level->children->count()) {
-            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) use ($tree){
                 return $this->buildReport($childLevel);
             });
         }
+
         /** @var WbsLevel $level */
         $tree['budget_cost'] = BreakDownResourceShadow::whereIn('wbs_id', $level->getChildrenIds())->sum('budget_cost');
-        $tree['dry_cost'] = $this->boqs->get($level->id) ??0;
+        foreach ($level->getChildrenIds() as $id){
+            $tree['dry_cost'] += $this->boqs->get($id) ??0;
+        }
         if ($tree['dry_cost'] != 0) {
             $tree['different'] = $tree['budget_cost'] - $tree['dry_cost'];
             $tree['increase'] = ceil(floatval(($tree['different'] / $tree['dry_cost']) * 100));
-            $this->total_dry += $tree['dry_cost'];
             $this->total_different += $tree['different'];
             $this->total_increase += $tree['increase'];
 
@@ -88,6 +91,7 @@ class BudgetCostDryCostByBuilding
         }
         return $tree;
     }
+
 
 
     public function getBudgetCostDryCostColumnChart($data)
