@@ -191,4 +191,9 @@ class Resources extends Model
         $this->resource_code = $finalCode;
     }
 
+    function scopeForProject(Builder $query, Project $project)
+    {
+        $query->where('project_id', $project->id);
+    }
+
 }
