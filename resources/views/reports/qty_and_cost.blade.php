@@ -10,9 +10,7 @@
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
 @stop
-@section('image')
-    <img src="{{asset('images/reports/costdryqty.jpg')}}">
-@endsection
+
 @section('body')
     <table class="table table-condensed ">
         <thead  class="output-cell">
@@ -24,19 +22,18 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($data as $row)
-
+        @foreach($data as $key=>$row)
             <tr class="tbl-content">
-                <td class="col-xs-4">{{$row['name']}}</td>
-                <td class="col-xs-4">{{number_format($row['total_budget_qty_eq'],2)}}</td>
-                <td class="col-xs-4">{{number_format($row['total_budget_cost_eq'],2)}}</td>
+                <td class="col-xs-4">{{$key}}</td>
+                <td class="col-xs-4" @if($row ['left']<0) style="color: #c42737;" @endif>{{number_format($row['left'],2)}}</td>
+                <td class="col-xs-4" @if($row ['right']<0) style="color: #c42737;" @endif>{{number_format($row['right'],2)}}</td>
 
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
             <td class="col-xs-4 output-cell" style="font-weight: 800">Total</td>
-            <td class="col-xs-4 output-cell">{{number_format($total['budget_qty_eq'],2)}}</td>
-            <td class="col-xs-4 output-cell">{{number_format($total['budget_cost_eq'],2)}}</td>
+            <td class="col-xs-4 output-cell" >{{number_format($total['left_eq'],2)}}</td>
+            <td class="col-xs-4 output-cell" >{{number_format($total['right_eq'],2)}}</td>
 
             {{--<td class="col-xs-2">% {{ceil($total['total_increase'])}}</td>--}}
         </tr>
