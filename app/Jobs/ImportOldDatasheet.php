@@ -75,6 +75,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                 if ($entries->count() >= 500) {
                     CostShadow::insert($entries->pluck('shadow')->toArray());
                     ActualResources::insert($entries->pluck('resource')->toArray());
+                    $success += $entries->count();
                     unset($entries);
                     $entries = collect();
                 }
@@ -87,6 +88,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         if ($entries->count()) {
             CostShadow::insert($entries->pluck('shadow')->toArray());
             ActualResources::insert($entries->pluck('resource')->toArray());
+            $success += $entries->count();
             unset($entries);
         }
 
