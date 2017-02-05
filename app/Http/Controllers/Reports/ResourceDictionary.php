@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers\Reports;
 
-
 use App\BreakDownResourceShadow;
 use App\BusinessPartner;
 use App\Project;
@@ -19,85 +18,78 @@ use Make\Makers\Resource;
 
 class ResourceDictionary
 {
+    private $resources;
+    private $units;
+    private $partners;
+    private $project;
+    private $types;
+
     public function getResourceDictionary(Project $project)
     {
         set_time_limit(300);
-        $break_down_resources = BreakDownResourceShadow::where('project_id', $project->id)->with('resource.parteners', 'resource', 'wbs', 'resource.types')->get();
-        $data = [];
-        $parents = [];
+        $this->project = $project;
+        $this->resources = collect();
+        $this->types = collect();
+        $tree = [];
 
+        $resources = \DB::select('SELECT DISTINCT resource_id, SUM(budget_cost) as budget_cost,sum(budget_unit) as budget_unit 
+FROM break_down_resource_shadows
+WHERE project_id = ' . $project->id . '
+GROUP BY resource_id');
+        foreach ($resources as $resource) {
+            $this->resources->put($resource->resource_id, ['budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
+        }
+        $this->units = Unit::all()->keyBy('id')->map(function ($unit) {
+            return $unit->type;
+        });
 
-        foreach ($break_down_resources as $break_down_resource) {
-            $resource = $break_down_resource->resource;
-            if (isset($resource->types)) {
-                $division = $resource->types;
+        $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
+            return $partner->name;
+        });
+        $this->types = ResourceType::whereHas('resources', function ($q) {
+            $q->where('project_id', $this->project->id);
+        })->get()->keyBy('id')->map(function ($type) {
+            return $type->resources->where('project_id', $this->project->id);
+        });
+        $types = ResourceType::tree()->get();
 
+        foreach ($types as $type) {
+            $treeType = $this->buildTypeTree($type);
+            $tree[] = $treeType;
+        }
+        return view('reports.budget.resource_dictionary.resource_dictionary', compact('project', 'tree'));
+    }
 
-                $root = $break_down_resource['resource_type'];
-                if (!isset($data[$root])) {
-                    $data[$root] = [
-                        'name' => $root,
-                        'type_id' => $break_down_resource['resource_type_id'],
-                        'divisions' => [],
-                    ];
-                }
+    protected function buildTypeTree(ResourceType $type)
+    {
+        $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0];
 
-                if (!isset($data[$root]['divisions'][$division->id])) {
-                    $data[$root]['divisions'][$division->id] = [
-                        'name' => $division->name,
-                        'parents' => [],
-                        'resources' => [],
-                    ];
-                }
-                $parent = $division;
-                while ($parent->parent) {
-                    $parent = $parent->parent;
-                    if ($parent->name == $root) {
-                        continue;
-                    }
-                    if (!isset($data[$root]['divisions'][$division->id]['parents'][$parent->id])) {
-                        $data[$root]['divisions'][$division->id]['parents'][$parent->id] = [
-                            'name' => $parent->name
-                        ];
-                    }
-
-                }
-
-                $latest_resource = Resources::orderBy('created_at', 'desc')->where('resource_id', $resource->id)->get()->first();
-                if (!isset($data[$root]['divisions'][$division->id]['resources'][$resource->id])) {
-                    $data[$root]['divisions'][$division->id]['resources'][$resource->id] = [
-                        'code' => $break_down_resource['resource_code'],
-                        'name' => $break_down_resource['resource_name'],
-                        'rate' => !is_null($latest_resource) ? $latest_resource->rate : $resource->rate,
-                        'unit' => $break_down_resource['measure_unit'],
-                        'waste' => $break_down_resource['resource_waste'],
-                        'reference' => $resource->reference,
-                        'partner' => isset($resource->parteners->name) ? $resource->parteners->name : '',
-                        'budget_cost' => 0,
-                        'budget_unit' => 0,
-                    ];
-                }
-                $data[$root]['divisions'][$division->id]['resources'][$break_down_resource['resource_id']]['budget_cost'] += $break_down_resource->budget_cost;
-                $data[$root]['divisions'][$division->id]['resources'][$resource->id]['budget_unit'] += $break_down_resource->budget_unit;
+        $resources = $this->types->get($type->id);
+        if(count($resources)){
+            foreach ($resources as $resource) {
+                $tree['resources'][$resource->id] = ['id' => $resource->id
+                    , 'code' => $resource->resource_code
+                    , 'name' => $resource->name
+                    , 'unit' => $this->units->get($resource->unit)
+                    , 'partner' => $this->partners->get($resource->business_partner_id)
+                    , 'waste' => $resource->waste
+                    , 'reference' => $resource->reference
+                    , 'rate' => $resource->rate
+                    , 'budget_cost' => $this->resources->get($resource->id)['budget_cost']
+                    , 'budget_unit' => $this->resources->get($resource->id)['budget_unit']
+                ];
             }
         }
 
 
-        foreach ($data as $key => $value) {
-            foreach ($value['divisions'] as $dKey => $dValue) {
-                ksort($data[$key]['divisions'][$dKey]['resources']);
-                foreach ($dValue['parents'] as $pKey => $parent) {
-                    if (!in_array($parent['name'], $parents)) {
-                        $parents[] = $parent['name'];
-                    } else {
-                        unset($data[$key]['divisions'][$dKey]['parents'][$pKey]);
-                    }
 
-                }
-                ksort($data[$key]['divisions'][$dKey]['parents']);
-            }
+        $tree['resources'] = collect($tree['resources'])->sortBy('code');
+        if ($type->children->count()) {
+            $tree['children'] = $type->children->map(function (ResourceType $child) {
+                return $this->buildTypeTree($child);
+            });
         }
-        ksort($data);
-        return view('reports.resource_dictionary', compact('project', 'data'));
+
+        return $tree;
     }
 }
