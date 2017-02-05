@@ -137,8 +137,7 @@ class QtyAndCost
 
             }
         }
-
-
+        
         if ($level->children && $level->children->count()) {
             $tree['children'] = $level->children->map(function (WbsLevel $childLevel) use ($tree) {
                 return $this->buildReport($childLevel);
