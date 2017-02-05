@@ -11,7 +11,7 @@ class ResourceType extends Model
 {
     use Tree, HasOptions, CachesQueries;
 
-    protected $fillable = ['name','parent_id','code'];
+    protected $fillable = ['name', 'parent_id', 'code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -21,12 +21,12 @@ class ResourceType extends Model
 
     public function getLabelAttribute()
     {
-        return '# '.$this->name  ;
+        return '# ' . $this->name;
     }
 
     public function resources()
     {
-        return $this->hasMany(Resources::class,'resource_type_id');
+        return $this->hasMany(Resources::class, 'resource_type_id');
 
     }
 
@@ -37,8 +37,17 @@ class ResourceType extends Model
         }
 
         $this->load(['parent', 'parent.parent', 'parent.parent.parent']);
-        $parent = $this;
+        if (!$this->parent_id) {
+            return $this;
+        }
+        $parent = $this->parent;
+        if (!$this->parent) {
+            dd($this->getAttributes());
+        }
         while ($parent->parent_id && $parent->id != $parent->parent_id) {
+            if (!$parent->parent) {
+                return $this->root = $parent;
+            }
             $parent = $parent->parent;
         }
 

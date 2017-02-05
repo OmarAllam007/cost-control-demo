@@ -56,7 +56,7 @@ class DuplicateProject
 
     function duplicate($newName)
     {
-        set_time_limit(300);
+        set_time_limit(1800);
         ini_set('memory_limit', '1G');
 
         $start = microtime(1);
