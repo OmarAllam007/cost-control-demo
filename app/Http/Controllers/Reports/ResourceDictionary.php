@@ -41,7 +41,6 @@ GROUP BY resource_id');
             $this->resources->put($resource->resource_id, ['unit'=>$resource->measure_unit,'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
         }
 
-
         $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
             return $partner->name;
         });
@@ -81,10 +80,9 @@ GROUP BY resource_id');
                     , 'budget_cost' => $this->resources->get($resource->id)['budget_cost']
                     , 'budget_unit' => $this->resources->get($resource->id)['budget_unit']
                 ];
+                $tree['budget_cost'] +=$this->resources->get($resource->id)['budget_cost'];
             }
         }
-
-
 
         $tree['resources'] = collect($tree['resources'])->sortBy('code');
         if ($type->children->count()) {
