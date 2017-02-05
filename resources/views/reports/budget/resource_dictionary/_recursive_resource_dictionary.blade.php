@@ -18,7 +18,7 @@
                 blue-fourth-level
                     @endif
                 " data-toggle="collapse"  style="@if($tree_level ==0) color:white; @endif text-decoration: none" >
-            {{$level['name']}}
+            {{$level['name']}} @if(count($level['resources'])>0) ||  {{number_format($level['budget_cost'],2)}} @endif
         </a>
 
     </p>
