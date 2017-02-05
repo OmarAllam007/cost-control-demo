@@ -22,12 +22,14 @@ class ResourceDictionary
     private $units;
     private $partners;
     private $project;
+    private $types;
 
     public function getResourceDictionary(Project $project)
     {
         set_time_limit(300);
         $this->project = $project;
         $this->resources = collect();
+        $this->types = collect();
         $tree = [];
 
         $resources = \DB::select('SELECT DISTINCT resource_id, SUM(budget_cost) as budget_cost,sum(budget_unit) as budget_unit 
@@ -44,14 +46,17 @@ GROUP BY resource_id');
         $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
             return $partner->name;
         });
-
+        $this->types = ResourceType::whereHas('resources', function ($q) {
+            $q->where('project_id', $this->project->id);
+        })->get()->keyBy('id')->map(function ($type) {
+            return $type->resources->where('project_id', $this->project->id);
+        });
         $types = ResourceType::tree()->get();
 
         foreach ($types as $type) {
             $treeType = $this->buildTypeTree($type);
             $tree[] = $treeType;
         }
-
         return view('reports.budget.resource_dictionary.resource_dictionary', compact('project', 'tree'));
     }
 
@@ -59,10 +64,10 @@ GROUP BY resource_id');
     {
         $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0];
 
-        if ($type->resources->where('project_id', $this->project->id)->count()) {
-            $tree['resources'] = $type->resources->where('project_id', $this->project->id)->map(function (Resources $resource) {
-
-                $attributes = ['id' => $resource->id
+        $resources = $this->types->get($type->id);
+        if(count($resources)){
+            foreach ($resources as $resource) {
+                $tree['resources'][$resource->id] = ['id' => $resource->id
                     , 'code' => $resource->resource_code
                     , 'name' => $resource->name
                     , 'unit' => $this->units->get($resource->unit)
@@ -73,14 +78,12 @@ GROUP BY resource_id');
                     , 'budget_cost' => $this->resources->get($resource->id)['budget_cost']
                     , 'budget_unit' => $this->resources->get($resource->id)['budget_unit']
                 ];
-
-                return $attributes;
-            });
-            $tree['resources'] = $tree['resources']->sortBy('code');
-
-
+            }
         }
 
+
+
+        $tree['resources'] = collect($tree['resources'])->sortBy('code');
         if ($type->children->count()) {
             $tree['children'] = $type->children->map(function (ResourceType $child) {
                 return $this->buildTypeTree($child);
