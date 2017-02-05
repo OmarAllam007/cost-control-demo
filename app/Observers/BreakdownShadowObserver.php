@@ -40,7 +40,7 @@ class BreakdownShadowObserver
                 'project_id' => $resource->project_id
             ];
             $costShadow = CostShadow::where($conditions)->first();
-            if ($costShadow) {
+            if ($costShadow && $recalculated) {
                 $costShadow->update($recalculated->toArray());
             }
         }
