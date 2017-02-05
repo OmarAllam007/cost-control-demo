@@ -72,7 +72,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             if ($entry) {
                 $entries->push($entry);
 
-                if ($entries->count() >= 500) {
+                if ($entries->count() >= 1000) {
                     \DB::beginTransaction();
                     CostShadow::insert($entries->pluck('shadow')->toArray());
                     ActualResources::insert($entries->pluck('resource')->toArray());
