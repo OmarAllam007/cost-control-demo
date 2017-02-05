@@ -76,6 +76,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                     \DB::beginTransaction();
                     CostShadow::insert($entries->pluck('shadow')->toArray());
                     ActualResources::insert($entries->pluck('resource')->toArray());
+                    \DB::commit();
                     $success += $entries->count();
                     unset($entries);
                     $entries = collect();
