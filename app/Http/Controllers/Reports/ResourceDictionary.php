@@ -32,26 +32,29 @@ class ResourceDictionary
         $this->types = collect();
         $tree = [];
 
-        $resources = \DB::select('SELECT DISTINCT resource_id, SUM(budget_cost) as budget_cost,sum(budget_unit) as budget_unit 
+        $resources = \DB::select('SELECT DISTINCT resource_id,measure_unit, SUM(budget_cost) as budget_cost,sum(budget_unit) as budget_unit 
 FROM break_down_resource_shadows
 WHERE project_id = ' . $project->id . '
 GROUP BY resource_id');
+
         foreach ($resources as $resource) {
-            $this->resources->put($resource->resource_id, ['budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
+            $this->resources->put($resource->resource_id, ['unit'=>$resource->measure_unit,'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
         }
-        $this->units = Unit::all()->keyBy('id')->map(function ($unit) {
-            return $unit->type;
-        });
+
 
         $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
             return $partner->name;
         });
+
         $this->types = ResourceType::whereHas('resources', function ($q) {
             $q->where('project_id', $this->project->id);
         })->get()->keyBy('id')->map(function ($type) {
             return $type->resources->where('project_id', $this->project->id);
         });
-        $types = ResourceType::tree()->get();
+
+        $types = ResourceType::whereHas('resources', function ($q) {
+            $q->where('project_id', $this->project->id);
+        })->tree()->get();
 
         foreach ($types as $type) {
             $treeType = $this->buildTypeTree($type);
@@ -63,14 +66,14 @@ GROUP BY resource_id');
     protected function buildTypeTree(ResourceType $type)
     {
         $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0];
-
         $resources = $this->types->get($type->id);
+
         if(count($resources)){
             foreach ($resources as $resource) {
                 $tree['resources'][$resource->id] = ['id' => $resource->id
                     , 'code' => $resource->resource_code
                     , 'name' => $resource->name
-                    , 'unit' => $this->units->get($resource->unit)
+                    , 'unit' => $this->resources->get($resource->id)['unit']
                     , 'partner' => $this->partners->get($resource->business_partner_id)
                     , 'waste' => $resource->waste
                     , 'reference' => $resource->reference
