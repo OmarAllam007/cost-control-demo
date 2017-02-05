@@ -59,7 +59,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach(App\Resources::material()->get() as $resource)
+                    @foreach(App\Resources::forProject($project)->get() as $resource)
                     <tr>
                         <td class="col-sm-2">
                             <a href="#" class="select-resource code" data-id="{{$resource->id}}" data-code="{{$resource->resource_code}}">

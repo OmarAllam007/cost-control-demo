@@ -86,9 +86,8 @@ class ActualMaterialController extends Controller
             }
         }
 
-        $data['projectActivityCodes'] = $data['project']->breakdown_resources->load([
-            'breakdown', 'breakdown.std_activity', 'breakdown.wbs_level'
-        ])->keyBy('code');
+        $data['projectActivityCodes'] = BreakDownResourceShadow::where('project_id', $data['project']->id)
+            ->select(['id', 'code', 'wbs_id', 'cost_account', 'activity'])->with('wbs')->get()->keyBy('code');
 
         return view('actual-material.fix-mapping', $data);
     }
@@ -385,6 +384,7 @@ class ActualMaterialController extends Controller
             $code = mb_strtolower($code);
             foreach ($resources as $id => $rows) {
                 if (empty($shadows[$code]['resources'][$id])) {
+                    $data['invalid']->push($resources);
                     continue;
                 }
 
@@ -539,7 +539,8 @@ class ActualMaterialController extends Controller
             'closed' => $data['closed']->mergeWithKeys($result['closed']),
             'to_import' => $data['to_import']->mergeWithKeys($result['to_import']),
             'project' => $data['project'],
-            'batch' => $data['batch']
+            'batch' => $data['batch'],
+            'invalid' => $data['invalid']->mergeWithKeys($result['invalid'])
         ];
 
         return $returnData;

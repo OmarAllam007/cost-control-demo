@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CostIssue extends Model
 {
-    protected $fillable = ['batch_id'];
+    protected $fillable = ['batch_id', 'type', 'data'];
 
     function batch()
     {

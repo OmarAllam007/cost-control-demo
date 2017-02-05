@@ -12,108 +12,142 @@ namespace App\Http\Controllers\Reports;
 use App\Boq;
 use App\Breakdown;
 use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\Project;
+use App\StdActivity;
 use App\Survey;
+use App\WbsLevel;
+use Illuminate\Support\Facades\DB;
 
 class QtyAndCost
 {
+    private $data;
+    private $dry;
+    private $project;
+    private $activities;
+    private $cost_accounts;
+
     public function compare(Project $project)
     {
         set_time_limit(600);
-        $data = [];
+        $this->project = $project;
+        $this->data = [];
+
+        $this->activities = StdActivity::all()->keyBy('id')->map(function ($activity) {
+            return $activity->discipline;
+        });
+
+        $this->dry = Boq::where('project_id', $project->id)->get()->keyBy('wbs_id')->map(function ($boq) {
+            return $boq->dry_ur;
+        });
+
+        $this->cost_accounts = Boq::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($boq) {
+            return ['dry' => $boq->dry_ur, 'qty' => $boq->quantity];
+        });
+
         $total = [
-            'budget_qty_eq' => 0,
-            'budget_cost_eq' => 0,
+            'left_eq' => 0,
+            'right_eq' => 0,
         ];
 
-        $breakdowns = $project->breakdowns()->with('wbs_level', 'resources.template_resource', 'resources.template_resource.resource', 'std_activity', 'template.resources')->get();
-
-        foreach ($breakdowns as $breakdown) {
-            $discipline = $breakdown->std_activity->discipline;
-            $dry = Boq::where('cost_account', $breakdown->cost_account)->first();
-            $budget_quantity = Survey::where('cost_account', $breakdown->cost_account)->first();
-            $wbs = $breakdown->wbs_level;
-            $cost_account = $breakdown->cost_account;
-            if (!isset($data[$discipline])) {
-                $data[$discipline] = [
-                    'code' => $breakdown->std_activity->code,
-                    'name' => $discipline,
-                    'total_dry_cost' => 0,
-                    'total_dry_qty' => 0,
-                    'cost_accounts' => [],
-                    'total_budget_qty_eq' => 0,
-                    'total_budget_cost_eq' => 0,
-                ];
-
-            }
-
-
-            if (!isset($data[$discipline]['cost_accounts'][$cost_account])) {
-                $data[$discipline]['cost_accounts'][$cost_account] = [
-                    'total_boq_equavalant_rate' => 0,
-                    'dry_qty' => $dry->quantity??0,
-                    'dry_cost' => $dry->dry_ur??0,
-                    'wbs_levels' => [],
-                    'account_budget_cost' => 0,
-                    'account_budget_qty' => 0,
-                    'budget_cost_eq' => 0,
-                    'budget_qty_eq' => 0,
-                ];
-            }
-            if (!isset($data[$discipline]['cost_accounts'][$cost_account]['wbs_levels'][$wbs->name])) {
-                $data[$discipline]['cost_accounts'][$cost_account]['wbs_levels'][$wbs->name] = [
-                    'budget_cost' => 0,
-                    'budget_qty' => 0,
-                ];
-            }
-            foreach ($breakdown->resources as $resource) {
-                $data[$discipline]['cost_accounts'][$cost_account]['wbs_levels'][$wbs->name]['budget_cost'] += is_nan($resource->boq_unit_rate) ? 0 : $resource->budget_cost;
-
-            }
-            if ($budget_quantity) {
-                //last_change
-                $data[$discipline]['cost_accounts'][$cost_account]['wbs_levels'][$wbs->name]['budget_qty'] += is_nan($budget_quantity->budget_qty) ? 0 : $budget_quantity->budget_qty;
-            }
-
+        $wbs_levels = $project->wbs_tree;
+        $tree = [];
+        foreach ($wbs_levels as $level) {
+            $treeLevel = $this->buildReport($level);
+            $tree [] = $treeLevel;
         }
-
-        foreach ($data as $key => $value) {
-            foreach ($value['cost_accounts'] as $accountKey => $cost_account) {
-                foreach ($cost_account['wbs_levels'] as $levelKey => $level) {
-                    if ($level['budget_qty'] != 0) {
-
-                        $data[$key]['cost_accounts'][$accountKey]['account_budget_cost'] += $level['budget_cost'];
-
-                        $data[$key]['cost_accounts'][$accountKey]['account_budget_qty'] += $level['budget_qty'];
-
-                    }
-
-                }
-                if ($data[$key]['cost_accounts'][$accountKey]['account_budget_qty']) {
-
-                    $data[$key]['cost_accounts'][$accountKey]['total_boq_equavalant_rate'] += ($data[$key]['cost_accounts'][$accountKey]['account_budget_cost'] / $data[$key]['cost_accounts'][$accountKey]['account_budget_qty']);
-
-                }
-
-                //first_equation
-                $data[$key]['cost_accounts'][$accountKey]['budget_cost_eq'] =
-                    ($data[$key]['cost_accounts'][$accountKey]['total_boq_equavalant_rate'] - $data[$key]['cost_accounts'][$accountKey]['dry_cost']) * $data[$key]['cost_accounts'][$accountKey]['dry_qty'];
-
-                //second equation
-                $data[$key]['cost_accounts'][$accountKey]['budget_qty_eq'] =
-                    ($data[$key]['cost_accounts'][$accountKey]['account_budget_qty'] - $data[$key]['cost_accounts'][$accountKey]['dry_qty']) * $data[$key]['cost_accounts'][$accountKey]['total_boq_equavalant_rate'];
-
-                $data[$key]['total_budget_cost_eq'] += $data[$key]['cost_accounts'][$accountKey]['budget_cost_eq'];
-
-                $data[$key]['total_budget_qty_eq'] += $data[$key]['cost_accounts'][$accountKey]['budget_qty_eq'];
-            }
+        foreach ($this->data as $item) {
+            $total['left_eq'] += $item['left'];
+            $total['right_eq'] += $item['right'];
         }
-        foreach ($data as $key => $value) {
-            $total['budget_qty_eq'] += $data[$key]['total_budget_qty_eq'];
-            $total['budget_cost_eq'] += $data[$key]['total_budget_cost_eq'];
-
-        }
+        $data = $this->data;
+        ksort($data);
         return view('reports.qty_and_cost', compact('data', 'total', 'project'));
     }
+
+    private function buildReport($level)
+    {
+        $inital_data = [];
+
+        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'budget_cost' => 0, 'budget_rate' => 0];
+        if ($this->dry->get($level->id) != 0) {
+            $budget = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->where('wbs_id', $level->id)->first();
+
+            if ($budget) {
+                $shadows = BreakDownResourceShadow::where('project_id', $this->project->id)
+                    ->where('wbs_id', $level->id)->get();
+                foreach ($shadows as $shadow) {
+                    if (!isset($inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account])) {
+                        $inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account] = [
+                            'budget' => 0,
+                            'dry' => $this->cost_accounts->get($shadow->cost_account)['dry'],
+                            'qty' => $this->cost_accounts->get($shadow->cost_account)['qty'],
+                            'budget_qty' => $shadow->budget_qty,
+                        ];
+                    }
+                    $inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account]['budget'] += $shadow->budget_cost;
+                }
+                foreach ($inital_data as $key => $items) {
+                    foreach ($items as $item) {
+                        if ($item['budget_qty'] != 0) {
+                            $rate = ($item['budget'] / $item['budget_qty']);
+                        } else {
+                            $rate = ($item['budget']);
+                        }
+                        if (!isset($this->data[$key]['left']) || !isset($this->data[$key]['right'])) {
+                            $this->data[$key]['left'] = 0;
+                            $this->data[$key]['right'] = 0;
+                        }
+                        $this->data[$key]['left'] += ($rate - $item['dry']) * $item['qty'];
+                        $this->data[$key]['right'] += (($item['budget_qty'] - $item['qty'])) * $rate;
+                    }
+                }
+            } else {
+                foreach ($level->children as $child) {
+                    $shadows = BreakDownResourceShadow::where('project_id', $this->project->id)
+                        ->where('wbs_id', $child->id)->get();
+                    foreach ($shadows as $shadow) {
+                        if (!isset($inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account])) {
+                            $inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account] = [
+                                'budget' => 0,
+                                'dry' => $this->cost_accounts->get($shadow->cost_account)['dry'],
+                                'qty' => $this->cost_accounts->get($shadow->cost_account)['qty'],
+                                'budget_qty' => $shadow->budget_qty,
+                            ];
+                        }
+                        $inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account]['budget'] += $shadow->budget_cost;
+                    }
+                    foreach ($inital_data as $key => $items) {
+                        foreach ($items as $item) {
+                            if ($item['budget_qty'] != 0) {
+                                $rate = ($item['budget'] / $item['budget_qty']);
+                            } else {
+                                $rate = ($item['budget']);
+                            }
+                            if (!isset($this->data[$key]['left']) || !isset($this->data[$key]['right'])) {
+                                $this->data[$key]['left'] = 0;
+                                $this->data[$key]['right'] = 0;
+                            }
+                            $this->data[$key]['left'] += ($rate - $item['dry']) * $item['qty'];
+                            $this->data[$key]['right'] += (($item['budget_qty'] - $item['qty'])) * $rate;
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+        if ($level->children && $level->children->count()) {
+            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) use ($tree) {
+                return $this->buildReport($childLevel);
+            });
+        }
+
+
+        return $tree;
+    }
+
 
 }
