@@ -68,8 +68,8 @@
                                     {{$code->code}}
                                 </a>
                             </td>
-                            <td class="col-sm-4">{{$code->breakdown->wbs_level->name}}</td>
-                            <td class="col-sm-3">{{$code->breakdown->std_activity->name}}</td>
+                            <td class="col-sm-4">{{$code->wbs->name}}</td>
+                            <td class="col-sm-3">{{$code->activity}}</td>
                             <td class="col-sm-3">
                                 <a href="#" data-dismiss="modal" data-code="{{$code->code}}"
                                    class="select-activity cost-account" data-id="{{$code->id}}">

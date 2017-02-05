@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ActivityMap;
+use App\ActualBatch;
 use App\ActualResources;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
@@ -85,9 +86,8 @@ class ActualMaterialController extends Controller
             }
         }
 
-        $data['projectActivityCodes'] = $data['project']->breakdown_resources->load([
-            'breakdown', 'breakdown.std_activity', 'breakdown.wbs_level'
-        ])->keyBy('code');
+        $data['projectActivityCodes'] = BreakDownResourceShadow::where('project_id', $data['project']->id)
+            ->select(['id', 'code', 'wbs_id', 'cost_account', 'activity'])->with('wbs')->get()->keyBy('code');
 
         return view('actual-material.fix-mapping', $data);
     }
@@ -363,27 +363,28 @@ class ActualMaterialController extends Controller
 
         $project = $data['project'];
         $resources = $data['resources'];
-        $shadows = $this->getResourcesSahdow($resources);
+        $shadows = $this->getResourcesShadow($resources);
 
         return view('actual-material.resources', compact('project', 'shadows', 'resources'));
     }
 
     function postResources(Request $request, $key)
     {
-
         $data = \Cache::get($key);
         if (!$data) {
             flash('No data found');
             return \Redirect::route('project.index');
         }
 
-        $shadows = $this->getResourcesSahdow($data['resources']);
+        $shadows = $this->getResourcesShadow($data['resources']);
         $quantities = $request->get('quantities');
         $newResources = collect();
+        $resourcesLog = collect();
         foreach ($data['resources'] as $code => $resources) {
             $code = mb_strtolower($code);
             foreach ($resources as $id => $rows) {
                 if (empty($shadows[$code]['resources'][$id])) {
+                    $data['invalid']->push($resources);
                     continue;
                 }
 
@@ -397,13 +398,20 @@ class ActualMaterialController extends Controller
                     $total = $qty = $unit_price = 0;
                 }
 
-                $newResources->push([
+                $newResources->push($resource = [
                     $shadow->code, '',
                     $shadow->resource_name, $shadow->measure_unit,
                     $qty, $unit_price, $total, $shadow->resource_code, ''
                 ]);
+
+                $resource['rows'] = $rows;
+
+                $resourcesLog->push($resource);
             }
         }
+
+        $issuesLog = new CostIssuesLog($data['batch']);
+        $issuesLog->recordPhysicalQuantity($resourcesLog);
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
         $data['resources'] = collect();
@@ -437,13 +445,18 @@ class ActualMaterialController extends Controller
         }
 
         $closed = $data['closed']->pluck('resource')->keyBy('id');
+        $rawData = $data['closed']->keyBy('resource.id');
 
         $newResourceIds = [];
+        $resourcesLog = collect(['reopened' => collect(), 'ignored' => collect()]);
         foreach ($request->get('closed', []) as $id => $is_open) {
             if ($is_open) {
                 $closed[$id]->status = 'In Progress';
                 $closed[$id]->save();
                 $newResourceIds[] = $id;
+                $resourcesLog->get('reopened')->push($rawData[$id]);
+            } else {
+                $resourcesLog->get('ignored')->push($rawData[$id]);
             }
         }
 
@@ -451,6 +464,9 @@ class ActualMaterialController extends Controller
             $row['resource'] = $row['resource']->fresh();
             return $row;
         });
+
+        $issueLog = new CostIssuesLog($data['batch']);
+        $issueLog->recordClosedResources($resourcesLog);
 
         $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
         $data['closed'] = collect();
@@ -481,8 +497,11 @@ class ActualMaterialController extends Controller
         } elseif ($data['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
         } elseif ($data['to_import']->count()) {
+            $issueLog = new CostIssuesLog(ActualBatch::find($data['batch']));
+            $issueLog->recordInvalid($data['invalid']);
             $count = $this->saveImported($data['to_import']);
             $data['to_import'] = collect();
+            $data['invalid'] = collect();
             flash("$count Records has been imported", 'success');
             return \Redirect::route('actual-material.progress', $key);
         } else {
@@ -520,7 +539,8 @@ class ActualMaterialController extends Controller
             'closed' => $data['closed']->mergeWithKeys($result['closed']),
             'to_import' => $data['to_import']->mergeWithKeys($result['to_import']),
             'project' => $data['project'],
-            'batch' => $data['batch']
+            'batch' => $data['batch'],
+            'invalid' => $data['invalid']->mergeWithKeys($result['invalid'])
         ];
 
         return $returnData;
@@ -530,8 +550,7 @@ class ActualMaterialController extends Controller
      * @param $resources
      * @return mixed
      */
-    protected
-    function getResourcesSahdow($resources)
+    protected function getResourcesShadow($resources)
     {
         $activityCodes = $resources->keys();
         $resourceIds = $resources->reduce(function ($ids, $activity) {
