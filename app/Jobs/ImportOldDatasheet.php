@@ -59,7 +59,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
         CostShadow::flushEventListeners();
         ActualResources::flushEventListeners();
-
+        BreakDownResourceShadow::flushEventListeners();
 
         $entries = collect();
         foreach ($rows as $row) {
@@ -73,6 +73,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                 $entries->push($entry);
 
                 if ($entries->count() >= 500) {
+                    \DB::beginTransaction();
                     CostShadow::insert($entries->pluck('shadow')->toArray());
                     ActualResources::insert($entries->pluck('resource')->toArray());
                     $success += $entries->count();
