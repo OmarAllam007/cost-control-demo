@@ -72,11 +72,11 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             if ($entry) {
                 $entries->push($entry);
 
-                if ($entries->count() >= 200) {
-                    \DB::beginTransaction();
+                if ($entries->count() >= 500) {
+//                    \DB::beginTransaction();
                     CostShadow::insert($entries->pluck('shadow')->toArray());
                     ActualResources::insert($entries->pluck('resource')->toArray());
-                    \DB::commit();
+//                    \DB::commit();
                     $success += $entries->count();
                     unset($entries);
                     $entries = collect();
@@ -93,6 +93,8 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             $success += $entries->count();
             unset($entries);
         }
+
+        dispatch(new UpdateResourceDictJob($this->project));
 
         return compact('success', 'failed');
     }
@@ -125,7 +127,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         $resource = [
             'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
             'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
-            'original_code' => $row[2], 'qty' => $row[10], 'unit_price' => $row[11], 'cost' => $row[10]
+            'original_code' => $row[2], 'cost' => $row[12], 'qty' => $row[13], 'unit_price' => $row[14],
         ];
 
         $shadow->progress = $row[4];

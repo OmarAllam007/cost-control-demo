@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
 
 class UpdateResourceDictJob
 {
+    protected $open_period_id;
     /**
      * @var Project
      */
@@ -31,24 +32,35 @@ class UpdateResourceDictJob
      * @param Project $project
      * @param Collection $resource_dict
      */
-    public function __construct($project, $resource_dict)
+    public function __construct($project, $resource_dict = null)
     {
         $this->project = $project;
-        $this->resource_dict = $resource_dict;
+        $this->open_period_id = $this->project->open_period()->id;
+
+        if ($resource_dict) {
+            $this->resource_dict = $resource_dict;
+        } else {
+            $this->resource_dict = collect();
+        }
     }
 
     function handle()
     {
-        ActualResources::groupBy('project_id', 'resource_id')
+        $query = ActualResources::groupBy('project_id', 'resource_id')
             ->select('project_id', 'resource_id')
-            ->selectRaw('avg(unit_price) as rate')->selectRaw('max(period_id) as period_id')
-            ->where('project_id', $this->project->id)
-            ->whereIn('resource_id', $this->resource_dict)
-            ->get()->map(function($actualResource) {
-                $attrs = $actualResource->toArray();
-                $rate = $attrs['rate'];
-                unset($attrs['rate']);
-                CostResource::firstOrCreate($attrs)->update(compact('rate'));
-            });
+            ->selectRaw('avg(unit_price) as rate')
+            ->where('project_id', $this->project->id);
+
+        if ($this->resource_dict->count()) {
+            $query->whereIn('resource_id', $this->resource_dict);
+        }
+
+        $query->get()->map(function ($actualResource) {
+            $attrs = $actualResource->toArray();
+            $attrs['period_id'] = $this->open_period_id;
+            $rate = $attrs['rate'];
+            unset($attrs['rate']);
+            CostResource::firstOrCreate($attrs)->update(compact('rate'));
+        });
     }
 }
