@@ -73,10 +73,10 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                 $entries->push($entry);
 
                 if ($entries->count() >= 500) {
-//                    \DB::beginTransaction();
+                    \DB::beginTransaction();
                     CostShadow::insert($entries->pluck('shadow')->toArray());
                     ActualResources::insert($entries->pluck('resource')->toArray());
-//                    \DB::commit();
+                    \DB::commit();
                     $success += $entries->count();
                     unset($entries);
                     $entries = collect();
@@ -132,6 +132,12 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
         $shadow->progress = $row[4];
         $shadow->status = $row[5];
+        if (floatval($shadow->progress) == 100) {
+            $shadow->status = 'Closed';
+        } elseif (strtolower($shadow->status) == 'closed') {
+            $shadow->progress = 100;
+        }
+
         $shadow->save();
 
         $shadow = [
