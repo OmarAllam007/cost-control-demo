@@ -1,5 +1,6 @@
 import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
+import Pagination from './pagination';
 
 export default {
 
@@ -11,14 +12,14 @@ export default {
             breakdowns: [],
             loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
-            perspective
+            perspective, count: 0, first: 0, last: 99
         };
     },
 
     //<editor-fold defaultstate="collapsed" desc="Computed properties">
     computed: {
         filtered_breakdowns() {
-            return this.breakdowns.filter((item) => {
+            const resources = this.breakdowns.filter((item) => {
                 if (this.activity) {
                     return (item.activity_id == this.activity);
                 }
@@ -40,6 +41,9 @@ export default {
                 }
                 return true;
             });
+
+            this.count = resources.length;
+            return resources.slice(this.first, this.last);
         }
     },
     //</editor-fold>
@@ -54,7 +58,7 @@ export default {
                 }).success(response => {
                     this.loading = false;
                     this.breakdowns = response;
-                }).error (() => {
+                }).error(() => {
                     this.loading = false;
                     this.breakdowns = [];
                 });
@@ -78,6 +82,11 @@ export default {
 
         reload_breakdowns() {
             this.loadBreakdowns();
+        },
+
+        pageChanged(params) {
+            this.first = params.first;
+            this.last = params.last;
         }
     },
 
@@ -88,6 +97,6 @@ export default {
     },
 
     components: {
-        DeleteActivityModal, DeleteResourceModal
+        DeleteActivityModal, DeleteResourceModal, Pagination
     }
 }

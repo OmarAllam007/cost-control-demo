@@ -197,6 +197,8 @@
                 </tr>
                 </tbody>
             </table>
+
+            <pagination :total="count"></pagination>
         </div>
         <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No breakdowns found</div>
 

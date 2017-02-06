@@ -1,1 +1,38 @@
-$(function(){"use strict";$(".tree-radio").on("change",function(){if(this.checked){var e="#"+$(this).closest(".modal").attr("id"),t=$('[href="'+e+'"]'),i=$(this).data("label");if(i)t.text(i);else{var r=[],a=$(this).closest(".tree--item--label"),n=a.find(".node-label").text();for(r.push(n),a=a.parents("li").first().parents("li").first();a.length;)n=a.find(".node-label").first().text(),r.push(n),a=a.parents("li").first();t.html(r.reverse().join(" &raquo; "))}}}),$(".remove-tree-input").on("click",function(e){e.preventDefault(),$(this).parent().find(".tree-open").text($(this).data("label")),$($(this).data("target")).find(".tree-radio").removeAttr("checked")})});
+$(function () {
+    'use strict';
+
+    $('.tree-radio').on('change', function(){
+        if (this.checked) {
+            var selector = '#' + $(this).closest('.modal').attr('id');
+            console.log(selector);
+            var trigger = $('[href="' + selector +'"]');
+
+            var label = $(this).data('label');
+            if (label) {
+                trigger.text(label);
+            } else {
+                var stack = [];
+                var parent = $(this).closest('.tree--item--label');
+                var text = parent.find('.node-label').text();
+                stack.push(text);
+
+                parent = parent.parents('li').first().parents('li').first();
+
+                while (parent.length) {
+                    text = parent.find('.node-label').first().text();
+                    stack.push(text);
+                    parent = parent.parents('li').first();
+                }
+
+                trigger.html(stack.reverse().join(' &raquo; '));
+            }
+        }
+    });
+
+    $('.remove-tree-input').on('click', function (e) {
+        e.preventDefault();
+        $(this).parent().find('.tree-open').text($(this).data('label'));
+        $($(this).data('target')).find('.tree-radio').removeAttr('checked');
+    });
+});
+//# sourceMappingURL=tree-select.js.map
