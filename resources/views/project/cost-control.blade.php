@@ -137,5 +137,6 @@
             });
         })
     </script>
+    <script src="{{asset('/js/tree-select.js')}}"></script>
     <script src="{{asset('/js/cost-control.js')}}"></script>
 @endsection
