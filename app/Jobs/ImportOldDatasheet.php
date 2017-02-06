@@ -73,10 +73,10 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                 $entries->push($entry);
 
                 if ($entries->count() >= 500) {
-//                    \DB::beginTransaction();
+                    \DB::beginTransaction();
                     CostShadow::insert($entries->pluck('shadow')->toArray());
                     ActualResources::insert($entries->pluck('resource')->toArray());
-//                    \DB::commit();
+                    \DB::commit();
                     $success += $entries->count();
                     unset($entries);
                     $entries = collect();
@@ -130,8 +130,19 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             'original_code' => $row[2], 'cost' => $row[12], 'qty' => $row[13], 'unit_price' => $row[14],
         ];
 
-        $shadow->progress = $row[4];
+        $shadow->progress = floatval($row[4]);
         $shadow->status = $row[5];
+
+        if ($shadow->progress == 100) {
+            $shadow->status = 'Closed';
+        } elseif ($shadow->progress > 0) {
+            $shadow->status = 'In Progress';
+        }
+
+        if (strtolower($shadow->status) == 'closed') {
+            $shadow->progress = 100;
+        }
+
         $shadow->save();
 
         $shadow = [
@@ -157,7 +168,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         $this->shadows = collect();
         $doubles = collect();
         BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->select(['code', 'cost_account', 'resource_code', 'remarks', 'wbs_id', 'resource_id', 'breakdown_resource_id', 'project_id'])
+            ->select(['id', 'code', 'cost_account', 'resource_code', 'remarks', 'wbs_id', 'resource_id', 'breakdown_resource_id', 'project_id'])
             ->get()->each(function (BreakDownResourceShadow $resource) use ($doubles) {
                 $code = mb_strtolower(trim($resource->code) . trim($resource->cost_account) . trim($resource->resource_code));
                 if ($this->shadows->has($code)) {
