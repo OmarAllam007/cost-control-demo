@@ -70,13 +70,14 @@ class QtyAndCost
         $inital_data = [];
 
         $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'budget_cost' => 0, 'budget_rate' => 0];
-        if ($this->dry->get($level->id) != 0) {
+
+        if ($level->getDry()) {
             $budget = BreakDownResourceShadow::where('project_id', $this->project->id)
                 ->where('wbs_id', $level->id)->first();
-
             if ($budget) {
                 $shadows = BreakDownResourceShadow::where('project_id', $this->project->id)
                     ->where('wbs_id', $level->id)->get();
+
                 foreach ($shadows as $shadow) {
                     if (!isset($inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account])) {
                         $inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account] = [
@@ -100,13 +101,13 @@ class QtyAndCost
                             $this->data[$key]['right'] = 0;
                         }
                         $this->data[$key]['left'] += ($rate - $item['dry']) * $item['qty'];
-                        $this->data[$key]['right'] += (($item['budget_qty'] - $item['qty'])) * $rate;
+                        $this->data[$key]['right'] += ($item['budget_qty'] - $item['qty']) * $rate;
                     }
                 }
             } else {
                 foreach ($level->children as $child) {
                     $shadows = BreakDownResourceShadow::where('project_id', $this->project->id)
-                        ->where('wbs_id', $child->id)->get();
+                        ->whereIn('wbs_id', $child->id)->get();
                     foreach ($shadows as $shadow) {
                         if (!isset($inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account])) {
                             $inital_data[$this->activities->get($shadow->activity_id)][$shadow->cost_account] = [
@@ -137,7 +138,7 @@ class QtyAndCost
 
             }
         }
-        
+
         if ($level->children && $level->children->count()) {
             $tree['children'] = $level->children->map(function (WbsLevel $childLevel) use ($tree) {
                 return $this->buildReport($childLevel);

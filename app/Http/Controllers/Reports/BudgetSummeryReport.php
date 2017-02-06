@@ -25,11 +25,14 @@ class BudgetSummeryReport
         $this->project = $project;
         $divisons = ActivityDivision::tree()->get();
         $tree = collect();
-        collect(\DB::select('SELECT activity_id , SUM(budget_cost) as budget_cost FROM break_down_resource_shadows
-                                            WHERE project_id=' . $project->id . '
-                                            GROUP BY activity_id'))->each(function ($activity) {
+        collect(\DB::select('SELECT activity_id , SUM(budget_cost) as budget_cost 
+                              FROM break_down_resource_shadows
+                              WHERE project_id=' . $project->id . '
+                              GROUP BY activity_id')
+        )->map(function ($activity) {
             $this->projectActivities->put($activity->activity_id, $activity->budget_cost);
         });
+
         $total_budget = BreakDownResourceShadow::where('project_id', $project->id)->sum('budget_cost');
 
         foreach ($divisons as $divison) {
