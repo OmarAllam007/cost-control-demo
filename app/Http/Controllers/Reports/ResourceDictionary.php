@@ -38,7 +38,7 @@ WHERE project_id = ' . $project->id . '
 GROUP BY resource_id');
 
         foreach ($resources as $resource) {
-            $this->resources->put($resource->resource_id, ['unit'=>$resource->measure_unit,'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
+            $this->resources->put($resource->resource_id, ['unit' => $resource->measure_unit, 'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
         }
 
         $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
@@ -67,7 +67,7 @@ GROUP BY resource_id');
         $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0];
         $resources = $this->types->get($type->id);
 
-        if(count($resources)){
+        if (count($resources)) {
             foreach ($resources as $resource) {
                 $tree['resources'][$resource->id] = ['id' => $resource->id
                     , 'code' => $resource->resource_code
@@ -80,7 +80,7 @@ GROUP BY resource_id');
                     , 'budget_cost' => $this->resources->get($resource->id)['budget_cost']
                     , 'budget_unit' => $this->resources->get($resource->id)['budget_unit']
                 ];
-                $tree['budget_cost'] +=$this->resources->get($resource->id)['budget_cost'];
+                $tree['budget_cost'] += $this->resources->get($resource->id)['budget_cost'];
             }
         }
 
