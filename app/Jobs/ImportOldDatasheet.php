@@ -124,6 +124,12 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
             return null;
         }
 
+        if (empty($row[9]) && empty($row[10]) && empty($row[11])) {
+            $row[9] = $row[12];
+            $row[10] = $row[13];
+            $row[11] = $row[14];
+        }
+
         $resource = [
             'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
             'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
