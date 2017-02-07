@@ -18,6 +18,13 @@ class Period extends Model
         return $this->belongsTo(Project::class);
     }
 
+    function batches()
+    {
+        $relation = $this->hasMany(ActualBatch::class);
+        $relation->orderBy('id', 'DESC');
+        return $relation;
+    }
+
     protected static function boot()
     {
         parent::boot();

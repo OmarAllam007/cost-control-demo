@@ -10,6 +10,13 @@ class ActualBatch extends Model
 
     function issues()
     {
-        return $this->hasMany(CostIssue::class, 'batch_id');
+        $relation = $this->hasMany(CostIssue::class, 'batch_id');
+        $relation->orderBy('id');
+        return $relation;
+    }
+
+    function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
