@@ -164,6 +164,8 @@ Route::resource('breakdown', 'BreakdownController');
 Route::resource('breakdown-resource', 'BreakdownResourceController');
 Route::resource('period', 'PeriodController');
 Route::resource('users', 'UsersController', ['parameters' => 'singular']);
+Route::get('/actual-batches/{actual_batch}', 'ActualBatchesController@show');
+Route::get('/actual-batches/{actual_batch}/download', 'ActualBatchesController@download');
 
 Route::get('/blank', 'BlankController@index');
 

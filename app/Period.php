@@ -18,6 +18,11 @@ class Period extends Model
         return $this->belongsTo(Project::class);
     }
 
+    function batches()
+    {
+        return $this->hasMany(ActualBatch::class);
+    }
+
     protected static function boot()
     {
         parent::boot();

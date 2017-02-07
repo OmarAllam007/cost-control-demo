@@ -70,8 +70,11 @@
             <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
 
             @can('periods', $project)
-                <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial
-                    Periods</a>
+                <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial Periods</a>
+            @endcan
+
+            @can('cost_owner', $project)
+                <a href="#data-uploads" class="btn btn-sm btn-info btn-outline"><i class="fa fa-upload"></i> Data Uploads</a>
             @endcan
 
             @can('reports', $project)
@@ -86,6 +89,10 @@
 
         @can('periods', $project)
             @include('project.cost-control.periods')
+        @endcan
+
+        @can('cost_owner', $project)
+            @include('project.cost-control.data-uploads')
         @endcan
 
         @can('reports', $project)
