@@ -192,7 +192,7 @@ class Project extends Model
 
     function cost_shadow()
     {
-        return $this->hasMany(CostShadow::class);
+        return $this->hasMany(CostShadow::class)->where('period_id', $this->open_period()->id);
     }
 
     function getIsCostReadyAttribute()
