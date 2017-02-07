@@ -20,7 +20,9 @@ class Period extends Model
 
     function batches()
     {
-        return $this->hasMany(ActualBatch::class);
+        $relation = $this->hasMany(ActualBatch::class);
+        $relation->orderBy('id', 'DESC');
+        return $relation;
     }
 
     protected static function boot()
