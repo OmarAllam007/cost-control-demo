@@ -497,7 +497,7 @@ class ActualMaterialController extends Controller
         } elseif ($data['multiple']->count()) {
             return \Redirect::route('actual-material.multiple', $key);
         } elseif ($data['to_import']->count()) {
-            $issueLog = new CostIssuesLog(ActualBatch::find($data['batch']));
+            $issueLog = new CostIssuesLog($data['batch']);
             $issueLog->recordInvalid($data['invalid']);
             $count = $this->saveImported($data['to_import']);
             $data['to_import'] = collect();
