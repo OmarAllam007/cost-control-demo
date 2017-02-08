@@ -30,10 +30,10 @@ class BudgetCostDryCostByDiscipline
             'budget' => $total
         ];
 
-        $total_dry = \DB::select(\DB::raw('SELECT std.discipline, SUM(b.quantity * b.dry_ur) AS `dry` FROM break_down_resource_shadows sh, std_activities std, boqs b
-                                  WHERE sh.project_id =' . $project->id . ' AND sh.cost_account = b.cost_account
-                                  AND sh.wbs_id = b.wbs_id
-                                  AND sh.activity_id = std.id 
+        $total_dry = \DB::select(\DB::raw('SELECT std.discipline, SUM(b.quantity * b.dry_ur) AS `dry` FROM breakdowns sh, std_activities std, boqs b
+                                  WHERE sh.project_id = ' . $project->id . ' AND b.project_id = sh.project_id AND sh.cost_account = b.cost_account
+                                  AND sh.wbs_level_id = b.wbs_id
+                                  AND sh.std_activity_id = std.id 
                                   GROUP BY std.discipline'));
 
         $total_budget = \DB::select(\DB::raw('SELECT std.discipline, SUM(sh.budget_cost) as budget 
