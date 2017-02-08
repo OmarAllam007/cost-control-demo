@@ -161,7 +161,7 @@ class WbsResource extends Model
             return 0;
         }
 
-        return $this->to_date_cost / $this->budget_unit;
+        return $this->to_date_cost / $this->boq_equivilant_rate;
     }
 
     function getPwIndexAttribute()
@@ -176,7 +176,7 @@ class WbsResource extends Model
 
     function getAllowableQtyAttribute()
     {
-        if (($this->to_date_qty < $this->budget_unit) && $this->progress_value != 1) {
+        if (($this->to_date_qty < $this->budget_unit) && $this->progress_value < 1) {
             return $this->to_date_qty;
         }
 

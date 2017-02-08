@@ -449,6 +449,7 @@ class ActualMaterialController extends Controller
 
         $newResourceIds = [];
         $resourcesLog = collect(['reopened' => collect(), 'ignored' => collect()]);
+
         foreach ($request->get('closed', []) as $id => $is_open) {
             if ($is_open) {
                 $closed[$id]->status = 'In Progress';
@@ -464,6 +465,7 @@ class ActualMaterialController extends Controller
             $row['resource'] = $row['resource']->fresh();
             return $row;
         });
+
 
         $issueLog = new CostIssuesLog($data['batch']);
         $issueLog->recordClosedResources($resourcesLog);
@@ -542,6 +544,8 @@ class ActualMaterialController extends Controller
             'batch' => $data['batch'],
             'invalid' => $data['invalid']->mergeWithKeys($result['invalid'])
         ];
+
+        file_put_contents(storage_path('logs/debug.log'), print_r($returnData, true));
 
         return $returnData;
     }
