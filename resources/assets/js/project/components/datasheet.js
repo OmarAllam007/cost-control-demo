@@ -21,23 +21,23 @@ export default {
         filtered_breakdowns() {
             const resources = this.breakdowns.filter((item) => {
                 if (this.activity) {
-                    return (item.budget.activity_id == this.activity);
+                    return (item.activity_id == this.activity);
                 }
                 return true;
             }).filter((item) => {
                 if (this.resource_type) {
-                    return (item.budget.resource_type_id == this.resource_type);
+                    return (item.resource_type_id == this.resource_type);
                 }
                 return true;
             }).filter((item) => {
                 if (this.cost_account) {
-                    return item.budget.cost_account.toLowerCase().indexOf(this.cost_account.toLowerCase()) >= 0;
+                    return item.cost_account.toLowerCase().indexOf(this.cost_account.toLowerCase()) >= 0;
                 }
                 return true;
             }).filter((item) => {
                 if (this.resource) {
-                    return item.budget.resource_name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0 ||
-                        item.budget.resource_code.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0;
+                    return item.resource_name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0 ||
+                        item.resource_code.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0;
                 }
                 return true;
             });
