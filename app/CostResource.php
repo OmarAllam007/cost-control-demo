@@ -25,7 +25,7 @@ class CostResource extends Model
             'type' => $this->resource->types->root->name,
             'type_id' => $this->resource->types->root->id,
             'rate' => $this->rate,
-            'measure_unit' => $this->resource->units->type,
+            'measure_unit' => $this->resource->units->type ?? '',
         ];
     }
 }
