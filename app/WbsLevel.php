@@ -168,6 +168,13 @@ class WbsLevel extends Model
     {
 
     }
+    function getDry(){
+        $boq = Boq::where('wbs_id',$this->id)->first();
+        if(isset($boq->dry_ur)){//chenged from $boq->dry_ur to 1
+            return 1;
+        }
+        return 0;
+    }
 
     function getDry($project){
         $boq = Boq::where('wbs_id',$this->id)->where('project_id',$project->id)->first();
