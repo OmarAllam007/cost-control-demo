@@ -77,16 +77,23 @@ class ReportController extends Controller
         $root = '';
         $total_budget_cost = '';
         $total_budget_unit = '';
-        $breakdown_resources = $project->shadows;
+        $breakdown_resources = \DB::select('SELECT
+  resource_id,
+  resource_name,
+  resource_type,
+  budget_cost,
+  budget_unit,
+  measure_unit
+FROM break_down_resource_shadows
+WHERE project_id=' . $project->id . '
+AND resource_type LIKE \'%lab%\'');
         foreach ($breakdown_resources as $resource) {
             $rootName = $resource->resource_type;
-            $resourceObject = $resource->resource;
-            if (str_contains(strtolower($rootName), 'labors')) {
                 $root = $rootName;
-                if (!isset($resources[$resourceObject->id])) {
-                    $resources[$resourceObject->id] = [
-                        'id' => $resourceObject->id,
-                        'name' => $resourceObject->name,
+                if (!isset($resources[$resource->resource_id])) {
+                    $resources[$resource->resource_id] = [
+                        'id' => $resource->resource_id,
+                        'name' => $resource->resource_name,
                         'type' => $rootName,
                         'budget_cost' => 0,
                         'budget_unit' => 0,
@@ -94,9 +101,8 @@ class ReportController extends Controller
                     ];
 
 
-                }
-                $resources[$resourceObject->id]['budget_cost'] += $resource->budget_cost;
-                $resources[$resourceObject->id]['budget_unit'] += $resource->budget_unit;
+                $resources[$resource->resource_id]['budget_cost'] += $resource->budget_cost;
+                $resources[$resource->resource_id]['budget_unit'] += $resource->budget_unit;
             }
 
         }
