@@ -35,6 +35,13 @@
                 @foreach($activityData['resources'] as $resource_id => $shadow)
                     @php
                     $code = mb_strtolower($code);
+                    @endphp
+
+                    @if (!isset($resources[$code][$resource_id]))
+                        @continue;
+                    @endif
+
+                    @php
                     $sub_resources = collect($resources[$code][$resource_id]);
                     $row_span = count($sub_resources);
                     $counter= 0;

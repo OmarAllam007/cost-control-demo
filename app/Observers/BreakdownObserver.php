@@ -12,21 +12,22 @@ namespace App\Observers;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\BreakdownVariable;
 
 class BreakdownObserver
 {
 
-    function created(Breakdown $breakdown)
+    function updated(Breakdown $breakdown)
     {
-
-        $shadows = BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->get();
+        $resources = BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->get();
         /** @var BreakDownResourceShadow $shadow */
         foreach ($shadows as $shadow) {
             $shadow->wbs_id = $breakdown->wbs_level_id;
             $shadow->update();
         }
     }
-    function updated(Breakdown $breakdown){
 
+    function deleted(Breakdown $breakdown){
+        $breakdown->variables()->delete();
     }
 }

@@ -117,7 +117,20 @@ class WbsResource extends Model
             return $resource->rate;
         }*/
 
-        return $this->current_unit_price;
+        if ($this->current_unit_price) {
+            return $this->current_unit_price;
+        }
+
+        $resource = CostResource::where('resource_id', $this->resource_id)
+            ->where('project_id', $this->project_id)->where('period_id', $this->period_id)->first();
+
+        if ($resource) {
+            return $resource->rate;
+        }
+
+        return $this->unit_price;
+
+        return 0;
     }
 
     function getCompletionCostAttribute()
@@ -157,11 +170,11 @@ class WbsResource extends Model
 
     function getPhysicalUnitAttribute()
     {
-        if ($this->budget_unit == 0) {
+        if ($this->boq_equivilant_rate == 0) {
             return 0;
         }
 
-        return $this->to_date_cost / $this->budget_unit;
+        return $this->to_date_cost / $this->boq_equivilant_rate;
     }
 
     function getPwIndexAttribute()
@@ -176,7 +189,7 @@ class WbsResource extends Model
 
     function getAllowableQtyAttribute()
     {
-        if (($this->to_date_qty < $this->budget_unit) && $this->progress_value != 1) {
+        if (($this->to_date_qty < $this->budget_unit) && $this->progress_value < 1) {
             return $this->to_date_qty;
         }
 

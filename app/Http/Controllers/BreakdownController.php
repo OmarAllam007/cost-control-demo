@@ -99,7 +99,6 @@ class BreakdownController extends Controller
     {
         $file = $this->dispatch(new ExportBreakdownJob($project));
         $response = \Response::download($file, slug($project->name) . '-breakdown.csv', ['ContentType' => 'text/csv']);
-        unlink($file);
         return $response;
     }
 

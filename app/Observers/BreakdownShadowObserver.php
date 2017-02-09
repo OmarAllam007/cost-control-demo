@@ -17,17 +17,17 @@ class BreakdownShadowObserver
 {
     function updating(BreakDownResourceShadow $resource)
     {
-        $dirty = $resource->getDirty();
-        if (isset($dirty['progress']) || isset($dirty['status'])) {
-            $resource->update_cost = true;
-        }
+//        $dirty = $resource->getDirty();
+//        if (isset($dirty['progress']) || isset($dirty['status'])) {
+//            $resource->update_cost = true;
+//        }
+        $resource->update_cost = false;
     }
 
     function updated(BreakDownResourceShadow $resource)
     {
         if ($resource->update_cost) {
             $conditions = [
-                'wbs_resources.period_id' => $resource->project->open_period()->id,
                 'wbs_resources.breakdown_resource_id' => $resource->breakdown_resource_id,
                 'wbs_resources.project_id' => $resource->project_id
             ];
