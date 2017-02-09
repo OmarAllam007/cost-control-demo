@@ -20,6 +20,7 @@ class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
+        set_time_limit(180);
         return WbsResource::whereIn('wbs_level_id', $wbs_level->getChildrenIds()) //->where('period_id', $wbs_level->project->open_period()->id)
             ->joinShadow()
             ->get();

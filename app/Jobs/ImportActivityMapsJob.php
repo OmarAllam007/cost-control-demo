@@ -38,8 +38,9 @@ class ImportActivityMapsJob extends ImportJob
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
 
-        $counter = 0;
+        $success = 0;
 
+        $failed = collect();
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -54,11 +55,13 @@ class ImportActivityMapsJob extends ImportJob
                     'project_id' => $this->project->id, 'activity_code' => $data[0], 'equiv_code' => $data[1]
                 ]);
 
-                ++$counter;
+                ++$success;
+            } else {
+                $failed->push($row);
             }
         }
 
-        return $counter;
+        return compact('success', 'failed');
     }
 
     protected function loadCodes()

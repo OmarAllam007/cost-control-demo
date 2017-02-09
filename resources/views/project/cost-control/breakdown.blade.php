@@ -167,9 +167,9 @@
                     <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.prev_unit_price: 0 |number_format }}</td>
                     <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.prev_qty: 0 |number_format }}</td>
                     <td class="bg-green" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.prev_cost: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_unit_price: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_qty: 0 |number_format }}</td>
-                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.current_cost: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.curr_unit_price: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.curr_qty: 0 |number_format }}</td>
+                    <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.curr_cost: 0 |number_format }}</td>
                     <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_unit_price: 0 |number_format }}</td>
                     <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_qty: 0 |number_format }}</td>
                     <td class="bg-orange" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.to_date_cost: 0 |number_format }}</td>

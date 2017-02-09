@@ -18,23 +18,15 @@ class RebuildCostShadow extends Command
     {
         BreakDownResourceShadow::where('status', 'Closed')->update(['progress' => 100]);
 
-        $resources = WbsResource::joinShadow()->whereHas('period', function($q) {
-            $q->where('is_open', true);
-        })->get()->keyBy('breakdown_resource_id');
+        $resources = WbsResource::joinShadow()->get();
 
 //        CostShadow::unguard();
         $count = $resources->count();
         $counter = 0;
+        CostShadow::truncate();
+        $shadows = collec();
         foreach ($resources as $resource) {
-            $shadow = CostShadow::where([
-                'breakdown_resource_id' => $resource->breakdown_resource_id,
-                'period_id' => $resource->period_id
-            ])->first();
-
-            $result = $shadow->update($resource->toArray());
-            if ($result) {
-                $counter ++;
-            }
+            $shadows->push($resource->toArray());
         }
 
         $this->output->comment("$counter of $count records has been updated");

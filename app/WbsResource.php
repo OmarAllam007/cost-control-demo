@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class WbsResource extends Model
 {
     protected $appends = [
-        'previous_unit_price', 'to_date_unit_price',
+        'to_date_unit_price',
         'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var',
         'remaining_qty', 'remaining_cost', 'remaining_unit_price',
         'completion_qty', 'completion_cost', 'completion_unit_price',
@@ -117,8 +117,8 @@ class WbsResource extends Model
             return $resource->rate;
         }*/
 
-        if ($this->current_unit_price) {
-            return $this->current_unit_price;
+        if ($this->curr_unit_price) {
+            return $this->curr_unit_price;
         }
 
         $resource = CostResource::where('resource_id', $this->resource_id)
@@ -129,8 +129,6 @@ class WbsResource extends Model
         }
 
         return $this->unit_price;
-
-        return 0;
     }
 
     function getCompletionCostAttribute()
