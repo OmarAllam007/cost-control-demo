@@ -33,6 +33,11 @@ function roundup($number, $precision)
     return ceil($convert) / $multiplier;
 }
 
+function csv_quote($str)
+{
+    return '"' . str_replace('"', '""', preg_replace('/\s+/', ' ', $str)) . '"';
+}
+
 function check_syntax($equation)
 {
     $content = '<?php ' . $equation;
