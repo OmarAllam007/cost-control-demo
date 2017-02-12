@@ -1,4 +1,5 @@
 <section id="data-uploads" class="project-tab">
+    @if ($project->open_period())
 <table class="table table-striped table-hover table-condensed">
     <thead>
     <tr>
@@ -21,5 +22,6 @@
         </tr>
     @endforeach
     </tbody>
+    @endif
 </table>
 </section>
