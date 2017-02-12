@@ -11,133 +11,249 @@ namespace App\Http\Controllers\Reports;
 
 use App\Boq;
 use App\Breakdown;
+use App\BreakDownResourceShadow;
 use App\Project;
 use App\Survey;
+use App\WbsLevel;
 use Khill\Lavacharts\Lavacharts;
 
 class RevisedBoq
 {
-    public function getRevised(Project $project)
+
+    private $boqs;
+    private $survies;
+    private $breakdowns;
+    private $activities;
+    private $shadows;
+    private $data = [];
+    private $dry ;
+    private $project;
+
+    public function getRevised($project)
     {
+        $this->boqs = collect();
+        $this->activities = collect();
+        $this->shadows = collect();
+        $this->dry = collect();
+        $this->project = $project;
         set_time_limit(300);
 
-        $breakdowns = $project->breakdowns()->with('wbs_level', 'resources')->get();
-        $data = [];
-        $total = ['revised_boq' => 0, 'original_boq' => 0, 'weight' => 0];
-        foreach ($breakdowns as $breakdown) {
-            $wbs_level = $breakdown->wbs_level;
-            $cost_account = $breakdown->cost_account;
-            $dry = $breakdown->getDry($project, $wbs_level->id, $cost_account);
-            if ($dry) {
-                if (!isset($data[$wbs_level->id])) {
-                    $data[$wbs_level->id] = [
-                        'code' => $wbs_level->code,
-                        'name' => $wbs_level->name,
-                        'cost_account' => [],
-                        'revised_boq' => 0,
-                        'original_boq' => 0,
-                        'weight' => 0,
-                    ];
-                }
-
-                if (!isset($data[$wbs_level->id]['cost_account'][$breakdown->cost_account])) {
-                    $data[$wbs_level->id]['cost_account'][$breakdown->cost_account] = [
-                        'revised_boq' => 0,
-                        'original_boq' => 0,
-                        'weight' => 0,
-                    ];
-
-                    $boq = Boq::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
-                    $survey = Survey::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
-
-                    if ($boq && $survey) {
-                        $data[$wbs_level->id]['cost_account'][$breakdown->cost_account]['original_boq'] += $boq->price_ur * $boq->quantity;
-                        $data[$wbs_level->id]['cost_account'][$breakdown->cost_account]['revised_boq'] += $boq->price_ur * $survey->eng_qty;
-                    }
-
-                }
+        collect(\DB::select('SELECT
+  br.id breakdown_id,
+  activity.id AS activity_id,
+  activity.name
+FROM breakdowns br JOIN std_activities activity ON br.std_activity_id = activity.id
+WHERE project_id =?', [$project->id]))->map(function ($breakdown) {
+            $this->activities->put($breakdown->breakdown_id, ['activity_id' => $breakdown->activity_id, 'activity_name' => $breakdown->name]);
+        });
 
 
-            } else {
 
-                $parent = $wbs_level;
-                while ($parent->parent) {
-                    $parent = $parent->parent;
-                    $parent_dry = $breakdown->getDry($project, $parent->id, $cost_account);
-                    if ($parent_dry) {
-                        if (!isset($data[$parent->id])) {
-                            $data[$parent->id] = [
-                                'code' => $parent->code,
-                                'name' => $parent->name,
-                                'cost_account' => [],
-                                'revised_boq' => 0,
-                                'original_boq' => 0,
-                                'weight' => 0,
-                            ];
-                        }
-                        if (!isset($data[$parent->id]['cost_account'][$breakdown->cost_account])) {
-                            $data[$parent->id]['cost_account'][$breakdown->cost_account] = [
-                                'revised_boq' => 0,
-                                'original_boq' => 0,
-                                'weight' => 0,
-                            ];
-                            $boq = Boq::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
-                            $survey = Survey::where('cost_account', $breakdown->cost_account)->where('project_id', $project->id)->first();
+        $this->breakdowns = WbsLevel::where('project_id', $project->id)->get()->keyBy('id')->map(function ($level) {
+            return $level->breakdowns;
+        });
+        $this->dry = Boq::where('project_id',$project->id)->get()->keyBy('wbs_id')->map(function ($boq){
+           return $boq->dry_ur;
+        });
 
-                            if ($boq && $survey) {
-                                $data[$parent->id]['cost_account'][$breakdown->cost_account]['original_boq'] += $boq->price_ur * $boq->quantity;
-                                $data[$parent->id]['cost_account'][$breakdown->cost_account]['revised_boq'] += $boq->price_ur * $survey->eng_qty;
-                            }
-                            $survey_parent = Survey::where('wbs_level_id', $parent->id)->where('cost_account', $breakdown->cost_account)->sum('eng_qty');
-//                            $data[$parent->id]['original_boq'] = $boq;
-//                            $data[$parent->id]['revised_boq'] = $survey * $survey_parent;
-                            break;
-                        }
-                    }
-                }
-            }
+
+
+
+        $wbs_levels = $project->wbs_levels;
+        $tree = [];
+        foreach ($wbs_levels as $level) {
+            $treeLevel = $this->buildReport($level);
+            $tree [] = $treeLevel;
         }
-
-
-        foreach ($data as $key => $value) {
-            foreach ($value['cost_account'] as $item) {
-                $data[$key]['revised_boq'] += $item['revised_boq'];
-                $data[$key]['original_boq'] += $item['original_boq'];
-                $total['revised_boq'] += $item['revised_boq'];
-                $total['original_boq'] += $item['original_boq'];
-            }
-        }
-        foreach ($data as $key => $value) {
-            if ($data[$key]['original_boq']) {
-                $data[$key]['weight'] += $data[$key]['revised_boq'] / $data[$key]['original_boq'] * 100;
-            }
-            if ($total['original_boq']) {
-
-                $total['weight'] = ($total['revised_boq'] / $total['original_boq']) * 100;
-            }
-        }
-        $chart = $this->getRevisedChart($data);
-        return view('reports.revised_boq', compact('data', 'total', 'project', 'chart'));
+        return view('reports.budget.revised_boq.revised_boq', compact('project', 'tree'));
     }
 
-    public function getRevisedChart($data)
+    private function buildReport(WbsLevel $level)
     {
-        $revised_boqs = \Lava::DataTable();
-        $revised_boqs->addStringColumn('Boqs')->addNumberColumn('Weight');
-        foreach ($data as $key => $value) {
-            $revised_boqs->addRow([$data[$key]['name'], $data[$key]['weight']]);
+
+        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'activities' => [], 'revised_boq' => 0, 'original_boq' => 0];
+
+        if ($this->dry->get($level->id)>0) {
+            foreach ($this->breakdowns->get($level->id) as $breakdown) {
+                $boq = \DB::select('SELECT price_ur , quantity from boqs
+WHERE project_id=?
+AND wbs_id=?
+AND cost_account=?',[$this->project->id,$level->id,$breakdown->cost_account]);
+
+                $survey = \DB::select('SELECT eng_qty from qty_surveys
+WHERE project_id=?
+AND wbs_level_id=?
+AND cost_account=?',[$this->project->id,$level->id,$breakdown->cost_account]);
+
+                $activity = $this->activities->get($breakdown->id);
+                if (!isset($tree['activities'][$activity['activity_id']])) {
+                    $tree['activities'][$activity['activity_id']] = ['name' => $activity['activity_name'], 'revised_boq' => 0, 'original_boq' => 0, 'cost_accounts' => []];
+                }
+                if($boq && $survey){
+                    if (!isset($tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account])) {
+                        $tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account] = ['cost_account'=>$breakdown->cost_account , 'revised_boq'=>$boq[0]->price_ur*$survey[0]->eng_qty , 'original_boq'=>$boq[0]->price_ur * $boq[0]->quantity];
+                        $tree['activities'][$activity['activity_id']]['revised_boq']+=$tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['revised_boq'];
+                        $tree['activities'][$activity['activity_id']]['original_boq']+=$tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['original_boq'];
+
+                    }
+
+                }
+            }
+
+            foreach ($tree['activities'] as $key=>$activity){
+                $tree['revised_boq']+=$activity['revised_boq'];
+                $tree['original_boq']+=$activity['original_boq'];
+            }
+
+        } else {
+            $parent = $level;
+            while($parent->parent){
+                $parent = $parent->parent;
+                if($this->dry->get($level->id)>0){
+                    foreach ($this->breakdowns->get($level->id) as $breakdown) {
+                        $boq = \DB::select('SELECT price_ur , quantity from boqs
+WHERE project_id=?
+AND wbs_id=?
+AND cost_account=?',[$this->project->id,$level->id,$breakdown->cost_account]);
+
+                        $survey = \DB::select('SELECT eng_qty from qty_surveys
+WHERE project_id=?
+AND wbs_level_id=?
+AND cost_account=?',[$this->project->id,$level->id,$breakdown->cost_account]);
+                        $activity = $this->activities->get($breakdown->id);
+                        if (!isset($tree['activities'][$activity['activity_id']])) {
+                            $tree['activities'][$activity['activity_id']] = ['name' => $activity['activity_name'], 'revised_boq' => 0, 'original_boq' => 0, 'cost_accounts' => []];
+                        }
+                        if($boq && $survey){
+                            if (!isset($tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account])) {
+                                $tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account] = ['cost_account'=>$breakdown->cost_account , 'revised_boq'=>$boq[0]->price_ur*$survey[0]->eng_qty , 'original_boq'=>$boq[0]->price_ur * $boq[0]->quantity];
+                                $tree['activities'][$activity['activity_id']]['revised_boq']+=$tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['revised_boq'];
+                                $tree['activities'][$activity['activity_id']]['original_boq']+=$tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['original_boq'];
+                            }
+                        }
+                    }
+                    foreach ($tree['activities'] as $key=>$activity){
+                        $tree['revised_boq']+=$activity['revised_boq'];
+                        $tree['original_boq']+=$activity['original_boq'];
+                    }
+                }
+            }
         }
-        \Lava::PieChart('BOQ', $revised_boqs, [
-            'width' => '1000',
-            'height' => '600',
-            'title' => 'REVISED BOQ',
-            'is3D' => true,
-            'slices' => [
-                ['offset' => 0.0],
-                ['offset' => 0.0],
-                ['offset' => 0.0],
+
+        return $tree;
+    }
+
+
+    public function getBudgetCostDryCostColumnChart($data)
+    {
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('WBS')->addNumberColumn('Dry Cost')->addNumberColumn('Budget Cost');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$data[$key]['name'], $data[$key]['dry_cost'], $data[$key]['budget_cost']]);
+
+        }
+        $options = [
+            'toolTip' => 'value',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
             ],
-            'pieSliceText' => "value",
-        ]);
+            'title' => trans('Budget VS Dry'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'WBS',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+
+        ];
+        \Lava::ColumnChart('BudgetCost', $costTable, $options);
+
+    }
+
+    public function getBudgetCostDryCostSecondColumnChart($data)
+    {
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('WBS')->addNumberColumn('Difference');
+        foreach ($data as $key => $value) {
+            $costTable->addRow([$data[$key]['name'], $data[$key]['different']]);
+
+        }
+        $options = [
+            'isStacked' => 'false',
+            'tooltip' => 'value',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
+            ],
+            'title' => trans('Difference'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'WBS',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+            'labels' => [
+                'visible' => 'true',
+            ],
+            'legend' => [
+                'position' => 'none',
+            ],
+            'bar' => [
+                'groupWidth' => '30%',
+            ],
+        ];
+        \Lava::ColumnChart('Difference', $costTable, $options);
+
+    }
+
+    public function getBudgetCostDryCostThirdColumnChart($data)
+    {
+
+        $costTable = \Lava::DataTable();
+
+        $costTable->addStringColumn('WBS')->addNumberColumn('Increase');
+        foreach ($data as $key => $value) {
+
+            $costTable->addRow([$data[$key]['name'], $value['increase']]);
+        }
+        $options = [
+            'isStacked' => 'false',
+            'tooltip' => 'value',
+            'titleTextStyle' => [
+                'color' => '#eb6b2c',
+                'fontSize' => 14,
+                'width' => '1000',
+                'height' => '600',
+            ],
+            'title' => trans('Increase'),
+            'height' => 400,
+            'hAxis' => [
+                'title' => 'WBS',
+            ],
+            'vAxis' => [
+                'title' => '',
+            ],
+            'labels' => [
+                'visible' => 'true',
+            ],
+            'legend' => [
+                'position' => 'none',
+            ],
+            'bar' => [
+                'groupWidth' => '30%',
+            ],
+        ];
+        \Lava::ColumnChart('Increase', $costTable, $options);
+
+
     }
 }
