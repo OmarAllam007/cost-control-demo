@@ -1,11 +1,11 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
 @if(request('all'))
-    @include('reports.all._resource_dictionary')
+    @include('reports.all._revised_boq')
 @endif
 @section('header')
     <h2 class="">Revised BOQ Report</h2>
     <div class="pull-right">
-        <a href="?print=1&paint=std-activity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
+        <a href="?print=1&paint=revised_boq" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
             Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back

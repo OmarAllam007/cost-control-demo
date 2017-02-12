@@ -1,47 +1,92 @@
 @if($level['activities'] && count($level['activities']))
     <li>
-        <p class="
-       @if($tree_level ==0)
+
+        <div class="col-md-12 panel panel-default @if($tree_level ==0)
                 blue-first-level
              @elseif($tree_level ==1)
                 blue-third-level
                @else
                 blue-fourth-level
                     @endif
-                "
-        >
-            <a href="#{{$level['id']}}" class="
-       @if($tree_level ==0)
+                " style="
+            padding: 5px; display: inline-block">
+            <div class="col-md-12  @if($tree_level ==0)
                     blue-first-level
                  @elseif($tree_level ==1)
                     blue-third-level
                    @else
                     blue-fourth-level
                         @endif
-                    " data-toggle="collapse" style="@if($tree_level ==0) color:white; @endif text-decoration: none">
-                {{$level['name']}} | Original BOQ : {{number_format($level['original_boq'])}} | Revised BOQ : {{number_format($level['revised_boq'])}}
-            </a>
+                    ">
+                <div class="col-md-6">
+                    <a href="#{{$level['id']}}" data-toggle="collapse"
+                       @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
+                        {{$level['name']}}
+                    </a>
+                </div>
+                <table class="col-md-6">
+                    <thead>
+                    <tr>
+                        <td class="col-md-3">Original BOQ</td>
+                        <td class="col-md-3">Revised BOQ</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="col-md-3">{{number_format($level['original_boq'])}}</td>
+                        <td class="col-md-3">{{number_format($level['revised_boq'])}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        </p>
+
+        </div>
+
 
         <article id="{{$level['id']}}" class="tree--child collapse">
             <ul class="list-unstyled">
                 <li>
                     @foreach($level['activities'] as $keyActivity=>$activity)
-                        <p class="blue-second-level">
-                            <a href="#{{$level['id']}}{{str_replace([' ','(',')','.','/','&',','],'',$activity['name'])}}" class=" " data-toggle="collapse"
-                               style="@if($tree_level ==0) color:white; @endif text-decoration: none">
-                                {{$activity['name']}} | Original BOQ : {{number_format($activity['original_boq'])}} | Revised BOQ : {{number_format($activity['revised_boq'])}}
-                            </a>
+                        <div class="col-md-12 panel panel-default blue-second-level
+                                " style="
+            padding: 5px; display: inline-block">
+                            <div class="col-md-12 blue-second-level">
+                                <div class="col-md-6">
+                                    <a href="#{{$level['id']}}{{str_replace([' ','(',')','.','/','&',','],'',$activity['name'])}}"
+                                       data-toggle="collapse"
+                                       @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
+                                        {{$activity['name']}}
+                                    </a>
+                                </div>
+                                <table class="col-md-6">
+                                    <thead>
+                                    <tr>
+                                        <td class="col-md-3">Original BOQ</td>
+                                        <td class="col-md-3">Revised BOQ</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="col-md-3">{{number_format($activity['original_boq'])}}</td>
+                                        <td class="col-md-3">{{number_format($activity['revised_boq'])}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                        </p>
+
                         @if($activity['cost_accounts'] && count($activity['cost_accounts']))
-                            <article id="{{$level['id']}}{{str_replace([' ','(',')','.','/','&',','],'',$activity['name'])}}" class="tree--child collapse">
+                            <article
+                                    id="{{$level['id']}}{{str_replace([' ','(',')','.','/','&',','],'',$activity['name'])}}"
+                                    class="tree--child collapse">
                                 <ul class="list-unstyled">
                                     <li>
                                         <table class="table table-condensed">
                                             <thead>
                                             <tr class="output-header">
+                                                <th>Description</th>
                                                 <th>COST ACCOUNT</th>
                                                 <th>Original BOQ</th>
                                                 <th>Revised BOQ</th>
@@ -50,6 +95,9 @@
                                             <tbody>
                                             @foreach($activity['cost_accounts'] as $keyCostAccount=>$cost_account)
                                                 <tr>
+                                                    <td>
+                                                        {{$cost_account['description'] ?? ''}}
+                                                    </td>
                                                     <td>
                                                         {{$cost_account['cost_account']}}
                                                     </td>
