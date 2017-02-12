@@ -68,7 +68,7 @@ class ExportSurveyJob extends Job
             if($quantity->variables->count()){
                 foreach ($quantity->variables as $variable){
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'$V-'.$variable_number);
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $rowCount,$variable->name);
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $rowCount,$variable->name.' = '.$variable->value);
                     $variable_number++;
                     $col++;
                 }
