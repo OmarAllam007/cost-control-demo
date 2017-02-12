@@ -123,6 +123,8 @@ Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
 Route::group(['prefix' => 'activity-map', 'as' => 'activity-map.'], function () {
     Route::get('import/{project}', ['as' => 'import', 'uses' => 'ActivityMapController@import']);
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActivityMapController@postImport']);
+    Route::get('fix-import/{project}/{key}', ['as' => 'fix-import', 'uses' => 'ActivityMapController@fixImport']);
+    Route::post('fix-import/{project}/{key}', ['as' => 'post-fix-import', 'uses' => 'ActivityMapController@postFixImport']);
     Route::delete('delete/{project}', ['as' => 'delete', 'uses' => 'ActivityMapController@delete']);
 });
 

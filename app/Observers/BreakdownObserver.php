@@ -17,14 +17,20 @@ use App\BreakdownVariable;
 class BreakdownObserver
 {
 
+    function updating(Breakdown $breakdown)
+    {
+        if ($breakdown->isDirty('cost-account')) {
+            $breakdown->variables()->update(['qty_survey_id' => $breakdown->qty_survey->id]);
+        }
+    }
+
     function updated(Breakdown $breakdown)
     {
-        $resources = BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->get();
+        $shadows = BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->get();
         /** @var BreakDownResourceShadow $shadow */
-        foreach ($shadows as $shadow) {
-            $shadow->wbs_id = $breakdown->wbs_level_id;
-            $shadow->update();
-        }
+        $shadows->each(function (BreakDownResourceShadow $shadow){
+            $shadow->breakdown_resource->updateShadow();
+        });
     }
 
     function deleted(Breakdown $breakdown){

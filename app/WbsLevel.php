@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use App\Jobs\CacheWBSTree;
@@ -14,6 +15,7 @@ class WbsLevel extends Model
 {
     use SoftDeletes;
     use Tree, HasOptions;
+    use CachesQueries;
 
     protected $fillable = ['name', 'project_id', 'parent_id', 'comments', 'code'];
 

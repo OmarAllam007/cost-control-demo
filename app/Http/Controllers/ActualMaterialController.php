@@ -483,7 +483,8 @@ class ActualMaterialController extends Controller
             return \Redirect::to('/');
         }
 
-        $this->dispatch(new ExportCostShadow($project));
+        $file = $this->dispatch(new ExportCostShadow($project));
+        return \Response::download($file, slug($project->name) . '_actual_cost.csv', ['Content-Type: text/csv']);
     }
 
     protected function redirect($data, $key)
