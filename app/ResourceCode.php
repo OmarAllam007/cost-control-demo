@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResourceCode extends Model
 {
-    protected $fillable = ['code', 'project_id'];
+    protected $fillable = ['code', 'project_id', 'resource_id'];
 
     function resource()
     {

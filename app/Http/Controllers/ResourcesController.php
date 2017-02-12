@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessPartner;
 use App\Filter\ResourcesFilter;
 use App\Http\Controllers\Caching\ResourcesCache;
+use App\Http\Controllers\Reports\Productivity;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\Export\ExportPublicResourcesJob;
@@ -14,6 +15,7 @@ use App\Jobs\Modify\ModifyPublicResourcesJob;
 use App\Jobs\Modify\ModifyResourcesJob;
 use App\Jobs\ResourcesImportJob;
 use App\Project;
+use App\ResourceCode;
 use App\Resources;
 use App\ResourceType;
 use App\StdActivityResource;
@@ -423,15 +425,89 @@ class ResourcesController extends Controller
 
         $file = $request->file('file');
 
-        $count = $this->dispatch(new ImportResourceCodesJob($file->path(), $project_id));
+        $result = $this->dispatch(new ImportResourceCodesJob($file->path(), $project_id));
 
-        flash($count . ' Equivalent codes have been imported successfully', 'success');
+        if ($result['failed']->count()) {
+            $key = 'res_codes_' . time();
+            \Cache::put($key, $result, 180);
+            flash('Could not import some resource codes', 'warning');
+            return \Redirect::route('resources.fix-import-codes', $key);
+        }
+
+        flash($result['success'] . ' Equivalent codes have been imported successfully', 'success');
         if ($project_id) {
             return \Redirect::route('project.cost-control', $project_id);
         }
         return \Redirect::route('resources.index');
     }
 
+    function fixImportCodes($key)
+    {
+        if (cannot('write', 'resources')) {
+            flash("You are not authorized to do this action");
+            return \Redirect::to('/resources');
+        }
+
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            \Redirect::to('/');
+        }
+
+        if ($data['project']) {
+            if (cannot('resource_mapping', $data['project'])) {
+                flash("You are not authorized to do this action");
+                return \Redirect::route('project.cost-control', $data['project']);
+            }
+        }
+
+        $resourcesQuery = Resources::query();
+        if ($data['project']) {
+            $resourcesQuery->where('project_id', $data['project']->id);
+        } else {
+            $resourcesQuery->whereNull('project_id');
+        }
+        $data['resources'] = $resourcesQuery->with('types')->orderBy('name')->orderBy('resource_code')
+            ->select('id', 'name', 'resource_code', 'resource_type_id')->get();
+
+        return view('resources.fix-import-codes', $data);
+    }
+
+    function postFixImportCodes($key, Request $request)
+    {
+        if (cannot('write', 'resources')) {
+            flash("You are not authorized to do this action");
+            return \Redirect::to('/resources');
+        }
+
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            \Redirect::to('/');
+        }
+
+        if ($data['project']) {
+            if (cannot('resource_mapping', $data['project'])) {
+                flash("You are not authorized to do this action");
+                return \Redirect::route('project.cost-control', $data['project']);
+            }
+        }
+
+        $resources = $request->get('mapping');
+        $project_id = $data['project']->id ?? null;
+        foreach ($resources as $code => $resource_id) {
+            if ($resource_id) {
+                ResourceCode::create(compact('code', 'resource_id', 'project_id'));
+                ++$data['success'];
+            }
+        }
+
+        flash("{$data['success']} Equivalent codes have been imported successfully", 'success');
+        if ($project_id) {
+            return \Redirect::route('project.cost-control', $project_id);
+        }
+        return \Redirect::route('resources.index');
+    }
 
     public function exportAllResources()
     {
