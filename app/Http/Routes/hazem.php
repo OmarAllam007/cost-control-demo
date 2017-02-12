@@ -54,6 +54,8 @@ Route::group(['prefix' => 'resources'], function () {
 
     Route::get('import-codes', ['as' => 'resources.import-codes', 'uses' => 'ResourcesController@importCodes']);
     Route::post('import-codes', ['as' => 'resources.post-import-codes', 'uses' => 'ResourcesController@postImportCodes']);
+    Route::get('fix-import-codes/{key}', ['as' => 'resources.fix-import-codes', 'uses' => 'ResourcesController@fixImportCodes']);
+    Route::post('fix-import-codes/{key}', ['as' => 'resources.post-fix-import-codes', 'uses' => 'ResourcesController@postFixImportCodes']);
     Route::delete('delete-codes/{project}', ['as' => 'resources.delete-codes', 'uses' => 'ResourceCodeController@delete']);
 });
 

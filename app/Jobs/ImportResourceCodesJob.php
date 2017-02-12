@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Project;
 use App\Resources;
 
 class ImportResourceCodesJob extends ImportJob
@@ -30,8 +31,8 @@ class ImportResourceCodesJob extends ImportJob
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
 
-        $counter = 0;
-
+        $project = Project::find($this->project_id);
+        $result = ['success' => 0, 'failed' => collect(), 'project' => $project];
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -45,11 +46,13 @@ class ImportResourceCodesJob extends ImportJob
                 $resource = Resources::where(['resource_code' => $code, 'project_id' => $this->project_id])->first();
                 if ($resource) {
                     $resource->codes()->updateOrCreate(['code' => $data[1], 'project_id' => $this->project_id]);
-                    ++$counter;
+                    ++$result['success'];
+                } else {
+                    $result['failed']->push($data);
                 }
             }
         }
 
-        return $counter;
+        return $result;
     }
 }
