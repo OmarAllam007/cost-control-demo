@@ -176,6 +176,9 @@ class DuplicateProject
                     $this->breakdownResourcesMap->put($resource->id, $newBreakdown->resources()->create($attributes)->id);
                 });
 
+                $variables = $breakdown->variables()->pluck('value', 'display_order');
+                $newBreakdown->syncVariables($variables);
+
                 return $newBreakdown->id;
             });
     }

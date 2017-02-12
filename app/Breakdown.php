@@ -90,7 +90,6 @@ class Breakdown extends Model
             $variableNames = $this->std_activity->variables->pluck('label', 'display_order');
             foreach ($variables as $index => $value) {
                 $var = BreakdownVariable::where('qty_survey_id', $this->qty_survey->id)->where('display_order', $index)->first();
-
                 if ($var) {
                     $var->update(compact('value'));
                 } else {
