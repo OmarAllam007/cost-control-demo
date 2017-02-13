@@ -43,17 +43,6 @@
 @stop
 
 @section('body')
-
-    @can('periods', $project)
-        @if (!$project->open_period())
-            <div class="alert alert-warning">
-                <i class="fa fa-exclamation-triangle"></i>
-                No open period in the project. Please
-                <a href="/period/create?project={{$project->id}}">add a period here</a>.
-            </div>
-        @endif
-    @endcan
-
     @can('activity_mapping', $project)
         @if (!App\ActivityMap::forProject($project)->exists())
             <div class="alert alert-warning">

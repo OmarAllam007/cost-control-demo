@@ -59,12 +59,11 @@ class ActivityMapController extends Controller
             return \Redirect::route('project.cost-control', $project);
         }
 
-        ini_set('memory_limit', '1G');
         $result = \Cache::get($key);
         $rows = $result['failed'];
 
-        $codes = BreakDownResourceShadow::with('wbs')->select(['id', 'code', 'wbs_id', 'activity'])
-            ->get()->keyBy('code');
+        $codes = BreakDownResourceShadow::where('project_id', $project->id)->selectRaw('DISTINCT code, wbs_id, activity')
+            ->get();
 
         return view('activity-map.fix-import', compact('rows', 'codes', 'project'));
     }
@@ -85,11 +84,14 @@ class ActivityMapController extends Controller
 
         $data = request('mapping');
         foreach ($data as $key => $value) {
-            ActivityMap::updateOrCreate([
-                'project_id' => $this->project->id, 'activity_code' => $value, 'equiv_code' => $key
-            ]);
+            dd($value);
+            if ($value) {
+                ActivityMap::updateOrCreate([
+                    'project_id' => $project->id, 'activity_code' => $value, 'equiv_code' => $key
+                ]);
 
-            ++$result['success'];
+                ++$result['success'];
+            }
         }
 
         flash($result['success'] . ' Records have been imported', 'success');

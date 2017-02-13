@@ -49,30 +49,26 @@ class ImportActivityMapsJob extends ImportJob
                 continue;
             }
 
-            $code = mb_strtolower($data[0]);
-            if ($this->codes->has($code) && $data[1]) {
+            $code = strtolower(trim($data[0]));
+            if ($this->codes->search($code) && $data[1]) {
                 ActivityMap::updateOrCreate([
                     'project_id' => $this->project->id, 'activity_code' => $data[0], 'equiv_code' => $data[1]
                 ]);
 
                 ++$success;
             } else {
-                $failed->push($row);
+                $failed->push($data);
             }
         }
-
         return compact('success', 'failed');
     }
 
     protected function loadCodes()
     {
-        $codes = $this->project->breakdown_resources()
-            ->pluck('breakdown_resources.id', 'breakdown_resources.code');
-
-        $keys = array_map('strtolower', $codes->keys()->toArray());
-        $values = $codes->values()->toArray();
-
-        $this->codes = collect(array_combine($keys, $values));
+        $this->codes = $this->project->breakdown_resources()
+            ->pluck('breakdown_resources.code')->map(function($code) {
+                return strtolower(trim($code));
+            })->unique();
 
         return $this->codes;
     }

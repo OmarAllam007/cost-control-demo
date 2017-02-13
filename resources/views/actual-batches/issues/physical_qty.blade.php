@@ -1,6 +1,5 @@
 @php
     $data = json_decode($issue->data, true);
-
 @endphp
 
 <article class="panel panel-default">
@@ -48,13 +47,13 @@
 
                     <td>{{$row[2]}}</td>
                     <td>{{$row[3]}}</td>
-                    <td>{{number_format($row[5], 2)}}</td>
-                    <td>{{number_format($row[4], 2)}}</td>
+                    <td>{{$row[4]}}</td>
+                    <td>{{$row[5]}}</td>
 
                     @if ($counter == 0)
-                        <td rowspan="{{$rowsCount}}">{{number_format($resource[5], 2)}}</td>
-                        <td rowspan="{{$rowsCount}}">{{number_format($resource[4], 2)}}</td>
-                        <td rowspan="{{$rowsCount}}">{{number_format($resource[6], 2)}}</td>
+                        <td rowspan="{{$rowsCount}}">{{$resource[4]}}</td>
+                        <td rowspan="{{$rowsCount}}">{{$resource[5]}}</td>
+                        <td rowspan="{{$rowsCount}}">{{$resource[6]}}</td>
                     @endif
                 </tr>
                 @php $counter ++ @endphp
