@@ -23,6 +23,7 @@
                     <th>To Date Qty</th>
                     <th>U.O.M</th>
                     <th class="text-center">In progress</th>
+                    <th class="text-center">Progress</th>
                 </tr>
                 </thead>
 
@@ -37,9 +38,12 @@
                         <td>{{$resource->measure_unit}}</td>
                         <td class="text-center">
                             <label style="display: block; margin: 0">
-                                {{Form::hidden("closed[{$resource->id}]", 0)}}
-                                {{Form::checkbox("closed[{$resource->id}]", 1)}}
+                                {{Form::hidden("closed[{$resource->id}][open]", 0)}}
+                                {{Form::checkbox("closed[{$resource->id}][open]", 1, null, ['class' => 'is-open'])}}
                             </label>
+                        </td>
+                        <td class="text-center">
+                            {{Form::text("closed[{$resource->id}][progress]", null, ['class' => 'form-control progress-value'])}}
                         </td>
                     </tr>
                 @endforeach
@@ -53,4 +57,14 @@
     </div>
 
     {{Form::close()}}
+@endsection
+
+@section('javascript')
+    <script>
+        $(function () {
+            $('.is-open').on('change', function() {
+                $(this).closest('tr').find().attr('disabled', !this.checked);
+            }).change();
+        });
+    </script>
 @endsection
