@@ -111,7 +111,7 @@ class Breakdown extends Model
 
     public function duplicate($data)
     {
-        $newData = $this->toArray();
+        $newData = $this->getAttributes();
         unset($newData['id'], $newData['created_at']);
         $newData['wbs_level_id'] = $data['wbs_level_id'];
         $newData['cost_account'] = $data['cost_account'];
@@ -124,12 +124,16 @@ class Breakdown extends Model
             $newBreakdown->resources()->create($newResource);
         }
 
-        if ($newBreakdown->qty_survey) {
-            $qty_survey_id = $newBreakdown->qty_survey->id;
+        $qty_survey = Survey::where('cost_account', $newData['cost_account'])
+            ->where('wbs_level_id', $newData['wbs_level_id'])
+            ->select('id')->first();
+
+        if ($qty_survey) {
+            $qty_survey_id = $qty_survey->id;
             foreach ($this->variables as $var) {
                 $newVar = $var->toArray();
                 unset($var['id'], $var['breakdown_id'], $var['created_at'], $var['updated_at']);
-                $var['qty_survey_id'] = $qty_survey_id;
+                $newVar['qty_survey_id'] = $qty_survey_id;
                 $newBreakdown->variables()->create($newVar);
             }
         }
