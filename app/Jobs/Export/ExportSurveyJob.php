@@ -3,25 +3,39 @@
 namespace App\Jobs\Export;
 
 use App\Jobs\Job;
+use App\Survey;
 use App\Unit;
+use App\WbsLevel;
 
 
 class ExportSurveyJob extends Job
 {
     public $project;
     private $units;
+    private $wbs_levels;
+    private $variables;
     public function __construct($project)
     {
         $this->project = $project;
+        $this->wbs_levels = WbsLevel::where('project_id',$project->id)->get()->keyBy('id')->map(function ($level){
+            return $level;
+        });
+
+        $this->variables  = Survey::where('project_id',$project->id)->get()->keyBy('id')->map(function ($survey){
+           return $survey->variables;
+        });
+
+        $this->units = Unit::all()->keyBy('id')->map(function ($unit){
+            return $unit->type;
+        });
     }
 
 
     public function handle()
     {
         set_time_limit(600);
-        $this->units = Unit::all()->keyBy('id')->map(function ($unit){
-            return $unit->type;
-        });
+
+
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Cost Account');
@@ -53,20 +67,21 @@ class ExportSurveyJob extends Job
         $col++;
 
         foreach ($this->project->quantities as $quantity) {
+
             $cost_account = $quantity->cost_account;
-            $wbs_level = $quantity->wbsLevel->path;
+            $wbs_levels = $this->wbs_levels->get($quantity->wbs_level_id)->path;
             $description = $quantity->description;
             $budget_qty = $quantity->budget_qty;
             $eng_qty = $quantity->eng_qty;
 
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $cost_account);
-            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $wbs_level);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $wbs_levels);
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $description);
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $budget_qty);
             $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $eng_qty);
             $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $this->units->get($quantity->unit_id));
-            if($quantity->variables->count()){
-                foreach ($quantity->variables as $variable){
+            if($this->variables->get($quantity->id)->count()){
+                foreach ($this->variables->get($quantity->id) as $variable){
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'$V-'.$variable_number);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $rowCount,$variable->name.' = '.$variable->value);
                     $variable_number++;
