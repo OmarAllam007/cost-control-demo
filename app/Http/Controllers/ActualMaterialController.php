@@ -456,6 +456,7 @@ class ActualMaterialController extends Controller
                 $closed[$id]->status = 'In Progress';
                 if ($status['progress']) {
                     $closed[$id]->progress = $status['progress'];
+                    $rawData[$id]['progress'] = $status['progress'];
                 }
                 $closed[$id]->save();
                 $newResourceIds[] = $id;
