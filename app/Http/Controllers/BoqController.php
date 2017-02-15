@@ -8,6 +8,7 @@ use App\Http\Requests\WipeRequest;
 use App\Jobs\BoqImportJob;
 
 use App\Jobs\Export\ExportBoqJob;
+use App\Jobs\Modify\ModifyProjectBoq;
 use App\Project;
 use App\Unit;
 use App\UnitAlias;
@@ -252,5 +253,17 @@ class BoqController extends Controller
 
         flash($msg, 'info');
         return \Redirect::to(route('project.show', $project) . '#boq');
+    }
+    function modifyProjectBoqs(Project $project){
+
+        return view('boq.modify',compact('project'));
+    }
+    function postModifyProjectBoqs(Request $request){
+        $project = Project::find($request->get('project'));
+        $file = $request->file('file');
+
+        $this->dispatch(new ModifyProjectBoq($file,$project));
+
+        return view('project.show',compact('project'));
     }
 }
