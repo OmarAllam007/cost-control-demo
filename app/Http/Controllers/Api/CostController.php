@@ -21,11 +21,12 @@ class CostController extends Controller
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
         set_time_limit(180);
-        return WbsResource::whereIn('wbs_level_id', $wbs_level->getChildrenIds()) //->where('period_id', $wbs_level->project->open_period()->id)
+        $period = $wbs_level->project->open_period();
+        /* return WbsResource::whereIn('wbs_level_id', $wbs_level->getChildrenIds()) //->where('period_id', $wbs_level->project->open_period()->id)
             ->joinShadow()
             ->get();
 
-        /*$period = $wbs_level->project->open_period();
+
         if (!$period) {
             return [];
         }
@@ -33,9 +34,8 @@ class CostController extends Controller
         if ($request->has('all')) {
             return BreakDownResourceShadow::where('wbs_id', $wbs_level->getChildrenIds())->with('cost')->get();
         }
-
-        return CostShadow::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
-            ->where('period_id', $period->id)->with('budget')->get();*/
+*/
+        return CostShadow::joinShadow($wbs_level, $period)->get();
     }
 
     function resources(Project $project)

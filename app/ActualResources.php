@@ -4,6 +4,7 @@ namespace App;
 
 use App\Http\Controllers\Reports\ActivityResourceBreakDown;
 use App\Observers\ActualResourceObserver;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class ActualResources extends Model
@@ -35,7 +36,7 @@ class ActualResources extends Model
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id');
     }
 
-    function period_id()
+    function period()
     {
         return $this->belongsTo(Period::class);
     }
@@ -50,11 +51,29 @@ class ActualResources extends Model
         return $this->belongsTo(Resources::class);
     }
 
+    function budget()
+    {
+        return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
+    }
+
+    function scopeJoinBudget(Builder $query, WbsLevel $wbs)
+    {
+        $wbs_ids = $wbs->getChildrenIds();
+
+        $query->getQuery()
+            ->selectRaw('ar.*, sh.*')
+            ->join('breakdown_resources_shadow sh', 'ar.breakdown_resource_id', '=', 'sh.breakdown_resource_id')
+            ->from('actual_resource ar')
+            ->whereIn('ar.wbs_level_id', $wbs_ids);
+    }
+
     protected static function boot()
     {
         self::observe(ActualResourceObserver::class);
         parent::boot();
     }
+
+
 
     /*
     function getProgressAttribute()
