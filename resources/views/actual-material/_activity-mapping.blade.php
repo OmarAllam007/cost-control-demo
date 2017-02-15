@@ -13,19 +13,14 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($mapping['activity']->pluck(0)->unique() as $activity)
+        @foreach($activity->pluck(0)->unique() as $activityCode)
             <tr>
-                <td class="col-sm-2">
-                    <label>
-                        {{Form::checkbox("activity[$activity][skip]")}}
-                    </label>
-                </td>
-                <td class="col-sm-5">{{$activity}}</td>
-                <td class="col-sm-5">
+                <td class="col-sm-6">{{$activityCode}}</td>
+                <td class="col-sm-6">
                     <a href="#" class="select-activity-trigger">
                         Select Activity
                     </a>
-                    {{Form::hidden("activity[$activity][activity_code]", null, ['class' => 'resource_id'])}}
+                    {{Form::hidden("activity[$activityCode]", null, ['class' => 'resource_id'])}}
                 </td>
             </tr>
         @endforeach

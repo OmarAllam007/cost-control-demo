@@ -10,11 +10,11 @@
 @section('body')
     {{Form::open(['method' => 'post'])}}
     <div class="row">
-        @if ($mapping['activity']->count())
+        @if ($activity->count())
             @include('actual-material._activity-mapping')
         @endif
 
-        @if ($mapping['resources']->count())
+        @if ($resources->count())
             @include('actual-material._resource-mapping')
         @endif
     </div>

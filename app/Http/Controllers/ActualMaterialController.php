@@ -16,6 +16,8 @@ use App\Jobs\UpdateResourceDictJob;
 use App\Project;
 use App\ResourceCode;
 use App\Resources;
+use App\Support\CostImporter;
+use App\Support\CostImportFixer;
 use App\Support\CostIssuesLog;
 use App\WbsLevel;
 use App\WbsResource;
@@ -53,148 +55,56 @@ class ActualMaterialController extends Controller
 
         $result = $this->dispatch(new ImportActualMaterialJob($project, $filename));
 
-        $key = 'mat_' . time();
-        \Cache::add($key, $result, 180);
-
-        return $this->redirect($result, $key);
+        return $this->redirect($result);
     }
 
-    function fixMapping($key)
+    function fixMapping(ActualBatch $actual_batch)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
+        $importer = new CostImporter($actual_batch);
+        $result = $importer->checkMapping();
+        $data = $result['errors'];
 
-        $issuesLog = new CostIssuesLog($data['batch']);
-        if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
-            if ($data['mapping']['activity']->count() && cannot('activity_mapping', $data['project'])) {
-                $issuesLog->recordActivityMappingUnPrivileged($data['mapping']['activity']);
+        $issuesLog = new CostIssuesLog($actual_batch);
+        if ($data['activity']->count() || $data['resources']->count()) {
+            $unprivileged = false;
+            if ($data['activity']->count() && cannot('activity_mapping', $actual_batch->project)) {
+                $issuesLog->recordActivityMappingUnPrivileged($data['activity']);
                 $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
-                $data['mapping']['activity'] = collect();
+                $data['activity'] = collect();
+                $unprivileged = true;
             }
 
-            if ($data['mapping']['resources']->count() && cannot('resource_mapping', $data['project'])) {
-                $issuesLog->recordResourceMappingUnPrivileged($data['mapping']['resources']);
+            if ($data['resources']->count() && cannot('resource_mapping', $actual_batch->project)) {
+                $issuesLog->recordResourceMappingUnPrivileged($data['resources']);
                 $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
-                $data['mapping']['resources'] = collect();
+                $data['resources'] = collect();
+                $unprivileged = true;
             }
 
-            if (!$data['mapping']['activity']->count() && !$data['mapping']['resources']->count()) {
-                return $this->redirect($data, $key);
+            if ($unprivileged) {
+                $fixer = new CostImportFixer($actual_batch);
+                $result = $fixer->fixMappingUnprivileged($data);
+
+                return $this->redirect($result);
             }
         }
 
-        $data['projectActivityCodes'] = BreakDownResourceShadow::where('project_id', $data['project']->id)
+        $data['projectActivityCodes'] = BreakDownResourceShadow::where('project_id', $actual_batch->project_id)
             ->select(['id', 'code', 'wbs_id', 'cost_account', 'activity'])->with('wbs')->get()->keyBy('code');
+        $data['project'] = $actual_batch->project;
 
         return view('actual-material.fix-mapping', $data);
     }
 
-    function postFixMapping($key, Request $request)
+    function postFixMapping(ActualBatch $actual_batch, Request $request)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
+        $data['activity'] = $request->get('activity', []);
+        $data['resources'] = $request->get('resources', []);
 
-        $newActivities = collect();
-        $activityMappingLog = collect();
-        if ($request->has('activity')) {
-            foreach ($request->get('activity') as $code => $activityData) {
-                if (!empty($activityData['skip']) || empty($activityData['activity_code'])) {
-                    $activityMappingLog->put($code,  '');
-                    continue;
-                }
+        $fixer = new CostImportFixer($actual_batch);
+        $result = $fixer->fixMappingPrivileged($data);
 
-                foreach ($data['mapping']['activity'] as $activity) {
-                    if ($activity[0] == $code) {
-                        $activity[0] = $activityData['activity_code'];
-                        $activityMappingLog->put($code, $activityData['activity_code']);
-                        ActivityMap::updateOrCreate(['activity_code' => $activityData['activity_code'], 'equiv_code' => $code, 'project_id' => $data['project']->id]);
-                        $newActivities->push($activity);
-                    }
-                }
-            }
-
-        }
-        // Issue has been resolved remove from cached data
-        $data['mapping']['activity'] = collect();
-
-        $resourceMappingLog = collect();
-        if ($request->has('resources')) {
-            foreach ($request->get('resources') as $code => $resourceData) {
-                if (!empty($resourceData['skip']) || empty($resourceData['resource_code'])) {
-                    $resourceMappingLog->put($code, '');
-                    continue;
-                }
-
-                foreach ($data['mapping']['resources'] as $activity) {
-                    if ($activity[7] == $code) {
-                        $activity[7] = $resourceData['resource_code'];
-                        $resourceMappingLog->put($code, $resourceData['resource_code']);
-                        $resource = Resources::where(['resource_code' => $resourceData['resource_code'], 'project_id' => $data['project']->id])->first();
-                        ResourceCode::updateOrCreate(['project_id' => $data['project']->id, 'code' => $activity[7], 'resource_id' => $resource->id]);
-                        $newActivities->push($activity);
-                    }
-                }
-            }
-
-        }
-
-        // Save the data into error log
-        $issueLog = new CostIssuesLog($data['batch']);
-        $issueLog->recordActivityMappingPrivileged($activityMappingLog);
-        $issueLog->recordResourceMappingPrivileged($resourceMappingLog);
-
-        // Issue has been resolved remove from cached data
-        $data['mapping']['resources'] = collect();
-
-        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
-        return $this->redirect($this->merge($data, $result), $key);
-    }
-
-    function fixUnits($key)
-    {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
-
-//        $units = $data['units']->groupBy(function ($row) {
-//            return $row['resource']->wbs->name . ' / ' . $row['resource']->activity . ' / ' . $row['resource']->resource_name;
-//        });
-
-        return view('actual-material.fix-units', $data);
-    }
-
-    function postFixUnits($key, Request $request)
-    {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
-
-        $newActivities = collect();
-        $units = $request->get("units");
-
-        foreach ($data['units'] as $idx => $row) {
-            $qty = $units[$idx]['qty'];
-            $unit_price = $row[6] / $qty;
-            $row[3] = $row['unit_resource']->units->type;
-            $row[4] = $qty;
-            $row[5] = $unit_price;
-            $newActivities->push($row);
-        }
-
-        $result = dispatch(new ImportMaterialDataJob($data['project'], $newActivities, $data['batch']));
-        $data['units'] = collect();
-
-        return $this->redirect($this->merge($data, $result, $key), $key);
+        return $this->redirect($result);
     }
 
     function fixMultiple($key)
@@ -364,19 +274,18 @@ class ActualMaterialController extends Controller
         return \Redirect::route('project.cost-control', $data['project']);
     }
 
-    function resources($key)
+    function resources(ActualBatch $actual_batch)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
+        $project = $actual_batch->project;
+        $importer = new CostImporter($actual_batch);
+        $result = $importer->checkPhysicalQty();
 
-        $project = $data['project'];
-        $resources = $data['resources'];
-        $shadows = $this->getResourcesShadow($resources);
+        $errors = $result['errors'];
+        $activities = $errors->groupBy(function ($error) {
+            return $error['resource']->wbs->path . ' / ' . $error['resource']->activity;
+        });
 
-        return view('actual-material.resources', compact('project', 'shadows', 'resources'));
+        return view('actual-material.resources', compact('project', 'activities'));
     }
 
     function postResources(Request $request, $key)
@@ -502,29 +411,29 @@ class ActualMaterialController extends Controller
         return \Response::download($file, slug($project->name) . '_actual_cost.csv', ['Content-Type: text/csv']);
     }
 
-    protected function redirect($data, $key)
+    protected function redirect($result)
     {
-        \Cache::put($key, $data, 180);
+        $batch = $result['batch'];
+        $key = $batch->id;
 
-        if ($data['mapping']['activity']->count() || $data['mapping']['resources']->count()) {
-            return \Redirect::route('actual-material.mapping', $key);
-        } elseif ($data['resources']->count()) {
-            return \Redirect::route('actual-material.resources', $key);
-        } elseif ($data['closed']->count()) {
-            return \Redirect::route('actual-material.closed', $key);
-        } elseif ($data['multiple']->count()) {
-            return \Redirect::route('actual-material.multiple', $key);
-        } elseif ($data['to_import']->count()) {
-            $issueLog = new CostIssuesLog($data['batch']);
-            $issueLog->recordInvalid($data['invalid']);
-            $count = $this->saveImported($data['to_import']);
-            $data['to_import'] = collect();
-            $data['invalid'] = collect();
-            flash("$count Records has been imported", 'success');
-            return \Redirect::route('actual-material.progress', $key);
-        } else {
-            flash('No data has been imported');
-            return \Redirect::route('project.cost-control', $data['project']);
+        if (!empty($result['error'])) {
+           switch($result['error']) {
+               case 'mapping':
+                   return \Redirect::route('actual-material.mapping', $key);
+               case 'physical_qty':
+                   return \Redirect::route('actual-material.resources', $key);
+               case 'closed':
+                   return \Redirect::route('actual-material.closed', $key);
+               case 'cost_accounts':
+                   return \Redirect::route('actual-material.multiple', $key);
+               case 'progress':
+                   return \Redirect::route('actual-material.progress', $key);
+               case 'status':
+                   return \Redirect::route('actual-material.status', $key);
+           }
+       } else {
+            flash("{$result['success']} resources has been updated");
+            return \Redirect::route('project.cost-control', $batch->project);
         }
     }
 

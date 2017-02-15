@@ -11,6 +11,7 @@ use App\Period;
 use App\Project;
 use App\ResourceCode;
 use App\Resources;
+use App\Support\CostImporter;
 use App\Unit;
 use App\UnitAlias;
 use Carbon\Carbon;
@@ -49,10 +50,14 @@ class ImportActualMaterialJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
+            $hash = str_random(8);
 
-            $material->push($data);
+            $material->put($hash, $data);
         }
 
-        return dispatch(new ImportMaterialDataJob($this->project, $material, $batch));
+        $costImporter = new CostImporter($batch, $material);
+        return $costImporter->checkMapping();
+
+//        return dispatch(new ImportMaterialDataJob($this->project, $material, $batch));
     }
 }
