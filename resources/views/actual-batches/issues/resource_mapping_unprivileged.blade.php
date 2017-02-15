@@ -11,15 +11,15 @@
         <table class="table table-condensed table-bordered">
             <thead>
             <tr>
-                <td>Activity Code</td>
-                <td>Date</td>
-                <td>Resource</td>
-                <td>U.O.M</td>
-                <td>Qty</td>
-                <td>Unit Price</td>
-                <td>Cost</td>
-                <td>Resource COde</td>
-                <td>Doc #</td>
+                <th>Activity Code</th>
+                <th>Date</th>
+                <th>Resource</th>
+                <th>U.O.M</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Cost</th>
+                <th>Resource COde</th>
+                <th>Doc #</th>
             </tr>
             </thead>
             @foreach($data as $row)
