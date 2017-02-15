@@ -23,6 +23,16 @@ class CollectionMacrosServiceProvider extends ServiceProvider
 
             return $result;
         });
+
+        Collection::macro('sortByKeys', function() {
+            $keys = $this->keys()->sort();
+            $newCollection = collect();
+            $keys->each(function($key) use ($newCollection) {
+                $newCollection->put($key, $this->get($key));
+            });
+
+            return $newCollection;
+        });
     }
 
     /**

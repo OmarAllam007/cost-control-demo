@@ -5,7 +5,7 @@
 @if ($data->count())
     <article class="panel panel-warning">
         <div class="panel-heading">
-            <h4 class="panel-title">Activity Mapping - No Permission</h4>
+            <h4 class="panel-title">Activity Mapping &mdash;- No Permission</h4>
         </div>
 
         <table class="table table-condensed table-bordered">

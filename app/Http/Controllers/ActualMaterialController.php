@@ -287,11 +287,19 @@ class ActualMaterialController extends Controller
         $progress = collect($request->get('progress'));
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $progress->keys())->get()->keyBy('breakdown_resource_id');
 
+        $period_id = $data['project']->open_period()->id;
+
         $progressLog = collect();
         foreach ($progress as $id => $value) {
-            $resources[$id]->progress = $value;
-            $resources[$id]->save();
-            $progressLog->push($resources[$id]);
+            $resource = $resources[$id];
+            $resource->progress = $value;
+            if ($resource->progress == 100) {
+                $resource->status = 'Closed';
+            }
+            $resource->save();
+            $resource->import_cost = WbsLevel::joinBudget()->where('breakdown_resource_id', $resource->breakdown_resource_id)
+                ->where('period_id', $period_id)->get()->toArray();
+            $progressLog->push($resource);
         }
 
         $costIssues = new CostIssuesLog($data['batch']);
