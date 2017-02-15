@@ -3,7 +3,7 @@
     @include('reports.all._budget_dry_building')
 @endif
 @section('header')
-    <h2>Cost Summery Report</h2>
+    <h2>{{$project->name}} - Cost Summery Report</h2>
     <div class="pull-right">
         {{--<a href="?print=1&paint=cost-dry-building" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>--}}
         <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i

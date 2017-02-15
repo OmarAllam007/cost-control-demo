@@ -6,7 +6,7 @@
     <h2 class="">{{$project->name}} - BOQ PRICE LIST Report</h2>
     <div class="pull-right">
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
-        Print</a>
+            Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
@@ -14,7 +14,19 @@
 
 @endsection
 @section('body')
+    <div id="input">
 
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="codeSearch">Search By Code </label>
+                    <input type="text" class="form-control" id="codeSearch">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br>
     <br>
     <ul class="list-unstyled tree">
         @foreach($tree as $parentKey=>$level)
@@ -23,5 +35,15 @@
     </ul>
 @endsection
 @section('javascript')
+    <script>
+        $('#codeSearch').on('input', function (e) {
+            var input = $(this).val();
+            if (input == '') {
+                $("article:not(.collapse)").addClass('collapse');
+            }
+            $('article[data-code=' + input + ']').removeClass('collapse');
 
+            console.log();
+        });
+    </script>
 @endsection

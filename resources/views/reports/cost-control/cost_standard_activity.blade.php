@@ -3,7 +3,7 @@
     @include('reports.all._high_priority_materials')
 @endif
 @section('header')
-    <h2>Standard Activity Report</h2>
+    <h2>{{$project->name}} - Standard Activity Report</h2>
 @endsection
 @section('body')
     <ul class="list-unstyled tree">

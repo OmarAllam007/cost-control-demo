@@ -3,7 +3,7 @@
     @include('reports.all._standard-activity')
 @endif
 @section('header')
-    <h2 class="">Variance Analysis Report</h2>
+    <h2 class="">{{$project->name}} - Variance Analysis Report</h2>
     <div class="pull-right">
         {{--<a href="?print=1&paint=std-activity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>--}}
         {{--Print</a>--}}
