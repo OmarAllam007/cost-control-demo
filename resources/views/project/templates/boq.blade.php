@@ -1,4 +1,5 @@
 <template id="BOQTemplate">
+
     <div class="boq">
         <div class="loader" v-show="loading">
             <i class="fa fa-spinner fa-spin fa-3x"></i>
@@ -9,10 +10,29 @@
                 <a href="/boq/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe" title="Add BOQ item">
                     <i class="fa fa-plus"></i> Add item
                 </a>
+                <div class="btn dropdown" style="padding: 0px">
+                    <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        Importing
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a href="{{route('boq.import', $project->id)}}" class="btn  btn-sm in-iframe">
+                                <i class="fa fa-cloud-upload"></i> Import
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('boq.modify',['project'=>$project->id])}}" class="btn">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                Modify
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                <a href="{{route('boq.import', $project->id)}}" class="btn btn-success btn-sm in-iframe">
-                    <i class="fa fa-cloud-upload"></i> Import
-                </a>
             @endcan
 
             @can('boq-divisions')
@@ -29,9 +49,6 @@
         </div>
         <div class="clearfix"></div>
 
-        <section class="filters">
-
-        </section>
 
         <section v-if="!empty_boq" class="panel-group" id="BoqAccord">
             <div class="panel panel panel-primary panel-collapse" v-for="(discipline, items) in boq">
