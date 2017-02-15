@@ -222,6 +222,7 @@ class ActualMaterialController extends Controller
         $costAccountLog = collect();
         foreach ($data['multiple'] as $activityCode => $resources) {
             foreach ($resources as $resourceCode => $resource) {
+                $log = ['original' => $resource, 'distributed' => []];
                 foreach ($resource['resources'] as $shadow) {
                     $material = $requestResources[$activityCode][$resourceCode][$shadow->breakdown_resource_id];
                     if (empty($material['included'])) {
@@ -234,8 +235,10 @@ class ActualMaterialController extends Controller
                     $newResource['resource'] = $shadow;
                     $newResources->push($newResource);
 
-                    $costAccountLog->push(compact('resource', 'newResource'));
+                    $log['distributed'][] = $newResource;
                 }
+
+                $costAccountLog->push($log);
             }
         }
 
