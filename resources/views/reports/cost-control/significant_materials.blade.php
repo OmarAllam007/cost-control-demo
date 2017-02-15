@@ -3,7 +3,7 @@
     @include('reports.all._high_priority_materials')
 @endif
 @section('header')
-    <h2>Significant Materials Report</h2>
+    <h2>{{$project->name}} - Significant Materials Report</h2>
 
 @endsection
 

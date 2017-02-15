@@ -17,7 +17,7 @@
 
     </p>
 
-        <article id="{{$level['id']}}" class="tree--child collapse">
+        <article id="{{$level['id']}}" class="tree--child collapse" data-code="{{mb_strtolower($level['code'])}}">
             @if($level['boqs'] && count($level['boqs']))
             @foreach($level['boqs'] as $item=>$boq_details)
                 <ul class="list-unstyled">

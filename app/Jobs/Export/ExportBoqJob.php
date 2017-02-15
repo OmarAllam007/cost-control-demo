@@ -12,10 +12,24 @@ class ExportBoqJob extends Job
 {
 
     public $project;
+    private $wbs_levels;
+    private $boqs;
+    private $units;
 
     public function __construct($project)
     {
         $this->project = $project;
+        $this->wbs_levels = WbsLevel::where('project_id',$project->id)->get()->keyBy('id')->map(function ($level){
+            return $level;
+        });
+        $this->boqs = BoqDivision::all()->keyBy('id')->map(function ($division){
+           return $division->name;
+        });
+        $this->units = Unit::all()->keyBy('id')->map(function ($unit){
+            return $unit->type;
+        });
+
+
     }
 
     public function handle()
@@ -39,7 +53,8 @@ class ExportBoqJob extends Job
         $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'SubContractors');
         $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Man Power');
         $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'WBS-LEVEL');
-        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Division');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Division');
+        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'WBS_PATH');
         $rowCount = 2;
 
         foreach ($items as $item) {
@@ -50,7 +65,7 @@ class ExportBoqJob extends Job
 
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $item->type);
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, isset(Unit::find($item->unit_id)->type) ? Unit::find($item->unit_id)->type : '');
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $this->units->get($item->unit_id));
 
             $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $item->quantity);
 
@@ -60,8 +75,10 @@ class ExportBoqJob extends Job
             $objPHPExcel->getActiveSheet()->SetCellValue('J' . $rowCount, $item->materials);
             $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $item->subcon);
             $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $item->subcon);
-            $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, WbsLevel::find($item->wbs_id)->path);
-            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, BoqDivision::find($item->division_id)->name ?? '');
+
+            $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $this->wbs_levels->get($item->wbs_id)->path);
+//            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $this->boqs->get($item->division_id));
+            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $item->wbs->code);
             $rowCount++;
         }
 
