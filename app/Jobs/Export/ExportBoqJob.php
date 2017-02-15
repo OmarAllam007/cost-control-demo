@@ -53,7 +53,8 @@ class ExportBoqJob extends Job
         $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'SubContractors');
         $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Man Power');
         $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'WBS-LEVEL');
-        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Division');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Division');
+        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'WBS_PATH');
         $rowCount = 2;
 
         foreach ($items as $item) {
@@ -76,7 +77,8 @@ class ExportBoqJob extends Job
             $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $item->subcon);
 
             $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $this->wbs_levels->get($item->wbs_id)->path);
-            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $this->boqs->get($item->division_id));
+//            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $this->boqs->get($item->division_id));
+            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $item->wbs->code);
             $rowCount++;
         }
 
