@@ -176,7 +176,9 @@ class CostImporter
             $activityCode = $this->activityCodes->get($row[0]);
             $resourceIds = $this->resourcesMap->get($row[7]);
 
-            $shadows = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->get();
+            $shadows = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
+                ->where('progress', '<', 100)->where('status', '!=', 'Closed')
+                ->get();
             if ($shadows->count() > 1) {
                 $row['hash'] = $hash;
                 $row['resources'] = $shadows;

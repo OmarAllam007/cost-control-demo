@@ -6,6 +6,7 @@ use App\ActivityMap;
 use App\ActualBatch;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class CostImportFixer
@@ -76,6 +77,33 @@ class CostImportFixer
 
     function fixPhysicalQuantity($data)
     {
+        $importer = new CostImporter($this->batch);
+        $result = $importer->checkPhysicalQty();
+        $errors = $result['errors'];
+        $hashes = $errors->pluck('rows.*.hash')->flatten();
+        $this->rows = $this->rows->forget($hashes->toArray());
+
+        $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
+
+        foreach ($data as $id => $qty) {
+            $hash = str_random(6);
+            $resource = $resources[$id];
+
+            $rows = $errors[$id]['rows'];
+            $total = $rows->sum(6);
+            $unit_price = $total / $qty;
+            $doc_no = $rows->pluck(8)->unique()->implode(', ');
+
+            $newResource = [
+                $resource->code, '',
+                $resource->resource_name, $resource->measure_unit,
+                $qty, $unit_price, $total,
+                $resource->resource_code,
+                $doc_no
+            ];
+
+            $this->rows->put($hash, $newResource);
+        }
 
         $importer = new CostImporter($this->batch, $this->rows);
         return $importer->checkClosed();

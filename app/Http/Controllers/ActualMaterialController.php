@@ -288,55 +288,12 @@ class ActualMaterialController extends Controller
         return view('actual-material.resources', compact('project', 'activities'));
     }
 
-    function postResources(Request $request, $key)
+    function postResources(ActualBatch $actual_batch, Request $request)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
+        $fixer = new CostImportFixer($actual_batch);
+        $result = $fixer->fixPhysicalQuantity($request->get('quantities', []));
 
-        $shadows = $this->getResourcesShadow($data['resources']);
-        $quantities = $request->get('quantities');
-        $newResources = collect();
-        $resourcesLog = collect();
-        foreach ($data['resources'] as $code => $resources) {
-            $code = mb_strtolower($code);
-            foreach ($resources as $id => $rows) {
-                if (empty($shadows[$code]['resources'][$id])) {
-                    $data['invalid']->push($resources);
-                    continue;
-                }
-
-                $shadow = $shadows[$code]['resources'][$id];
-                $qty = $quantities[$code][$id];
-                $total = collect($rows)->sum('6');
-
-                if (floatval($qty)) {
-                    $unit_price = $total / $qty;
-                } else {
-                    $total = $qty = $unit_price = 0;
-                }
-
-                $newResources->push($resource = [
-                    $shadow->code, '',
-                    $shadow->resource_name, $shadow->measure_unit,
-                    $qty, $unit_price, $total, $shadow->resource_code, ''
-                ]);
-
-                $resource['rows'] = $rows;
-
-                $resourcesLog->push($resource);
-            }
-        }
-
-        $issuesLog = new CostIssuesLog($data['batch']);
-        $issuesLog->recordPhysicalQuantity($resourcesLog);
-
-        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
-        $data['resources'] = collect();
-
-        return $this->redirect($this->merge($data, $result), $key);
+        return $this->redirect($result);
     }
 
     function closed($key)

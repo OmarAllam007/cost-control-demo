@@ -19,7 +19,6 @@
                     <th>Budget Resource Code</th>
                     <th>Budget Resource Name</th>
                     <th>Budget Unit</th>
-                    <th>Previous Qty</th>
                     <th>Budget U.O.M</th>
                     <th>Store Resource Code</th>
                     <th>Store Resource Name</th>
@@ -43,7 +42,6 @@
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_code}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_name}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->budget_unit}}</td>
-                                <td rowspan="{{$row_span}}">{{number_format($resource['resource']->cost->previous_qty ?? 0, 2)}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->measure_unit}}</td>
                             @endif
                             <td>{{$store_resource[7]}}</td>
