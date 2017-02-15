@@ -98,6 +98,11 @@ Route::group(['prefix' => 'project'], function () {
     //Export Project Reports
     Route::get('export_std_activity/{project}',['as'=>'budget_std_activity.export','uses'=>'ExportReportController@exportStdActivity']);
     Route::get('export_productivity/{project}',['as'=>'budget_productivity.export','uses'=>'ExportReportController@exportProductivity']);
+
+    //Modify Boq
+    Route::get('modify_boq/{project}',['as'=>'boq.modify','uses'=>'BoqController@modifyProjectBoqs']);
+    Route::post('modify_boq/',['as'=>'boq.post-modify','uses'=>'BoqController@postModifyProjectBoqs']);
+
 });
 //reports cost control
 
