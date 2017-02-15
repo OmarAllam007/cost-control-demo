@@ -38,12 +38,13 @@ class ExportSurveyJob extends Job
 
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Cost Account');
-        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'WBS-Levels');
-        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Description');
-        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Budget Quantity');
-        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Engineer Quantity');
-        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Unit');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Cost Account');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'WBS-Levels');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'WBS-Code');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Description');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Budget Quantity');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Engineer Quantity');
+//        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Unit');
         $col = 0;
         $rowCount = 2;
         $variable_number = 1;
@@ -52,6 +53,9 @@ class ExportSurveyJob extends Job
         $col++;
 
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'WBS-Levels');
+        $col++;
+
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'WBS-Code');
         $col++;
 
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Description');
@@ -66,20 +70,24 @@ class ExportSurveyJob extends Job
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Unit');
         $col++;
 
+
+
         foreach ($this->project->quantities as $quantity) {
 
             $cost_account = $quantity->cost_account;
             $wbs_levels = $this->wbs_levels->get($quantity->wbs_level_id)->path;
+            $wbs_code = $this->wbs_levels->get($quantity->wbs_level_id)->code;
             $description = $quantity->description;
             $budget_qty = $quantity->budget_qty;
             $eng_qty = $quantity->eng_qty;
 
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $cost_account);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $wbs_levels);
-            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $description);
-            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $budget_qty);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $eng_qty);
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $this->units->get($quantity->unit_id));
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $wbs_code);
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $description);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $budget_qty);
+            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $eng_qty);
+            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $this->units->get($quantity->unit_id));
             if($this->variables->get($quantity->id)->count()){
                 foreach ($this->variables->get($quantity->id) as $variable){
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'$V-'.$variable_number);
