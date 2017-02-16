@@ -2,7 +2,7 @@
     $data = json_decode($issue->data, true);
 @endphp
 
-<article class="panel panel-default">
+<article class="panel panel-warning">
     <div class="panel-heading">
         <h4 class="panel-title">Physical Quantity</h4>
     </div>
@@ -41,19 +41,19 @@
                                 {{$shadow->wbs->path . ' / ' . $shadow->activity }}
                             @endif
                         </td>
-                        <td rowspan="{{$rowsCount}}">{{$resource[2]}}</td>
-                        <td rowspan="{{$rowsCount}}">{{$resource[3]}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[2])}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[3])}}</td>
                     @endif
 
                     <td>{{$row[2]}}</td>
                     <td>{{$row[3]}}</td>
-                    <td>{{$row[4]}}</td>
-                    <td>{{$row[5]}}</td>
+                    <td>{{sprintf('%.02f', $row[4])}}</td>
+                    <td>{{sprintf('%.02f', $row[5])}}</td>
 
                     @if ($counter == 0)
-                        <td rowspan="{{$rowsCount}}">{{$resource[4]}}</td>
-                        <td rowspan="{{$rowsCount}}">{{$resource[5]}}</td>
-                        <td rowspan="{{$rowsCount}}">{{$resource[6]}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[4])}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[5])}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[6])}}</td>
                     @endif
                 </tr>
                 @php $counter ++ @endphp

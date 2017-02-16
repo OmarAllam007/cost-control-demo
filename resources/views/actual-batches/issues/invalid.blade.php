@@ -2,7 +2,7 @@
     $rows = json_decode($issue->data, true);
 @endphp
 
-<article class="panel panel-default">
+<article class="panel panel-warning">
     <div class="panel-heading">
         <h4 class="panel-title">Invalid Data</h4>
     </div>

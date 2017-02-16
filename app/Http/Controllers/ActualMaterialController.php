@@ -222,6 +222,7 @@ class ActualMaterialController extends Controller
         $costAccountLog = collect();
         foreach ($data['multiple'] as $activityCode => $resources) {
             foreach ($resources as $resourceCode => $resource) {
+                $log = ['original' => $resource, 'distributed' => []];
                 foreach ($resource['resources'] as $shadow) {
                     $material = $requestResources[$activityCode][$resourceCode][$shadow->breakdown_resource_id];
                     if (empty($material['included'])) {
@@ -234,8 +235,10 @@ class ActualMaterialController extends Controller
                     $newResource['resource'] = $shadow;
                     $newResources->push($newResource);
 
-                    $costAccountLog->push(compact('resource', 'newResource'));
+                    $log['distributed'][] = $newResource;
                 }
+
+                $costAccountLog->push($log);
             }
         }
 
@@ -287,11 +290,19 @@ class ActualMaterialController extends Controller
         $progress = collect($request->get('progress'));
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $progress->keys())->get()->keyBy('breakdown_resource_id');
 
+        $period_id = $data['project']->open_period()->id;
+
         $progressLog = collect();
         foreach ($progress as $id => $value) {
-            $resources[$id]->progress = $value;
-            $resources[$id]->save();
-            $progressLog->push($resources[$id]);
+            $resource = $resources[$id];
+            $resource->progress = $value;
+            if ($resource->progress == 100) {
+                $resource->status = 'Closed';
+            }
+            $resource->save();
+            $resource->import_cost = WbsLevel::joinBudget()->where('breakdown_resource_id', $resource->breakdown_resource_id)
+                ->where('period_id', $period_id)->get()->toArray();
+            $progressLog->push($resource);
         }
 
         $costIssues = new CostIssuesLog($data['batch']);
@@ -456,6 +467,7 @@ class ActualMaterialController extends Controller
                 $closed[$id]->status = 'In Progress';
                 if ($status['progress']) {
                     $closed[$id]->progress = $status['progress'];
+                    $rawData[$id]['progress'] = $status['progress'];
                 }
                 $closed[$id]->save();
                 $newResourceIds[] = $id;
