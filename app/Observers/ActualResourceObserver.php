@@ -20,30 +20,32 @@ class ActualResourceObserver
         $this->updateShadow($resource);
     }
 
-    function deleted(ActualResources $resource)
+    function updated(ActualResources $resource)
     {
         $this->updateShadow($resource);
     }
 
+    function deleted(ActualResources $resource)
+    {
+        $conditions = [
+            'breakdown_resource_id' => $resource->breakdown_resource_id,
+            'period_id' => $resource->period_id,
+        ];
+
+        CostShadow::where($conditions)->delete();
+    }
+
     protected function updateShadow(ActualResources $resource)
     {
-        $trans = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
-//            ->where('wbs_resources.period_id', $resource->period_id)
-            ->where('wbs_resources.resource_id', $resource->resource_id)
+        $trans = WbsResource::joinShadow()
+            ->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
+            ->where('period_id', $resource->period_id)
             ->first();
 
         $conditions = [
             'breakdown_resource_id' => $resource->breakdown_resource_id,
             'period_id' => $resource->period_id,
-            'resource_id' => $resource->resource_id,
         ];
-
-        if (!$trans) {
-            CostShadow::where($conditions)->get()->each(function(CostShadow $shadow){
-                $shadow->delete();
-            });
-            return;
-        }
 
         $shadow = CostShadow::firstOrCreate($conditions);
 

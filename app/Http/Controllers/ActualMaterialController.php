@@ -161,25 +161,9 @@ class ActualMaterialController extends Controller
         return $this->redirect($this->merge($data, $result), $key);
     }
 
-    function progress($key)
+    function progress(ActualBatch $actual_batch)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
 
-        $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->whereRaw('csh.to_date_qty > bsh.budget_unit')->pluck('breakdown_resource_id', 'breakdown_resource_id');
-        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function ($resource) {
-            $wbs = WbsLevel::find($resource->wbs_id);
-            return $wbs->path . ' / ' . $resource->activity;
-        });
-
-        if (!$resources->count()) {
-            return \Redirect::route('actual-material.status', $key);
-        }
-
-        $project = $data['project'];
         return view('actual-material.progress', compact('key', 'resources', 'project'));
     }
 
@@ -293,22 +277,15 @@ class ActualMaterialController extends Controller
         $fixer = new CostImportFixer($actual_batch);
         $result = $fixer->fixPhysicalQuantity($request->get('quantities', []));
 
-        return $this->redirect($result);
+        return $this->redirect($result['batch']);
     }
 
-    function closed($key)
+    function closed(ActualBatch $actual_batch)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
-
-        $closed = $data['closed']->pluck('resource')->keyBy('id')->groupBy(function ($resource) {
-            return $resource->wbs->path . ' / ' . $resource->activity;
-        });
-
-        $project = $data['project'];
+        $project = $actual_batch->project;
+        $importer = new CostImporter($actual_batch);
+        $result = $importer->checkClosed();
+        $closed = $result['errors'];
 
         return view('actual-material.closed', compact('closed', 'project'));
     }

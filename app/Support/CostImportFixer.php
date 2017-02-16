@@ -80,11 +80,12 @@ class CostImportFixer
         $importer = new CostImporter($this->batch);
         $result = $importer->checkPhysicalQty();
         $errors = $result['errors'];
+
         $hashes = $errors->pluck('rows.*.hash')->flatten();
         $this->rows = $this->rows->forget($hashes->toArray());
 
         $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
-
+        $resourcesLog = collect();
         foreach ($data as $id => $qty) {
             $hash = str_random(6);
             $resource = $resources[$id];
@@ -103,7 +104,10 @@ class CostImportFixer
             ];
 
             $this->rows->put($hash, $newResource);
+            $resourcesLog->push(compact('resource', 'rows', 'newResource'));
         }
+
+        (new CostIssuesLog($this->batch))->recordPhysicalQuantity($resourcesLog);
 
         $importer = new CostImporter($this->batch, $this->rows);
         return $importer->checkClosed();
@@ -133,9 +137,7 @@ class CostImportFixer
 
     function fixMultipleCostAccounts($data)
     {
-
         $importer = new CostImporter($this->batch, $this->rows);
-        return $importer->saveAndCheckProgress();
+        return $importer->save();
     }
-
 }

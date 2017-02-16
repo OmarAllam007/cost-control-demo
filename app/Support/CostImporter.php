@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\ActivityMap;
 use App\ActualBatch;
+use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
 use App\Resources;
@@ -31,6 +32,9 @@ class CostImporter
     /** @var Collection */
     protected $data_to_save;
 
+    /** @var Collection */
+    protected $actual_resources;
+
     function __construct(ActualBatch $batch, Collection $rows = null)
     {
         set_time_limit(600);
@@ -38,13 +42,13 @@ class CostImporter
         $this->batch = $batch;
 
         if ($rows) {
-            $this->data_to_save = collect();
             $this->rows = $rows;
             $this->cache();
         } else {
             $key = 'batch_' . $this->batch->id;
             $data = \Cache::get($key);
             $this->rows = $data['rows'];
+            $this->actual_resources = $data['actual_resources'];
         }
 
         $this->loadActivityCodes();
@@ -66,7 +70,7 @@ class CostImporter
 
         foreach ($this->rows as $row) {
             $code = trim(strtolower($row[7]));
-            if (!$this->activityCodes->has($code)) {
+            if (!$this->resourcesMap->has($code)) {
                 $errors['resources']->push($row);
             }
         }
@@ -179,6 +183,7 @@ class CostImporter
             $shadows = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
                 ->where('progress', '<', 100)->where('status', '!=', 'Closed')
                 ->get();
+
             if ($shadows->count() > 1) {
                 $row['hash'] = $hash;
                 $row['resources'] = $shadows;
@@ -190,12 +195,81 @@ class CostImporter
             return ['error' => 'cost_accounts', 'errors' => $errors, 'batch' => $this->batch];
         }
 
-        return $this->saveAndCheckProgress();
+        return $this->save();
     }
 
-    function saveAndCheckProgress()
+    /**
+     * #E05 - Progress
+     *
+     * Save the data and check if we need to provide progress
+     */
+    function save()
     {
+        $project_id = $this->batch->project_id;
+        $period_id = $this->batch->project->open_period()->id;
+        $batch_id = $this->batch->id;
 
+        $this->actual_resources = collect();
+
+        foreach ($this->rows as $row) {
+            if (isset($row['resource'])) {
+                $resource = $row['resource'];
+                unset($row['resource']);
+            } else {
+                $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+                $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
+                $resource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->first();
+            }
+
+            if (!$resource) {
+                continue;
+            }
+
+            $actual_resource = ActualResources::create([
+                'project_id' => $project_id, 'period_id' => $period_id, 'wbs_level_id' => $resource->wbs_id, 'batch_id' => $batch_id,
+                'breakdown_resource_id' => $resource->breakdown_resource_id, 'original_code' => $row[7], 'qty' => $row[4], 'unit_price' => $row[5], 'cost' => $row[6],
+                'unit_id' => $resource->unit_id, 'resource_id' => $resource->resource_id, 'doc_no' => $row[8], 'original_data' => json_encode($row),
+                'action_date' => $row[1]
+            ]);
+
+            $this->actual_resources->push($actual_resource);
+        }
+
+        $this->rows = collect();
+        $this->cache();
+
+        return $this->progress();
+
+
+    }
+
+    function progress()
+    {
+        $breakdown_resource_ids = $this->actual_resources->pluck('breakdown_resource_id');
+        $errors = BreakDownResourceShadow::with('cost')
+            ->whereIn('break_down_resource_id', $breakdown_resource_ids)->get()
+            ->filter(function ($resource) {
+                return $resource->cost->to_date_qty >= $resource->budget_unit;
+            });
+
+        if ($errors->count()) {
+            return ['error' => 'progress', 'errors' => $errors];
+        }
+
+        return $this->status();
+    }
+
+    function status()
+    {
+        if (count($this->actual_resources)) {
+            $breakdown_ids = $this->actual_resources->pluck('breakdown_resource_id');
+        } else {
+            $breakdown_ids = ActualResources::where('batch_id', $this->batch->id)->pluck('breakdown_resource_id');
+        }
+
+        $resources = BreakDownResourceShadow::with('cost')->whereIn('breakdown_resource_id', $breakdown_ids)->get();
+
+        return ['error' => 'status', 'errors' => $resources];
     }
 
     protected function loadActivityCodes()
@@ -242,7 +316,6 @@ class CostImporter
     }
 
 
-
     protected function loadUnits()
     {
         $this->unitsMap = collect();
@@ -261,6 +334,8 @@ class CostImporter
     protected function cache()
     {
         $key = 'batch_' . $this->batch->id;
-        \Cache::put($key, ['batch' => $this->batch, 'rows' => $this->rows, 'data_to_save' => $this->data_to_save], 1440);
+        \Cache::put($key, ['batch' => $this->batch, 'rows' => $this->rows, 'actual_resources' => $this->actual_resources], 1440);
     }
+
+
 }
