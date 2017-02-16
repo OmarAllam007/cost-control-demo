@@ -6,10 +6,12 @@ use App\ActivityMap;
 use App\ActualBatch;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
+use App\Jobs\UpdateResourceDictJob;
 use App\ResourceCode;
 use App\Resources;
 use App\Unit;
 use App\UnitAlias;
+use function GuzzleHttp\Psr7\str;
 use Illuminate\Support\Collection;
 
 class CostImporter
@@ -115,7 +117,7 @@ class CostImporter
                 $count = $record['rows']->pluck(7)->unique()->count();
                 if ($count > 1) {
                     $errors->put($id, $record);
-                    conitnue;
+                    continue;
                 }
 
                 foreach ($record['rows'] as $row) {
@@ -176,12 +178,15 @@ class CostImporter
         $errors = collect();
 
         foreach ($this->rows as $hash => $row) {
-            $activityCode = $this->activityCodes->get($row[0]);
-            $resourceIds = $this->resourcesMap->get($row[7]);
+            $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+            $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
+
 
             $shadows = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
                 ->where('progress', '<', 100)->where('status', '!=', 'Closed')
                 ->get();
+
+            //TODO: If shadows not found add to invalid
 
             if ($shadows->count() > 1) {
                 $row['hash'] = $hash;
@@ -210,6 +215,8 @@ class CostImporter
 
         $this->actual_resources = collect();
 
+        $resource_dict = collect();
+
         foreach ($this->rows as $row) {
             if (isset($row['resource'])) {
                 $resource = $row['resource'];
@@ -221,6 +228,7 @@ class CostImporter
             }
 
             if (!$resource) {
+                //TODO: add to invalid
                 continue;
             }
 
@@ -231,23 +239,31 @@ class CostImporter
                 'action_date' => $row[1]
             ]);
 
+            $resource_dict->push($resource->resource_id);
+
             $this->actual_resources->push($actual_resource);
         }
+
+        dispatch(new UpdateResourceDictJob($this->batch->project, $resource_dict));
 
         $this->rows = collect();
         $this->cache();
 
-        return $this->progress();
-
-
+        return $this->checkProgress();
     }
 
-    function progress()
+    function checkProgress()
     {
-        $breakdown_resource_ids = $this->actual_resources->pluck('breakdown_resource_id');
+        if ($this->actual_resources->count()) {
+            $breakdown_resource_ids = $this->actual_resources->pluck('breakdown_resource_id');
+        } else {
+            $breakdown_resource_ids = ActualResources::where('batch_id', $this->batch->id)->pluck('breakdown_resource_id');
+        }
+
         $errors = BreakDownResourceShadow::with('cost')
             ->whereIn('breakdown_resource_id', $breakdown_resource_ids)->get()
             ->filter(function ($resource) {
+                $resource->cost = $resource->cost()->first();
                 return $resource->cost->to_date_qty >= $resource->budget_unit;
             });
 
@@ -255,10 +271,10 @@ class CostImporter
             return ['error' => 'progress', 'errors' => $errors, 'batch' => $this->batch];
         }
 
-        return $this->status();
+        return $this->checkStatus();
     }
 
-    function status()
+    function checkStatus()
     {
         if (count($this->actual_resources)) {
             $breakdown_ids = $this->actual_resources->pluck('breakdown_resource_id');
@@ -268,7 +284,7 @@ class CostImporter
 
         $resources = BreakDownResourceShadow::with('cost')->whereIn('breakdown_resource_id', $breakdown_ids)->get();
 
-        return ['error' => 'status', 'errors' => $resources];
+        return ['error' => 'status', 'errors' => $resources, 'batch' => $this->batch];
     }
 
     protected function loadActivityCodes()

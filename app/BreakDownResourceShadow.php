@@ -60,7 +60,7 @@ class BreakDownResourceShadow extends Model
 
     function cost()
     {
-        return $this->belongsTo(CostShadow::class, 'breakdown_resource_id', 'breakdown_resource_id')->where('period_id', $this->project->open_period()->id);
+        return $this->hasOne(CostShadow::class, 'breakdown_resource_id', 'breakdown_resource_id')->where('period_id', $this->project->open_period()->id);
     }
 
     function wbs_resource()

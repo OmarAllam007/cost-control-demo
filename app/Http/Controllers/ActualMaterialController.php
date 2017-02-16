@@ -107,13 +107,52 @@ class ActualMaterialController extends Controller
         return $this->redirect($result);
     }
 
-    function fixMultiple($key)
+    function resources(ActualBatch $actual_batch)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
+        $project = $actual_batch->project;
+        $importer = new CostImporter($actual_batch);
+        $result = $importer->checkPhysicalQty();
+
+        $errors = $result['errors'];
+        $activities = $errors->groupBy(function ($error) {
+            return $error['resource']->wbs->path . ' / ' . $error['resource']->activity;
+        });
+
+        return view('actual-material.resources', compact('project', 'activities'));
+    }
+
+    function postResources(ActualBatch $actual_batch, Request $request)
+    {
+        $fixer = new CostImportFixer($actual_batch);
+        $result = $fixer->fixPhysicalQuantity($request->get('quantities', []));
+
+        return $this->redirect($result);
+    }
+    function closed(ActualBatch $actual_batch)
+    {
+        $project = $actual_batch->project;
+        $importer = new CostImporter($actual_batch);
+        $result = $importer->checkClosed();
+        $closed = $result['errors']->groupBy(function ($resource) {
+            return $resource->wbs->path . ' / ' . $resource->activity;
+        })->sortByKeys();
+
+        return view('actual-material.closed', compact('closed', 'project'));
+    }
+
+    function postClosed(ActualBatch $actual_batch, Request $request)
+    {
+        $fixer = new CostImportFixer($actual_batch);
+        $result = $fixer->fixClosed($request->get('closed', []));
+
+        return $this->redirect($result);
+    }
+
+    function fixMultiple(ActualBatch $actual_batch)
+    {
+        $importer = new CostImporter($actual_batch);
+        $errors = $importer->checkMultipleCostAccounts();
+        dd($errors);
 
         return view('actual-material.fix-multiple', $data);
     }
@@ -165,7 +204,8 @@ class ActualMaterialController extends Controller
     {
         $project = $actual_batch->project;
         $importer = new CostImporter($actual_batch);
-        $result = $importer->checkClosed();
+        $result = $importer->checkProgress();
+
         $resources = $result['errors']->groupBy(function ($resource) {
             return $resource->wbs->path . ' / ' . $resource->activity;
         })->sortByKeys();
@@ -173,176 +213,38 @@ class ActualMaterialController extends Controller
         return view('actual-material.progress', compact('key', 'resources', 'project'));
     }
 
-    function postProgress(Request $request, $key)
+    function postProgress(ActualBatch $actual_batch, Request $request)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
-
         $this->validate($request, ['progress.*' => 'required|numeric|gt:0|lte:100'], [
             'required' => 'This field is required', 'numeric' => 'Please enter a numeric value',
             'between' => 'Value must be between 0 and 100', 'gt' => 'Value must be greater than 0',
             'lte' => 'Value must be less than or equal to 100'
         ]);
 
-        $progress = collect($request->get('progress'));
-        $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $progress->keys())->get()->keyBy('breakdown_resource_id');
-
-        $period_id = $data['project']->open_period()->id;
-
-        $progressLog = collect();
-        foreach ($progress as $id => $value) {
-            $resource = $resources[$id];
-            $resource->progress = $value;
-            if ($resource->progress == 100) {
-                $resource->status = 'Closed';
-            }
-            $resource->save();
-            $resource->import_cost = WbsLevel::joinBudget()->where('breakdown_resource_id', $resource->breakdown_resource_id)
-                ->where('period_id', $period_id)->get()->toArray();
-            $progressLog->push($resource);
-        }
-
-        $costIssues = new CostIssuesLog($data['batch']);
-        $costIssues->recordProgress($progressLog);
-
-        flash('Progress has been updated', 'success');
-        return \Redirect::route('actual-material.status', $key);
+        $result = (new CostImportFixer($actual_batch))->fixProgress($request->get('progress'));
+        return $this->redirect($result);
     }
 
-    function status($key)
+    function status(ActualBatch $actual_batch)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
-
-        $resource_ids = CostShadow::select('csh.breakdown_resource_id')->from('cost_shadows as csh')->join('break_down_resource_shadows as bsh', 'bsh.breakdown_resource_id', '=', 'csh.breakdown_resource_id')->where('batch_id', $data['batch']->id)->pluck('breakdown_resource_id', 'breakdown_resource_id');
-        $resources = WbsResource::joinShadow()->whereIn('wbs_resources.breakdown_resource_id', $resource_ids)->get()->groupBy(function ($resource) {
-            $wbs = WbsLevel::find($resource->wbs_id);
-            return $wbs->path . ' / ' . $resource->activity;
-        });
-
-        $project = $data['project'];
+        $result = (new CostImporter($actual_batch))->checkStatus();
+        $resources = $result['errors']->groupBy(function ($resource){
+            return $resource->wbs->path . ' / ' . $resource->activity;
+        })->sortByKeys();
+        $project = $actual_batch->project;
 
         return view('actual-material.status', compact('resources', 'project'));
     }
 
-    function postStatus(Request $request, $key)
+    function postStatus(ActualBatch $actual_batch, Request $request)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
-
         $this->validate($request, ['status.*' => 'required'], ['required' => 'This field is required']);
-
-        $status = collect($request->get('status'));
-        $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $status->keys())->get()->keyBy('breakdown_resource_id');
-        $statusLog = collect();
-        foreach ($status as $id => $value) {
-            $resources[$id]->status = $value;
-            if (strtolower($value) == 'closed') {
-                $resources[$id]->progress = 100;
-            }
-
-            $resources[$id]->save();
-            $statusLog->push($resources[$id]);
-        }
-
-        $costIssues = new CostIssuesLog($data['batch']);
-        $costIssues->recordStatus($statusLog);
-
-        $data = \Cache::get($key);
-        \Cache::forget($key);
-
-        flash('Status has been updated', 'success');
-        return \Redirect::route('project.cost-control', $data['project']);
-    }
-
-    function resources(ActualBatch $actual_batch)
-    {
-        $project = $actual_batch->project;
-        $importer = new CostImporter($actual_batch);
-        $result = $importer->checkPhysicalQty();
-
-        $errors = $result['errors'];
-        $activities = $errors->groupBy(function ($error) {
-            return $error['resource']->wbs->path . ' / ' . $error['resource']->activity;
-        });
-
-        return view('actual-material.resources', compact('project', 'activities'));
-    }
-
-    function postResources(ActualBatch $actual_batch, Request $request)
-    {
-        $fixer = new CostImportFixer($actual_batch);
-        $result = $fixer->fixPhysicalQuantity($request->get('quantities', []));
+        $result = (new CostImportFixer($actual_batch))->fixStatus($request->get('status'));
 
         return $this->redirect($result);
     }
 
-    function closed(ActualBatch $actual_batch)
-    {
-        $project = $actual_batch->project;
-        $importer = new CostImporter($actual_batch);
-        $result = $importer->checkClosed();
-        $closed = $result['errors']->groupBy(function ($resource) {
-            return $resource->wbs->path . ' / ' . $resource->activity;
-        })->sortByKeys();
-
-        return view('actual-material.closed', compact('closed', 'project'));
-    }
-
-    function postClosed(Request $request, $key)
-    {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
-
-        $closed = $data['closed']->pluck('resource')->keyBy('id');
-        $rawData = $data['closed']->keyBy('resource.id');
-
-        $newResourceIds = [];
-        $resourcesLog = collect(['reopened' => collect(), 'ignored' => collect()]);
-
-        foreach ($request->get('closed', []) as $id => $status) {
-            $is_open = $status['open'];
-            if ($is_open) {
-                $closed[$id]->status = 'In Progress';
-                if ($status['progress']) {
-                    $closed[$id]->progress = $status['progress'];
-                    $rawData[$id]['progress'] = $status['progress'];
-                }
-                $closed[$id]->save();
-                $newResourceIds[] = $id;
-                $resourcesLog->get('reopened')->push($rawData[$id]);
-            } else {
-                $resourcesLog->get('ignored')->push($rawData[$id]);
-            }
-        }
-
-        $newResources = $data['closed']->whereIn('resource.id', $newResourceIds)->map(function ($row) {
-            $row['resource'] = $row['resource']->fresh();
-            return $row;
-        });
-
-        $issueLog = new CostIssuesLog($data['batch']);
-        $issueLog->recordClosedResources($resourcesLog);
-
-        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
-        $data['closed'] = collect();
-
-        return $this->redirect($this->merge($data, $result), $key);
-    }
-
-    function ExportCostBreakdown(Project $project)
+    function exportCostBreakdown(Project $project)
     {
         if (cannot('cost_control', $project)) {
             flash("You don't have access to this page");
@@ -374,11 +276,12 @@ class ActualMaterialController extends Controller
                    return \Redirect::route('actual-material.status', $key);
            }
        } else {
-            flash("{$result['success']} resources has been updated");
+            flash("{$result['success']} resources has been updated", 'success');
             return \Redirect::route('project.cost-control', $batch->project);
         }
     }
 
+    // TODO remove this method after updating cost dictionary
     protected function saveImported($to_import)
     {
         $count = 0;
@@ -396,45 +299,4 @@ class ActualMaterialController extends Controller
         return $count;
     }
 
-    protected function merge($data, $result)
-    {
-        $returnData = [
-            'mapping' => [
-                'activity' => $data['mapping']['activity']->mergeWithKeys($result['mapping']['activity']),
-                'resources' => $data['mapping']['resources']->mergeWithKeys($result['mapping']['resources']),
-            ],
-            'multiple' => $data['multiple']->mergeWithKeys($result['multiple']),
-            'resources' => $data['resources']->mergeWithKeys($result['resources']),
-            'closed' => $data['closed']->mergeWithKeys($result['closed']),
-            'to_import' => $data['to_import']->mergeWithKeys($result['to_import']),
-            'project' => $data['project'],
-            'batch' => $data['batch'],
-            'invalid' => $data['invalid']->mergeWithKeys($result['invalid'])
-        ];
-
-        file_put_contents(storage_path('logs/debug.log'), print_r($returnData, true));
-
-        return $returnData;
-    }
-
-    /**
-     * @param $resources
-     * @return mixed
-     */
-    protected function getResourcesShadow($resources)
-    {
-        $activityCodes = $resources->keys();
-        $resourceIds = $resources->reduce(function ($ids, $activity) {
-            return $ids->merge(array_keys($activity));
-        }, collect());
-
-        $shadows = BreakDownResourceShadow::whereIn('code', $activityCodes)->whereIn('resource_id', $resourceIds)
-            ->get()->groupBy(function ($item) {
-                return mb_strtolower($item->code);
-            })->map(function ($shadows) {
-                $first = $shadows->first();
-                return collect(['name' => $first->wbs->path . ' / ' . $first->activity, 'resources' => $shadows->keyBy('resource_id')]);
-            });
-        return $shadows;
-    }
 }

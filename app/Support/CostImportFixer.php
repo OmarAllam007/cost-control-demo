@@ -6,6 +6,7 @@ use App\ActivityMap;
 use App\ActualBatch;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
+use App\WbsResource;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -132,7 +133,7 @@ class CostImportFixer
             }
         }
 
-        $issueLog = new CostIssuesLog($data['batch']);
+        $issueLog = new CostIssuesLog($this->batch);
         $issueLog->recordClosedResources($closedLog);
 
         $importer = new CostImporter($this->batch, $this->rows);
@@ -143,5 +144,54 @@ class CostImportFixer
     {
         $importer = new CostImporter($this->batch, $this->rows);
         return $importer->save();
+    }
+
+    function fixProgress($progress)
+    {
+        $result = (new CostImporter($this->batch))->checkProgress();
+        $resources = $result['errors']->keyBy('breakdown_resource_id');
+
+        $progressLog = collect();
+        foreach ($progress as $id => $value) {
+            $resource = $resources[$id];
+            $data = ['progress' => $value];
+            if ($value == 100) {
+                $data['status'] = 'Closed';
+            }
+            unset($resource->cost);
+            $resource->update($data);
+            $resource->import_cost = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
+                ->where('period_id', $this->batch->period_id)->get()->toArray();
+            $progressLog->push($resource);
+        }
+
+        $costIssues = new CostIssuesLog($this->batch);
+        $costIssues->recordProgress($progressLog);
+
+        $importer = new CostImporter($this->batch, $this->rows);
+        return $importer->checkStatus();
+    }
+
+    function fixStatus($status)
+    {
+        $result = (new CostImporter($this->batch))->checkStatus();
+        $resources = $result['errors']->keyBy('breakdown_resource_id');
+
+        $statusLog = collect();
+        foreach ($status as $id => $value) {
+            $resource = $resources[$id];
+            $resource->status = $value;
+            if (strtolower($value) == 'closed') {
+                $resource->progress = 100;
+            }
+            unset($resource->cost, $resource->imported_cost);
+            $resource->save();
+            $statusLog->push($resource);
+        }
+
+        $costIssues = new CostIssuesLog($this->batch);
+        $costIssues->recordStatus($statusLog);
+
+        return ['success' => $resources->count(), 'batch' => $this->batch];
     }
 }
