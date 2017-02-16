@@ -247,13 +247,13 @@ class CostImporter
     {
         $breakdown_resource_ids = $this->actual_resources->pluck('breakdown_resource_id');
         $errors = BreakDownResourceShadow::with('cost')
-            ->whereIn('break_down_resource_id', $breakdown_resource_ids)->get()
+            ->whereIn('breakdown_resource_id', $breakdown_resource_ids)->get()
             ->filter(function ($resource) {
                 return $resource->cost->to_date_qty >= $resource->budget_unit;
             });
 
         if ($errors->count()) {
-            return ['error' => 'progress', 'errors' => $errors];
+            return ['error' => 'progress', 'errors' => $errors, 'batch' => $this->batch];
         }
 
         return $this->status();

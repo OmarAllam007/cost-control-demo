@@ -81,6 +81,10 @@ class CostImportFixer
         $result = $importer->checkPhysicalQty();
         $errors = $result['errors'];
 
+        if ($result['error'] != 'physical_qty') {
+            return $result;
+        }
+
         $hashes = $errors->pluck('rows.*.hash')->flatten();
         $this->rows = $this->rows->forget($hashes->toArray());
 

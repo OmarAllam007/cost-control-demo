@@ -277,7 +277,7 @@ class ActualMaterialController extends Controller
         $fixer = new CostImportFixer($actual_batch);
         $result = $fixer->fixPhysicalQuantity($request->get('quantities', []));
 
-        return $this->redirect($result['batch']);
+        return $this->redirect($result);
     }
 
     function closed(ActualBatch $actual_batch)
