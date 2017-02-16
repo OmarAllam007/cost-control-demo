@@ -163,6 +163,12 @@ class ActualMaterialController extends Controller
 
     function progress(ActualBatch $actual_batch)
     {
+        $project = $actual_batch->project;
+        $importer = new CostImporter($actual_batch);
+        $result = $importer->checkClosed();
+        $resources = $result['errors']->groupBy(function ($resource) {
+            return $resource->wbs->path . ' / ' . $resource->activity;
+        })->sortByKeys();
 
         return view('actual-material.progress', compact('key', 'resources', 'project'));
     }
@@ -285,7 +291,9 @@ class ActualMaterialController extends Controller
         $project = $actual_batch->project;
         $importer = new CostImporter($actual_batch);
         $result = $importer->checkClosed();
-        $closed = $result['errors'];
+        $closed = $result['errors']->groupBy(function ($resource) {
+            return $resource->wbs->path . ' / ' . $resource->activity;
+        })->sortByKeys();
 
         return view('actual-material.closed', compact('closed', 'project'));
     }

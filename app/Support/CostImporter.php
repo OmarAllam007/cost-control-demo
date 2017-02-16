@@ -151,9 +151,8 @@ class CostImporter
         $errors = collect();
 
         foreach ($this->rows as $hash => $row) {
-            $activityCode = $this->activityCodes->get($row[0]);
-            $resourceIds = $this->resourcesMap->get($row[7]);
-
+            $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+            $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
             $resources = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->get();
             foreach ($resources as $resource) {
                 if (strtolower($resource->status) == 'closed' || $resource->progress == 100) {
