@@ -11,21 +11,16 @@
 
 @section('body')
     {{Form::open(['method' => 'post'])}}
-    @foreach($multiple as $activityCode => $activity)
+    @foreach($resources as $activity => $activityData)
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{$activity}}</h4>
+            </div>
 
-        @foreach($activity as $resourceCode => $resource)
+        @foreach($activityData as $resource)
             @php
-                $firstResource=$resource['resources']->first();
-                $wbs = $firstResource->wbs;
-                $wbs_path = $wbs->path;
-                $activity_name = $firstResource->activity;
                 $totalQty = $resource['resources']->sum('budget_unit');
             @endphp
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">{{$wbs_path}} / {{ $activity_name }}</h4>
-                </div>
-
                 <table class="table table-bordered table-condensed table-hover table-striped" data-total-qty="{{$totalQty}}" data-qty="{{$resource[4]}}">
                     <thead>
                     <tr>
@@ -48,11 +43,11 @@
                     <tbody>
                     @foreach($resource['resources'] as $res)
                         @php
-                            $boq = \App\Boq::costAccountOnWbs($wbs, $res->cost_account)->first();
+                            $boq = \App\Boq::costAccountOnWbs($res->wbs, $res->cost_account)->first();
                         @endphp
                         <tr data-budget="{{$res->budget_unit}}">
                             <td class="text-center">
-                                {{Form::checkbox("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][included]", 1, true, ['class' => 'include'])}}
+                                {{Form::checkbox("resource[{$res->breakdown_resource_id}][included]", 1, true, ['class' => 'include'])}}
                             </td>
                             <td>{{$res->breakdown_resource->code}}</td>
                             <td>{{$boq->description}}</td>
@@ -63,9 +58,9 @@
                             <td>{{$res->cost_account}}</td>
                             <td>{{$res->budget_unit}}</td>
                             <td>{{$res->remarks}}</td>
-                            <td>{{$res->cost ? number_format($res->cost->previous_qty, 2) : 0 }}</td>
+                            <td>{{$res->cost ? number_format($res->cost->prev_qty, 2) : 0 }}</td>
                             <td>
-                                {{Form::text("resource[$activityCode][$resourceCode][{$res->breakdown_resource_id}][qty]", $qty = $totalQty? round($res->budget_unit * $resource[4]/$totalQty, 2) : 0, ['class' => 'form-control input-sm qty'])}}
+                                {{Form::text("resource[{$res->breakdown_resource_id}][qty]", $qty = $totalQty? round($res->budget_unit * $resource[4]/$totalQty, 2) : 0, ['class' => 'form-control input-sm qty'])}}
                             </td>
                             <td class="unit-price-cell" data-value="{{$resource[5]}}">{{ number_format($resource[5], 2) }}</td>
                             <td class="total-cell" data-value="{{$amount = $qty * $resource[5]}}">{{ number_format($amount, 2) }}</td>
@@ -92,7 +87,7 @@
     @endforeach
 
     <div class="form-group">
-        <button class="btn btn-success" id="submitBtn">Next <i class="fa fa-chevron-circle-right"></i></button>
+        <button class="btn btn-primary" id="submitBtn">Next <i class="fa fa-chevron-circle-right"></i></button>
     </div>
 
     {{Form::close()}}

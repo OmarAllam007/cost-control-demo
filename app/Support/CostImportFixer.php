@@ -142,6 +142,13 @@ class CostImportFixer
 
     function fixMultipleCostAccounts($data)
     {
+        $errors = (new CostImporter($this->batch))->checkMultipleCostAccounts();
+
+        foreach ($errors as $error) {
+            dd($error);
+            unset($this->rows[$error['hash']]);
+        }
+
         $importer = new CostImporter($this->batch, $this->rows);
         return $importer->save();
     }

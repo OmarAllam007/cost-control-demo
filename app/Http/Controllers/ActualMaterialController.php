@@ -151,21 +151,23 @@ class ActualMaterialController extends Controller
     function fixMultiple(ActualBatch $actual_batch)
     {
         $importer = new CostImporter($actual_batch);
-        $errors = $importer->checkMultipleCostAccounts();
-        dd($errors);
+        $result = $importer->checkMultipleCostAccounts();
 
-        return view('actual-material.fix-multiple', $data);
+        $project = $actual_batch->project;
+        $resources = $result['errors']->groupBy(function ($error) {
+            $resource = $error['resources'][0];
+            return $resource->wbs->path . ' / ' . $resource->activity;
+        })->sortByKeys();
+
+        return view('actual-material.fix-multiple', compact('project', 'resources'));
     }
 
-    function postFixMultiple($key, Request $request)
+    function postFixMultiple(ActualBatch $actual_batch, Request $request)
     {
-        $data = \Cache::get($key);
-        if (!$data) {
-            flash('No data found');
-            return \Redirect::route('project.index');
-        }
+        $data = $request->get('resource');
+        $result = (new CostImportFixer($actual_batch))->fixMultipleCostAccounts($data);
 
-        $requestResources = $request->get('resource');
+        return $this->redirect($result);
         $newResources = collect();
 
         $costAccountLog = collect();
@@ -280,23 +282,4 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.cost-control', $batch->project);
         }
     }
-
-    // TODO remove this method after updating cost dictionary
-    protected function saveImported($to_import)
-    {
-        $count = 0;
-
-        $resource_dict = collect();
-        foreach ($to_import as $record) {
-            ActualResources::create($record);
-            $resource_dict->push($record['resource_id']);
-            ++$count;
-        }
-
-        $project = Project::find($record['project_id']);
-        $this->dispatch(new UpdateResourceDictJob($project, $resource_dict));
-
-        return $count;
-    }
-
 }
