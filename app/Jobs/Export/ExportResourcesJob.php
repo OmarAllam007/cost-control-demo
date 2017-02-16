@@ -92,8 +92,6 @@ class ExportResourcesJob extends Job
 
             $column = 0;
             $rowCount++;
-
-
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

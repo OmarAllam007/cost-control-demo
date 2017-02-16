@@ -3,7 +3,7 @@
     @include('reports.all._wbs')
 @endif
 @section('header')
-    <h1>WBS-LEVELS</h1>
+    <h1>{{$project->name}} - WBS-LEVELS</h1>
     <div class="pull-right">
         <a href="{{route('wbs_report.export',
         ['project'=>$project])}}"

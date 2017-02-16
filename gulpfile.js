@@ -17,6 +17,7 @@ elixir(function (mix) {
         .webpack('project/index.js', 'public/js/project.js')
         .webpack('project-permissions.js');
     mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
+    mix.webpack('project/components/Boq.js', 'public/js/public/js/breakdown.js');
     mix.scripts('tree-select.js');
     // .sass('print.scss')
     // .webpack('resource-codes.js');

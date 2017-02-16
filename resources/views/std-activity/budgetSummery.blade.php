@@ -3,7 +3,7 @@
     @include('reports.all._budget-summery')
 @endif
 @section('header')
-    <h2>Budget Summary</h2>
+    <h2>{{$project->name}} - Budget Summary</h2>
     <div class="pull-right">
         <a href="?print=1&paint=budget-summery" target="_blank" class="btn btn-default btn-sm"><i
                     class="fa fa-print"></i> Print</a>

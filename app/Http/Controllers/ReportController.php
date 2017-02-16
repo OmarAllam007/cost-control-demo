@@ -89,16 +89,16 @@ WHERE project_id=' . $project->id . '
 AND resource_type LIKE \'%lab%\'');
         foreach ($breakdown_resources as $resource) {
             $rootName = $resource->resource_type;
-                $root = $rootName;
-                if (!isset($resources[$resource->resource_id])) {
-                    $resources[$resource->resource_id] = [
-                        'id' => $resource->resource_id,
-                        'name' => $resource->resource_name,
-                        'type' => $rootName,
-                        'budget_cost' => 0,
-                        'budget_unit' => 0,
-                        'unit' => $resource->measure_unit??'',
-                    ];
+            $root = $rootName;
+            if (!isset($resources[$resource->resource_id])) {
+                $resources[$resource->resource_id] = [
+                    'id' => $resource->resource_id,
+                    'name' => $resource->resource_name,
+                    'type' => $rootName,
+                    'budget_cost' => 0,
+                    'budget_unit' => 0,
+                    'unit' => $resource->measure_unit??'',
+                ];
 
 
                 $resources[$resource->resource_id]['budget_cost'] += $resource->budget_cost;

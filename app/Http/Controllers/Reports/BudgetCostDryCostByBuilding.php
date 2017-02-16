@@ -83,7 +83,6 @@ class BudgetCostDryCostByBuilding
             $this->total_different += $tree['different'];
             $this->total_increase += $tree['increase'];
 
-
         }
         if ($level->getDry()) {
             $this->data[$level->id] = ['name' => $level->name, 'budget_cost' => $tree['budget_cost'], 'dry_cost' => $tree['dry_cost'], 'different' => $tree['different'], 'increase' => $tree['increase']];

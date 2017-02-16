@@ -21,4 +21,9 @@
     <ul class="list-unstyled tree" >
         @include('reports._recursive_boq_price_list')
     </ul>
-@stop
+@endsection
+@section('javascript')
+    <script>
+        alert();
+    </script>
+@endsection

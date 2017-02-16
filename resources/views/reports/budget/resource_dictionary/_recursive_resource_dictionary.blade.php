@@ -1,3 +1,4 @@
+@if(($level['resources'] && count($level['resources'])) || ($level['children'] && count($level['children'])))
 <li>
     <p class="
        @if($tree_level ==0)
@@ -18,13 +19,13 @@
                 blue-fourth-level
                     @endif
                 " data-toggle="collapse"  style="@if($tree_level ==0) color:white; @endif text-decoration: none" >
-            {{$level['name']}} @if(count($level['resources'])>0) ||  {{number_format($level['budget_cost'],2)}} @endif
+            {{$level['name']}} @if($level['budget_cost']) ||  {{number_format($level['budget_cost'],2)}} @endif
         </a>
 
     </p>
 
     <article id="{{$level['id']}}" class="tree--child collapse">
-        @if($level['resources'] && count($level['resources']))
+
             <ul class="list-unstyled">
                     <li>
                         <table class="table table-condensed">
@@ -76,7 +77,7 @@
                         </table>
                     </li>
             </ul>
-        @endif
+        {{--@endif--}}
         @if ($level['children'] && count($level['children']))
             <ul class="list-unstyled">
                 @foreach($level['children'] as $child)
@@ -89,3 +90,4 @@
     </article>
 
 </li>
+    @endif

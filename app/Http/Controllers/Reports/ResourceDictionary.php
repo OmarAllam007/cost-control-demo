@@ -23,6 +23,7 @@ class ResourceDictionary
     private $partners;
     private $project;
     private $types;
+    private $parent_cost;
 
     public function getResourceDictionary(Project $project)
     {
@@ -31,11 +32,10 @@ class ResourceDictionary
         $this->resources = collect();
         $this->types = collect();
         $tree = [];
-
-        $resources = \DB::select('SELECT DISTINCT resource_id,measure_unit, SUM(budget_cost) as budget_cost,sum(budget_unit) as budget_unit 
+        $resources = \DB::select('SELECT  resource_id,measure_unit, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit 
 FROM break_down_resource_shadows
 WHERE project_id = ' . $project->id . '
-GROUP BY resource_id');
+GROUP BY resource_id , measure_unit');
 
         foreach ($resources as $resource) {
             $this->resources->put($resource->resource_id, ['unit' => $resource->measure_unit, 'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
@@ -51,22 +51,24 @@ GROUP BY resource_id');
             return $type->resources->where('project_id', $this->project->id);
         });
 
-        $types = ResourceType::whereHas('resources', function ($q) {
-            $q->where('project_id', $this->project->id);
-        })->tree()->get();
 
+        $types = ResourceType::tree()->get();
         foreach ($types as $type) {
             $treeType = $this->buildTypeTree($type);
             $tree[] = $treeType;
         }
+
+
         return view('reports.budget.resource_dictionary.resource_dictionary', compact('project', 'tree'));
     }
 
     protected function buildTypeTree(ResourceType $type)
     {
         $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0];
-        $resources = $this->types->get($type->id);
 
+
+
+        $resources = $this->types->get($type->id);
         if (count($resources)) {
             foreach ($resources as $resource) {
                 $tree['resources'][$resource->id] = ['id' => $resource->id
@@ -81,14 +83,26 @@ GROUP BY resource_id');
                     , 'budget_unit' => $this->resources->get($resource->id)['budget_unit']
                 ];
                 $tree['budget_cost'] += $this->resources->get($resource->id)['budget_cost'];
+
             }
         }
 
         $tree['resources'] = collect($tree['resources'])->sortBy('code');
+
         if ($type->children->count()) {
-            $tree['children'] = $type->children->map(function (ResourceType $child) {
-                return $this->buildTypeTree($child);
+            $tree['children'] = $type->children->map(function (ResourceType $child) use ($tree) {
+                $subtree = $this->buildTypeTree($child);
+                return $subtree;
             });
+
+
+            foreach ($tree['children'] as $child) {
+                $tree['budget_cost'] += $child['budget_cost'];
+
+
+            }
+
+
         }
 
         return $tree;

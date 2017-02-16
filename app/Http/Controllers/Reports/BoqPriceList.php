@@ -87,12 +87,14 @@ class BoqPriceList
                     'total_resources' => 0,
                 ];
 
-                $name = mb_strtoupper(substr($shadow['resource_type'], strpos($shadow['resource_type'], '.') + 1, 3));
-                if (isset($tree['boqs'][$boq]['items'][$cost_account][$name])) {
-                    $tree['boqs'][$boq]['items'][$cost_account][$name] += $shadow['boq_equivilant_rate'];
-                    $tree['boqs'][$boq]['items'][$cost_account]['total_resources'] += $shadow['boq_equivilant_rate'];
 
-                }
+
+
+            }
+            $name = mb_strtoupper(substr($shadow['resource_type'], strpos($shadow['resource_type'], '.') + 1, 3));
+            if (isset($tree['boqs'][$boq]['items'][$cost_account][$name])) {
+                $tree['boqs'][$boq]['items'][$cost_account][$name] += $shadow['boq_equivilant_rate'];
+                $tree['boqs'][$boq]['items'][$cost_account]['total_resources'] += $shadow['boq_equivilant_rate'];
 
             }
         };

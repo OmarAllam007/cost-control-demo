@@ -1,4 +1,4 @@
-<li id="full-tree">
+                                                                                                               <li id="full-tree">
     @foreach($data as $wbs_level=>$attributes)
 
         @if(isset($attributes['parents']))

@@ -42,8 +42,8 @@ class BoqImportJob extends ImportJob
         $rows = $sheet->getRowIterator(2);
         $status = ['success' => 0, 'failed' => collect(), 'dublicated' => []];
         Boq::flushEventListeners();
-        $boqs = Boq::with('wbs')->where('project_id', $this->project_id)->get()->map(function($item) {
-            if(isset($item->wbs->code)) {
+        $boqs = Boq::with('wbs')->where('project_id', $this->project_id)->get()->map(function ($item) {
+            if (isset($item->wbs->code)) {
                 return mb_strtolower($item->wbs->code . $item->cost_account);
             }
         });
@@ -58,7 +58,7 @@ class BoqImportJob extends ImportJob
             }
 
             $code = mb_strtolower($data[0] . $data[2]);
-            if (!$boqs->search($code) && $this->getWbsId($data[0])!=0) {
+            if (!$boqs->search($code) && $this->getWbsId($data[0]) != 0) {
                 Boq::create([
                     'wbs_id' => $this->getWbsId($data[0]),
                     'item_code' => $data[1] ?: '',
@@ -77,7 +77,7 @@ class BoqImportJob extends ImportJob
                     'project_id' => $this->project_id,
                 ]);
                 ++$status['success'];
-            } else if($boqs->search($code)){
+            } else if ($boqs->search($code)) {
                 $status['dublicated'][] = $data[0];
             }
         }

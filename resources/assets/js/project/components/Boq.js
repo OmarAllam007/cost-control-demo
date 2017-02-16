@@ -8,7 +8,8 @@ export default {
             boq: {},
             loading: false,
             wbs_id: 0,
-            wiping: false
+            wiping: false,
+            filter: '',
         };
     },
 
@@ -39,17 +40,32 @@ export default {
             }
         },
 
+        filtered_boq() {
+            const boqs = this.boq.filter(boq => {
+                if (!this.filter || this.filter == '') {
+                    return true;
+                }
+                const term = this.filter.toLowerCase();
+                return qty.description.toLowerCase().indexOf(term) >= 0 ||
+                    qty.cost_account.toLowerCase().indexOf(term) >= 0;
+            });
+
+
+            return quantities.slice(this.first, this.last);
+        },
+
         destroy (item_id) {
             this.loading = true;
             $.ajax({
                 url: '/boq/' + item_id,
-                data: {_token: document.querySelector('meta[name=csrf-token]').content,_method: 'delete'},
+                data: {_token: document.querySelector('meta[name=csrf-token]').content, _method: 'delete'},
                 method: 'post'
             }).success(response => {
                 if (response.ok) {
                     this.loadBoq();
                 }
-            }).error(() => {});
+            }).error(() => {
+            });
         },
 
         wipeAll() {
