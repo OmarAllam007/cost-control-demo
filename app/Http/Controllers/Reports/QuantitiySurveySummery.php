@@ -40,17 +40,13 @@ class QuantitiySurveySummery
             return $survey->unit->type;
         });
 
-        $levels = BreakDownResourceShadow::with('wbs')->where('project_id', $project->id)->pluck('wbs_id')->toArray();
-
-        $wbs_levels = WbsLevel::whereIn('id', $levels)->where('project_id', $project->id)->tree()->get();
+        $wbs_levels = WbsLevel::where('project_id', $project->id)->tree()->get();
         $tree = [];
         foreach ($wbs_levels as $level) {
             $treeLevel = $this->buildTree($level->root);
             $tree[] = $treeLevel;
-
         }
         return view('reports.budget.qs_summery.qs_summery_report', compact('project', 'tree'));
-
     }
 
 
