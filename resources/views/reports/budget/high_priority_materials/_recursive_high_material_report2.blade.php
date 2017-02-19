@@ -55,7 +55,7 @@
             @if ($level['children'] && count($level['children']))
                 <ul class="list-unstyled">
                     @foreach($level['children'] as $child)
-                        @include('reports.budget.high_priority_materials._recursive_high_material_report', ['level' => $child, 'tree_level' => $tree_level + 1])
+                        @include('reports.budget.high_priority_materials._recursive_high_material_report2', ['level' => $child, 'tree_level' => $tree_level + 1])
                     @endforeach
                 </ul>
             @endif
