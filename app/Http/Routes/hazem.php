@@ -132,22 +132,22 @@ Route::group(['prefix' => 'activity-map', 'as' => 'activity-map.'], function () 
 
 Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], function () {
     Route::get('import/{project}', ['as' => 'import', 'uses' => 'ActualMaterialController@import']);
-    Route::get('mapping/{key}', ['as' => 'mapping', 'uses' => 'ActualMaterialController@fixMapping']);
-    Route::get('multiple/{key}', ['as' => 'multiple', 'uses' => 'ActualMaterialController@fixMultiple']);
-    Route::get('units/{key}', ['as' => 'units', 'uses' => 'ActualMaterialController@fixunits']);
-    Route::get('progress/{key}', ['as' => 'progress', 'uses' => 'ActualMaterialController@progress']);
-    Route::get('status/{key}', ['as' => 'status', 'uses' => 'ActualMaterialController@status']);
-    Route::get('resources/{key}', ['as' => 'resources', 'uses' => 'ActualMaterialController@resources']);
-    Route::get('closed/{key}', ['as' => 'closed', 'uses' => 'ActualMaterialController@closed']);
+    Route::get('mapping/{actual_batch}', ['as' => 'mapping', 'uses' => 'ActualMaterialController@fixMapping']);
+    Route::get('multiple/{actual_batch}', ['as' => 'multiple', 'uses' => 'ActualMaterialController@fixMultiple']);
+    Route::get('units/{actual_batch}', ['as' => 'units', 'uses' => 'ActualMaterialController@fixunits']);
+    Route::get('progress/{actual_batch}', ['as' => 'progress', 'uses' => 'ActualMaterialController@progress']);
+    Route::get('status/{actual_batch}', ['as' => 'status', 'uses' => 'ActualMaterialController@status']);
+    Route::get('resources/{actual_batch}', ['as' => 'resources', 'uses' => 'ActualMaterialController@resources']);
+    Route::get('closed/{actual_batch}', ['as' => 'closed', 'uses' => 'ActualMaterialController@closed']);
 
     Route::post('import/{project}', ['as' => 'post-import', 'uses' => 'ActualMaterialController@postImport']);
-    Route::post('mapping/{key}', ['as' => 'post-mapping', 'uses' => 'ActualMaterialController@postFixMapping']);
-    Route::post('multiple/{key}', ['as' => 'post-multiple', 'uses' => 'ActualMaterialController@postFixMultiple']);
-    Route::post('units/{key}', ['as' => 'post-units', 'uses' => 'ActualMaterialController@postFixUnits']);
-    Route::post('progress/{key}', ['as' => 'post-progress', 'uses' => 'ActualMaterialController@postProgress']);
-    Route::post('status/{key}', ['as' => 'post-status', 'uses' => 'ActualMaterialController@postStatus']);
-    Route::post('resources/{key}', ['as' => 'post-resources', 'uses' => 'ActualMaterialController@postResources']);
-    Route::post('closed/{key}', ['as' => 'post-closed', 'uses' => 'ActualMaterialController@postClosed']);
+    Route::post('mapping/{actual_batch}', ['as' => 'post-mapping', 'uses' => 'ActualMaterialController@postFixMapping']);
+    Route::post('multiple/{actual_batch}', ['as' => 'post-multiple', 'uses' => 'ActualMaterialController@postFixMultiple']);
+    Route::post('units/{actual_batch}', ['as' => 'post-units', 'uses' => 'ActualMaterialController@postFixUnits']);
+    Route::post('progress/{actual_batch}', ['as' => 'post-progress', 'uses' => 'ActualMaterialController@postProgress']);
+    Route::post('status/{actual_batch}', ['as' => 'post-status', 'uses' => 'ActualMaterialController@postStatus']);
+    Route::post('resources/{actual_batch}', ['as' => 'post-resources', 'uses' => 'ActualMaterialController@postResources']);
+    Route::post('closed/{actual_batch}', ['as' => 'post-closed', 'uses' => 'ActualMaterialController@postClosed']);
 });
 
 Route::group(['prefix' => 'cost', 'as' => 'cost.'], function () {

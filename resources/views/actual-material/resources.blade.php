@@ -7,19 +7,17 @@
 
 @section('body')
     {{Form::open()}}
-    @foreach($shadows as $code => $activityData)
-        <div class="panel panel-default">
+    @foreach($activities as $activity => $activityData)
+        <div class="panel panel-warning">
             <div class="panel-heading">
-                <h4 class="panel-title">{{$activityData['name']}}</h4>
+                <h4 class="panel-title">{{$activity}}</h4>
             </div>
 
-            <table class="table table-condensed table-bordered table-striped">
+            <table class="table table-condensed table-bordered">
                 <thead>
                 <tr>
                     <th>Budget Resource Code</th>
                     <th>Budget Resource Name</th>
-                    <th>Budget Unit</th>
-                    <th>Previous Qty</th>
                     <th>Budget U.O.M</th>
                     <th>Store Resource Code</th>
                     <th>Store Resource Name</th>
@@ -32,28 +30,17 @@
 
                 </thead>
                 <tbody>
-                @foreach($activityData['resources'] as $resource_id => $shadow)
+                @foreach($activityData as $resource)
                     @php
-                    $code = mb_strtolower($code);
+                    $row_span = count($resource['rows']);
                     @endphp
 
-                    @if (!isset($resources[$code][$resource_id]))
-                        @continue;
-                    @endif
-
-                    @php
-                    $sub_resources = collect($resources[$code][$resource_id]);
-                    $row_span = count($sub_resources);
-                    $counter= 0;
-                    @endphp
-                    @foreach($sub_resources as $store_resource)
+                    @foreach($resource['rows'] as $counter => $store_resource)
                         <tr>
                             @if ($counter == 0)
-                                <td rowspan="{{$row_span}}">{{$shadow->resource_code}}</td>
-                                <td rowspan="{{$row_span}}">{{$shadow->resource_name}}</td>
-                                <td rowspan="{{$row_span}}">{{$shadow->budget_unit}}</td>
-                                <td rowspan="{{$row_span}}">{{number_format($shadow->cost->previous_qty ?? 0, 2)}}</td>
-                                <td rowspan="{{$row_span}}">{{$shadow->measure_unit}}</td>
+                                <td rowspan="{{$row_span}}">{{$resource['resource']->resource_code}}</td>
+                                <td rowspan="{{$row_span}}">{{$resource['resource']->resource_name}}</td>
+                                <td rowspan="{{$row_span}}">{{$resource['resource']->measure_unit}}</td>
                             @endif
                             <td>{{$store_resource[7]}}</td>
                             <td>{{$store_resource[2]}}</td>
@@ -61,12 +48,12 @@
                             <td>{{$store_resource[3]}}</td>
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">
-                                    {{Form::text("quantities[{$code}][{$resource_id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
+                                    {{Form::text("quantities[{$resource['resource']->id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
                                 </td>
                                 <td rowspan="{{$row_span}}" class="unit-price-cell">0.00</td>
                                 <td rowspan="{{$row_span}}" class="total-cell"
-                                    data-value="{{$sub_resources->sum(6)}}">
-                                    {{number_format($sub_resources->sum(6), 2)}}
+                                    data-value="{{$total = $resource['rows']->sum(6)}}">
+                                    {{number_format($total, 2)}}
                                 </td>
                             @endif
                         </tr>
