@@ -62,7 +62,6 @@ GROUP BY cost_account'))->map(function ($shadow) {
                                               GROUP BY std . discipline')))->map(function ($shadow) {
             $this->data[$shadow->discipline]['budget'] = $shadow->budget;
         });
-        dd($this->data);
         $data = $this->data;
         return view('reports.budget_cost_dry_cost_by_discipline', compact('data', 'total', 'project'));
     }
