@@ -120,7 +120,7 @@ class Project extends Model
 
     function getDivisions()
     {
-        $divisions = $this->breakdowns()->with('wbs_level.parent','wbs_level.parent.parent','std_activity.division')->get()->pluck('std_activity.division');
+        $divisions = $this->breakdowns()->with('wbs_level.parent', 'wbs_level.parent.parent', 'std_activity.division')->get()->pluck('std_activity.division');
         $all = collect();
         $parents = collect();
         foreach ($divisions as $division) {
@@ -235,6 +235,14 @@ class Project extends Model
     {
         $duplicator = new DuplicateProject($this);
         return $duplicator->duplicate($newName);
+    }
+
+    function getMaxPeriod()
+    {
+        $max_id = \DB::select('SELECT  max(id) as max from periods
+where project_id=?
+AND periods.is_open=0', [$this->id]);
+        return $max_id[0]->max;
     }
 
 }

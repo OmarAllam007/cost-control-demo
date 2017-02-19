@@ -104,9 +104,7 @@ GROUP BY cost_account'))->map(function ($shadow) {
                     }
                 }
             }
-
         }
-
     }
 
     public function getBudgetCostDryCostColumnChart($data)

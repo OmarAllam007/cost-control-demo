@@ -28,10 +28,29 @@ class CostReportsController extends Controller
         return $projectInfo->getProjectInformation($project);
     }
 
-    public function costSummery(Project $project)
+    public function costSummery(Project $project, Request $request)
     {
+        if ($request->period_id) {
+            if (\Session::has('period_id')) {
+                \Session::forget('period_id');
+                \Session::set('period_id', $request->period_id);
+                $chosen_period_id = $request->period_id;
+            } else {
+                $chosen_period_id = $project->getMaxPeriod();
+                \Session::set('period_id', $request->period_id);
+            }
+        }
+        else{
+            if (\Session::has('period_id')) {
+                $chosen_period_id = \Session::get('period_id');;
+            } else {
+                $chosen_period_id = $project->getMaxPeriod();
+                \Session::set('period_id', $request->period_id);
+            }
+        }
+
         $cost_summery = new CostSummery();
-        return $cost_summery->getCostSummery($project);
+        return $cost_summery->getCostSummery($project, $chosen_period_id);
     }
 
     public function significantMaterials(Project $project)
