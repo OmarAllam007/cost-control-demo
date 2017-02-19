@@ -6,6 +6,7 @@ use App\ActivityDivision;
 use App\Boq;
 use App\Breakdown;
 use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\ActivityResourceBreakDown;
 use App\Http\Controllers\Reports\BoqPriceList;
 use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Reports\ResourceDictionary;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
 use App\Resources;
+use App\ResourceType;
 use App\StdActivity;
 use App\StdActivityResource;
 use App\Unit;
@@ -34,6 +36,8 @@ use Illuminate\Support\Facades\Input;
 
 class ReportController extends Controller
 {
+    private $request;
+    private $project;
 
     public function getReports(Project $project)
     {
@@ -185,9 +189,97 @@ AND resource_type LIKE \'%lab%\'');
 
     public function highPriority(Project $project, Request $request)
     {
-        $high_materials = new HighPriorityMaterials();
-        return $high_materials->getTopHighPriorityMaterials($project, $request);
+        $resources = Resources::where('project_id', $project->id)->whereNotNull('top_material')->pluck('id')->toArray();
+        if (count($resources)) {
+            return $this->topMaterialResources($project, $request, $resources);
+        } else {
+            $high_materials = new HighPriorityMaterials();
+            return $high_materials->getTopHighPriorityMaterials($project, $request);
+        }
+
     }
 
+    public function topMaterialResources(Project $project, Request $request, $resources = false)
+    {
+        if($request->get('checked')){
+            $resources = Resources::where('project_id', $project->id)->whereIn('id', $request['checked'])->get();
+            Resources::flushEventListeners();
+            foreach ($resources as $resource) {
+                $resource->top_material = $resource->types->name;
+                $resource->update();
+            }
+        }
+        if (!$request->get('checked')) {
+            $request['checked'] = $resources;
+        }
+        $tree = [];
+        $this->project = $project;
+        $this->request = $request;
+
+        $resource_types = ResourceType::tree()->with('children', 'children.children', 'children.children.children')->get();
+        $types = $resource_types->where('name', '03.MATERIAL');
+        foreach ($types as $type) {
+            $level = $this->getTree($type, $request);
+            $tree[] = $level;
+        }
+
+
+
+        return view('reports.budget.high_priority_materials.top_resources', compact('tree', 'project'));
+
+
+    }
+
+    public function topMaterialResourcesReset(Project $project)
+    {
+        Resources::flushEventListeners();
+        Resources::where('project_id', $project->id)->whereNotNull('top_material')->update(['top_material' => null]);
+        return redirect()->route('project.show', $project);
+    }
+
+    private function getTree($type, $request)
+    {
+        $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0, 'budget_unit' => 0];
+        foreach ($request->get('checked') as $resource) {
+            $shadow = \DB::select('SELECT
+  r.name AS resource_name,
+  r.id AS resource_id,
+  r.resource_type_id,
+  t.name type_name,
+  sum(sh.budget_cost) AS budget_cost , 
+  sum(sh.budget_unit) AS budget_unit
+FROM resources r, break_down_resource_shadows sh, resource_types t
+WHERE sh.project_id = ?
+      AND r.id = sh.resource_id
+      AND t.id = r.resource_type_id
+      AND t.id = ?
+      AND r.id = ?
+GROUP BY r.name, r.resource_type_id  , t.name , r.id', [$this->project->id, $type->id, $resource]);
+            if(isset($shadow[0])){
+                if (!isset($tree['resources'][$shadow[0]->resource_name])) {
+                    $tree['resources'][$shadow[0]->resource_name] = [
+                        'id' => $shadow[0]->resource_id,
+                        'name' => $shadow[0]->resource_name,
+                        'budget_cost' => $shadow[0]->budget_cost,
+                        'budget_unit' => $shadow[0]->budget_unit,
+                    ];
+                    $tree['budget_cost'] += $shadow[0]->budget_cost;
+                    $tree['budget_unit'] += $shadow[0]->budget_unit;
+                }
+            }
+        }
+
+
+        if ($type->children->count()) {
+            $tree['children'] = $type->children->map(function (ResourceType $childLevel) use ($request) {
+                return $this->getTree($childLevel, $request);
+            });
+
+            foreach ($tree['children'] as $child) {
+                $tree['budget_cost'] += $child['budget_cost'];
+            }
+        }
+        return $tree;
+    }
 
 }

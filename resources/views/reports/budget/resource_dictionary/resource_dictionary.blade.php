@@ -15,7 +15,6 @@
 @endsection
 @section('body')
 
-    <br>
     <ul class="list-unstyled tree">
         @foreach($tree as $parentKey=>$level)
             @include('reports.budget.resource_dictionary._recursive_resource_dictionary', ['level'=>$level,'tree_level'=>0])
@@ -24,7 +23,6 @@
 @endsection
 @section('javascript')
     <script>
-
-
+        $('li').each(function(){ if (!$(this).find('tbody tr').length) { $(this).hide(); } })
     </script>
 @endsection

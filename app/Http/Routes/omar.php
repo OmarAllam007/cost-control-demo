@@ -93,6 +93,8 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('boq_price_list/{project}', ['as' => 'boq_price_list.report', 'uses' => 'ReportController@boqPriceList']);
 
     Route::get('high_priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriority']);
+    Route::post('high_priority_resources/{project}', ['as' => 'generate_top_matrial_reports.report', 'uses' => 'ReportController@topMaterialResources']);
+    Route::post('high_priority_resources_reset/{project}', ['as' => 'reset_top_matrial_reports.report', 'uses' => 'ReportController@topMaterialResourcesReset']);
 
 
     //Export Project Reports

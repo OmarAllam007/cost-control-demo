@@ -16,12 +16,8 @@ class ProjectInformation
 {
     function getProjectInformation(Project $project)
     {
-
-        //convert project duration to dayes and plus it to start date
-
-
         $data=[];
-        $shadows = CostShadow::where('project_id',$project->id)->groupBy('period_id')->select('period_id')->selectRaw('sum(to_date_cost) as todate_cost')->selectRaw('sum(allowable_ev_cost) as 
+        $shadows = CostShadow::where('project_id',$project->id)->where('period_id','<',$project->open_period()->id)->groupBy('period_id')->select('period_id')->selectRaw('sum(to_date_cost) as todate_cost')->selectRaw('sum(allowable_ev_cost) as 
         allowable_cost')
         ->get();
         foreach ($shadows as $shadow) {
@@ -37,7 +33,6 @@ class ProjectInformation
             }
 
         }
-
         return view('reports.cost-control.project_information', compact('project','data', 'allowable_cost', 'actual_cost'));
 
     }

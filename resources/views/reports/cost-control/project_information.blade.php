@@ -79,7 +79,7 @@
             <td>{{number_format($value['actual_cost'],2)}}</td>
             <td>{{number_format($value['allowable_cost'],2)}}</td>
             <td>{{number_format($value['actual_cost']?$value['allowable_cost']/$value['actual_cost']:0,2)}}</td>
-            <td>{{number_format($value['allowable_cost']-$value['actual_cost'],2)}}</td>
+            <td @if(number_format($value['allowable_cost']-$value['actual_cost'],2) < 0 ) style="color: red;" @endif >{{number_format($value['allowable_cost']-$value['actual_cost'],2)}}</td>
         @endforeach
         </tbody>
     </table>

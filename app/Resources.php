@@ -53,6 +53,11 @@ class Resources extends Model
         return $this->belongsToMany(BreakdownResource::class);
     }
 
+    function breakdown_shadow()
+    {
+        return $this->belongsToMany(BreakDownResourceShadow::class);
+    }
+
     function scopeFilter(Builder $query, $term = '')
     {
         $query->with(['units', 'types'])
