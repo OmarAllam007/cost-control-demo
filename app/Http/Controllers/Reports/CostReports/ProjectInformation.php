@@ -21,7 +21,7 @@ class ProjectInformation
 
 
         $data=[];
-        $shadows = CostShadow::where('project_id',$project->id)->groupBy('period_id')->select('period_id')->selectRaw('sum(to_date_cost) as todate_cost')->selectRaw('sum(allowable_ev_cost) as 
+        $shadows = CostShadow::where('project_id',$project->id)->where('period_id','<',$project->open_period()->id)->groupBy('period_id')->select('period_id')->selectRaw('sum(to_date_cost) as todate_cost')->selectRaw('sum(allowable_ev_cost) as 
         allowable_cost')
         ->get();
         foreach ($shadows as $shadow) {
