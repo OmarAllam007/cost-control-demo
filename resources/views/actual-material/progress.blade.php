@@ -40,8 +40,8 @@
                 <td>{{$activityResource->resource_code}}</td>
                 <td>{{$activityResource->resource_name}}</td>
                 <td class="budget-cell" data-value="{{$activityResource->budget_unit}}">{{number_format($activityResource->budget_unit, 2)}}</td>
-                <td class="todate-cell" data-value="{{$activityResource->to_date_qty}}">{{number_format($activityResource->to_date_qty, 2)}}</td>
-                <td class="remaining-cell">{!! $activityResource->remaining_qty < 0 ? '<span class="text-danger">' . number_format($activityResource->remaining_qty, 2) . '</span>' : number_format($activityResource->remaining_qty, 2) !!}</td>
+                <td class="todate-cell" data-value="{{$activityResource->cost->to_date_qty}}">{{number_format($activityResource->cost->to_date_qty, 2)}}</td>
+                <td class="remaining-cell">{!! $activityResource->cost->remaining_qty < 0 ? '<span class="text-danger">' . number_format($activityResource->cost->remaining_qty, 2) . '</span>' : number_format($activityResource->remaining_qty, 2) !!}</td>
                 <td>
                     <div class="input-group">
                     {{Form::text("progress[{$activityResource->breakdown_resource_id}]", $activityResource->progress, ['class' => 'form-control input-sm progress-val'])}}

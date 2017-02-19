@@ -3,31 +3,21 @@
     <table class="table table-striped table-condensed table-fixed">
         <thead>
         <tr>
-            <th class="col-sm-2">
-                <label>
-                    {{Form::checkbox('skip_all', 1, null, ['class' => 'skip-all'])}} Skip
-                </label>
-            </th>
-            <th class="col-sm-2">Resource Code</th>
-            <th class="col-sm-3">Name</th>
+            <th class="col-sm-3">Resource Code</th>
+            <th class="col-sm-5">Name</th>
             <th class="col-sm-2">U.O.M</th>
-            <th class="col-sm-3">Resource ID</th>
+            <th class="col-sm-2">Resource ID</th>
         </tr>
         </thead>
         <tbody>
-        @foreach($mapping['resources'] as $resource)
+        @foreach($resources as $resource)
             <tr>
-                <td class="col-sm-2">
-                    <label>
-                        {{Form::checkbox("resources[{$resource[7]}][skip]")}}
-                    </label>
-                </td>
-                <td class="col-sm-2">{{$resource[7]}}</td>
-                <td class="col-sm-3">{{$resource[2]}}</td>
+                <td class="col-sm-3">{{$resource[7]}}</td>
+                <td class="col-sm-5">{{$resource[2]}}</td>
                 <td class="col-sm-2">{{$resource[3]}}</td>
-                <td class="col-sm-3">
+                <td class="col-sm-2">
                     <a href="#" class="select-resource-trigger">Select Resource</a>
-                    {{Form::hidden("resources[{$resource[7]}][resource_code]", null, ['class' => 'resource_id'])}}
+                    {{Form::hidden("resources[{$resource[7]}]", null, ['class' => 'resource_id'])}}
                 </td>
             </tr>
         @endforeach

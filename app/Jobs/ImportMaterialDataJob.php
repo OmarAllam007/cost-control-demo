@@ -78,7 +78,7 @@ class ImportMaterialDataJob extends Job
         $breakdownResourcesMap = [];
         $today = Carbon::today()->format('Y-m-d');
         foreach ($this->data as $row) {
-            $hash = str_random(10);
+            $hash = str_random(6);
             $date = Carbon::createFromDate(1899, 12, 31)->addDays($row[1])->format('Y-m-d');
             if ($date >= $today) {
                 continue;

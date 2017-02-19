@@ -43,7 +43,7 @@
                             </label>
                         </td>
                         <td class="text-center">
-                            {{Form::text("closed[{$resource->id}][progress]", null, ['class' => 'form-control progress-value'])}}
+                            {{Form::text("closed[{$resource->id}][progress]", null, ['class' => 'form-control input-sm progress-value'])}}
                         </td>
                     </tr>
                 @endforeach
@@ -62,8 +62,15 @@
 @section('javascript')
     <script>
         $(function () {
-            $('.is-open').on('change', function() {
-                $(this).closest('tr').find().attr('disabled', !this.checked);
+            $('.is-open').on('change', function () {
+                var input = $(this).closest('tr').find('.progress-value').attr('disabled', !this.checked);
+                if (this.checked) {
+                    input.val(99).focus();
+                    input.get(0).selectionStart = 0;
+                    input.get(0).selectionEnd = 2;
+                } else {
+                    input.val('');
+                }
             }).change();
         });
     </script>
