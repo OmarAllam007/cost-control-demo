@@ -201,7 +201,17 @@ AND resource_type LIKE \'%lab%\'');
 
     public function topMaterialResources(Project $project, Request $request, $resources = false)
     {
-
+        if($request->get('checked')){
+            $resources = Resources::where('project_id', $project->id)->whereIn('id', $request['checked'])->get();
+            Resources::flushEventListeners();
+            foreach ($resources as $resource) {
+                $resource->top_material = $resource->types->name;
+                $resource->update();
+            }
+        }
+        if (!$request->get('checked')) {
+            $request['checked'] = $resources;
+        }
         $tree = [];
         $this->project = $project;
         $this->request = $request;
@@ -213,9 +223,7 @@ AND resource_type LIKE \'%lab%\'');
             $tree[] = $level;
         }
 
-        if (!$request->get('checked')) {
-            $request['checked'] = $resources;
-        }
+
 
         return view('reports.budget.high_priority_materials.top_resources', compact('tree', 'project'));
 
@@ -231,7 +239,6 @@ AND resource_type LIKE \'%lab%\'');
 
     private function getTree($type, $request)
     {
-        $resources = implode(',', $request->get('checked'));
         $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0, 'budget_unit' => 0];
         foreach ($request->get('checked') as $resource) {
             $shadow = \DB::select('SELECT
