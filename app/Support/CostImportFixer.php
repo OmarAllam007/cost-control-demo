@@ -8,6 +8,7 @@ use App\BreakDownResourceShadow;
 use App\ResourceCode;
 use App\WbsResource;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class CostImportFixer
@@ -142,11 +143,28 @@ class CostImportFixer
 
     function fixMultipleCostAccounts($data)
     {
-        $errors = (new CostImporter($this->batch))->checkMultipleCostAccounts();
+        $result = (new CostImporter($this->batch))->checkMultipleCostAccounts();
+        $errors = $result['errors'];
 
         foreach ($errors as $error) {
-            dd($error);
-            unset($this->rows[$error['hash']]);
+
+            $this->rows->forget($error['hash']);
+            $resources = $error['resources']->keyBy('breakdown_resource_id');
+            $unit_price = floatval($error[5]);
+            foreach ($resources as $id => $resource) {
+                if (isset($data[$id]) && $data[$id]['included'] && $data[$id]['qty']) {
+                    $qty = floatval($data[$id]['qty']);
+                    $total = $qty * $unit_price;
+
+                    $newRow = [
+                        $resource->code, '', $resource->resource_name, $resource->measure_unit,
+                        $qty, $unit_price, $total, $resource->resource_code, $error[8],
+                        'resource' => $resource
+                    ];
+
+                    $this->rows->push($newRow);
+                }
+            }
         }
 
         $importer = new CostImporter($this->batch, $this->rows);
