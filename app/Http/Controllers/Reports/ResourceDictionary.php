@@ -95,13 +95,10 @@ GROUP BY resource_id , measure_unit');
                 return $subtree;
             });
 
-
             foreach ($tree['children'] as $child) {
                 $tree['budget_cost'] += $child['budget_cost'];
 
-
             }
-
 
         }
 

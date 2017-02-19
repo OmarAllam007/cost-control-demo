@@ -32,13 +32,11 @@
                 </thead>
                 <tbody>
                 @foreach($data as $key=>$row)
+
                     <tr class="tbl-content">
                         <td class="col-sm-1">@if($button) @else  <input type="checkbox" name="checked[]"
                                                                         value="{{$key}}"> @endif</td>
-                        {{--<td class="col-xs-1">@if($button)--}}
-                                {{--<button title="{{$key}}" value="{{$key}}" type="button" class="btn btn-primary" data-toggle="modal"--}}
-                                        {{--data-target="#exampleModal" data-whatever="{{$row['name']}}">Edit--}}
-                                {{--</button>@else  @endif  </td>--}}
+
                         <td class="col-xs-4">{{$row['name']}}</td>
                         <td class="col-xs-2">{{number_format($row['budget_cost'],2)}}</td>
                         <td class="col-xs-2">{{number_format($row['budget_unit'],2)}}</td>
@@ -51,7 +49,7 @@
         @else
             @foreach($data as $key=>$row)
                 <p class="blue-third-level">{{$row['name']}} <span
-                            class="pull-right badge col-md-1">{{number_format($row['budget_cost'],2)}}</span>}</p>
+                            class="pull-right  badge col-md-1">{{number_format($row['budget_cost'],2)}}</span>}</p>
                 @foreach($row['resources'] as $resource)
                     <p class="blue-fourth-level tree--item"><input type="checkbox" name="resources[]"
                                                                    value="{{$resource['resource_id']}}">{{$resource['name']}}
