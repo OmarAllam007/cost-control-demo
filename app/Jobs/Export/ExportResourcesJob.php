@@ -26,9 +26,8 @@ class ExportResourcesJob extends Job
         $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
             return $partner->name;
         });
-        $this->units = Unit::all()->keyBy('id')->map(function ($unit){
-           return $unit->type;
-        });
+
+        $this->units = Unit::pluck('type', 'id');
     }
 
     public function handle()

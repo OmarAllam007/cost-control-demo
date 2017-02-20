@@ -11,16 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class ExportPublicResourcesJob extends Job
 {
     /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * Execute the job.
      *
      * @return void
@@ -42,7 +32,7 @@ class ExportPublicResourcesJob extends Job
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name);
 
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource->rate);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, isset($resource->units->type)?$resource->units->type:'' );
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $resource->units->type??'');
 
             $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $resource->waste);
 
