@@ -25,15 +25,11 @@ class BoqReport
     {
         $this->project = $project;
         $tree = [];
-        $levels = CostShadow::all()->pluck('wbs_level_id')->unique()->toArray();
-        $wbs_levels = WbsLevel::whereIn('id', $levels)->where('project_id', $project->id)->get();
+
+        $wbs_levels = \Cache::get('wbs-tree-' . $project->id);
         foreach ($wbs_levels as $level) {
-            if ($level->root) {
                 $treeLevel = $this->buildTree($level->root);
-            }
-            if ($treeLevel) {
                 $tree[] = $treeLevel;
-            }
         }
 
         return view('reports.cost-control.boq-report.boq_report', compact('tree', 'levels', 'project'));
@@ -46,7 +42,8 @@ class BoqReport
             $this->root_ids[] = $level->id;
             $tree = ['id' => $level->id, 'name' => $level->name, 'children' => [], 'data' => [
                 'to_date_cost' => 0,
-                'previous_cost' => 0,
+                'prev_cost' => 0,
+                'prev_allowable' => 0,
                 'allowable_ev_cost' => 0,
                 'remaining_cost' => 0,
                 'completion_cost' => 0,
@@ -57,7 +54,7 @@ class BoqReport
 
             $shadows = CostShadow::sumColumns([
                 'to_date_cost',
-                'previous_cost',
+                'prev_cost',
                 'allowable_ev_cost',
                 'remaining_cost',
                 'completion_cost',
@@ -76,7 +73,7 @@ class BoqReport
             foreach ($shadows as $shadow) {
 
                 $tree['data']['to_date_cost'] = $shadow['to_date_cost'] ?:0;
-                $tree['data']['previous_cost'] = $shadow['previous_cost'] ?: 0;
+                $tree['data']['previous_cost'] = $shadow['prev_cost'] ?: 0;
                 $tree['data']['allowable_ev_cost'] = $shadow['allowable_ev_cost'] ?:0 ;
                 $tree['data']['remaining_cost'] = $shadow['remaining_cost'] ?: 0;
                 $tree['data']['completion_cost'] = $shadow['completion_cost'] ?: 0;

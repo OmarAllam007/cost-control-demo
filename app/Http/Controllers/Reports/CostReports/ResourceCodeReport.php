@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Reports\CostReports;
 
 
 use App\BreakDownResourceShadow;
+use App\BusinessPartner;
 use App\CostShadow;
 use App\Project;
 use App\Resources;
@@ -18,78 +19,122 @@ use App\ResourceType;
 class ResourceCodeReport
 {
     protected $project;
+    protected $resources;
+    protected $period_cost;
+    protected $prev_cost;
 
-    public function getResourceCodeReport(Project $project)
+    public function getResourceCodeReport(Project $project, $chosen_period_id)
     {
-        // get resources
-        // get types of resources
-        // build tree
-
+        set_time_limit(300);
         $this->project = $project;
-        $tree = [];
-        $type_level = '';
-        $resources = CostShadow::joinBudget('budget.resource_id')
-            ->where('cost.project_id', $project->id)
-            ->where('cost.period_id', $project->open_period()->id)
-            ->pluck('resource_id')->unique()->toArray();
+        $this->resources = collect();
+        $this->period_cost = collect();
+        $this->prev_cost = collect();
+        $this->types = collect();
 
-        $type_ids = Resources::whereIn('id', $resources)->pluck('resource_type_id')->unique()->toArray();
-        $types = ResourceType::whereIn('id', $type_ids)->get();
+        $tree = [];
+        $types= \Cache::has('resources-tree')?\Cache::get('resources-tree') : ResourceType::tree()->get();
+        collect(\DB::select('SELECT  resource_id,measure_unit, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit 
+FROM break_down_resource_shadows
+WHERE project_id = ' . $project->id . '
+GROUP BY resource_id , measure_unit'))->map(function ($resource) {
+            $this->resources->put($resource->resource_id, ['unit' => $resource->measure_unit, 'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
+
+        });
+
+
+        collect(\DB::select('SELECT
+  c.resource_id,
+  SUM(c.to_date_cost)      AS to_data_cost,
+  SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
+  SUM(c.cost_var)          AS cost_var,
+  SUM(c.remaining_cost)    AS remain_cost,
+  SUM(c.allowable_var)     AS allowable_var,
+  SUM(c.completion_cost)   AS completion_cost
+FROM cost_shadows c, break_down_resource_shadows sh
+WHERE c.project_id = ? AND c.period_id = ?
+      AND c.breakdown_resource_id = sh.breakdown_resource_id
+GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($resource) {
+            $this->period_cost->put($resource->resource_id, ['to_date_cost' => $resource->to_date_cost ?? 0, 'to_date_allowable_cost' => $resource->to_date_allowable_cost ?? 0
+                , 'cost_var' => $resource->cost_var ?? 0
+                , 'remain_cost' => $resource->remain_cost ?? 0
+                , 'allowable_var' => $resource->allowable_var ?? 0
+                , 'completion_cost' => $resource->completion_cost ?? 0
+            ]);
+        });
+        collect(\DB::select('SELECT
+  c.resource_id,
+  SUM(c.to_date_cost)      AS to_data_cost,
+  SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
+  SUM(c.cost_var)          AS cost_var
+FROM cost_shadows c
+WHERE c.project_id = ? AND c.period_id < ?
+GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($resource) {
+            $this->prev_cost->put($resource->resource_id, ['to_date_cost' => $resource->to_data_cost ?? 0, 'to_date_allowable_cost' => $resource->to_date_allowable_cost ?? 0
+                , 'cost_var' => $resource->cost_var ?? 0
+            ]);
+        });
+
+        $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
+            return $partner->name;
+        });
+
+        $this->types = ResourceType::whereHas('resources', function ($q) {
+            $q->where('project_id', $this->project->id);
+        })->get()->keyBy('id')->map(function ($type) {
+            return $type->resources->where('project_id', $this->project->id);
+        });
+
         foreach ($types as $type) {
-            $type_level = $this->buildTree($type->root);
+            $treeType = $this->buildTypeTree($type);
+            $tree[] = $treeType;
         }
-        if ($type_level) {
-            $tree[] = $type_level;
-        }
-        return view('reports.cost-control.resource-code.resource_code', compact('project', 'tree'));
+        return view('reports.cost-control.resource_code.resource_code', compact('project', 'tree'));
     }
 
-    function buildTree($resource_type)
+
+    /**
+     * @param $type
+     * @return array
+     */
+    private function buildTypeTree($type)
     {
+        $tree = ['id' => $type['id'], 'name' => $type['name'], 'children' => [], 'resources' => [], 'budget_cost' => 0];
 
-        $tree = ['id' => $resource_type->id, 'name' => $resource_type->name, 'children' => [], 'data' => [
-            'to_date_cost' => 0,
-            'previous_cost' => 0,
-            'allowable_ev_cost' => 0,
-            'remaining_cost' => 0,
-            'completion_cost' => 0,
-            'cost_var' => 0,
-            'allowable_var' => 0,
-            'budget_cost' => 0,
-        ]];
 
-        $shadows = CostShadow::joinBudget('budget.resource_type')->sumFields([
-            'cost.to_date_cost',
-            'cost.previous_cost',
-            'cost.allowable_ev_cost',
-            'cost.remaining_cost',
-            'cost.completion_cost',
-            'cost.cost_var',
-            'cost.allowable_var'])
-            ->where('cost.period_id', $this->project->open_period()->id)
-            ->whereIn('budget.resource_type_id', $resource_type->getChildrenIds())
-            ->get()->toArray();
+        $resources = $this->types->get($type['id']);
+        if (count($resources)) {
+            foreach ($resources as $resource) {
+                $tree['resources'][$resource['id']] = ['id' => $resource['id']
+                    , 'name' => $resource['name']
+                    , 'budget_cost' => $this->resources->get($resource['id'])['budget_cost'] ?? 0
+                    , 'prev_cost' => $this->prev_cost->get($resource['id'])['to_date_cost'] ?? 0
+                    , 'prev_allowable_cost' => $this->prev_cost->get($resource['id'])['to_date_allowable_cost'] ?? 0
+                    , 'prev_var' => $this->prev_cost->get($resource['id'])['cost_var'] ?? 0
+                    , 'to_data_cost' => $this->period_cost->get($resource['id'])['to_data_cost'] ?? 0
+                    , 'to_date_allowable_cost' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
+                    , 'cost_var' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
+                    , 'remain_cost' => $this->period_cost->get($resource['id'])['remain_cost'] ?? 0
+                    , 'allowable_var' => $this->period_cost->get($resource['id'])['allowable_var'] ?? 0
+                    , 'completion_cost' => $this->period_cost->get($resource['id'])['completion_cost'] ?? 0
 
-        $resources = Resources::where('project_id',$this->project->id)->whereIn('resource_type_id', $resource_type->getChildrenIds())->pluck('id')->unique()->toArray();
-        $budget_cost = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->whereIn('resource_id', $resources)->get()->sum('budget_cost');
-
-        $tree['data']['budget_cost'] = $budget_cost;
-
-        foreach ($shadows as $shadow) {
-            $tree['data']['to_date_cost'] = $shadow['to_date_cost'] ?: 0;
-            $tree['data']['previous_cost'] = $shadow['previous_cost'] ?: 0;
-            $tree['data']['allowable_ev_cost'] = $shadow['allowable_ev_cost'] ?: 0;
-            $tree['data']['remaining_cost'] = $shadow['remaining_cost'] ?: 0;
-            $tree['data']['completion_cost'] = $shadow['completion_cost'] ?: 0;
-            $tree['data']['cost_var'] = $shadow['cost_var'] ?: 0;
-            $tree['data']['allowable_var'] = $shadow['allowable_var'] ?: 0;
+                ];
+                $tree['budget_cost'] += $this->resources->get($resource['id'])['budget_cost'];
+            }
         }
 
-        if ($resource_type->children->count()) {
-            $tree['children'] = $resource_type->children->map(function (ResourceType $type) {
-                return $this->buildTree($type);
+        $tree['resources'] = collect($tree['resources'])->sortBy('code');
+
+        if (collect($type['children'])->count()) {
+            $tree['children'] = collect($type['children'])->map(function ($child) use ($tree) {
+                $subtree = $this->buildTypeTree($child);
+                return $subtree;
             });
+
+            foreach ($tree['children'] as $child) {
+                $tree['budget_cost'] += $child['budget_cost'];
+            }
+
         }
 
         return $tree;
