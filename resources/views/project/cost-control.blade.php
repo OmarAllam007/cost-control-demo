@@ -4,15 +4,21 @@
     <h2>{{ $project->name }}</h2>
 
     <nav class="btn-toolbar pull-right">
-        <a href="{{route('costshadow.export',$project)}}" class="btn btn-info btn-sm">
-            <i class="fa fa-cloud-download"></i> Export
-        </a>
+        <div class="btn-group">
+            <button class="btn btn-outline btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-cloud-download"></i> Export <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{route('costshadow.export',$project)}}"><i class="fa fa-cube"></i> Current Period</a></li>
+                <li><a href="{{route('costshadow.export',$project)}}?perspective=budget"><i class="fa fa-cubes"></i> All Resources</a></li>
+            </ul>
+        </div>
 
         @if (can('activity_mapping', $project) || can('resource_mapping', $project) || ($project->is_cost_ready && can('actual_resources', $project)))
             <div class="btn-group">
-                <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle"
-                   data-toggle="dropdown"><i
-                            class="fa fa-cloud-upload"></i> Import <span class="caret"></span></a>
+                <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                </a>
                 <ul id="import-link" class="dropdown-menu">
                     @if ($project->is_cost_ready)
                         @can('actual_resources', $project)
@@ -63,15 +69,18 @@
             <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
 
             @can('periods', $project)
-                <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial Periods</a>
+                <a href="#periods" class="btn btn-sm btn-violet btn-outline"><i class="fa fa-calendar"></i> Financial
+                    Periods</a>
             @endcan
 
             @can('cost_owner', $project)
-                <a href="#data-uploads" class="btn btn-sm btn-info btn-outline"><i class="fa fa-upload"></i> Data Uploads</a>
+                <a href="#data-uploads" class="btn btn-sm btn-info btn-outline"><i class="fa fa-upload"></i> Data
+                    Uploads</a>
             @endcan
 
             @can('reports', $project)
-                <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i> Reports</a>
+                <a href="#CostControlReports" class="btn btn-success btn-sm btn-outline"><i class="fa fa-bar-chart"></i>
+                    Reports</a>
             @endcan
         </nav>
         <div class="clearfix"></div>
