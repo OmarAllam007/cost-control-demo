@@ -8,6 +8,7 @@ export default {
 
     data() {
         let perspective = window.localStorage.cost_perspective;
+
         return {
             breakdowns: [],
             loading: false,
@@ -92,7 +93,9 @@ export default {
 
     watch: {
         perspective(view) {
+            console.log(view);
             window.localStorage.perspective = view;
+            this.loadBreakdowns();
         }
     },
 

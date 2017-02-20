@@ -6,6 +6,19 @@
                 <i class="fa fa-refresh fa-spin fa-3x"></i>
             </div>
 
+            <section class="form-group pull-right">
+
+            <div class="btn-group">
+                <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}" @click="perspective = 'cost'">
+                    <i class="fa fa-cube"></i> Current Only
+                </button>
+                <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective == 'budget', 'btn-default': perspective != 'budget'}" @click="perspective = 'budget'">
+                <i class="fa fa-cubes"></i> All Resources
+                </button>
+            </div>
+            </section>
+            <div class="clearfix"></div>
+
             <section class="filters row" id="breakdown-filters">
                 @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
                 @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
