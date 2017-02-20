@@ -31,21 +31,21 @@ class CostReportsController extends Controller
     public function costSummery(Project $project, Request $request)
     {
         if ($request->period_id) {
-            if (\Session::has('period_id')) {
-                \Session::forget('period_id');
-                \Session::set('period_id', $request->period_id);
+            if (\Session::has('period_id'.$project->id)) {
+                \Session::forget('period_id'.$project->id);
+                \Session::set('period_id'.$project->id, $request->period_id);
                 $chosen_period_id = $request->period_id;
             } else {
                 $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id', $request->period_id);
+                \Session::set('period_id'.$project->id, $request->period_id);
             }
         }
         else{
-            if (\Session::has('period_id')) {
-                $chosen_period_id = \Session::get('period_id');;
+            if (\Session::has('period_id'.$project->id)) {
+                $chosen_period_id = \Session::get('period_id'.$project->id);;
             } else {
                 $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id', $request->period_id);
+                \Session::set('period_id'.$project->id, $request->period_id);
             }
         }
 
@@ -53,10 +53,28 @@ class CostReportsController extends Controller
         return $cost_summery->getCostSummery($project, $chosen_period_id);
     }
 
-    public function significantMaterials(Project $project)
+    public function significantMaterials(Project $project, Request $request)
     {
+        if ($request->period_id) {
+            if (\Session::has('period_id'.$project->id.$project->id)) {
+                \Session::forget('period_id'.$project->id);
+                \Session::set('period_id'.$project->id, $request->period_id);
+                $chosen_period_id = $request->period_id;
+            } else {
+                $chosen_period_id = $project->getMaxPeriod();
+                \Session::set('period_id'.$project->id, $request->period_id);
+            }
+        }
+        else{
+            if (\Session::has('period_id'.$project->id)) {
+                $chosen_period_id = \Session::get('period_id'.$project->id);;
+            } else {
+                $chosen_period_id = $project->getMaxPeriod();
+                \Session::set('period_id'.$project->id, $request->period_id);
+            }
+        }
         $importantMaterials = new SignificantMaterials();
-        return $importantMaterials->getSignifcantMaterials($project);
+        return $importantMaterials->getTopHighPriorityMaterials($project,$chosen_period_id);
     }
 
     public function standardActivity(Project $project)
