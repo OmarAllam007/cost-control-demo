@@ -19,7 +19,6 @@ use Make\Makers\Resource;
 
 class HighPriorityMaterials
 {
-    private $resources_materials;
     private $project;
 
     public function getTopHighPriorityMaterials(Project $project, Request $request)
