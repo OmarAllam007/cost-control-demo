@@ -4,6 +4,7 @@ namespace App;
 
 use App\Http\Controllers\Reports\ActivityResourceBreakDown;
 use App\Observers\ActualResourceObserver;
+use function GuzzleHttp\json_decode;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,8 @@ class ActualResources extends Model
     ];
 
     protected $casts = ['original_data' => 'array'];
+
+    protected $dates = ['created_at', 'update_at', 'action_date'];
 
     function project()
     {
@@ -73,6 +76,37 @@ class ActualResources extends Model
         parent::boot();
     }
 
+    function toActivityLog()
+    {
+        $attributes = [
+            'budget_resource_name' => $this->budget->resource_name, 'doc_no' => $this->doc_no,
+            'budget_measure_unit' => $this->budget->measure_unit,
+        ];
+
+        if ($this->original_data) {
+            $attributes['qty'] = $this->original_data[4];
+            $attributes['unit_price'] = $this->original_data[5];
+            $attributes['cost'] = $this->original_data[6];
+            $attributes['store_measure_unit'] = $this->original_data[3];
+            $attributes['store_resource_name'] = trim($this->original_data[3]);
+        } else {
+            $attributes['qty'] = $this->qty;
+            $attributes['unit_price'] = $this->unit_price;
+            $attributes['cost'] = $this->cost;
+            $attributes['store_measure_unit'] = $this->budget->measure_unit;
+            $attributes['store_resource_name'] = trim($this->budget->resource_name);
+        }
+
+        if ($this->attributes['action_date']) {
+            $attributes['action_date'] = $this->action_date->format('d/m/Y');
+        } elseif ($this->attributes['created_at']) {
+            $attributes['action_date'] = $this->created_at->format('d/m/Y');
+        } else {
+            $attributes['action_date'] = '';
+        }
+
+        return $attributes;
+    }
 
 
     /*

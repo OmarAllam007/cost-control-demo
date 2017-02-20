@@ -22,20 +22,30 @@ class CostController extends Controller
     {
         set_time_limit(180);
         $period = $wbs_level->project->open_period();
-        /* return WbsResource::whereIn('wbs_level_id', $wbs_level->getChildrenIds()) //->where('period_id', $wbs_level->project->open_period()->id)
-            ->joinShadow()
-            ->get();
-
-
-        if (!$period) {
-            return [];
-        }
-
-        if ($request->has('all')) {
-            return BreakDownResourceShadow::where('wbs_id', $wbs_level->getChildrenIds())->with('cost')->get();
-        }
-*/
         return CostShadow::joinShadow($wbs_level, $period)->get();
+    }
+
+    function activityLog(WbsLevel $wbs_level, Request $request)
+    {
+        $activities = collect();
+        ActualResources::with('budget')->whereIn('wbs_level_id', $wbs_level->getChildrenIds())
+            ->chunk(1000, function (Collection $resources) use ($activities) {
+                foreach ($resources as $resource) {
+                    $activity = $resource->budget->activity;
+
+                    if (!$activities->has($activity)) {
+                        $activities->put($activity, collect());
+                    }
+
+                    $activities->get($activity)->push($resource->toActivityLog());
+                }
+            });
+
+        return $activities->map(function($resources) {
+            return $resources->sortBy(function($resource) {
+                return strtolower(trim($resource['store_resource_name']));
+            });
+        })->sortByKeys();
     }
 
     function resources(Project $project)

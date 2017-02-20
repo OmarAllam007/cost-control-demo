@@ -3,6 +3,7 @@ import Wbs from './components/Wbs';
 import Datasheet from './components/datasheet';
 import Alert from './components/Alert';
 import Resources from './components/CostResources';
+import ActivityLog from './components/ActivityLog'
 
 Vue.filter('slug', function(value){
     return value.replace(/\W/g, '-').replace(/-{2,}/g, '-').toLowerCase();
@@ -50,16 +51,12 @@ window.app = new Vue({
         },
 
         reload(params) {
-            console.log(params);
             this.reload(params.component, params.alert);
         }
     },
 
     components: {
-        Alert,
-        Wbs,
-        Datasheet,
-        Resources
+        Alert, Wbs, Datasheet, Resources, ActivityLog
     }
 });
 

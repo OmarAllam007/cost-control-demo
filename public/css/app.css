@@ -11256,4 +11256,8 @@ select[multiple].dropdown-templates {
   width: 200px;
 }
 
+table.collapse.in {
+  display: table;
+}
+
 /*# sourceMappingURL=app.css.map */
