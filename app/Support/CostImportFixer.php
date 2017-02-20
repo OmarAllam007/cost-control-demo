@@ -147,12 +147,11 @@ class CostImportFixer
         $errors = $result['errors'];
 
         foreach ($errors as $error) {
-
             $this->rows->forget($error['hash']);
             $resources = $error['resources']->keyBy('breakdown_resource_id');
             $unit_price = floatval($error[5]);
             foreach ($resources as $id => $resource) {
-                if (isset($data[$id]) && $data[$id]['included'] && $data[$id]['qty']) {
+                if (isset($data[$id]) && !empty($data[$id]['included']) && $data[$id]['qty']) {
                     $qty = floatval($data[$id]['qty']);
                     $total = $qty * $unit_price;
 
