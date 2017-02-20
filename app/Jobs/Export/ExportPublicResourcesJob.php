@@ -27,11 +27,6 @@ class ExportPublicResourcesJob extends Job
      */
     public function handle()
     {
-        set_time_limit(600);
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-        $cacheSettings = array('memoryCacheSize' => '500MB', 'cacheTime' => '1000');
-        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Type', 'Rate', 'Unit'
