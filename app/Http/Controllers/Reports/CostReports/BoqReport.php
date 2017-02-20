@@ -32,7 +32,7 @@ class BoqReport
                 $tree[] = $treeLevel;
         }
 
-//        return view('reports.cost-control.boq-report.boq_report', compact('tree', 'levels', 'project'));
+        return view('reports.cost-control.boq-report.boq_report', compact('tree', 'levels', 'project'));
     }
 
     function buildTree($level)

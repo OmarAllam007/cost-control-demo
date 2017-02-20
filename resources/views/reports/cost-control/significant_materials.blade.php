@@ -4,13 +4,17 @@
 @endif
 @section('header')
     <h2>{{$project->name}} - Significant Materials Report</h2>
-
+    <style>
+        .padding{
+            padding-right: 300px;
+        }
+    </style>
 @endsection
 
 @section('body')
     <div class="row" style="margin-bottom: 10px;">
         <form action="{{route('cost.significant',$project)}}" class="form-inline col col-md-8" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Cache::has('period_id'.$project->id) ? Cache::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control'])}}
+            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Cache::has('period_id'.$project->id) ? Cache::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
         <br>
