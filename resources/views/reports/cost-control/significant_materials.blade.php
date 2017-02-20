@@ -8,16 +8,13 @@
 @endsection
 
 @section('body')
-    <div class="col col-md-8">
-        <form action="{{route('cost.standard_activity_report',$project)}}" class="form-inline" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') , null, ['placeholder' => 'Choose a Period','class'=>'form-control'])}}
+    <div class="row" style="margin-bottom: 10px;">
+        <form action="{{route('cost.significant',$project)}}" class="form-inline col col-md-8" method="get">
+            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Cache::has('period_id'.$project->id) ? Cache::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
         <br>
     </div>
-    <br>
-    <br>
-    <br>
 
     <ul class="list-unstyled tree">
         @foreach($data as $item)

@@ -19,7 +19,7 @@
 
     <article id="{{$division['id']}}" class="tree--child collapse">
 
-        @if ($division['activities'] && count($division['activities']))
+        @if (collect($division['activities'])->sortBy('name') && count($division['activities']))
             @foreach($division['activities'] as $keyActivity=>$activity)
                 <ul class="list-unstyled">
                     <li>
@@ -58,17 +58,16 @@
                                                                     <th>Remaining Cost</th>
                                                                     <th>At Compeletion Cost</th>
                                                                     <th>Cost Variance</th>
-
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                @foreach($cost_account['resources'] as $keyResource=>$resource)
+                                                                @foreach(collect($cost_account['resources'])->sortBy('name') as $keyResource=>$resource)
 
                                                                     <tr>
                                                                         <td>{{$resource['name']}}</td>
                                                                         <td>{{number_format($resource['budget_cost']??0,2) }}</td>
-                                                                        <td>{{number_format($resource['prev_date_cost']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['prev_allowable_ev_cost']??0,2)}}</td>
+                                                                        <td>{{number_format($resource['prev_cost']??0,2)}}</td>
+                                                                        <td>{{number_format($resource['prev_allowabe']??0,2)}}</td>
                                                                         <td>{{number_format($resource['prev_variance']??0,2)}}</td>
                                                                         <td>{{number_format($resource['to_date_cost']??0,2)}}</td>
                                                                         <td>{{number_format($resource['to_date_allowable_cost']??0,2)}}</td>
