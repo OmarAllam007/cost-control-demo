@@ -43,22 +43,24 @@
                                             <table class="table table-condensed ">
                                                 <thead>
                                                 <tr class="tbl-children-division">
-                                                    <th class="col-md-3">Resource Name</th>
+                                                    <th class="col-md-2">Resource Name</th>
                                                     <th class="col-md-2">Price-Unit</th>
-                                                    <th class="col-md-3">Unit of Measure</th>
+                                                    <th class="col-md-2">Unit of Measure</th>
                                                     <th class="col-md-2">Budget Unit</th>
                                                     <th class="col-md-2">Budget Cost</th>
+                                                    <th class="col-md-2">Resource Type</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 @foreach($cost_account['resources'] as $resource)
                                                     <tr class="tbl-content">
-                                                        <td class="col-md-3">{{$resource['name']}}</td>
+                                                        <td class="col-md-2">{{$resource['name']}}</td>
 
                                                         <td class="col-md-2">{{number_format($resource['price_unit'],2)}}</td>
-                                                        <td class="col-md-3">{{$resource['unit']}}</td>
+                                                        <td class="col-md-2">{{$resource['unit']}}</td>
                                                         <td class="col-md-2">{{number_format($resource['budget_unit'],2)}}</td>
                                                         <td class="col-md-2">{{number_format($resource['budget_cost'],2)}}</td>
+                                                        <td class="col-md-2">{{$resource['resource_type']}}</td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>

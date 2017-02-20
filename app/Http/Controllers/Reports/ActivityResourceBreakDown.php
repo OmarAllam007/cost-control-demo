@@ -79,9 +79,11 @@ class ActivityResourceBreakDown
                 $tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']]['resources'][$breakDown_resource['resource_name']] = [
                     'name' => $breakDown_resource['resource_name'],
                     'unit' => $breakDown_resource['measure_unit'],
+                    'resource_type'=>$breakDown_resource['resource_type'],
                     'price_unit' => 0,
                     'budget_cost' => 0,
                     'budget_unit' => 0,
+
                 ];
             }
 
