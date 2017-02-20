@@ -2,14 +2,17 @@
 
 namespace App;
 
+use App\Behaviors\CostAttributes;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\JoinClause;
 
 
 class BreakDownResourceShadow extends Model
 {
-    use Tree;
+    use Tree, CostAttributes;
+
     protected $table = 'break_down_resource_shadows';
     protected $fillable = [
         'breakdown_resource_id', 'code', 'project_id', 'wbs_id', 'breakdown_id', 'resource_id', 'template', 'activity', 'activity_id', 'cost_account',
@@ -83,6 +86,27 @@ class BreakDownResourceShadow extends Model
     public function recalculate()
     {
 
+    }
+
+    function scopeJoinCost(Builder $query, WbsLevel $wbsLevel, Period $period)
+    {
+        $query->from("$this->table as budget")
+            ->leftJoin('cost_shadows as cost', function(JoinClause $join) use ($period) {
+                return $join->on('budget.breakdown_resource_id', '=', 'cost.breakdown_resource_id')
+                    ->where('cost.period_id', '=', $period->id);
+            })
+            ->whereIn('budget.wbs_id', $wbsLevel->getChildrenIds())
+//            ->where('cost.period_id', $period->id)
+            ->selectRaw('budget.*, cost.curr_cost, cost.curr_qty, cost.curr_unit_price, cost.prev_cost, cost.prev_qty, ' .
+                'cost.to_date_cost, cost.to_date_qty, cost.prev_unit_price, cost.to_date_unit_price, ' .
+                'cost.allowable_ev_cost, cost.allowable_var, cost.bl_allowable_cost, cost.bl_allowable_var, ' .
+                'cost.remaining_qty, cost.remaining_cost, cost.remaining_unit_price, ' .
+                'cost.completion_qty, cost.completion_cost, cost.completion_unit_price, ' .
+                'cost.qty_var, cost.cost_var, cost.unit_price_var, cost.physical_unit, cost.pw_index, ' .
+                'cost.cost_variance_to_date_due_unit_price, cost.allowable_qty, cost.cost_variance_remaining_due_unit_price, ' .
+                'cost.cost_variance_completion_due_unit_price, cost.cost_variance_completion_due_qty, cost.cost_variance_to_date_due_qty');
+
+        $this->appendFields();
     }
 
     /*    function getBoqDescription()

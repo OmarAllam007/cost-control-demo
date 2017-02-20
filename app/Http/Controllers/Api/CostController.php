@@ -22,7 +22,14 @@ class CostController extends Controller
     {
         set_time_limit(180);
         $period = $wbs_level->project->open_period();
-        return CostShadow::joinShadow($wbs_level, $period)->get();
+
+        $perspective = $request->get('perspective');
+
+        if ($perspective=='budget') {
+            return BreakDownResourceShadow::joinCost($wbs_level, $period)->get();
+        } else {
+            return CostShadow::joinShadow($wbs_level, $period)->get();
+        }
     }
 
     function activityLog(WbsLevel $wbs_level, Request $request)
