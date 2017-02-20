@@ -6,10 +6,19 @@
                 <i class="fa fa-refresh fa-spin fa-3x"></i>
             </div>
 
-            <a href="{{route('costshadow.export',$project)}}" class="btn btn-info btn-sm pull-right">
-                <i class="fa fa-cloud-download"></i> Export
-            </a>
+            <section class="form-group pull-right">
+
+            <div class="btn-group">
+                <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}" @click="perspective = 'cost'">
+                    <i class="fa fa-cube"></i> Current Only
+                </button>
+                <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective == 'budget', 'btn-default': perspective != 'budget'}" @click="perspective = 'budget'">
+                <i class="fa fa-cubes"></i> All Resources
+                </button>
+            </div>
+            </section>
             <div class="clearfix"></div>
+
             <section class="filters row" id="breakdown-filters">
                 @include('std-activity._modal', ['input' => 'activity', 'value' => ''])
                 @include('resource-type._modal', ['input' => 'resource_type', 'value' => ''])
@@ -56,7 +65,8 @@
                 </div>
             </section>
 
-            <div class="scrollpane" v-if="filtered_breakdowns.length">
+            <section v-if="filtered_breakdowns.length">
+            <div class="scrollpane">
                 <table class="table table-condensed table-striped table-hover table-breakdown">
                     <thead>
                     <tr>
@@ -258,8 +268,9 @@
                     </tbody>
                 </table>
 
-                <pagination :total="count"></pagination>
             </div>
+            <pagination :total="count"></pagination>
+        </section>
             <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No breakdowns found</div>
 
             @can('actual_resource', $project)

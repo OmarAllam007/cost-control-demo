@@ -8,6 +8,7 @@ export default {
 
     data() {
         let perspective = window.localStorage.cost_perspective;
+
         return {
             breakdowns: [],
             loading: false,
@@ -53,7 +54,7 @@ export default {
             if (this.wbs_id) {
                 this.loading = true;
                 $.ajax({
-                    url: '/api/cost/breakdowns/' + this.wbs_id + (this.perspective ? '?all=0' : ''),
+                    url: '/api/cost/breakdowns/' + this.wbs_id + (this.perspective ? ('?perspective=' + this.perspective) : ''),
                     dataType: 'json', cache: true
                 }).success(response => {
                     this.loading = false;
@@ -92,7 +93,9 @@ export default {
 
     watch: {
         perspective(view) {
+            console.log(view);
             window.localStorage.perspective = view;
+            this.loadBreakdowns();
         }
     },
 

@@ -4,6 +4,10 @@
     <h2>{{ $project->name }}</h2>
 
     <nav class="btn-toolbar pull-right">
+        <a href="{{route('costshadow.export',$project)}}" class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
+
         @if (can('activity_mapping', $project) || can('resource_mapping', $project) || ($project->is_cost_ready && can('actual_resources', $project)))
             <div class="btn-group">
                 <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle"
