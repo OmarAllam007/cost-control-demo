@@ -219,6 +219,7 @@ $config = [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => \Collective\Html\FormFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Lava' => \Khill\Lavacharts\Laravel\LavachartsFacade::class,
     ],
 
     'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil',
