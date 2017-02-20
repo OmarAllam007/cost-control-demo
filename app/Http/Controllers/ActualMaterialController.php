@@ -168,38 +168,6 @@ class ActualMaterialController extends Controller
         $result = (new CostImportFixer($actual_batch))->fixMultipleCostAccounts($data);
 
         return $this->redirect($result);
-        $newResources = collect();
-
-        $costAccountLog = collect();
-        foreach ($data['multiple'] as $activityCode => $resources) {
-            foreach ($resources as $resourceCode => $resource) {
-                $log = ['original' => $resource, 'distributed' => []];
-                foreach ($resource['resources'] as $shadow) {
-                    $material = $requestResources[$activityCode][$resourceCode][$shadow->breakdown_resource_id];
-                    if (empty($material['included'])) {
-                        continue;
-                    }
-
-                    $newResource = $resource;
-                    $newResource[4] = $material['qty'];
-                    $newResource[6] = $material['qty'] * $resource[5];
-                    $newResource['resource'] = $shadow;
-                    $newResources->push($newResource);
-
-                    $log['distributed'][] = $newResource;
-                }
-
-                $costAccountLog->push($log);
-            }
-        }
-
-        $issueLog = new CostIssuesLog($data['batch']);
-        $issueLog->recordCostAccountDistribution($costAccountLog);
-
-        $result = $this->dispatch(new ImportMaterialDataJob($data['project'], $newResources, $data['batch']));
-        $data['multiple'] = collect();
-
-        return $this->redirect($this->merge($data, $result), $key);
     }
 
     function progress(ActualBatch $actual_batch)

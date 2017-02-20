@@ -26,19 +26,17 @@ class ExportResourcesJob extends Job
         $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
             return $partner->name;
         });
-        $this->units = Unit::all()->keyBy('id')->map(function ($unit){
-           return $unit->type;
-        });
+
+        $this->units = Unit::pluck('type', 'id');
     }
 
     public function handle()
     {
-        set_time_limit(600);
-
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-        $cacheSettings = array('memoryCacheSize' => '500MB', 'cacheTime' => '1000');
-        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-
+//        set_time_limit(600);
+//
+//        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+//        $cacheSettings = array('memoryCacheSize' => '500MB', 'cacheTime' => '1000');
+//        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
@@ -71,14 +69,14 @@ class ExportResourcesJob extends Job
                $column+=3;
            }
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource->versionFor($this->project->id)->rate);
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource->rate);
             $column++;
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $this->units->get($resource->versionFor($this->project->id)->unit));
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $this->units->get($resource->unit));
             $column++;
 
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource->versionFor($this->project->id)->waste);
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource->waste);
             $column++;
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource->reference);

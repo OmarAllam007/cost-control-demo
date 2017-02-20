@@ -11,27 +11,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class ExportPublicResourcesJob extends Job
 {
     /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * Execute the job.
      *
      * @return void
      */
     public function handle()
     {
-        set_time_limit(600);
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-        $cacheSettings = array('memoryCacheSize' => '500MB', 'cacheTime' => '1000');
-        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Type', 'Rate', 'Unit'
@@ -47,7 +32,7 @@ class ExportPublicResourcesJob extends Job
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name);
 
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource->rate);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, isset($resource->units->type)?$resource->units->type:'' );
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $resource->units->type??'');
 
             $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $resource->waste);
 

@@ -183,7 +183,7 @@ class CostImporter
 
 
             $shadows = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
-                ->where('progress', '<', 100)->where('status', '!=', 'Closed')
+                ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'")
                 ->get();
 
             //TODO: If shadows not found add to invalid
