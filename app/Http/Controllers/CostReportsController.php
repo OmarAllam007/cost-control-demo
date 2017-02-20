@@ -77,11 +77,28 @@ class CostReportsController extends Controller
         return $importantMaterials->getTopHighPriorityMaterials($project,$chosen_period_id);
     }
 
-    public function standardActivity(Project $project)
+    public function standardActivity(Project $project,Request $request)
     {
-
+        if ($request->period_id) {
+            if (\Session::has('period_id'.$project->id)) {
+                \Session::forget('period_id'.$project->id);
+                \Session::set('period_id'.$project->id, $request->period_id);
+                $chosen_period_id = $request->period_id;
+            } else {
+                $chosen_period_id = $project->getMaxPeriod();
+                \Session::set('period_id'.$project->id, $request->period_id);
+            }
+        }
+        else{
+            if (\Session::has('period_id'.$project->id)) {
+                $chosen_period_id = \Session::get('period_id'.$project->id);;
+            } else {
+                $chosen_period_id = $project->getMaxPeriod();
+                \Session::set('period_id'.$project->id, $request->period_id);
+            }
+        }
         $standard_activity = new CostStandardActivityReport();
-        return $standard_activity->getStandardActivities($project);
+        return $standard_activity->getStandardActivities($project,$chosen_period_id);
     }
 
     public function boqReport(Project $project)

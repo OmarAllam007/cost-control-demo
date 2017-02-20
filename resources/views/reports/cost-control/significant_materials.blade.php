@@ -9,7 +9,7 @@
 
 @section('body')
     <div class="col col-md-8">
-        <form action="{{route('cost.significant',$project)}}" class="form-inline" method="get">
+        <form action="{{route('cost.standard_activity_report',$project)}}" class="form-inline" method="get">
             {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') , null, ['placeholder' => 'Choose a Period','class'=>'form-control'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
