@@ -23,7 +23,7 @@ class ActivityReport
     protected $period_id;
     protected $levels;
 
-    function getActivityReport(Project $project, $period_id = 1)
+    function getActivityReport(Project $project, $period_id)
     {
         $this->project = $project;
         $this->period_id = $period_id;

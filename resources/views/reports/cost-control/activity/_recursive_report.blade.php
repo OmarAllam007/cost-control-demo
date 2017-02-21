@@ -66,7 +66,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($level['activities'] as $activity)
+                        @foreach(collect($level['activities'])->sortBy('activity_name') as $activity)
                             <tr>
                             <td>{{$activity['activity_name']}}</td>
                             <td>{{number_format($activity['budget_cost'],2)}}</td>
