@@ -82,9 +82,9 @@ class Project extends Model
         $refs = $this->shadows()->with('productivity')
 //            ->select('id', 'productivity_ref')
             ->where('productivity_ref', '!=', '')->whereNotNull('productivity_ref')
-            ->pluck('productivity_ref')->unique()->filter();
+            ->pluck('productivity_id')->unique()->filter();
 
-        return Productivity::whereIn('csi_code', $refs)->get();
+        return Productivity::whereIn('id', $refs)->get();
     }
 
     /*function getResourcesAttribute()
