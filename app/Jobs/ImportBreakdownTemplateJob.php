@@ -29,9 +29,6 @@ class ImportBreakdownTemplateJob extends ImportJob
 
     function __construct($file)
     {
-        ini_set('memory_limit', '1G');
-        set_time_limit(300);
-
         $this->file = $file;
         $this->loadActivities();
         $this->loadResources();
@@ -41,8 +38,8 @@ class ImportBreakdownTemplateJob extends ImportJob
 
     function handle()
     {
-        ini_set('max_execution_time', 300);
         $loader = new \PHPExcel_Reader_Excel2007();
+        $loader->setReadDataOnly(true);
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
@@ -57,6 +54,7 @@ class ImportBreakdownTemplateJob extends ImportJob
             if (!$activity) {
                 continue;
             }
+
 
 
             $template = $this->getTemplate($data[2], $activity);
