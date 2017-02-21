@@ -2,6 +2,8 @@
 
 namespace App\Jobs\Export;
 
+use App\BreakDownResourceShadow;
+use App\CostShadow;
 use App\Jobs\Job;
 use App\WbsLevel;
 use App\WbsResource;
@@ -10,10 +12,15 @@ class ExportCostShadow extends Job
 {
 
     protected $project;
+    /**
+     * @var string
+     */
+    private $perspective;
 
-    public function __construct($project)
+    public function __construct($project, $perspective = '')
     {
         $this->project = $project;
+        $this->perspective = $perspective;
     }
 
 
@@ -83,7 +90,13 @@ class ExportCostShadow extends Job
 
         fwrite($fh, implode(',', array_map('csv_quote', $headers)));
 
-        $shadows = WbsResource::with('wbs')->joinShadow()->where('wbs_resources.project_id', $this->project->id)->get();
+        $period = $this->project->open_period();
+
+        if ($this->perspective == 'budget') {
+            $shadows = BreakDownResourceShadow::with('wbs')->joinCost(null, $period)->where('budget.project_id', $this->project->id)->get();
+        } else {
+            $shadows = CostShadow::with('wbs')->joinShadow(null, $period)->where('bsh.project_id', $this->project->id)->get();
+        }
 
         foreach ($shadows as $costShadow) {
             $levels = [];

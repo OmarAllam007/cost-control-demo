@@ -88,15 +88,18 @@ class BreakDownResourceShadow extends Model
 
     }
 
-    function scopeJoinCost(Builder $query, WbsLevel $wbsLevel, Period $period)
+    function scopeJoinCost(Builder $query, WbsLevel $wbsLevel = null, Period $period = null)
     {
         $query->from("$this->table as budget")
             ->leftJoin('cost_shadows as cost', function(JoinClause $join) use ($period) {
-                return $join->on('budget.breakdown_resource_id', '=', 'cost.breakdown_resource_id')
-                    ->where('cost.period_id', '=', $period->id);
+                $join->on('budget.breakdown_resource_id', '=', 'cost.breakdown_resource_id');
+
+                if ($period) {
+                    $join->where('cost.period_id', '=', $period->id);
+                }
+
+                return $join;
             })
-            ->whereIn('budget.wbs_id', $wbsLevel->getChildrenIds())
-//            ->where('cost.period_id', $period->id)
             ->selectRaw('budget.*, cost.curr_cost, cost.curr_qty, cost.curr_unit_price, cost.prev_cost, cost.prev_qty, ' .
                 'cost.to_date_cost, cost.to_date_qty, cost.prev_unit_price, cost.to_date_unit_price, ' .
                 'cost.allowable_ev_cost, cost.allowable_var, cost.bl_allowable_cost, cost.bl_allowable_var, ' .
@@ -106,7 +109,13 @@ class BreakDownResourceShadow extends Model
                 'cost.cost_variance_to_date_due_unit_price, cost.allowable_qty, cost.cost_variance_remaining_due_unit_price, ' .
                 'cost.cost_variance_completion_due_unit_price, cost.cost_variance_completion_due_qty, cost.cost_variance_to_date_due_qty');
 
+        if ($wbsLevel) {
+            $query->whereIn('budget.wbs_id', $wbsLevel->getChildrenIds());
+        }
+
         $this->appendFields();
+
+        return $query;
     }
 
     /*    function getBoqDescription()

@@ -224,7 +224,9 @@ class CostImporter
             } else {
                 $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
                 $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
-                $resource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->first();
+                $resource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
+                    ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'")
+                    ->first();
             }
 
             if (!$resource) {

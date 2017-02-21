@@ -22,6 +22,11 @@ class CostShadow extends Model
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
     }
 
+    function wbs()
+    {
+        return $this->belongsTo(WbsLevel::class);
+    }
+
     function project()
     {
         return $this->belongsTo(Project::class);
@@ -48,13 +53,21 @@ class CostShadow extends Model
         }
     }
 
-    function scopeJoinShadow(Builder $query, WbsLevel $level, Period $period, $type = 'left')
+    function scopeJoinShadow(Builder $query, WbsLevel $level = null, Period $period = null, $type = 'left')
     {
-        return $query->selectRaw('csh.*, bsh.*')
+        $query->selectRaw('csh.*, bsh.*')
             ->from('cost_shadows as csh')
-            ->join('break_down_resource_shadows as bsh', 'csh.breakdown_resource_id', '=', 'bsh.breakdown_resource_id')
-            ->whereIn('wbs_level_id', $level->getChildrenIds())
-            ->where('period_id', $period->id);
+            ->join('break_down_resource_shadows as bsh', 'csh.breakdown_resource_id', '=', 'bsh.breakdown_resource_id');
+
+        if ($level) {
+            $query->whereIn('wbs_level_id', $level->getChildrenIds());
+        }
+
+        if ($period) {
+            $query->where('period_id', $period->id);
+        }
+
+        return $query;
     }
 
 }

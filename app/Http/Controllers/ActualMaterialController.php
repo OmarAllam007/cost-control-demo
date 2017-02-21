@@ -214,14 +214,14 @@ class ActualMaterialController extends Controller
         return $this->redirect($result);
     }
 
-    function exportCostBreakdown(Project $project)
+    function exportCostBreakdown(Project $project, Request $request)
     {
         if (cannot('cost_control', $project)) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
-        $file = $this->dispatch(new ExportCostShadow($project));
+        $file = $this->dispatch(new ExportCostShadow($project, $request->get('perspective', '')));
         return \Response::download($file, slug($project->name) . '_actual_cost.csv', ['Content-Type: text/csv']);
     }
 
