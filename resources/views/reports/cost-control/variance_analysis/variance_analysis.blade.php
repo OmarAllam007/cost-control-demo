@@ -15,7 +15,7 @@
 
 @section('body')
     <ul class="list-unstyled tree">
-        @foreach($data as $resource_type)
+        @foreach($tree as $tKey=>$resource_type)
             @include('reports.cost-control.variance_analysis._recursive_report', ['type'=>$resource_type,'tree_level'=>0])
         @endforeach
     </ul>
