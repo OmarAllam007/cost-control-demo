@@ -39,7 +39,6 @@ class WbsLevel extends Model
 
     public function deleteRecursive()
     {
-        $ids = $this->getChildrenIds();
         $this->deleteRelations();
         $this->delete();
     }
@@ -47,9 +46,14 @@ class WbsLevel extends Model
     function deleteRelations()
     {
         $ids = $this->getChildrenIds();
+        Breakdown::flushEventListeners();
+        BreakdownResource::flushEventListeners();
+        BreakDownResourceShadow::flushEventListeners();
+        BreakdownVariable::flushEventListeners();
+
         $breakdown_ids = Breakdown::whereIn('wbs_level_id', $ids)->pluck('id');
         $breakdown_resource_ids = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->pluck('id');
-        Breakdown::whereIn($ids, $breakdown_ids)->delete();
+        Breakdown::whereIn('id', $breakdown_ids)->delete();
         BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->delete();
         BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)->delete();
         BreakdownVariable::whereIn('breakdown_id', $breakdown_ids);

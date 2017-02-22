@@ -104,18 +104,27 @@ class WbsLevelController extends Controller
         return \Redirect::to('/blank?reload=wbs');
     }
 
-    public function destroy(WbsLevel $wbs_level)
+    public function destroy(WbsLevel $wbs_level, Request $request)
     {
         if (\Gate::denies('wbs', $wbs_level->project)) {
-            flash('You are not authorized to do this action');
+            $msg = 'You are not authorized to do this action';
+            if ($request->ajax()) {
+                return ['ok' => false, 'message' => $msg];
+            }
+
+            flash($msg);
             return \Redirect::route('project.index');
         }
         
         $wbs_level->deleteRecursive();
-        $this->dispatch(new CacheWBSTreeInQueue($wbs_level->project()));
+        $this->dispatch(new CacheWBSTreeInQueue($wbs_level->project));
 
-        flash('WBS level has been deleted', 'success');
+        $msg = 'WBS level has been deleted';
+        if ($request->ajax()) {
+            return ['ok' => true, 'message' => $msg];
+        }
 
+        flash($msg, 'info');
         return \Redirect::route('project.show', $wbs_level->project_id);
     }
 

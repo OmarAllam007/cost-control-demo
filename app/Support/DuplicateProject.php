@@ -57,7 +57,6 @@ class DuplicateProject
     function duplicate($newName)
     {
         set_time_limit(1800);
-        ini_set('memory_limit', '1G');
 
         $start = microtime(1);
         $attributes = $this->project->getAttributes();
