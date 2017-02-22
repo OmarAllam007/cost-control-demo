@@ -28,7 +28,7 @@ class VarianceAnalysisReport
     private $period_id;
     private $cost_account;
 
-    function getVarianceReport(Project $project, $period_id = 1)
+    function getVarianceReport(Project $project, $period_id)
     {
         $this->project = $project;
         $this->period_id = $period_id;
@@ -41,6 +41,7 @@ FROM boqs
 WHERE project_id = ?', [$project->id]))->map(function ($boq) {
             $this->discplines->put($boq->cost_account, $boq->type);
         });
+
         $this->getResourcesData()->map(function ($resource) {
             $this->resources_data->put($resource->resource_id, [
                 'resource_name' => $resource->resource_name,
@@ -76,9 +77,7 @@ WHERE project_id = ?', [$project->id]))->map(function ($boq) {
 
     function buildTypeTree($type)
     {
-        $tree = ['id' => $type['id'], 'name' => $type['name'], 'children' => [], 'discpline' => [
-
-        ], 'budget_unit' => 0,
+        $tree = ['id' => $type['id'], 'name' => $type['name'], 'children' => [], 'discpline' => [], 'budget_unit' => 0,
             'unit_price' => 0,
             'budget_cost' => 0,
             'curr_unit_price' => 0,
@@ -100,6 +99,7 @@ WHERE project_id=? AND resource_id=?', [$this->project->id, $resource->id]);
 
                 foreach ($cost_accounts as $cost_account) {
                     $cost_account_resource = $this->discplines->get($cost_account->cost_account);
+
                     if (!isset($tree['discpline'][$cost_account_resource])) {
                         $tree['discpline'][$cost_account_resource] = [
                             'budget_unit' => 0,
@@ -118,9 +118,11 @@ WHERE project_id=? AND resource_id=?', [$this->project->id, $resource->id]);
                             'resources' => [],
                         ];
                     }
+
                     if (!isset($tree['discpline'][$cost_account_resource]['resources'][$resource->id])) {
                         $tree['discpline'][$cost_account_resource]['resources'][$resource->id] = $this->resources_data->get($resource->id);
                     }
+
                     $tree['discpline'][$cost_account_resource]['unit_price'] += $tree['discpline'][$cost_account_resource]['resources'][$resource->id]['unit_price'];
                     $tree['discpline'][$cost_account_resource]['curr_unit_price'] += $tree['discpline'][$cost_account_resource]['resources'][$resource->id]['curr_unit_price'];
                     $tree['discpline'][$cost_account_resource]['to_date_unit_price'] += $tree['discpline'][$cost_account_resource]['resources'][$resource->id]['to_date_unit_price'];
@@ -149,8 +151,6 @@ WHERE project_id=? AND resource_id=?', [$this->project->id, $resource->id]);
 
             }
         }
-
-//        $tree['resources'] = collect($tree['resources'])->sortBy('code');
 
         if (collect($type['children'])->count()) {
             $tree['children'] = collect($type['children'])->map(function ($child) use ($tree) {
