@@ -156,7 +156,7 @@ trait CostAttributes
 
     function getAllowableQtyAttribute()
     {
-        if (($this->to_date_qty < $this->budget_unit) && $this->progress_value < 1) {
+        if (($this->to_date_qty < $this->budget_unit)) {
             return $this->to_date_qty;
         }
 
