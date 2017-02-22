@@ -10,13 +10,10 @@
 @section('body')
     <div class="row">
         <div class="col-md-6 col-sm-9">
-
             {{Form::open(['route' => ['actual-revenue.import', $project], 'files' => true])}}
-
-            {{--<p class="text-info">--}}
-                {{--<i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/activity-map.xlsx')}}">click here</a> to download a sample template--}}
-            {{--</p>--}}
-
+            <p class="text-info">
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/actual_revenue.xlsx')}}">click here</a> to download a sample template
+            </p>
             <div class="form-group {{$errors->first('file', 'has-error')}}">
                 {{Form::label('file', null, ['class' => 'control-label'])}}
                 {{Form::file('file', ['class' => 'form-control'])}}
