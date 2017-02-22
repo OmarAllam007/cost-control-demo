@@ -16,7 +16,7 @@ window.app = new Vue({
     el: '#projectArea',
 
     data: {
-        selected: 0, wiping: false
+        selected: 0, wiping: false, loading: false
     },
 
     methods: {
@@ -24,6 +24,28 @@ window.app = new Vue({
             $('#IframeModal').modal('hide');
             this.$broadcast('reload_' + component);
             this.$broadcast('show_alert', alert);
+        },
+
+        deleteWbs() {
+            this.loading = true;
+
+            $.ajax({
+                url: '/wbs-level/' + this.selected,
+                method: 'post', dataType: 'json',
+                data: {
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    _method: 'delete', wipe: true
+                }
+            }).success(response => {
+                $('#DeleteWBSModal').modal('hide');
+                this.loading = false;
+                this.$broadcast('show_alert', {type: response.ok? 'info' : 'error', message: response.message});
+                this.$broadcast('reload_wbs');
+            }).error(() => {
+                $('#DeleteWBSModal').modal('hide');
+                this.loading = false;
+                this.$broadcast('show_alert', {type: 'error', message: 'Could not delete WBS'});
+            });
         }
     },
 
