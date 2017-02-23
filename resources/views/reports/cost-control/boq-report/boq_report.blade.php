@@ -14,15 +14,28 @@
 @endsection
 
 @section('body')
+
+    <style>
+        .padding{
+            padding-right: 300px;
+        }
+    </style>
+    <div class="row" style="margin-bottom: 10px;">
+        <form action="{{route('cost.boq_report',$project)}}" class="form-inline col col-md-8" method="get">
+            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
+            {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
+        </form>
+        <br>
+    </div>
+
     <ul class="list-unstyled tree">
-        @foreach($tree as $wbs_level)
-            @include('reports.cost-control.boq-report._recursive_report', ['division'=>$wbs_level,'tree_level'=>0])
+        @foreach($tree as $key=>$wbs_level)
+            @include('reports.cost-control.boq-report._recursive_report', ['level'=>$wbs_level,'tree_level'=>0])
         @endforeach
     </ul>
 @endsection
 @section('javascript')
     <script>
-
-
+        $('li').each(function(){ if (!$(this).find('tbody tr').length) { $(this).hide(); } })
     </script>
 @endsection
