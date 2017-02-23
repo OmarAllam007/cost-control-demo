@@ -44,8 +44,8 @@ class BreakDownResourceObserver
         $resource = Resources::withTrashed()->find($resource_id);
         $project_id = $breakdownResource->breakdown->project_id;
 
-        $projectResource = Resources::where(function (Builder $q) use ($resource, $resource_id) {
-            $q->where('resource_id', $resource->id)->orWhere('id', $resource->id);
+        $projectResource = Resources::where(function (Builder $q) use ($resource_id) {
+            $q->where('resource_id', $resource_id)->orWhere('id', $resource_id);
         })->whereProjectId($project_id)->first();
 
         if (!$projectResource) {
