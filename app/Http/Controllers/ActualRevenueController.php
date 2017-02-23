@@ -9,8 +9,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Jobs\Import\ImportActualRevenue;
 use Illuminate\Http\Request;
-use App\Jobs\ActualRevenueJob;
 use App\Project;
 
 class ActualRevenueController extends Controller
@@ -24,6 +24,8 @@ class ActualRevenueController extends Controller
     function postImport(Project $project, Request $request)
     {
         $file = $request->file('file');
-        $this->dispatch(new ActualRevenueJob($file->path(), $project));
+        $this->dispatch(new ImportActualRevenue($file->path(), $project));
+        return view('actual-revenue.import',compact('project'));
+
     }
 }

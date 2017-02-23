@@ -36,8 +36,8 @@
         <td>{{$project->project_start_date}}</td>
         <td>{{$project->original_finished_date}}</td>
         <td>{{$project->expected_finished_date}}</td>
-        <td>{{(strtotime(date("Y-m-d"))-strtotime($project->project_start_date))/86400}} Day/s</td>
-        <td>{{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400 }} Day/s</td>
+        <td>@if($project->project_start_date!=0) {{(strtotime(date("Y-m-d"))-strtotime($project->project_start_date))/86400}} @else 0 @endif Day/s</td>
+        <td>@if($project->expected_finished_date!=0) {{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400 }} @else 0 @endif Day/s</td>
         </tbody>
     </table>
 
