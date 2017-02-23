@@ -14,20 +14,6 @@
 
 @endsection
 @section('body')
-    <div id="input">
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="codeSearch">Search By Code </label>
-                    <input type="text" class="form-control" id="codeSearch">
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <br>
-    <br>
     <ul class="list-unstyled tree">
         @foreach($tree as $parentKey=>$level)
             @include('reports.budget.boq_price_list._recursive_report', ['level'=>$level,'tree_level'=>0])
