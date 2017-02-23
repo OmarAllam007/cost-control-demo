@@ -32,6 +32,11 @@ class CostShadow extends Model
         return $this->belongsTo(Project::class);
     }
 
+    function period()
+    {
+        return $this->belongsTo(Period::class);
+    }
+
     function scopeJoinBudget(Builder $query, $group)
     {
         $query->from('cost_shadows as cost')
@@ -55,7 +60,7 @@ class CostShadow extends Model
 
     function scopeJoinShadow(Builder $query, WbsLevel $level = null, Period $period = null, $type = 'left')
     {
-        $query->selectRaw('csh.*, bsh.*')
+        $query->selectRaw('csh.*, bsh.*, csh.id as cost_id')
             ->from('cost_shadows as csh')
             ->join('break_down_resource_shadows as bsh', 'csh.breakdown_resource_id', '=', 'bsh.breakdown_resource_id');
 
@@ -70,4 +75,28 @@ class CostShadow extends Model
         return $query;
     }
 
+    function recalculate()
+    {
+
+    }
+
+    function getProgressAttribute()
+    {
+        return $this->shadow->progress;
+    }
+
+    function getStatusAttribute()
+    {
+        return $this->shadow->status;
+    }
+
+    function getBudgetUnitAttribute()
+    {
+        return $this->shadow->budget_unit;
+    }
+
+    function getBudgetCostAttribute()
+    {
+        return $this->shadow->budget_cost;
+    }
 }

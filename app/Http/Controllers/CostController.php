@@ -28,7 +28,7 @@ class CostController extends Controller
         }
 
         $this->validate($request, [
-            'remaining_qty' => 'required|numeric|gte:0', 'remaining_cost' => 'required|numeric|gte:0', 'remaining_unit_price' => 'required|numeric|gte:0',
+            'remaining_qty' => 'required|numeric|gte:0', 'remaining_unit_price' => 'required|numeric|gte:0', 'allowable_qty' => 'required|numeric|gte:0',
             'progress' => 'numeric|gt:0|lte:100'
         ]);
 

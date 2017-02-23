@@ -184,6 +184,7 @@ class DuplicateProject
 
     protected function duplicateShadow()
     {
+        BreakDownResourceShadow::flushEventListeners();
         BreakDownResourceShadow::where('project_id', $this->project->id)->get()->each(function (BreakDownResourceShadow $resource) {
             $attributes = $resource->getAttributes();
             unset($attributes['id'], $attributes['created_at'], $attributes['updated_at']);
