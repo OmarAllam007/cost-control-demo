@@ -100,7 +100,7 @@ class BreakDownResourceShadow extends Model
 
                 return $join;
             })
-            ->selectRaw('budget.*, cost.curr_cost, cost.curr_qty, cost.curr_unit_price, cost.prev_cost, cost.prev_qty, ' .
+            ->selectRaw('budget.*, cost.id as cost_id, cost.curr_cost, cost.curr_qty, cost.curr_unit_price, cost.prev_cost, cost.prev_qty, ' .
                 'cost.to_date_cost, cost.to_date_qty, cost.prev_unit_price, cost.to_date_unit_price, ' .
                 'cost.allowable_ev_cost, cost.allowable_var, cost.bl_allowable_cost, cost.bl_allowable_var, ' .
                 'cost.remaining_qty, cost.remaining_cost, cost.remaining_unit_price, ' .
