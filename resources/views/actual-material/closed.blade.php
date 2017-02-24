@@ -34,7 +34,7 @@
                         <td>{{$resource->resource_name}}</td>
                         <td>{{$resource->remarks}}</td>
                         <td>{{number_format($resource->budget_unit, 2)}}</td>
-                        <td>{{number_format($resource->cost->to_date_qty?? 0, 2)}}</td>
+                        <td>{{number_format($resource->qty_to_date ?? 0, 2)}}</td>
                         <td>{{$resource->measure_unit}}</td>
                         <td class="text-center">
                             <label style="display: block; margin: 0">

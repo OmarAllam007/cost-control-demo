@@ -29,6 +29,8 @@ class RebuildBudgetShadow extends Command
         $this->output->comment($count . ' Resources found');
         $this->bar = $this->output->createProgressBar($count);
 
+        \Log::info('Rebuild started at ' . date('c'));
+
         BreakDownResourceShadow::with('breakdown_resource')->where('project_id', '!=', 39)
             ->chunk(25000, function (Collection $shadows) {
                 $shadows->pluck('breakdown_resource')->each(function (BreakdownResource $resource) {
@@ -38,5 +40,10 @@ class RebuildBudgetShadow extends Command
             });
 
         $this->bar->finish();
+
+        $this->output->newLine();
+        $this->output->success('Rebuild finished');
+        \Log::info('Rebuild done at ' . date('c'));
+        $this->output->newLine();
     }
 }

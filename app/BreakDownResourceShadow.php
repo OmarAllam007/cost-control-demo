@@ -118,6 +118,11 @@ class BreakDownResourceShadow extends Model
         return $query;
     }
 
+    function getQtyToDateAttribute()
+    {
+        return ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
+    }
+
     /*    function getBoqDescription()
         {
 

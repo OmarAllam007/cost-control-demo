@@ -58,7 +58,7 @@
                             <td>{{$res->cost_account}}</td>
                             <td>{{$res->budget_unit}}</td>
                             <td>{{$res->remarks}}</td>
-                            <td>{{$res->cost ? number_format($res->cost->prev_qty, 2) : 0 }}</td>
+                            <td>{{number_format($res->qty_to_date, 2) }}</td>
                             <td>
                                 {{Form::text("resource[{$res->breakdown_resource_id}][qty]", $qty = $totalQty? round($res->budget_unit * $resource[4]/$totalQty, 2) : 0, ['class' => 'form-control input-sm qty'])}}
                             </td>
