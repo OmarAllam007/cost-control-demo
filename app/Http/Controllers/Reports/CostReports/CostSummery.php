@@ -34,9 +34,10 @@ ORDER BY  t.name', [$project->id]))->map(function ($type) {
   sh.resource_type,
   SUM(c.to_date_cost) AS to_data_cost,
   SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
-  SUM(c.cost_var) AS cost_var,
+  SUM(c.allowable_var) AS allowable_var,
   SUM(c.remaining_cost) AS remain_cost,
-  SUM(c.completion_cost) AS completion_cost
+  SUM(c.completion_cost) AS completion_cost,
+  SUM(c.cost_var) AS cost_var
 FROM cost_shadows c, break_down_resource_shadows sh
 WHERE c.project_id = ? AND c.period_id=?
       AND c.breakdown_resource_id = sh.breakdown_resource_id
@@ -45,7 +46,8 @@ GROUP BY sh.resource_type',[$project->id,$chosen_period_id]);
   sh.resource_type,
   SUM(c.to_date_cost) as to_data_cost,
   SUM(c.allowable_ev_cost) as to_date_allowable_cost,
-  SUM(c.cost_var) AS cost_var
+  SUM(c.allowable_var) AS allowable_var
+  
 FROM cost_shadows c, break_down_resource_shadows sh
 WHERE c.project_id = ? AND c.period_id < ?
       AND c.breakdown_resource_id = sh.breakdown_resource_id
@@ -61,6 +63,7 @@ GROUP BY sh.resource_type',[$project->id,$chosen_period_id]);
                 'previous_allowable' => 0,
                 'previous_variance' => 0,
                 'allowable_ev_cost' => $shadow->to_date_allowable_cost,
+                'allowable_var' => $shadow->allowable_var,
                 'cost_var' => $shadow->cost_var,
                 'remaining_cost' => $shadow->remain_cost,
                 'completion_cost' => $shadow->completion_cost,
@@ -70,7 +73,7 @@ GROUP BY sh.resource_type',[$project->id,$chosen_period_id]);
                     if (isset($data[$this->budget_cost->get($previousShadow->resource_type)])) {
                         $data[$this->budget_cost->get($previousShadow->resource_type)]['previous_cost'] += $previousShadow->to_data_cost; // to_date for previous
                         $data[$this->budget_cost->get($previousShadow->resource_type)]['previous_allowable'] += $previousShadow->to_date_allowable_cost; // to_date for previous
-                        $data[$this->budget_cost->get($previousShadow->resource_type)]['previous_variance'] += $previousShadow->cost_var; // to_date for previous
+                        $data[$this->budget_cost->get($previousShadow->resource_type)]['previous_variance'] += $previousShadow->allowable_var; // to_date for previous
                     }
                 }
             }

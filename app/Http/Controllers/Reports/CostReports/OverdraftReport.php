@@ -37,9 +37,9 @@ class OverdraftReport
         Boq::where('project_id', $project->id)->get()->map(function ($boq) {
             $this->boqs->put($boq->wbs_id . $boq->cost_account, ['quantity' => $boq->quantity, 'price_ur' => $boq->price_ur , 'description'=>$boq->description]);
         });
-        $this->wbs_levels= WbsLevel::where('project_id',$project->id)->get()->keyBy('id')->map(function ($level){
-            return $level;
-        });
+            $this->wbs_levels= WbsLevel::where('project_id',$project->id)->get()->keyBy('id')->map(function ($level){
+                return $level;
+            });
         ActualRevenue::where('project_id', $project->id)->where('period_id', $period_id)->get()->map(function ($actual) {
             $this->actual_data->put($actual->wbs_id . $actual->cost_account, ['quantity' => $actual->quantity, 'actual_revenue' => $actual->value]);
         });
