@@ -158,14 +158,18 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
         });
 
         $this->div_activities = StdActivity::all()->keyBy('id')->map(function ($activity) {
-            return ActivityDivision::find($activity->division_id)->root->first();
+            $parent = $activity->division;
+            while($parent->parent){
+                $parent=$parent->parent;
+            }
+            return $parent;
         });
 
         foreach ($wbs_levels as $level) {
             $treeLevel = $this->buildTree($level);
             $tree[] = $treeLevel;
         }
-//        dd($tree[5]);
+
         return view('reports.cost-control.boq-report.boq_report', compact('tree', 'levels', 'project'));
     }
 
@@ -181,6 +185,7 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
 
             foreach ($activities as $activity) {
                 $division = $this->div_activities->get($activity->id);
+
                 if (!isset($tree['division'][$division->id])) {
                     $tree['division'][$division->id] = ['name' => $division->name, 'cost_accounts' => []];
                 }

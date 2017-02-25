@@ -36,6 +36,6 @@
 @endsection
 @section('javascript')
     <script>
-        $('li').each(function(){ if (!$(this).find('tbody tr').length) { $(this).hide(); } })
+        $('li').parent('ul[class=tree]').each(function(){ if (!$(this).find('tbody tr').length) { $(this).hide(); } })
     </script>
 @endsection
