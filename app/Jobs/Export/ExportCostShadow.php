@@ -93,15 +93,15 @@ class ExportCostShadow extends Job
         $period = $this->project->open_period();
 
         if ($this->perspective == 'budget') {
-            $shadows = BreakDownResourceShadow::with('wbs')->joinCost(null, $period)->where('budget.project_id', $this->project->id)->get();
+            $shadows = BreakDownResourceShadow::with(['wbs', 'wbs.parent.parent.parent'])->joinCost(null, $period)->where('budget.project_id', $this->project->id)->get();
         } else {
-            $shadows = CostShadow::with('wbs')->joinShadow(null, $period)->where('bsh.project_id', $this->project->id)->get();
+            $shadows = CostShadow::with(['wbs', 'wbs.parent.parent.parent'])->joinShadow(null, $period)->where('bsh.project_id', $this->project->id)->get();
         }
 
         foreach ($shadows as $costShadow) {
             $levels = [];
             $parent = $costShadow->wbs;
-            $levels[] = $parent->name;
+            $levels[] = $costShadow->wbs->name;
             $parent = $parent->parent;
 
             while ($parent) {
