@@ -107,4 +107,38 @@ class CostController extends Controller
 
         return ['ok' => true, 'message' => 'Activity data has been deleted'];
     }
+
+    function deleteWbs(WbsLevel $wbs_level)
+    {
+        if (cannot('cost_owner', $wbs_level->project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        ActualResources::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
+            ->where('period_id', $wbs_level->project->open_period()->id)
+            ->chunk(100, function (Collection $resources) {
+                $resources->each(function (ActualResources $resource) {
+                    $resource->delete();
+                });
+            });
+
+        return ['ok' => true, 'message' => 'WBS current data has been deleted'];
+    }
+
+    function deleteProject(Project $project)
+    {
+        if (cannot('cost_owner', $project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        ActualResources::whereIn('wbs_level_id', $project->id)
+            ->where('period_id', $project->open_period()->id)
+            ->chunk(1000, function (Collection $resources) {
+                $resources->each(function (ActualResources $resource) {
+                    $resource->delete();
+                });
+            });
+
+        return ['ok' => true, 'message' => 'Project current data has been deleted'];
+    }
 }
