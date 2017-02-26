@@ -28,7 +28,7 @@ class ExportCostShadow extends Job
     {
         set_time_limit(600);
         $file = storage_path('app/' . uniqid('cost_shadow_') . '.csv');
-        $fh = fopen($file, 'w');
+
         $headers = [
             'WBS',
             'Activity Name',
@@ -85,7 +85,7 @@ class ExportCostShadow extends Job
             'Cost Variance to Date Due to Qty',
         ];
 
-        fwrite($fh, implode(',', array_map('csv_quote', $headers)));
+        $lines = [implode(',', array_map('csv_quote', $headers))];
 
         $period = $this->project->open_period();
 
@@ -108,7 +108,7 @@ class ExportCostShadow extends Job
             };
             $levels = array_reverse($levels);*/
 
-            $line = implode(',', array_map('csv_quote', [
+            $lines[] = implode(',', array_map('csv_quote', [
                 $costShadow->wbs->canonical,
                 $costShadow['activity'],
                 $costShadow['code'],
@@ -163,12 +163,9 @@ class ExportCostShadow extends Job
                 number_format($costShadow['cost_variance_completion_due_qty'] ?: '0', 2, '.', ''),
                 number_format($costShadow['cost_variance_to_date_due_qty'] ?: '0', 2, '.', ''),
             ]));
-
-            fwrite($fh, PHP_EOL . $line);
         }
 
-        fclose($fh);
-        return $file;
+        return implode(PHP_EOL, $lines);
     }
 
     function styleColumns($sheet, $range, $color)
