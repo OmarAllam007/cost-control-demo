@@ -6,16 +6,20 @@
                 <i class="fa fa-refresh fa-spin fa-3x"></i>
             </div>
 
-            <section class="form-group pull-right">
+            <section class="btn-toolbar pull-right">
 
-            <div class="btn-group">
-                <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}" @click="perspective = 'cost'">
-                    <i class="fa fa-cube"></i> Current Only
-                </button>
-                <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective == 'budget', 'btn-default': perspective != 'budget'}" @click="perspective = 'budget'">
-                <i class="fa fa-cubes"></i> All Resources
-                </button>
-            </div>
+                <div class="btn-group">
+                    <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}" @click="perspective = 'cost'">
+                        <i class="fa fa-cube"></i> Current Only
+                    </button>
+                    <button type="button" :class="{'btn btn-sm': true, 'btn-info': perspective == 'budget', 'btn-default': perspective != 'budget'}" @click="perspective = 'budget'">
+                    <i class="fa fa-cubes"></i> All Resources
+                    </button>
+                </div>
+
+                @can('cost_owner', $project)
+                    <a href="#DeleteWbsDataModal" class="btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Delete current</a>
+                @endcan
             </section>
             <div class="clearfix"></div>
 
@@ -336,5 +340,27 @@
             @endcan
         </div>
     @endif
+
+    @can('cost_owner', $project)
+            <div class="modal fade" tabindex="-1" role="dialog" id="DeleteWbsDataModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                            <h4 class="modal-title">Delete current Data</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p class="lead">Are you sure you want to delete all current data for this WBS and all its children?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" :disabled="loading" @click="deleteWbsCurrent">
+                                <i :class="{'fa': true, 'fa-remove': !loading, 'fa-spinner fa-spin': loading}"></i> Yes Delete
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    @endcan
 </datasheet>
 

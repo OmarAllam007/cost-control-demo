@@ -30,10 +30,7 @@ class ExportCostShadow extends Job
         $file = storage_path('app/' . uniqid('cost_shadow_') . '.csv');
         $fh = fopen($file, 'w');
         $headers = [
-            'WBS-Level-1',
-            'WBS-Level-2',
-            'WBS-Level-3',
-            'WBS-Level-4',
+            'WBS',
             'Activity Name',
             'Activity ID',
             'Breakdown Template',
@@ -99,7 +96,8 @@ class ExportCostShadow extends Job
         }
 
         foreach ($shadows as $costShadow) {
-            $levels = [];
+           /* $levels = [];
+
             $parent = $costShadow->wbs;
             $levels[] = $costShadow->wbs->name;
             $parent = $parent->parent;
@@ -108,13 +106,10 @@ class ExportCostShadow extends Job
                 $levels[] = $parent->name;
                 $parent = $parent->parent;
             };
-            $levels = array_reverse($levels);
+            $levels = array_reverse($levels);*/
 
             $line = implode(',', array_map('csv_quote', [
-                isset($levels[0]) ? $levels[0] : '',
-                isset($levels[1]) ? $levels[1] : '',
-                isset($levels[2]) ? $levels[2] : '',
-                isset($levels[3]) ? $levels[3] : '',
+                $costShadow->wbs->canonical,
                 $costShadow['activity'],
                 $costShadow['code'],
                 $costShadow['template'],
