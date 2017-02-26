@@ -50,7 +50,7 @@
         $.each(chart_data, function (e, value) {
             sites.push(value.name);
             data[value.name] = value.budget_cost;
-        })
+        });
 
         var chart = c3.generate({
             bindto: '#chart',

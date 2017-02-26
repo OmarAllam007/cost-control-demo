@@ -81,7 +81,7 @@ WHERE c.project_id = ? AND c.period_id = ?
       AND sh.breakdown_resource_id = c.breakdown_resource_id
 GROUP BY sh.activity_id,
   sh.cost_account,
-  sh.wbs_id', [$project->id, 1]))->map(function ($cost) {
+  sh.wbs_id', [$project->id, $period_id]))->map(function ($cost) {
             $this->cost_data->put(trim(str_replace(' ', '', $cost->wbs_id)) . trim(str_replace(' ', '', $cost->activity_id)) . trim(str_replace(' ', '', $cost->cost_account)), [
                 'to_date_unit_price' => $cost->to_date_unit_price
                 , 'physical_unit' => $cost->physical_unit
@@ -109,11 +109,11 @@ WHERE project_id=?', [$project->id]))->map(function ($item) {
         collect(\DB::select('SELECT sh.cost_account , activity_id , wbs_id 
 FROM  break_down_resource_shadows sh 
 WHERE sh.project_id =?', [$project->id]))->map(function ($item) {
-            if (!isset($this->cost_accounts[$item->wbs_id.$item->activity_id]['cost_accounts'])) {
-                $this->cost_accounts[$item->wbs_id.$item->activity_id] = ['cost_accounts' => []];
+            if (!isset($this->cost_accounts[$item->wbs_id . $item->activity_id]['cost_accounts'])) {
+                $this->cost_accounts[$item->wbs_id . $item->activity_id] = ['cost_accounts' => []];
             }
-            if (!isset($this->cost_accounts[$item->wbs_id.$item->activity_id]['cost_accounts'][$item->cost_account])) {
-                $this->cost_accounts[$item->wbs_id.$item->activity_id]['cost_accounts'][$item->cost_account] =  $item->cost_account;
+            if (!isset($this->cost_accounts[$item->wbs_id . $item->activity_id]['cost_accounts'][$item->cost_account])) {
+                $this->cost_accounts[$item->wbs_id . $item->activity_id]['cost_accounts'][$item->cost_account] = $item->cost_account;
             }
             return $this->cost_accounts;
         });
@@ -159,8 +159,8 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
 
         $this->div_activities = StdActivity::all()->keyBy('id')->map(function ($activity) {
             $parent = $activity->division;
-            while($parent->parent){
-                $parent=$parent->parent;
+            while ($parent->parent) {
+                $parent = $parent->parent;
             }
             return $parent;
         });
@@ -177,7 +177,6 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
     {
 
         $tree = ['id' => $level['id'], 'name' => $level['name'], 'children' => [], 'division' => [], 'data' => []];
-
         $activities_id = collect($this->activities_ids)->get($level['id'])['activities'];
         if ($activities_id) {
             $activities_id = array_keys($activities_id);
@@ -190,10 +189,9 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                     $tree['division'][$division->id] = ['name' => $division->name, 'cost_accounts' => []];
                 }
 
-                $cost_accounts = collect($this->cost_accounts)->get($level['id'].$activity->id);
+                $cost_accounts = collect($this->cost_accounts)->get($level['id'] . $activity->id);
 
-                foreach ($cost_accounts['cost_accounts'] as $key=>$cost_account) {
-
+                foreach ($cost_accounts['cost_accounts'] as $key => $cost_account) {
                     $quantity = $this->boqs->get($level['id'] . $key)['quantity'];
                     $price_ur = $this->boqs->get($level['id'] . $key)['price_unit'];
                     $description = $this->boqs->get($level['id'] . $key)['description'];
@@ -214,7 +212,6 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                         $parent = $level;
                         while ($parent->parent) {
                             $parent = $parent->parent;
-
                             $quantity = $this->boqs->get($parent->id . $key)['quantity'];
                             $price_ur = $this->boqs->get($parent->id . $key)['price_unit'];
                             $description = $this->boqs->get($parent->id . $key)['description'];
@@ -248,11 +245,14 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
 
             }
         }
+
         if (count($level['children'])) {
             $tree['children'] = collect($level['children'])->map(function ($childLevel) {
+
                 return $this->buildTree($childLevel);
             });
         }
+
 
         return $tree;
     }

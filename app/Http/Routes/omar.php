@@ -105,7 +105,14 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('modify_boq/{project}',['as'=>'boq.modify','uses'=>'BoqController@modifyProjectBoqs']);
     Route::post('modify_boq/',['as'=>'boq.post-modify','uses'=>'BoqController@postModifyProjectBoqs']);
 
+
+
+    Route::get('show_productivity_report/{project}',['as'=>'productivity-cost-show.modify','uses'=>'CostReportsController@productivityReport']);
+
 });
+Route::get('/download_trend/{id}/download', 'ProductivityController@downloadTrend');
+Route::get('/download_labor_trend/{id}/download', 'ProductivityController@downloadLaborTrend');
+
 //reports cost control
 
 
@@ -149,6 +156,15 @@ Route::group(['prefix' => 'breakdown-resource'], function () {
 Route::group(['prefix'=>'actual-revenue','as'=>'actual-revenue.import'],function (){
    Route::get('import/{project}','ActualRevenueController@import');
    Route::post('import/{project}','ActualRevenueController@postImport');
+});
+Route::group(['prefix'=>'cost-productivity','as'=>'productivity-report.import'],function (){
+    Route::get('import/{project}','ProductivityController@importReport');
+    Route::post('import/{project}','ProductivityController@postImportReport');
+});
+
+Route::group(['prefix'=>'cost-labor','as'=>'cost-labor.import'],function (){
+    Route::get('import/{project}','ProductivityController@laborImportReport');
+    Route::post('import/{project}','ProductivityController@laborPostImportReport');
 });
 
 Route::resource('unit', 'UnitController');

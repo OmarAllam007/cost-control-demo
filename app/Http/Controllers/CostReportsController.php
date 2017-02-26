@@ -206,8 +206,11 @@ class CostReportsController extends Controller
 
     public function productivityReport(Project $project)
     {
-        $productivity = new ProductivityReport();
-        return $productivity->getCostProductivity($project);
+        $file_ex = \File::exists(public_path().'/files/productivity/Productivity-'.$project->id.'-period-'.$project->getMaxPeriod().'.xlsx');
+        $headers = array('Content-Type: application/xlsx');
+        return \Response::download(public_path().'/files/productivity/Productivity-'.$project->id.'-period-'.$project->getMaxPeriod().'.xlsx','report.xlsx',$headers);
+
+//        return view('reports.cost-control.productivity.productivity');
     }
 
     public function varianceAnalysisReport(Project $project, Request $request)
@@ -233,4 +236,6 @@ class CostReportsController extends Controller
         $variance = new VarianceAnalysisReport();
         return $variance->getVarianceReport($project,$chosen_period_id);
     }
+
+
 }

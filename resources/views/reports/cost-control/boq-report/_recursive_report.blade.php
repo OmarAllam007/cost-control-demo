@@ -34,7 +34,7 @@
                                                             <td>ITEM Description</td>
                                                             <td>BOQ Unit Price</td>
                                                             <td>Boq Qunatity</td>
-                                                            <td>Boq Equav. Unit Price</td>
+                                                            <td>Budget Unit Price</td>
                                                             <td>Budget Unit</td>
                                                             <td>Budget Cost</td>
                                                             <td>Todate Boq Unit Price</td>
@@ -48,6 +48,7 @@
                                                             <td>At Completion Cost</td>
                                                             {{--completion_cost--}}
                                                             <td>At Completion Cost Variance</td>
+                                                            <td>Concern</td>
                                                             {{--cost_var--}}
 
                                                         </tr>
@@ -70,6 +71,7 @@
                                                                 <td>{{number_format($cost_account['remaining_cost']) ?? 0}}</td>
                                                                 <td>{{number_format($cost_account['at_comp']) ?? 0}}</td>
                                                                 <td>{{number_format($cost_account['at_comp_var']) ?? 0}}</td>
+
 
                                                             </tr>
 
@@ -99,3 +101,25 @@
 
 
 </li>
+
+<div class="modal fade" id="Concern" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <form action="" method="post" class="modal-content">
+            {{csrf_field()}} {{method_field('delete')}}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    Are you sure you want to delete this project?
+                </div>
+                <input type="hidden" name="wipe" value="1">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger"><i class="fa fa-fw fa-trash"></i> Delete</button>
+            </div>
+        </form>
+    </div>
+</div>

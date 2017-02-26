@@ -16,7 +16,7 @@
 
                 <a href="{{route('cost.overdraft',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Overdraft</a><br>
-                <a href="#" target="_blank"
+                <a href="{{route('cost-labor.import',$project)}}" target="_blank"
                    class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">Labor Trend Analysis</a><br>
                 <a href="#" target="_blank"
@@ -39,7 +39,7 @@
 
                 <a href="{{route('cost.variance',$project)}}" target="_blank"
                    class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Variance Analysis</a><br>
-                <a href="#" target="_blank" class="hvr-float-shadow btn btn-primary"
+                <a href="{{route('productivity-report.import',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Productivity
                 </a><br>
 
