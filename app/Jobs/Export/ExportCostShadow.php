@@ -26,7 +26,6 @@ class ExportCostShadow extends Job
 
     public function handle()
     {
-        set_time_limit(600);
         $file = storage_path('app/' . uniqid('cost_shadow_') . '.csv');
 
         $headers = [
@@ -109,7 +108,7 @@ class ExportCostShadow extends Job
             $levels = array_reverse($levels);*/
 
             $lines[] = implode(',', array_map('csv_quote', [
-                $costShadow->wbs->canonical,
+//                $costShadow->wbs->canonical,
                 $costShadow['activity'],
                 $costShadow['code'],
                 $costShadow['template'],
