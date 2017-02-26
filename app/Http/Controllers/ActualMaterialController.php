@@ -70,14 +70,14 @@ class ActualMaterialController extends Controller
             $unprivileged = false;
             if ($data['activity']->count() && cannot('activity_mapping', $actual_batch->project)) {
                 $issuesLog->recordActivityMappingUnPrivileged($data['activity']);
-                $this->dispatch(new SendMappingErrorNotification($data, 'activity'));
+                $this->dispatch(new SendMappingErrorNotification($actual_batch->project, $data, 'activity'));
                 $data['activity'] = collect();
                 $unprivileged = true;
             }
 
             if ($data['resources']->count() && cannot('resource_mapping', $actual_batch->project)) {
                 $issuesLog->recordResourceMappingUnPrivileged($data['resources']);
-                $this->dispatch(new SendMappingErrorNotification($data, 'resources'));
+                $this->dispatch(new SendMappingErrorNotification($actual_batch->project, $data, 'resources'));
                 $data['resources'] = collect();
                 $unprivileged = true;
             }

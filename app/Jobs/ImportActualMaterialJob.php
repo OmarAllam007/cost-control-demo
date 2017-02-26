@@ -47,9 +47,10 @@ class ImportActualMaterialJob extends ImportJob
             $data = $this->getDataFromCells($cells);
 
             // Row is empty, skip
-            if (!array_filter($data)) {
+            if (!array_filter(array_map('trim', $data))) {
                 continue;
             }
+
             $hash = str_random(8);
 
             $material->put($hash, $data);

@@ -66,7 +66,7 @@ class CostImporter
         foreach ($this->rows as $row) {
             $code = trim(strtolower($row[0]));
             if (!$this->activityCodes->has($code)) {
-                $errors['activity']->push($row[0]);
+                $errors['activity']->push($row);
             }
         }
 
