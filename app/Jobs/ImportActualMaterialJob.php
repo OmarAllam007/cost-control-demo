@@ -53,6 +53,9 @@ class ImportActualMaterialJob extends ImportJob
 
             $hash = str_random(8);
 
+            $dateVal = $sheet->getCell('B' . $row->getRowIndex())->getValue();
+            $data[1] = Carbon::create(1899, 12, 30)->addDays($dateVal)->format('Y-m-d');
+
             $material->put($hash, $data);
         }
 
