@@ -41,20 +41,24 @@ ORDER BY  t.name', [$project->id]))->map(function ($type) {
 FROM cost_shadows c, break_down_resource_shadows sh
 WHERE c.project_id = ? AND c.period_id=?
       AND c.breakdown_resource_id = sh.breakdown_resource_id
-GROUP BY sh.resource_type',[$project->id,$chosen_period_id]);
+GROUP BY sh.resource_type', [$project->id, $chosen_period_id]);
         $previousShadows = \DB::select('SELECT
   sh.resource_type,
-  SUM(c.to_date_cost) as to_data_cost,
-  SUM(c.allowable_ev_cost) as to_date_allowable_cost,
+  SUM(c.to_date_cost) AS to_data_cost,
+  SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
   SUM(c.allowable_var) AS allowable_var
   
 FROM cost_shadows c, break_down_resource_shadows sh
 WHERE c.project_id = ? AND c.period_id < ?
       AND c.breakdown_resource_id = sh.breakdown_resource_id
-GROUP BY sh.resource_type',[$project->id,$chosen_period_id]);
+GROUP BY sh.resource_type', [$project->id, $chosen_period_id]);
 
         $data = [];
+        $total = ['budget_cost' => 0, 'to_date_cost' => 0, 'previous_cost' => 0,
+            'previous_allowable' => 0,'previous_variance'=>0,'allowable_ev_cost'=>0,'allowable_var'=>0,
+        'cost_var'=>0,'remaining_cost'=>0,'completion_cost'=>0];
         foreach ($shadows as $shadow) {
+
             $data[$this->budget_cost->get($shadow->resource_type)] = [
                 'name' => $shadow->resource_type,
                 'budget_cost' => $this->budget_cost->get($shadow->resource_type),
@@ -68,6 +72,13 @@ GROUP BY sh.resource_type',[$project->id,$chosen_period_id]);
                 'remaining_cost' => $shadow->remain_cost,
                 'completion_cost' => $shadow->completion_cost,
             ];
+            $total['budget_cost']+=$this->budget_cost->get($shadow->resource_type);
+            $total['to_date_cost']+=$shadow->to_data_cost;
+            $total['allowable_ev_cost']+=$shadow->to_date_allowable_cost;
+            $total['allowable_var']+=$shadow->allowable_var;
+            $total['cost_var']+=$shadow->cost_var;
+            $total['remaining_cost']+=$shadow->remain_cost;
+            $total['completion_cost']+=$shadow->completion_cost;
             if (count($previousShadows)) {
                 foreach ($previousShadows as $previousShadow) {
                     if (isset($data[$this->budget_cost->get($previousShadow->resource_type)])) {
@@ -75,10 +86,15 @@ GROUP BY sh.resource_type',[$project->id,$chosen_period_id]);
                         $data[$this->budget_cost->get($previousShadow->resource_type)]['previous_allowable'] += $previousShadow->to_date_allowable_cost; // to_date for previous
                         $data[$this->budget_cost->get($previousShadow->resource_type)]['previous_variance'] += $previousShadow->allowable_var; // to_date for previous
                     }
+                    $total['previous_cost']+=$previousShadow->to_data_cost;
+                    $total['previous_allowable']+=$previousShadow->to_date_allowable_cost;
+                    $total['previous_variance']+=$previousShadow->allowable_var;
+
+
                 }
             }
         }
         $data = collect($data)->sortBy('name');
-        return view('reports.cost-control.cost_summery', compact('data', 'project'));
+        return view('reports.cost-control.cost_summery', compact('data', 'project','total'));
     }
 }
