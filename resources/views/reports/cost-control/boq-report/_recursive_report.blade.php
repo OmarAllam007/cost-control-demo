@@ -21,44 +21,67 @@
                                     href="#{{$level['id']}}{{$divKey}}"
                                     data-toggle="collapse">{{$division['name']}}</label></p>
                         <article class="tree--child collapse" id="{{$level['id']}}{{$divKey}}">
-                            @if(count($division['activities']))
-                                <table class="table table-condensed">
-                                    <thead style="background:#95DAC2;color: #000; border-bottom: solid black">
-                                    <tr>
-                                        <td>Activity</td>
-                                        <td>Budget Cost</td>
-                                        <td>Previous Cost</td>
-                                        <td>Previous Allowable Cost</td>
-                                        <td>Previous Allowable Var</td>
-                                        <td>Todate Cost</td>
-                                        <td>Allowable Cost</td>
-                                        <td>Allowable Var</td>
-                                        <td>Remain Cost</td>
-                                        <td>Completion Cost</td>
+{{--                            @if(count($division['activities']))--}}
+                                {{--@foreach($division['activities'] as $activity)--}}
+                                    @if($division['cost_accounts'])
+                                        <ul class="tree list-unstyled">
+                                            <li>
+                                                <article class="tree--child">
+                                                    <table class="table table-condensed">
+                                                        <thead style="background:#95DAC2;color: #000; border-bottom: solid black">
+                                                        <tr>
+                                                            <td>BOQ Item</td>
+                                                            <td>ITEM Description</td>
+                                                            <td>BOQ Unit Price</td>
+                                                            <td>Boq Qunatity</td>
+                                                            <td>Boq Equav. Unit Price</td>
+                                                            <td>Budget Unit</td>
+                                                            <td>Budget Cost</td>
+                                                            <td>Todate Boq Unit Price</td>
+                                                            {{--todatecost/phiscal unit--}}
+                                                            <td>Physical Unit</td>
+                                                            <td>Todate Cost</td>
+                                                            <td>Allowable Cost</td>
+                                                            <td>Todate Cost Var</td>
+                                                            {{--allowable_var--}}
+                                                            <td>Remaining Cost</td>
+                                                            <td>At Completion Cost</td>
+                                                            {{--completion_cost--}}
+                                                            <td>At Completion Cost Variance</td>
+                                                            {{--cost_var--}}
 
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($division['activities'] as $activity)
-                                        @if($activity['name'])
-                                        <tr>
-                                            <td>{{$activity['name']}} </td>
-                                            <td>{{number_format($activity['budget_cost']) ?? 0}} </td>
-                                            <td>{{number_format($activity['prev_cost']) ?? 0}} </td>
-                                            <td>{{number_format($activity['prev_allowable']) ?? 0}} </td>
-                                            <td>{{number_format($activity['prev_var']) ?? 0}} </td>
-                                            <td>{{number_format($activity['to_date_cost']) ?? 0}}</td>
-                                            <td>{{number_format($activity['allowable_cost'] ?? 0)}}</td>
-                                            <td>{{number_format($activity['allowable_var']) ?? 0}}</td>
-                                            <td>{{number_format($activity['remain_cost']) ?? 0}}</td>
-                                            <td>{{number_format($activity['completion_cost']) ?? 0}}</td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($division['cost_accounts'] as $cost_account)
+                                                            <tr>
+                                                                <td>{{$cost_account['cost_account']}} </td>
+                                                                <td>{{$cost_account['description']}} </td>
+                                                                <td>{{number_format($cost_account['unit_price']) ?? 0}} </td>
+                                                                <td>{{number_format($cost_account['quantity']) ?? 0}} </td>
+                                                                <td>{{number_format($cost_account['equavlant']) ?? 0}} </td>
+                                                                <td>{{number_format($cost_account['budget_unit']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['budget_cost'] ?? 0)}}</td>
+                                                                <td>{{number_format($cost_account['to_date_unit_price']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['physical_unit']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['to_date_cost']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['allowable_cost']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['to_date_cost_var']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['remaining_cost']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['at_comp']) ?? 0}}</td>
+                                                                <td>{{number_format($cost_account['at_comp_var']) ?? 0}}</td>
 
-                                        </tr>
-                                        @endif
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            @endif
+                                                            </tr>
+
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </article>
+                                            </li>
+                                        </ul>
+                                    @endif
+                                {{--@endforeach--}}
+                            {{--@endif--}}
                         </article>
                     </li>
                 @endforeach
