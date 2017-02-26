@@ -84,14 +84,14 @@ class ExportCostShadow extends Job
             'Cost Variance to Date Due to Qty',
         ];
 
-        $lines = [implode(',', array_map('csv_quote', $headers))];
+        $lines = collect(implode(',', array_map('csv_quote', $headers)));
 
         $period = $this->project->open_period();
 
         if ($this->perspective == 'budget') {
-            $query = BreakDownResourceShadow::joinCost(null, $period)->where('budget.project_id', $this->project->id);
+            $query = BreakDownResourceShadow::joinCost(null, $period);
         } else {
-            $query = CostShadow::joinShadow(null, $period)->where('bsh.project_id', $this->project->id);
+            $query = CostShadow::joinShadow(null, $period);
         }
 
         $query->chunk(10000, function ($shadows) use ($lines) {
@@ -107,7 +107,7 @@ class ExportCostShadow extends Job
                      $parent = $parent->parent;
                  };
                  $levels = array_reverse($levels);*/
-                $lines[] = implode(',', array_map('csv_quote', [
+                $lines->push(implode(',', array_map('csv_quote', [
                     $costShadow->wbs->canonical,
                     $costShadow['activity'],
                     $costShadow['code'],
@@ -161,11 +161,11 @@ class ExportCostShadow extends Job
                     number_format($costShadow['cost_variance_completion_due_unit_price'] ?: '0', 2, '.', ''),
                     number_format($costShadow['cost_variance_completion_due_qty'] ?: '0', 2, '.', ''),
                     number_format($costShadow['cost_variance_to_date_due_qty'] ?: '0', 2, '.', ''),
-                ]));
+                ])));
             }
         });
 
-        return implode(PHP_EOL, $lines);
+        return $lines->implode(PHP_EOL);
     }
 
     function styleColumns($sheet, $range, $color)

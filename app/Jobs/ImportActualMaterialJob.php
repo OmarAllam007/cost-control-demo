@@ -47,10 +47,14 @@ class ImportActualMaterialJob extends ImportJob
             $data = $this->getDataFromCells($cells);
 
             // Row is empty, skip
-            if (!array_filter($data)) {
+            if (!array_filter(array_map('trim', $data))) {
                 continue;
             }
+
             $hash = str_random(8);
+
+            $dateVal = $sheet->getCell('B' . $row->getRowIndex())->getValue();
+            $data[1] = Carbon::create(1899, 12, 30)->addDays($dateVal)->format('Y-m-d');
 
             $material->put($hash, $data);
         }

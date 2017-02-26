@@ -50,12 +50,12 @@ export default {
     //</editor-fold>
 
     methods: {
-        loadBreakdowns() {
+        loadBreakdowns(cache = true) {
             if (this.wbs_id) {
                 this.loading = true;
                 $.ajax({
                     url: '/api/cost/breakdowns/' + this.wbs_id + (this.perspective ? ('?perspective=' + this.perspective) : ''),
-                    dataType: 'json', cache: true
+                    dataType: 'json', cache
                 }).success(response => {
                     this.loading = false;
                     this.breakdowns = response;
@@ -77,16 +77,17 @@ export default {
         deleteWbsCurrent() {
             this.loading = true;
             $.ajax({
-                url: '/cost/delete-wbs/' + this.wbs_id, method: 'post', dataType: 'json',
-                data: { method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
+                url: '/api/cost/delete-wbs/' + this.wbs_id, method: 'delete', dataType: 'json',
+                data: { _method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
             }).success(response => {
-                this.loading(false);
+                this.loading = false;
                 $('#DeleteWbsDataModal').modal('hide');
+                this.loadBreakdowns(false);
                 this.$dispatch('request_alert', {
                     type: response.ok? 'info' : 'error', message: response.message
                 });
             }).error(() => {
-                this.loading(false);
+                this.loading = false;
                 $('#DeleteWbsDataModal').modal('hide');
                 this.$dispatch('request_alert', {
                     type: 'error', message: 'Could not delete current data for this WBS'

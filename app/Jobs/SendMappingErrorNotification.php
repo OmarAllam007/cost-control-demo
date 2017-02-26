@@ -14,15 +14,15 @@ class SendMappingErrorNotification
     /** @var Project */
     protected $project;
 
-    function __construct($data, $type)
+    function __construct($project, $data, $type)
     {
         $this->data = $data;
         $this->type = $type;
+        $this->project = $project;
     }
 
     function handle()
     {
-        $this->project = $this->data['project'];
         $type = $this->type;
 
         if (!$this->project->cost_owner) {
@@ -46,7 +46,7 @@ class SendMappingErrorNotification
 
     protected function createExcelFile()
     {
-        $rows = $this->data['mapping'][$this->type];
+        $rows = $this->data[$this->type];
 
         $reader = \PHPExcel_IOFactory::createReader('Excel2007');
         $excel = $reader->load(public_path('files/templates/actual.xlsx'));
