@@ -59,4 +59,13 @@ class ActivityDivision extends Model
 
         return $parents;
     }
+
+    function isGeneral()
+    {
+        if (isset($this->root->id)) {
+            return $this->root->id == 779;
+        }
+
+        return false;
+    }
 }

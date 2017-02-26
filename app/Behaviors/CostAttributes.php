@@ -10,6 +10,7 @@ namespace App\Behaviors;
 
 
 use App\CostResource;
+use App\StdActivity;
 
 trait CostAttributes
 {
@@ -35,6 +36,11 @@ trait CostAttributes
     {
         if (!$this->budget_cost) {
             return 0;
+        }
+
+        $activity = StdActivity::find($this->activity_id);
+        if ($activity->division->isGeneral()) {
+            return $this->progress_val * $this->budget_cost;
         }
 
         if ($this->progress_value == 1 || $this->to_date_cost > $this->budget_cost || $this->to_date_qty > $this->budget_qty) {
