@@ -35,14 +35,14 @@
                     @if ($counter == 0)
                         <td rowspan="{{$rowsCount}}">
                             @php
-                            $shadow = \App\BreakDownResourceShadow::byRawData($resource);
+                            $shadow = App\BreakDownResourceShadow::find($resource['resource']['id']);
                             @endphp
                             @if ($shadow)
                                 {{$shadow->wbs->path . ' / ' . $shadow->activity }}
                             @endif
                         </td>
-                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[2])}}</td>
-                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[3])}}</td>
+                        <td rowspan="{{$rowsCount}}">{{$shadow->resource_name}}</td>
+                        <td rowspan="{{$rowsCount}}">{{$shadow->measure_unit}}</td>
                     @endif
 
                     <td>{{$row[2]}}</td>
@@ -51,9 +51,9 @@
                     <td>{{sprintf('%.02f', $row[5])}}</td>
 
                     @if ($counter == 0)
-                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[4])}}</td>
-                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[5])}}</td>
-                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource[6])}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource['newResource'][4])}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource['newResource'][5])}}</td>
+                        <td rowspan="{{$rowsCount}}">{{sprintf('%.02f', $resource['newResource'][6])}}</td>
                     @endif
                 </tr>
                 @php $counter ++ @endphp
