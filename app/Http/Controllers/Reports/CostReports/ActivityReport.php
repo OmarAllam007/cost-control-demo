@@ -33,7 +33,7 @@ class ActivityReport
         });
         $tree = [];
 
-        $wbs_tree = \Cache::get('wbs-tree-' . $project->id);
+        $wbs_tree = \Cache::get('wbs-tree-' . $project->id) ?: $project->wbs_tree;
 
         foreach ($wbs_tree as $level) {
             $treeLevel = $this->buildTree($level);
