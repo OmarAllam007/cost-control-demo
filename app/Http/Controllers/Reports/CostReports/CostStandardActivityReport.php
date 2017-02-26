@@ -24,6 +24,8 @@ class CostStandardActivityReport
     private $project_activities;
     private $prev_shadow;
     private $period_shadow;
+    private $resourcesActivity;
+    private $budgetData;
 
     function getStandardActivities(Project $project, $chosen_period_id)
     {
@@ -31,6 +33,8 @@ class CostStandardActivityReport
         $this->prev_shadow = collect();
         $this->period_shadow = collect();
         $this->project_activities = collect();
+        $this->budgetData = collect();
+
 
         collect(\DB::select('SELECT
   c.resource_id,
@@ -69,12 +73,43 @@ GROUP BY c.resource_id', [$this->project->id, $chosen_period_id]))->map(function
                 , 'completion_cost' => $resource->completion_cost
             ]);
         });
+
         collect(\DB::select('SELECT DISTINCT sh.activity_id , sh.cost_account FROM break_down_resource_shadows sh
 WHERE project_id=?', [$project->id]))->map(function ($activity) {
             $this->project_activities->put($activity->activity_id, $activity->cost_account);
         });
+        collect(\DB::select('SELECT
+ c.resource_id, activity_id,resource_name,
+SUM(c.to_date_cost) to_data_cost, sum(c.allowable_ev_cost) allowable_cost,sum(allowable_var) to_date_var , sum(remaining_cost) remain_cost,
+sum(completion_cost) completion_cost , sum(cost_var) cost_var
+FROM break_down_resource_shadows sh
+  JOIN cost_shadows c ON c.breakdown_resource_id = sh.breakdown_resource_id
+WHERE c.project_id = ?  AND c.period_id=?
+GROUP BY c.resource_id, activity_id', [$this->project->id, $chosen_period_id]))->map(function ($resource) {
+            if (!isset($this->resourcesActivity[$resource->activity_id]['resources'])) {
+                $this->resourcesActivity[$resource->activity_id] = ['resources' => []];
+            }
+            if (!isset($this->resourcesActivity[$resource->activity_id]['resources'][$resource->resource_id])) {
+                $this->resourcesActivity[$resource->activity_id]['resources'][$resource->resource_id] =
+                    [
+                        'id' => $resource->resource_id
+                        , 'name' => $resource->resource_name
+                        , 'to_date_cost' => $resource->to_data_cost
+                        , 'allowable_ev_cost' => $resource->allowable_cost
+                        , 'allowable_var' => $resource->to_date_var
+                        , 'remaining_cost' => $resource->remain_cost
+                        , 'completion_cost' => $resource->completion_cost
+                        , 'cost_var' => $resource->cost_var
+                    ];
+            }
+            return $this->resourcesActivity;
+        });
 
-
+        collect(\DB::select('SELECT resource_id ,  SUM(budget_cost) as budget_cost FROM break_down_resource_shadows
+WHERE project_id=?
+GROUP BY resource_id', [$project->id]))->map(function ($resource) {
+            $this->budgetData->put($resource->resource_id,$resource->budget_cost);
+        });
         $activity_divisions_tree = ActivityDivision::tree()->get();
         $tree = [];
 
@@ -83,8 +118,7 @@ WHERE project_id=?', [$project->id]))->map(function ($activity) {
             $level_tree = $this->buildTree($level);
             $tree[] = $level_tree;
         }
-
-        return view('reports.cost-control.standard_activity.standard_acticity',compact('project','tree'));
+        return view('reports.cost-control.standard_activity.standard_acticity', compact('project', 'tree'));
 
     }
 
@@ -102,53 +136,31 @@ WHERE project_id=?', [$project->id]))->map(function ($activity) {
         if ($level->activities->count()) {
             $activities = $level->activities->whereIn('id', $this->project_activities->keys()->toArray());
             foreach ($activities as $activity) {
-                $tree['activities'][$activity->id] = ['id' => $activity->id, 'name' => $activity->name, 'cost_accounts' => [], 'budget_cost' => 0];
-                $cost_accounts = collect(\DB::select('SELECT DISTINCT cost_account FROM break_down_resource_shadows
-WHERE project_id=?
-AND activity_id =?', [$this->project->id, $activity->id]))->map(function ($cost_account) {
-                return $cost_account->cost_account;
-                });
+                $tree['activities'][$activity->id] = ['id' => $activity->id, 'name' => $activity->name, 'resources' => [], 'budget_cost' => 0];
 
-                foreach ($cost_accounts as $cost_account) {
-                    if (!isset($tree['activities'][$activity->id]['cost_accounts'][$cost_account])) {
-                        $tree['activities'][$activity->id]['cost_accounts'][$cost_account] = [
-                            'budget_cost' => 0,
-                            'prev_cost' => 0,
-                            'prev_allowabe' => 0,
-                            'prev_variance' => 0,
-                            'to_data_cost' => 0,
-                            'to_date_allowable_cost' => 0,
-                            'cost_var' => 0,
-                            'remain_cost' => 0,
-                            'allowable_var' => 0,
-                            'completion_cost' => 0,
-                            'resources' => [],
+                $resources = collect($this->resourcesActivity)->get($activity->id);
+
+                if (count($resources['resources'])) {
+                    foreach ($resources['resources'] as $resource) {
+                        $tree['activities'][$activity->id]['resources'][$resource['id']] = [
+                            'name' => $resource['name'],
+                            'budget_cost' => $this->budgetData->get($resource['id']),
+                            'to_data_cost' => $resource['to_date_cost'],
+                            'to_date_allowable_cost' => $resource['allowable_ev_cost'],
+                            'cost_var' => $resource['cost_var'],
+                            'remain_cost' => $resource['remaining_cost'],
+                            'allowable_var' => $resource['allowable_var'],
+                            'completion_cost' => $resource['completion_cost'],
+                            'prev_cost' => $this->prev_shadow->get($resource['id'])['prev_cost'],
+                            'prev_allowabe' => $this->prev_shadow->get($resource['id'])['prev_allowabe'],
+                            'prev_variance' => $this->prev_shadow->get($resource['id'])['prev_variance'],
                         ];
+//                    $tree['activities'][$activity->id]['budget_cost'] += $resource->budget_cost;
+
+
                     }
-
-
-                    $resources = collect(\DB::select('SELECT  sh.resource_name , resource_id , budget_cost FROM break_down_resource_shadows sh
-WHERE project_id=? AND cost_account =?', [$this->project->id, $cost_account]));
-
-                    foreach ($resources as $resource) {
-                        $tree['activities'][$activity->id]['cost_accounts'][$cost_account]['resources'][$resource->resource_id] = [
-                            'name' => $resource->resource_name,
-                            'budget_cost' => $resource->budget_cost,
-                            'prev_cost' => $this->prev_shadow->get($resource->resource_id)['prev_cost'],
-                            'prev_allowabe' => $this->prev_shadow->get($resource->resource_id)['prev_allowabe'],
-                            'prev_variance' => $this->prev_shadow->get($resource->resource_id)['prev_variance'],
-                            'to_data_cost' => $this->period_shadow->get($resource->resource_id)['to_data_cost'],
-                            'to_date_allowable_cost' => $this->period_shadow->get($resource->resource_id)['to_date_allowable_cost'],
-                            'cost_var' => $this->period_shadow->get($resource->resource_id)['cost_var'],
-                            'remain_cost' => $this->period_shadow->get($resource->resource_id)['remain_cost'],
-                            'allowable_var' => $this->period_shadow->get($resource->resource_id)['allowable_var'],
-                            'completion_cost' => $this->period_shadow->get($resource->resource_id)['completion_cost'],
-                        ];
-                        $tree['activities'][$activity->id]['cost_accounts'][$cost_account]['budget_cost'] += $resource->budget_cost;
-                    }
-
-                    $tree['activities'][$activity->id]['budget_cost'] += $tree['activities'][$activity->id]['cost_accounts'][$cost_account]['budget_cost'];
                 }
+//                    $tree['activities'][$activity->id]['budget_cost'] += $tree['activities'][$activity->id]['cost_accounts'][$cost_account]['budget_cost'];
             }
         }
 
