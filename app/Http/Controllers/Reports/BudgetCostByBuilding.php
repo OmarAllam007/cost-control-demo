@@ -34,7 +34,8 @@ class BudgetCostByBuilding
         $this->getBudgetCostForBuildingPieChart($this->data);
         $this->getBugetCostByBuildingColumnChart($this->data);
         $total_budget = $this->total_budget;
-        return view('reports.budget.budget_cost_by_building.budget_cost_by_building', compact('project', 'tree', 'total_budget'));
+        $data = $this->data;
+        return view('reports.budget.budget_cost_by_building.budget_cost_by_building', compact('project', 'tree', 'total_budget','data'));
     }
 
     private function buildReport($level)
