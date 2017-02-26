@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 
 class ActualMaterialController extends Controller
@@ -221,8 +222,10 @@ class ActualMaterialController extends Controller
             return \Redirect::to('/');
         }
 
-        $file = $this->dispatch(new ExportCostShadow($project, $request->get('perspective', '')));
-        return \Response::download($file, slug($project->name) . '_actual_cost.csv', ['Content-Type: text/csv']);
+        $content = $this->dispatch(new ExportCostShadow($project, $request->get('perspective', '')));
+        return new Response($content, 200, [
+            'Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename=' . slug($project->name) . '_actual_cost.csv'
+        ]);
     }
 
     protected function redirect($result)

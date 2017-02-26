@@ -72,6 +72,27 @@ export default {
 
         deleteActivity(resource) {
             this.$broadcast('show_delete_activity', resource);
+        },
+
+        deleteWbsCurrent() {
+            this.loading = true;
+            $.ajax({
+                url: '/cost/delete-wbs/' + this.wbs_id, method: 'post', dataType: 'json',
+                data: { method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
+            }).success(response => {
+                this.loading(false);
+                $('#DeleteWbsDataModal').modal('hide');
+                this.$dispatch('request_alert', {
+                    type: response.ok? 'info' : 'error', message: response.message
+                });
+            }).error(() => {
+                this.loading(false);
+                $('#DeleteWbsDataModal').modal('hide');
+                this.$dispatch('request_alert', {
+                    type: 'error', message: 'Could not delete current data for this WBS'
+                });
+
+            });
         }
     },
 

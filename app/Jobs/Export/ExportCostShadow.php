@@ -26,14 +26,10 @@ class ExportCostShadow extends Job
 
     public function handle()
     {
-        set_time_limit(600);
         $file = storage_path('app/' . uniqid('cost_shadow_') . '.csv');
-        $fh = fopen($file, 'w');
+
         $headers = [
-            'WBS-Level-1',
-            'WBS-Level-2',
-            'WBS-Level-3',
-            'WBS-Level-4',
+            'WBS',
             'Activity Name',
             'Activity ID',
             'Breakdown Template',
@@ -88,92 +84,88 @@ class ExportCostShadow extends Job
             'Cost Variance to Date Due to Qty',
         ];
 
-        fwrite($fh, implode(',', array_map('csv_quote', $headers)));
+        $lines = [implode(',', array_map('csv_quote', $headers))];
 
         $period = $this->project->open_period();
 
         if ($this->perspective == 'budget') {
-            $shadows = BreakDownResourceShadow::with('wbs')->joinCost(null, $period)->where('budget.project_id', $this->project->id)->get();
+            $query = BreakDownResourceShadow::joinCost(null, $period)->where('budget.project_id', $this->project->id);
         } else {
-            $shadows = CostShadow::with('wbs')->joinShadow(null, $period)->where('bsh.project_id', $this->project->id)->get();
+            $query = CostShadow::joinShadow(null, $period)->where('bsh.project_id', $this->project->id);
         }
 
-        foreach ($shadows as $costShadow) {
-            $levels = [];
-            $parent = $costShadow->wbs;
-            $levels[] = $parent->name;
-            $parent = $parent->parent;
+        $query->chunk(10000, function ($shadows) use ($lines) {
+            foreach ($shadows as $costShadow) {
+                /* $levels = [];
 
-            while ($parent) {
-                $levels[] = $parent->name;
-                $parent = $parent->parent;
-            };
-            $levels = array_reverse($levels);
+                 $parent = $costShadow->wbs;
+                 $levels[] = $costShadow->wbs->name;
+                 $parent = $parent->parent;
 
-            $line = implode(',', array_map('csv_quote', [
-                isset($levels[0]) ? $levels[0] : '',
-                isset($levels[1]) ? $levels[1] : '',
-                isset($levels[2]) ? $levels[2] : '',
-                isset($levels[3]) ? $levels[3] : '',
-                $costShadow['activity'],
-                $costShadow['code'],
-                $costShadow['template'],
-                $costShadow['cost_account'],
-                number_format($costShadow['eng_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['budget_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['resource_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['resource_waste'] ?: '0', 2, '.', ''),
-                $costShadow['resource_type'],
-                $costShadow['resource_code'],
-                $costShadow['resource_name'],
-                number_format($costShadow['unit_price'] ?: '0', 2, '.', ''),
-                $costShadow['measure_unit'],
-                number_format($costShadow['budget_unit'] ?: '0', 2, '.', ''),
-                number_format($costShadow['budget_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['boq_equivilant_rate'] ?: '0', 2, '.', ''),
-                number_format($costShadow['labors_count'], 2, '.', ''),
-                number_format($costShadow['productivity_output'] ?: '0', 2, '.', ''),
-                $costShadow['productivity_ref'] ?: '0',
-                $costShadow['remarks'],
-                number_format($costShadow->progress, 2, '.', ''),
-                $costShadow->status,
-                number_format($costShadow['prev_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['prev_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['prev_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['curr_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['curr_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['curr_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['to_date_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['to_date_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['to_date_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['allowable_ev_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['allowable_var'] ?: '0', 2, '.', ''),
-                number_format($costShadow['remaining_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['remaining_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['remaining_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['bl_allowable_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['bl_allowable_var'] ?: '0', 2, '.', ''),
-                number_format($costShadow['completion_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['completion_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['completion_cost'] ?: '0', 2, '.', ''),
-                number_format($costShadow['unit_price_var'] ?: '0', 2, '.', ''),
-                number_format($costShadow['qty_var'] ?: '0', 2, '.', ''),
-                number_format($costShadow['cost_var'] ?: '0', 2, '.', ''),
-                number_format($costShadow['physical_unit'] ?: '0', 2, '.', ''),
-                number_format($costShadow['pw_index'] ?: '0', 2, '.', ''),
-                number_format($costShadow['cost_variance_to_date_due_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['allowable_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['cost_variance_remaining_due_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['cost_variance_completion_due_unit_price'] ?: '0', 2, '.', ''),
-                number_format($costShadow['cost_variance_completion_due_qty'] ?: '0', 2, '.', ''),
-                number_format($costShadow['cost_variance_to_date_due_qty'] ?: '0', 2, '.', ''),
-            ]));
+                 while ($parent) {
+                     $levels[] = $parent->name;
+                     $parent = $parent->parent;
+                 };
+                 $levels = array_reverse($levels);*/
+                $lines[] = implode(',', array_map('csv_quote', [
+                    $costShadow->wbs->canonical,
+                    $costShadow['activity'],
+                    $costShadow['code'],
+                    $costShadow['template'],
+                    $costShadow['cost_account'],
+                    number_format($costShadow['eng_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['budget_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['resource_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['resource_waste'] ?: '0', 2, '.', ''),
+                    $costShadow['resource_type'],
+                    $costShadow['resource_code'],
+                    $costShadow['resource_name'],
+                    number_format($costShadow['unit_price'] ?: '0', 2, '.', ''),
+                    $costShadow['measure_unit'],
+                    number_format($costShadow['budget_unit'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['budget_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['boq_equivilant_rate'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['labors_count'], 2, '.', ''),
+                    number_format($costShadow['productivity_output'] ?: '0', 2, '.', ''),
+                    $costShadow['productivity_ref'] ?: '0',
+                    $costShadow['remarks'],
+                    number_format($costShadow->progress, 2, '.', ''),
+                    $costShadow->status,
+                    number_format($costShadow['prev_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['prev_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['prev_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['curr_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['curr_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['curr_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['to_date_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['to_date_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['to_date_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['allowable_ev_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['allowable_var'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['remaining_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['remaining_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['remaining_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['bl_allowable_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['bl_allowable_var'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['completion_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['completion_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['completion_cost'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['unit_price_var'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['qty_var'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['cost_var'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['physical_unit'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['pw_index'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['cost_variance_to_date_due_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['allowable_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['cost_variance_remaining_due_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['cost_variance_completion_due_unit_price'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['cost_variance_completion_due_qty'] ?: '0', 2, '.', ''),
+                    number_format($costShadow['cost_variance_to_date_due_qty'] ?: '0', 2, '.', ''),
+                ]));
+            }
+        });
 
-            fwrite($fh, PHP_EOL . $line);
-        }
-
-        fclose($fh);
-        return $file;
+        return implode(PHP_EOL, $lines);
     }
 
     function styleColumns($sheet, $range, $color)

@@ -82,21 +82,21 @@ class CostShadow extends Model
 
     function getProgressAttribute()
     {
-        return $this->shadow->progress;
+        return $this->budget->progress;
     }
 
     function getStatusAttribute()
     {
-        return $this->shadow->status;
+        return $this->budget->status;
     }
 
     function getBudgetUnitAttribute()
     {
-        return $this->shadow->budget_unit;
+        return $this->budget->budget_unit;
     }
 
     function getBudgetCostAttribute()
     {
-        return $this->shadow->budget_cost;
+        return $this->budget->budget_cost;
     }
 }
