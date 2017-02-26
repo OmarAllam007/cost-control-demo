@@ -20,8 +20,8 @@
         <br>
     </div>
     <table class="table table-condensed">
-        <thead class="output-cell">
-        <tr style="border: 2px solid black">
+        <thead >
+        <tr style="border: 2px solid black;background: #8ed3d8;color: #000;" >
             <td></td>
             <td style="border: 2px solid black;text-align: center">Budget</td>
             <td colspan="3" style="border: 2px solid black;text-align: center">Previous</td>
@@ -29,7 +29,7 @@
             <td colspan="1" style="border: 2px solid black; text-align: center">Remaining</td>
             <td colspan="2" style="text-align: center">At Completion</td>
         </tr>
-        <tr>
+        <tr style="background: #C6F1E7">
             <th class="col-xs-2" style="border: 2px solid black;text-align: center">Resource Type</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Base Line</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Cost</th>
@@ -41,11 +41,13 @@
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Remaining Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost Variance</th>
+
         </tr>
+
         </thead>
         <tbody>
         @foreach($data as $key=>$value)
-            <tr>
+            <tr >
                 <td style="border: 2px solid black;text-align: left">{{$value['name']}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['budget_cost']??0,2) }}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_cost']??0,2)}}</td>
@@ -59,6 +61,20 @@
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['cost_var']??0,2)}}</td>
             </tr>
         @endforeach
+        <tr style="background: #F0FFF3">
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Total</th>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['budget_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_allowable'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_variance'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['to_date_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['allowable_ev_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['allowable_var'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['remaining_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['completion_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($total['cost_var'])}}</td>
+
+        </tr>
         </tbody>
     </table>
 @endsection
