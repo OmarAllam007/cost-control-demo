@@ -185,9 +185,10 @@ class CostImportFixer
             }
             unset($resource->cost);
             $resource->update($data);
-            $resource->import_cost = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
+            $cost = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
                 ->where('period_id', $this->batch->period_id)->get()->toArray();
-            $progressLog->push($resource);
+            $log = ['resource' => $resource, 'remaining_qty' => $cost['remaining_qty'], 'to_date_qty' => $cost['to_date_qty']];
+            $progressLog->push($log);
         }
 
         $costIssues = new CostIssuesLog($this->batch);
@@ -211,7 +212,10 @@ class CostImportFixer
             }
             unset($resource->cost, $resource->imported_cost);
             $resource->save();
-            $statusLog->push($resource);
+            $cost = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
+                ->where('period_id', $this->batch->period_id)->get()->toArray();
+            $log = ['resource' => $resource, 'remaining_qty' => $cost['remaining_qty'], 'to_date_qty' => $cost['to_date_qty']];
+            $statusLog->push($log);
         }
 
         $costIssues = new CostIssuesLog($this->batch);
