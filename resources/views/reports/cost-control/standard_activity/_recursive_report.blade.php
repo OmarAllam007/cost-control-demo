@@ -30,7 +30,7 @@
 
                         </p>
                         <article id="{{$activity['id']}}" class="tree--child collapse">
-                            {{--@if(count($activity['resources']))--}}
+                            @if(count($activity['resources']))
                                 <ul class="list-unstyled">
                                     <li>
                                         <table class="table table-condensed">
@@ -66,7 +66,7 @@
                                         </table>
                                     </li>
                                 </ul>
-                            {{--@endif--}}
+                            @endif
                         </article>
                     </li>
                 </ul>
