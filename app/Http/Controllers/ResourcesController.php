@@ -9,6 +9,7 @@ use App\Http\Controllers\Reports\Productivity;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheResourcesTree;
 use App\Jobs\Export\ExportPublicResourcesJob;
+use App\Jobs\Export\ExportResourcesMapping;
 use App\Jobs\ImportResourceCodesJob;
 use App\Jobs\Export\ExportResourcesJob;
 use App\Jobs\Modify\ModifyPublicResourcesJob;
@@ -567,5 +568,9 @@ class ResourcesController extends Controller
         Resources::where('project_id', $project->id)->delete();
         \Cache::forget('resources-tree');
         return redirect()->route('project.show', $project);
+    }
+
+    function exportResourceMapping(Project $project){
+        $this->dispatch(new ExportResourcesMapping($project));
     }
 }

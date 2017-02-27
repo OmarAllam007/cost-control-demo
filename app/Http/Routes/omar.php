@@ -123,6 +123,7 @@ Route::group(['prefix' => 'project'], function () {
 
 Route::group(['prefix' => 'project'], function () {
     Route::get('activity-mapping/export/{project}', ['as' => 'activity_mapping.export', 'uses' => 'ActivityMapController@exportActivityMapping']);
+    Route::get('resource-mapping/export/{project}', ['as' => 'resource_mapping.export', 'uses' => 'ResourcesController@exportResourceMapping']);
 });
 
 Route::group(['prefix' => 'survey'], function () {
