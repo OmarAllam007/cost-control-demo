@@ -121,6 +121,10 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('wbs_levels/export/{project}', ['as' => 'wbs_report.export', 'uses' => 'ExportReportController@exportWbsReport']);
 });
 
+Route::group(['prefix' => 'project'], function () {
+    Route::get('activity-mapping/export/{project}', ['as' => 'activity_mapping.export', 'uses' => 'ActivityMapController@exportActivityMapping']);
+    Route::get('resource-mapping/export/{project}', ['as' => 'resource_mapping.export', 'uses' => 'ResourcesController@exportResourceMapping']);
+});
 
 Route::group(['prefix' => 'survey'], function () {
     Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'SurveyController@exportQuantitySurvey']);

@@ -36,7 +36,7 @@
                                         <table class="table table-condensed">
                                             <thead>
                                             <tr class="tbl-children-division">
-                                                <th>Resource Name</th>
+
                                                 <th>Base Line</th>
                                                 <th>Previous Cost</th>
                                                 <th>Previous allowable</th>
@@ -50,21 +50,18 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach(collect($activity['resources'])->sortBy('name') as $keyResource=>$resource)
                                                 <tr>
-                                                    <td>{{$resource['name']}}</td>
-                                                    <td>{{number_format($resource['budget_cost']??0,2) }}</td>
-                                                    <td>{{number_format($resource['prev_cost']??0,2)}}</td>
-                                                    <td>{{number_format($resource['prev_allowabe']??0,2)}}</td>
-                                                    <td>{{number_format($resource['prev_variance']??0,2)}}</td>
-                                                    <td>{{number_format($resource['to_data_cost']?? 0)}}</td>
-                                                    <td>{{number_format($resource['to_date_allowable_cost']??0,2)}}</td>
-                                                    <td>{{number_format($resource['allowable_var']??0,2)}}</td>
-                                                    <td>{{number_format($resource['remain_cost']??0,2)}}</td>
-                                                    <td>{{number_format($resource['completion_cost']??0,2)}}</td>
-                                                    <td>{{number_format($resource['cost_var']??0,2)}}</td>
+                                                    <td>{{number_format($activity['budget_cost']??0,2) }}</td>
+                                                    <td>{{number_format($activity['prev_cost']??0,2)}}</td>
+                                                    <td>{{number_format($activity['prev_allowabe']??0,2)}}</td>
+                                                    <td>{{number_format($activity['prev_variance']??0,2)}}</td>
+                                                    <td>{{number_format($activity['to_data_cost']?? 0)}}</td>
+                                                    <td>{{number_format($activity['to_date_allowable_cost']??0,2)}}</td>
+                                                    <td>{{number_format($activity['allowable_var']??0,2)}}</td>
+                                                    <td>{{number_format($activity['remain_cost']??0,2)}}</td>
+                                                    <td>{{number_format($activity['completion_cost']??0,2)}}</td>
+                                                    <td>{{number_format($activity['cost_var']??0,2)}}</td>
                                                 </tr>
-                                            @endforeach
                                             </tbody>
                                         </table>
                                     </li>
