@@ -84,15 +84,16 @@ class ActualResources extends Model
         ];
 
         if ($this->original_data) {
-            $attributes['qty'] = $this->original_data[4];
-            $attributes['unit_price'] = $this->original_data[5];
-            $attributes['cost'] = $this->original_data[6];
-            $attributes['store_measure_unit'] = $this->original_data[3];
-            $attributes['store_resource_name'] = trim($this->original_data[3]);
+            $original_data = json_decode($this->original_data, true);
+            $attributes['qty'] = number_format($original_data[4], 2);
+            $attributes['unit_price'] = number_format($original_data[5], 2);
+            $attributes['cost'] = number_format($original_data[6], 2);
+            $attributes['store_measure_unit'] = $original_data[3];
+            $attributes['store_resource_name'] = trim($original_data[2]);
         } else {
-            $attributes['qty'] = $this->qty;
-            $attributes['unit_price'] = $this->unit_price;
-            $attributes['cost'] = $this->cost;
+            $attributes['qty'] = number_format($this->qty, 2);
+            $attributes['unit_price'] = number_format($this->unit_price, 2);
+            $attributes['cost'] = number_format($this->cost, 2);
             $attributes['store_measure_unit'] = $this->budget->measure_unit;
             $attributes['store_resource_name'] = trim($this->budget->resource_name);
         }

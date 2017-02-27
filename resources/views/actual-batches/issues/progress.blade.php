@@ -1,12 +1,21 @@
 @php
-    $activities = collect(json_decode($issue->data, true) ?: [])->map(function($row) {
-        $resource = new \App\BreakDownResourceShadow($row);
-        $resource->id = $row['id'];
-        if (isset($row['cost'])) {
-            $resource->import_cost = $row['import_cost'];
+    $activities = collect(json_decode($issue->data, true) ?: [])->map(function($log){
+        if (isset($log['resource'])) {
+            $attributes = $log['resource'];
+        } else {
+            $attributes = $log;
         }
-        return $resource;
-    })->groupBy(function(\App\BreakDownResourceShadow $resource) {
+
+        $log['resource'] = new \App\BreakDownResourceShadow($attributes);
+        $log['resource']->id = $attributes['id'];
+        return $log;
+    })->groupBy(function($log) {
+        if (isset($log['resource'])) {
+            $resource = $log['resource'];
+        } else {
+            $resource = $log;
+        }
+
         return $resource->wbs->path . ' / ' . $resource->activity;
     })->sortByKeys();
 @endphp
@@ -14,7 +23,7 @@
 @if ($activities->count())
     <article class="panel panel-warning">
         <div class="panel-heading">
-            <h4 class="panel-title">Status</h4>
+            <h4 class="panel-title">Progress</h4>
         </div>
 
         <div class="panel-body">
@@ -36,13 +45,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($resources as $resource)
+                        @foreach($resources as $log)
+                            @php
+                                if (isset($log['resource'])) {
+                                    $resource = $log['resource'];
+                                } else {
+                                    $resource = $log;
+                                }
+                            @endphp
                             <tr>
                                 <td>{{$resource->resource_code}}</td>
                                 <td>{{$resource->resource_name}}</td>
-                                <td>{{$resource->budget_unit}}</td>
-                                <td>{{$resource->import_cost['to_date_qty'] ?? 'N/A'}}</td>
-                                <td>{{$resource->import_cost['remaining_qty'] ?? 'N/A'}}</td>
+                                <td>{{number_format($resource->budget_unit, 2)}}</td>
+                                <td>{{number_format($log['to_date_qty']?? $resource->cost->to_date_qty ?? 0, 2)}}</td>
+                                <td>{{number_format($log['remaining_qty']?? $resource->cost->remaining_qty ?? 0, 2)}}</td>
                                 <td><strong>{{sprintf('%.02f', $resource->progress)}}%</strong></td>
                             </tr>
                         @endforeach

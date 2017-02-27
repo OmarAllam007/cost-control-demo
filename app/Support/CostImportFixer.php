@@ -185,9 +185,8 @@ class CostImportFixer
             }
             unset($resource->cost);
             $resource->update($data);
-            $resource->import_cost = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
-                ->where('period_id', $this->batch->period_id)->get()->toArray();
-            $progressLog->push($resource);
+            $log = ['resource' => $resource, 'remaining_qty' => $resource->cost->remaining_qty, 'to_date_qty' => $resource->cost->to_date_qty];
+            $progressLog->push($log);
         }
 
         $costIssues = new CostIssuesLog($this->batch);
@@ -209,9 +208,10 @@ class CostImportFixer
             if (strtolower($value) == 'closed') {
                 $resource->progress = 100;
             }
-            unset($resource->cost, $resource->imported_cost);
             $resource->save();
-            $statusLog->push($resource);
+            $log = ['resource' => $resource, 'remaining_qty' => $resource->cost->remaining_qty, 'to_date_qty' => $resource->cost->to_date_qty];
+            unset($resource->cost, $resource->imported_cost);
+            $statusLog->push($log);
         }
 
         $costIssues = new CostIssuesLog($this->batch);
