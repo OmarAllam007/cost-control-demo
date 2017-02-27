@@ -20,15 +20,15 @@ class ExportBreakdownJob extends Job
     public function handle()
     {
         set_time_limit(600);
-        $filename = storage_path('app/'. uniqid('breakdown_csv_'));
+        $filename = storage_path('app/' . uniqid('breakdown_csv_'));
 
         $headers = [
-            'APP_ID', 'WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4','WBS-Level-5','WBS-Level-6','WBS-Level-7','Activity-Division-1','Activity-Division-2','Activity-Division-3',
-            'Activity-Division-4','Activity ID',
-            'Activity','Discipline',
+            'APP_ID', 'WBS-Level-1', 'WBS-Level-2', 'WBS-Level-3', 'WBS-Level-4', 'WBS-Level-5', 'WBS-Level-6', 'WBS-Level-7', 'Activity-Division-1', 'Activity-Division-2', 'Activity-Division-3',
+            'Activity-Division-4', 'Activity ID',
+            'Activity', 'Discipline',
             'Breakdown-Template', 'Cost Account',
-            'Engineering Quantity', 'BudgetQuantity','Resource Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost',
-            'BOQ Equivalent Unit Rate','No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'
+            'Engineering Quantity', 'BudgetQuantity', 'Resource Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost',
+            'BOQ Equivalent Unit Rate', 'No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'
         ];
 
         $line = implode(",", array_map([$this, 'csv_quote'], $headers));
@@ -36,13 +36,13 @@ class ExportBreakdownJob extends Job
         fwrite($fh, $line);
 
         /** @var LengthAwarePaginator $shadows */
-        $shadows = $this->project->shadows()->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function($shadows) use ($fh) {
+        $shadows = $this->project->shadows()->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function ($shadows) use ($fh) {
             foreach ($shadows as $breakdown_resource) {
                 $discpline = $breakdown_resource->std_activity->discipline;
                 $division = $breakdown_resource->std_activity->division;
                 $level = $breakdown_resource->wbs;
                 $levels = [];
-                $divisions=[];
+                $divisions = [];
                 $levels[] = $level->name;
 
                 $parent = $level->parent;
@@ -52,12 +52,12 @@ class ExportBreakdownJob extends Job
                 };
                 $levels = array_reverse($levels);
 
-                $divisions[]=$division->name;
+                $divisions[] = $division->name;
 
                 $parentDiv = $division->parent;
-                while($parentDiv){
+                while ($parentDiv) {
                     $divisions[] = $parentDiv->name;
-                    $parentDiv= $parentDiv->parent;
+                    $parentDiv = $parentDiv->parent;
                 }
                 $divisions = array_reverse($divisions);
                 $data = [
@@ -111,7 +111,7 @@ class ExportBreakdownJob extends Job
 //        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
 //        $objWriter->save('php://output');
 
-fclose($fh);
+        fclose($fh);
 
         return $filename;
     }

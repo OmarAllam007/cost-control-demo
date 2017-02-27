@@ -27,9 +27,8 @@ class ExportActivityMapping extends Job
         $objPHPExcel->setActiveSheetIndex(0);
         set_time_limit(600);
         $items = ActivityMap::where('project_id', $this->project->id)->get();
-
-        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Activity Code');
-        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Equivalent Code');
+        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'App Activity Code');
+        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Store Activity Code');
         $rowCount = 2;
 
         foreach ($items as $item) {
