@@ -28,7 +28,7 @@ class SignificantMaterials
         $this->period_cost = collect();
         $this->period_id = $chosen_period_id;
 
-        collect(\DB::select('SELECT  resource_id,resource_name, sum(unit_price) AS unit_price, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit
+        collect(\DB::select('SELECT  resource_id,resource_name, unit_price AS unit_price, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit
 FROM break_down_resource_shadows
 WHERE project_id = ?
 GROUP BY resource_id , resource_name', [$project->id]))->map(function ($resource) {

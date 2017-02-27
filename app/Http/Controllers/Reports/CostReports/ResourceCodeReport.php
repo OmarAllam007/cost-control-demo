@@ -35,7 +35,7 @@ class ResourceCodeReport
         $this->period_id = $chosen_period_id;
 
 
-        collect(\DB::select('SELECT  resource_id,resource_name, sum(unit_price) AS unit_price, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit
+        collect(\DB::select('SELECT  resource_id,resource_name, (SUM(budget_cost) / sum(budget_unit))  AS unit_price, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit
 FROM break_down_resource_shadows
 WHERE project_id = ?
 GROUP BY resource_id , resource_name', [$project->id]))->map(function ($resource) {
@@ -116,7 +116,7 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
                 $tree['resources'][$resource['id']] = [
                     'id' => $resource['id']
                     , 'name' => $resource['name']
-                    , 'unit_price' => $this->resources->get($resource->id)['unit'] ?? 0
+                    , 'unit_price' => $this->resources->get($resource->id)['budget_unit']?$this->resources->get($resource->id)['budget_cost'] / $this->resources->get($resource->id)['budget_unit']:$this->resources->get($resource->id)['budget_cost']
                     , 'budget_unit' => $this->resources->get($resource->id)['budget_unit'] ?? 0
                     , 'budget_cost' => $this->resources->get($resource->id)['budget_cost'] ?? 0
                     , 'to_date_unit_price' => $this->period_cost->get($resource['id'])['to_date_unit_price'] ?? 0
