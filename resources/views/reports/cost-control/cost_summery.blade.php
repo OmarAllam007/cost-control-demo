@@ -55,24 +55,24 @@
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_variance']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['to_date_cost'])}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['allowable_ev_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['allowable_var']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center; @if($value['allowable_var']<0) color: red; @endif">{{number_format($value['allowable_var']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['remaining_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['completion_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['cost_var']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center; @if($value['cost_var']<0) color: red; @endif">{{number_format($value['cost_var']??0,2)}}</td>
             </tr>
         @endforeach
         <tr style="background: #F0FFF3">
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Total</th>
-            <td style="border: 2px solid black;text-align: center">{{number_format($total['budget_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center; ">{{number_format($total['budget_cost'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_cost'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_allowable'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_variance'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['to_date_cost'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['allowable_ev_cost'])}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($total['allowable_var'])}}</td>
+            <td style="border: 2px solid black;text-align: center;@if($total['allowable_var']<0) color: red; @endif">{{number_format($total['allowable_var'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['remaining_cost'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['completion_cost'])}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($total['cost_var'])}}</td>
+            <td style="border: 2px solid black;text-align: center; @if($total['cost_var']<0) color: red; @endif">{{number_format($total['cost_var'])}}</td>
 
         </tr>
         </tbody>
