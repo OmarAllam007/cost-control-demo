@@ -18,19 +18,21 @@
                     <td>Activity</td>
                     <td>Count Account</td>
                     <td>Resource</td>
+                    <td>Remarks</td>
                     <td>Progress</td>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($data['reopened'] as $row)
                     @php
-                        $shadow = \App\BreakDownResourceShadow::find($row['resource']['id']);
+                        $shadow = \App\BreakDownResourceShadow::find($row['id']);
                     @endphp
 
                     <tr>
                         <td>{{$shadow->wbs->path}} / {{$shadow->activity}}</td>
                         <td>{{$shadow->cost_account}}</td>
                         <td>{{$shadow->resource_name}}</td>
+                        <td>{{$shadow->remarks}}</td>
                         <td>{{$row['progress'] ?? ''}}</td>
                     </tr>
                 @endforeach
