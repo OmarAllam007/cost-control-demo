@@ -49,8 +49,8 @@ class ExportCostResources extends Job
 
             $rowCount++;
         }
-
-        $xlsName = 'CostResources'.$this->project->name.'.xlsx';
+        $project_name=$this->project->name;
+        $xlsName = $project_name."CostResources.xlsx";
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="'.$xlsName.'"');
