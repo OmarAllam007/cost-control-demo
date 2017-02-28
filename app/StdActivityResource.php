@@ -68,7 +68,7 @@ class StdActivityResource extends Model
             'resource_name' => $this->resource->name,
             'resource_waste' => $this->resource->waste,
             'unit' => isset($this->resource->units->type) ? $this->resource->units->type : '',
-            'resource_type' => $this->resource->types->root->name,
+            'resource_type' => $this->resource->types->root->name ?? '',
             'budget_qty' => '',
             'eng_qty' => '',
             'remarks' => $this->remarks,
