@@ -19,6 +19,29 @@
         .padding{
             padding-right: 300px;
         }
+        .cell-borders{
+           border:1px solid lightgray;
+        }
+        .firstGroup{
+            background: #a9eee6;
+            color: #000;
+        }
+        .secondGroup{
+            background: #f9a1bc;
+            color: black;
+        }
+
+        .thirdGroup{
+            background: #a6e1ec;
+            color: black;
+        }
+        .names{
+            background: #625772;
+            color:white;
+        }
+        .blackBorder{
+            border: 2px solid black;
+        }
     </style>
     <div class="row" style="margin-bottom: 10px;">
         <form action="{{route('cost.boq_report',$project)}}" class="form-inline col col-md-8" method="get">

@@ -32,16 +32,23 @@ class BoqReport
     protected $activities_ids;
     protected $cost_accounts;
     protected $boqs;
+    protected $wbs_level_children;
+    protected $boqs_project;
 
     function getReport(Project $project, $period_id)
     {
+        //get Boq By wbs_id , cost account ... done
+        //
+
         $this->project = $project;
         $this->divisions = collect();
         $this->activities = collect();
         $this->div_activities = collect();
         $this->prev_activities = collect();
+        $this->boqs_project = collect();
         $this->boqs = collect();
         $this->wbs_levels = collect();
+        $this->wbs_level_children = collect();
         $this->budget_data = collect();
         $this->cost_data = collect();
         $this->activities_ids = [];
@@ -49,30 +56,44 @@ class BoqReport
         $tree = [];
 
         $wbs_levels = \Cache::get('wbs-tree-' . $project->id) ?: $project->wbs_tree;
+
         Boq::where('project_id', $project->id)->get()->map(function ($boq) {
-            $this->boqs->put($boq->wbs_id . $boq->cost_account, ['price_unit' => $boq->price_ur, 'description' => $boq->description, 'quantity' => $boq->quantity]);
+            $this->boqs->put($boq->wbs_id . $boq->cost_account, ['price_unit' => $boq->price_ur, 'description' => $boq->description, 'quantity' => $boq->quantity, 'dry_ur' => $boq->dry_ur]);
         });
-        collect(\DB::select('SELECT cost_account, wbs_id,activity_id,
-  SUM(boq_equivilant_rate) AS boq_equivilant_rate,
-  SUM(budget_cost) budget_cost,
-  SUM(budget_unit) budget_unit
-FROM break_down_resource_shadows
-WHERE project_id=?
-GROUP BY cost_account,wbs_id,activity_id', [$project->id]))->map(function ($shadow) {
-            $this->budget_data->put(trim(str_replace(' ', '', $shadow->wbs_id)) . trim(str_replace(' ', '', $shadow->activity_id)) . trim(str_replace(' ', '', $shadow->cost_account)),
-                ['boq_equivilant_rate' => $shadow->boq_equivilant_rate, 'budget_cost' => $shadow->budget_cost,
-                    'budget_unit' => $shadow->budget_unit]);
+        Boq::where('project_id', $project->id)->get()->map(function ($boq) {
+            $this->boqs_project->put($boq->wbs_id, $boq->price_ur);
         });
 
+        $this->wbs_level_children = WbsLevel::where('project_id', $project->id)->get()->keyBy('id')->map(function ($level) {
+            return $level->getChildrenIds();
+        });
+
+        //get_budget_data
+        collect(\DB::select('SELECT cost_account, wbs_id,activity_id,
+  budget_qty AS budget_qty,
+  SUM(boq_equivilant_rate) AS boq_equivilant_rate,
+  SUM(budget_cost) budget_cost,
+  SUM(budget_unit) budget_unit,
+  SUM(budget_cost) / budget_qty AS budget_unit_rate
+FROM break_down_resource_shadows
+WHERE project_id=?
+GROUP BY cost_account,wbs_id,activity_id , budget_qty', [$project->id]))->map(function ($shadow) {
+            $this->budget_data->put(trim(str_replace(' ', '', $shadow->wbs_id)) . trim(str_replace(' ', '', $shadow->activity_id)) . trim(str_replace(' ', '', $shadow->cost_account)),
+                ['boq_equivilant_rate' => $shadow->boq_equivilant_rate, 'budget_cost' => $shadow->budget_cost,
+                    'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_unit_rate ,'budget_qty'=>$shadow->budget_qty]);
+        });
+        //end
+
+
+        //get_cost_data
         collect(\DB::select('SELECT
   sh.activity_id,
   sh.cost_account,
   sh.wbs_id,
-  SUM(to_date_unit_price) AS to_date_unit_price,
   SUM(physical_unit)      AS physical_unit,
   SUM(to_date_cost)       AS to_date_cost,
-  SUM(allowable_ev_cost)  AS allowable_ev_cost,
-  SUM(allowable_var)  AS allowable_var,
+  SUM(allowable_ev_cost)  AS allowable_cost,
+  SUM(allowable_var)  AS to_date_cost_var,
   SUM(remaining_cost)  AS remaining_cost,
   SUM(completion_cost)  AS completion_cost,
   SUM(cost_var)  AS completion_cost_var
@@ -83,11 +104,10 @@ GROUP BY sh.activity_id,
   sh.cost_account,
   sh.wbs_id', [$project->id, $period_id]))->map(function ($cost) {
             $this->cost_data->put(trim(str_replace(' ', '', $cost->wbs_id)) . trim(str_replace(' ', '', $cost->activity_id)) . trim(str_replace(' ', '', $cost->cost_account)), [
-                'to_date_unit_price' => $cost->to_date_unit_price
-                , 'physical_unit' => $cost->physical_unit
+                'physical_unit' => $cost->physical_unit
                 , 'to_date_cost' => $cost->to_date_cost
-                , 'allowable_ev_cost' => $cost->allowable_ev_cost
-                , 'allowable_var' => $cost->allowable_var
+                , 'allowable_ev_cost' => $cost->allowable_cost
+                , 'to_date_cost_var' => $cost->to_date_cost_var
                 , 'remaining_cost' => $cost->remaining_cost
                 , 'completion_cost' => $cost->completion_cost
                 , 'cost_var' => $cost->completion_cost_var
@@ -143,19 +163,7 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
         $this->wbs_levels = WbsLevel::where('project_id', $project->id)->get()->keyBy('id')->map(function ($level) {
             return $level;
         });
-        collect(\DB::select('SELECT activity,
-  sh.activity_id,
-  sh.wbs_id,
-  SUM(cost.to_date_cost) AS to_date_cost,
-  SUM(cost.allowable_ev_cost) AS allowable_cost,
-  SUM(allowable_var) AS allowable_var
-FROM break_down_resource_shadows sh JOIN cost_shadows cost
-WHERE sh.breakdown_resource_id = cost.breakdown_resource_id AND sh.project_id = ? AND cost.period_id < ?
-GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($activity) {
-            $this->prev_activities->put($activity->activity_id . $activity->wbs_id, ['name' => $activity->activity,
-                'to_date_cost' => $activity->to_date_cost, 'allowable_cost' => $activity->allowable_cost, 'allowable_var' => $activity->allowable_var
-            ]);
-        });
+
 
         $this->div_activities = StdActivity::all()->keyBy('id')->map(function ($activity) {
             $parent = $activity->division;
@@ -169,86 +177,80 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
             $treeLevel = $this->buildTree($level);
             $tree[] = $treeLevel;
         }
-
         return view('reports.cost-control.boq-report.boq_report', compact('tree', 'levels', 'project'));
     }
 
     function buildTree($level)
     {
-
         $tree = ['id' => $level['id'], 'name' => $level['name'], 'children' => [], 'division' => [], 'data' => []];
-        $activities_id = collect($this->activities_ids)->get($level['id'])['activities'];
-        if ($activities_id) {
-            $activities_id = array_keys($activities_id);
-            $activities = StdActivity::whereIn('id', $activities_id)->get();
+        $level = $this->wbs_levels->get($level['id']);
+        $boq = Boq::where('project_id', $this->project->id)->where('wbs_id', $level['id'])->first();
+        if ($boq) {
+            $children = $this->wbs_level_children->get($level['id']);
+            foreach ($children as $child) {
+                $activities_id = collect($this->activities_ids)->get($child)['activities'];
+                if ($activities_id) {
+                    $activities_id = array_keys($activities_id);
+                    foreach ($activities_id as $activity) {
+                        $division = $this->div_activities->get($activity);
+                        if (!isset($tree['division'][$division->id])) {
+                            $tree['division'][$division->id] = ['name' => $division->name, 'cost_accounts' => []];
+                        }
 
-            foreach ($activities as $activity) {
-                $division = $this->div_activities->get($activity->id);
+                        $cost_accounts = collect($this->cost_accounts)->get($child . $activity);
+                        foreach ($cost_accounts['cost_accounts'] as $key => $cost_account) {
+                            $dry = $this->boqs->get($level['id'] . $key)['dry_ur'];
+                            $quantity = $this->boqs->get($level['id'] . $key)['quantity'];
+                            $price_ur = $this->boqs->get($level['id'] . $key)['price_unit'];
+                            $description = $this->boqs->get($level['id'] . $key)['description'];
+                            $budget_unit_rate = $this->budget_data->get($child . $activity . $key)['budget_unit_rate'];
+                            $budget_cost = $this->budget_data->get($child . $activity . $key)['budget_cost'];
+                            $budget_unit = $this->budget_data->get($child . $activity . $key)['budget_unit'];
+                            $budget_qty = $this->budget_data->get($child . $activity . $key)['budget_qty'];
+                            $physical_unit = $this->cost_data->get($child . $activity . $key)['physical_unit'];
+                            $to_date_cost = $this->cost_data->get($child . $activity . $key)['to_date_cost'];
+                            $allowable_ev_cost = $this->cost_data->get($child . $activity . $key)['allowable_ev_cost'];
+                            $to_date_cost_var = $this->cost_data->get($child . $activity . $key)['to_date_cost_var'];
+                            $remaining_cost = $this->cost_data->get($child . $activity . $key)['remaining_cost'];
+                            $completion_cost = $this->cost_data->get($child . $activity . $key)['completion_cost'];
+                            $completion_cost_var = $this->cost_data->get($child . $activity . $key)['cost_var'];
+                            $todate_budget_unit_rate = $physical_unit!=0 ? $to_date_cost/$physical_unit:$budget_unit_rate;
+                            if (!isset($tree['division'][$division->id]['cost_accounts'][$key])) {
+                                $tree['division'][$division->id]['cost_accounts'][$key] = [
+                                    'cost_account'=>$key,
+                                    'dry' => $dry,
+                                    'budget_unit_rate' => $budget_unit_rate,
+                                    'todate_budget_unit_rate' => $todate_budget_unit_rate,
+                                    'var_unit_rate' => $budget_unit_rate-($todate_budget_unit_rate),
+                                    'description' => $description,
+                                    'unit_price' => $price_ur,
+                                    'quantity' => $quantity,
+                                    'budget_unit' => $budget_unit,
+                                    'budget_cost' => $budget_cost,
+                                    'physical_unit' => $physical_unit,
+                                    'to_date_cost' => $to_date_cost,
+                                    'allowable_cost' => $allowable_ev_cost,
+                                    'to_date_cost_var' => $to_date_cost_var,
+                                    'remaining_cost' => $remaining_cost,
+                                    'at_comp' => $completion_cost,
+                                    'at_comp_var' => $completion_cost_var,
+                                    'dry_cost'=>$quantity*$dry,
+                                    'boq_cost'=>$quantity*$price_ur,
+                                    'budget_qty'=>$budget_qty,
 
-                if (!isset($tree['division'][$division->id])) {
-                    $tree['division'][$division->id] = ['name' => $division->name, 'cost_accounts' => []];
-                }
 
-                $cost_accounts = collect($this->cost_accounts)->get($level['id'] . $activity->id);
-
-                foreach ($cost_accounts['cost_accounts'] as $key => $cost_account) {
-                    $quantity = $this->boqs->get($level['id'] . $key)['quantity'];
-                    $price_ur = $this->boqs->get($level['id'] . $key)['price_unit'];
-                    $description = $this->boqs->get($level['id'] . $key)['description'];
-                    $boq_equavalent_rate = $this->budget_data->get($level['id'] . $activity->id . $key)['boq_equivilant_rate'];
-                    $budget_cost = $this->budget_data->get($level['id'] . $activity->id . $key)['budget_cost'];
-                    $budget_unit = $this->budget_data->get($level['id'] . $activity->id . $key)['budget_unit'];
-                    $to_date_price_unit = $this->cost_data->get($level['id'] . $activity->id . $key)['to_date_unit_price'];
-                    $physical_unit = $this->cost_data->get($level['id'] . $activity->id . $key)['physical_unit'];
-                    $to_date_cost = $this->cost_data->get($level['id'] . $activity->id . $key)['to_date_cost'];
-                    $allowable_ev_cost = $this->cost_data->get($level['id'] . $activity->id . $key)['allowable_ev_cost'];
-                    $allowable_var = $this->cost_data->get($level['id'] . $activity->id . $key)['allowable_var'];
-                    $remaining_cost = $this->cost_data->get($level['id'] . $activity->id . $key)['remaining_cost'];
-                    $completion_cost = $this->cost_data->get($level['id'] . $activity->id . $key)['completion_cost'];
-                    $completion_cost_var = $this->cost_data->get($level['id'] . $activity->id . $key)['cost_var'];
-
-                    if ($quantity == null) {
-                        $level = $this->wbs_levels->get($level['id']);
-                        $parent = $level;
-                        while ($parent->parent) {
-                            $parent = $parent->parent;
-                            $quantity = $this->boqs->get($parent->id . $key)['quantity'];
-                            $price_ur = $this->boqs->get($parent->id . $key)['price_unit'];
-                            $description = $this->boqs->get($parent->id . $key)['description'];
-
-                            if ($quantity != null || $price_ur != null) {
-                                break;
+                                ];
                             }
                         }
-                    }
 
-                    if (!isset($tree['division'][$division->id]['cost_accounts'][$key])) {
-                        $tree['division'][$division->id]['cost_accounts'][$key] = [
-                            'cost_account' => $key,
-                            'description' => $description,
-                            'unit_price' => $price_ur,
-                            'quantity' => $quantity,
-                            'equavlant' => $boq_equavalent_rate,
-                            'budget_unit' => $budget_unit,
-                            'budget_cost' => $budget_cost,
-                            'to_date_unit_price' => $to_date_price_unit,
-                            'physical_unit' => $physical_unit,
-                            'to_date_cost' => $to_date_cost,
-                            'allowable_cost' => $allowable_ev_cost,
-                            'to_date_cost_var' => $allowable_var,
-                            'remaining_cost' => $remaining_cost,
-                            'at_comp' => $completion_cost,
-                            'at_comp_var' => $completion_cost_var
-                        ];
                     }
                 }
-
             }
         }
 
+
         if (count($level['children'])) {
             $tree['children'] = collect($level['children'])->map(function ($childLevel) {
-
                 return $this->buildTree($childLevel);
             });
         }
