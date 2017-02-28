@@ -125,6 +125,10 @@ trait CostAttributes
             return $resource->rate;
         }
 
+        if ($this->prev_unit_price) {
+            return $this->prev_unit_price;
+        }
+
         return $this->unit_price;
     }
 
