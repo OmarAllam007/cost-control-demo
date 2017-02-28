@@ -77,7 +77,6 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
                 'completion_cost' => $resource->completion_cost ?? 0,
                 'cost_var' => $resource->cost_var ?? 0,
                 'pw_index' => $resource->allowable_qty!=0?($resource->quantity_var / $resource->allowable_qty): 0,
-
             ]);
         });
 

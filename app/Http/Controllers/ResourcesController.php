@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\BusinessPartner;
+use App\CostResource;
 use App\Filter\ResourcesFilter;
 use App\Http\Controllers\Caching\ResourcesCache;
 use App\Http\Controllers\Reports\Productivity;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheResourcesTree;
+use App\Jobs\Export\ExportCostResources;
 use App\Jobs\Export\ExportPublicResourcesJob;
 use App\Jobs\Export\ExportResourcesMapping;
 use App\Jobs\ImportResourceCodesJob;
@@ -371,6 +373,16 @@ class ResourcesController extends Controller
         }
 
         return $this->dispatch(new ExportResourcesJob($project));
+    }
+    function exportCostResources(Project $project)
+    {
+        if (\Gate::denies('resources', $project)) {
+            flash("You don't have access to this page");
+            return \Redirect::to('/');
+        }
+
+        return $this->dispatch(new ExportCostResources($project));
+
     }
 
     function wipe(WipeRequest $request)

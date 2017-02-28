@@ -141,6 +141,8 @@ Route::group(['prefix' => 'resources'], function () {
     Route::get('modify/', ['as' => 'all-resources.modify', 'uses' => 'ResourcesController@modifyAllResources']);
     Route::post('modify/', ['as' => 'all-resources.post-modify', 'uses' => 'ResourcesController@postModifyAllResources']);
     Route::delete('deleteAll/{project}',['uses'=>'ResourcesController@projectWipeAll','as'=>'project-resources.wipeAll']);
+    Route::get('export-cost-resources/{project}', ['as' => 'resources-cost.export', 'uses' => 'ResourcesController@exportCostResources']);
+
 
 });
 Route::group(['prefix' => 'resource-type'], function () {
