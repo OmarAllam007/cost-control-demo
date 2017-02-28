@@ -39,26 +39,22 @@ class ExportCostResources extends Job
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Resource Type', 'Rate', 'Unit Of Measure'], 'A1');
         $rowCount = 2;
-        $column = 0;
 
         foreach ($this->resources as $resource) {
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['code']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['name']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['type']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['rate']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['measure_unit']);
-            $column++;
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource['code']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource['name']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource['type']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource['rate']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $resource['measure_unit']);
+
             $rowCount++;
         }
-
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - Cost Resources.xlsx"');
+        $project_name=$this->project->name;
+        $xlsName = $project_name."CostResources.xlsx";
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$xlsName.'"');
         header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
     }
 }

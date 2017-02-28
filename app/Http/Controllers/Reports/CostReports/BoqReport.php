@@ -80,7 +80,7 @@ WHERE project_id=?
 GROUP BY cost_account,wbs_id,activity_id , budget_qty', [$project->id]))->map(function ($shadow) {
             $this->budget_data->put(trim(str_replace(' ', '', $shadow->wbs_id)) . trim(str_replace(' ', '', $shadow->activity_id)) . trim(str_replace(' ', '', $shadow->cost_account)),
                 ['boq_equivilant_rate' => $shadow->boq_equivilant_rate, 'budget_cost' => $shadow->budget_cost,
-                    'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_unit_rate ,'budget_qty'=>$shadow->budget_qty]);
+                    'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_unit_rate, 'budget_qty' => $shadow->budget_qty]);
         });
         //end
 
@@ -214,33 +214,45 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                             $remaining_cost = $this->cost_data->get($child . $activity . $key)['remaining_cost'];
                             $completion_cost = $this->cost_data->get($child . $activity . $key)['completion_cost'];
                             $completion_cost_var = $this->cost_data->get($child . $activity . $key)['cost_var'];
-                            $todate_budget_unit_rate = $physical_unit!=0 ? $to_date_cost/$physical_unit:$budget_unit_rate;
+                            $todate_budget_unit_rate = $physical_unit != 0 ? $to_date_cost / $physical_unit : $budget_unit_rate;
                             if (!isset($tree['division'][$division->id]['cost_accounts'][$key])) {
                                 $tree['division'][$division->id]['cost_accounts'][$key] = [
-                                    'cost_account'=>$key,
+                                    'cost_account' => $key,
                                     'dry' => $dry,
-                                    'budget_unit_rate' => $budget_unit_rate,
-                                    'todate_budget_unit_rate' => $todate_budget_unit_rate,
-                                    'var_unit_rate' => $budget_unit_rate-($todate_budget_unit_rate),
+                                    'budget_unit_rate' => 0,
+                                    'todate_budget_unit_rate' => 0,
+                                    'var_unit_rate' => 0,
                                     'description' => $description,
                                     'unit_price' => $price_ur,
                                     'quantity' => $quantity,
-                                    'budget_unit' => $budget_unit,
-                                    'budget_cost' => $budget_cost,
-                                    'physical_unit' => $physical_unit,
-                                    'to_date_cost' => $to_date_cost,
-                                    'allowable_cost' => $allowable_ev_cost,
-                                    'to_date_cost_var' => $to_date_cost_var,
-                                    'remaining_cost' => $remaining_cost,
-                                    'at_comp' => $completion_cost,
-                                    'at_comp_var' => $completion_cost_var,
-                                    'dry_cost'=>$quantity*$dry,
-                                    'boq_cost'=>$quantity*$price_ur,
-                                    'budget_qty'=>$budget_qty,
-
-
+                                    'budget_unit' => 0,
+                                    'budget_cost' => 0,
+                                    'physical_unit' => 0,
+                                    'to_date_cost' => 0,
+                                    'allowable_cost' => 0,
+                                    'to_date_cost_var' => 0,
+                                    'remaining_cost' => 0,
+                                    'at_comp' => 0,
+                                    'at_comp_var' => 0,
+                                    'dry_cost' => $quantity*$dry,
+                                    'boq_cost' => $quantity*$price_ur,
+                                    'budget_qty' => 0,
                                 ];
+
                             }
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit_rate']+=$budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['todate_budget_unit_rate']+=$todate_budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit']+=$budget_unit;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_cost']+=$budget_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['physical_unit']+=$physical_unit;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost']+=$to_date_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['allowable_cost']+=$allowable_ev_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost_var']+=$to_date_cost_var;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['remaining_cost']+=$remaining_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['at_comp']+=$completion_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['at_comp_var']+=$completion_cost_var;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_qty']+=$budget_qty;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['var_unit_rate']+=$budget_unit_rate-($todate_budget_unit_rate);
                         }
 
                     }
