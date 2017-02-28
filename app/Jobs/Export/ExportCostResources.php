@@ -9,9 +9,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ExportCostResources extends Job implements ShouldQueue
+class ExportCostResources extends Job
 {
-    use InteractsWithQueue, SerializesModels;
 
     /**
      * Create a new job instance.
@@ -26,21 +25,19 @@ class ExportCostResources extends Job implements ShouldQueue
     {
         $this->project = $project;
         $this->units = Unit::pluck('type', 'id');
-    $this->resources = CostResource::where('project_id', $project->id)
-        ->where('period_id', $project->open_period()->id)
-        ->get()->map(function (CostResource $resource) {
-            return $resource->jsonFormat();
-        });
-
+        $this->resources = CostResource::where('project_id', $project->id)
+            ->where('period_id', $project->open_period()->id)
+            ->get()->map(function (CostResource $resource) {
+                return $resource->jsonFormat();
+            });
     }
-
 
 
     public function handle()
     {
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Resource Type', 'Rate' ,'Unit Of Measure'], 'A1');
+        $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Resource Type', 'Rate', 'Unit Of Measure'], 'A1');
         $rowCount = 2;
         $column = 0;
 
