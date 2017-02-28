@@ -102,11 +102,9 @@ class ExportCostShadow extends Job
 
         /** @var $query Builder */
 
-//        header('Content-Type: text/csv');
-//        header('Content-Disposition: attachment; filename=export.csv');
         $query->chunk(5000, function ($shadows) {
-                $time = microtime(1);
             foreach ($shadows as $costShadow) {
+                $time = microtime(1);
                 $this->buffer .= "\n" .
                     csv_quote($costShadow->wbs->canonical).','.
                     csv_quote($costShadow['activity']).','.
@@ -127,10 +125,10 @@ class ExportCostShadow extends Job
                     '"'.round($costShadow['boq_equivilant_rate'] ?: '0', 2).'",'.
                     '"'.round($costShadow['labors_count'], 2).'",'.
                     '"'.round($costShadow['productivity_output'] ?: '0', 2).'",'.
-                    '"'.$costShadow['productivity_ref'] ?: '0'.'",'.
+                    '"'.$costShadow['productivity_ref'].'",'.
                     '"'.$costShadow['remarks'].'",'.
                     '"'.round($costShadow['progress'], 2).'",'.
-                    '"'.$costShadow['status'] ?: 'Not Started'.'",'.
+                    '"'.($costShadow['status'] ?: 'Not Started').'",'.
                     '"'.round($costShadow['prev_unit_price'] ?: '0', 2).'",'.
                     '"'.round($costShadow['prev_qty'] ?: '0', 2).'",'.
                     '"'.round($costShadow['prev_cost'] ?: '0', 2).'",'.
