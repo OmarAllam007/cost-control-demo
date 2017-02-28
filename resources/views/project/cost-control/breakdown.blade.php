@@ -298,7 +298,7 @@
 
             <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No breakdowns found</div>
 
-            @can('actual_resource', $project)
+            @can('delete_resources', $project)
                 <delete-resource-modal inline-template>
                     <form class="modal fade" tabindex="-1" role="dialog">
                         <div class="modal-dialog">
