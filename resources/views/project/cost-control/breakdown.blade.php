@@ -161,7 +161,7 @@
                     <table class="table table-condensed table-striped table-hover table-breakdown">
                         <tbody>
                         <tr v-for="breakdown in filtered_breakdowns">
-                            @can('manual_edit', $project)
+                            @if (can('manual_edit', $project) || can('delete_resources', $project))
                                 <td style="min-width: 30px; max-width: 30px">
                                     <div class="dropdown">
                                         <button class="btn btn-xs btn-default" type="button"
@@ -173,15 +173,17 @@
                                                        title="Edit Resource Data"><i class="fa fa-fw fa-edit"></i> Edit</a>
                                                 </li>
                                             @endcan
+                                            @can('delete_resources', $project)
                                             <li><a href="#" @click.prevent="deleteResource(breakdown)"><i
                                                             class="fa fa-fw fa-trash"></i> Delete resource data</a></li>
                                             <li><a href="#" @click.prevent="deleteActivity(breakdown)"><span
                                                             class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete activity data</span></a>
                                             </li>
+                                            @endcan
                                         </ul>
                                     </div>
                                 </td>
-                            @endcan
+                            @endif
                             <td style="min-width: 300px; max-width: 300px;"
                                 class="bg-blue">@{{ breakdown.activity }}</td>
                             <td style="min-width: 150px; max-width: 150px;"
