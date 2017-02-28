@@ -17,11 +17,11 @@ class RebuildCostShadow extends Command
 
     public function handle()
     {
-        $resources = \DB::select('SELECT DISTINCT breakdown_resource_id, period_id FROM actual_resources');
+        $resources = \DB::select('SELECT DISTINCT breakdown_resource_id, period_id FROM actual_resources where period_id in (1, 2)');
         $bar = $this->output->createProgressBar(count($resources));
         $bar->setBarWidth(80);
 
-        CostShadow::truncate();
+        CostShadow::whereIn('period_id', [1, 2])->delete();
 
         WbsResource::unguard();
 

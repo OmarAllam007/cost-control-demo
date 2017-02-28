@@ -135,6 +135,13 @@ class BreakdownResourceController extends Controller
 
             foreach ($breakdown->resources as $resource) {
                 $resourceData = $resource->getAttributes();
+                if ($newBreakdown->qty_survey) {
+                    $resourceData['budget_qty'] = $newBreakdown->qty_survey->budget_qty;
+                    $resourceData['eng_qty'] = $newBreakdown->qty_survey->eng_qty;
+                } else {
+                    $resourceData['budget_qty'] = 0;
+                    $resourceData['eng_qty'] = 0;
+                }
                 unset($resourceData['id'], $resourceData['breakdown_id'], $resourceData['created_at'], $resourceData['updated_at']);
                 $newBreakdown->resources()->create($resourceData);
             }
