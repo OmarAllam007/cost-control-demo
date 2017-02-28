@@ -39,23 +39,15 @@ class ExportCostResources extends Job
         $objPHPExcel->setActiveSheetIndex(0);
         $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Resource Type', 'Rate', 'Unit Of Measure'], 'A1');
         $rowCount = 2;
-        $column = 0;
 
         foreach ($this->resources as $resource) {
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['code']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['name']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['type']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['rate']);
-            $column++;
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($column, $rowCount, $resource['measure_unit']);
-            $column++;
-            $rowCount++;
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource['code']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource['name']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource['type']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource['rate']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $resource['measure_unit']);
 
-            $column=0;
-            $rowCount=2;
+            $rowCount++;
         }
 
 
