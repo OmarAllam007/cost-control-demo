@@ -235,16 +235,16 @@
                                         <td style="border-right: 2px solid black;">{{number_format($resource['budget_cost']??0,2) }}</td>
                                         <td>{{number_format($resource['to_date_unit_price']??0,2) }}</td>
                                         <td style="background: #defdff;border-left:1px solid lightgray; border-right:1px solid  lightgray;">{{number_format($resource['to_date_qty']??0,2) }}</td>
-                                        <td>{{number_format($resource['to_date_cost']??0,2) }}</td>
-                                        <td>{{number_format($resource['allowable_ev_cost']??0,2) }}</td>
-                                        <td>{{number_format($resource['quantity_var']??0,2) }}</td>
+                                        <td style="border-left:1px solid lightgray; border-right:1px solid  lightgray;">{{number_format($resource['to_date_cost']??0,2) }}</td>
+                                        <td style="border-left:1px solid lightgray; border-right:1px solid  lightgray;">{{number_format($resource['allowable_ev_cost']??0,2) }}</td>
+                                        <td style="border-left:1px solid lightgray; border-right:1px solid  lightgray;">{{number_format($resource['quantity_var']??0,2) }}</td>
                                         <td style="border-right: 2px solid black; @if($resource['allowable_var']<0) color:red @endif">{{number_format($resource['allowable_var']??0,2) }}</td>
                                         <td>{{number_format($resource['remaining_unit_price']??0,2) }}</td>
                                         <td style="background: #defdff;border-left:1px solid lightgray; border-right:1px solid  lightgray;">{{number_format($resource['remaining_qty']??0,2) }}</td>
                                         <td style="border-right: 2px solid black;">{{number_format($resource['remaining_cost']??0,2) }}</td>
                                         <td>{{number_format($resource['completion_unit_price']??0,2) }}</td>
                                         <td style="background: #defdff;border-left:1px solid lightgray; border-right:1px solid  lightgray;">{{number_format($resource['completion_qty']??0,2) }}</td>
-                                        <td>{{number_format($resource['completion_cost']??0,2) }}</td>
+                                        <td style="border-left:1px solid lightgray; border-right:1px solid  lightgray;">{{number_format($resource['completion_cost']??0,2) }}</td>
                                         <td style="border-right: 2px solid black; @if($resource['cost_var']<0) color:red @endif ">{{number_format($resource['cost_var']??0,2) }}</td>
                                         <td style="border-right: 2px solid black;">{{number_format($resource['pw_index']??0,2) }}</td>
                                     </tr>
