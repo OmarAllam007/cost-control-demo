@@ -14,6 +14,8 @@ use App\StdActivity;
 
 trait CostAttributes
 {
+    protected $calculated;
+
     function getPreviousUnitPriceAttribute()
     {
         if ($this->previous_qty) {
@@ -47,8 +49,12 @@ trait CostAttributes
             return $this->attributes['to_date_unit_price'];
         }
 
+        if (isset($this->calculated['to_date_unit_price'])) {
+            return $this->calculated['to_date_unit_price'];
+        }
+
         if ($this->to_date_qty) {
-            return $this->to_date_cost / $this->to_date_qty;
+            return $this->calculated['to_date_unit_price'] = $this->to_date_cost / $this->to_date_qty;
         }
 
         return 0;
@@ -56,53 +62,77 @@ trait CostAttributes
 
     function getAllowableEvCostAttribute()
     {
+        if (isset($this->calculated['allowable_ev_cost'])) {
+            return $this->calculated['allowable_ev_cost'];
+        }
+
         if (!$this->budget_cost) {
             return 0;
         }
 
         $activity = StdActivity::find($this->activity_id);
         if ($activity->division->isGeneral()) {
-            return $this->progress_val * $this->budget_cost;
+            return $this->calculated['allowable_ev_cost'] = $this->progress_val * $this->budget_cost;
         }
 
         if ($this->progress_value == 1 || $this->to_date_cost > $this->budget_cost || $this->to_date_qty > $this->budget_qty) {
-            return $this->budget_cost;
+            return $this->calculated['allowable_ev_cost'] = $this->budget_cost;
         }
 
-        return $this->to_date_qty * $this->unit_price;
+        return $this->calculated['allowable_ev_cost'] = $this->to_date_qty * $this->unit_price;
     }
 
     function getAllowableVarAttribute()
     {
-        return $this->allowable_ev_cost - $this->to_date_cost;
+        if (isset($this->calculated['allowable_var'])) {
+            return $this->calculated['allowable_var'];
+        }
+
+        return $this->calculated['allowable_var'] = $this->allowable_ev_cost - $this->to_date_cost;
     }
 
     function getBlAllowableCostAttribute()
     {
-        return $this->budget_cost - $this->allowable_ev_cost;
+        if (isset($this->calculated['bl_allowable_cost'])) {
+            return $this->calculated['bl_allowable_cost'];
+        }
+
+        return $this->calculated['bl_allowable_cost'] = $this->budget_cost - $this->allowable_ev_cost;
     }
 
     function getBlAllowableVarAttribute()
     {
-        return $this->bl_allowable_cost - $this->remaining_cost;
+        if (isset($this->calculated['bl_allowable_var'])) {
+            return $this->calculated['bl_allowable_var'];
+        }
+
+        return $this->calculated['bl_allowable_var'] = $this->bl_allowable_cost - $this->remaining_cost;
     }
 
     function getRemainingQtyAttribute()
     {
+        if (isset($this->calculated['remaining_qty'])) {
+            return $this->calculated['remaining_qty'];
+        }
+
         if (!$this->budget_unit || $this->progress_value == 1 || strtolower($this->status) == 'closed') {
-            return 0;
+            return $this->calculated['remaining_qty'] = 0;
         }
 
         if ($this->to_date_qty > $this->budget_unit && $this->progress_value) {
-            return ($this->to_date_qty * (1 - $this->progress_value)) / $this->progress_value;
+            return $this->calculated['remaining_qty'] = ($this->to_date_qty * (1 - $this->progress_value)) / $this->progress_value;
         }
 
-        return $this->budget_unit - $this->to_date_qty;
+        return $this->calculated['remaining_qty'] = $this->budget_unit - $this->to_date_qty;
     }
 
     function getRemainingCostAttribute()
     {
-        return $this->remaining_unit_price * $this->remaining_qty;
+        if (isset($this->calculated['remaining_cost'])) {
+            return $this->calculated['remaining_cost'];
+        }
+
+        return $this->calculated['remaining_cost'] = $this->remaining_unit_price * $this->remaining_qty;
     }
 
     function getRemainingUnitPriceAttribute()
@@ -113,58 +143,81 @@ trait CostAttributes
         if ($resource) {
             return $resource->rate;
         }*/
+        if (isset($this->calculated['remaining_unit_price'])) {
+            return $this->calculated['remaining_unit_price'];
+        }
 
-        if ($this->curr_unit_price) {
-            return $this->curr_unit_price;
+        if (!empty($this->attributes['curr_unit_price'])) {
+            return $this->attributes['curr_unit_price'];
         }
 
         $resource = CostResource::where('resource_id', $this->resource_id)
             ->where('project_id', $this->project_id)->where('period_id', $this->period_id)->first();
 
         if ($resource) {
-            return $resource->rate;
+            return $this->calculated['remaining_unit_price'] = $resource->rate;
         }
 
         if ($this->prev_unit_price) {
-            return $this->prev_unit_price;
+            return $this->calculated['remaining_unit_price'] = $this->prev_unit_price;
         }
 
-        return $this->unit_price;
+        return $this->calculated['remaining_unit_price'] = $this->unit_price;
     }
 
     function getCompletionCostAttribute()
     {
-        return $this->remaining_cost + $this->to_date_cost;
+        if (isset($this->calculated['completion_unit_price'])) {
+            return $this->calculated['completion_unit_price'];
+        }
+
+        return $this->calculated['completion_unit_price'] = $this->remaining_cost + $this->to_date_cost;
     }
 
     function getCompletionQtyAttribute()
     {
-        return $this->remaining_qty + $this->to_date_qty;
+        if (isset($this->calculated['completion_qty'])) {
+            return $this->calculated['completion_qty'];
+        }
 
+        return $this->calculated['completion_qty'] = $this->remaining_qty + $this->to_date_qty;
     }
 
     function getCompletionUnitPriceAttribute()
     {
+        if (isset($this->calculated['completion_unit_price'])) {
+            return $this->calculated['completion_unit_price'];
+        }
+
         if ($this->completion_qty == 0) {
-            return $this->remaining_unit_price;
+            return $this->calculated['completion_unit_price'] = $this->remaining_unit_price;
         } else {
-            return $this->completion_cost / $this->completion_qty;
+            return $this->calculated['completion_unit_price'] = $this->completion_cost / $this->completion_qty;
         }
     }
 
     function getUnitPriceVarAttribute()
     {
-        return $this->unit_price - $this->completion_unit_price;
+        if (isset($this->calculated['unit_price_var'])) {
+            return $this->calculated['unit_price_var'];
+        }
+        return $this->calculated['unit_price_var'] = $this->unit_price - $this->completion_unit_price;
     }
 
     function getQtyVarAttribute()
     {
-        return $this->budget_qty - $this->completion_qty;
+        if (isset($this->calculated['qty_var'])) {
+            return $this->calculated['qty_var'];
+        }
+        return $this->calculated['qty_var'] = $this->budget_qty - $this->completion_qty;
     }
 
     function getCostVarAttribute()
     {
-        return $this->budget_cost - $this->completion_cost;
+        if (isset($this->calculated['cost_var'])) {
+            return $this->calculated['cost_var'];
+        }
+        return $this->calculated['cost_var'] = $this->budget_cost - $this->completion_cost;
     }
 
     function getPhysicalUnitAttribute()
@@ -188,36 +241,60 @@ trait CostAttributes
 
     function getAllowableQtyAttribute()
     {
-        if (($this->to_date_qty < $this->budget_unit)) {
-            return $this->to_date_qty;
+        if (isset($this->calculated['allowable_qty'])) {
+            return $this->calculated['allowable_qty'];
         }
 
-        return $this->budget_unit;
+        if (($this->to_date_qty < $this->budget_unit)) {
+            return $this->calculated['allowable_qty'] = $this->to_date_qty;
+        }
+
+        return $this->calculated['allowable_qty'] = $this->budget_unit;
     }
 
     function getCostVarianceToDateDueUnitPriceAttribute()
     {
-        return ($this->unit_price - $this->to_date_unit_price) * $this->to_date_qty;
+        if (isset($this->calculated['cost_variance_to_date_due_unit_price'])) {
+            return $this->calculated['cost_variance_to_date_due_unit_price'];
+        }
+
+        return $this->calculated['cost_variance_to_date_due_unit_price'] = ($this->unit_price - $this->to_date_unit_price) * $this->to_date_qty;
     }
 
     function getCostVarianceRemainingDueUnitPriceAttribute()
     {
-        return ($this->unit_price - $this->remaining_unit_price) * $this->remaining_qty;
+        if (isset($this->calculated['cost_variance_remaining_due_unit_price'])) {
+            return $this->calculated['cost_variance_remaining_due_unit_price'];
+        }
+
+        return $this->calculated['cost_variance_remaining_due_unit_price'] = ($this->unit_price - $this->remaining_unit_price) * $this->remaining_qty;
     }
 
     function getCostVarianceCompletionDueUnitPriceAttribute()
     {
-        return $this->cost_variance_to_date_due_unit_price + $this->cost_variance_remaining_due_unit_price;
+        if (isset($this->calculated['cost_variance_completion_due_unit_price'])) {
+            return $this->calculated['cost_variance_completion_due_unit_price'];
+        }
+
+        return $this->calculated['cost_variance_completion_due_unit_price'] = $this->cost_variance_to_date_due_unit_price + $this->cost_variance_remaining_due_unit_price;
     }
 
     function getCostVarianceCompletionDueQtyAttribute()
     {
-        return $this->unit_price * ($this->budget_unit - $this->completion_qty);
+        if (isset($this->calculated['cost_variance_completion_due_qty'])) {
+            return $this->calculated['cost_variance_completion_due_qty'];
+        }
+
+        return $this->calculated['cost_variance_completion_due_qty'] = $this->unit_price * ($this->budget_unit - $this->completion_qty);
     }
 
     function getCostVarianceToDateDueQtyAttribute()
     {
-        return $this->unit_price * ($this->allowable_qty - $this->to_date_qty);
+        if (isset($this->calculated['cost_variance_to_date_due_qty'])) {
+            return $this->calculated['cost_variance_to_date_due_qty'];
+        }
+
+        return $this->calculated['cost_variance_to_date_due_qty'] = $this->unit_price * ($this->allowable_qty - $this->to_date_qty);
     }
 
     function getProgressValueAttribute()
