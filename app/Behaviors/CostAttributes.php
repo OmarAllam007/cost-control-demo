@@ -23,8 +23,30 @@ trait CostAttributes
         return 0;
     }
 
+    function getToDateQtyAttribute()
+    {
+        if (!empty($this->attributes['to_date_qty'])) {
+            return $this->attributes['to_date_qty'];
+        }
+
+        return $this->curr_qty + $this->prev_qty;
+    }
+
+    function getToDateCostAttribute()
+    {
+        if (!empty($this->attributes['to_date_cost'])) {
+            return $this->attributes['to_date_cost'];
+        }
+
+        return $this->curr_cost + $this->prev_cost;
+    }
+
     function getToDateUnitPriceAttribute()
     {
+        if (!empty($this->attributes['to_date_unit_price'])) {
+            return $this->attributes['to_date_unit_price'];
+        }
+
         if ($this->to_date_qty) {
             return $this->to_date_cost / $this->to_date_qty;
         }
@@ -205,7 +227,12 @@ trait CostAttributes
 
     function appendFields()
     {
-
+        $this->appends = [
+            'to_date_qty', 'to_date_cost', 'to_date_unit_price', 'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var', 'remaining_qty', 'remaining_cost',
+            'remaining_unit_price', 'completion_cost', 'completion_qty', 'completion_unit_price', 'unit_price_var', 'qty_var', 'cost_var', 'physical_unit', 'pw_index', 'allowable_qty',
+            'cost_variance_to_date_due_unit_price', 'cost_variance_remaining_due_unit_price', 'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty',
+            'cost_variance_to_date_due_qty'
+        ];
     }
 
 }

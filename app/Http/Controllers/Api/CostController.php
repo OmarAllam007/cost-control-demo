@@ -26,7 +26,11 @@ class CostController extends Controller
         $perspective = $request->get('perspective');
 
         if ($perspective=='budget') {
-            return BreakDownResourceShadow::joinCost($wbs_level, $period)->get();
+            $rows = BreakDownResourceShadow::joinCost($wbs_level, $period)->get();
+            $rows->each(function(BreakDownResourceShadow $row) {
+                $row->appendFields();
+            });
+            return $rows;
         } else {
             return CostShadow::joinShadow($wbs_level, $period)->get();
         }

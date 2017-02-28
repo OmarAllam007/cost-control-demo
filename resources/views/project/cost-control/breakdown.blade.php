@@ -179,8 +179,7 @@
                                             <li><a href="#" @click.prevent="deleteActivity(breakdown)"><span
                                                             class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete activity data</span></a>
                                             </li>
-                                            @endcan
-                                        </ul>
+                                            @endcan </ul>
                                     </div>
                                 </td>
                             @endif

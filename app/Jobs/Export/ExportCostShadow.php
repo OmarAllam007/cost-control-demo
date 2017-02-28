@@ -7,6 +7,8 @@ use App\CostShadow;
 use App\Jobs\Job;
 use App\WbsLevel;
 use App\WbsResource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class ExportCostShadow extends Job
 {
@@ -17,6 +19,11 @@ class ExportCostShadow extends Job
      */
     private $perspective;
 
+    /** @var Collection */
+    protected $lines;
+
+    protected $buffer = '';
+
     public function __construct($project, $perspective = '')
     {
         $this->project = $project;
@@ -26,8 +33,7 @@ class ExportCostShadow extends Job
 
     public function handle()
     {
-        $file = storage_path('app/' . uniqid('cost_shadow_') . '.csv');
-
+        set_time_limit(1800);
         $headers = [
             'WBS',
             'Activity Name',
@@ -84,30 +90,23 @@ class ExportCostShadow extends Job
             'Cost Variance to Date Due to Qty',
         ];
 
-        $lines = collect(implode(',', array_map('csv_quote', $headers)));
+        $this->buffer = implode(',', array_map('csv_quote', $headers));
 
         $period = $this->project->open_period();
 
         if ($this->perspective == 'budget') {
-            $query = BreakDownResourceShadow::joinCost(null, $period);
+            $query = BreakDownResourceShadow::joinCost(null, $period)->where('budget.project_id', $this->project->id);
         } else {
             $query = CostShadow::joinShadow(null, $period);
         }
 
-        $query->chunk(10000, function ($shadows) use ($lines) {
+        /** @var $query Builder */
+
+//        header('Content-Type: text/csv');
+//        header('Content-Disposition: attachment; filename=export.csv');
+        $query->chunk(2000, function ($shadows) {
             foreach ($shadows as $costShadow) {
-                /* $levels = [];
-
-                 $parent = $costShadow->wbs;
-                 $levels[] = $costShadow->wbs->name;
-                 $parent = $parent->parent;
-
-                 while ($parent) {
-                     $levels[] = $parent->name;
-                     $parent = $parent->parent;
-                 };
-                 $levels = array_reverse($levels);*/
-                $lines->push(implode(',', array_map('csv_quote', [
+                $this->buffer .= "\n" . implode(',', array_map('csv_quote', [
                     $costShadow->wbs->canonical,
                     $costShadow['activity'],
                     $costShadow['code'],
@@ -129,8 +128,8 @@ class ExportCostShadow extends Job
                     number_format($costShadow['productivity_output'] ?: '0', 2, '.', ''),
                     $costShadow['productivity_ref'] ?: '0',
                     $costShadow['remarks'],
-                    number_format($costShadow->progress, 2, '.', ''),
-                    $costShadow->status,
+                    number_format($costShadow['progress'], 2, '.', ''),
+                    $costShadow['status'] ?: 'Not Started',
                     number_format($costShadow['prev_unit_price'] ?: '0', 2, '.', ''),
                     number_format($costShadow['prev_qty'] ?: '0', 2, '.', ''),
                     number_format($costShadow['prev_cost'] ?: '0', 2, '.', ''),
@@ -161,21 +160,18 @@ class ExportCostShadow extends Job
                     number_format($costShadow['cost_variance_completion_due_unit_price'] ?: '0', 2, '.', ''),
                     number_format($costShadow['cost_variance_completion_due_qty'] ?: '0', 2, '.', ''),
                     number_format($costShadow['cost_variance_to_date_due_qty'] ?: '0', 2, '.', ''),
-                ])));
+                ]));
             }
+
+//            fwrite($fh, $this->buffer);
+//            $this->buffer = '';
+//            $count = $shadows->count();
+            unset($shadows);
+            gc_collect_cycles();
+
+            \Log::info('Chunk has been buffered; memory: ' . round(memory_get_usage(true) / (1024 * 1024), 2));
         });
 
-        return $lines->implode(PHP_EOL);
-    }
-
-    function styleColumns($sheet, $range, $color)
-    {
-        $sheet->getStyle("" . $range . "")->applyFromArray(
-            array(
-                'fill' => array(
-                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                    'color' => array('rgb' => $color)
-                )
-            ));
+        return $this->buffer;
     }
 }
