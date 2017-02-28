@@ -51,8 +51,9 @@ class ExportCostResources extends Job
         }
 
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - CostResources.xlsx"');
+        header('Content-type: application/vnd.ms-excel');
+
+        header('Content-Disposition: attachment; filename="CostResources-'.$this->project->name .'.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
         $objWriter->save('php://output');
