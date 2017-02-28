@@ -58,7 +58,7 @@ SELECT
   SUM(c.completion_qty)                  AS completion_qty,
   SUM(c.completion_cost)                 AS completion_cost,
   SUM(c.cost_var)                        AS cost_var,
-  SUM(c.pw_index) / COUNT(c.resource_id) AS pw_index
+  SUM(c.allowable_qty) AS allowable_qty
 FROM cost_shadows c
 WHERE c.project_id = ? AND c.period_id = ? 
 GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($resource) {
@@ -76,7 +76,7 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
                 'completion_qty' => $resource->completion_qty ?? 0,
                 'completion_cost' => $resource->completion_cost ?? 0,
                 'cost_var' => $resource->cost_var ?? 0,
-                'pw_index' => $resource->pw_index ?? 0,
+                'pw_index' => $resource->allowable_qty!=0?($resource->quantity_var / $resource->allowable_qty): 0,
 
             ]);
         });
@@ -131,7 +131,6 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
                     , 'completion_cost' => $this->period_cost->get($resource['id'])['completion_cost'] ?? 0
                     , 'cost_var' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
                     , 'pw_index' => $this->period_cost->get($resource['id'])['pw_index'] ?? 0
-
 
                 ];
                 $tree['budget_cost'] += $this->resources->get($resource['id'])['budget_cost'];
