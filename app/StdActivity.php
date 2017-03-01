@@ -74,4 +74,9 @@ class StdActivity extends Model
 
         return collect($variables);
     }
+
+    function isGeneral()
+    {
+        return $this->division_id == 779;
+    }
 }
