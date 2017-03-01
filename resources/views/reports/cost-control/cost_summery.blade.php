@@ -5,7 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
 
-    <h2>{{$project->name}} - Cost Summery Report</h2>
+    <h2 id="report_name">{{$project->name}} - Cost Summery Report</h2>
     <div class="pull-right">
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
 
@@ -31,7 +31,7 @@
             <td colspan="3" style="border: 2px solid black;text-align: center">Previous</td>
             <td colspan="3" style="border: 2px solid black;text-align: center">To-Date</td>
             <td colspan="1" style="border: 2px solid black; text-align: center">Remaining</td>
-            <td colspan="2" style="text-align: center">At Completion</td>
+            <td colspan="3" style="text-align: center">At Completion</td>
         </tr>
         <tr style="background: #C6F1E7">
             <th class="col-xs-2" style="border: 2px solid black;text-align: center">Resource Type</th>
@@ -45,6 +45,7 @@
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Remaining Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost Variance</th>
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Concern</th>
 
         </tr>
 
@@ -63,6 +64,13 @@
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['remaining_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['completion_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center; @if($value['cost_var']<0) color: red; @endif">{{number_format($value['cost_var']??0,2)}}</td>
+                <td>
+                    <a type="button" href="#" class="btn btn-primary btn-lg concern-btn"
+                       title="{{$value['name']}}"
+                       data-type="{{json_encode($value)}}">
+                        <i class="fa fa-pencil-square-o " aria-hidden="true"></i>
+                    </a>
+                </td>
             </tr>
         @endforeach
         <tr style="background: #F0FFF3">
@@ -81,9 +89,35 @@
         </tr>
         </tbody>
     </table>
+
+    <input type="hidden" value="{{$project->id}}" id="project_id">
     <div class="row">
         <div id="chart"></div>
         <div id="chart2"></div>
+    </div>
+
+    <div class="modal fade" id="ConcernModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <form action="" class="modal-content">
+                {{csrf_field()}} {{method_field('post')}}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">Add Concern</h4>
+                </div>
+                <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Comment:</label>
+                            <textarea class="form-control" id="mytextarea"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success apply_concern "><i class="fa fa-plus"></i> Add Concern
+                            </button>
+                        </div>
+                </div>
+
+            </form>
+        </div>
     </div>
 @endsection
 
@@ -172,6 +206,43 @@
 
         });
 
+        $(function () {
+            var ConcernModal = $('#ConcernModal');
+            var ConcernModalForm = ConcernModal.find('form');
+            var title = ConcernModal.find('.modal-title');
+            var project_id = $('#project_id').val();
+
+
+            $('.concern-btn').on('click', function (e) {
+                e.preventDefault();
+                var data = ($(this).attr('data-type'));
+                ConcernModal.modal();
+                $('.apply_concern').on('click', function (e) {
+                    e.preventDefault();
+                    var report_name = $('h2[id=report_name]').text();
+                    var body = $('#mytextarea').val();
+
+                    $.ajax({
+                        url: '/concern/'+project_id,
+                        method: 'POST',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            info: data,
+                            report_name: report_name,
+                            comment: body,
+                        },
+
+                    }).success((e) => {
+                        console.log('success')
+                    })
+                    ConcernModal.modal('hide');
+
+                    location.reload();
+                })
+            })
+
+
+        })
 
     </script>
 @endsection

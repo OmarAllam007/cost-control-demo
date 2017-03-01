@@ -181,3 +181,5 @@ Route::get('/summary', function() {
         'cost.to_date_cost', 'cost.allowable_ev_cost', 'budget.budget_cost'
     ])->get();
 });
+
+Route::post('/concern/{project}','CostConcernsController@addConcernCostReport');
