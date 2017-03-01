@@ -114,7 +114,7 @@
 
             },
             bar: {
-                width: 100
+                width:{ratio:1}
             },
             interaction: {
                 enabled: true
