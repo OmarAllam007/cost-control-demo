@@ -53,7 +53,7 @@
             <ul class="list-unstyled">
                     <table class="table table-condensed">
                         <thead>
-                        <tr class="output-cell">
+                        <tr style="background:#625772;color:white">
                             <td>Activity</td>
                             <td>Base Line</td>
                             <td>Previous Cost</td>
@@ -74,9 +74,9 @@
                             <td>{{number_format($activity['to_date_cost'],2)}}</td>
                             <td>{{number_format($activity['allowable_cost'],2)}}</td>
                             <td>{{number_format($activity['remain_cost'],2)}}</td>
-                            <td>{{number_format($activity['allowable_var'],2)}}</td>
+                            <td @if($activity['allowable_var']<0) style="color: red" @endif>{{number_format($activity['allowable_var'],2)}}</td>
                             <td>{{number_format($activity['completion_cost'],2)}}</td>
-                            <td>{{number_format($activity['cost_var'],2)}}</td>
+                            <td @if($activity['cost_var']<0) style="color: red" @endif>{{number_format($activity['cost_var'],2)}}</td>
                         </tr>
                         @endforeach
 
