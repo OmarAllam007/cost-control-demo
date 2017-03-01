@@ -82,8 +82,8 @@
         </tbody>
     </table>
     <div class="row">
-        <div id="chart" ></div>
-        <div id="chart2" ></div>
+        <div id="chart"></div>
+        <div id="chart2"></div>
     </div>
 @endsection
 
@@ -111,10 +111,9 @@
                 json: [data],
                 keys: {value: sites},
                 type: 'bar',
-
             },
             bar: {
-                width:{ratio:1}
+                width: {ratio: 1}
             },
             interaction: {
                 enabled: true
@@ -142,7 +141,7 @@
 
         });
 
-        var chart = c3.generate({
+        var chart3 = c3.generate({
             bindto: '#chart2',
             data: {
                 json: [chart2],
@@ -150,7 +149,7 @@
                 type: 'bar',
             },
             bar: {
-                width:{ratio:1}
+                width: {ratio: 1}
             },
             interaction: {
                 enabled: true
