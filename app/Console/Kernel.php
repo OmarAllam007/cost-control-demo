@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\CleanResourceTypes;
 use App\Console\Commands\CostUpdateReminder;
+use App\Console\Commands\ExportAllResources;
 use App\Console\Commands\FixBreakdownVars;
 use App\Console\Commands\FixBudgetQty;
 use App\Console\Commands\RebuildCostShadow;
@@ -26,7 +27,8 @@ class Kernel extends ConsoleKernel
         RebuildCostShadow::class,
         RebuildBudgetShadow::class,
         UpdateActivityCode::class,
-        FixBreakdownVars::class
+        FixBreakdownVars::class,
+        ExportAllResources::class
     ];
 
     /**
