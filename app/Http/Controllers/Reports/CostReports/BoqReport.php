@@ -73,15 +73,15 @@ class BoqReport
   budget_qty AS budget_qty,
   SUM(boq_equivilant_rate) AS boq_equivilant_rate,
   SUM(budget_cost) budget_cost,
-  SUM(budget_unit) budget_unit,
-  SUM(budget_cost) / budget_qty AS budget_unit_rate
+  SUM(budget_unit) budget_unit
 FROM break_down_resource_shadows
 WHERE project_id=?
 GROUP BY cost_account,wbs_id,activity_id , budget_qty', [$project->id]))->map(function ($shadow) {
             $this->budget_data->put(trim(str_replace(' ', '', $shadow->wbs_id)) . trim(str_replace(' ', '', $shadow->activity_id)) . trim(str_replace(' ', '', $shadow->cost_account)),
                 ['boq_equivilant_rate' => $shadow->boq_equivilant_rate, 'budget_cost' => $shadow->budget_cost,
-                    'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_unit_rate, 'budget_qty' => $shadow->budget_qty]);
+                    'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_qty!=0 ?($shadow->budget_cost/$shadow->budget_qty) : 0, 'budget_qty' => $shadow->budget_qty]);
         });
+//        dd($this->budget_data['9702328710.1.1']);
         //end
 
 
@@ -214,7 +214,7 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                             $remaining_cost = $this->cost_data->get($child . $activity . $key)['remaining_cost'];
                             $completion_cost = $this->cost_data->get($child . $activity . $key)['completion_cost'];
                             $completion_cost_var = $this->cost_data->get($child . $activity . $key)['cost_var'];
-                            $todate_budget_unit_rate = $physical_unit != 0 ? $to_date_cost / $physical_unit : $budget_unit_rate;
+                            $todate_budget_unit_rate = $physical_unit != 0 ? ($to_date_cost / $physical_unit) : $budget_unit_rate;
                             if (!isset($tree['division'][$division->id]['cost_accounts'][$key])) {
                                 $tree['division'][$division->id]['cost_accounts'][$key] = [
                                     'cost_account' => $key,
@@ -240,8 +240,8 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                                 ];
 
                             }
-                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit_rate']+=$budget_unit_rate;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['todate_budget_unit_rate']+=$todate_budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit_rate']=$budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['todate_budget_unit_rate']=$todate_budget_unit_rate;
                             $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit']+=$budget_unit;
                             $tree['division'][$division->id]['cost_accounts'][$key]['budget_cost']+=$budget_cost;
                             $tree['division'][$division->id]['cost_accounts'][$key]['physical_unit']+=$physical_unit;

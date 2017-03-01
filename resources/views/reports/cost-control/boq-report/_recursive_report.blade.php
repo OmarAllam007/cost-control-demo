@@ -35,7 +35,7 @@
                                                             <td class="firstGroup">Dry Unit / Price</td>
                                                             <td class="firstGroup">Boq Unit Price</td>
                                                             <td class="firstGroup">Budget Unit Rate</td>
-                                                            <td class="firstGroup">Todate Budget Unit Rate</td>
+                                                            <td class="firstGroup">Todate Unit Rate</td>
                                                             <td class="firstGroup">Variance (Unit Rate)</td>
                                                             <td class="secondGroup">Boq Qty</td>
                                                             <td class="secondGroup">Budget Qty</td>
@@ -56,23 +56,23 @@
                                                             <tr >
                                                                 <td class="cell-borders">{{$key}} </td>
                                                                 <td class="cell-borders">{{$cost_account['description']}} </td>
-                                                                <td class="cell-borders">{{number_format($cost_account['dry']) ?? 0}} </td>
-                                                                <td class="cell-borders">{{number_format($cost_account['unit_price']) ?? 0}} </td>
-                                                                <td class="cell-borders">{{number_format($cost_account['budget_unit_rate']) ?? 0}} </td>
-                                                                <td class="cell-borders">{{number_format($cost_account['todate_budget_unit_rate']) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['var_unit_rate'] ?? 0)}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['quantity']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['budget_qty']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['physical_unit']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['dry_cost']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['boq_cost']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['budget_cost']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['allowable_cost']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['to_date_cost']) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['remaining_cost']) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['at_comp']) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['at_comp_var']) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['dry'],2) ?? 0}} </td>
+                                                                <td class="cell-borders">{{number_format($cost_account['unit_price'],2) ?? 0}} </td>
+                                                                <td class="cell-borders">{{number_format($cost_account['budget_unit_rate'],2) ?? 0}} </td>
+                                                                <td class="cell-borders">{{number_format($cost_account['todate_budget_unit_rate'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['var_unit_rate'],2 ?? 0)}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['quantity'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['budget_qty'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['physical_unit'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['dry_cost'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['boq_cost'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['budget_cost'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['allowable_cost'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['to_date_cost'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['remaining_cost'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['at_comp'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['at_comp_var'],2) ?? 0}}</td>
                                                             </tr>
 
                                                         @endforeach
