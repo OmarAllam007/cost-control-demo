@@ -10,9 +10,9 @@
                 <a href="#" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Dashboard</a><br>
                 <a href="{{route('cost.boq_report',$project)}}" target="_blank"  class="hvr-float-shadow btn btn-primary" target="" style="width:100%;margin-bottom: 8px;">BOQ</a><br>
-
-                <a href="{{route('cost.significant',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
-                   style="width:100%;margin-bottom: 8px;">Significant Material</a><br>
+                <a href="{{route('productivity-report.import',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
+                   style="width:100%;margin-bottom: 8px;">Productivity
+                </a><br>
 
                 <a href="{{route('cost.overdraft',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Overdraft</a><br>
@@ -22,7 +22,6 @@
                 <a href="#" target="_blank"
                    class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Issues</a><br>
-
             </th>
             <th class="col-xs-6">
                 <a href="{{route('cost_control.cost-summery',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"

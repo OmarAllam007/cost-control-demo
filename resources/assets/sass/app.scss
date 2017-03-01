@@ -546,3 +546,30 @@ select[multiple].dropdown-templates{
 table.collapse.in {
   display: table;
 }
+
+.padding{
+  padding-right: 300px;
+}
+.cell-borders{
+  border:1px solid lightgray;
+}
+.firstGroup{
+  background: #a9eee6;
+  color: #000;
+}
+.secondGroup{
+  background: #f9a1bc;
+  color: black;
+}
+
+.thirdGroup{
+  background: #a6e1ec;
+  color: black;
+}
+.names{
+  background: #625772;
+  color:white;
+}
+.blackBorder{
+  border: 2px solid black;
+}

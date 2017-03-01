@@ -23,6 +23,7 @@ class ResourceCodeReport
     protected $period_cost;
     protected $prev_cost;
     protected $period_id;
+    protected $cost_data;
 
     public function getResourceCodeReport(Project $project, $chosen_period_id)
     {
@@ -33,6 +34,8 @@ class ResourceCodeReport
         $this->prev_cost = collect();
         $this->types = collect();
         $this->period_id = $chosen_period_id;
+        $this->cost_data = collect();
+
 
 
         collect(\DB::select('SELECT  resource_id,resource_name, (SUM(budget_cost) / sum(budget_unit))  AS unit_price, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit
@@ -42,10 +45,12 @@ GROUP BY resource_id , resource_name', [$project->id]))->map(function ($resource
             $this->resources->put($resource->resource_id, ['unit' => $resource->unit_price, 'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
         });
 
-        collect(\DB::select('
-SELECT
+        collect(\DB::select('SELECT
   c.resource_id,
   sum(c.to_date_unit_price) /COUNT(c.resource_id)                 AS to_date_unit_price,
+  sum(curr_cost) current_cost,
+  sum(curr_qty) current_qty,
+  sum(curr_unit_price) current_unit_price,
   SUM(c.to_date_qty)                     AS to_date_qty,
   SUM(c.to_date_cost)                    AS to_date_cost,
   SUM(c.allowable_ev_cost)               AS to_date_allowable_cost,
@@ -66,8 +71,12 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
                 'to_date_unit_price' => $resource->to_date_unit_price ?? 0,
                 'to_date_qty' => $resource->to_date_qty ?? 0,
                 'to_date_cost' => $resource->to_date_cost ?? 0,
+                'current_unit_price' => $resource->current_unit_price ?? 0,
+                'current_qty' => $resource->current_qty ?? 0,
+                'current_cost' => $resource->current_cost ?? 0,
                 'allowable_ev_cost' => $resource->to_date_allowable_cost ?? 0,
-                'quantity_var' => $resource->quantity_var ?? 0,
+                'quantity_var' => $resource->allowable_var - $resource->to_date_qty ?? 0,
+                'allowable_qty' => $resource->allowable_qty ?? 0,
                 'allowable_var' => $resource->allowable_var ?? 0,
                 'remaining_unit_price' => $resource->remaining_unit_price ?? 0,
                 'remaining_qty' => $resource->remaining_qty ?? 0,
@@ -76,7 +85,8 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
                 'completion_qty' => $resource->completion_qty ?? 0,
                 'completion_cost' => $resource->completion_cost ?? 0,
                 'cost_var' => $resource->cost_var ?? 0,
-                'pw_index' => $resource->allowable_qty!=0?($resource->quantity_var / $resource->allowable_qty): 0,
+                'qty_var_comp' => $resource->quantity_var ?? 0,
+                'pw_index' => $resource->allowable_qty != 0 ? ($resource->quantity_var / $resource->allowable_qty) : 0,
             ]);
         });
 
@@ -110,28 +120,34 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
         $resources = $this->types->get($type['id']);
         if (count($resources)) {
             foreach ($resources as $resource) {
-                $tree['resources'][$resource['id']] = [
-                    'id' => $resource['id']
-                    , 'name' => $resource['name']
-                    , 'unit_price' => $this->resources->get($resource->id)['budget_unit']?$this->resources->get($resource->id)['budget_cost'] / $this->resources->get($resource->id)['budget_unit']:$this->resources->get($resource->id)['budget_cost']
-                    , 'budget_unit' => $this->resources->get($resource->id)['budget_unit'] ?? 0
-                    , 'budget_cost' => $this->resources->get($resource->id)['budget_cost'] ?? 0
-                    , 'to_date_unit_price' => $this->period_cost->get($resource['id'])['to_date_unit_price'] ?? 0
-                    , 'to_date_qty' => $this->period_cost->get($resource['id'])['to_date_qty'] ?? 0
-                    , 'to_date_cost' => $this->period_cost->get($resource['id'])['to_date_cost'] ?? 0
-                    , 'allowable_ev_cost' => $this->period_cost->get($resource['id'])['allowable_ev_cost'] ?? 0
-                    , 'quantity_var' => $this->period_cost->get($resource['id'])['quantity_var'] ?? 0
-                    , 'allowable_var' => $this->period_cost->get($resource['id'])['allowable_var'] ?? 0
-                    , 'remaining_unit_price' => $this->period_cost->get($resource['id'])['remaining_unit_price'] ?? 0
-                    , 'remaining_qty' => $this->period_cost->get($resource['id'])['remaining_qty'] ?? 0
-                    , 'remaining_cost' => $this->period_cost->get($resource['id'])['remaining_cost'] ?? 0
-                    , 'completion_unit_price' => $this->period_cost->get($resource['id'])['completion_unit_price'] ?? 0
-                    , 'completion_qty' => $this->period_cost->get($resource['id'])['completion_qty'] ?? 0
-                    , 'completion_cost' => $this->period_cost->get($resource['id'])['completion_cost'] ?? 0
-                    , 'cost_var' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
-                    , 'pw_index' => $this->period_cost->get($resource['id'])['pw_index'] ?? 0
+                $tree['resources'][$resource['id']] =
+                    [
+                        'id' => $resource['id']
+                        , 'name' => $resource['name']
+                        , 'unit_price' => $this->resources->get($resource->id)['budget_unit'] ? $this->resources->get($resource->id)['budget_cost'] / $this->resources->get($resource->id)['budget_unit'] : $this->resources->get($resource->id)['budget_cost']
+                        , 'budget_unit' => $this->resources->get($resource->id)['budget_unit'] ?? 0
+                        , 'budget_cost' => $this->resources->get($resource->id)['budget_cost'] ?? 0
+                        , 'current_unit_price' => $this->resources->get($resource->id)['current_unit_price'] ?? 0
+                        , 'current_qty' => $this->resources->get($resource->id)['current_qty'] ?? 0
+                        , 'current_cost' => $this->resources->get($resource->id)['current_cost'] ?? 0
+                        , 'to_date_unit_price' => $this->period_cost->get($resource['id'])['to_date_unit_price'] ?? 0
+                        , 'to_date_qty' => $this->period_cost->get($resource['id'])['to_date_qty'] ?? 0
+                        , 'to_date_cost' => $this->period_cost->get($resource['id'])['to_date_cost'] ?? 0
+                        , 'allowable_ev_cost' => $this->period_cost->get($resource['id'])['allowable_ev_cost'] ?? 0
+                        , 'quantity_var' => $this->period_cost->get($resource['id'])['quantity_var'] ?? 0
+                        , 'allowable_var' => $this->period_cost->get($resource['id'])['allowable_var'] ?? 0
+                        , 'allowable_qty' => $this->period_cost->get($resource['id'])['allowable_qty'] ?? 0
+                        , 'remaining_unit_price' => $this->period_cost->get($resource['id'])['remaining_unit_price'] ?? 0
+                        , 'remaining_qty' => $this->period_cost->get($resource['id'])['remaining_qty'] ?? 0
+                        , 'remaining_cost' => $this->period_cost->get($resource['id'])['remaining_cost'] ?? 0
+                        , 'completion_unit_price' => $this->period_cost->get($resource['id'])['completion_unit_price'] ?? 0
+                        , 'completion_qty' => $this->period_cost->get($resource['id'])['completion_qty'] ?? 0
+                        , 'completion_cost' => $this->period_cost->get($resource['id'])['completion_cost'] ?? 0
+                        , 'cost_var' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
+                        , 'pw_index' => $this->period_cost->get($resource['id'])['pw_index'] ?? 0
+                        , 'qty_var_comp' => $this->period_cost->get($resource['id'])['qty_var_comp'] ?? 0
 
-                ];
+                    ];
                 $tree['budget_cost'] += $this->resources->get($resource['id'])['budget_cost'];
             }
         }

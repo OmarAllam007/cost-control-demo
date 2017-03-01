@@ -66,8 +66,6 @@ GROUP BY resource_id , measure_unit');
     {
         $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0];
 
-
-
         $resources = $this->types->get($type->id);
         if (count($resources)) {
             foreach ($resources as $resource) {
