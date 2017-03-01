@@ -1,14 +1,18 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
-@if(request('all'))
-    @include('reports.all._budget_dry_building')
-@endif
+
 @section('header')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+
     <h2>{{$project->name}} - Cost Summery Report</h2>
     <div class="pull-right">
-        {{--<a href="?print=1&paint=cost-dry-building" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>--}}
+        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+
         <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
+
 @endsection
 @section('body')
 
@@ -20,8 +24,8 @@
         <br>
     </div>
     <table class="table table-condensed">
-        <thead >
-        <tr style="border: 2px solid black;background: #8ed3d8;color: #000;" >
+        <thead>
+        <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
             <td></td>
             <td style="border: 2px solid black;text-align: center">Budget</td>
             <td colspan="3" style="border: 2px solid black;text-align: center">Previous</td>
@@ -47,7 +51,7 @@
         </thead>
         <tbody>
         @foreach($data as $key=>$value)
-            <tr >
+            <tr>
                 <td style="border: 2px solid black;text-align: left">{{$value['name']}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['budget_cost']??0,2) }}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_cost']??0,2)}}</td>
@@ -77,4 +81,98 @@
         </tr>
         </tbody>
     </table>
+    <div class="row">
+        <div id="chart" ></div>
+        <div id="chart2" ></div>
+    </div>
+@endsection
+
+@section('javascript')
+    <script>
+        var chart_data = {!! json_encode($at_comp_cost_var_chart)  !!};
+        var second_chart = {!! json_encode($to_date_cost_var_chart)  !!};
+        var data = {};
+        var sites = [];
+        var chart2 = {};
+        var types = [];
+
+        $.each(chart_data, function (e, value) {
+            sites.push(e);
+            data[e] = value.at_comp_cost_var
+        })
+        $.each(second_chart, function (e, value) {
+            types.push(e);
+            chart2[e] = value.to_date_cost_var
+        })
+
+        var chart = c3.generate({
+            bindto: '#chart',
+            data: {
+                json: [data],
+                keys: {value: sites},
+                type: 'bar',
+
+            },
+            bar: {
+                width: 100
+            },
+            interaction: {
+                enabled: true
+            },
+            axis: {
+                y: {
+                    label: {
+                        text: 'At Completion Variance',
+                        position: 'outer-middle',
+
+                    }
+                },
+                x: {
+                    label: {
+                        text: 'Resource Type',
+                        position: 'inner-top',
+                    },
+                    tick: {
+                        centered: true
+                    }
+
+                }
+
+            }
+
+        });
+
+        var chart = c3.generate({
+            bindto: '#chart2',
+            data: {
+                json: [chart2],
+                keys: {value: types},
+                type: 'bar',
+            },
+            bar: {
+                width:{ratio:1}
+            },
+            interaction: {
+                enabled: true
+            },
+            axis: {
+                y: {
+                    label: {
+                        text: 'To Date Cost Var',
+                        position: 'outer-middle',
+                    }
+                },
+                x: {
+                    label: {
+                        text: 'Resource Type',
+                        position: 'inner-top',
+                    }
+                }
+
+            }
+
+        });
+
+
+    </script>
 @endsection

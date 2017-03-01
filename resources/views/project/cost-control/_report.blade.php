@@ -25,7 +25,7 @@
             </th>
             <th class="col-xs-6">
                 <a href="{{route('cost_control.cost-summery',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
-                   style="width:100%; margin-bottom: 8px;">Cost Summery</a><br>
+                   style="width:100%; margin-bottom: 8px;">Cost Summary</a><br>
                 <a href="{{route('cost.standard_activity_report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Standard Activity</a><br>
                 <a href="{{route('cost.activity_report',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
