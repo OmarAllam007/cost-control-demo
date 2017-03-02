@@ -78,7 +78,7 @@ Route::group(['prefix' => 'project'], function () {
 
     Route::get('budget_cost_dry_cost/{project}', ['as' => 'budget_cost_dry_cost.report', 'uses' => 'ReportController@budgetCostVSDryCost']);
 
-    Route::get('budget_cost_vs_break_down/{project}', ['as' => 'budget_cost_vs_break_down.report', 'uses' => 'ReportController@budgetCostVSBreadDown']);
+    Route::get('budget_cost_vs_break_down/{project}', ['as' => 'budget_cost_vs_break_down.report', 'uses' => 'ReportController@budgetCostVSBreadD@own']);
 
     Route::get('budget_cost_by_discipline/{project}', ['as' => 'budget_cost_by_discipline.report', 'uses' => 'ReportController@budgetCostDiscipline']);
 
@@ -108,6 +108,7 @@ Route::group(['prefix' => 'project'], function () {
 
 
     Route::get('show_productivity_report/{project}',['as'=>'productivity-cost-show.modify','uses'=>'CostReportsController@productivityReport']);
+    Route::get('show_issues/{project}',['as'=>'show_issues.report','uses'=>'CostReportsController@issuesReport']);
 
 });
 Route::get('/download_trend/{id}/download', 'ProductivityController@downloadTrend');
@@ -183,5 +184,5 @@ Route::resource('productivity', 'ProductivityController');
 Route::resource('category', 'CategoryController');
 Route::resource('category', 'CategoryController');
 
-
+//comment
 

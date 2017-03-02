@@ -11,7 +11,9 @@ namespace App\Http\Controllers\Reports\CostReports;
 
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\CostConcerns;
 use App\CostShadow;
+use App\Http\Controllers\CostConcernsController;
 use App\Project;
 use App\ResourceType;
 
@@ -20,13 +22,19 @@ class CostSummery
 
     private $budget_cost;
     private $cost_data;
+    private $project;
 
     function getCostSummery(Project $project, $chosen_period_id)
     {
+        $this->project = $project;
         $this->budget_cost = collect();
         $this->cost_data = collect();
         $to_date_cost_var_chart = [];
         $at_comp_cost_var_chart = [];
+        $report_name = 'Cost Summary Report';
+
+        $concern = new CostConcernsController();
+        $concerns =$concern->getConcernReport($project,$report_name);
 
         collect(\DB::select('SELECT sh.resource_type_id  , t.name ,SUM(budget_cost) AS budget FROM break_down_resource_shadows sh , resource_types t
 WHERE sh.project_id=? AND t.id = sh.resource_type_id
@@ -126,6 +134,8 @@ GROUP BY sh.resource_type', [$project->id, $chosen_period_id]);
         }
         $data = collect($data)->sortBy('name');
         return view('reports.cost-control.cost_summery', compact('data', 'project', 'total', 'to_date_cost_var_chart'
-            , 'at_comp_cost_var_chart'));
+            , 'at_comp_cost_var_chart', 'report_name','concerns'));
     }
+
+
 }
