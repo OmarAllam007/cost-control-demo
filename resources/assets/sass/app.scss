@@ -390,9 +390,15 @@ body#iframe {
 
 .blue-third-level {
   background-color: #a9cbf1 !important;
-  color: brown;
+  color: brown !important;
+  text-decoration: none;
   font-weight: bold;
   padding:10px;}
+p.blue-third-level > a {
+  text-decoration: none;
+  color: black !important;
+}
+
 
 .blue-fourth-level {
   background-color: #ebebeb !important;

@@ -36,7 +36,6 @@
                                         <table class="table table-condensed">
                                             <thead>
                                             <tr class="tbl-children-division">
-
                                                 <th>Base Line</th>
                                                 <th>Previous Cost</th>
                                                 <th>Previous allowable</th>
@@ -47,6 +46,7 @@
                                                 <th>Remaining Cost</th>
                                                 <th>At Compeletion Cost</th>
                                                 <th>Cost Variance</th>
+                                                <th></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -61,6 +61,11 @@
                                                     <td>{{number_format($activity['remain_cost']??0,2)}}</td>
                                                     <td>{{number_format($activity['completion_cost']??0,2)}}</td>
                                                     <td>{{number_format($activity['cost_var']??0,2)}}</td>
+                                                   <td><a type="button" href="#" class="btn btn-primary btn-lg concern-btn"
+                                                       title="{{$activity['name']}}"
+                                                       data-json="{{json_encode($activity)}}">
+                                                        <i class="fa fa-pencil-square-o " aria-hidden="true"></i>
+                                                    </a></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -84,3 +89,28 @@
 
     </article>
 </li>
+
+<div class="modal" id="ConcernModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <form action="" class="modal-content">
+            {{csrf_field()}} {{method_field('post')}}
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title">Add Concern</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="message-text" class="control-label">Comment:</label>
+                    <textarea class="form-control" id="mytextarea"></textarea>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success apply_concern" data-dismiss="modal"><i class="fa fa-plus"></i>
+                        Add Concern
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

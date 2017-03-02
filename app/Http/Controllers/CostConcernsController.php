@@ -39,7 +39,16 @@ class CostConcernsController extends Controller
 
             }
         }
+        if ($report_name == 'Standard Activity') {
+            $concerns = CostConcerns::where('report_name', $report_name)->where('project_id', $project->id)->get();
+            foreach ($concerns as $concern) {
+                $name = json_decode($concern->data);
+                if (!isset($concerns_data[$name->name]['comments'][$concern->comment])) {
+                    $concerns_data[$name->name]['comments'][$concern->comment] = $concern->comment;
+                }
 
+            }
+        }
 
         return $concerns_data;
     }

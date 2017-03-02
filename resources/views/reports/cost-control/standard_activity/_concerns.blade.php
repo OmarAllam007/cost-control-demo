@@ -10,9 +10,8 @@
                 <table class="table table-condensed table-bordered">
                     <thead >
                     <tr class="bg-success">
-                        <td>Resource Type</td>
+                        <td>Activity</td>
                         <td style="">Comment</td>
-                        {{--<td style=""></td>--}}
                     </tr>
                     </thead>
                     <tbody>

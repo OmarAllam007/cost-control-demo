@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Reports\CostReports;
 use App\ActivityDivision;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
+use App\Http\Controllers\CostConcernsController;
 use App\Http\Controllers\Reports\Productivity;
 use App\Project;
 use App\ResourceType;
@@ -103,20 +104,24 @@ GROUP BY c.resource_id, activity_id', [$this->project->id, $chosen_period_id]))-
             return $this->resourcesActivity;
         });
 
+
         collect(\DB::select('SELECT resource_id ,  SUM(budget_cost) AS budget_cost FROM break_down_resource_shadows
 WHERE project_id=?
 GROUP BY resource_id', [$project->id]))->map(function ($resource) {
             $this->budgetData->put($resource->resource_id, $resource->budget_cost);
         });
+
         $activity_divisions_tree = ActivityDivision::tree()->get();
         $tree = [];
-
+        $report_name = 'Standard Activity';
+        $concern = new CostConcernsController();
+        $concerns = $concern->getConcernReport($project, $report_name);
 
         foreach ($activity_divisions_tree as $level) {
             $level_tree = $this->buildTree($level);
             $tree[] = $level_tree;
         }
-        return view('reports.cost-control.standard_activity.standard_acticity', compact('project', 'tree'));
+        return view('reports.cost-control.standard_activity.standard_acticity', compact('project', 'tree','concerns'));
 
     }
 
