@@ -138,7 +138,7 @@ class ProjectController extends Controller
         if ($request->has('name')) {
             $name = $request->get('name');
         } else {
-            $name = $project->name;
+            $name = 'Copy of ' . $project->name;
         }
 
         $id = $project->duplicate($name);
