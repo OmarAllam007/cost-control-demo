@@ -17,24 +17,26 @@ class ProjectInformation
     function getProjectInformation(Project $project)
     {
         $data=[];
-        $shadows = CostShadow::where('project_id',$project->id)->where('period_id','<',$project->open_period()->id)->groupBy('period_id')->select('period_id')->selectRaw('sum(to_date_cost) as todate_cost')->selectRaw('sum(allowable_ev_cost) as 
+        if($project->open_period()) {
+            $shadows = CostShadow::where('project_id', $project->id)->where('period_id', '<', $project->open_period()->id)
+                ->groupBy('period_id')->select('period_id')->selectRaw('sum(to_date_cost) as todate_cost')->selectRaw('sum(allowable_ev_cost) as 
         allowable_cost')
-        ->get();
-        foreach ($shadows as $shadow) {
-            if(!isset($data[$shadow->period_id])){
-                $data[$shadow->period_id] = [
-                    'actual_cost'=>0,
-                    'allowable_cost'=>0,
-                    'cpi'=>0,
-                    'cost_variance'=>0,
-                ];
-                $data[$shadow->period_id]['actual_cost']+=$shadow->todate_cost;
-                $data[$shadow->period_id]['allowable_cost']+=$shadow->allowable_cost;
+                ->get();
+            foreach ($shadows as $shadow) {
+                if (!isset($data[$shadow->period_id])) {
+                    $data[$shadow->period_id] = [
+                        'actual_cost' => 0,
+                        'allowable_cost' => 0,
+                        'cpi' => 0,
+                        'cost_variance' => 0,
+                    ];
+                    $data[$shadow->period_id]['actual_cost'] += $shadow->todate_cost;
+                    $data[$shadow->period_id]['allowable_cost'] += $shadow->allowable_cost;
+                }
+
             }
-
         }
-        return view('reports.cost-control.project_information', compact('project','data', 'allowable_cost', 'actual_cost'));
-
+        return view('reports.cost-control.project_information', compact('project', 'data', 'allowable_cost', 'actual_cost'));
     }
 
 }
