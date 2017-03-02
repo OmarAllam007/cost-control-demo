@@ -69,10 +69,10 @@
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['allowable_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['to_date_cost'],2) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="@if($cost_account['to_date_cost_var']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['remaining_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['at_comp'],2) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['at_comp_var'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="@if($cost_account['at_comp_var']<0) color: red; @endif">{{number_format($cost_account['at_comp_var'],2) ?? 0}}</td>
                                                             </tr>
 
                                                         @endforeach
