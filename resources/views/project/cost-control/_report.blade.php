@@ -17,7 +17,7 @@
                 <a href="{{route('cost-labor.import',$project)}}" target="_blank"
                    class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">Labor Trend Analysis</a><br>
-                <a href="#" target="_blank"
+                <a href="{{route('show_issues.report',$project)}}" target="_blank"
                    class="hvr-float-shadow btn btn-primary"
                    style="width:100%;margin-bottom: 8px;">Issues</a><br>
             </th>

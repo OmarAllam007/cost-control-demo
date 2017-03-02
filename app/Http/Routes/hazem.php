@@ -183,4 +183,4 @@ Route::get('/summary', function() {
     ])->get();
 });
 
-Route::post('/concern/{project}','CostConcernsController@addConcernCostReport');
+Route::post('/concern/{project}','CostConcernsController@addConcernReport');

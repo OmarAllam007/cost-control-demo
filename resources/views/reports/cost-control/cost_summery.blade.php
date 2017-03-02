@@ -5,14 +5,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
 
-    <h2 id="report_name">{{$project->name}} - Cost Summery Report</h2>
+    <h2 id="report_name">{{$project->name. '- Cost Summary Report'}}</h2>
+
     <div class="pull-right">
+        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">
+            <i class="fa fa-warning"></i> Concerns
+        </button>
+
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
 
-        <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
+        <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm"><i
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
-
 @endsection
 @section('body')
 
@@ -91,12 +95,18 @@
     </table>
 
     <input type="hidden" value="{{$project->id}}" id="project_id">
+
     <div class="row">
-        <div id="chart"></div>
-        <div id="chart2"></div>
+        <div class="col-md-6">
+            <div id="chart"></div>
+        </div>
+
+        <div class="col-md-6">
+            <div id="chart2"></div>
+        </div>
     </div>
 
-    <div class="modal fade" id="ConcernModal" tabindex="-1" role="dialog">
+    <div class="modal" id="ConcernModal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <form action="" class="modal-content">
                 {{csrf_field()}} {{method_field('post')}}
@@ -106,19 +116,24 @@
                 </div>
                 <div class="modal-body">
 
-                        <div class="form-group">
-                            <label for="message-text" class="control-label">Comment:</label>
-                            <textarea class="form-control" id="mytextarea"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-success apply_concern "><i class="fa fa-plus"></i> Add Concern
-                            </button>
-                        </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Comment:</label>
+                        <textarea class="form-control" id="mytextarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success apply_concern" data-dismiss="modal"><i class="fa fa-plus"></i>
+                            Add Concern
+                        </button>
+                    </div>
                 </div>
 
             </form>
         </div>
     </div>
+
+    @if(count($concerns))
+        @include('reports._cost_summery_concerns')
+    @endif
 @endsection
 
 @section('javascript')
@@ -147,10 +162,10 @@
                 type: 'bar',
             },
             bar: {
-                width: {ratio: 1}
+                width: {ratio: .5}
             },
-            interaction: {
-                enabled: true
+            transition: {
+                duration: 100
             },
             axis: {
                 y: {
@@ -183,7 +198,7 @@
                 type: 'bar',
             },
             bar: {
-                width: {ratio: 1}
+                width: {ratio: .5}
             },
             interaction: {
                 enabled: true
@@ -216,14 +231,18 @@
             $('.concern-btn').on('click', function (e) {
                 e.preventDefault();
                 var data = ($(this).attr('data-type'));
-                ConcernModal.modal();
-                $('.apply_concern').on('click', function (e) {
-                    e.preventDefault();
-                    var report_name = $('h2[id=report_name]').text();
-                    var body = $('#mytextarea').val();
+                ConcernModal.data('type', data).modal();
 
+            });
+
+            $('.apply_concern').on('click', function (e) {
+                e.preventDefault();
+                var report_name = 'Cost Summary Report';
+                var body = $('#mytextarea').val();
+                var data = ConcernModal.data('type');
+                if (body.length != 0) {
                     $.ajax({
-                        url: '/concern/'+project_id,
+                        url: '/concern/' + project_id,
                         method: 'POST',
                         data: {
                             _token: $('meta[name="csrf-token"]').attr('content'),
@@ -231,16 +250,13 @@
                             report_name: report_name,
                             comment: body,
                         },
-
                     }).success((e) => {
                         console.log('success')
-                    })
+                    });
                     ConcernModal.modal('hide');
-
-                    location.reload();
-                })
+//                    location.reload();
+                }
             })
-
 
         })
 
