@@ -11,7 +11,7 @@
             <strong>Uploaded at: </strong>{{$batch->created_at->format('d/m/Y H:i')}}
         </div>
         <div class="col-sm-4">
-            <strong><i class="fa fa-download"></i> <a href="{{$batch->file}}">Download</a></strong>
+            <strong><i class="fa fa-download"></i> <a href="{{'/actual-batches/' . $batch->id . '/download'}}">Download</a></strong>
         </div>
     </div>
 

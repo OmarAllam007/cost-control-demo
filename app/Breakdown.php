@@ -95,7 +95,7 @@ class Breakdown extends Model
                 } else {
                     $this->variables()->create([
                         'qty_survey_id' => $this->qty_survey->id,
-                        'name' => $variableNames[$index],
+                        'name' => $variableNames->get($index),
                         'value' => $value,
                         'display_order' => $index,
                     ]);
