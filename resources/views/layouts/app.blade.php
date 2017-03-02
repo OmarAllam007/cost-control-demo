@@ -8,7 +8,7 @@
 
     <title>{{config('app.name')}}</title>
     <link rel="stylesheet" href="{{asset('/css/app.css')}}">
-
+    @yield('css')
     @yield('head')
 </head>
 <body id="app-layout">
