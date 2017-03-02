@@ -21,7 +21,7 @@ class ExportSurveyJob extends Job
             return $level;
         });
 
-        $this->variables  = Survey::where('project_id',$project->id)->get()->keyBy('id')->map(function ($survey){
+        $this->variables  = Survey::with('variables')->where('project_id',$project->id)->get()->keyBy('id')->map(function ($survey){
            return $survey->variables;
         });
 
@@ -34,17 +34,11 @@ class ExportSurveyJob extends Job
     public function handle()
     {
         set_time_limit(600);
+        $project = $this->project;
 
 
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->setActiveSheetIndex(0);
-//        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Cost Account');
-//        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'WBS-Levels');
-//        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'WBS-Code');
-//        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Description');
-//        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Budget Quantity');
-//        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Engineer Quantity');
-//        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Unit');
         $col = 0;
         $rowCount = 2;
         $variable_number = 1;
@@ -80,7 +74,6 @@ class ExportSurveyJob extends Job
             $description = $quantity->description;
             $budget_qty = $quantity->budget_qty;
             $eng_qty = $quantity->eng_qty;
-
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $cost_account);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $wbs_levels);
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $wbs_code);
@@ -88,6 +81,7 @@ class ExportSurveyJob extends Job
             $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $budget_qty);
             $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $eng_qty);
             $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $this->units->get($quantity->unit_id));
+            $col++;
             if($this->variables->get($quantity->id)->count()){
                 foreach ($this->variables->get($quantity->id) as $variable){
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'$V-'.$variable_number);
@@ -101,10 +95,10 @@ class ExportSurveyJob extends Job
             $col = 6;
             $rowCount++;
         }
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - Quantity Survey.xlsx"');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$project->name.'- Survey.xls"');
         header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
     }
 }

@@ -71,7 +71,7 @@
                 <td>
                     <a type="button" href="#" class="btn btn-primary btn-lg concern-btn"
                        title="{{$value['name']}}"
-                       data-type="{{json_encode($value)}}">
+                       data-json="{{json_encode($value)}}">
                         <i class="fa fa-pencil-square-o " aria-hidden="true"></i>
                     </a>
                 </td>
@@ -230,8 +230,8 @@
 
             $('.concern-btn').on('click', function (e) {
                 e.preventDefault();
-                var data = ($(this).attr('data-type'));
-                ConcernModal.data('type', data).modal();
+                var data = ($(this).attr('data-json'));
+                ConcernModal.data('json', data).modal();
 
             });
 
@@ -239,7 +239,7 @@
                 e.preventDefault();
                 var report_name = 'Cost Summary Report';
                 var body = $('#mytextarea').val();
-                var data = ConcernModal.data('type');
+                var data = ConcernModal.data('json');
                 if (body.length != 0) {
                     $.ajax({
                         url: '/concern/' + project_id,

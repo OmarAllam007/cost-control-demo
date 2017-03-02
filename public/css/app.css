@@ -11091,9 +11091,15 @@ body#iframe .container-fluid {
 
 .blue-third-level {
   background-color: #a9cbf1 !important;
-  color: brown;
+  color: brown !important;
+  text-decoration: none;
   font-weight: bold;
   padding: 10px;
+}
+
+p.blue-third-level > a {
+  text-decoration: none;
+  color: black !important;
 }
 
 .blue-fourth-level {
@@ -11284,8 +11290,8 @@ table.collapse.in {
 }
 
 .names {
-  background: #625772;
-  color: white;
+  background: #cebce3;
+  color: black;
 }
 
 .blackBorder {

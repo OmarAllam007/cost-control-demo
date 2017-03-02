@@ -82,10 +82,16 @@ class ExportBoqJob extends Job
             $rowCount++;
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $project->name . ' - BOQ.xlsx"');
+//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//        header('Content-Disposition: attachment;filename="' ."');
+//        header('Cache-Control: max-age=0');
+//        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+//        $objWriter->save('php://output');
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$project->name.'- BOQ.xls"');
         header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel,'Excel5');
         $objWriter->save('php://output');
     }
 }

@@ -29,19 +29,19 @@
                                                 <div class="table-condensed table-responsive">
                                                     <table class="table">
                                                         <thead>
-                                                        <tr>
+                                                        <tr style="border: 2px solid black">
                                                             <td class="thirdGroup">Boq Item</td>
-                                                            <td class="thirdGroup">Item Description</td>
+                                                            <td class="thirdGroup" style="border-right: 2px solid black">Item Description</td>
                                                             <td class="firstGroup">Dry Unit / Price</td>
                                                             <td class="firstGroup">Boq Unit Price</td>
                                                             <td class="firstGroup">Budget Unit Rate</td>
                                                             <td class="firstGroup">Todate Unit Rate</td>
-                                                            <td class="firstGroup">Variance (Unit Rate)</td>
+                                                            <td class="firstGroup" style="border-right: 2px solid black">Variance (Unit Rate)</td>
                                                             <td class="secondGroup">Boq Qty</td>
                                                             <td class="secondGroup">Budget Qty</td>
                                                             <td class="secondGroup">Physical Qty</td>
                                                             <td class="secondGroup">Dry Cost</td>
-                                                            <td class="secondGroup">BOQ Cost</td>
+                                                            <td class="secondGroup" style="border-right: 2px solid black">BOQ Cost</td>
                                                             <td class="names">Budget Cost</td>
                                                             <td class="names">Allowable Cost</td>
                                                             <td class="names">Todate Cost</td>
@@ -53,26 +53,26 @@
                                                         </thead>
                                                         <tbody>
                                                         @foreach(collect($division['cost_accounts'])->sortBy('cost_account') as $key=>$cost_account)
-                                                            <tr >
+                                                            <tr style="border: 2px solid black">
                                                                 <td class="cell-borders">{{$key}} </td>
-                                                                <td class="cell-borders">{{$cost_account['description']}} </td>
+                                                                <td class="cell-borders" style="border-right: 2px solid black">{{$cost_account['description']}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['dry'],2) ?? 0}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['unit_price'],2) ?? 0}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_unit_rate'],2) ?? 0}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['todate_budget_unit_rate'],2) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['var_unit_rate'],2 ?? 0)}}</td>
+                                                                <td class="cell-borders" style="border-right: 2px solid black ; @if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['var_unit_rate'],2 ?? 0)}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['quantity'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_qty'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_unit_rate']!=0?$cost_account['to_date_cost']/$cost_account['budget_unit_rate']:0,2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['dry_cost'],2) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['boq_cost'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="border-right: 2px solid black">{{number_format($cost_account['boq_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['allowable_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['to_date_cost'],2) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="@if($cost_account['to_date_cost_var']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['remaining_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['at_comp'],2) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['at_comp_var'],2) ?? 0}}</td>
+                                                                <td class="cell-borders" style="@if($cost_account['at_comp_var']<0) color: red; @endif">{{number_format($cost_account['at_comp_var'],2) ?? 0}}</td>
                                                             </tr>
 
                                                         @endforeach
