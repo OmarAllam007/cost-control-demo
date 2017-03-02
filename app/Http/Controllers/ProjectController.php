@@ -14,9 +14,9 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::paginate();
+        $projectGroups = Project::orderBy('client_name')->get()->groupBy('client_name');
 
-        return view('project.index', compact('projects'));
+        return view('project.index', compact('projectGroups'));
     }
 
     public function create()
