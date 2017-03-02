@@ -175,6 +175,7 @@ Route::get('/actual-batches/{actual_batch}', 'ActualBatchesController@show');
 Route::get('/actual-batches/{actual_batch}/download', 'ActualBatchesController@download');
 
 Route::get('/blank', 'BlankController@index');
+Route::get('dashboard', 'DashboardController@index');
 
 Route::get('/summary', function() {
     return App\CostShadow::joinBudget('budget.resource_type')->sumFields([

@@ -225,7 +225,7 @@ trait CostAttributes
         if ($this->boq_equivilant_rate == 0) {
             return 0;
         }
-
+// change to use budget unit rate
         return $this->to_date_cost / $this->boq_equivilant_rate;
     }
 

@@ -193,6 +193,11 @@ class BreakdownResource extends Model
         return $this->budget_cost / $this->eng_qty;
     }
 
+    function getBudgetUnitRateAttribute()
+    {
+        // Sum BoqUnitRate on all resource for the cost account on WBS
+    }
+
 //    function getOriginalResourceIdAttribute()
 //    {
 //        if ($this->original_resource == 0) {
