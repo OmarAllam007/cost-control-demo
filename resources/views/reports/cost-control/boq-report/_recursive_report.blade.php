@@ -26,8 +26,8 @@
                                     @if($division['cost_accounts'])
                                         <ul class="tree list-unstyled">
                                             <li>
-                                                <article class="tree--child">
-                                                    <table class="table table-condensed">
+                                                <div class="table-condensed table-responsive">
+                                                    <table class="table">
                                                         <thead>
                                                         <tr>
                                                             <td class="thirdGroup">Boq Item</td>
@@ -78,7 +78,7 @@
                                                         @endforeach
                                                         </tbody>
                                                     </table>
-                                                </article>
+                                                </div>
                                             </li>
                                         </ul>
                                     @endif
