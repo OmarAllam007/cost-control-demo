@@ -207,13 +207,13 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                             $budget_cost = $this->budget_data->get($child . $activity . $key)['budget_cost'];
                             $budget_unit = $this->budget_data->get($child . $activity . $key)['budget_unit'];
                             $budget_qty = $this->budget_data->get($child . $activity . $key)['budget_qty'];
-                            $physical_unit = $this->cost_data->get($child . $activity . $key)['physical_unit'];
                             $to_date_cost = $this->cost_data->get($child . $activity . $key)['to_date_cost'];
                             $allowable_ev_cost = $this->cost_data->get($child . $activity . $key)['allowable_ev_cost'];
                             $to_date_cost_var = $this->cost_data->get($child . $activity . $key)['to_date_cost_var'];
                             $remaining_cost = $this->cost_data->get($child . $activity . $key)['remaining_cost'];
                             $completion_cost = $this->cost_data->get($child . $activity . $key)['completion_cost'];
                             $completion_cost_var = $this->cost_data->get($child . $activity . $key)['cost_var'];
+                            $physical_unit = $this->cost_data->get($child . $activity . $key)['physical_unit'];
                             $todate_budget_unit_rate = $physical_unit != 0 ? ($to_date_cost / $physical_unit) : $budget_unit_rate;
                             if (!isset($tree['division'][$division->id]['cost_accounts'][$key])) {
                                 $tree['division'][$division->id]['cost_accounts'][$key] = [
@@ -237,6 +237,7 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                                     'dry_cost' => $quantity*$dry,
                                     'boq_cost' => $quantity*$price_ur,
                                     'budget_qty' => 0,
+                                    'sum_budget_unit_rate'=>0
                                 ];
 
                             }
@@ -244,7 +245,8 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                             $tree['division'][$division->id]['cost_accounts'][$key]['todate_budget_unit_rate']=$todate_budget_unit_rate;
                             $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit']+=$budget_unit;
                             $tree['division'][$division->id]['cost_accounts'][$key]['budget_cost']+=$budget_cost;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['physical_unit']+=$physical_unit;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['sum_budget_unit_rate']+=$budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['physical_unit']=$budget_unit_rate!=0? $to_date_cost/$budget_unit_rate :0;
                             $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost']+=$to_date_cost;
                             $tree['division'][$division->id]['cost_accounts'][$key]['allowable_cost']+=$allowable_ev_cost;
                             $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost_var']+=$to_date_cost_var;

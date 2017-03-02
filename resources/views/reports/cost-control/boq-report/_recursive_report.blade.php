@@ -63,7 +63,7 @@
                                                                 <td class="cell-borders" style="@if($cost_account['var_unit_rate']<0) color: red; @endif">{{number_format($cost_account['var_unit_rate'],2 ?? 0)}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['quantity'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_qty'],2) ?? 0}}</td>
-                                                                <td class="cell-borders">{{number_format($cost_account['physical_unit'],2) ?? 0}}</td>
+                                                                <td class="cell-borders">{{number_format($cost_account['budget_unit_rate']!=0?$cost_account['to_date_cost']/$cost_account['budget_unit_rate']:0,2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['dry_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['boq_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_cost'],2) ?? 0}}</td>
