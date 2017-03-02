@@ -4,6 +4,7 @@ namespace App;
 
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasOptions;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -30,6 +31,13 @@ class BreakdownTemplate extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function scopePublic(Builder $query)
+    {
+        return $query->where(function (Builder $q){
+            $q->whereNull('project_id')->orWhere('project_id', 0);
+        });
     }
 
     public function morphToJSON(){

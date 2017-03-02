@@ -52,7 +52,7 @@
             @endcan
         </div>
 
-        @if ($std_activity->breakdowns->count())
+        @if ($std_activity->breakdowns()->public()->count())
             <table class="table table-condensed table-hover table-striped">
                 <thead>
                 <tr>
@@ -62,7 +62,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($std_activity->breakdowns as $breakdown)
+                @foreach($std_activity->breakdowns()->public()->get() as $breakdown)
                     <tr>
                         <td>{{$breakdown->code}}</td>
                         <td>{{$breakdown->name}}</td>
