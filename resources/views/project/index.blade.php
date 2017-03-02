@@ -92,6 +92,7 @@
             var deleteModal = $('#DeleteProjectModal');
             var deleteForm = deleteModal.find('form');
             var title = deleteForm.find('.modal-title');
+            var data = 0;
 
             $('.delete-btn').on('click', function (e) {
                 e.preventDefault();
