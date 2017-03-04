@@ -223,7 +223,7 @@ trait CostAttributes
 
     function getPhysicalUnitAttribute()
     {
-        if ($this->boq_equivilant_rate == 0) {
+        if ($this->budget_unit_rate == 0) {
             return 0;
         }
 // change to use budget unit rate
