@@ -168,11 +168,11 @@ trait CostAttributes
 
     function getCompletionCostAttribute()
     {
-        if (isset($this->calculated['completion_unit_price'])) {
-            return $this->calculated['completion_unit_price'];
+        if (isset($this->calculated['completion_cost'])) {
+            return $this->calculated['completion_cost'];
         }
 
-        return $this->calculated['completion_unit_price'] = $this->remaining_cost + $this->to_date_cost;
+        return $this->calculated['completion_cost'] = $this->remaining_cost + $this->to_date_cost;
     }
 
     function getCompletionQtyAttribute()
