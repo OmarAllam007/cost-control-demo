@@ -62,15 +62,18 @@ GROUP BY 1, 2, 3, 4, 5', $resource);
             $data['prev_cost'] = $previousData['prev_cost'];
             $data['prev_unit_price'] = $previousData['prev_unit_price'];
 
+            dd($data);
+
             $data['to_date_qty'] = $data['curr_qty'] + $previousData['prev_qty'];
             $data['to_date_cost'] = $data['curr_cost'] + $previousData['prev_cost'];
             if ($data['to_date_qty']) {
-                $data['to_date_unit_price'] = $data['to_date_cost'] + $data['to_date_qty'];
+                $data['to_date_unit_price'] = $data['to_date_cost'] / $data['to_date_unit_price'];
             } else {
                 $data['to_date_unit_price'] = 0;
             }
 
             $shadow = BreakDownResourceShadow::where('breakdown_resource_id', $resource['breakdown_resource_id'])->first();
+            /** @var $shadow BreakDownResourceShadow */
             $data = array_merge($data, $shadow->toArray());
 
 
