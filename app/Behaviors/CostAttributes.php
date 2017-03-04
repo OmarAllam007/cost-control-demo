@@ -9,6 +9,7 @@
 namespace App\Behaviors;
 
 
+use App\BreakDownResourceShadow;
 use App\CostResource;
 use App\StdActivity;
 
@@ -72,7 +73,7 @@ trait CostAttributes
 
         $activity = StdActivity::find($this->activity_id);
         if ($activity->isGeneral()) {
-            return $this->calculated['allowable_ev_cost'] = $this->progress_val * $this->budget_cost;
+            return $this->calculated['allowable_ev_cost'] = $this->progress_value * $this->budget_cost;
         }
 
         if ($this->progress_value == 1 || $this->to_date_cost > $this->budget_cost || $this->to_date_qty > $this->budget_unit) {
@@ -167,11 +168,11 @@ trait CostAttributes
 
     function getCompletionCostAttribute()
     {
-        if (isset($this->calculated['completion_unit_price'])) {
-            return $this->calculated['completion_unit_price'];
+        if (isset($this->calculated['completion_cost'])) {
+            return $this->calculated['completion_cost'];
         }
 
-        return $this->calculated['completion_unit_price'] = $this->remaining_cost + $this->to_date_cost;
+        return $this->calculated['completion_cost'] = $this->remaining_cost + $this->to_date_cost;
     }
 
     function getCompletionQtyAttribute()
@@ -222,11 +223,11 @@ trait CostAttributes
 
     function getPhysicalUnitAttribute()
     {
-        if ($this->boq_equivilant_rate == 0) {
+        if ($this->budget_unit_rate == 0) {
             return 0;
         }
 // change to use budget unit rate
-        return $this->to_date_cost / $this->boq_equivilant_rate;
+        return $this->to_date_cost / $this->budget_unit_rate;
     }
 
     function getPwIndexAttribute()
@@ -297,6 +298,18 @@ trait CostAttributes
         return $this->calculated['cost_variance_to_date_due_qty'] = $this->unit_price * ($this->allowable_qty - $this->to_date_qty);
     }
 
+    function getBudgetUnitRateAttribute()
+    {
+        // Sum BoqUnitRate on all resource for the cost account on WBS
+        if (isset($this->calculated['budget_unit_rate'])) {
+            return $this->calculated['budget_unit_rate'];
+        }
+
+        return $this->calculated['budget_unit_rate'] = BreakDownResourceShadow::where([
+            'cost_account' => $this->cost_account, 'wbs_id' => $this->wbs_id
+        ])->sum('boq_equivilant_rate');
+    }
+
     function getProgressValueAttribute()
     {
         if (strtolower($this->status) == 'closed') {
@@ -312,7 +325,7 @@ trait CostAttributes
             'to_date_qty', 'to_date_cost', 'to_date_unit_price', 'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var', 'remaining_qty', 'remaining_cost',
             'remaining_unit_price', 'completion_cost', 'completion_qty', 'completion_unit_price', 'unit_price_var', 'qty_var', 'cost_var', 'physical_unit', 'pw_index', 'allowable_qty',
             'cost_variance_to_date_due_unit_price', 'cost_variance_remaining_due_unit_price', 'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty',
-            'cost_variance_to_date_due_qty'
+            'cost_variance_to_date_due_qty', 'budget_unit_rate'
         ];
     }
 

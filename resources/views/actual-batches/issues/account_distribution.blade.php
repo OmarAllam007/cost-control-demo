@@ -1,8 +1,8 @@
-@php
-    $data = json_decode($issue->data, true);
-@endphp
-
 @if (false && $data)
+    @php
+        $data = json_decode($issue->data, true);
+    @endphp
+
     <article class="panel panel-warning">
         <div class="panel-heading">
             <h4 class="panel-title">Multiple Cost Account</h4>

@@ -40,9 +40,6 @@ class ModifyPublicResourcesJob extends ImportJob
 
     public function handle()
     {
-        set_time_limit(300);
-        ini_set('memory_limit', '512m');
-
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
 

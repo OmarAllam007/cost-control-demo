@@ -14,7 +14,7 @@
             <table class="table table-striped table-hover table-condensed">
                 <thead>
                 <tr>
-                    <th class="col-md-8">Activity</th>.
+                    <th class="col-md-8">Activity</th>
                     <th>
                         <div class="pull-right">
                             Actions
