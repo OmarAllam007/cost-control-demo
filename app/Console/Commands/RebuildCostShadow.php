@@ -62,8 +62,6 @@ GROUP BY 1, 2, 3, 4, 5', $resource);
             $data['prev_cost'] = $previousData['prev_cost'];
             $data['prev_unit_price'] = $previousData['prev_unit_price'];
 
-            dd($data);
-
             $data['to_date_qty'] = $data['curr_qty'] + $previousData['prev_qty'];
             $data['to_date_cost'] = $data['curr_cost'] + $previousData['prev_cost'];
             if ($data['to_date_qty']) {
