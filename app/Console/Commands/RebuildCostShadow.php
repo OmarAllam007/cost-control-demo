@@ -17,11 +17,11 @@ class RebuildCostShadow extends Command
 
     public function handle()
     {
-        $resources = \DB::select('SELECT DISTINCT breakdown_resource_id, period_id FROM actual_resources where period_id in (1, 2)');
-        $bar = $this->output->createProgressBar(count($resources));
+        $resources = ActualResources::get(['breakdown_resource_id', 'period_id']);
+        $bar = $this->output->createProgressBar($resources->count());
         $bar->setBarWidth(80);
 
-        CostShadow::whereIn('period_id', [1, 2])->delete();
+        CostShadow::truncate();
 
         WbsResource::unguard();
 
@@ -36,8 +36,8 @@ class RebuildCostShadow extends Command
         ];
 
         foreach ($resources as $resource) {
-            $resource = (array) $resource;
-            $data = \Db::select('
+            $resource = $resource->toArray();
+            $data = \DB::select('
 SELECT project_id, wbs_level_id, breakdown_resource_id, period_id, resource_id, 
   sum(qty) AS curr_qty, sum(cost) AS curr_cost, CASE WHEN sum(qty) != 0 THEN sum(cost) / sum(qty) ELSE 0 END AS curr_unit_price
 FROM actual_resources 
@@ -45,7 +45,7 @@ WHERE breakdown_resource_id = :breakdown_resource_id AND period_id = :period_id
 GROUP BY 1, 2, 3, 4, 5', $resource);
             $data = (array) $data[0];
 
-            $previousData = \Db::select('
+            $previousData = \DB::select('
 SELECT project_id, wbs_level_id, breakdown_resource_id, period_id, resource_id, 
 sum(qty) AS prev_qty, sum(cost) AS prev_cost, CASE WHEN sum(qty) != 0 THEN sum(cost) / sum(qty) ELSE 0 END AS prev_unit_price
 FROM actual_resources 
