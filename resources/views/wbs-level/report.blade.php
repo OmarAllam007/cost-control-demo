@@ -23,10 +23,6 @@
     </div>
 @endsection
 
-@section('image')
-    <img src="{{asset('images/reports/wbs-level.jpg')}}">
-@endsection
-
 @section('body')
     @php
         $depthTree = $project->tree_depth+1;
