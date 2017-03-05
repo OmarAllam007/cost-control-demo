@@ -50,7 +50,7 @@ class ImportActivityMapsJob extends ImportJob
             }
 
             $code = strtolower(trim($data[0]));
-            if ($this->codes->search($code) && $data[1]) {
+            if ($this->codes->search($code) !== false && $data[1]) {
                 ActivityMap::updateOrCreate([
                     'project_id' => $this->project->id, 'activity_code' => $data[0], 'equiv_code' => $data[1]
                 ]);
