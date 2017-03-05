@@ -85,7 +85,6 @@ class ActivityMapController extends Controller
 
         $data = request('mapping');
         foreach ($data as $key => $value) {
-            dd($value);
             if ($value) {
                 ActivityMap::updateOrCreate([
                     'project_id' => $project->id, 'activity_code' => $value, 'equiv_code' => $key
