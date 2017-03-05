@@ -159,7 +159,7 @@ class CostImportFixer
 
                     $newRow = [
                         $resource->code, $date, $resource->resource_name, $resource->measure_unit,
-                        $qty, $unit_price, $total, $resource->resource_code, $error[8],
+                        $qty, $unit_price, $total, $resource->resource_code, $error[8] ?? '',
                         'resource' => $resource
                     ];
 
