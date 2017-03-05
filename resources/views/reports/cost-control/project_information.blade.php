@@ -11,6 +11,9 @@
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
     <style>
+        #main-panel{
+            padding: 15px;
+        }
         table {
             font-size: 16px;
         }
@@ -24,11 +27,11 @@
     <div class="row">
         <div class="panel panel-primary ">
             <div class="panel-heading">
-                <h2 class="panel-title" style="font-size: x-large">Project Milestones</h2>
+                <h2 class="panel-title" style="font-size: x-large"><a href="#miles" data-toggle="collapse">Project Milestones</a></h2>
             </div>
-            <div class="panel-body">
+            <div class="panel-body collapse" id="miles" >
                 <br>
-                <table class="table table-bordered ">
+                <table class="table table-bordered " >
                     <thead>
                     <tr class="danger">
                         <th>Project Cost Center</th>
@@ -63,9 +66,9 @@
     <div class="row">
         <div class="panel panel-warning ">
             <div class="panel-heading">
-                <h2 class="panel-title" style="font-size: x-large">Project Cost Information</h2>
+                <h2 class="panel-title" style="font-size: x-large"><a href="#info" data-toggle="collapse">Project Cost Information</a></h2>
             </div>
-            <div class="panel-body">
+            <div class="panel-body collapse" id="info">
                 <br>
                 <h2>Project Value: </h2>
 
@@ -138,9 +141,9 @@
     <div class="row">
         <div class="panel panel-primary ">
             <div class="panel-heading">
-                <h2 class="panel-title" style="font-size: x-large">Project Cost Performance</h2>
+                <h2 class="panel-title" style="font-size: x-large"><a href="#perf" data-toggle="collapse">Project Cost Performance</a></h2>
             </div>
-            <div class="panel-body">
+            <div class="panel-body collapse" id="perf">
                 <br>
                 <table class="table table-bordered">
                     <thead>
@@ -164,7 +167,7 @@
                 </table>
             </div>
         </div>
-    </div>>
+    </div>
 
 
 
