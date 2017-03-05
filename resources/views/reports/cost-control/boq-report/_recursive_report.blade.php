@@ -30,8 +30,8 @@
                                                     <table class="table">
                                                         <thead>
                                                         <tr style="border: 2px solid black">
-                                                            <td class="thirdGroup">Boq Item</td>
-                                                            <td class="thirdGroup" style="border-right: 2px solid black">Item Description</td>
+                                                            <td class="thirdGroup" style="border-right: 2px solid black">Boq Item</td>
+                                                            <td class="thirdGroup col-md-4"  style="border-right: 2px solid black">Item Description</td>
                                                             <td class="firstGroup">Dry Unit / Price</td>
                                                             <td class="firstGroup">Boq Unit Price</td>
                                                             <td class="firstGroup">Budget Unit Rate</td>
@@ -54,8 +54,8 @@
                                                         <tbody>
                                                         @foreach(collect($division['cost_accounts'])->sortBy('cost_account') as $key=>$cost_account)
                                                             <tr style="border: 2px solid black">
-                                                                <td class="cell-borders">{{$key}} </td>
-                                                                <td class="cell-borders" style="border-right: 2px solid black">{{$cost_account['description']}} </td>
+                                                                <td class="cell-borders" style="border-right: 2px solid black">{{$key}} </td>
+                                                                <td class="cell-borders col-md-4" style="border-right: 2px solid black">{{$cost_account['description']}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['dry'],2) ?? 0}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['unit_price'],2) ?? 0}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_unit_rate'],2) ?? 0}} </td>

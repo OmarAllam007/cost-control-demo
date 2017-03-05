@@ -15,10 +15,10 @@ $text-color: #444;
 }
 
 @media print {
-
+  
   @page {
     size: A4;
-    margin: 8px;
+    margin: 4px;
     padding: 5px;
   }
   thead {
@@ -150,6 +150,18 @@ $text-color: #444;
 
   }
 
+  div.pull-right > a, button {
+    display: none;
+  }
+  div.pull-right button {
+    display: none;
+  }
+  form {
+    display: none;
+  }
+  table > tbody > tr > td > a {
+    display: none;
+  }
 }
 
 table.table > thead.output-cell > tr > th {
@@ -172,33 +184,32 @@ table.table > tbody > tr > td > a.visible-button {
   background-color: #366092 !important;
 }
 
-
-
 .blue-first-level {
   background-color: #366092 !important;
   color: white;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .blue-second-level {
   background-color: #95b3d8 !important;
   color: white;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .blue-third-level {
   background-color: #a9cbf3 !important;
   color: black;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
+
 .blue-fourth-level {
   background-color: #d8d8d8 !important;
   color: black;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .tbl-header {
@@ -250,11 +261,3 @@ table.table > tbody > tr > td > a.visible-button {
   color: black;
   background-color: #e7f1fc !important;
 }
-
-@media print{
-  div.pull-right > a {
-    display: none;
-  }
-}
-
-//todo expand collapse in printing

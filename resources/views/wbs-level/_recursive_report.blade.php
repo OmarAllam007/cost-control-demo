@@ -34,8 +34,8 @@
 
     >
 
-        {{$wbs_level['name']}}
-        <small class="text-muted @if($tree_level==0)wbs-code @else '' @endif">({{$wbs_level['code']}})
+        {{$wbs_level['name']}} -
+        <small class=" @if($tree_level==0)wbs-code @else '' @endif">({{$wbs_level['code']}})
         </small>
     </td>
 

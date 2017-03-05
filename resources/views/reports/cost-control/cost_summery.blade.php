@@ -8,9 +8,9 @@
     <h2 id="report_name">{{$project->name. '- Cost Summary Report'}}</h2>
 
     <div class="pull-right">
-        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">
-            <i class="fa fa-warning"></i> Concerns
-        </button>
+        {{--<a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">--}}
+            {{--<i class="fa fa-warning"></i> Concerns--}}
+        {{--</a>--}}
 
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
 
@@ -20,8 +20,8 @@
 @endsection
 @section('body')
 
-    <div class="col col-md-8">
-        <form action="{{route('cost_control.cost-summery',$project)}}" class="form-inline" method="get">
+    <div class="col col-md-8 form-inline">
+        <form action="{{route('cost_control.cost-summery',$project)}}" method="get">
             {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') , null, ['placeholder' => 'Choose a Period','class'=>'form-control'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
@@ -49,7 +49,7 @@
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Remaining Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost Variance</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Concern</th>
+            {{--<th class="col-xs-1" style="border: 2px solid black;text-align: center">Concern</th>--}}
 
         </tr>
 
@@ -68,13 +68,13 @@
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['remaining_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($value['completion_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center; @if($value['cost_var']<0) color: red; @endif">{{number_format($value['cost_var']??0,2)}}</td>
-                <td>
-                    <a type="button" href="#" class="btn btn-primary btn-lg concern-btn"
-                       title="{{$value['name']}}"
-                       data-json="{{json_encode($value)}}">
-                        <i class="fa fa-pencil-square-o " aria-hidden="true"></i>
-                    </a>
-                </td>
+                {{--<td>--}}
+                    {{--<a  href="#" class="btn btn-primary btn-lg concern-btn"--}}
+                       {{--title="{{$value['name']}}"--}}
+                       {{--data-json="{{json_encode($value)}}">--}}
+                        {{--<i class="fa fa-pencil-square-o " aria-hidden="true"></i>--}}
+                    {{--</a>--}}
+                {{--</td>--}}
             </tr>
         @endforeach
         <tr style="background: #F0FFF3">
