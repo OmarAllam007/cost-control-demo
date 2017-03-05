@@ -21,6 +21,8 @@
             <tr>
                 <td>Base Line</td>
                 <td>Previous Cost</td>
+                <td>Previous Allowable</td>
+                <td>Previous Var</td>
                 <td>To Date Cost</td>
                 <td>Allawable (EV) Cost</td>
                 <td>Remaining Cost</td>
@@ -33,6 +35,8 @@
             <tr>
                 <td>{{number_format($level['data']['budget_cost'],2)}}</td>
                 <td>{{number_format($level['data']['prev_cost'],2)}}</td>
+                <td>{{number_format($level['data']['prev_allowable'],2)}}</td>
+                <td>{{number_format($level['data']['prev_var'],2)}}</td>
                 <td>{{number_format($level['data']['to_date_cost'],2)}}</td>
                 <td>{{number_format($level['data']['allowable_cost'],2)}}</td>
                 <td>{{number_format($level['data']['remain_cost'],2)}}</td>
@@ -57,6 +61,8 @@
                             <td>Activity</td>
                             <td>Base Line</td>
                             <td>Previous Cost</td>
+                            <td>Previous Allowable</td>
+                            <td>Previous Var</td>
                             <td>To Date Cost</td>
                             <td>Allawable (EV) Cost</td>
                             <td>Remaining Cost</td>
@@ -71,6 +77,8 @@
                             <td>{{$activity['activity_name']}}</td>
                             <td>{{number_format($activity['budget_cost'],2)}}</td>
                             <td>{{number_format($activity['prev_cost'],2)}}</td>
+                            <td>{{number_format($activity['prev_allowable'],2)}}</td>
+                            <td>{{number_format($activity['prev_var'],2)}}</td>
                             <td>{{number_format($activity['to_date_cost'],2)}}</td>
                             <td>{{number_format($activity['allowable_cost'],2)}}</td>
                             <td>{{number_format($activity['remain_cost'],2)}}</td>
