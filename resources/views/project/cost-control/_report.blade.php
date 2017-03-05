@@ -18,7 +18,7 @@
                    class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">Labor Trend Analysis</a><br>
                 <a href="{{route('cost.variance',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Variance Analysis</a><br>
+                   class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Issues</a><br>
 
                 {{--<a href="{{route('show_issues.report',$project)}}" target="_blank"--}}
                    {{--class="hvr-float-shadow btn btn-primary"--}}
@@ -44,12 +44,6 @@
                 </a>
 
 
-            </th>
-            <th class="col-xs-12">
-            <a href="{{route('productivity-report.import',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
-               style="width:100%;margin-bottom: 8px;">Productivity
-            </a><br>
-            </th>
         </tr>
         </thead>
     </table>
