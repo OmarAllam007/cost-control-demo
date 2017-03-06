@@ -6,7 +6,9 @@ use App\Filter\StdActivityFilter;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\ActivityImportJob;
 use App\Jobs\Export\ExportStdActivitiesJob;
+use App\Jobs\Export\Reports\Budget\ExportStdActivity;
 use App\Jobs\Modify\ModifyPublicStdActivitiesJob;
+use App\Project;
 use App\StdActivity;
 use Illuminate\Http\Request;
 
@@ -204,5 +206,9 @@ class StdActivityController extends Controller
     function dublicateActivity()
     {
         return view('std-activity.dublicated');
+    }
+
+    function exportStdActivityBudgetReport(Project $project){
+        $this->dispatch(new ExportStdActivity($project));
     }
 }

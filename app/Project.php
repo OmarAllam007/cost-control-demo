@@ -120,7 +120,7 @@ class Project extends Model
 
     function getDivisions()
     {
-        $divisions = $this->breakdowns()->with('wbs_level.parent', 'wbs_level.parent.parent', 'std_activity.division')->get()->pluck('std_activity.division');
+        $divisions = $this->breakdowns()->with('wbs_level.parent', 'wbs_level.parent.parent','wbs_level.parent.parent.parent', 'std_activity.division')->get()->pluck('std_activity.division');
         $all = collect();
         $parents = collect();
         foreach ($divisions as $division) {

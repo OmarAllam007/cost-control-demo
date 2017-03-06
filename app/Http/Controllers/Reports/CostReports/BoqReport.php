@@ -81,7 +81,6 @@ GROUP BY cost_account,wbs_id,activity_id , budget_qty', [$project->id]))->map(fu
                 ['boq_equivilant_rate' => $shadow->boq_equivilant_rate, 'budget_cost' => $shadow->budget_cost,
                     'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_qty!=0 ?($shadow->budget_cost/$shadow->budget_qty) : 0, 'budget_qty' => $shadow->budget_qty]);
         });
-//        dd($this->budget_data['9702328710.1.1']);
         //end
 
 

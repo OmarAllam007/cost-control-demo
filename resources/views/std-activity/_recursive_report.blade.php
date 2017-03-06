@@ -21,7 +21,7 @@
             </ul>
         @endif
 
-        @if ($division->activities()->whereIn('id',$activity_ids)->get()&& $division->activities()->whereIn('id',$activity_ids)->count())
+        @if ($division->activities()->whereIn('id',$activity_ids)->get() && $division->activities()->whereIn('id',$activity_ids)->count())
             <table class="table table-condensed">
 
                 <tbody>
