@@ -30,6 +30,7 @@ class ExportStdActivity extends Job
 
     public function handle()
     {
+
         $div_ids = $this->project->getDivisions();
         $activity_ids = $this->project->getActivities()->toArray();
         $all = $div_ids['all'];
