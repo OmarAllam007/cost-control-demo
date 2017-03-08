@@ -26,10 +26,10 @@
             </div>
 
             <div class="col-sm-4">
-                <div class="form-group {{$errors->first('allowable_qty', 'has-error')}}">
-                    {{Form::label('allowable_qty', 'Allowable Qty', ['class' => 'control-label'])}}
-                    {{Form::text('allowable_qty', null, ['class' => 'form-control', 'id' => 'RemainingCost'])}}
-                    {!! $errors->first('allowable_qty', '<div class="help-block">:message</div>') !!}
+                <div class="form-group {{$errors->first('allowable_ev_cost', 'has-error')}}">
+                    {{Form::label('allowable_ev_cost', 'Allowable To Date', ['class' => 'control-label', 'for' => 'AllowableEvCost'])}}
+                    {{Form::text('allowable_ev_cost', null, ['class' => 'form-control', 'id' => 'AllowableEvCost'])}}
+                    {!! $errors->first('allowable_ev_cost', '<div class="help-block">:message</div>') !!}
                 </div>
             </div>
         </div>

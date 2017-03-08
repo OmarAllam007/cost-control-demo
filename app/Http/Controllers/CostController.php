@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CostShadow;
 use App\Jobs\ImportOldDatasheet;
 use App\Project;
+use App\Support\CostShadowCalculator;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
@@ -28,12 +29,16 @@ class CostController extends Controller
         }
 
         $this->validate($request, [
-            'remaining_qty' => 'required|numeric|gte:0', 'remaining_unit_price' => 'required|numeric|gte:0', 'allowable_qty' => 'required|numeric|gte:0',
+            'remaining_qty' => 'required|numeric|gte:0', 'remaining_unit_price' => 'required|numeric|gte:0',
+            'allowable_ev_cost' => 'required|numeric|gte:0',
             'progress' => 'numeric|gt:0|lte:100'
         ]);
 
-        $cost_shadow->update($request->all());
-        $cost_shadow->budget->update($request->get('budget'));
+        $cost_shadow->update($request->only(['remaining_qty', 'remaining_unit_price', 'allowable_ev_cost']));
+        $cost_shadow->budget->update(['progress' => $request->get('budget.progress'), 'status' => $request->get('budget.status')]);
+
+        $calculator = new CostShadowCalculator($cost_shadow);
+        $calculator->update();
 
         flash('Resource data has been updated', 'success');
         return \Redirect::to('/blank?reload=breakdowns');
