@@ -33,7 +33,7 @@
             @if(!empty($edit))
                 {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
                 {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
-            @elseif($override)
+            @elseif(!empty($override))
                 {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
                 {{ Form::text('resource_code',$resources->code, ['class' => 'form-control','readonly'=>'readonly']) }}
             @endif
@@ -43,7 +43,7 @@
 
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
-            @if($override)
+            @if(!empty($override))
                 {{ Form::text('name', $resources->name, ['class' => 'form-control']) }}
             @else
                 {{ Form::text('name', null, ['class' => 'form-control']) }}

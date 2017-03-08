@@ -1,4 +1,4 @@
-@servers(['web' => 'app@budget.alkifahcont.com'])
+@servers(['web' => 'app@kps.alkifahcont.com'])
 
 @task('deploy')
     cd cost-control

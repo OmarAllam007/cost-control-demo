@@ -127,25 +127,11 @@ class Resources extends Model
                 $breakdown_resource->resource_waste = $this->waste;
                 if ($breakdown_resource->isDirty()) {
                     $breakdown_resource->update();
+                } else {
+                    $breakdown_resource->updateShadow();
                 }
             }
         }
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::updated(function ($resource) {
-            $breakdown_resources = BreakdownResource::where('resource_id', $resource->id)->get();
-            foreach ($breakdown_resources as $breakdown_resource) {
-                $formatter = new BreakdownResourceFormatter($breakdown_resource);
-                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
-                    ->update($formatter->toArray());
-
-            }
-        });
-
-
     }
 
     function scopeMaterial(Builder $query)
