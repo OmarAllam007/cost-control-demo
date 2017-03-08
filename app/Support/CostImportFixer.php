@@ -147,9 +147,12 @@ class CostImportFixer
         $result = (new CostImporter($this->batch))->checkMultipleCostAccounts();
         $errors = $result['errors'];
 
+        $distributionLog = collect();
+
         foreach ($errors as $error) {
             $date =$error[1];
             $resources = $error['resources']->keyBy('breakdown_resource_id');
+            $logEntry = ['oldRow' => $this->rows->get($error['hash']), 'newRows' => []];
             $this->rows->forget($error['hash']);
             $unit_price = floatval($error[5]);
             foreach ($resources as $id => $resource) {
@@ -164,9 +167,15 @@ class CostImportFixer
                     ];
 
                     $this->rows->push($newRow);
+                    $logEntry['newRows'][] = $newRow;
                 }
             }
+
+            $distributionLog->push($logEntry);
         }
+
+        $issueLog = new CostIssuesLog($this->batch);
+        $issueLog->recordCostAccountDistribution($distributionLog);
 
         $importer = new CostImporter($this->batch, $this->rows);
         return $importer->save();
