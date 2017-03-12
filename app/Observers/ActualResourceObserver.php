@@ -27,12 +27,13 @@ class ActualResourceObserver
 
     function deleted(ActualResources $resource)
     {
-        $conditions = [
-            'breakdown_resource_id' => $resource->breakdown_resource_id,
-            'period_id' => $resource->period_id,
-        ];
-
-        CostShadow::where($conditions)->delete();
+//        $conditions = [
+//            'breakdown_resource_id' => $resource->breakdown_resource_id,
+//            'period_id' => $resource->period_id,
+//        ];
+//
+//        CostShadow::where($conditions)->delete();
+        $this->updateShadow($resource);
     }
 
     protected function updateShadow(ActualResources $resource)
