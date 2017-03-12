@@ -1,6 +1,5 @@
 @php
     $data = json_decode($issue->data, true);
-dd($data);
 @endphp
 
 @if ($data)
