@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ActualBatch;
 use App\ActualResources;
 use App\Breakdown;
 use App\BreakdownResource;
@@ -25,9 +26,9 @@ class CostController extends Controller
 
         $perspective = $request->get('perspective');
 
-        if ($perspective=='budget') {
+        if ($perspective == 'budget') {
             $rows = BreakDownResourceShadow::joinCost($wbs_level, $period)->get();
-            $rows->each(function(BreakDownResourceShadow $row) {
+            $rows->each(function (BreakDownResourceShadow $row) {
                 $row->appendFields();
             });
             return $rows;
@@ -52,8 +53,8 @@ class CostController extends Controller
                 }
             });
 
-        return $activities->map(function($resources) {
-            return $resources->sortBy(function($resource) {
+        return $activities->map(function ($resources) {
+            return $resources->sortBy(function ($resource) {
                 return strtolower(trim($resource['store_resource_name']));
             });
         })->sortByKeys();
@@ -91,6 +92,22 @@ class CostController extends Controller
         } else {
             return ['ok' => false, 'message' => 'Could not delete resource'];
         }
+    }
+
+    function deleteBatch(ActualBatch $actual_batch)
+    {
+        if (cannot('actual_resources', $actual_batch->project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        ActualResources::where('batch_id', $actual_batch->id)
+            ->get()->each(function (ActualResources $resource) {
+                $resource->delete();
+            });
+
+        $actual_batch->delete();
+
+        return ['ok' => true, 'message' => 'Resources data has been deleted'];
     }
 
     function deleteActivity(Breakdown $breakdown)
