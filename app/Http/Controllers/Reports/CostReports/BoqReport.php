@@ -39,7 +39,7 @@ class BoqReport
     {
         //get Boq By wbs_id , cost account ... done
         //
-
+//        ini_set('memory_limit', '1.5G');
         $this->project = $project;
         $this->divisions = collect();
         $this->activities = collect();

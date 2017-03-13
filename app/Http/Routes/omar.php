@@ -170,6 +170,7 @@ Route::group(['prefix'=>'cost-labor','as'=>'cost-labor.import'],function (){
     Route::post('import/{project}','ProductivityController@laborPostImportReport');
 });
 Route::get('export-std-activity-report-budget/{project}',['uses'=>'StdActivityController@exportStdActivityBudgetReport','as'=>'export.budget_std_Activity']);
+Route::get('export-productivity-report-budget/{project}',['uses'=>'ProductivityController@exportProductivityReport','as'=>'export.budget_productivity']);
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');

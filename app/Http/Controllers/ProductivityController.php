@@ -389,4 +389,7 @@ class ProductivityController extends Controller
         $file_path = LaborTrendUploadTable::find($id)->file_path;
         return response()->download($file_path);
     }
+
+
+
 }

@@ -21,12 +21,13 @@
 @section('body')
 
     <div class="row" style="margin-bottom: 10px;">
-        <form action="{{route('cost.boq_report',$project)}}" class="form-inline col col-md-8" method="get">
+        <form action="{{route('cost_control.cost-summery',$project)}}" class="form-inline col col-md-8" method="get">
             {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
         <br>
     </div>
+
     <table class="table table-condensed">
         <thead>
         <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">

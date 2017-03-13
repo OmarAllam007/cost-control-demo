@@ -18,7 +18,7 @@
                    class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">Labor Trend Analysis</a><br>
                 <a href="{{route('cost.variance',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Issues:Q:qqqqq</a><br>
+                   class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Issues</a><br>
 
                 {{--<a href="{{route('show_issues.report',$project)}}" target="_blank"--}}
                    {{--class="hvr-float-shadow btn btn-primary"--}}
