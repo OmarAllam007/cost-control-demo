@@ -11171,10 +11171,10 @@ p.blue-third-level > a {
   color: white;
   text-decoration: none;
   background-color: #8cc152;
-  font-family: 'Tahoma';
+  font-family: 'Arial', sans-serif;
   display: block;
   border-radius: 8px;
-  box-shadow: 0px 2px 0px #c9c9c9, 0px 9px 25px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 2px 0px #c9c9c9, 0px 5px 5px rgba(0, 0, 0, 0.7);
   text-align: center;
   -webkit-transition: all .1s ease;
   transition: all .1s ease;
