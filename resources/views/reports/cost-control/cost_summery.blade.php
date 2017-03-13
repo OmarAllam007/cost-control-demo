@@ -43,7 +43,7 @@
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous (EV) Allowable</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Variance</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">to-date Cost</th>
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Todate Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Allowable (EV) Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Todate Cost Variance</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Remaining Cost</th>
@@ -79,7 +79,7 @@
         @endforeach
         <tr style="background: #F0FFF3">
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Total</th>
-            <td style="border: 2px solid black;text-align: center; ">{{number_format($total['budget_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center; ">{{number_format($data->sum('budget_cost'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_cost'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_allowable'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_variance'])}}</td>
