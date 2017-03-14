@@ -46,10 +46,6 @@ WHERE project_id =?', [$project->id]))->map(function ($breakdown) {
         $this->breakdowns = WbsLevel::where('project_id', $project->id)->get()->keyBy('id')->map(function ($level) {
             return $level->breakdowns;
         });
-        $this->dry = Boq::where('project_id', $project->id)->get()->keyBy('wbs_id')->map(function ($boq) {
-            return $boq->dry_ur;
-        });
-
 
         $wbs_levels = $project->wbs_tree;
         $tree = [];
@@ -66,7 +62,9 @@ WHERE project_id =?', [$project->id]))->map(function ($breakdown) {
     {
         $tree = ['id' => $level->id, 'code' => $level->code,'children'=>[], 'name' => $level->name, 'activities' => [], 'revised_boq' => 0, 'original_boq' => 0];
 
-        if ($this->dry->get($level->id) > 0) {
+        $boq = Boq::where('wbs_id',$level->id)->where('project_id',$this->project->id)->where('dry_ur','<>',0)->first();
+
+        if ($boq) {
             foreach ($this->breakdowns->get($level->id) as $breakdown) {
                 $boq = \DB::select('SELECT price_ur , quantity, description FROM boqs
 WHERE project_id=?
@@ -97,11 +95,12 @@ AND cost_account=?', [$this->project->id, $level->id, $breakdown->cost_account])
             }
 
         } else {
-            $parent = $level;
 
+            $parent = $level;
             while ($parent->parent) {
                 $parent = $parent->parent;
-                if ($this->dry->get($parent->id) > 0) {
+                $boq = Boq::where('wbs_id',$parent->id)->where('project_id',$this->project->id)->where('dry_ur','<>',0)->first();
+                if ($boq) {
                     foreach ($this->breakdowns->get($level->id) as $breakdown) {
                         $boq = \DB::select('SELECT price_ur , quantity ,description FROM boqs
 WHERE project_id=?
