@@ -4,6 +4,7 @@ import Datasheet from './components/datasheet';
 import Alert from './components/Alert';
 import Resources from './components/CostResources';
 import ActivityLog from './components/ActivityLog'
+import { DataUploads } from './components/data-uploads';
 
 Vue.filter('slug', function(value){
     return value.replace(/\W/g, '-').replace(/-{2,}/g, '-').toLowerCase();
@@ -78,7 +79,7 @@ window.app = new Vue({
     },
 
     components: {
-        Alert, Wbs, Datasheet, Resources, ActivityLog
+        Alert, Wbs, Datasheet, Resources, ActivityLog, DataUploads
     }
 });
 

@@ -31,6 +31,7 @@
                 </div>
                 <div class="modal-body">
                     <p class="lead text-danger">Are you sure you want to delete this data upload all related data?</p>
+                    <p class="alert alert-danger hidden" id="delete-warning">Could not delete upload</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" id="DeleteBtn"><i class="fa fa-trash"></i> Delete</button>
@@ -58,17 +59,17 @@
                 $('#DeleteBtn').on('click', function () {
                     var _this = $(this);
                     _this.attr('disabled', true).find('.fa').toggleClass('fa-trash fa-spinner fa-spin');
+                    $('#delete-warning').addClass('hidden');
                     $.ajax({
                         url: '/api/cost/delete-batch/{{$batch->id}}',
                         dataType: 'json', 'method': 'delete', data: { _token: $('meta[name=csrf-token]').attr('content')}
                     }).success(function(response) {
                         _this.attr('disabled', false).find('.fa').toggleClass('fa-trash fa-spinner fa-spin');
-                        parent.$('.modal.in').modal('hide');
-                        parent.app.reload();
+                        window.parent.$('.modal.in').modal('hide');
+                        window.parent.app.reload('data_uploads', {type: 'info', message: 'Data has been deleted'});
                     }).error(function(error) {
-                        console.log(error);
-//                        _this.attr('disabled', false).find('.fa').toggleClass('fa-trash fa-spinner fa-spin');
-//                        parent.$('.modal.in').modal('hide');
+                        _this.attr('disabled', false).find('.fa').toggleClass('fa-trash fa-spinner fa-spin');
+                        $('#delete-warning').removeClass('hidden');
                     });
                 });
             });
