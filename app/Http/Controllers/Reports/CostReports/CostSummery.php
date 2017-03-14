@@ -77,8 +77,8 @@ FROM (SELECT
         LEFT JOIN break_down_resource_shadows AS budget ON (cost.breakdown_resource_id = budget.breakdown_resource_id)
       WHERE cost.project_id = ? AND cost.period_id = (SELECT max(p.period_id)
                                                        FROM cost_shadows p
-                                                       WHERE p.breakdown_resource_id = cost.breakdown_resource_id ) AND
-            cost.period_id <= ?
+                                                       WHERE p.breakdown_resource_id = cost.breakdown_resource_id  AND
+            p.period_id <= ?)
       GROUP BY 1, 2,3) AS DATA
 GROUP BY 1,2;', [$project->id,$chosen_period_id]))->map(function ($resource) {
             $this->cost_data->put($resource->resource_type_id,
@@ -108,7 +108,7 @@ FROM (SELECT
         LEFT JOIN break_down_resource_shadows AS budget ON (cost.breakdown_resource_id = budget.breakdown_resource_id)
       WHERE cost.project_id = ? AND cost.period_id = (SELECT max(p.period_id)
                                                        FROM cost_shadows p
-                                                       WHERE p.breakdown_resource_id = cost.breakdown_resource_id ) AND cost.period_id < ?
+                                                       WHERE p.breakdown_resource_id = cost.breakdown_resource_id and p.period_id < ?)
       GROUP BY 1,2) AS DATA
 GROUP BY 1;', [$project->id, $chosen_period_id]))->map(function ($resource) {
             $this->prev_data->put($resource->resource_type_id,
