@@ -75,6 +75,20 @@ class CostController extends Controller
             });
     }
 
+    function batches(Project $project)
+    {
+        if (!can('actual_resources', $project)) {
+            return ['ok' => false, 'message' => 'Your are not authorized to do this action'];
+        }
+
+        $query = ActualBatch::whereProjectId($project->id)->latest();
+        if (!can('cost_owner', $project)) {
+            $query->whereUserId(Auth::id());
+        }
+
+        return ['ok' => true, 'batches' => $query->get()];
+    }
+
     function deleteResource(BreakdownResource $breakdown_resource)
     {
         if (cannot('actual_resources', $breakdown_resource->breakdown->project)) {
@@ -99,6 +113,8 @@ class CostController extends Controller
         if (cannot('actual_resources', $actual_batch->project)) {
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
+
+        set_time_limit(600);
 
         ActualResources::where('batch_id', $actual_batch->id)
             ->get()->each(function (ActualResources $resource) {

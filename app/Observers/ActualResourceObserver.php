@@ -48,10 +48,17 @@ class ActualResourceObserver
             'period_id' => $resource->period_id,
         ];
 
-        $shadow = CostShadow::firstOrCreate($conditions);
+        if ($trans) {
+            $shadow = CostShadow::firstOrCreate($conditions);
 
-        $attributes = $trans->toArray();
-        $attributes['batch_id'] = $resource->batch_id;
-        $shadow->update($attributes);
+
+            $attributes = $trans->toArray();
+            $attributes['batch_id'] = $resource->batch_id;
+            $shadow->update($attributes);
+        } else {
+            CostShadow::where($conditions)->get()->each(function ($resource) {
+                $resource->delete();
+            });
+        }
     }
 }

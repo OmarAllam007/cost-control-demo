@@ -26,6 +26,7 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('breakdowns/{wbs_level}', 'Api\CostController@breakdowns');
         Route::get('resources/{project}', 'Api\CostController@resources');
         Route::get('activity-log/{wbs_level}', 'Api\CostController@activityLog');
+        Route::get('batches/{project}', 'Api\CostController@batches');
 
         Route::delete('/delete-resource/{breakdown_resource}', 'Api\CostController@deleteResource');
         Route::delete('/delete-activity/{breakdown}', 'Api\CostController@deleteActivity');
