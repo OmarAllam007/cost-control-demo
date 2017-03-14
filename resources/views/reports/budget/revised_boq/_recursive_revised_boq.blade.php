@@ -1,21 +1,18 @@
-@if($level['activities'] && count($level['activities']))
     <li>
-
         <div class="col-md-12 panel panel-default @if($tree_level ==0)
-                blue-first-level
+                boqLevelOne
              @elseif($tree_level ==1)
-                blue-third-level
+                boqLevelTwo
                @else
-                blue-fourth-level
-                    @endif
-                " style="
-            padding: 5px; display: inline-block">
+                boqLevelThree
+                     @endif
+                " >
             <div class="col-md-12  @if($tree_level ==0)
-                    blue-first-level
+                    boqLevelOne
                  @elseif($tree_level ==1)
-                    blue-third-level
+                    boqLevelTwo
                    @else
-                    blue-fourth-level
+                    boqLevelThree
                         @endif
                     ">
                 <div class="col-md-6">
@@ -120,16 +117,16 @@
                     @endforeach
                 </li>
             </ul>
-            {{--@if ($level['children'] && count($level['children']))--}}
-            {{--<ul class="list-unstyled">--}}
-            {{--@foreach($level['children'] as $child)--}}
-            {{--@include('reports.budget.resource_dictionary._recursive_resource_dictionary', ['level' => $child, 'tree_level' => $tree_level + 1])--}}
-            {{--@endforeach--}}
-            {{--</ul>--}}
-            {{--@endif--}}
+
+            @if ($level['children'] && count($level['children']))
+            <ul class="list-unstyled">
+            @foreach($level['children'] as $child)
+            @include('reports.budget.revised_boq._recursive_revised_boq', ['level' => $child, 'tree_level' => $tree_level + 1])
+            @endforeach
+            </ul>
+            @endif
 
 
         </article>
 
     </li>
-@endif

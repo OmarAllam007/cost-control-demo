@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: omar.garana
- * Date: 10/10/2016
- * Time: 11:44 AM
- */
+
 
 namespace App\Http\Controllers\Reports;
 
@@ -56,21 +51,20 @@ WHERE project_id =?', [$project->id]))->map(function ($breakdown) {
         });
 
 
-        $wbs_levels = $project->wbs_levels;
+        $wbs_levels = $project->wbs_tree;
         $tree = [];
         foreach ($wbs_levels as $level) {
             $treeLevel = $this->buildReport($level);
             $tree [] = $treeLevel;
         }
         $tree = collect($tree)->sortBy('name');
+
         return view('reports.budget.revised_boq.revised_boq', compact('project', 'tree'));
     }
 
     private function buildReport(WbsLevel $level)
     {
-        $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'activities' => [], 'revised_boq' => 0, 'original_boq' => 0];
-
-
+        $tree = ['id' => $level->id, 'code' => $level->code,'children'=>[], 'name' => $level->name, 'activities' => [], 'revised_boq' => 0, 'original_boq' => 0];
 
         if ($this->dry->get($level->id) > 0) {
             foreach ($this->breakdowns->get($level->id) as $breakdown) {
@@ -78,12 +72,10 @@ WHERE project_id =?', [$project->id]))->map(function ($breakdown) {
 WHERE project_id=?
 AND wbs_id=?
 AND cost_account=?', [$this->project->id, $level->id, $breakdown->cost_account]);
-
                 $survey = \DB::select('SELECT eng_qty FROM qty_surveys
 WHERE project_id=?
 AND wbs_level_id=?
 AND cost_account=?', [$this->project->id, $level->id, $breakdown->cost_account]);
-
                 $activity = $this->activities->get($breakdown->id);
                 if (!isset($tree['activities'][$activity['activity_id']])) {
                     $tree['activities'][$activity['activity_id']] = ['name' => $activity['activity_name'], 'revised_boq' => 0, 'original_boq' => 0, 'cost_accounts' => []];
@@ -106,19 +98,20 @@ AND cost_account=?', [$this->project->id, $level->id, $breakdown->cost_account])
 
         } else {
             $parent = $level;
+
             while ($parent->parent) {
                 $parent = $parent->parent;
-                if ($this->dry->get($level->id) > 0) {
+                if ($this->dry->get($parent->id) > 0) {
                     foreach ($this->breakdowns->get($level->id) as $breakdown) {
-                        $boq = \DB::select('SELECT price_ur , quantity FROM boqs
+                        $boq = \DB::select('SELECT price_ur , quantity ,description FROM boqs
 WHERE project_id=?
 AND wbs_id=?
-AND cost_account=?', [$this->project->id, $level->id, $breakdown->cost_account]);
+AND cost_account=?', [$this->project->id, $parent->id, $breakdown->cost_account]);
 
                         $survey = \DB::select('SELECT eng_qty FROM qty_surveys
 WHERE project_id=?
 AND wbs_level_id=?
-AND cost_account=?', [$this->project->id, $level->id, $breakdown->cost_account]);
+AND cost_account=?', [$this->project->id, $parent->id, $breakdown->cost_account]);
                         $activity = $this->activities->get($breakdown->id);
                         if (!isset($tree['activities'][$activity['activity_id']])) {
                             $tree['activities'][$activity['activity_id']] = ['name' => $activity['activity_name'], 'revised_boq' => 0, 'original_boq' => 0, 'cost_accounts' => []];
@@ -139,120 +132,17 @@ AND cost_account=?', [$this->project->id, $level->id, $breakdown->cost_account])
             }
         }
 
+        if ($level->children->count()) {
+            $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
+                return $this->buildReport($childLevel);
+            });
+
+            foreach ($tree['children'] as $child){
+                $tree['revised_boq']+=$child['revised_boq'];
+                $tree['original_boq']+=$child['original_boq'];
+            }
+        }
         return $tree;
     }
 
-
-//    public function getBudgetCostDryCostColumnChart($data)
-//    {
-//        $costTable = \Lava::DataTable();
-//
-//        $costTable->addStringColumn('WBS')->addNumberColumn('Dry Cost')->addNumberColumn('Budget Cost');
-//        foreach ($data as $key => $value) {
-//            $costTable->addRow([$data[$key]['name'], $data[$key]['dry_cost'], $data[$key]['budget_cost']]);
-//
-//        }
-//        $options = [
-//            'toolTip' => 'value',
-//            'titleTextStyle' => [
-//                'color' => '#eb6b2c',
-//                'fontSize' => 14,
-//                'width' => '1000',
-//                'height' => '600',
-//            ],
-//            'title' => trans('Budget VS Dry'),
-//            'height' => 400,
-//            'hAxis' => [
-//                'title' => 'WBS',
-//            ],
-//            'vAxis' => [
-//                'title' => '',
-//            ],
-//
-//        ];
-//        \Lava::ColumnChart('BudgetCost', $costTable, $options);
-//
-//    }
-//
-//    public function getBudgetCostDryCostSecondColumnChart($data)
-//    {
-//        $costTable = \Lava::DataTable();
-//
-//        $costTable->addStringColumn('WBS')->addNumberColumn('Difference');
-//        foreach ($data as $key => $value) {
-//            $costTable->addRow([$data[$key]['name'], $data[$key]['different']]);
-//
-//        }
-//        $options = [
-//            'isStacked' => 'false',
-//            'tooltip' => 'value',
-//            'titleTextStyle' => [
-//                'color' => '#eb6b2c',
-//                'fontSize' => 14,
-//                'width' => '1000',
-//                'height' => '600',
-//            ],
-//            'title' => trans('Difference'),
-//            'height' => 400,
-//            'hAxis' => [
-//                'title' => 'WBS',
-//            ],
-//            'vAxis' => [
-//                'title' => '',
-//            ],
-//            'labels' => [
-//                'visible' => 'true',
-//            ],
-//            'legend' => [
-//                'position' => 'none',
-//            ],
-//            'bar' => [
-//                'groupWidth' => '30%',
-//            ],
-//        ];
-//        \Lava::ColumnChart('Difference', $costTable, $options);
-//
-//    }
-//
-//    public function getBudgetCostDryCostThirdColumnChart($data)
-//    {
-//
-//        $costTable = \Lava::DataTable();
-//
-//        $costTable->addStringColumn('WBS')->addNumberColumn('Increase');
-//        foreach ($data as $key => $value) {
-//
-//            $costTable->addRow([$data[$key]['name'], $value['increase']]);
-//        }
-//        $options = [
-//            'isStacked' => 'false',
-//            'tooltip' => 'value',
-//            'titleTextStyle' => [
-//                'color' => '#eb6b2c',
-//                'fontSize' => 14,
-//                'width' => '1000',
-//                'height' => '600',
-//            ],
-//            'title' => trans('Increase'),
-//            'height' => 400,
-//            'hAxis' => [
-//                'title' => 'WBS',
-//            ],
-//            'vAxis' => [
-//                'title' => '',
-//            ],
-//            'labels' => [
-//                'visible' => 'true',
-//            ],
-//            'legend' => [
-//                'position' => 'none',
-//            ],
-//            'bar' => [
-//                'groupWidth' => '30%',
-//            ],
-//        ];
-//        \Lava::ColumnChart('Increase', $costTable, $options);
-//
-//
-//    }
 }

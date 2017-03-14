@@ -33,7 +33,7 @@ class ExportProductivityJob extends Job
         $rowCount = 2;
         foreach ($this->project->productivities as $productivity) {
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $productivity->csi_code);
-            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $productivity->category->name);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $productivity->category->path);
             $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $productivity->description);
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $productivity->crew_structure);
             $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $productivity->versionFor($this->project->id)->daily_output);
@@ -43,11 +43,11 @@ class ExportProductivityJob extends Job
             $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $productivity->source);
             $rowCount++;
         }
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - Productivity.xlsx"');
-        header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save('php://output');
 
+
+
+        header('Content-Disposition: attachment; filename="' . $this->project->name . ' - Productivity.xls"');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
     }
 }

@@ -29,6 +29,7 @@ class QuantitiySurveySummery
 
     public function qsSummeryReport(Project $project)
     {
+
         set_time_limit(300);
         $this->project = $project;
 
@@ -52,7 +53,7 @@ class QuantitiySurveySummery
 
     private function buildTree($level)
     {
-        $tree = [];
+
 
         $tree = ['id' => $level->id, 'code' => $level->code, 'name' => $level->name, 'children' => [], 'divisions' => []];
 
@@ -81,6 +82,7 @@ class QuantitiySurveySummery
                     'cost_accounts' => [],
                 ];
             }
+
             if (!isset($tree['divisions'][$division_id]['activities'][$activity_id]['cost_accounts'][$break_down_resource['cost_account']])) {
                 $tree['divisions'][$division_id]['activities'][$activity_id]['cost_accounts'][$break_down_resource['cost_account']] = [
                     'cost_account' => $break_down_resource['cost_account'],

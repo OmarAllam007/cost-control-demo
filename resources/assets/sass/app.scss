@@ -388,6 +388,15 @@ body#iframe {
   font-weight: bold;
   padding: 10px; }
 
+.blue-second-level > div > a{
+  background-color: #5e5e5e !important;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  text-decoration: none;
+
+}
+
 .blue-third-level {
   background-color: #a9cbf1 !important;
   color: brown !important;
@@ -585,4 +594,48 @@ table.collapse.in {
   color: white;
   font-weight: bold;
   padding: 10px;
+}
+
+.boqLevelOne{
+  background-color: #34495E;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelOne > div > a{
+  background-color: #34495E;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelTwo{
+  background-color: #75C3C5;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelTwo  > div > a{
+  background-color: #75c3c5;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.boqLevelThree{
+  background-color: #AACFD0;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelThree  > div > a{
+  background-color: #AACFD0;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\ActivityDivision;
 use App\CsiCategory;
 use App\Filter\ProductivityFilter;
+use App\Http\Controllers\Reports\Export\ExportProductivityReport;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\Export\ExportProductivityJob;
@@ -390,6 +391,9 @@ class ProductivityController extends Controller
         return response()->download($file_path);
     }
 
+    function exportProductivityReport(Project $project){
+        $this->dispatch(new ExportProductivityJob($project));
+    }
 
 
 }
