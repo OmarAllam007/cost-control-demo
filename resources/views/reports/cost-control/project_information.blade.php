@@ -25,6 +25,15 @@
 @endsection
 
 @section('body')
+
+    <div class="row" style="margin-bottom: 10px;">
+        <form action="{{route('cost_control.info',$project)}}" class="form-inline col col-md-8" method="get">
+            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
+            {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
+        </form>
+        <br>
+    </div>
+
     <div class="row">
         <div class="panel panel-primary ">
             <div class="panel-heading">
@@ -157,12 +166,12 @@
                     </thead>
                     <tbody>
                     <tr>
-                        @foreach($data as $key=>$value)
-                            <td>{{number_format($value['actual_cost'],2)}}</td>
-                            <td>{{number_format($value['allowable_cost'],2)}}</td>
-                            <td @if(number_format($value['allowable_cost']-$value['actual_cost'],2) < 0 ) style="color: red;" @endif >{{number_format($value['allowable_cost']-$value['actual_cost'],2)}}</td>
-                            <td style="@if($value['allowable_cost']/$value['actual_cost']<1) color: red; @endif">{{number_format($value['actual_cost']?$value['allowable_cost']/$value['actual_cost']:0,2)}}</td>
-                        @endforeach
+
+                            <td>{{number_format($data['actual_cost'],2)}}</td>
+                            <td>{{number_format($data['allowable_cost'],2)}}</td>
+                            <td @if(number_format($data['allowable_cost']-$data['actual_cost'],2) < 0 ) style="color: red;" @endif >{{number_format($data['allowable_cost']-$data['actual_cost'],2)}}</td>
+                            <td style="@if($data['allowable_cost']/$data['actual_cost']<1) color: red; @endif">{{number_format($data['actual_cost']?$data['allowable_cost']/$data['actual_cost']:0,2)}}</td>
+
                     </tr>
                     </tbody>
                 </table>
