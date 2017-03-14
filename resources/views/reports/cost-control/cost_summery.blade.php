@@ -20,13 +20,14 @@
 @endsection
 @section('body')
 
-    <div class="col col-md-8 form-inline">
-        <form action="{{route('cost_control.cost-summery',$project)}}" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') , null, ['placeholder' => 'Choose a Period','class'=>'form-control'])}}
+    <div class="row" style="margin-bottom: 10px;">
+        <form action="{{route('cost_control.cost-summery',$project)}}" class="form-inline col col-md-8" method="get">
+            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
         <br>
     </div>
+
     <table class="table table-condensed">
         <thead>
         <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
@@ -43,7 +44,7 @@
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous (EV) Allowable</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Variance</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">to-date Cost</th>
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Todate Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Allowable (EV) Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Todate Cost Variance</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Remaining Cost</th>
@@ -79,7 +80,7 @@
         @endforeach
         <tr style="background: #F0FFF3">
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Total</th>
-            <td style="border: 2px solid black;text-align: center; ">{{number_format($total['budget_cost'])}}</td>
+            <td style="border: 2px solid black;text-align: center; ">{{number_format($data->sum('budget_cost'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_cost'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_allowable'])}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($total['previous_variance'])}}</td>
