@@ -14,8 +14,26 @@
 
 @endsection
 @section('body')
+    <div class="col-md-12 panel panel-default boqLevelOne" >
+        <div class="col-md-12 boqLevelOne">
+            <table class="col-md-12">
+                <thead>
+                <tr style="text-align: center">
+                    <td class="col-md-6">Total Original BOQ</td>
+                    <td class="col-md-6">Total Revised BOQ</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="text-align: center">
+                    <td class="col-md-6">{{number_format($total['original'])}}</td>
+                    <td class="col-md-6">{{number_format($total['revised'])}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <br>
+
+    </div>
     <ul class="list-unstyled tree">
         @foreach($tree as $parentKey=>$level)
             @include('reports.budget.revised_boq._recursive_revised_boq', ['level'=>$level,'tree_level'=>0])

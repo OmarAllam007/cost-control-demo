@@ -3,16 +3,20 @@
                 boqLevelOne
              @elseif($tree_level ==1)
                 boqLevelTwo
-               @else
+               @elseif($tree_level ==2)
                 boqLevelThree
-                     @endif
+                @elseif($tree_level==3)
+                boqLevelFour
+                    @endif
                 " >
             <div class="col-md-12  @if($tree_level ==0)
                     boqLevelOne
                  @elseif($tree_level ==1)
                     boqLevelTwo
-                   @else
+                   @elseif($tree_level ==2)
                     boqLevelThree
+                    @elseif($tree_level==3)
+                    boqLevelFour
                         @endif
                     ">
                 <div class="col-md-6">
