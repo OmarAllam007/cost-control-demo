@@ -35,7 +35,7 @@ class BoqReport
     protected $wbs_level_children;
     protected $boqs_project;
 
-    function getReport(Project $project, $period_id)
+    function getReport (Project $project, $period_id)
     {
         //get Boq By wbs_id , cost account ... done
         //
@@ -79,40 +79,55 @@ WHERE project_id=?
 GROUP BY cost_account,wbs_id,activity_id , budget_qty', [$project->id]))->map(function ($shadow) {
             $this->budget_data->put(trim(str_replace(' ', '', $shadow->wbs_id)) . trim(str_replace(' ', '', $shadow->activity_id)) . trim(str_replace(' ', '', $shadow->cost_account)),
                 ['boq_equivilant_rate' => $shadow->boq_equivilant_rate, 'budget_cost' => $shadow->budget_cost,
-                    'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_qty!=0 ?($shadow->budget_cost/$shadow->budget_qty) : 0, 'budget_qty' => $shadow->budget_qty]);
+                    'budget_unit' => $shadow->budget_unit, 'budget_unit_rate' => $shadow->budget_qty != 0 ? ($shadow->budget_cost / $shadow->budget_qty) : 0, 'budget_qty' => $shadow->budget_qty]);
         });
         //end
 
 
         //get_cost_data
         collect(\DB::select('SELECT
-  sh.activity_id,
-  sh.cost_account,
-  sh.wbs_id,
-  SUM(physical_unit)      AS physical_unit,
-  SUM(to_date_cost)       AS to_date_cost,
-  SUM(allowable_ev_cost)  AS allowable_cost,
-  SUM(allowable_var)  AS to_date_cost_var,
-  SUM(remaining_cost)  AS remaining_cost,
-  SUM(completion_cost)  AS completion_cost,
-  SUM(cost_var)  AS completion_cost_var
-FROM cost_shadows c, break_down_resource_shadows sh
-WHERE c.project_id = ? AND c.period_id = ?
-      AND sh.breakdown_resource_id = c.breakdown_resource_id
-GROUP BY sh.activity_id,
-  sh.cost_account,
-  sh.wbs_id', [$project->id, $period_id]))->map(function ($cost) {
+  activity_id,
+  cost_account,
+  wbs_id,
+  sum(allowable_ev) allowable_cost,
+  sum(to_date_cost) to_date_cost,
+  sum(to_date_variance) to_date_var,
+  sum(remaining_cost) remain_cost,
+  sum(completion_cost) comp_cost,
+  sum(physical_unit) physical_unit,
+  sum(cost_var) cost_var
+FROM (SELECT
+        budget.activity_id     AS activity_id,
+        budget.cost_account    AS cost_account,
+        budget.wbs_id          AS wbs_id,
+        SUM(physical_unit)     AS physical_unit,
+        sum(allowable_ev_cost) AS allowable_ev,
+        sum(to_date_cost)      AS to_date_cost,
+        sum(allowable_var)     AS to_date_variance,
+        sum(remaining_cost)    AS remaining_cost,
+        sum(completion_cost)   AS completion_cost,
+        sum(cost_var)          AS cost_var
+      FROM cost_shadows AS cost
+        LEFT JOIN break_down_resource_shadows AS budget ON (cost.breakdown_resource_id = budget.breakdown_resource_id)
+      WHERE cost.project_id = ? AND cost.period_id = (SELECT max(p.period_id)
+                                                       FROM cost_shadows p
+                                                       WHERE p.breakdown_resource_id = cost.breakdown_resource_id AND
+                                                             cost.period_id <= ?)
+      GROUP BY 1, 2, 3) AS data
+GROUP BY 1, 2, 3;', [$project->id, $period_id]))->map(function ($cost) {
             $this->cost_data->put(trim(str_replace(' ', '', $cost->wbs_id)) . trim(str_replace(' ', '', $cost->activity_id)) . trim(str_replace(' ', '', $cost->cost_account)), [
                 'physical_unit' => $cost->physical_unit
                 , 'to_date_cost' => $cost->to_date_cost
                 , 'allowable_ev_cost' => $cost->allowable_cost
-                , 'to_date_cost_var' => $cost->to_date_cost_var
-                , 'remaining_cost' => $cost->remaining_cost
-                , 'completion_cost' => $cost->completion_cost
-                , 'cost_var' => $cost->completion_cost_var
+                , 'to_date_cost_var' => $cost->to_date_var
+                , 'remaining_cost' => $cost->remain_cost
+                , 'completion_cost' => $cost->comp_cost
+                , 'cost_var' => $cost->cost_var
 
             ]);
         });
+
+
         collect(\DB::select('SELECT DISTINCT activity_id , wbs_id FROM break_down_resource_shadows sh
 WHERE project_id=?', [$project->id]))->map(function ($item) {
 
@@ -141,23 +156,6 @@ WHERE sh.project_id =?', [$project->id]))->map(function ($item) {
             return $division;
         });
 
-        collect(\DB::select('SELECT activity,
-  sh.activity_id,
-  sh.wbs_id,
-  SUM(sh.budget_cost) AS budget_cost,
-  SUM(cost.to_date_cost) AS to_date_cost,
-  SUM(cost.allowable_ev_cost) AS allowable_cost,
-  SUM(allowable_var) AS allowable_var,
-  SUM(remaining_cost) AS remain_cost,
-  SUM(completion_cost) AS completion_cost
-FROM break_down_resource_shadows sh JOIN cost_shadows cost
-WHERE sh.breakdown_resource_id = cost.breakdown_resource_id AND sh.project_id = ? AND cost.period_id=?
-GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($activity) {
-            $this->activities->put($activity->activity_id . $activity->wbs_id, ['name' => $activity->activity, 'budget_cost' => $activity->budget_cost,
-                'to_date_cost' => $activity->to_date_cost, 'allowable_cost' => $activity->allowable_cost, 'allowable_var' => $activity->allowable_var
-                , 'remain_cost' => $activity->remain_cost, 'completion_cost' => $activity->completion_cost
-            ]);
-        });
 
         $this->wbs_levels = WbsLevel::where('project_id', $project->id)->get()->keyBy('id')->map(function ($level) {
             return $level;
@@ -179,7 +177,7 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
         return view('reports.cost-control.boq-report.boq_report', compact('tree', 'levels', 'project'));
     }
 
-    function buildTree($level)
+    function buildTree ($level)
     {
         $tree = ['id' => $level['id'], 'name' => $level['name'], 'children' => [], 'division' => [], 'data' => []];
         $level = $this->wbs_levels->get($level['id']);
@@ -214,6 +212,7 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                             $completion_cost_var = $this->cost_data->get($child . $activity . $key)['cost_var'];
                             $physical_unit = $this->cost_data->get($child . $activity . $key)['physical_unit'];
                             $todate_budget_unit_rate = $physical_unit != 0 ? ($to_date_cost / $physical_unit) : $budget_unit_rate;
+
                             if (!isset($tree['division'][$division->id]['cost_accounts'][$key])) {
                                 $tree['division'][$division->id]['cost_accounts'][$key] = [
                                     'cost_account' => $key,
@@ -233,27 +232,27 @@ GROUP BY activity_id , sh.wbs_id', [$project->id, $period_id]))->map(function ($
                                     'remaining_cost' => 0,
                                     'at_comp' => 0,
                                     'at_comp_var' => 0,
-                                    'dry_cost' => $quantity*$dry,
-                                    'boq_cost' => $quantity*$price_ur,
+                                    'dry_cost' => $quantity * $dry,
+                                    'boq_cost' => $quantity * $price_ur,
                                     'budget_qty' => 0,
-                                    'sum_budget_unit_rate'=>0
+                                    'sum_budget_unit_rate' => 0
                                 ];
 
                             }
-                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit_rate']=$budget_unit_rate;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['todate_budget_unit_rate']=$todate_budget_unit_rate;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit']+=$budget_unit;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_cost']+=$budget_cost;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['sum_budget_unit_rate']+=$budget_unit_rate;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['physical_unit']=$budget_unit_rate!=0? $to_date_cost/$budget_unit_rate :0;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost']+=$to_date_cost;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['allowable_cost']+=$allowable_ev_cost;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost_var']+=$to_date_cost_var;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['remaining_cost']+=$remaining_cost;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['at_comp']+=$completion_cost;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['at_comp_var']+=$completion_cost_var;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_qty']+=$budget_qty;
-                            $tree['division'][$division->id]['cost_accounts'][$key]['var_unit_rate']+=$budget_unit_rate-($todate_budget_unit_rate);
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit_rate'] = $budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['todate_budget_unit_rate'] = $todate_budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_unit'] += $budget_unit;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_cost'] += $budget_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['sum_budget_unit_rate'] += $budget_unit_rate;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['physical_unit'] = $budget_unit_rate != 0 ? $to_date_cost / $budget_unit_rate : 0;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost'] += $to_date_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['allowable_cost'] += $allowable_ev_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['to_date_cost_var'] += $to_date_cost_var;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['remaining_cost'] += $remaining_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['at_comp'] += $completion_cost;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['at_comp_var'] += $completion_cost_var;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['budget_qty'] += $budget_qty;
+                            $tree['division'][$division->id]['cost_accounts'][$key]['var_unit_rate'] += $budget_unit_rate - ($todate_budget_unit_rate);
                         }
 
                     }
