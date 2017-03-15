@@ -93,7 +93,7 @@
             @include('project.cost-control.periods')
         @endcan
 
-        @can('cost_owner', $project)
+        @can('actual_resources', $project)
             @include('project.cost-control.data-uploads')
         @endcan
 
