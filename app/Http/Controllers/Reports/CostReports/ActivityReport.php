@@ -226,7 +226,6 @@ GROUP BY activity_id , sh.activity ,sh.wbs_id', [$project->id]))->map(function (
                 return $this->buildTree($childLevel);
             });
         }
-
         foreach ($tree['children'] as $child) {
             $tree['data']['budget_cost'] += $child['data']['budget_cost'];
             $tree['data']['to_date_cost'] += $child['data']['to_date_cost'];
