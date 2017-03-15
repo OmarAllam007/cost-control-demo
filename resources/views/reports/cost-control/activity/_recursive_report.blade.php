@@ -24,9 +24,9 @@
                 <td>Previous Allowable</td>
                 <td>Previous Var</td>
                 <td>To Date Cost</td>
-                <td>Allawable (EV) Cost</td>
-                <td>Remaining Cost</td>
+                <td>Allowable (EV) Cost</td>
                 <td>To Date Variance</td>
+                <td>Remaining Cost</td>
                 <td>At Compeletion Cost</td>
                 <td>Cost Variance</td>
             </tr>
@@ -39,8 +39,8 @@
                 <td>{{number_format($level['data']['prev_var'],2)}}</td>
                 <td>{{number_format($level['data']['to_date_cost'],2)}}</td>
                 <td>{{number_format($level['data']['allowable_cost'],2)}}</td>
-                <td>{{number_format($level['data']['remain_cost'],2)}}</td>
                 <td>{{number_format($level['data']['allowable_var'],2)}}</td>
+                <td>{{number_format($level['data']['remain_cost'],2)}}</td>
                 <td>{{number_format($level['data']['completion_cost'],2)}}</td>
                 <td>{{number_format($level['data']['cost_var'],2)}}</td>
             </tr>
