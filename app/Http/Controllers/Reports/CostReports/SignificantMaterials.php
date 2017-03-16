@@ -81,7 +81,9 @@ GROUP BY 1;', [$project->id, $chosen_period_id]))->map(function ($resource) {
 
             ]);
         });
+
         set_time_limit(300);
+
         $resources = Resources::where('project_id', $project->id)->whereNotNull('top_material')->get();
         $data = [];
         foreach ($resources as $resource) {
