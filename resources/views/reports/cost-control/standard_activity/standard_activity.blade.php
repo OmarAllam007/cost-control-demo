@@ -1,6 +1,6 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
 @if(request('all'))
-    @include('reports.all._qs_summery')
+    @include('reports.all._standard-activity')
 @endif
 @section('header')
     <h2 class="">{{$project->name}} - Standard Activity</h2>
@@ -8,6 +8,7 @@
         {{--<button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">--}}
             {{--<i class="fa fa-warning"></i> Concerns--}}
         {{--</button>--}}
+
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
             Print</a>
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
@@ -63,20 +64,28 @@
 
 
     </div>
+
     <div class="row" style="margin-bottom: 10px;">
         <form action="{{route('cost.standard_activity_report',$project)}}" class="form-inline col col-md-8" method="get">
             {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
-        <br>
+
+        <div class="btn-group btn-group-sm  btn-group-block col-md-4">
+            <a href="#ActivitiesModal" data-toggle="modal" class="btn btn-default btn-block  tree-open">Select Activity</a>
+            <a href="#" class="remove-tree-input btn btn-warning" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
+        </div>
     </div>
 
-    <ul class="list-unstyled tree">
+
+    <ul class="list-unstyled tree stdreport">
         @foreach($tree as $parentKey=>$division)
             @include('reports.cost-control.standard_activity._recursive_report', ['division'=>$division,'tree_level'=>0])
         @endforeach
     </ul>
     <input type="hidden" value="{{$project->id}}" id="project_id">
+
+    @include('std-activity._modal', ['input' => 'activity', 'value' => 'Select Activity'])
 
     @if(count($concerns))
         @include('reports.cost-control.standard_activity._concerns')
@@ -88,6 +97,7 @@
     <script>
 
         $(function () {
+            var global_selector = '';
             var ConcernModal = $('#ConcernModal');
             var ConcernModalForm = ConcernModal.find('form');
             var title = ConcernModal.find('.modal-title');
@@ -105,6 +115,7 @@
                 var body = $('#mytextarea').val();
                 var data = ConcernModal.data('json');
                 if (body.length != 0) {
+
                     $.ajax({
                         url: '/concern/' + project_id,
                         method: 'POST',
@@ -112,16 +123,40 @@
                             _token: $('meta[name="csrf-token"]').attr('content'),
                             info: data,
                             report_name: report_name,
-                            comment: body,
+                            comment: body
                         },
-                    }).success((e) => {
+                    }).success((e)=> {
                         console.log('success')
                     });
                     ConcernModal.modal('hide');
                 }
             })
+            $('.tree-radio').on('change', function(){
+                if (this.checked) {
+                    var value = $(this).attr('value');
+                    global_selector = $('#activity-'+value);
+                    $('.divison-container,.activity-container').removeClass('in').addClass('hidden');
+                    global_selector.parents('.divison-container,.activity-container').addClass('in').removeClass('hidden');
+                    global_selector.addClass('in').removeClass('hidden');
+                    global_selector.parents('li').addClass('target').removeClass('hidden');
+                    $('ul.stdreport > li').not('.target').addClass('hidden');
+                }
+            });
+
+            $('.remove-tree-input').on('click',function () {
+                $('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
+                global_selector.parents('.divison-container,.activity-container').removeClass('in').addClass('hidden');
+                global_selector.removeClass('in').addClass('hidden');
+                global_selector.parents('li').removeClass('target').addClass('hidden');
+                $('li').not('target').removeClass('hidden');
+                $('li.target').removeClass('target');
+                $('ul.stdreport > li').not('.target').show();
+            })
 
         })
 
     </script>
+    <script src="{{asset('/js/project.js')}}"></script>
+    {{--    <script src="{{asset('/js/resources.js')}}"></script>--}}
+    <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection
