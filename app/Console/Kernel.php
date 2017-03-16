@@ -9,6 +9,7 @@ use App\Console\Commands\FixBreakdownVars;
 use App\Console\Commands\FixBudgetQty;
 use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
+use App\Console\Commands\RecalculateCost;
 use App\Console\Commands\UpdateActivityCode;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -28,7 +29,8 @@ class Kernel extends ConsoleKernel
         RebuildBudgetShadow::class,
         UpdateActivityCode::class,
         FixBreakdownVars::class,
-        ExportAllResources::class
+        ExportAllResources::class,
+        RecalculateCost::class,
     ];
 
     /**
