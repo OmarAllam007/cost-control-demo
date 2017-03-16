@@ -232,12 +232,15 @@ trait CostAttributes
 
     function getPwIndexAttribute()
     {
-        if ($this->budget_unit == 0 || $this->progress_value < 1) {
-            return 0;
+        $resource_id = $this->resource_id;
+        $period_id = $this->period_id;
+
+        $result = \DB::selectOne('select sum(allowable_qty) allowable, sum(to_date_qty) qty from cost_shadows cost where resource_id = :resource_id and period_id = (select max(period_id) from cost_shadows p where p.breakdown_resource_id = cost.breakdown_resource_id and p.period_id <= :period_id)', compact('resource_id', 'period_id'));
+        if ($result && $result->allowable) {
+            return ($result->allowable - $result->qty) * 100 / $result->allowable;
         }
 
-        return ($this->budget_unit - $this->to_date_qty) / $this->budget_unit;
-
+        return 0;
     }
 
     function getAllowableQtyAttribute()
