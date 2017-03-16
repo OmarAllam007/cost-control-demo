@@ -18,6 +18,7 @@ use App\ResourceType;
 
 class ResourceCodeReport
 {
+
     protected $project;
     protected $resources;
     protected $period_cost;
@@ -27,6 +28,7 @@ class ResourceCodeReport
 
     public function getResourceCodeReport(Project $project, $chosen_period_id)
     {
+
         set_time_limit(300);
         $this->project = $project;
         $this->resources = collect();
@@ -45,28 +47,35 @@ GROUP BY resource_id , resource_name', [$project->id]))->map(function ($resource
             $this->resources->put($resource->resource_id, ['unit' => $resource->unit_price, 'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
         });
 
-        collect(\DB::select('SELECT
-  c.resource_id,
-  sum(c.to_date_unit_price) /COUNT(c.resource_id)                 AS to_date_unit_price,
+        collect(\DB::select('SELECT * FROM (
+SELECT
+  cost.resource_id,
+  sum(cost.to_date_unit_price) /COUNT(cost.resource_id)                 AS to_date_unit_price,
   sum(curr_cost) current_cost,
   sum(curr_qty) current_qty,
   sum(curr_unit_price) current_unit_price,
-  SUM(c.to_date_qty)                     AS to_date_qty,
-  SUM(c.to_date_cost)                    AS to_date_cost,
-  SUM(c.allowable_ev_cost)               AS to_date_allowable_cost,
-  SUM(c.qty_var)               AS quantity_var,
-  SUM(c.allowable_var)                   AS allowable_var,
-  sum(remaining_unit_price) /COUNT(c.resource_id)             AS remaining_unit_price,
-  SUM(c.remaining_qty)                   AS remaining_qty,
-  SUM(c.remaining_cost)                  AS remain_cost,
-  sum(completion_unit_price) /COUNT(c.resource_id)           AS completion_unit_price,
-  SUM(c.completion_qty)                  AS completion_qty,
-  SUM(c.completion_cost)                 AS completion_cost,
-  SUM(c.cost_var)                        AS cost_var,
-  SUM(c.allowable_qty) AS allowable_qty
-FROM cost_shadows c
-WHERE c.project_id = ? AND c.period_id = ? 
-GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($resource) {
+  SUM(cost.to_date_qty)                     AS to_date_qty,
+  SUM(cost.to_date_cost)                    AS to_date_cost,
+  SUM(cost.allowable_ev_cost)               AS to_date_allowable_cost,
+  SUM(cost.qty_var)               AS quantity_var,
+  SUM(cost.allowable_var)                   AS allowable_var,
+  sum(remaining_unit_price) /COUNT(cost.resource_id)             AS remaining_unit_price,
+  SUM(cost.remaining_qty)                   AS remaining_qty,
+  SUM(cost.remaining_cost)                  AS remain_cost,
+  sum(completion_unit_price) /COUNT(cost.resource_id)           AS completion_unit_price,
+  SUM(cost.completion_qty)                  AS completion_qty,
+  SUM(cost.completion_cost)                 AS completion_cost,
+  SUM(cost.cost_var)                        AS cost_var,
+  SUM(cost.allowable_qty) AS allowable_qty
+FROM cost_shadows AS cost
+
+  LEFT JOIN break_down_resource_shadows AS budget ON (cost.breakdown_resource_id = budget.breakdown_resource_id)
+WHERE cost.project_id = ? AND cost.period_id = (SELECT max(p.period_id)
+                                                 FROM cost_shadows p
+                                                 WHERE p.breakdown_resource_id = cost.breakdown_resource_id AND
+                                                       cost.period_id <= ?)
+GROUP BY 1) AS data
+GROUP BY 1;', [$project->id, $chosen_period_id]))->map(function ($resource) {
             $this->period_cost->put($resource->resource_id, [
                 'to_date_unit_price' => $resource->to_date_unit_price ?? 0,
                 'to_date_qty' => $resource->to_date_qty ?? 0,
@@ -153,7 +162,7 @@ GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($res
         }
 
         $tree['resources'] = collect($tree['resources'])->sortBy('code');
-        if ($type['name'] == '03.MATERIAL') {
+        if ($type['id'] == '40') {
             $top = new SignificantMaterials();
             $tree['top'] = $top->getTopHighPriorityMaterials($this->project, $this->period_id);
         }

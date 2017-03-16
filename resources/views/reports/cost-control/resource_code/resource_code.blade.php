@@ -15,6 +15,20 @@
         .padding{
             padding-right: 300px;
         }
+        .table-fixed thead {
+
+        }
+        .table-fixed tbody {
+            height: 230px;
+            overflow-y: auto;
+        }
+        .table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+            display: block;
+        }
+        .table-fixed tbody td, .table-fixed thead > tr> th {
+            float: left;
+            border-bottom-width: 0;
+        }
     </style>
 @endsection
 
