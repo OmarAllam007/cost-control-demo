@@ -1,4 +1,12 @@
-@extends('layouts.iframe')
+@extends('layouts.' . (request('iframe') ? 'iframe' : 'app'))
+
+@section('header')
+    <h3>{{$batch->project->name}} &mdash; {{$batch->period->name}}</h3>
+
+    <div class="pull-right">
+        <a href="{{route('project.cost-control', $batch->project)}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+    </div>
+    @stop
 
 @section('body')
 
