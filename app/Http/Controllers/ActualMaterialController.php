@@ -11,6 +11,7 @@ use App\CostShadow;
 use App\Jobs\Export\ExportCostShadow;
 use App\Jobs\ImportActualMaterialJob;
 use App\Jobs\ImportMaterialDataJob;
+use App\Jobs\NotifyCostOwnerForUpload;
 use App\Jobs\SendMappingErrorNotification;
 use App\Jobs\UpdateResourceDictJob;
 use App\Project;
@@ -211,6 +212,8 @@ class ActualMaterialController extends Controller
     {
         $this->validate($request, ['status.*' => 'required'], ['required' => 'This field is required']);
         $result = (new CostImportFixer($actual_batch))->fixStatus($request->get('status'));
+
+        $this->dispatch(new NotifyCostOwnerForUpload($actual_batch));
 
         return $this->redirect($result);
     }
