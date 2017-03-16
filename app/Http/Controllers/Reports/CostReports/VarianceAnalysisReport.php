@@ -42,8 +42,9 @@ class VarianceAnalysisReport
         $this->discplines = StdActivity::all()->keyBy('id')->map(function ($data) {
             return $data->discipline;
         });
-        collect(\DB::select('SELECT
-  c.resource_id,
+        collect(\DB::select('SELECT * FROM (
+SELECT
+  cost.resource_id,
   sum(curr_unit_price)                         curr_unit_price,
   sum(to_date_unit_price)                      to_date_unit_price,
   sum(unit_price_var)                          unit_price_var,
@@ -51,12 +52,18 @@ class VarianceAnalysisReport
   sum(cost_variance_completion_due_unit_price) cost_variance_completion_due_unit_price,
   sum(to_date_qty)                             to_date_qty,
   sum(allowable_qty)                           allowable_qty,
-  sum((allowable_qty - to_date_qty)) AS        qty_var,
+  sum(allowable_qty - to_date_qty) AS        qty_var,
   sum(cost_variance_to_date_due_qty)           cost_variance_to_date_due_qty,
   sum(cost_variance_completion_due_qty)        cost_variance_completion_due_qty
-FROM cost_shadows c
-WHERE c.project_id = ? AND c.period_id = ?
-GROUP BY resource_id', [$project->id, $period_id]))->map(function ($costItem) {
+FROM cost_shadows AS cost
+
+  LEFT JOIN break_down_resource_shadows AS budget ON (cost.breakdown_resource_id = budget.breakdown_resource_id)
+WHERE cost.project_id = ? AND cost.period_id = (SELECT max(p.period_id)
+                                                 FROM cost_shadows p
+                                                 WHERE p.breakdown_resource_id = cost.breakdown_resource_id AND
+                                                       cost.period_id <= ?)
+GROUP BY 1) AS data
+GROUP BY 1;', [$project->id, $period_id]))->map(function ($costItem) {
             $this->cost_data->put($costItem->resource_id, ['curr_unit_price' => $costItem->curr_unit_price
                 , 'to_date_unit_price' => $costItem->to_date_unit_price, 'unit_price_var' => $costItem->unit_price_var
                 , 'cost_variance_to_date_due_unit_price' => $costItem->cost_variance_to_date_due_unit_price
@@ -65,6 +72,7 @@ GROUP BY resource_id', [$project->id, $period_id]))->map(function ($costItem) {
                 , 'qty_var' => $costItem->qty_var, 'cost_variance_to_date_due_qty' => $costItem->cost_variance_to_date_due_qty
                 , 'cost_variance_completion_due_qty' => $costItem->cost_variance_completion_due_qty]);
         });
+
         $shadows = collect(\DB::select('SELECT activity_id ,resource_name,resource_type,resource_type_id, resource_id , budget_cost , budget_unit , boq_equivilant_rate  FROM break_down_resource_shadows 
 WHERE project_id=? ', [$this->project->id]));
 
@@ -110,37 +118,7 @@ WHERE project_id=? ', [$this->project->id]));
 
         }
         $tree=$this->data;
-//        dd($this->data['03.MATERIAL']['disciplines']['CIVIL']);
-//        $this->getResourcesData()->map(function ($resource) {
-//            $this->resources_data->put($resource->resource_id, [
-//                'resource_name' => $resource->resource_name,
-//                'budget_unit' => $resource->budget_unit ?? 0,
-//                'unit_price' => $resource->unit_price ?? 0,
-//                'budget_cost' => $resource->budget_cost ?? 0,
-//                'curr_unit_price' => $resource->curr_unit_price ?? 0,
-//                'to_date_unit_price' => $resource->to_date_unit_price ?? 0,
-//                'unit_price_var' => $resource->unit_price_var ?? 0,
-//                'cost_variance_to_date_due_unit_price' => $resource->cost_variance_to_date_due_unit_price ?? 0,
-//                'cost_variance_completion_due_unit_price' => $resource->cost_variance_completion_due_unit_price ?? 0,
-//                'to_date_qty' => $resource->to_date_qty ?? 0,
-//                'allowable_qty' => $resource->allowable_qty ?? 0,
-//                'qty_var' => $resource->qty_var ?? 0,
-//                'cost_variance_to_date_due_qty' => $resource->cost_variance_to_date_due_qty ?? 0,
-//                'cost_variance_completion_due_qty' => $resource->cost_variance_completion_due_qty ?? 0,
-//            ]);
-//        });
-//
-//        $types = \Cache::has('resources-tree') ? \Cache::get('resources-tree') : ResourceType::tree()->get();
-//        $this->types = ResourceType::whereHas('resources', function ($q) {
-//            $q->where('project_id', $this->project->id);
-//        })->get()->keyBy('id')->map(function ($type) {
-//            return $type->resources->where('project_id', $this->project->id);
-//        });
-//        $tree = [];
-//        foreach ($types as $type) {
-//            $treeType = $this->buildTypeTree($type);
-//            $tree[] = $treeType;
-//        }
+
         return view('reports.cost-control.variance_analysis.variance_analysis', compact('tree', 'project'));
     }
 
@@ -161,6 +139,7 @@ WHERE project_id=? ', [$this->project->id]));
             'cost_variance_completion_due_qty' => 0,];
 
         $resources = $this->types->get($type['id']);
+
         if (count($resources)) {
             foreach ($resources as $resource) {
                 $cost_accounts = \DB::select('SELECT cost_account  FROM break_down_resource_shadows 
