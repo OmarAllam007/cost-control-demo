@@ -25,6 +25,43 @@
         .padding{
             padding-right: 300px;
         }
+        .checkList {
+            width: 28px;
+            height: 28px;
+            position: relative;
+            margin: 20px auto;
+            background: #fcfff4;
+            background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+
+        label {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            cursor: pointer;
+            background: linear-gradient(top, #222 0%, #45484d 100%);
+            box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 1);
+
+
+
+        &
+        :hover::after {
+            opacity: 0.3;
+        }
+
+        }
+        input[type=checkbox] {
+            visibility: hidden;
+
+        &
+        :checked + label:after {
+            opacity: 1;
+        }
+
+        }
+        }
     </style>
 @endsection
 @section('body')
@@ -77,9 +114,11 @@
 
         </div>
         <div class="btn-group btn-group-sm  btn-group-block col-md-2" style="text-align: center">
-        <button type="button" class=" btn btn-danger col-md-1 negative"  data-toggle="button" aria-pressed="false" >
-           Negative Variance
-        </button>
+        {{--<button type="button" class=" btn btn-danger col-md-1 negative"  data-toggle="button" aria-pressed="false" >--}}
+           {{--Negative Variance--}}
+        {{--</button>--}}
+            <input type="checkbox" name="checked" class="checkList"
+                   value="Negative Variance" > <p style="margin: 8px;font-size: larger">Negative Variance</p>
         </div>
     </div>
 
@@ -143,8 +182,9 @@
                     global_selector = $('#activity-'+value);
                     $('.divison-container,.activity-container').removeClass('in').addClass('hidden');
                     global_selector.parents('.divison-container,.activity-container').addClass('in').removeClass('hidden');
-                    global_selector.addClass('in').removeClass('hidden');
+                    global_selector.addClass('in target').removeClass('hidden');
                     global_selector.parents('li').addClass('target').removeClass('hidden');
+                    $('.activity-container').not('.target').parent('li').addClass('hidden');
                     $('ul.stdreport > li').not('.target').addClass('hidden');
                 }
             });
@@ -153,13 +193,14 @@
                 global_selector.parents('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
                 global_selector.removeClass('in').addClass('hidden');
                 global_selector.parents('li').removeClass('target').addClass('hidden');
+                global_selector.removeClass('target');
                 $('li').not('target').removeClass('hidden');
                 $('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
                 $('li.target').removeClass('target');
                 $('ul.stdreport > li').not('.target').show();
             })
 
-            $('.negative').on('click',function () {
+            $('.checkList').on('click',function () {
                 var articles =$('.negative_var');
                 articles.each(function () {
                     if($(this).hasClass('clicked')){
