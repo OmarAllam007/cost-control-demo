@@ -17,7 +17,7 @@
 
     </p>
 
-    <article id="{{$division['id']}}" class="tree--child collapse">
+    <article id="{{$division['id']}}" class="tree--child collapse divison-container">
         <table class="table table-condensed">
             <thead  style="background:#95DAC2;color: #000; border-bottom: solid black">
             <tr>
@@ -53,13 +53,12 @@
                 <ul class="list-unstyled">
                     <li>
                         <p class="blue-fourth-level">
-                            <a href="#{{$activity['id']}}" data-toggle="collapse">
+                            <a href="#activity-{{$activity['id']}}" data-toggle="collapse">
                                 {{$activity['name']}}
                             </a>
 
                         </p>
-                        <article id="{{$activity['id']}}" class="tree--child collapse">
-
+                        <article id="activity-{{$activity['id']}}" class="tree--child collapse activity-container @if($activity['cost_var'] <0) negative_var @else positive_var @endif">
                                 <ul class="list-unstyled">
                                     <li>
                                         <table class="table table-condensed">
@@ -89,7 +88,7 @@
                                                     <td>{{number_format($activity['allowable_var']??0,2)}}</td>
                                                     <td>{{number_format($activity['remain_cost']??0,2)}}</td>
                                                     <td>{{number_format($activity['completion_cost']??0,2)}}</td>
-                                                    <td style=" @if($activity['cost_var'] <0)  color: red; @endif ">{{number_format($activity['cost_var']??0,2)}}</td>
+                                                    <td style=" @if($activity['cost_var'] <0)  color: red; @endif " >{{number_format($activity['cost_var']??0,2)}}</td>
                                                    {{--<td><a type="button" href="#" class="btn btn-primary btn-lg concern-btn"--}}
                                                        {{--title="{{$activity['name']}}"--}}
                                                        {{--data-json="{{json_encode($activity)}}">--}}

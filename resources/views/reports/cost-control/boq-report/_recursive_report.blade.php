@@ -12,7 +12,7 @@
         <a href="#col-{{$level['id']}}" data-toggle="collapse"
            style="@if($tree_level==0) color: white;  @elseif($tree_level==1) color: black; @elseif($tree_level==2) color: black; @endif text-decoration: none;">{{$level['name']}}</a>
     </p>
-    <article id="col-{{$level['id']}}" class="tree--child collapse">
+    <article id="col-{{$level['id']}}" class="tree--child collapse level-container">
         @if(count($level['division']))
             <ul class="tree list-unstyled">
                 @foreach($level['division'] as $divKey=>$division)
@@ -20,7 +20,7 @@
                         <p class="blue-second-level"><label
                                     href="#{{$level['id']}}{{$divKey}}"
                                     data-toggle="collapse">{{$division['name']}}</label></p>
-                        <article class="tree--child collapse" id="{{$level['id']}}{{$divKey}}">
+                        <article class="tree--child collapse division-container" id="{{$level['id']}}{{$divKey}}">
 {{--                            @if(count($division['activities']))--}}
                                 {{--@foreach($division['activities'] as $activity)--}}
                                     @if($division['cost_accounts'])
@@ -53,8 +53,8 @@
                                                         </thead>
                                                         <tbody>
                                                         @foreach(collect($division['cost_accounts'])->sortBy('cost_account') as $key=>$cost_account)
-                                                            <tr style="border: 2px solid black">
-                                                                <td class="cell-borders" style="border-right: 2px solid black">{{$key}} </td>
+                                                            <tr style="border: 2px solid black" class="@if($cost_account['at_comp_var']<0 || $cost_account['to_date_cost_var']<0) negative-var @endif">
+                                                                <td class="cell-borders" data-account="{{$key}}" style="border-right: 2px solid black">{{$key}} </td>
                                                                 <td class="cell-borders col-md-4" style="border-right: 2px solid black">{{$cost_account['description']}} </td>
                                                                 <td class="cell-borders">{{number_format($cost_account['dry'],2) ?? 0}} </td>
                                                                 <td class="cell-borders col-md-2">{{number_format($cost_account['unit_price'],2) ?? 0}} </td>
@@ -69,10 +69,10 @@
                                                                 <td class="cell-borders">{{number_format($cost_account['budget_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['allowable_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['to_date_cost'],2) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['to_date_cost_var']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var'],2) ?? 0}}</td>
+                                                                <td class="cell-borders " style="@if($cost_account['to_date_cost_var']<0) color: red; @endif">{{number_format($cost_account['to_date_cost_var'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['remaining_cost'],2) ?? 0}}</td>
                                                                 <td class="cell-borders">{{number_format($cost_account['at_comp'],2) ?? 0}}</td>
-                                                                <td class="cell-borders" style="@if($cost_account['at_comp_var']<0) color: red; @endif">{{number_format($cost_account['at_comp_var'],2) ?? 0}}</td>
+                                                                <td class="cell-borders " style="@if($cost_account['at_comp_var']<0) color: red; @endif">{{number_format($cost_account['at_comp_var'],2) ?? 0}}</td>
                                                             </tr>
 
                                                         @endforeach
