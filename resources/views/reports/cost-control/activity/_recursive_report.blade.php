@@ -15,7 +15,7 @@
 
     </p>
 
-    <article id="col-{{$level['id']}}" class="tree--child collapse">
+    <article id="col-{{$level['id']}}" class="tree--child collapse level-container">
         <table class="table table-condensed">
             <thead  style="background:#95DAC2;color: #000; border-bottom: solid black">
             <tr>
@@ -72,9 +72,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach(collect($level['activities'])->sortBy('activity_name') as $activity)
-                            <tr>
-                            <td>{{$activity['activity_name']}}</td>
+                        @foreach(collect($level['activities'])->sortBy('activity_name') as $key=>$activity)
+                            <tr @if($activity['allowable_var']<0 || $activity['allowable_var'] <0 || $activity['prev_var']<0) class="negative-var" @endif>
+                            <td data-activity="{{$key}}">{{$activity['activity_name']}}</td>
                             <td>{{number_format($activity['budget_cost'],2)}}</td>
                             <td>{{number_format($activity['prev_cost'],2)}}</td>
                             <td>{{number_format($activity['prev_allowable'],2)}}</td>
