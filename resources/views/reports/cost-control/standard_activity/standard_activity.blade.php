@@ -11,7 +11,7 @@
 
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
             Print</a>
-        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
+        <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
