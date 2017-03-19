@@ -66,14 +66,20 @@
     </div>
 
     <div class="row" style="margin-bottom: 10px;">
-        <form action="{{route('cost.standard_activity_report',$project)}}" class="form-inline col col-md-8" method="get">
+        <form action="{{route('cost.standard_activity_report',$project)}}" class="form-inline col col-md-4" method="get">
             {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
 
-        <div class="btn-group btn-group-sm  btn-group-block col-md-4">
+        <div class="btn-group btn-group-sm  btn-group-block col-md-2">
             <a href="#ActivitiesModal" data-toggle="modal" class="btn btn-default btn-block  tree-open">Select Activity</a>
             <a href="#" class="remove-tree-input btn btn-warning" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
+
+        </div>
+        <div class="btn-group btn-group-sm  btn-group-block col-md-2" style="text-align: center">
+        <button type="button" class=" btn btn-danger col-md-1 negative"  data-toggle="button" aria-pressed="false" >
+           Negative Variance
+        </button>
         </div>
     </div>
 
@@ -144,13 +150,40 @@
             });
 
             $('.remove-tree-input').on('click',function () {
-                $('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
-                global_selector.parents('.divison-container,.activity-container').removeClass('in').addClass('hidden');
+                global_selector.parents('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
                 global_selector.removeClass('in').addClass('hidden');
                 global_selector.parents('li').removeClass('target').addClass('hidden');
                 $('li').not('target').removeClass('hidden');
+                $('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
                 $('li.target').removeClass('target');
                 $('ul.stdreport > li').not('.target').show();
+            })
+
+            $('.negative').on('click',function () {
+                var articles =$('.negative_var');
+                articles.each(function () {
+                    if($(this).hasClass('clicked')){
+                        $(this).parents('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
+                        $(this).removeClass('in').removeClass('hidden');
+                        $(this).parents('li').removeClass('target').removeClass('hidden');
+                        $(this).removeClass('clicked');
+                        $('ul.stdreport > li').not('.target').removeClass('hidden');
+                        $(this).css('background-color:#FF574B');
+
+
+                    }
+                    else{
+                        $(this).parents('.divison-container,.activity-container').addClass('in').removeClass('hidden');
+                        $(this).addClass('in').removeClass('hidden');
+                        $(this).parents('li').addClass('target').removeClass('hidden');
+                        $(this).addClass('clicked');
+                        $('ul.stdreport > li').not('.target').addClass('hidden');
+                        $(this).css('background-color:#990025');
+                    }
+//                    $('.divison-container,.activity-container').removeClass('in').addClass('hidden');
+
+                });
+
             })
 
         })
