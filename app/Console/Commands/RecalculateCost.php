@@ -13,7 +13,7 @@ class RecalculateCost extends Command
     protected $signature = 'cost:recalculate';
     protected $description = 'Recalculate cost fields';
 
-    protected $fields = ['pw_index', 'allowable_ev_cost'];
+    protected $fields = ['pw_index', 'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var'];
     /** @var ProgressBar */
     protected $bar;
 
