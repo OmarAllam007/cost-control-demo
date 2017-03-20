@@ -136,7 +136,7 @@ class CostController extends Controller
 
         ActualResources::whereIn('breakdown_resource_id', $resourceIds)
             ->where('period_id', $breakdown->project->open_period()->id)
-            ->chunk(100, function (Collection $resources) {
+            ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
                     $resource->delete();
                 });
@@ -153,7 +153,7 @@ class CostController extends Controller
 
         ActualResources::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
             ->where('period_id', $wbs_level->project->open_period()->id)
-            ->chunk(100, function (Collection $resources) {
+            ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
                     $resource->delete();
                 });
@@ -170,7 +170,7 @@ class CostController extends Controller
 
         ActualResources::whereIn('wbs_level_id', $project->id)
             ->where('period_id', $project->open_period()->id)
-            ->chunk(1000, function (Collection $resources) {
+            ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
                     $resource->delete();
                 });
