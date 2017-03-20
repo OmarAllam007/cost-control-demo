@@ -28,6 +28,8 @@ class ExportCostShadow extends Job
 
     protected $buffer = '';
 
+    protected $cache = ['activity' => [], 'wbs' => []];
+
     public function __construct($project, $perspective = '')
     {
         $this->project = $project;
@@ -37,7 +39,7 @@ class ExportCostShadow extends Job
 
     public function handle()
     {
-        set_time_limit(1800);
+        set_time_limit(3600);
         $headers = [
             'WBS Level 1', 'WBS Level 2', 'WBS Level 3', 'WBS Level 4', 'WBS Level 5', 'WBS Level 6',
             'Activity Division 1', 'Activity Division 2', 'Activity Division 3', 'Activity Name', 'Activity ID',
@@ -66,19 +68,23 @@ class ExportCostShadow extends Job
 
         /** @var $query Builder */
 
-        $query->chunk(5000, function ($shadows) {
+        $query->chunk(10000, function ($shadows) {
+            $time = microtime(1);
             foreach ($shadows as $costShadow) {
-                $boqDescription = '';
-                $boq = Boq::costAccountOnWbs($costShadow->wbs, $costShadow->cost_account)->first();
-                if ($boq) {
-                    $boqDescription = $boq->description;
+                $boqDescription = $this->getBoqDescription($costShadow);
+
+                if (isset($this->cache['resources'][$costShadow->resource_id])) {
+                    $resource = $this->cache['resources'][$costShadow->resource_id];
+                } else {
+                    $this->cache['resources'][$costShadow->resource_id] = $resource = Resources::find($costShadow->resource_id);
                 }
 
-                $resource = Resources::find($costShadow->resource_id);
+                $wbs = $this->getWbs($costShadow);
+                $activityDivs = $this->getActivityDivisions($costShadow);
 
                 $this->buffer .= "\n" .
-                    $this->getWbs($costShadow).','.
-                    $this->getActivityDivisions($costShadow).','.
+                    $wbs.','.
+                    $activityDivs.','.
                     csv_quote($costShadow['activity']).','.
                     '"'.$costShadow['code'].'",'.
                     csv_quote($boqDescription).','.
@@ -87,7 +93,7 @@ class ExportCostShadow extends Job
                     round($costShadow['budget_qty'] ?: '0', 2).','.
                     round($costShadow['resource_qty'] ?: '0', 2).','.
                     round($costShadow['resource_waste'] ?: '0', 2).','.
-                    $this->getResourceDivisions($costShadow).','.
+                    $this->getResourceDivisions($resource).','.
                     '"'.$costShadow['resource_code'].'",'.
                     csv_quote($costShadow['resource_name']).','.
                     csv_quote($resource->top_material) . ','.
@@ -147,6 +153,10 @@ class ExportCostShadow extends Job
     protected function getWbs($costShadow)
     {
         $level = $costShadow->wbs;
+        if (isset($this->cache['wbs'][$level->id])) {
+            return $this->cache['wbs'][$level->id];
+        }
+
         $wbsLevels = [$level->name];
         $parent = $level;
         while ($parent = $parent->parent) {
@@ -167,11 +177,15 @@ class ExportCostShadow extends Job
             $wbsLevels[5] = $level->name;
         }
 
-        return implode(',', array_map('csv_quote', $wbsLevels));
+        return $this->cache['wbs'][$level->id] = implode(',', array_map('csv_quote', $wbsLevels));
     }
 
     protected function getActivityDivisions($costShadow)
     {
+        if (isset($this->cache['activity'][$costShadow->activity_id])) {
+            return $this->cache['activity'][$costShadow->activity_id];
+        }
+
         $activity = StdActivity::find($costShadow->activity_id);
         $division = $parent =$activity->division;
         $divisions = [$division->name];
@@ -191,12 +205,14 @@ class ExportCostShadow extends Job
             $divisions[2] = $division->name;
         }
 
-        return implode(',', array_map('csv_quote', $divisions));
+        return $this->cache['activity'][$costShadow->activity_id] = implode(',', array_map('csv_quote', $divisions));
     }
 
-    protected function getResourceDivisions($costShadow)
+    protected function getResourceDivisions($resource)
     {
-        $resource = Resources::find($costShadow->resource_id);
+        if (isset($this->cache['divisions'][$resource->id])) {
+            return $this->cache['divisions'][$resource->id];
+        }
 
         $parent = $division = $resource->types;
         $divisions = [$division->name];
@@ -215,6 +231,22 @@ class ExportCostShadow extends Job
             }
             $divisions[2] = $division->name;
         }
-        return implode(',', array_map('csv_quote', $divisions));
+        return $this->cache['divisions'][$resource->id] = implode(',', array_map('csv_quote', $divisions));
+    }
+
+    protected function getBoqDescription($costShadow)
+    {
+        $boqDescription = '';
+        $boqCode = $costShadow->wbs . '#'. $costShadow->cost_account;
+        if (isset($this->cache['boqs'][$boqCode])) {
+            return $this->cache['boqs'][$boqCode];
+        } else {
+            $boq = Boq::costAccountOnWbs($costShadow->wbs, $costShadow->cost_account)->first();
+            if ($boq) {
+                return $this->cache['boqs'][$boqCode] = $boq->description;
+            }
+        }
+
+        return $this->cache['boqs'][$boqCode] = '';
     }
 }
