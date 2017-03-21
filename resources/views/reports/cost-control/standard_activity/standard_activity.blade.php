@@ -9,9 +9,9 @@
             {{--<i class="fa fa-warning"></i> Concerns--}}
         {{--</button>--}}
 
-        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
+        <a href="?print=1" target="_blank" class="btn btn-default btn-sm print"><i class="fa fa-print"></i>
             Print</a>
-        <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm">
+        <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm back">
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
@@ -147,6 +147,8 @@
             var ConcernModalForm = ConcernModal.find('form');
             var title = ConcernModal.find('.modal-title');
             var project_id = $('#project_id').val();
+            var negative_clicked = false;
+            var activity =0;
             $('.concern-btn').on('click', function (e) {
                 e.preventDefault();
                 var data = ($(this).attr('data-json'));
@@ -180,31 +182,45 @@
                 if (this.checked) {
                     var value = $(this).attr('value');
                     global_selector = $('#activity-'+value);
-                    $('.divison-container,.activity-container').removeClass('in').addClass('hidden');
-                    global_selector.parents('.divison-container,.activity-container').addClass('in').removeClass('hidden');
+                    $('.division-container,.activity-container').removeClass('in').addClass('hidden');
+                    global_selector.parents('.division-container,.activity-container').addClass('in').removeClass('hidden');
                     global_selector.addClass('in target').removeClass('hidden');
                     global_selector.parents('li').addClass('target').removeClass('hidden');
                     $('.activity-container').not('.target').parent('li').addClass('hidden');
                     $('ul.stdreport > li').not('.target').addClass('hidden');
+                    activity = value;
+                    negative_clicked=false;
+
                 }
             });
 
             $('.remove-tree-input').on('click',function () {
-                global_selector.parents('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
+                global_selector.parents('.division-container,.activity-container').removeClass('in').removeClass('hidden');
                 global_selector.removeClass('in').addClass('hidden');
                 global_selector.parents('li').removeClass('target').addClass('hidden');
                 global_selector.removeClass('target');
                 $('li').not('target').removeClass('hidden');
-                $('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
+                $('.division-container,.activity-container').removeClass('in').removeClass('hidden');
                 $('li.target').removeClass('target');
                 $('ul.stdreport > li').not('.target').show();
+                activity = 0;
             })
 
             $('.checkList').on('click',function () {
                 var articles =$('.negative_var');
+                if(!$(this).hasClass('checked_var')){
+                    $(this).addClass('checked_var');
+                    negative_clicked = true;
+                    activity=0;
+                }
+                else{
+                    $(this).removeClass('checked_var');
+                    negative_clicked = false;
+                }
+
                 articles.each(function () {
                     if($(this).hasClass('clicked')){
-                        $(this).parents('.divison-container,.activity-container').removeClass('in').removeClass('hidden');
+                        $(this).parents('.division-container,.activity-container').removeClass('in').removeClass('hidden');
                         $(this).removeClass('in').removeClass('hidden');
                         $(this).parents('li').removeClass('target').removeClass('hidden');
                         $(this).removeClass('clicked');
@@ -214,17 +230,24 @@
 
                     }
                     else{
-                        $(this).parents('.divison-container,.activity-container').addClass('in').removeClass('hidden');
+                        $(this).parents('.division-container,.activity-container').addClass('in').removeClass('hidden');
                         $(this).addClass('in').removeClass('hidden');
                         $(this).parents('li').addClass('target').removeClass('hidden');
                         $(this).addClass('clicked');
+
                         $('ul.stdreport > li').not('.target').addClass('hidden');
                         $(this).css('background-color:#990025');
                     }
-//                    $('.divison-container,.activity-container').removeClass('in').addClass('hidden');
+//                    $('.division-container,.activity-container').removeClass('in').addClass('hidden');
 
                 });
 
+            })
+            $('.print').on('click',function () {
+                sessionStorage.removeItem('negative_var_'+project_id);
+                sessionStorage.removeItem('activity_'+project_id);
+                sessionStorage.setItem('negative_var_'+project_id,negative_clicked);
+                sessionStorage.setItem('activity_'+project_id,activity);
             })
 
         })

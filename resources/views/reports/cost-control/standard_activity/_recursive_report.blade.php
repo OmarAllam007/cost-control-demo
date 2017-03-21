@@ -17,7 +17,7 @@
 
     </p>
 
-    <article id="{{$division['id']}}" class="tree--child collapse divison-container">
+    <article id="{{$division['id']}}" class="tree--child collapse division-container">
         <table class="table table-condensed">
             <thead  style="background:#95DAC2;color: #000; border-bottom: solid black">
             <tr>
