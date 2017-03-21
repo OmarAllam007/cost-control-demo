@@ -39,7 +39,6 @@ class ExportCostShadow extends Job
 
     public function handle()
     {
-        set_time_limit(3600);
         $headers = [
             'WBS Level 1', 'WBS Level 2', 'WBS Level 3', 'WBS Level 4', 'WBS Level 5', 'WBS Level 6',
             'Activity Division 1', 'Activity Division 2', 'Activity Division 3', 'Activity Name', 'Activity ID',
@@ -61,14 +60,14 @@ class ExportCostShadow extends Job
         $period = $this->project->open_period();
 
         if ($this->perspective == 'budget') {
-            $query = BreakDownResourceShadow::joinCost(null, $period)->where('budget.project_id', $this->project->id);
+            $query = BreakDownResourceShadow::with('previous', 'current', 'cost')->where('project_id', $this->project->id);
         } else {
             $query = CostShadow::joinShadow(null, $period);
         }
 
         /** @var $query Builder */
 
-        $query->chunk(10000, function ($shadows) {
+        $query->chunk(5000, function ($shadows) {
             $time = microtime(1);
             foreach ($shadows as $costShadow) {
                 $boqDescription = $this->getBoqDescription($costShadow);
@@ -146,6 +145,8 @@ class ExportCostShadow extends Job
 
             \Log::info('Chunk has been buffered; memory: ' . round(memory_get_usage() / (1024 * 1024), 2));
         });
+
+        file_put_contents(storage_path('app/cost-shadow-' . slug($this->project->name) . '_' . slug($this->project->open_period()->name) . '.csv'), $this->buffer);
 
         return $this->buffer;
     }

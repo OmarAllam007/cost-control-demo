@@ -71,6 +71,16 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(WbsResource::class, 'breakdown_resource_id', 'breakdown_resource_id');
     }
 
+    function previous()
+    {
+        return $this->hasOne(PreviousCost::class, 'prev_breakdown_resource_id', 'breakdown_resource_id');
+    }
+
+    function current()
+    {
+        return $this->hasOne(CurrentCost::class, 'curr_breakdown_resource_id', 'breakdown_resource_id');
+    }
+
     function scopeSumFields(Builder $q, $group, $fields = [])
     {
         foreach ($fields as $field) {
@@ -83,12 +93,7 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(Productivity::class);
     }
 
-    public function recalculate()
-    {
-
-    }
-
-    function scopeJoinCost(Builder $query, WbsLevel $wbsLevel = null, Period $period = null)
+    function scopeJoinCost(Builder $query, WbsLevel $wbsLevel = null)
     {
         $query->from("$this->table as budget")
             ->leftJoin('current_resources as curr', 'budget.breakdown_resource_id', '=', 'curr.curr_breakdown_resource_id')
@@ -109,6 +114,83 @@ class BreakDownResourceShadow extends Model
         return ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
     }
 
+    public function getCurrQtyAttribute()
+    {
+        if (isset($this->cost->curr_qty)) {
+            return $this->cost->curr_qty;
+        }
+
+        if (isset($this->current->curr_qty)) {
+            return $this->current->curr_qty;
+        }
+
+        return 0;
+    }
+
+    public function getCurrCostAttribute()
+    {
+        if (isset($this->cost->curr_cost)) {
+            return $this->cost->curr_cost;
+        }
+
+        if (isset($this->current->curr_cost)) {
+            return $this->current->curr_cost;
+        }
+
+        return 0;
+    }
+
+    public function getCurrUnitPriceAttribute()
+    {
+        if (isset($this->cost->curr_unit_price)) {
+            return $this->cost->curr_unit_price;
+        }
+
+        if (isset($this->current->curr_unit_price)) {
+            return $this->current->curr_unit_price;
+        }
+
+        return 0;
+    }
+
+    public function getPrevQtyAttribute()
+    {
+        if (isset($this->cost->prev_qty)) {
+            return $this->cost->prev_qty;
+        }
+
+        if (isset($this->previous->prev_qty)) {
+            return $this->previous->prev_qty;
+        }
+
+        return 0;
+    }
+
+    public function getPrevCostAttribute()
+    {
+        if (isset($this->cost->prev_cost)) {
+            return $this->cost->prev_cost;
+        }
+
+        if (isset($this->previous->prev_cost)) {
+            return $this->previous->prev_cost;
+        }
+
+        return 0;
+    }
+
+    public function getPrevUnitPriceAttribute()
+    {
+        if (isset($this->cost->prev_unit_price)) {
+            return $this->cost->prev_unit_price;
+        }
+
+        if (isset($this->previous->prev_unit_price)) {
+            return $this->previous->prev_unit_price;
+        }
+
+        return 0;
+    }
     /*    function getBoqDescription()
         {
 
