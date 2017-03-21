@@ -9,7 +9,7 @@ let Variables = Vue.extend({
         addVariable: function() {
             var index = this.vars.length;
             var number = index + 1;
-            var _var = {id: index, name: '$v' + number, label: ''};
+            var _var = {id: number, name: '$v' + number, label: ''};
 
             this.vars.push(_var);
         },
