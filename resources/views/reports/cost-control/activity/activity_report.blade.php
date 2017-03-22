@@ -5,9 +5,9 @@
 @section('header')
     <h2 class="">{{$project->name}} - Activity report</h2>
     <div class="pull-right">
-        {{--<a href="?print=1&paint=std-activity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>--}}
-        {{--Print</a>--}}
-        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
+        <a href="?print=1" target="_blank" class="btn btn-default btn-sm print"><i class="fa fa-print"></i>
+        Print</a>
+        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm back">
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
@@ -88,6 +88,8 @@
             @include('reports.cost-control.activity._recursive_report', ['level'=>$level,'tree_level'=>0])
         @endforeach
     </ul>
+    <input type="hidden" value="{{$project->id}}" id="project_id">
+
     @include('std-activity._modal', ['input' => 'activity', 'value' => 'Select Activity'])
     @include('wbs-level._modal')
 @endsection
@@ -96,6 +98,10 @@
         $(function () {
             var global_selector = '';
             var target_td = '';
+            var project_id = $('#project_id').val();
+            var activity = 0;
+            var negative_clicked = 0;
+            var wbs = 0;
 
 //            WBS-LEVELS
             $('.wbs-radio').on('change', function () {
@@ -109,6 +115,10 @@
                     global_selector.children().children().children('article').addClass('in').removeClass('hidden');
 //                    $('.level-container').not('.target').parent('li').addClass('hidden');
 //                    $('ul.stdreport > li').not('.target').addClass('hidden');
+                    wbs=value;
+                    activity=0;
+                    negative_clicked=0;
+
                 }
             });
 
@@ -120,16 +130,22 @@
                 $('li').not('target').removeClass('hidden');
                 $('.level-container').removeClass('in').removeClass('hidden');
                 global_selector.children().children().children('article').removeClass('in').addClass('hidden');
+                wbs=0;
+                activity=0;
+                negative_clicked=0;
             });
 //            ACTIVITIES
 
             $('.activity-input').on('change', function () {
                 var value = $(this).val();
-                target_td = $("td[data-activity='" + value + "']");
+                target_td = $("tr#activity-" + value);
                 target_td.parents('.level-container').addClass('in').removeClass('hidden');
                 target_td.addClass('in').removeClass('hidden');
                 target_td.parents('li').addClass('target').removeClass('hidden');
 //                target_td.parent('tr').css('background-color', '');
+                wbs=0;
+                activity=value;
+                negative_clicked=0;
             });
 
             $('.remove-tree-input-activity').on('click', function () {
@@ -140,14 +156,16 @@
                 $('li').not('target').removeClass('hidden');
                 $('.level-container').removeClass('in').removeClass('hidden');
 //                target_td.parent('tr').css('background-color', 'white');
-
 //                target_td.children().children().children('article').removeClass('in').addClass('hidden');
+                wbs=0;
+                activity=0;
+                negative_clicked=0;
             });
 
 
 //            COST-ACCOUNTS
             $('.checkList').on('click', function () {
-                var negative_rows = $('.negative-var');
+                var negative_rows = $('.negative_var');
                 if ($(this).hasClass('clicked')) {
                     negative_rows.each(function () {
                         $(this).parents('.level-container').removeClass('in').removeClass('hidden');
@@ -156,6 +174,9 @@
 //                        $('ul.stdreport > li').not('.target').removeClass('hidden');
                     });
                     $(this).removeClass('clicked');
+                    wbs=0;
+                    activity=0;
+                    negative_clicked=0;
                 }
                 else {
                     negative_rows.each(function () {
@@ -164,11 +185,25 @@
                         $(this).parents('li').addClass('target').removeClass('hidden');
                     });
                     $(this).addClass('clicked');
+                    wbs=0;
+                    activity=0;
+                    negative_clicked=1;
                 }
 
             })
+
+            $('.print').on('click',function () {
+                sessionStorage.removeItem('negative_var_'+project_id);
+                sessionStorage.removeItem('activity_'+project_id);
+                sessionStorage.removeItem('wbs_'+project_id);
+
+                sessionStorage.setItem('negative_var_'+project_id,negative_clicked);
+                sessionStorage.setItem('activity_'+project_id,activity);
+                sessionStorage.setItem('wbs_'+project_id,wbs);
+            })
         })
     </script>
+    <script src="{{asset('/js/project.js')}}"></script>
     <script src="{{asset('/js/tree-select.js')}}"></script>
 
 @endsection

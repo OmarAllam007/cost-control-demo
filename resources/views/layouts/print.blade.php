@@ -64,43 +64,57 @@
         }
         $('.' + hash[1]).css('background', '#3e5a20');
     }
-    $(function () {
-        //negative_var
-        console.log(sessionStorage.getItem('negative_var_' + project_id), sessionStorage.getItem('activity_' + project_id))
 
-        if (sessionStorage.getItem('negative_var_' + project_id)==true) {
+    $(function () {
+
+        //negative_var
+        var negative_variance = sessionStorage.getItem('negative_var_' + project_id);
+        var activity = sessionStorage.getItem('activity_' + project_id);
+        var wbs = sessionStorage.getItem('wbs_' + project_id);
+        console.log(negative_variance)
+        if (negative_variance !=0) {
             var articles = $('.negative_var');
             articles.each(function () {
-                $(this).parents('.division-container,.activity-container').addClass('in').removeClass('hidden');
+                $(this).parents().each(function () {
+                    $(this).addClass('in').removeClass('hidden')
+                });
                 $(this).addClass('in').removeClass('hidden');
                 $(this).parents('li').addClass('target').removeClass('hidden');
                 $(this).addClass('clicked');
-                negative_clicked = true;
-                activity = 0;
-                $('ul.stdreport > li').not('.target').addClass('hidden');
-                $(this).css('background-color:#990025');
-//                    $('.division-container,.activity-container').removeClass('in').addClass('hidden');
 
             });
         }
 //activity_var
-        if (sessionStorage.getItem('activity_' + project_id) != 0) {
-            console.log('step2')
+        if (activity != 0) {
             var value = sessionStorage.getItem('activity_' + project_id);
             global_selector = $('#activity-' + value);
-            $('.division-container,.activity-container').removeClass('in').addClass('hidden');
-            global_selector.parents('.division-container,.activity-container').addClass('in').removeClass('hidden');
+//            $('article').removeClass('in').addClass('hidden');
+            global_selector.parents().each(function () {
+              $(this).addClass('in').removeClass('hidden')
+            });
             global_selector.addClass('in target').removeClass('hidden');
             global_selector.parents('li').addClass('target').removeClass('hidden');
-            $('.activity-container').not('.target').parent('li').addClass('hidden');
+//            $('article').not('.target').parent('li').addClass('hidden');
 //        $('ul.stdreport > li').not('.target').addClass('hidden');
+        }
+
+        if(wbs !=0 || wbs !=null){
+            var wbs_value = sessionStorage.getItem('wbs_' + project_id);
+            global_selector = $('#col-' + wbs_value);
+//            $('.level-container').removeClass('in').addClass('hidden');
+            global_selector.parents().each(function () {
+              $(this).addClass('in').removeClass('hidden')
+            });
+            global_selector.addClass('in').removeClass('hidden');
+            global_selector.parents('li').addClass('target').removeClass('hidden');
+            global_selector.children().children().children('article').addClass('in').removeClass('hidden');
         }
         $('form').addClass('hidden');
         $('div.row').addClass('hidden')
         $('.back,.print').addClass('hidden')
     })
     //    changeButtonBackroundColor();
-    window.print();
+    //    window.print();
 </script>
 
 @if (env('APP_ENV') != 'local')
