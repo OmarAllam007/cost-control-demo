@@ -51,6 +51,7 @@
                 wbs=value;
             }
         });
+
         $('.remove-tree-input-wbs').on('click', function () {
             console.log(global_selector)
             global_selector.parents('.level-container').removeClass('in').removeClass('hidden');
