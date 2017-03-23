@@ -10,7 +10,7 @@
                 @endif
             "
     >
-        <a href="#{{$level['id']}}"  class="
+        <a href="#col-{{$level['id']}}"  class="
        @if($tree_level ==0)
                 blue-first-level
              @elseif($tree_level ==1)
@@ -24,7 +24,7 @@
 
     </p>
 
-    <article id="{{$level['id']}}" class="tree--child collapse">
+    <article id="col-{{$level['id']}}" class="tree--child collapse level-container">
 
             <ul class="list-unstyled">
                     <li>

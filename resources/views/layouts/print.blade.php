@@ -52,7 +52,6 @@
 @yield('javascript')
 
 <script>
-    var project_id = $('#project_id').val();
     var global_selector = 0;
     function changeButtonBackroundColor() {
         var vars = [], hash;
@@ -66,13 +65,19 @@
     }
 
     $(function () {
+        var project_id = $('#project_id').val();
 
         //negative_var
         var negative_variance = sessionStorage.getItem('negative_var_' + project_id);
         var activity = sessionStorage.getItem('activity_' + project_id);
         var wbs = sessionStorage.getItem('wbs_' + project_id);
-        console.log(negative_variance)
-        if (negative_variance !=0) {
+        var productivity = sessionStorage.getItem('budget_productivity_' + project_id);
+
+        var type = sessionStorage.getItem('dictionary_' + project_id);
+        console.log(type , sessionStorage)
+
+        if (negative_variance != 0 && negative_variance != null) {
+            console.log('variance', negative_variance)
             var articles = $('.negative_var');
             articles.each(function () {
                 $(this).parents().each(function () {
@@ -85,36 +90,80 @@
             });
         }
 //activity_var
-        if (activity != 0) {
+       else if (activity != 0 && activity != null) {
+            console.log('activity', activity)
             var value = sessionStorage.getItem('activity_' + project_id);
             global_selector = $('#activity-' + value);
 //            $('article').removeClass('in').addClass('hidden');
             global_selector.parents().each(function () {
-              $(this).addClass('in').removeClass('hidden')
+                $(this).addClass('in').removeClass('hidden')
             });
             global_selector.addClass('in target').removeClass('hidden');
             global_selector.parents('li').addClass('target').removeClass('hidden');
+            $('ul.report_tree > li:not(.target)').addClass('hidden');
 //            $('article').not('.target').parent('li').addClass('hidden');
 //        $('ul.stdreport > li').not('.target').addClass('hidden');
         }
 
-        if(wbs !=0 || wbs !=null){
+        else if (productivity != 0 && productivity != null) {
+            console.log('productivity', productivity)
+            var prod_value = sessionStorage.getItem('budget_productivity_' + project_id);
+            console.log(prod_value)
+            global_selector = $('#' + prod_value);
+//            $('article').removeClass('in').addClass('hidden');
+            global_selector.parents().each(function () {
+                $(this).addClass('in').removeClass('hidden')
+            });
+            global_selector.addClass('in target').removeClass('hidden');
+            global_selector.parents().each(function () {
+                $(this).addClass('target').removeClass('hidden')
+            });
+            $('ul.report_tree > li:not(.target)').addClass('hidden');
+
+        }
+
+       else if (wbs != 0 && wbs != null) {
+            console.log('wbs', wbs)
             var wbs_value = sessionStorage.getItem('wbs_' + project_id);
+            console.log(wbs_value)
             global_selector = $('#col-' + wbs_value);
 //            $('.level-container').removeClass('in').addClass('hidden');
             global_selector.parents().each(function () {
-              $(this).addClass('in').removeClass('hidden')
+                $(this).addClass('in').removeClass('hidden')
             });
             global_selector.addClass('in').removeClass('hidden');
             global_selector.parents('li').addClass('target').removeClass('hidden');
             global_selector.children().children().children('article').addClass('in').removeClass('hidden');
+            $('ul.report_tree > li:not(.target)').addClass('hidden');
+
         }
+
+        else if (type != 0 && type != null) {
+            var type_value = sessionStorage.getItem('dictionary_' + project_id);
+            console.log(type_value)
+            global_selector = $('#col-' + type_value);
+//            $('.level-container').removeClass('in').addClass('hidden');
+            global_selector.parents().each(function () {
+                $(this).addClass('in').removeClass('hidden')
+            });
+            global_selector.addClass('in').removeClass('hidden');
+            global_selector.parents('li').addClass('target').removeClass('hidden');
+            global_selector.children().children().children('article').addClass('in').removeClass('hidden');
+            $('ul.report_tree > li:not(.target)').addClass('hidden');
+
+        }
+        else{
+            $('ul > li > article.collapse').addClass('in');
+        }
+
+
         $('form').addClass('hidden');
         $('div.row').addClass('hidden')
         $('.back,.print').addClass('hidden')
+        $('div.pull-right').children('a').addClass('hidden')
     })
-    //    changeButtonBackroundColor();
-    //    window.print();
+    changeButtonBackroundColor();
+    //        window.print();
 </script>
 
 @if (env('APP_ENV') != 'local')

@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\CsiCategory::tree()->get() as $level)
+                    @foreach(App\CsiCategory::tree()->get()->sortBy('name') as $level)
                         @include('csi-category._recursive_input', compact('level'))
                     @endforeach
                 </ul>
