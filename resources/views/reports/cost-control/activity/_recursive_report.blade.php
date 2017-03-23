@@ -73,8 +73,8 @@
                         </thead>
                         <tbody>
                         @foreach(collect($level['activities'])->sortBy('activity_name') as $key=>$activity)
-                            <tr @if($activity['allowable_var']<0 || $activity['allowable_var'] <0 || $activity['prev_var']<0) class="negative-var" @endif>
-                            <td data-activity="{{$key}}">{{$activity['activity_name']}}</td>
+                            <tr id="activity-{{$key}}" @if($activity['allowable_var']<0 || $activity['allowable_var'] <0 || $activity['prev_var']<0) class="negative_var" @endif>
+                            <td>{{$activity['activity_name']}}</td>
                             <td>{{number_format($activity['budget_cost'],2)}}</td>
                             <td>{{number_format($activity['prev_cost'],2)}}</td>
                             <td>{{number_format($activity['prev_allowable'],2)}}</td>
