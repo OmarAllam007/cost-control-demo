@@ -12,7 +12,25 @@
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
+<style>
+    .scrollToTop{
+        width:100px;
+        height:130px;
+        padding:10px;
+        text-align:center;
+        font-weight: bold;
+        color: #444;
+        text-decoration: none;
+        position:fixed;
+        bottom:30px;
+        right:40px;
+        display:none;
 
+      }
+    .scrollToTop:hover{
+        text-decoration:none;
+    }
+</style>
 @endsection
 @section('body')
     <div class="row" style="margin-bottom: 10px;">
@@ -29,7 +47,8 @@
             @include('reports.budget.resource_dictionary._recursive_resource_dictionary', ['level'=>$level,'tree_level'=>0])
         @endforeach
     </ul>
-
+    <a href="#" class="scrollToTop"><i class="fa fa-arrow-up fa-5x" aria-hidden="true"></i>
+        </a>
     <input type="hidden" value="{{$project->id}}" id="project_id">
     @include('resource-type._modal')
 @endsection
@@ -50,11 +69,23 @@
                 global_selector.parents().each(function () {
                     $(this).addClass('target').removeClass('hidden')
                 });
+
                 $('ul.report_tree > li:not(.target)').addClass('hidden');
                 type = value;
-
             }
         });
+        $('#ResourceTypeModal').on('hidden.bs.modal', function () {
+            $('html, body').animate({
+                scrollTop: $("#col-"+type).offset().top
+            }, 300)
+        });
+
+        $('.close').on('click',function () {
+            $('html, body').animate({
+                scrollTop: $("#col-"+type).offset().top
+            }, 300)
+        });
+
         $('.remove-tree-input-type').on('click', function () {
             global_selector.parents('.level-container').removeClass('in').removeClass('hidden');
             global_selector.removeClass('in').addClass('hidden');
@@ -68,8 +99,22 @@
         });
 
         $('.print').on('click', function () {
-            sessionStorage.removeItem('dictionary_' + project_id;
+            sessionStorage.removeItem('dictionary_' + project_id);
             sessionStorage.setItem('dictionary_' + project_id, type);
+        });
+
+        $(window).scroll(function(){
+            if ($(this).scrollTop() > 100) {
+                $('.scrollToTop').fadeIn();
+            } else {
+                $('.scrollToTop').fadeOut();
+            }
+        });
+
+        //Click event to scroll to top
+        $('.scrollToTop').click(function(){
+            $('html, body').animate({scrollTop : 0},100);
+            return false;
         });
     </script>
 
