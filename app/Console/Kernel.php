@@ -7,6 +7,7 @@ use App\Console\Commands\CostUpdateReminder;
 use App\Console\Commands\ExportAllResources;
 use App\Console\Commands\FixBreakdownVars;
 use App\Console\Commands\FixBudgetQty;
+use App\Console\Commands\FixModResources;
 use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
 use App\Console\Commands\RecalculateCost;
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         FixBreakdownVars::class,
         ExportAllResources::class,
         RecalculateCost::class,
+        FixModResources::class
     ];
 
     /**
