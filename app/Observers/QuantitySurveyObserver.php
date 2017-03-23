@@ -12,40 +12,48 @@ namespace App\Observers;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\Http\Controllers\Exports\QuantitySurvey;
 use App\Survey;
 use Illuminate\Database\Eloquent\Builder;
 
 class QuantitySurveyObserver
 {
-
-    function updated(Survey $quantitySurvey)
+    function created(Survey $qs)
     {
-        $ids = BreakDownResourceShadow::whereIn('wbs_id', $quantitySurvey->wbsLevel->getChildrenIds())
-            ->where('cost_account', $quantitySurvey->cost_account)
-            ->pluck('breakdown_resource_id');
-
-        $resources = BreakdownResource::whereIn('id', $ids)->get();
-
-        foreach ($resources as $resource) {
-            $resource->budget_qty = $quantitySurvey->budget_qty;
-            $resource->eng_qty = $quantitySurvey->eng_qty;
-            $resource->save();
-        }
+        $this->updateResources($qs);
     }
 
-    function deleting(Survey $survey)
+
+    function updated(Survey $qs)
     {
-        $ids = BreakDownResourceShadow::where('project_id', $survey->project_id)
-            ->whereIn('wbs_id', $survey->wbsLevel->getChildrenIds())
-            ->where('cost_account', $survey->cost_account)->pluck('breakdown_resource_id');
+        $this->updateResources($qs);
+    }
 
-        $resources = BreakdownResource::whereIn('id', $ids)->get();
+    function deleting(Survey $qs)
+    {
+        $ids = BreakDownResourceShadow::where('project_id', $qs->project_id)
+            ->whereIn('wbs_id', $qs->wbsLevel->getChildrenIds())
+            ->where('cost_account', $qs->cost_account)->pluck('breakdown_resource_id');
 
-        foreach ($resources as $resource) {
+        BreakdownResource::whereIn('id', $ids)->get()->each(function (BreakdownResource $resource) {
             $resource->budget_qty = 0;
             $resource->eng_qty = 0;
             $resource->save();
-        }
+        });
+    }
+
+    protected function updateResources(Survey $qs)
+    {
+        $ids = BreakDownResourceShadow::whereIn('wbs_id', $qs->wbsLevel->getChildrenIds())
+            ->where('cost_account', $qs->cost_account)
+            ->pluck('breakdown_resource_id');
+
+        BreakdownResource::whereIn('id', $ids)->get()
+            ->each(function (BreakdownResource $resource) use ($qs) {
+            $resource->budget_qty = $qs->budget_qty;
+            $resource->eng_qty = $qs->eng_qty;
+            $resource->save();
+        });
     }
 
 }

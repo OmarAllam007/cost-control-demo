@@ -69,6 +69,7 @@ class Survey extends Model
             $breakdown_ids[] = $var->breakdown_id;
         }
 
+        // Make sure those breakdowns exist.
         $breakdown_ids = Breakdown::whereIn('id', $breakdown_ids)->pluck('id');
 
         $resources = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->get();
