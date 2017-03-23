@@ -54,6 +54,7 @@
         var project_id = $('#project_id').val();
         var activity = 0;
         var wbs = 0;
+        var global_selector;
         $('.wbs-radio').on('change', function () {
             if (this.checked) {
                 var value = $(this).attr('value');

@@ -72,8 +72,9 @@
         var activity = sessionStorage.getItem('activity_' + project_id);
         var wbs = sessionStorage.getItem('wbs_' + project_id);
         var productivity = sessionStorage.getItem('budget_productivity_' + project_id);
-        console.log(negative_variance)
-        if (negative_variance !=0) {
+
+        if (negative_variance !=0 && negative_variance!=null) {
+            console.log('variance',negative_variance)
             var articles = $('.negative_var');
             articles.each(function () {
                 $(this).parents().each(function () {
@@ -86,7 +87,8 @@
             });
         }
 //activity_var
-        if (activity != 0) {
+        if (activity != 0 && activity!=null) {
+            console.log('activity',activity)
             var value = sessionStorage.getItem('activity_' + project_id);
             global_selector = $('#activity-' + value);
 //            $('article').removeClass('in').addClass('hidden');
@@ -100,7 +102,8 @@
 //        $('ul.stdreport > li').not('.target').addClass('hidden');
         }
 
-        if(productivity !=0){
+        if(productivity !=0 && productivity!=null){
+            console.log('productivity',productivity)
             var prod_value = sessionStorage.getItem('budget_productivity_' + project_id);
             console.log(prod_value)
             global_selector = $('#' + prod_value);
@@ -116,8 +119,10 @@
 
         }
 
-        if(wbs !=0 || wbs !=null){
+        if(wbs !=0 && wbs !=null){
+            console.log('wbs',wbs)
             var wbs_value = sessionStorage.getItem('wbs_' + project_id);
+            console.log(wbs_value)
             global_selector = $('#col-' + wbs_value);
 //            $('.level-container').removeClass('in').addClass('hidden');
             global_selector.parents().each(function () {
