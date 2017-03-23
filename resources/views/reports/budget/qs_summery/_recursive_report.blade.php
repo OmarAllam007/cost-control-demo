@@ -9,13 +9,13 @@
                 @endif
             "
     >
-        <a href="#{{$level['id']}}"  data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
+        <a href="#col-{{$level['id']}}"  data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
             {{$level['name']}}
         </a>
 
     </p>
 
-    <article id="{{$level['id']}}" class="tree--child collapse" data-code="{{strtolower($level['code'])}}">
+    <article id="col-{{$level['id']}}" class="tree--child collapse level-container" data-code="{{strtolower($level['code'])}}">
 
         @if($level['divisions'] && count($level['divisions']))
             <ul class="list-unstyled">
@@ -32,7 +32,7 @@
                                             <p class="blue-fourth-level">
                                                 <a  data-toggle="collapse">{{$activity['name']}}</a>
                                             </p>
-                                            <article class="tree--child " id="{{$keyActivity}}">
+                                            <article class="tree--child " id="activity-{{$keyActivity}}">
                                                 @if ($activity['cost_accounts'] && count($activity['cost_accounts']))
                                                     <article class="tree--child">
                                                         <table class="table table-condensed">

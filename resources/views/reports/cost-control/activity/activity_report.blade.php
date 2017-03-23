@@ -83,7 +83,7 @@
             <p style="margin: 8px;font-size: larger">Negative Variance</p>
         </div>
     </div>
-    <ul class="list-unstyled tree">
+    <ul class="list-unstyled tree report_tree">
         @foreach($tree as $level)
             @include('reports.cost-control.activity._recursive_report', ['level'=>$level,'tree_level'=>0])
         @endforeach
@@ -100,8 +100,8 @@
             var target_td = '';
             var project_id = $('#project_id').val();
             var activity = 0;
-            var negative_clicked = 0;
             var wbs = 0;
+            var negative_clicked = 0;
 
 //            WBS-LEVELS
             $('.wbs-radio').on('change', function () {

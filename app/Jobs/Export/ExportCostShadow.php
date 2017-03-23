@@ -35,10 +35,20 @@ class ExportCostShadow extends Job
         $this->project = $project;
         $this->perspective = $perspective;
     }
-
+    protected $resources ;
+    protected $activities ;
 
     public function handle()
     {
+
+        $this->resources = Resources::all()->keyBy('id')->map(function ($resource) {
+        return $resource;
+        });
+
+        $this->activities = StdActivity::all()->keyBy('id')->map(function ($activity) {
+        return $activity;
+        });
+
         set_time_limit(3600);
         $headers = [
             'WBS Level 1', 'WBS Level 2', 'WBS Level 3', 'WBS Level 4', 'WBS Level 5', 'WBS Level 6',
@@ -60,14 +70,13 @@ class ExportCostShadow extends Job
 
         $period = $this->project->open_period();
 
+
         if ($this->perspective == 'budget') {
-            $query = BreakDownResourceShadow::joinCost(null, $period)->where('budget.project_id', $this->project->id);
+            $query = BreakDownResourceShadow::joinCost(null, $period)->with('wbs')->where('budget.project_id', $this->project->id);
         } else {
             $query = CostShadow::joinShadow(null, $period);
         }
-
         /** @var $query Builder */
-
         $query->chunk(10000, function ($shadows) {
             $time = microtime(1);
             foreach ($shadows as $costShadow) {
@@ -76,9 +85,8 @@ class ExportCostShadow extends Job
                 if (isset($this->cache['resources'][$costShadow->resource_id])) {
                     $resource = $this->cache['resources'][$costShadow->resource_id];
                 } else {
-                    $this->cache['resources'][$costShadow->resource_id] = $resource = Resources::find($costShadow->resource_id);
+                    $this->cache['resources'][$costShadow->resource_id] = $resource = $this->resources->get($costShadow->resource_id);
                 }
-
                 $wbs = $this->getWbs($costShadow);
                 $activityDivs = $this->getActivityDivisions($costShadow);
 
@@ -186,7 +194,7 @@ class ExportCostShadow extends Job
             return $this->cache['activity'][$costShadow->activity_id];
         }
 
-        $activity = StdActivity::find($costShadow->activity_id);
+        $activity = $this->activities->get($costShadow->activity_id);
         $division = $parent =$activity->division;
         $divisions = [$division->name];
         while ($parent = $parent->parent) {
