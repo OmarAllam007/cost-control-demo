@@ -25,6 +25,8 @@ class FixModResources extends Command
             $resource = Resources::find($id);
             $resource->rate = $rate;
             $resource->waste = $waste;
+            $resource->save();
+
             $bar->advance();
         }
 
