@@ -62,15 +62,12 @@ WHERE project_id=?', [$project->id]))->map(function ($survey) {
         $tree = [];
         foreach ($wbs_levels as $level) {
             $treeLevel = $this->buildReport($level);
-            foreach ($treeLevel['children'] as $child) {
-                $treeLevel['revised_boq'] += $child['revised_boq'];
-                $treeLevel['original_boq'] += $child['original_boq'];
-            }
             $tree [] = $treeLevel;
         }
 //        $tree = collect($tree)->sortBy('name');
         $total = $this->total;
         return view('reports.budget.revised_boq.revised_boq', compact('project', 'tree', 'total'));
+
     }
 
     private function buildReport (WbsLevel $level)
@@ -83,13 +80,12 @@ WHERE project_id=?', [$project->id]))->map(function ($survey) {
   sum(price_ur * (SELECT eng_qty FROM qty_surveys WHERE qty_surveys.project_id=? AND wbs_level_id=? AND qty_surveys.cost_account = boqs.cost_account) )  AS revised
 FROM boqs
 WHERE project_id = ? AND wbs_id = ?', [$this->project->id, $level->id, $this->project->id, $level->id]);
-
-        if ($boq_data) {
-//            $tree['revised_boq'] = $boq_data[0]->revised ?? 0;
-//            $tree['original_boq'] = $boq_data[0]->original ?? 0;
-            $this->total['revised'] += $tree['revised_boq'];
-            $this->total['original'] += $tree['original_boq'];
-
+        if(isset($boq_data[0])){
+            $tree['revised_boq'] = $boq_data[0]->revised;
+            $tree['original_boq'] = $boq_data[0]->original;
+        }
+        $boq = Boq::where('project_id',$this->project->id)->where('wbs_id',$level->id)->first();
+        if ($boq) {
             foreach ($this->breakdowns->get($level->id) as $breakdown) {
                 $boq = $this->boqs->get($level->id . $breakdown->cost_account);
                 $survey = $this->survies->get($level->id . $breakdown->cost_account);
@@ -120,11 +116,10 @@ WHERE project_id = ? AND wbs_id = ?', [$this->project->id, $level->id, $this->pr
 
                 $tree['activities'][$activity['activity_id']]['revised_boq'] += $tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['revised_boq'];
                 $tree['activities'][$activity['activity_id']]['original_boq'] += $tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['original_boq'];
-                $tree['revised_boq'] += $tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['revised_boq'];
-                $tree['original_boq'] += $tree['activities'][$activity['activity_id']]['cost_accounts'][$breakdown->cost_account]['original_boq'];
-
 
             }
+            $this->total['revised'] += $tree['revised_boq'];
+            $this->total['original'] += $tree['original_boq'];
         }
         if ($level->children->count()) {
             $tree['children'] = $level->children->map(function (WbsLevel $childLevel) {
