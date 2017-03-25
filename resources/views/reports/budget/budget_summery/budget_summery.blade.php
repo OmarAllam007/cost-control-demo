@@ -25,15 +25,20 @@
 ">
         <div class="tree--item">
             <div class="tree--item--label blue-first-level">
-                <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Budget Cost : {{number_format($total_budget,2)}} </strong></h5>
+                <h5 style="font-size:20pt;font-family: 'Lucida Grande'"><strong>Total Project Budget Cost
+                        : {{number_format($total_budget,2)}} </strong></h5>
             </div>
         </div>
 
     </li>
     <br>
-    <ul class="list-unstyled tree">
+    <ul class="list-unstyled tree report_tree">
         @foreach($tree as $parentKey=>$division)
             @include('reports.budget.budget_summery._recursive_report', ['division'=>$division,'tree_level'=>0])
         @endforeach
     </ul>
+@endsection
+
+@section('javascript')
+
 @endsection
