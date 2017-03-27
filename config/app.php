@@ -171,7 +171,6 @@ $config = [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ValidationProvider::class,
         \App\Providers\CollectionMacrosServiceProvider::class,
-
     ],
 
     /*

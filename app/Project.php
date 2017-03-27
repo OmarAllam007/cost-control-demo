@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use App\Support\DuplicateProject;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use SoftDeletes, HasOptions, Tree, CachesQueries;
+    use HasChangeLog;
 
     protected static $alias = 'Project';
     protected $ids = [];
