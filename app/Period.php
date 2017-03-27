@@ -3,10 +3,12 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use Illuminate\Database\Eloquent\Model;
 
 class Period extends Model
 {
+    use HasChangeLog;
     use CachesQueries;
 
     protected $fillable = ['name', 'start_date', 'is_open'];

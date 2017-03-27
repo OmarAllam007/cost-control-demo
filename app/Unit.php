@@ -3,11 +3,13 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
     use CachesQueries;
+    use HasChangeLog;
 
     protected $table = 'units';
     protected $fillable = ['type','code'];

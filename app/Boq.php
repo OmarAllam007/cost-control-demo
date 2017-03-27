@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,8 +12,8 @@ use App\Behaviors\Tree;
 
 class Boq extends Model
 {
-
     use Tree, HasOptions, CachesQueries;
+    use HasChangeLog;
 
     protected $fillable = [
         'wbs_id', 'item', 'description', 'type', 'unit_id', 'quantity', 'dry_ur', 'price_ur', 'arabic_description'

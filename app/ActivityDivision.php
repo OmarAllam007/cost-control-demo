@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -12,13 +13,13 @@ class ActivityDivision extends Model
 {
     use Tree;
     use SoftDeletes, CachesQueries;
+    use HasChangeLog;
 
     protected $fillable = ['code', 'name', 'parent_id'];
 
     protected $dates = ['created_at', 'updated_at'];
 
     protected $orderBy = ['code', 'name'];
-
 
     public function getLabelAttribute()
     {

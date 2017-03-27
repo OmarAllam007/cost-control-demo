@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\HasChangeLog;
 use Illuminate\Database\Eloquent\Model;
 
 class UnitAlias extends Model
 {
+    use HasChangeLog;
+
     protected $fillable = ['unit_id', 'name'];
 
     static function createAliasFor($unit_id, $name)
