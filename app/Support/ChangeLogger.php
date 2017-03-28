@@ -55,7 +55,7 @@ class ChangeLogger
         $updated = $model->getDirty();
         $original = [];
 
-        if ($model->id) {
+        if ($model->exists) {
             foreach ($updated as $field => $value) {
                 $original[$field] = $model->getOriginal($field, '');
             }
@@ -74,7 +74,7 @@ class ChangeLogger
         foreach ($this->request->files as $file) {
             /** @var UploadedFile $file */
             $originalName = $file->getClientOriginalName();
-            \File::copy($file->getRealPath(), storage_path('uploads/' . $originalName));
+            \File::copy($file->getRealPath(), storage_path('uploads/' . uniqid() . '_' . $originalName));
             $files[] = $originalName;
        }
 

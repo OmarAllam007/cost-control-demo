@@ -78,7 +78,9 @@ GROUP BY 1, 2, 3, 4, 5', $resource);
             $wbs_resource = new WbsResource($data);
             $wbs_resource->appendFields();
             $insert = collect($wbs_resource->toArray())->only($fields);
-            CostShadow::create($insert->toArray());
+            if (!CostShadow::where($resource)->exists()) {
+                CostShadow::create($insert->toArray());
+            }
 
             $bar->advance();
         }

@@ -11,7 +11,10 @@ use Illuminate\Database\Query\JoinClause;
 
 class BreakDownResourceShadow extends Model
 {
-    use Tree, CostAttributes;
+    use Tree;
+    use CostAttributes {
+        getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
+    }
 
     protected $table = 'break_down_resource_shadows';
     protected $fillable = [
@@ -63,7 +66,9 @@ class BreakDownResourceShadow extends Model
 
     function cost()
     {
-        return $this->hasOne(CostShadow::class, 'breakdown_resource_id', 'breakdown_resource_id')->where('period_id', $this->project->open_period()->id);
+        $relation = $this->hasOne(CostShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
+        $relation->take(1)->orderBy('id', 'DESC');
+        return $relation;
     }
 
     function wbs_resource()
@@ -116,7 +121,7 @@ class BreakDownResourceShadow extends Model
 
     public function getCurrQtyAttribute()
     {
-        if (isset($this->cost->curr_qty)) {
+        if (isset($this->cost->curr_qty) && $this->cost->period_id == $this->project->open_period()->id) {
             return $this->cost->curr_qty;
         }
 
@@ -129,7 +134,7 @@ class BreakDownResourceShadow extends Model
 
     public function getCurrCostAttribute()
     {
-        if (isset($this->cost->curr_cost)) {
+        if (isset($this->cost->curr_cost) && $this->cost->period_id == $this->project->open_period()->id) {
             return $this->cost->curr_cost;
         }
 
@@ -142,7 +147,7 @@ class BreakDownResourceShadow extends Model
 
     public function getCurrUnitPriceAttribute()
     {
-        if (isset($this->cost->curr_unit_price)) {
+        if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->project->open_period()->id) {
             return $this->cost->curr_unit_price;
         }
 
@@ -155,7 +160,7 @@ class BreakDownResourceShadow extends Model
 
     public function getPrevQtyAttribute()
     {
-        if (isset($this->cost->prev_qty)) {
+        if (isset($this->cost->prev_qty) && $this->cost->period_id == $this->project->open_period()->id) {
             return $this->cost->prev_qty;
         }
 
@@ -168,7 +173,7 @@ class BreakDownResourceShadow extends Model
 
     public function getPrevCostAttribute()
     {
-        if (isset($this->cost->prev_cost)) {
+        if (isset($this->cost->prev_cost) && $this->cost->period_id == $this->project->open_period()->id) {
             return $this->cost->prev_cost;
         }
 
@@ -181,7 +186,7 @@ class BreakDownResourceShadow extends Model
 
     public function getPrevUnitPriceAttribute()
     {
-        if (isset($this->cost->prev_unit_price)) {
+        if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->project->open_period()->id) {
             return $this->cost->prev_unit_price;
         }
 
@@ -190,6 +195,15 @@ class BreakDownResourceShadow extends Model
         }
 
         return 0;
+    }
+
+    public function getAllowableEvCostAttribute()
+    {
+        if (!empty($this->cost->allowable_ev_cost)) {
+            return $this->cost->allowable_ev_cost;
+        }
+
+        return $this->getAllowableEvCostAttributeFromTrait();
     }
     /*    function getBoqDescription()
         {
