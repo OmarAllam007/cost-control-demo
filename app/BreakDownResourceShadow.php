@@ -14,6 +14,9 @@ class BreakDownResourceShadow extends Model
     use Tree;
     use CostAttributes {
         getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
+        getRemainingCostAttribute as protected getRemainingCostAttributeFromTrait;
+        getRemainingQtyAttribute as protected getRemainingQtyAttributeFromTrait;
+        getRemainingUnitPriceAttribute as protected getRemainingUnitPriceAttributeFromTrait;
     }
 
     protected $table = 'break_down_resource_shadows';
@@ -67,7 +70,7 @@ class BreakDownResourceShadow extends Model
     function cost()
     {
         $relation = $this->hasOne(CostShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
-        $relation->take(1)->orderBy('id', 'DESC');
+        $relation->where('period_id', '<=', $this->getCalculationPeriod()->id)->orderBy('period_id', 'DESC');
         return $relation;
     }
 
@@ -121,38 +124,40 @@ class BreakDownResourceShadow extends Model
 
     public function getCurrQtyAttribute()
     {
-        if (isset($this->cost->curr_qty) && $this->cost->period_id == $this->project->open_period()->id) {
+        $period_id = $this->getCalculationPeriod()->id;
+        if (isset($this->cost->curr_qty) && $this->cost->period_id == $period_id) {
             return $this->cost->curr_qty;
         }
 
-        if (isset($this->current->curr_qty)) {
-            return $this->current->curr_qty;
+        if (isset($this->calculated['curr_qty'])) {
+            return $this->calculated['curr_qty'];
         }
 
-        return 0;
+        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
     }
 
     public function getCurrCostAttribute()
     {
-        if (isset($this->cost->curr_cost) && $this->cost->period_id == $this->project->open_period()->id) {
+        $period_id = $this->getCalculationPeriod()->id;
+        if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
             return $this->cost->curr_cost;
         }
 
-        if (isset($this->current->curr_cost)) {
-            return $this->current->curr_cost;
+        if (isset($this->calculated['curr_cost'])) {
+            return $this->calculated['curr_cost'];
         }
 
-        return 0;
+        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
     }
 
     public function getCurrUnitPriceAttribute()
     {
-        if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->project->open_period()->id) {
+        if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->curr_unit_price;
         }
 
-        if (isset($this->current->curr_unit_price)) {
-            return $this->current->curr_unit_price;
+        if ($this->curr_qty) {
+            return $this->curr_cost / $this->curr_qty;
         }
 
         return 0;
@@ -160,38 +165,40 @@ class BreakDownResourceShadow extends Model
 
     public function getPrevQtyAttribute()
     {
-        if (isset($this->cost->prev_qty) && $this->cost->period_id == $this->project->open_period()->id) {
+        $period_id = $this->getCalculationPeriod()->id;
+        if (isset($this->cost->prev_qty) && $this->cost->period_id == $period_id) {
             return $this->cost->prev_qty;
         }
 
-        if (isset($this->previous->prev_qty)) {
-            return $this->previous->prev_qty;
+        if (isset($this->calculated['prev_qty'])) {
+            return $this->calculated['prev_qty'];
         }
 
-        return 0;
+        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
     }
 
     public function getPrevCostAttribute()
     {
-        if (isset($this->cost->prev_cost) && $this->cost->period_id == $this->project->open_period()->id) {
+        $period_id = $this->getCalculationPeriod()->id;
+        if (isset($this->cost->prev_cost) && $this->cost->period_id == $period_id) {
             return $this->cost->prev_cost;
         }
 
-        if (isset($this->previous->prev_cost)) {
-            return $this->previous->prev_cost;
+        if (isset($this->calculated['prev_cost'])) {
+            return $this->calculated['prev_cost'];
         }
 
-        return 0;
+        return $this->calculated['prev_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('cost') ?: 0;
     }
 
     public function getPrevUnitPriceAttribute()
     {
-        if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->project->open_period()->id) {
+        if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->prev_unit_price;
         }
 
-        if (isset($this->previous->prev_unit_price)) {
-            return $this->previous->prev_unit_price;
+        if ($this->prev_qty) {
+            return $this->prev_cost / $this->prev_qty;
         }
 
         return 0;
@@ -205,8 +212,31 @@ class BreakDownResourceShadow extends Model
 
         return $this->getAllowableEvCostAttributeFromTrait();
     }
-    /*    function getBoqDescription()
-        {
 
-        }*/
+    function getRemainingCostAttribute()
+    {
+        if (!empty($this->cost->remaining_cost)) {
+            return $this->cost->remaining_cost;
+        }
+
+        return $this->getRemainingCostAttributeFromTrait();
+    }
+
+    function getRemainingQtyAttribute()
+    {
+        if (!empty($this->cost->remaining_qty)) {
+            return $this->cost->remaining_qty;
+        }
+
+        return $this->getRemainingQtyAttributeFromTrait();
+    }
+
+    function getRemainingUnitPriceAttribute()
+    {
+        if (!empty($this->cost->remaining_unit_price)) {
+            return $this->cost->remaining_unit_price;
+        }
+
+        return $this->getRemainingUnitPriceAttributeFromTrait();
+    }
 }

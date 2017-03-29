@@ -11,6 +11,7 @@ namespace App\Behaviors;
 
 use App\BreakDownResourceShadow;
 use App\CostResource;
+use App\Period;
 use App\StdActivity;
 
 trait CostAttributes
@@ -153,7 +154,7 @@ trait CostAttributes
         }
 
         $resource = CostResource::where('resource_id', $this->resource_id)
-            ->where('project_id', $this->project_id)->where('period_id', $this->period_id)->first();
+            ->where('project_id', $this->project_id)->where('period_id', $this->getCalculationPeriod())->first();
 
         if ($resource) {
             return $this->calculated['remaining_unit_price'] = $resource->rate;
@@ -338,6 +339,30 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             'cost_variance_to_date_due_unit_price', 'cost_variance_remaining_due_unit_price', 'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty',
             'cost_variance_to_date_due_qty', 'budget_unit_rate'
         ];
+    }
+
+    /** @var Period */
+    protected $calculation_period;
+
+    function setCalculationPeriod($period = null)
+    {
+        if (!$period) {
+            $period = $this->project->open_period();
+        } elseif (is_int($period)) {
+            $period = Period::find($period);
+        }
+
+        $this->calculation_period = $period;
+        return $this;
+    }
+
+    function getCalculationPeriod()
+    {
+        if (!$this->calculation_period) {
+            $$this->calculation_period = $this->project->open_period();
+        }
+
+        return $this->calculation_period;
     }
 
 }
