@@ -1,15 +1,17 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
 
-@section('header')
+@section('css')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+@endsection
+
+@section('header')
+
 
     <h2 id="report_name">{{$project->name. '- Cost Summary Report'}}</h2>
 
     <div class="pull-right">
         {{--<a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">--}}
-            {{--<i class="fa fa-warning"></i> Concerns--}}
+        {{--<i class="fa fa-warning"></i> Concerns--}}
         {{--</a>--}}
 
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
@@ -22,7 +24,7 @@
 
     <div class="row" style="margin-bottom: 10px;">
         <form action="{{route('cost_control.cost-summery',$project)}}" class="form-inline col col-md-8" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
+            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->pluck('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
         <br>
@@ -31,12 +33,12 @@
     <table class="table table-condensed">
         <thead>
         <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
-            <td></td>
-            <td style="border: 2px solid black;text-align: center">Budget</td>
-            <td colspan="3" style="border: 2px solid black;text-align: center">Previous</td>
-            <td colspan="3" style="border: 2px solid black;text-align: center">To-Date</td>
-            <td colspan="1" style="border: 2px solid black; text-align: center">Remaining</td>
-            <td colspan="3" style="text-align: center">At Completion</td>
+            <th></th>
+            <th style="border: 2px solid black;text-align: center">Budget</th>
+            <th colspan="3" style="border: 2px solid black;text-align: center">Previous</th>
+            <th colspan="3" style="border: 2px solid black;text-align: center">To-Date</th>
+            <th colspan="1" style="border: 2px solid black; text-align: center">Remaining</th>
+            <th colspan="3" style="text-align: center; border: 2px solid black;">At Completion</th>
         </tr>
         <tr style="background: #C6F1E7">
             <th class="col-xs-2" style="border: 2px solid black;text-align: center">Resource Type</th>
@@ -56,55 +58,62 @@
 
         </thead>
         <tbody>
-        @foreach($data as $key=>$value)
-
+        @foreach($resourceTypes as $id => $value)
+            @php
+                $typePreviousData = $previousData[$id] ?? [];
+                $typeToDateData = $toDateData[$id] ?? [];
+            @endphp
             <tr>
-                <td style="border: 2px solid black;text-align: left">{{$value['name']}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['budget_cost']??0,2) }}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_allowable']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['previous_variance']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['to_date_cost'])}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['allowable_ev_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center; @if($value['allowable_var']<0) color: red; @endif">{{number_format($value['allowable_var']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['remaining_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($value['completion_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center; @if($value['cost_var']<0) color: red; @endif">{{number_format($value['cost_var']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: left">{{$value}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['budget_cost']??0,2) }}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typePreviousData['previous_cost']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typePreviousData['previous_allowable']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typePreviousData['previous_var']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['to_date_cost']??0, 2)}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['to_date_allowable']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center; @if($typeToDateData['to_date_var'] ?? 0<0) color: red; @endif">{{number_format($typeToDateData['to_date_var']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['remaining_cost']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['completion_cost']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center; @if($typeToDateData['completion_cost_var']??0<0) color: red; @endif">{{number_format($typeToDateData['completion_cost_var']??0,2)}}</td>
                 {{--<td>--}}
-                    {{--<a  href="#" class="btn btn-primary btn-lg concern-btn"--}}
-                       {{--title="{{$value['name']}}"--}}
-                       {{--data-json="{{json_encode($value)}}">--}}
-                        {{--<i class="fa fa-pencil-square-o " aria-hidden="true"></i>--}}
-                    {{--</a>--}}
+                {{--<a  href="#" class="btn btn-primary btn-lg concern-btn"--}}
+                {{--title="{{$value['name']}}"--}}
+                {{--data-json="{{json_encode($value)}}">--}}
+                {{--<i class="fa fa-pencil-square-o " aria-hidden="true"></i>--}}
+                {{--</a>--}}
                 {{--</td>--}}
             </tr>
         @endforeach
+        </tbody>
+        <tfoot>
         <tr style="background: #F0FFF3">
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Total</th>
-            <td style="border: 2px solid black;text-align: center; ">{{number_format($data->sum('budget_cost'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($data->sum('previous_cost'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($data->sum('previous_allowable'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($data->sum('previous_variance'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($data->sum('to_date_cost'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($data->sum('allowable_ev_cost'))}}</td>
-            <td style="border: 2px solid black;text-align: center;@if($total['allowable_var']<0) color: red; @endif">{{number_format($data->sum('allowable_var'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($data->sum('remaining_cost'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($data->sum('completion_cost'))}}</td>
-            <td style="border: 2px solid black;text-align: center; @if($total['cost_var']<0) color: red; @endif">{{number_format($data->sum('cost_var'))}}</td>
+            <td style="border: 2px solid black;text-align: center; ">{{number_format($toDateData->sum('budget_cost'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_cost'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_allowable'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_var'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('to_date_cost'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('to_date_allowable'))}}</td>
+            <td style="border: 2px solid black;text-align: center;@if($toDateData->sum('to_date_var') <0) color: red; @endif">{{number_format($toDateData->sum('to_date_var'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('remaining_cost'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('completion_cost'))}}</td>
+            <td style="border: 2px solid black;text-align: center; @if($toDateData->sum('completion_cost_var')<0) color: red; @endif">{{number_format($toDateData->sum('completion_cost_var'))}}</td>
 
         </tr>
-        </tbody>
+        </tfoot>
     </table>
 
     <input type="hidden" value="{{$project->id}}" id="project_id">
 
     <div class="row">
         <div class="col-md-6">
-            <div id="chart"></div>
+            <h4 class="text-center">To date Cost vs Allowable Cost</h4>
+            <div id="to_date_vs_allowable_chart"></div>
         </div>
 
         <div class="col-md-6">
-            <div id="chart2"></div>
+            <h4 class="text-center">Budget Cost vs At Completion</h4>
+            <div id="budget_cost_vs_completion_chart"></div>
         </div>
     </div>
 
@@ -133,15 +142,78 @@
         </div>
     </div>
 
-    @if(count($concerns))
-        @include('reports._cost_summery_concerns')
-    @endif
+    {{--@if(count($concerns))--}}
+    {{--@include('reports._cost_summery_concerns')--}}
+    {{--@endif--}}
 @endsection
 
 @section('javascript')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+    @php
+    $to_date_values = collect(['To Date Cost']);
+    $budget_values = collect(['Budget Cost']);
+    $completion_values = collect(['At Completion']);
+    $allowable_values = collect(['Allowable Cost']);
+    $typeNames = collect();
+    foreach ($resourceTypes as $id => $name) {
+        $to_date_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_cost : 0;
+        $completion_values[$id] = $toDateData[$id]? $toDateData[$id]->completion_cost : 0;
+        $allowable_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_allowable : 0;
+        $budget_values[$id] = $toDateData[$id]? $toDateData[$id]->budget_cost : 0;
+        $typeNames[] = $name;
+    }
+    @endphp
+
+
     <script>
-        var chart_data = {!! json_encode($at_comp_cost_var_chart)  !!};
-        var second_chart = {!! json_encode($to_date_cost_var_chart)  !!};
+
+        var budget_cost_vs_completion_chart = c3.generate({
+            bindto: '#budget_cost_vs_completion_chart',
+            data: {
+                columns: [{!! $budget_values->values() !!}, {!! $completion_values->values() !!}],
+                type: 'bar'
+            },
+            bar: {
+                width: {ratio: .5}
+            },
+            transition: { duration: 100 },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {!! $typeNames !!}
+                }
+            },
+            grid: {
+                x: {show: true},
+                y: {show: true}
+            }
+        });
+
+        var to_date_vs_allowable_chart = c3.generate({
+            bindto: '#to_date_vs_allowable_chart',
+            data: {
+                columns: [{!! $to_date_values->values() !!}, {!! $allowable_values->values() !!}],
+                type: 'bar'
+            },
+            bar: {
+                width: {ratio: .5}
+            },
+            transition: {
+                duration: 100
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {!! $typeNames !!}
+                }
+            },
+            grid: {
+                x: {show: true},
+                y: {show: true}
+            }
+        });
+        {{--
         var data = {};
         var sites = [];
         var chart2 = {};
@@ -150,11 +222,11 @@
         $.each(chart_data, function (e, value) {
             sites.push(e);
             data[e] = value.at_comp_cost_var
-        })
+        });
         $.each(second_chart, function (e, value) {
             types.push(e);
             chart2[e] = value.to_date_cost_var
-        })
+        });
 
         var chart = c3.generate({
             bindto: '#chart',
@@ -164,7 +236,7 @@
                 type: 'bar',
             },
             bar: {
-                width: {ratio: .5}
+                width: {ratio: .25}
             },
             transition: {
                 duration: 100
@@ -174,7 +246,6 @@
                     label: {
                         text: 'At Completion Variance',
                         position: 'outer-middle',
-
                     }
                 },
                 x: {
@@ -182,10 +253,6 @@
                         text: 'Resource Type',
                         position: 'inner-top',
                     },
-                    tick: {
-                        centered: true
-                    }
-
                 }
 
             }
@@ -261,6 +328,6 @@
             })
 
         })
-
+--}}
     </script>
 @endsection
