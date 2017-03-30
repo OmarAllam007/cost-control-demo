@@ -11,4 +11,9 @@ class MasterShadow extends Model
         'activity_divs' => 'array',
         'resource_divs' => 'array',
     ];
+
+    public function period()
+    {
+        return $this->belongsTo(Period::class);
+    }
 }

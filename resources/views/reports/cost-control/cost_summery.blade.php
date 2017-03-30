@@ -71,10 +71,10 @@
                 <td style="border: 2px solid black;text-align: center">{{number_format($typePreviousData['previous_var']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['to_date_cost']??0, 2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['to_date_allowable']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center; @if($typeToDateData['to_date_var'] ?? 0<0) color: red; @endif">{{number_format($typeToDateData['to_date_var']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center; @if(($typeToDateData['to_date_var'] ?? 0) < 0) color: red; @endif">{{number_format($typeToDateData['to_date_var']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['remaining_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['completion_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center; @if($typeToDateData['completion_cost_var']??0<0) color: red; @endif">{{number_format($typeToDateData['completion_cost_var']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center; @if(($typeToDateData['completion_cost_var']??0)<0) color: red; @endif">{{number_format($typeToDateData['completion_cost_var']??0,2)}}</td>
                 {{--<td>--}}
                 {{--<a  href="#" class="btn btn-primary btn-lg concern-btn"--}}
                 {{--title="{{$value['name']}}"--}}
@@ -115,6 +115,21 @@
             <h4 class="text-center">Budget Cost vs At Completion</h4>
             <div id="budget_cost_vs_completion_chart"></div>
         </div>
+
+        <div class="col-md-6">
+            <h4 class="text-center">Cost At Completion</h4>
+            <div id="completion_cost_trend_chart"></div>
+        </div>
+
+        <div class="col-md-6">
+            <h4 class="text-center">Variance At Completion</h4>
+            <div id="completion_cost_var_trend_chart"></div>
+        </div>
+
+        <div class="col-md-12">
+            <h4 class="text-center">Variance At Completion By Type Trend</h4>
+            <div id="completion_cost_var_trend_by_type_chart"></div>
+        </div>
     </div>
 
     <div class="modal" id="ConcernModal" tabindex="-1" role="dialog">
@@ -151,18 +166,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
     @php
-    $to_date_values = collect(['To Date Cost']);
-    $budget_values = collect(['Budget Cost']);
-    $completion_values = collect(['At Completion']);
-    $allowable_values = collect(['Allowable Cost']);
-    $typeNames = collect();
-    foreach ($resourceTypes as $id => $name) {
-        $to_date_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_cost : 0;
-        $completion_values[$id] = $toDateData[$id]? $toDateData[$id]->completion_cost : 0;
-        $allowable_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_allowable : 0;
-        $budget_values[$id] = $toDateData[$id]? $toDateData[$id]->budget_cost : 0;
-        $typeNames[] = $name;
-    }
+        //todo: Extract all this into view composer or controller
+        $to_date_values = collect(['To Date Cost']);
+        $budget_values = collect(['Budget Cost']);
+        $completion_values = collect(['At Completion']);
+        $allowable_values = collect(['Allowable Cost']);
+        $typeNames = collect();
+        foreach ($resourceTypes as $id => $name) {
+            $to_date_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_cost : 0;
+            $completion_values[$id] = $toDateData[$id]? $toDateData[$id]->completion_cost : 0;
+            $allowable_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_allowable : 0;
+            $budget_values[$id] = $toDateData[$id]? $toDateData[$id]->budget_cost : 0;
+            $typeNames[] = $name;
+        }
+
+        $costTrends = \App\MasterShadow::with('period')->orderBy('period_id')
+            ->where('project_id', $project->id)->groupBy('period_id')
+            ->selectRaw('period_id, sum(completion_cost) completion_cost, sum(cost_var) as cost_var')->get();
+        $trends_completion_cost_values = collect(['At Completion Cost']);
+        $trends_completion_cost_var_values = collect(['At Completion Cost Variance']);
+        $periods = collect();
+        foreach ($costTrends as $trend) {
+            $periods[] = $trend->period->name;
+            $trends_completion_cost_values[] = $trend->completion_cost;
+            $trends_completion_cost_var_values[] = $trend->cost_var;
+        }
+
+        $costTrendsByResourceTypes = \App\MasterShadow::with('period')->orderBy('period_id')
+            ->where('project_id', $project->id)->groupBy('period_id', 'resource_type_id')
+            ->selectRaw('period_id, resource_type_id, sum(completion_cost) completion_cost, sum(cost_var) as cost_var')->get()->groupBy('period_id')->map(function($records){
+                return $records->keyBy('resource_type_id')->toArray();
+            });
+
+        $resourceTypeTrends = [];
+        foreach ($costTrendsByResourceTypes as $period_id => $trends) {
+           foreach ($resourceTypes as $id => $name) {
+                if (!isset($resourceTypeTrends[$id])) {
+                    $resourceTypeTrends[$id] = [$name];
+                }
+
+                $resourceTypeTrends[$id][] = $trends[$id]['cost_var'] ?? 0;
+            }
+        }
     @endphp
 
 
@@ -177,7 +222,7 @@
             bar: {
                 width: {ratio: .5}
             },
-            transition: { duration: 100 },
+            transition: {duration: 100},
             axis: {
                 x: {
                     type: 'category',
@@ -213,6 +258,70 @@
                 y: {show: true}
             }
         });
+
+        var completion_cost_trend_chart = c3.generate({
+            bindto: '#completion_cost_trend_chart',
+            data: {
+                columns: [{!! $trends_completion_cost_values !!}],
+                type: 'line'
+            },
+            transition: {
+                duration: 100
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {!! $periods !!}
+                }
+            },
+            grid: {
+                x: {show: true},
+                y: {show: true}
+            }
+        });
+
+        var completion_cost_var_trend_chart = c3.generate({
+            bindto: '#completion_cost_var_trend_chart',
+            data: {
+                columns: [{!! $trends_completion_cost_var_values !!}],
+                type: 'line'
+            },
+            transition: {
+                duration: 100
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {!! $periods !!}
+                }
+            },
+            grid: {
+                x: {show: true},
+                y: {show: true}
+            }
+        });
+
+        var completion_cost_var_trend_by_type_chart = c3.generate({
+            bindto: '#completion_cost_var_trend_by_type_chart',
+            data: {
+                columns: {!! json_encode(array_values($resourceTypeTrends)) !!},
+                type: 'line'
+            },
+            transition: {
+                duration: 100
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {!! $periods !!}
+                }
+            },
+            grid: {
+                x: {show: true},
+                y: {show: true}
+            }
+        });
+
         {{--
         var data = {};
         var sites = [];
