@@ -124,7 +124,7 @@ class Breakdown extends Model
             ->select('id', 'budget_qty', 'eng_qty')->first();
 
         foreach ($this->resources as $resource) {
-            $newResource = $resource->getAtrributes();
+            $newResource = $resource->getAttributes();
             if ($qty_survey) {
                 $newResource['budget_qty'] = $qty_survey->budget_qty;
                 $newResource['eng_qty'] = $qty_survey->eng_qty;
