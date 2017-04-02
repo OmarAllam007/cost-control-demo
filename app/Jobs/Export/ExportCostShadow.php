@@ -6,6 +6,7 @@ use App\Boq;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Jobs\Job;
+use App\MasterShadow;
 use App\Resources;
 use App\ResourceType;
 use App\StdActivity;
@@ -67,7 +68,7 @@ class ExportCostShadow extends Job
         $period = $this->project->open_period();
 
         if ($this->perspective == 'budget') {
-            $query = BreakDownResourceShadow::with('previous', 'current', 'cost')->where('project_id', $this->project->id);
+            $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
         } else {
             $query = CostShadow::joinShadow(null, $period);
         }
@@ -75,34 +76,32 @@ class ExportCostShadow extends Job
         /** @var $query Builder */
 
         $query->chunk(5000, function ($shadows) {
+
             $time = microtime(1);
             foreach ($shadows as $costShadow) {
-                $boqDescription = $this->getBoqDescription($costShadow);
+                $levels = $costShadow['wbs'];
+                $levels = array_pad($levels, 6, '');
+                $levels = array_only($levels, range(0, 5));
+                $wbs = implode(', ', array_map('csv_quote', $levels));
 
-                if (isset($this->cache['resources'][$costShadow->resource_id])) {
-                    $resource = $this->cache['resources'][$costShadow->resource_id];
-                } else {
-                    $this->cache['resources'][$costShadow->resource_id] = $resource = Resources::find($costShadow->resource_id);
-                }
-
-                $wbs = $this->getWbs($costShadow);
-                $activityDivs = $this->getActivityDivisions($costShadow);
+                $activityDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['activity_divs'], 3, ''), range(0, 2))));
+                $resourceDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'], 3, ''), range(0, 2))));
 
                 $this->buffer .= "\n" .
                     $wbs.','.
                     $activityDivs.','.
                     csv_quote($costShadow['activity']).','.
                     '"'.$costShadow['code'].'",'.
-                    csv_quote($boqDescription).','.
+                    csv_quote($costShadow->boq).','.
                     '"'.$costShadow['cost_account'].'",'.
                     round($costShadow['eng_qty'] ?: '0', 2).','.
                     round($costShadow['budget_qty'] ?: '0', 2).','.
                     round($costShadow['resource_qty'] ?: '0', 2).','.
                     round($costShadow['resource_waste'] ?: '0', 2).','.
-                    $this->getResourceDivisions($resource).','.
+                    $resourceDivs.','.
                     '"'.$costShadow['resource_code'].'",'.
                     csv_quote($costShadow['resource_name']).','.
-                    csv_quote($resource->top_material) . ','.
+                    csv_quote($costShadow['top_material']) . ','.
                     '"'.round($costShadow['unit_price'] ?: '0', 2).'",'.
                     '"'.$costShadow['measure_unit'].'",'.
                     '"'.round($costShadow['budget_unit'] ?: '0', 2).'",'.
