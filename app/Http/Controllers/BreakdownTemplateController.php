@@ -95,7 +95,7 @@ class BreakdownTemplateController extends Controller
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
-        } else if (\Gate::denies('write', 'breakdown-template')) {
+        } else if (\Gate::denies('read', 'breakdown-template')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
