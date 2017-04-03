@@ -136,9 +136,9 @@ class ExportCostToMaster extends Job
 
         $activity = StdActivity::find($costShadow->activity_id);
         $division = $parent = $activity->division;
-        $divisions = [$division->name];
+        $divisions = [$division->code . ' ' . $division->name];
         while ($parent = $parent->parent) {
-            $divisions[] = $parent->name;
+            $divisions[] = $parent->code . ' ' . $parent->name;
         }
 
         return $this->cache['activity'][$costShadow->activity_id] = array_reverse($divisions);

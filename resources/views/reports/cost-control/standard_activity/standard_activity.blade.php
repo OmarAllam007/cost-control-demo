@@ -2,11 +2,12 @@
 @if(request('all'))
     @include('reports.all._standard-activity')
 @endif
+
 @section('header')
     <h2 class="">{{$project->name}} - Standard Activity</h2>
     <div class="pull-right">
         {{--<button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">--}}
-            {{--<i class="fa fa-warning"></i> Concerns--}}
+        {{--<i class="fa fa-warning"></i> Concerns--}}
         {{--</button>--}}
 
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm print"><i class="fa fa-print"></i>
@@ -15,209 +16,126 @@
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
+@endsection
+
+@section('body')
+    <table class="table table-bordered">
+        <thead>
+        <tr class="bg-primary">
+            <th class="text-center">Base Line</th>
+            <th class="text-center">Previous Cost</th>
+            <th class="text-center">Previous Allowable</th>
+            <th class="text-center">Previous Var</th>
+            <th class="text-center">To Date Cost</th>
+            <th class="text-center">Allowable (EV) Cost</th>
+            <th class="text-center">To Date Variance</th>
+            <th class="text-center">Remaining Cost</th>
+            <th class="text-center">At Completion Cost</th>
+            <th class="text-center">Cost Variance</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text-center">{{number_format($currentTotals['budget_cost']??0,2) }}</td>
+            <td class="text-center">{{number_format($previousTotals['previous_cost']??0,2)}}</td>
+            <td class="text-center">{{number_format($previousTotals['previous_allowable']??0,2)}}</td>
+            <td class="text-center {{$previousTotals->previous_var > 0? 'text-success' : 'text-danger'}}">{{number_format($previousTotals['previous_var']??0,2)}}</td>
+            <td class="text-center">{{number_format($currentTotals['to_date_cost']?? 0,2)}}</td>
+            <td class="text-center">{{number_format($currentTotals['to_date_allowable']??0,2)}}</td>
+            <td class="text-center {{$currentTotals->to_date_var > 0? 'text-success' : 'text-danger'}}">{{number_format($currentTotals['to_date_var']??0,2)}}</td>
+            <td class="text-center">{{number_format($currentTotals['remaining']??0,2)}}</td>
+            <td class="text-center">{{number_format($currentTotals['at_completion_cost']??0,2)}}</td>
+            <td class="text-center {{$currentTotals->cost_var > 0? 'text-success' : 'text-danger'}}">{{number_format($currentTotals->cost_var??0,2)}}</td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <table class="table table-bordered table-hover activity-table">
+        <thead>
+        <tr class="bg-primary">
+            <th>Activity</th>
+            <th>Budget Cost</th>
+            <th>Previous Cost</th>
+            <th>Previous Allowable</th>
+            <th>Previous Var</th>
+            <th>To Date Cost</th>
+            <th>Allowable (EV) Cost</th>
+            <th>To Date Variance</th>
+            <th>Remaining Cost</th>
+            <th>At Completion Cost</th>
+            <th>Cost Variance</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($tree->where('index', 0) as $name => $level)
+            @include('reports.cost-control.standard_activity._recursive_report')
+        @endforeach
+        </tbody>
+    </table>
+
+
+
+@endsection
+
+@section('css')
     <style>
-        .fixed {
-            position: fixed;
-            top: 0;
-            height: 70px;
-            z-index: 1;
+
+        .level-1 td.level-label {
+            padding-left: 30px;
         }
-        .padding{
-            padding-right: 300px;
+
+        .level-2 td.level-label {
+            padding-left: 60px;
+        }
+
+        .level-3 td.level-label {
+            padding-left: 90px;
+        }
+
+        .level-activity {
+            background: #e7f1fc;
+        }
+
+        .open-level, .open-level:active, .open-level:focus, .open-level:hover {
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        tr {
+            cursor: pointer;
         }
 
     </style>
-@endsection
-@section('body')
-    <div class="col-md-12 panel panel-default boqLevelFour">
-        <div class="col-md-12 boqLevelFour">
-            <table class="col-md-12">
-                <thead>
-                <tr style="text-align: center">
-                    <td>Base Line</td>
-                    <td>Previous Cost</td>
-                    <td>Previous Allowable</td>
-                    <td>Previous Var</td>
-                    <td>To Date Cost</td>
-                    <td>Allowable (EV) Cost</td>
-                    <td>Remaining Cost</td>
-                    <td>To Date Variance</td>
-                    <td>At Completion Cost</td>
-                    <td>Cost Variance</td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr style="text-align: center">
-                    <td>{{number_format($total['budget_cost']??0,2) }}</td>
-                    <td>{{number_format($total['prev_cost']??0,2)}}</td>
-                    <td>{{number_format($total['prev_allowable']??0,2)}}</td>
-                    <td>{{number_format($total['prev_variance']??0,2)}}</td>
-                    <td>{{number_format($total['to_data_cost']?? 0,2)}}</td>
-                    <td>{{number_format($total['to_date_allowable_cost']??0,2)}}</td>
-                    <td>{{number_format($total['allowable_var']??0,2)}}</td>
-                    <td>{{number_format($total['remain_cost']??0,2)}}</td>
-                    <td>{{number_format($total['completion_cost']??0,2)}}</td>
-                    <td style=" @if($total['cost_var'] <0)  color: red; @endif ">{{number_format($total['cost_var']??0,2)}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-    </div>
-
-    <div class="row" style="margin-bottom: 10px;">
-        <form action="{{route('cost.standard_activity_report',$project)}}" class="form-inline col col-md-4" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
-            {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
-        </form>
-
-        <div class="btn-group btn-group-sm  btn-group-block col-md-2">
-            <a href="#ActivitiesModal" data-toggle="modal" class="btn btn-default btn-block  tree-open">Select Activity</a>
-            <a href="#" class="remove-tree-input btn btn-warning" data-target="#ActivitiesModal" data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
-
-        </div>
-        <div class="btn-group btn-group-sm  btn-group-block col-md-2" style="text-align: center">
-        {{--<button type="button" class=" btn btn-danger col-md-1 negative"  data-toggle="button" aria-pressed="false" >--}}
-           {{--Negative Variance--}}
-        {{--</button>--}}
-            <input type="checkbox" name="checked" class="checkList"
-                   value="Negative Variance" > <p style="margin: 8px;font-size: larger">Negative Variance</p>
-        </div>
-    </div>
-
-
-    <ul class="list-unstyled tree stdreport">
-        @foreach($tree as $parentKey=>$division)
-            @include('reports.cost-control.standard_activity._recursive_report', ['division'=>$division,'tree_level'=>0])
-        @endforeach
-    </ul>
-    <input type="hidden" value="{{$project->id}}" id="project_id">
-
-    @include('std-activity._modal', ['input' => 'activity', 'value' => 'Select Activity'])
-
-    @if(count($concerns))
-        @include('reports.cost-control.standard_activity._concerns')
-    @endif
 @endsection
 
 
 @section('javascript')
     <script>
-
-        $(function () {
-            var global_selector = '';
-            var ConcernModal = $('#ConcernModal');
-            var ConcernModalForm = ConcernModal.find('form');
-            var title = ConcernModal.find('.modal-title');
-            var project_id = $('#project_id').val();
-            var negative_clicked = 0;
-            var activity =0;
-            $('.concern-btn').on('click', function (e) {
-                e.preventDefault();
-                var data = ($(this).attr('data-json'));
-                ConcernModal.data('json', data).modal();
-
-            });
-
-            $('.apply_concern').on('click', function (e) {
-                e.preventDefault();
-                var report_name = 'Standard Activity';
-                var body = $('#mytextarea').val();
-                var data = ConcernModal.data('json');
-                if (body.length != 0) {
-
-                    $.ajax({
-                        url: '/concern/' + project_id,
-                        method: 'POST',
-                        data: {
-                            _token: $('meta[name="csrf-token"]').attr('content'),
-                            info: data,
-                            report_name: report_name,
-                            comment: body
-                        },
-                    }).success((e)=> {
-                        console.log('success')
-                    });
-                    ConcernModal.modal('hide');
-                }
-            })
-            $('.tree-radio').on('change', function(){
-                if (this.checked) {
-                    var value = $(this).attr('value');
-                    global_selector = $('#activity-'+value);
-                    $('.division-container,.activity-container').removeClass('in').addClass('hidden');
-                    global_selector.parents('.division-container,.activity-container').addClass('in').removeClass('hidden');
-                    global_selector.addClass('in target').removeClass('hidden');
-                    global_selector.parents('li').addClass('target').removeClass('hidden');
-                    $('.activity-container').not('.target').parent('li').addClass('hidden');
-                    $('ul.stdreport > li').not('.target').addClass('hidden');
-                    activity = value;
-                    negative_clicked=0;
-
-                }
-            });
-
-            $('.remove-tree-input').on('click',function () {
-                global_selector.parents('.division-container,.activity-container').removeClass('in').removeClass('hidden');
-                global_selector.removeClass('in').addClass('hidden');
-                global_selector.parents('li').removeClass('target').addClass('hidden');
-                global_selector.removeClass('target');
-                $('li').not('target').removeClass('hidden');
-                $('.division-container,.activity-container').removeClass('in').removeClass('hidden');
-                $('li.target').removeClass('target');
-                $('ul.stdreport > li').not('.target').show();
-                activity = 0;
-            })
-
-            $('.checkList').on('click',function () {
-                var articles =$('.negative_var');
-                if(!$(this).hasClass('checked_var')){
-                    $(this).addClass('checked_var');
-                    negative_clicked = 1;
-                    activity=0;
-                }
-                else{
-                    $(this).removeClass('checked_var');
-                    negative_clicked = 0;
-                }
-
-                articles.each(function () {
-                    if($(this).hasClass('clicked')){
-                        $(this).parents('.division-container,.activity-container').removeClass('in').removeClass('hidden');
-                        $(this).removeClass('in').removeClass('hidden');
-                        $(this).parents('li').removeClass('target').removeClass('hidden');
-                        $(this).removeClass('clicked');
-                        $('ul.stdreport > li').not('.target').removeClass('hidden');
-                        $(this).css('background-color:#FF574B');
-
-
-                    }
-                    else{
-                        $(this).parents('.division-container,.activity-container').addClass('in').removeClass('hidden');
-                        $(this).addClass('in').removeClass('hidden');
-                        $(this).parents('li').addClass('target').removeClass('hidden');
-                        $(this).addClass('clicked');
-
-                        $('ul.stdreport > li').not('.target').addClass('hidden');
-                        $(this).css('background-color:#990025');
-                    }
-//                    $('.division-container,.activity-container').removeClass('in').addClass('hidden');
-
+        $(function(){
+            function closeRows(rows) {
+                rows.find('a').each(function() {
+                    const selector = '.' + $(this).data('target');
+                    const rows = $(selector).addClass('hidden');
+                    $(this).find('.fa').addClass('fa-plus-square-o').removeClass('fa-minus-square-o open');
+                    closeRows(rows);
                 });
+            }
 
-            })
-            $('.print').on('click',function () {
-                sessionStorage.removeItem('negative_var_'+project_id);
-                sessionStorage.removeItem('activity_'+project_id);
-                sessionStorage.setItem('negative_var_'+project_id,negative_clicked);
-                sessionStorage.setItem('activity_'+project_id,activity);
-            })
+            $('.open-level').click(function(e){
+                let selector = '.' + $(this).data('target');
+                $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
+                let rows = $(selector).toggleClass('hidden');
+                if (!$(this).hasClass('open')) {
+                    closeRows(rows);
+                }
 
-        })
+                return false;
+            });
 
+            const rows = $('.activity-table tr').click(function() {
+                rows.removeClass('info');
+                $(this).addClass('info').find('a').click();
+            });
+        });
     </script>
-    <script src="{{asset('/js/project.js')}}"></script>
-    {{--    <script src="{{asset('/js/resources.js')}}"></script>--}}
-    <script src="{{asset('/js/tree-select.js')}}"></script>
 @endsection
