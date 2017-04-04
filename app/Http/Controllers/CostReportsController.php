@@ -97,7 +97,7 @@ class CostReportsController extends Controller
     {
         if ($request->period) {
             \Session::set('period_id_' . $project->id, $request->period);
-        } elseif (!$request->session()->has('period_id_' . $project->id)) {
+        } elseif (!$request->session()->get('period_id_' . $project->id)) {
             \Session::set('period_id_' . $project->id, $project->getMaxPeriod());
         }
 
