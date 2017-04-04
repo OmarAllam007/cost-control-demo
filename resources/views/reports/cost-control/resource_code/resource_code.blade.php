@@ -15,6 +15,7 @@
 
 @section('body')
     <div class="fixed-table-container">
+        <div class="fixed-table-container-inner">
     <table class="table table-bordered" id="resourcesTable">
         <thead>
         <tr>
@@ -71,6 +72,7 @@
         @endforeach
         </tbody>
     </table>
+        </div>
     </div>
 @endsection
 
@@ -89,7 +91,12 @@
         }
 
         .fixed-table-container {
-            width: auto;
+            max-height: 600px;
+            overflow: auto;
+        }
+
+        .fixed-table-container-inner {
+            width: 5250px;
         }
     </style>
 @endsection
