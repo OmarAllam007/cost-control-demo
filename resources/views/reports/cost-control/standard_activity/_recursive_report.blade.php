@@ -9,13 +9,13 @@
     <td>{{number_format($level['budget_cost'], 2)}}</td>
     <td>{{number_format($level['previous_cost'], 2)}}</td>
     <td>{{number_format($level['previous_allowable'], 2)}}</td>
-    <td>{{number_format($level['previous_var'], 2)}}</td>
+    <td class="{{$level['previous_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['previous_var'], 2)}}</td>
     <td>{{number_format($level['to_date_cost'], 2)}}</td>
     <td>{{number_format($level['to_date_allowable'], 2)}}</td>
-    <td>{{number_format($level['to_date_var'], 2)}}</td>
+    <td class="{{$level['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['to_date_var'], 2)}}</td>
     <td>{{number_format($level['remaining_cost'], 2)}}</td>
     <td>{{number_format($level['completion_cost'], 2)}}</td>
-    <td>{{number_format($level['completion_var'], 2)}}</td>
+    <td class="{{$level['completion_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['completion_var'], 2)}}</td>
 </tr>
 
 @if ($subs->count())
@@ -32,13 +32,13 @@
             <td>{{number_format($activity['budget_cost'], 2)}}</td>
             <td>{{number_format($activity['previous_cost'], 2)}}</td>
             <td>{{number_format($activity['previous_allowable'], 2)}}</td>
-            <td>{{number_format($activity['previous_var'], 2)}}</td>
+            <td class="{{$activity['previous_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['previous_var'], 2)}}</td>
             <td>{{number_format($activity['to_date_cost'], 2)}}</td>
             <td>{{number_format($activity['to_date_allowable'], 2)}}</td>
-            <td>{{number_format($activity['to_date_var'], 2)}}</td>
+            <td class="{{$activity['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['to_date_var'], 2)}}</td>
             <td>{{number_format($activity['remaining_cost'], 2)}}</td>
             <td>{{number_format($activity['completion_cost'], 2)}}</td>
-            <td>{{number_format($activity['completion_var'], 2)}}</td>
+            <td class="{{$activity['completion_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['completion_var'], 2)}}</td>
         </tr>
     @endforeach
 @endif
