@@ -95,13 +95,7 @@ class CostReportsController extends Controller
 
     public function standardActivity(Project $project, Request $request)
     {
-        if ($request->period) {
-            \Session::set('period_id_' . $project->id, $request->period);
-        } elseif (!$request->session()->get('period_id_' . $project->id)) {
-            \Session::set('period_id_' . $project->id, $project->getMaxPeriod());
-        }
-
-        $chosen_period_id = \Session::get('period_id_' . $project->id);;
+        $chosen_period_id = $this->getPeriod($project, $request);
 
         $standard_activity = new CostStandardActivityReport();
         return $standard_activity->getStandardActivities($project, $chosen_period_id);
@@ -133,25 +127,9 @@ class CostReportsController extends Controller
 
     public function resourceCodeReport(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        }
-        $code = new ResourceCodeReport();
-        return $code->getResourceCodeReport($project, $chosen_period_id);
+        $period = $this->getPeriod($project, $request);
+        $resourceCodeReport = new ResourceCodeReport($project, $period);
+        return $resourceCodeReport->run();
     }
 
     public function overdraftReport(Project $project, Request $request)
@@ -259,6 +237,18 @@ class CostReportsController extends Controller
         }
         $variance = new IssuesReport();
         return $variance->getIssuesReport($project, $chosen_period_id);
+    }
+
+    protected function getPeriod(Project $project, Request $request)
+    {
+        if ($request->period) {
+            \Session::set('period_id_' . $project->id, $request->period);
+        } elseif (!$request->session()->get('period_id_' . $project->id)) {
+            \Session::set('period_id_' . $project->id, $project->getMaxPeriod());
+        }
+
+        $chosen_period_id = \Session::get('period_id_' . $project->id);
+        return intval($chosen_period_id);
     }
 
 

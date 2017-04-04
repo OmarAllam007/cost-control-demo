@@ -12,171 +12,44 @@ namespace App\Http\Controllers\Reports\CostReports;
 use App\BreakDownResourceShadow;
 use App\BusinessPartner;
 use App\CostShadow;
+use App\MasterShadow;
+use App\Period;
 use App\Project;
 use App\Resources;
 use App\ResourceType;
 
 class ResourceCodeReport
 {
-
+    /** @var Project */
     protected $project;
-    protected $resources;
-    protected $period_cost;
-    protected $prev_cost;
-    protected $period_id;
-    protected $cost_data;
+    /** @var Period */
+    protected $period;
 
-    public function getResourceCodeReport(Project $project, $chosen_period_id)
+    function __construct(Project $project, $chosen_period_id)
     {
-
-        set_time_limit(300);
         $this->project = $project;
-        $this->resources = collect();
-        $this->period_cost = collect();
-        $this->prev_cost = collect();
-        $this->types = collect();
-        $this->period_id = $chosen_period_id;
-        $this->cost_data = collect();
+        $this->period = Period::find($chosen_period_id);
+    }
 
-
-
-        collect(\DB::select('SELECT  resource_id,resource_name, (SUM(budget_cost) / sum(budget_unit))  AS unit_price, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit
-FROM break_down_resource_shadows
-WHERE project_id = ?
-GROUP BY resource_id , resource_name', [$project->id]))->map(function ($resource) {
-            $this->resources->put($resource->resource_id, ['unit' => $resource->unit_price, 'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
-        });
-
-        collect(\DB::select('SELECT * FROM (
-SELECT
-  cost.resource_id,
-  sum(cost.to_date_unit_price) /COUNT(cost.resource_id)                 AS to_date_unit_price,
-  sum(curr_cost) current_cost,
-  sum(curr_qty) current_qty,
-  sum(curr_unit_price) current_unit_price,
-  SUM(cost.to_date_qty)                     AS to_date_qty,
-  SUM(cost.to_date_cost)                    AS to_date_cost,
-  SUM(cost.allowable_ev_cost)               AS to_date_allowable_cost,
-  SUM(cost.qty_var)               AS quantity_var,
-  SUM(cost.allowable_var)                   AS allowable_var,
-  sum(remaining_unit_price) /COUNT(cost.resource_id)             AS remaining_unit_price,
-  SUM(cost.remaining_qty)                   AS remaining_qty,
-  SUM(cost.remaining_cost)                  AS remain_cost,
-  sum(completion_unit_price) /COUNT(cost.resource_id)           AS completion_unit_price,
-  SUM(cost.completion_qty)                  AS completion_qty,
-  SUM(cost.completion_cost)                 AS completion_cost,
-  SUM(cost.cost_var)                        AS cost_var,
-  SUM(cost.allowable_qty) AS allowable_qty
-FROM cost_shadows AS cost
-
-  LEFT JOIN break_down_resource_shadows AS budget ON (cost.breakdown_resource_id = budget.breakdown_resource_id)
-WHERE cost.project_id = ? AND cost.period_id = (SELECT max(p.period_id)
-                                                 FROM cost_shadows p
-                                                 WHERE p.breakdown_resource_id = cost.breakdown_resource_id AND
-                                                       cost.period_id <= ?)
-GROUP BY 1) AS data
-GROUP BY 1;', [$project->id, $chosen_period_id]))->map(function ($resource) {
-            $this->period_cost->put($resource->resource_id, [
-                'to_date_unit_price' => $resource->to_date_unit_price ?? 0,
-                'to_date_qty' => $resource->to_date_qty ?? 0,
-                'to_date_cost' => $resource->to_date_cost ?? 0,
-                'current_unit_price' => $resource->current_unit_price ?? 0,
-                'current_qty' => $resource->current_qty ?? 0,
-                'current_cost' => $resource->current_cost ?? 0,
-                'allowable_ev_cost' => $resource->to_date_allowable_cost ?? 0,
-                'quantity_var' => $resource->allowable_var - $resource->to_date_qty ?? 0,
-                'allowable_qty' => $resource->allowable_qty ?? 0,
-                'allowable_var' => $resource->allowable_var ?? 0,
-                'remaining_unit_price' => $resource->remaining_unit_price ?? 0,
-                'remaining_qty' => $resource->remaining_qty ?? 0,
-                'remaining_cost' => $resource->remain_cost ?? 0,
-                'completion_unit_price' => $resource->completion_unit_price ?? 0,
-                'completion_qty' => $resource->completion_qty ?? 0,
-                'completion_cost' => $resource->completion_cost ?? 0,
-                'cost_var' => $resource->cost_var ?? 0,
-                'qty_var_comp' => $resource->quantity_var ?? 0,
-                'pw_index' => $resource->allowable_qty != 0 ? ($resource->quantity_var / $resource->allowable_qty) : 0,
-            ]);
-        });
-
-
-        $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
-            return $partner->name;
-        });
-
-        $this->types = ResourceType::whereHas('resources', function ($q) {
-            $q->where('project_id', $this->project->id);
-        })->get()->keyBy('id')->map(function ($type) {
-            return $type->resources->where('project_id', $this->project->id);
-        });
-        $tree = [];
-        $types = \Cache::has('resources-tree') ? \Cache::get('resources-tree') : ResourceType::tree()->get();
-        foreach ($types as $type) {
-            $treeType = $this->buildTypeTree($type);
-            $tree[] = $treeType;
-        }
+    public function run()
+    {
+        $tree = $this->buildTree();
+        $project = $this->project;
         return view('reports.cost-control.resource_code.resource_code', compact('project', 'tree'));
     }
 
-
-    /**
-     * @param $type
-     * @return array
-     */
-    private function buildTypeTree($type)
+    private function buildTree()
     {
-        $tree = ['id' => $type['id'], 'name' => $type['name'], 'children' => [], 'resources' => [], 'budget_cost' => 0, 'top' => []];
-        $resources = $this->types->get($type['id']);
-        if (count($resources)) {
-            foreach ($resources as $resource) {
-                $tree['resources'][$resource['id']] =
-                    [
-                        'id' => $resource['id']
-                        , 'name' => $resource['name']
-                        , 'unit_price' => $this->resources->get($resource->id)['budget_unit'] ? $this->resources->get($resource->id)['budget_cost'] / $this->resources->get($resource->id)['budget_unit'] : $this->resources->get($resource->id)['budget_cost']
-                        , 'budget_unit' => $this->resources->get($resource->id)['budget_unit'] ?? 0
-                        , 'budget_cost' => $this->resources->get($resource->id)['budget_cost'] ?? 0
-                        , 'current_unit_price' => $this->resources->get($resource->id)['current_unit_price'] ?? 0
-                        , 'current_qty' => $this->resources->get($resource->id)['current_qty'] ?? 0
-                        , 'current_cost' => $this->resources->get($resource->id)['current_cost'] ?? 0
-                        , 'to_date_unit_price' => $this->period_cost->get($resource['id'])['to_date_unit_price'] ?? 0
-                        , 'to_date_qty' => $this->period_cost->get($resource['id'])['to_date_qty'] ?? 0
-                        , 'to_date_cost' => $this->period_cost->get($resource['id'])['to_date_cost'] ?? 0
-                        , 'allowable_ev_cost' => $this->period_cost->get($resource['id'])['allowable_ev_cost'] ?? 0
-                        , 'quantity_var' => $this->period_cost->get($resource['id'])['quantity_var'] ?? 0
-                        , 'allowable_var' => $this->period_cost->get($resource['id'])['allowable_var'] ?? 0
-                        , 'allowable_qty' => $this->period_cost->get($resource['id'])['allowable_qty'] ?? 0
-                        , 'remaining_unit_price' => $this->period_cost->get($resource['id'])['remaining_unit_price'] ?? 0
-                        , 'remaining_qty' => $this->period_cost->get($resource['id'])['remaining_qty'] ?? 0
-                        , 'remaining_cost' => $this->period_cost->get($resource['id'])['remaining_cost'] ?? 0
-                        , 'completion_unit_price' => $this->period_cost->get($resource['id'])['completion_unit_price'] ?? 0
-                        , 'completion_qty' => $this->period_cost->get($resource['id'])['completion_qty'] ?? 0
-                        , 'completion_cost' => $this->period_cost->get($resource['id'])['completion_cost'] ?? 0
-                        , 'cost_var' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
-                        , 'pw_index' => $this->period_cost->get($resource['id'])['pw_index'] ?? 0
-                        , 'qty_var_comp' => $this->period_cost->get($resource['id'])['qty_var_comp'] ?? 0
+        $tree = [];
 
-                    ];
-                $tree['budget_cost'] += $this->resources->get($resource['id'])['budget_cost'];
-            }
-        }
+        $resourcetData = MasterShadow::forPeriod($this->period)->resourceDictReport()->get();
 
-        $tree['resources'] = collect($tree['resources'])->sortBy('code');
-        if ($type['id'] == '40') {
-            $top = new SignificantMaterials();
-            $tree['top'] = $top->getTopHighPriorityMaterials($this->project, $this->period_id);
-        }
-
-        if (collect($type['children'])->count()) {
-            $tree['children'] = collect($type['children'])->map(function ($child) use ($tree) {
-                $subtree = $this->buildTypeTree($child);
-                return $subtree;
+        $tree = $resourcetData->groupBy('resource_type')->map(function($typeGroup) {
+            return $typeGroup->groupBy('boq_discipline')->map(function($disciplineGroup) {
+                return $disciplineGroup->groupBy('top_material');
             });
-            foreach ($tree['children'] as $child) {
-                $tree['budget_cost'] += $child['budget_cost'];
-            }
+        });
 
-        }
         return $tree;
     }
 

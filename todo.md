@@ -12,7 +12,7 @@
 	* Top resource or other
 	* Cost/Var (plus or negative)
 * Freeze table headers
-* Export
+* Export??
 * Hierarchy as of sent sheet
 
 
