@@ -28,7 +28,7 @@
 @if (!empty($level['activities']))
     @foreach($level['activities'] as $activity)
         <tr class="level-{{$level['index'] + 1}} level-activity hidden {{slug($name)}}">
-            <td class="level-label"><i class="fa fa-caret-up"></i> {{$activity['name']}}</td>
+            <td class="level-label"><i class="fa fa-caret-right"></i> {{$activity['name']}}</td>
             <td>{{number_format($activity['budget_cost'], 2)}}</td>
             <td>{{number_format($activity['previous_cost'], 2)}}</td>
             <td>{{number_format($activity['previous_allowable'], 2)}}</td>
