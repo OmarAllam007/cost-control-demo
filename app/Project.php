@@ -241,10 +241,7 @@ class Project extends Model
 
     function getMaxPeriod()
     {
-        $max_id = \DB::select('SELECT  max(id) as max from periods
-where project_id=?
-AND periods.is_open=0', [$this->id]);
-        return $max_id[0]->max;
+        return $this->periods()->where('is_open', false)->max('id');
     }
 
 }

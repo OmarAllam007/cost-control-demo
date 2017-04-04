@@ -19,6 +19,9 @@
 @endsection
 
 @section('body')
+
+    @include('reports.cost-control.standard_activity._filters')
+
     <table class="table table-bordered">
         <thead>
         <tr class="bg-primary">
@@ -39,7 +42,7 @@
             <td class="text-center">{{number_format($currentTotals['budget_cost']??0,2) }}</td>
             <td class="text-center">{{number_format($previousTotals['previous_cost']??0,2)}}</td>
             <td class="text-center">{{number_format($previousTotals['previous_allowable']??0,2)}}</td>
-            <td class="text-center {{$previousTotals->previous_var > 0? 'text-success' : 'text-danger'}}">{{number_format($previousTotals['previous_var']??0,2)}}</td>
+            <td class="text-center {{$previousTotals['previous_var'] > 0? 'text-success' : 'text-danger'}}">{{number_format($previousTotals['previous_var']??0,2)}}</td>
             <td class="text-center">{{number_format($currentTotals['to_date_cost']?? 0,2)}}</td>
             <td class="text-center">{{number_format($currentTotals['to_date_allowable']??0,2)}}</td>
             <td class="text-center {{$currentTotals->to_date_var > 0? 'text-success' : 'text-danger'}}">{{number_format($currentTotals['to_date_var']??0,2)}}</td>
@@ -53,17 +56,17 @@
     <table class="table table-bordered table-hover activity-table">
         <thead>
         <tr class="bg-primary">
-            <th>Activity</th>
-            <th>Budget Cost</th>
-            <th>Previous Cost</th>
-            <th>Previous Allowable</th>
-            <th>Previous Var</th>
-            <th>To Date Cost</th>
-            <th>Allowable (EV) Cost</th>
-            <th>To Date Variance</th>
-            <th>Remaining Cost</th>
-            <th>At Completion Cost</th>
-            <th>Cost Variance</th>
+            <th class="col-xs-2">Activity</th>
+            <th class="col-xs-1">Budget Cost</th>
+            <th class="col-xs-1">Previous Cost</th>
+            <th class="col-xs-1">Previous Allowable</th>
+            <th class="col-xs-1">Previous Var</th>
+            <th class="col-xs-1">To Date Cost</th>
+            <th class="col-xs-1">Allowable (EV) Cost</th>
+            <th class="col-xs-1">To Date Variance</th>
+            <th class="col-xs-1">Remaining Cost</th>
+            <th class="col-xs-1">At Completion Cost</th>
+            <th class="col-xs-1">Cost Variance</th>
         </tr>
         </thead>
         <tbody>

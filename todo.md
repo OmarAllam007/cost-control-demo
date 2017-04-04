@@ -17,16 +17,16 @@
 
 
 ## Std Activity
-* Sum is not correct
-* Hierarchy:
-	* Activity Division
-	* Std Activity
-* Filters
-	* Division
-	* Activity
-	* Negative var
-	* Status 
-* Bordered tables
+* _Sum is not correct_
+* _Hierarchy:_
+	* _Activity Division_
+	* _Std Activity_
+* _Filters_
+	* _Division_
+	* _Activity_
+	* _Negative var_
+	* _Status_
+* _Bordered tables_
 * Charts
 
 
