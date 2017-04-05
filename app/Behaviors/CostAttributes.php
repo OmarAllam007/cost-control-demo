@@ -211,7 +211,7 @@ trait CostAttributes
         if (isset($this->calculated['qty_var'])) {
             return $this->calculated['qty_var'];
         }
-        return $this->calculated['qty_var'] = $this->budget_qty - $this->completion_qty;
+        return $this->calculated['qty_var'] = $this->budget_unit - $this->completion_qty;
     }
 
     function getCostVarAttribute()

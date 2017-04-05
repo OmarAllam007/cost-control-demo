@@ -19,33 +19,33 @@
 <tr class="top-material hidden {{trim(slug($name) . '-' . slug($discipline))}}">
     <td class="resource-cell right-border"><strong><a href="#" data-target=".{{$target}}"><i class="fa fa-plus-square-o"></i> {{$topMaterial}}</a></strong></td>
 
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
     <td class="number-cell right-border">{{number_format($totals['budget_cost'], 2)}}</td>
 
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
     <td class="number-cell right-border">{{number_format($totals['prev_cost'], 2)}}</td>
 
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
     <td class="number-cell right-border">{{number_format($totals['curr_cost'], 2)}}</td>
 
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
     <td class="number-cell">{{number_format($totals['to_date_cost'], 2)}}</td>
     <td class="number-cell">{{number_format($totals['to_date_allowable'], 2)}}</td>
     <td class="number-cell right-border {{$totals['to_date_cost_var'] < 0? 'text-danger' : 'text-success'}}">{{number_format($totals['to_date_cost_var'], 2)}}</td>
 
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
     <td class="number-cell right-border">{{number_format($totals['remaining_cost'], 2)}}</td>
 
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
-    <td class="number-cell">N/A</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
+    <td class="number-cell">&nbsp;</td>
     <td class="number-cell">{{number_format($totals['at_completion_cost'], 2)}}</td>
     <td class="number-cell {{$totals['cost_var'] < 0? 'text-danger' : 'text-success'}}">{{number_format($totals['cost_var'], 2)}}</td>
     <td class="number-cell"></td>

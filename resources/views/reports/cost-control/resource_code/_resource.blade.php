@@ -32,5 +32,5 @@
     <td class="number-cell">{{number_format($resource->qty_var, 2)}}</td>
     <td class="number-cell">{{number_format($resource->at_completion_cost, 2)}}</td>
     <td class="number-cell {{$resource->cost_var < 0? 'text-danger' : 'text-success'}}">{{number_format($resource->cost_var, 2)}}</td>
-    <td class="number-cell {{$resource->pw_index < 0? 'text-danger' : 'text-success'}}">{{number_format($resource->pw_index, 4)}}</td>
+    <td class="number-cell {{$resource->pw_index < 0? 'text-danger' : 'text-success'}}">{{number_format($resource->pw_index * 100, 2)}}%</td>
 </tr>
