@@ -15,6 +15,7 @@ use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
 use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
+use App\Period;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -157,25 +158,11 @@ class CostReportsController extends Controller
 
     public function activityReport(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        }
-        $activity = new ActivityReport();
-        return $activity->getActivityReport($project, $chosen_period_id);
+        $period = Period::find($this->getPeriod($project, $request));
+
+        $report = new ActivityReport($period);
+
+        return $report->run();
     }
 
     public function resourceDictionaryReport(Project $project)

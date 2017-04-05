@@ -46,4 +46,27 @@ class MasterShadow extends Model
         $query->groupBy($fields)->orderByRaw('5, 3, 4, 1');
         return $query;
     }
+
+    function scopePreviousActivityReport(Builder $query, Period $period)
+    {
+        $query->forPeriod($period);
+        $fields = ['wbs_id', 'activity'];
+        $query->groupBy($fields);
+        $query->select($fields)->selectRaw(
+            'sum(to_date_cost) prev_cost, sum(to_date_qty) prev_qty, sum(allowable_ev_cost) prev_allowable'
+        );
+        $query->orderBy('activity');
+    }
+
+    function scopeCurrentActivityReport(Builder $query, Period $period)
+    {
+        $query->forPeriod($period);
+        $fields = ['wbs_id', 'activity'];
+        $query->groupBy($fields);
+        $query->select($fields)->selectRaw(
+            'sum(budget_cost) as budget_cost, sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_ev_cost) to_date_allowable,'.
+            'sum(allowable_var) as to_date_var, sum(remaining_cost) remaining_cost, sum(completion_cost) at_completion_cost, sum(cost_var) cost_var'
+        );
+        $query->orderBy('activity');
+    }
 }
