@@ -3,17 +3,17 @@
 * Back button returns to budget
 
 
-## Resource Dict
-* Slow
-* Filters
-	* Status
-	* Resource type, Resource Code/Name
-	* BOQ Discipline (Filter only not in hierarchy)
-	* Top resource or other
-	* Cost/Var (plus or negative)
-* Freeze table headers
+## _Resource Dict_
+* _Slow_
+* _Filters_
+	* _Status_
+	* _Resource type, Resource Code/Name_
+	* _BOQ Discipline (Filter only not in hierarchy)_
+	* _Top resource or other_
+	* _Cost/Var (plus or negative)_
+* _Freeze table headers_
 * Export??
-* Hierarchy as of sent sheet
+* _Hierarchy as of sent sheet_
 
 
 ## Std Activity

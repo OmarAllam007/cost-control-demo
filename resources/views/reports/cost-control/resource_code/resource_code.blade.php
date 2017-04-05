@@ -14,65 +14,71 @@
 @endsection
 
 @section('body')
+    @include('reports.cost-control.resource_code._filters')
+
     <div class="fixed-table-container">
+
+            <table class="table table-bordered  resources-table">
+                <thead>
+                <tr class="thead-top">
+                    <th class="resource-cell right-border" rowspan="2">Resource</th>
+                    <th class="text-center right-border" colspan="3">Budget</th>
+                    <th class="text-center right-border" colspan="3">Previous</th>
+                    <th class="text-center right-border" colspan="3">Current</th>
+                    <th class="text-center right-border" colspan="7">To Date</th>
+                    <th class="text-center right-border" colspan="3">Remaining</th>
+                    <th class="text-center" colspan="6">At Completion</th>
+                </tr>
+                <tr class="thead-bottom">
+                    {{-- Budget --}}
+                    <th class="text-center number-cell" width="100">U.Price</th>
+                    <th class="text-center number-cell" width="100">Qty</th>
+                    <th class="text-center number-cell right-border" width="100">Cost</th>
+
+                    {{-- Previous --}}
+                    <th class="text-center number-cell" width="100">U.Price</th>
+                    <th class="text-center number-cell" width="100">Qty</th>
+                    <th class="text-center number-cell right-border" width="100">Cost</th>
+
+                    {{-- Current --}}
+                    <th class="text-center number-cell" width="100">U.Price</th>
+                    <th class="text-center number-cell" width="100">Qty</th>
+                    <th class="text-center number-cell right-border" width="100">Cost</th>
+
+                    {{-- To Date --}}
+                    <th class="text-center number-cell" width="100">U.Price</th>
+                    <th class="text-center number-cell" width="100">Qty</th>
+                    <th class="text-center number-cell" width="100">Allowable Qty</th>
+                    <th class="text-center number-cell" width="100">Qty Var</th>
+                    <th class="text-center number-cell" width="100">Cost</th>
+                    <th class="text-center number-cell" width="100">Allowable Cost</th>
+                    <th class="text-center number-cell right-border" width="100">Cost Var</th>
+
+                    {{-- Remaining --}}
+                    <th class="text-center number-cell" width="100">U.Price</th>
+                    <th class="text-center number-cell" width="100">Qty</th>
+                    <th class="text-center number-cell right-border" width="100">Cost</th>
+
+                    {{-- At Completion --}}
+                    <th class="text-center number-cell" width="100">U.Price</th>
+                    <th class="text-center number-cell" width="100">Qty</th>
+                    <th class="text-center number-cell" width="100">Qty Var</th>
+                    <th class="text-center number-cell" width="100">Cost</th>
+                    <th class="text-center number-cell" width="100">Cost Var</th>
+                    <th class="text-center number-cell" width="100">P/W Index</th>
+                </tr>
+                </thead>
+            </table>
+
         <div class="fixed-table-container-inner">
-    <table class="table table-bordered" id="resourcesTable">
-        <thead>
-        <tr>
-            <th width="300" rowspan="2"><div class="th-inner">Resource</div></th>
-            <th colspan="3"><div class="th-inner">Budget</div></th>
-            <th colspan="3"><div class="th-inner">Previous</div></th>
-            <th colspan="3"><div class="th-inner">Current</div></th>
-            <th colspan="7"><div class="th-inner">To Date</div></th>
-            <th colspan="3"><div class="th-inner">Remaining</div></th>
-            <th colspan="6"><div class="th-inner">At Completion</div></th>
-        </tr>
-        <tr>
-            {{-- Budget --}}
-            <th width="200"><div class="th-inner">U.Price</div></th>
-            <th width="200"><div class="th-inner">Qty</div></th>
-            <th width="200"><div class="th-inner">Cost</div></th>
-
-            {{-- Previous --}}
-            <th width="200"><div class="th-inner">U.Price</div></th>
-            <th width="200"><div class="th-inner">Qty</div></th>
-            <th width="200"><div class="th-inner">Cost</div></th>
-
-            {{-- Current --}}
-            <th width="200"><div class="th-inner">U.Price</div></th>
-            <th width="200"><div class="th-inner">Qty</div></th>
-            <th width="200"><div class="th-inner">Cost</div></th>
-
-            {{-- To Date --}}
-            <th width="200"><div class="th-inner">U.Price</div></th>
-            <th width="200"><div class="th-inner">Qty</div></th>
-            <th width="200"><div class="th-inner">Allowable Qty</div></th>
-            <th width="200"><div class="th-inner">Qty Var</div></th>
-            <th width="200"><div class="th-inner">Cost</div></th>
-            <th width="200"><div class="th-inner">Allowable Cost</div></th>
-            <th width="200"><div class="th-inner">Cost Var</div></th>
-
-            {{-- Remaining --}}
-            <th width="200"><div class="th-inner">U.Price</div></th>
-            <th width="200"><div class="th-inner">Qty</div></th>
-            <th width="200"><div class="th-inner">Cost</div></th>
-
-            {{-- At Completion --}}
-            <th width="200"><div class="th-inner">U.Price</div></th>
-            <th width="200"><div class="th-inner">Qty</div></th>
-            <th width="200"><div class="th-inner">Qty Var</div></th>
-            <th width="200"><div class="th-inner">Cost</div></th>
-            <th width="200"><div class="th-inner">Cost Var</div></th>
-            <th width="150"><div class="th-inner">P/W Index</div></th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($tree as $name => $typeData)
-            @include('reports.cost-control.resource_code._type')
-        @endforeach
-        </tbody>
-    </table>
-        </div>
+            <table class="table table-bordered table-hover resources-table" id="resourcesTable">
+                <tbody>
+                @foreach($tree as $name => $typeData)
+                    @include('reports.cost-control.resource_code._type')
+                @endforeach
+                </tbody>
+            </table>
+     </div>
     </div>
 @endsection
 
@@ -91,12 +97,73 @@
         }
 
         .fixed-table-container {
-            max-height: 600px;
-            overflow: auto;
+            overflow-x: auto;
         }
 
         .fixed-table-container-inner {
-            width: 5250px;
+            width: 3320px;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .resource-cell {
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
+        }
+
+        .number-cell {
+            width: 120px;
+            min-width: 120px;
+            max-width: 120px;
+        }
+
+        .table > tbody > tr > td.right-border, .table > thead > tr > th.right-border{
+            border-right: 2px solid #999;
+        }
+
+
+        #resourcesTable a, #resourcesTable a:active, #resourcesTable a:focus {
+            text-decoration: none;
+        }
+
+        .resources-table > thead > tr > th {
+            border-bottom: none;
+        }
+
+        .resources-table {
+            border: 2px solid #999;
+            margin-bottom: 0;
+            width: auto;
+        }
+
+        #resourcesTable {
+            border-top: none;
+        }
+
+        .resource,.top-material-resource {
+            background-color: #e7f1fc;
+        }
+
+        .top-material {
+            background-color: #fa8840;
+        }
+
+        #resourcesTable > tbody > tr.top-material:hover {
+            background-color: #F9690E;
+        }
+
+        #resourcesTable > tbody > tr.resource.bg-primary td,
+        #resourcesTable > tbody > tr.top-material-resource.bg-primary td,
+        #resourcesTable > tbody > tr.top-material.bg-primary td,
+        #resourcesTable > tbody > tr.bg-primary:hover,
+        #resourcesTable > tbody > tr.info.bg-primary:hover,
+        #resourcesTable > tbody > tr.info.bg-primary > td {
+            background-color: #3097D1;
+        }
+
+        .top-material td, .top-material td a, .bg-primary a {
+            color: #fff;
         }
     </style>
 @endsection
@@ -117,12 +184,21 @@
                 });
             }
 
-            $('#resourcesTable').on('click', 'a', function() {
+            const resourcesTable = $('#resourcesTable').on('click', 'a', function() {
                 const target = $(this).data('target');
                 const rows = $(target).toggleClass('hidden');
                 $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
-                closeRows(rows);
+                if (!$(this).hasClass('open')) {
+                    closeRows(rows);
+                }
                 return false;
+            }).on('click', 'tr', function() {
+                if ($(this).hasClass('bg-primary')) {
+                    $(this).removeClass('bg-primary')
+                } else {
+                    resourcesTable.find('tr').removeClass('bg-primary');
+                    $(this).addClass('bg-primary')
+                }
             });
         });
     </script>

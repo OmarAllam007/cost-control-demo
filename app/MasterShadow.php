@@ -35,9 +35,9 @@ class MasterShadow extends Model
         $query->selectRaw(
             'trim(rt.name) as resource_type, sum(prev_cost) prev_cost, sum(prev_qty) prev_qty,' .
             'sum(curr_cost) curr_cost, sum(curr_qty) curr_qty,' .
-            'sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_ev_cost) to_date_allowable, sum(allowable_var) as to_date_var, sum(allowable_qty) to_date_allowable_qty,' .
-            'sum(remaining_cost) as remaining_cost, sum(remaining_qty) as remaining_qty, CASE WHEN sum(allowable_qty) != 0 THEN sum(allowable_qty) - sum(to_date_qty) / sum(allowable_qty) ELSE 0 END AS pw_index,' .
-            'sum(completion_cost) at_completion_cost, sum(completion_qty) at_completion_qty, sum(cost_var) cost_var, sum(budget_cost) budget_cost, sum(budget_unit) budget_qty'
+            'sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_ev_cost) to_date_allowable, sum(allowable_qty) to_date_allowable_qty,' .
+            'sum(remaining_cost) as remaining_cost, sum(remaining_qty) as remaining_qty, CASE WHEN sum(allowable_qty) != 0 THEN (sum(allowable_qty) - sum(to_date_qty)) / sum(allowable_qty) ELSE 0 END AS pw_index,' .
+            'sum(completion_cost) at_completion_cost, sum(completion_qty) at_completion_qty, sum(cost_var) cost_var, sum(budget_cost) budget_cost, sum(budget_unit) budget_qty, sum(qty_var) as qty_var'
         );
 
         $query->join('resource_types as rt', 'resource_type_id', '=', 'rt.id');
