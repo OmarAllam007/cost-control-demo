@@ -1,4 +1,4 @@
-@extends('layouts.' . (request('print')? 'print' : 'app'))
+@extends('layouts.app')
 
 @if(request('all'))
     @include('reports.all._standard-activity')
@@ -32,7 +32,6 @@
             <th>To Date Cost Var</th>
 
             <th>Remaining Cost</th>
-
             <th>At Completion Cost</th>
             <th>Cost Variance</th>
         </tr>
@@ -42,7 +41,7 @@
 
             @foreach($tree->where('parent', '') as $key => $level)
                 @include('reports.cost-control.activity._wbs')
-            @endoreach
+            @endforeach
 
         </tbody>
     </table>
