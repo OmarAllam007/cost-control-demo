@@ -227,7 +227,7 @@ trait CostAttributes
         if ($this->budget_unit_rate == 0) {
             return 0;
         }
-// change to use budget unit rate
+
         return $this->to_date_cost / $this->budget_unit_rate;
     }
 
@@ -359,7 +359,7 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     function getCalculationPeriod()
     {
         if (!$this->calculation_period) {
-            $$this->calculation_period = $this->project->open_period();
+            $this->calculation_period = $this->project->open_period();
         }
 
         return $this->calculation_period;
