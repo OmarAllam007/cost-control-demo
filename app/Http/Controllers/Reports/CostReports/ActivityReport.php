@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Reports\CostReports;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use App\WbsLevel;
+use Illuminate\Database\Eloquent\Builder;
 
 class ActivityReport
 {
@@ -26,7 +28,11 @@ class ActivityReport
 
         $tree = $this->buildTree();
 
-        return view('reports.cost-control.activity.activity_report', compact('tree', 'project'));
+        $periods = $this->project->periods()->readyForReporting()->orderBy('name')->pluck('name', 'id');
+
+        $activities = MasterShadow::forPeriod($this->period)->orderBy('activity')->pluck('activity');
+
+        return view('reports.cost-control.activity.activity_report', compact('tree', 'project', 'periods', 'activities'));
     }
 
     function buildTree()
@@ -40,7 +46,7 @@ class ActivityReport
             $previousData = [];
         }
 
-        $currentData = MasterShadow::currentActivityReport($this->period)->get()->groupBy('wbs_id')->map(function ($group) {
+        $currentData = $this->applyFilters(MasterShadow::currentActivityReport($this->period))->get()->groupBy('wbs_id')->map(function ($group) {
             return $group->keyBy('activity');
         });
 
@@ -61,7 +67,7 @@ class ActivityReport
                         $tree[$key] = [
                             'budget_cost' => 0, 'to_date_cost' => 0, 'to_date_allowable' => 0, 'to_date_var' => 0,
                             'prev_cost' => 0, 'prev_allowable' => 0, 'prev_cost_var' => 0,
-                            'remaining_cost' => 0, 'completion_cost' => 0, 'completion_var' => 0
+                            'remaining_cost' => 0, 'completion_cost' => 0, 'completion_var' => 0, 'activities' => []
                         ];
                     }
 
@@ -79,7 +85,7 @@ class ActivityReport
                     $tree[$key]['completion_var'] += $activityCurrent['completion_var'];
                 }
 
-                $wbs[$key]['activities'][$activity] = [
+                $tree[$key]['activities'][$activity] = [
                     'budget_cost' => $activityCurrent['budget_cost'],
                     'to_date_cost' => $activityCurrent['to_date_cost'],
                     'to_date_allowable' => $activityCurrent['to_date_allowable'],
@@ -96,6 +102,43 @@ class ActivityReport
         }
 
         return collect($tree);
+    }
+
+    private function applyFilters(Builder $query)
+    {
+        $request = request();
+
+        if ($status = strtolower($request->get('status', ''))) {
+            if ($status == 'not started') {
+                $query->havingRaw('sum(to_date_qty) = 0');
+            } elseif ($status == 'in progress') {
+                $query->havingRaw('sum(to_date_qty) > 0 AND AVG(progress) < 100');
+            } elseif ($status == 'closed') {
+                $query->where('to_date_qty', '>', 0)->where('progress', 100);
+            }
+        }
+
+        if ($wbs = $request->get('wbs')) {
+            $term = "%$wbs%";
+            $levels = WbsLevel::where('project_id', $this->project->id)->where(function ($q) use ($term) {
+                $q->where('code', 'like', $term)->orWhere('name', 'like', $term);
+            })->pluck('id');
+            $query->whereIn('wbs_id', $levels);
+        }
+
+        if ($activity = $request->get('activity')) {
+            $query->where('activity', $activity);
+        }
+
+        if ($request->exists('negative_to_date')) {
+            $query->havingRaw('to_date_var < 0');
+        }
+
+        if ($request->exists('negative_completion')) {
+            $query->having('completion_var', '<', 0);
+        }
+
+        return $query;
     }
 
 

@@ -53,7 +53,7 @@ class MasterShadow extends Model
         $fields = ['wbs_id', 'activity'];
         $query->groupBy($fields);
         $query->select($fields)->selectRaw(
-            'sum(to_date_cost) prev_cost, sum(to_date_qty) prev_qty, sum(allowable_ev_cost) prev_allowable'
+            'sum(to_date_cost) prev_cost, sum(allowable_ev_cost) prev_allowable, sum(allowable_var) prev_cost_var'
         );
         $query->orderBy('activity');
     }
@@ -65,7 +65,7 @@ class MasterShadow extends Model
         $query->groupBy($fields);
         $query->select($fields)->selectRaw(
             'sum(budget_cost) as budget_cost, sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_ev_cost) to_date_allowable,'.
-            'sum(allowable_var) as to_date_var, sum(remaining_cost) remaining_cost, sum(completion_cost) at_completion_cost, sum(cost_var) cost_var'
+            'sum(allowable_var) as to_date_var, sum(remaining_cost) remaining_cost, sum(completion_cost) completion_cost, sum(cost_var) completion_var'
         );
         $query->orderBy('activity');
     }

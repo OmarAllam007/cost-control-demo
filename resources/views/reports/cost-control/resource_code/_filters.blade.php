@@ -71,7 +71,7 @@
 
                 <div class="col-sm-2">
                     <div class="form-group">
-                        <label for="status">Resource</label>
+                        <label for="resource">Resource</label>
                         <input type="text" class="form-control" name="resource" id="resource" value="{{request('resource')}}">
                     </div>
                 </div>
