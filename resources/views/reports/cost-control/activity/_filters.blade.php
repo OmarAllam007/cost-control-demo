@@ -23,6 +23,19 @@
 
             <div class="col-sm-3">
                 <div class="form-group">
+                    <label for="activity">Activity</label>
+                    @php $activity = strtolower(request('activity')) @endphp
+                    <select name="activity" id="activity" class="form-control">
+                        <option value="">[All Activities]</option>
+                        @foreach($activities as $name)
+                            <option value="{{$name}}" {{strtolower($name) == $activity? 'selected' : ''}}>{{$name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
                     <label for="status">Status</label>
                     @php $status = strtolower(request('status')) @endphp
                     <select name="status" id="status" class="form-control">
@@ -33,21 +46,6 @@
                     </select>
                 </div>
             </div>
-
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="activity">Status</label>
-                    @php $activity = strtolower(request('activity')) @endphp
-                    <select name="activity" id="activity" class="form-control">
-                        <option value="">[All Activities]</option>
-                        @foreach($activities as $name)
-                            <option value="closed" {{strtolower($name) == $activity? 'selected' : ''}}>{{$name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-
 
             <div class="col-sm-3">
                 <div class="checkbox">
