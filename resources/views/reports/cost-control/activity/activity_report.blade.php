@@ -146,7 +146,7 @@
                 rows.each(function() {
                     const link = $(this).find('a');
                     const target = '.' + link.data('target');
-                    link.find('.fa').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+                    link.find('.fa').addClass('fa-plus-square-o').removeClass('fa-minus-square-o');
                     const rows = $(target).addClass('hidden');
                     closeRows(rows);
                 });

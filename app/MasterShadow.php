@@ -23,6 +23,16 @@ class MasterShadow extends Model
         return $this->belongsTo(Period::class);
     }
 
+    function boq_record()
+    {
+        return $this->belongsTo(Boq::class, 'boq_id');
+    }
+
+    function boq_wbs()
+    {
+        return $this->belongsTo(WbsLevel::class, 'boq_wbs_id');
+    }
+
     public function scopeForPeriod(Builder $query, Period $period)
     {
         return $query->wherePeriodId($period->id)->whereProjectId($period->project_id);
@@ -68,5 +78,18 @@ class MasterShadow extends Model
             'sum(allowable_var) as to_date_var, sum(remaining_cost) remaining_cost, sum(completion_cost) completion_cost, sum(cost_var) completion_var'
         );
         $query->orderBy('activity');
+    }
+
+    function scopeBoqReport(Builder $query, Period $period)
+    {
+        $fields = ['boq_wbs_id', 'cost_account', 'boq', 'boq_id'];
+
+        $query->forPeriod($period)->select($fields)->selectRaw(
+            'sum(budget_cost) as budget_cost, sum(to_date_cost) to_date_cost, sum(allowable_ev_cost) to_date_allowable,'.
+            'sum(allowable_var) to_date_var, sum(remaining_cost) remaining_cost, sum(completion_cost) at_completion_cost,'.
+            'sum(cost_var) at_completion_var, sum(physical_unit) physical_qty, avg(budget_unit_rate) as budget_unit_rate, avg(budget_qty) as budget_qty'
+        )->groupBy($fields)->orderBy('cost_account');
+
+        return $query;
     }
 }

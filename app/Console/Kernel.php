@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AddBoqDisciplineToMasterShadow;
+use App\Console\Commands\AddBoqToMasterSahdow;
 use App\Console\Commands\CleanResourceTypes;
 use App\Console\Commands\CostUpdateReminder;
 use App\Console\Commands\ExportAllResources;
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
         RecalculateCost::class,
         FixModResources::class,
         AddBoqDisciplineToMasterShadow::class,
+        AddBoqToMasterSahdow::class,
     ];
 
     /**

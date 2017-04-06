@@ -104,26 +104,11 @@ class CostReportsController extends Controller
 
     public function boqReport(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        }
+        $period_id = $this->getPeriod($project, $request);
+        $period = $project->periods()->find($period_id);
 
-        $boq = new BoqReport();
-        return $boq->getReport($project, $chosen_period_id);
+        $boq = new BoqReport($period);
+        return $boq->run();
     }
 
     public function resourceCodeReport(Project $project, Request $request)

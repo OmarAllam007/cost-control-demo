@@ -185,4 +185,15 @@ class WbsLevel extends Model
         }
         return 0;
     }
+
+    function getParents()
+    {
+        $parents = collect([$this->name]);
+        $parent = $this->parent;
+        while ($parent) {
+            $parents->push($parent->name);
+            $parent = $parent->parent;
+        }
+        return $parents->reverse();
+    }
 }
