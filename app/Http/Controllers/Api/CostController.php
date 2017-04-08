@@ -83,7 +83,7 @@ class CostController extends Controller
 
         $query = ActualBatch::whereProjectId($project->id)->latest();
         if (!can('cost_owner', $project)) {
-            $query->whereUserId(Auth::id());
+            $query->whereUserId(auth()->id());
         }
 
         return ['ok' => true, 'batches' => $query->get()];
