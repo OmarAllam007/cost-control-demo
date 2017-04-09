@@ -1,209 +1,175 @@
-@extends('layouts.' . (request('print')? 'print' : 'app'))
+@extends('layouts.app')
+
 @if(request('all'))
     @include('reports.all._standard-activity')
 @endif
+
 @section('header')
     <h2 class="">{{$project->name}} - Activity report</h2>
     <div class="pull-right">
-        <a href="?print=1" target="_blank" class="btn btn-default btn-sm print"><i class="fa fa-print"></i>
-        Print</a>
-        <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm back">
+        {{--<a href="?print=1" target="_blank" class="btn btn-default btn-sm print"><i class="fa fa-print"></i> Print</a>--}}
+        <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm back">
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
 @endsection
+
 @section('body')
-    <style>
-        .padding {
-            padding-right: 300px;
-        }
-    </style>
-    <div class="col-md-12 panel panel-default boqLevelFour">
-        <div class="col-md-12 boqLevelFour">
-            <table class="col-md-12">
-                <thead>
-                <tr style="text-align: center">
-                    <td>Base Line</td>
-                    <td>Previous Cost</td>
-                    <td>Previous Allowable</td>
-                    <td>Previous Var</td>
-                    <td>To Date Cost</td>
-                    <td>Allowable (EV) Cost</td>
-                    <td>Remaining Cost</td>
-                    <td>To Date Variance</td>
-                    <td>At Completion Cost</td>
-                    <td>Cost Variance</td>
-                </tr>
-                </thead>
+
+    @include('reports.cost-control.activity._filters')
+
+    <div class="horizontal-scroll">
+
+        <table class="table table-bordered" id="activity-header">
+        <thead>
+        <tr>
+            <th>Activity</th>
+
+            <th>Base Line</th>
+
+            <th>Previous Cost</th>
+            <th>Previous Allowable</th>
+            <th>Previous Var</th>
+
+            <th>To Date Cost</th>
+            <th>Allowable (EV) Cost</th>
+            <th>To Date Cost Var</th>
+
+            <th>Remaining Cost</th>
+            <th>At Completion Cost</th>
+            <th>Cost Variance</th>
+        </tr>
+        </thead>
+        </table>
+
+        <div class="vertical-scroll">
+
+            <table class="table table-bordered table-hover" id="activity-table">
+
                 <tbody>
-                <tr style="text-align: center">
-                    <td>{{number_format($total['budget_cost']??0,2) }}</td>
-                    <td>{{number_format($total['prev_cost']??0,2)}}</td>
-                    <td>{{number_format($total['prev_allowable']??0,2)}}</td>
-                    <td>{{number_format($total['prev_variance']??0,2)}}</td>
-                    <td>{{number_format($total['to_data_cost']?? 0,2)}}</td>
-                    <td>{{number_format($total['to_date_allowable_cost']??0,2)}}</td>
-                    <td>{{number_format($total['allowable_var']??0,2)}}</td>
-                    <td>{{number_format($total['remain_cost']??0,2)}}</td>
-                    <td>{{number_format($total['completion_cost']??0,2)}}</td>
-                    <td style=" @if($total['cost_var'] <0)  color: red; @endif ">{{number_format($total['cost_var']??0,2)}}</td>
-                </tr>
+
+                    @foreach($tree->where('parent', '')->sortBy('name') as $key => $level)
+                        @include('reports.cost-control.activity._wbs', ['depth' => 1])
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
-
-
     </div>
-    <div class="row" style="margin-bottom: 10px;">
-        <form action="{{route('cost.activity_report',$project)}}" class="form-inline col col-md-4" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
-            {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
-        </form>
-        <br>
-
-        <div class="btn-group btn-group-sm  btn-group-block col-md-2">
-            <a href="#WBSModal" data-toggle="modal" class="btn btn-default btn-block  tree-open">Select WBS-Level</a>
-            <a href="#" class="remove-tree-input-wbs btn btn-warning" data-target="#WBSModal"
-               data-label="Select WBS-Level"><span class="fa fa-times-circle"></span></a>
-
-        </div>
-        <div class="btn-group btn-group-sm  btn-group-block col-md-2">
-            <a href="#ActivitiesModal" data-toggle="modal" class="btn btn-default btn-block  tree-open">Select
-                Activity</a>
-            <a href="#" class="remove-tree-input-activity btn btn-warning" data-target="#ActivitiesModal"
-               data-label="Select Activity"><span class="fa fa-times-circle"></span></a>
-
-        </div>
-        <div class="btn-group btn-group-sm  btn-group-block col-md-2" style="text-align: center">
-            {{--<button type="button" class=" btn btn-danger col-md-1 negative"  data-toggle="button" aria-pressed="false" >--}}
-            {{--Negative Variance--}}
-            {{--</button>--}}
-            <input type="checkbox" name="checked" class="checkList"
-                   value="Negative Variance">
-            <p style="margin: 8px;font-size: larger">Negative Variance</p>
-        </div>
-    </div>
-    <ul class="list-unstyled tree report_tree">
-        @foreach($tree as $level)
-            @include('reports.cost-control.activity._recursive_report', ['level'=>$level,'tree_level'=>0])
-        @endforeach
-    </ul>
-    <input type="hidden" value="{{$project->id}}" id="project_id">
-
-    @include('std-activity._modal', ['input' => 'activity', 'value' => 'Select Activity'])
-    @include('wbs-level._modal')
 @endsection
+
+@section('css')
+    <style>
+        .horizontal-scroll {
+            overflow-x: auto;
+        }
+
+        .vertical-scroll {
+            overflow-y: auto;
+            max-height: 550px;
+            width: 1820px;
+            padding-right: 16px;
+        }
+
+    #activity-table a, #activity-table a:hover, #activity-table a:focus, #activity-table a:active {
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .level-2 td:first-child {
+        padding-left: 20px
+    }
+
+    .level-3 td:first-child {
+        padding-left: 40px
+    }
+
+    .level-4 td:first-child {
+        padding-left: 60px
+    }
+
+    .level-5 td:first-child {
+        padding-left: 80px
+    }
+
+    .level-6 td:first-child {
+        padding-left: 90px
+    }
+
+    .bg-primary a {
+        color: #fff;
+    }
+
+    .activity {
+        background-color: #e7f1fc;
+    }
+
+    #activity-table > tbody > tr.resource.bg-primary td,
+    #activity-table > tbody > tr.top-material-resource.bg-primary td,
+    #activity-table > tbody > tr.top-material.bg-primary td,
+    #activity-table > tbody > tr.bg-primary:hover,
+    #activity-table > tbody > tr.info.bg-primary:hover,
+    #activity-table > tbody > tr.success.bg-primary:hover,
+    #activity-table > tbody > tr.info.bg-primary > td,
+    #activity-table > tbody > tr.success.bg-primary > td,
+    #activity-table > tbody > tr.activity.bg-primary > td {
+        background-color: #3097D1;
+        color: #fff;
+    }
+        #activity-table {
+            border-top: none;
+        }
+
+        .table {
+            margin-bottom: 0;
+            width: auto;
+        }
+
+        .table > thead > tr > th:first-child, .table > tbody > tr > td:first-child{
+            width: 300px;
+            max-width: 300px;
+            min-width: 300px;
+        }
+
+        .table > thead > tr > th, .table > tbody > tr > td{
+            width: 150px;
+            max-width: 150px;
+            min-width: 150px;
+        }
+    </style>
+@endsection
+
 @section('javascript')
     <script>
-        $(function () {
-            var global_selector = '';
-            var target_td = '';
-            var project_id = $('#project_id').val();
-            var activity = 0;
-            var wbs = 0;
-            var negative_clicked = 0;
+        $(function() {
+            function closeRows(rows) {
+                rows.each(function() {
+                    const link = $(this).find('a');
+                    const target = '.' + link.data('target');
+                    link.find('.fa').addClass('fa-plus-square-o').removeClass('fa-minus-square-o');
+                    const rows = $(target).addClass('hidden');
+                    closeRows(rows);
+                });
+            }
+            const activityTable = $('#activity-table').on('click', 'a', function(){
+                const _self = $(this);
+                const target = '.' + _self.data('target');
+                const rows = $(target).toggleClass('hidden');
+                _self.toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
+                if (!_self.hasClass('open')) {
+                    closeRows(rows);
+                }
+                console.log(target);
 
-//            WBS-LEVELS
-            $('.wbs-radio').on('change', function () {
-                if (this.checked) {
-                    var value = $(this).attr('value');
-                    global_selector = $('#col-' + value);
-                    $('.level-container').removeClass('in').addClass('hidden');
-                    global_selector.parents('.level-container').addClass('in').removeClass('hidden');
-                    global_selector.addClass('in').removeClass('hidden');
-                    global_selector.parents('li').addClass('target').removeClass('hidden');
-                    global_selector.children().children().children('article').addClass('in').removeClass('hidden');
-//                    $('.level-container').not('.target').parent('li').addClass('hidden');
-//                    $('ul.stdreport > li').not('.target').addClass('hidden');
-                    wbs=value;
-                    activity=0;
-                    negative_clicked=0;
-
+                return false;
+            }).on('click', 'tbody tr', function () {
+                if ($(this).hasClass('bg-primary')) {
+                    $(this).removeClass('bg-primary');
+                } else {
+                    activityTable.find('tr').removeClass('bg-primary');
+                    $(this).addClass('bg-primary');
                 }
             });
-
-            $('.remove-tree-input-wbs').on('click', function () {
-                global_selector.parents('.level-container').removeClass('in').removeClass('hidden');
-                global_selector.removeClass('in').addClass('hidden');
-                global_selector.parents('li').removeClass('target').addClass('hidden');
-                global_selector.removeClass('target');
-                $('li').not('target').removeClass('hidden');
-                $('.level-container').removeClass('in').removeClass('hidden');
-                global_selector.children().children().children('article').removeClass('in').addClass('hidden');
-                wbs=0;
-                activity=0;
-                negative_clicked=0;
-            });
-//            ACTIVITIES
-
-            $('.activity-input').on('change', function () {
-                var value = $(this).val();
-                target_td = $("tr#activity-" + value);
-                target_td.parents('.level-container').addClass('in').removeClass('hidden');
-                target_td.addClass('in').removeClass('hidden');
-                target_td.parents('li').addClass('target').removeClass('hidden');
-//                target_td.parent('tr').css('background-color', '');
-                wbs=0;
-                activity=value;
-                negative_clicked=0;
-            });
-
-            $('.remove-tree-input-activity').on('click', function () {
-                target_td.parents('.level-container').removeClass('in').removeClass('hidden');
-                target_td.removeClass('in').addClass('hidden');
-                target_td.parents('li').removeClass('target').addClass('hidden');
-                target_td.removeClass('target');
-                $('li').not('target').removeClass('hidden');
-                $('.level-container').removeClass('in').removeClass('hidden');
-//                target_td.parent('tr').css('background-color', 'white');
-//                target_td.children().children().children('article').removeClass('in').addClass('hidden');
-                wbs=0;
-                activity=0;
-                negative_clicked=0;
-            });
-
-
-//            COST-ACCOUNTS
-            $('.checkList').on('click', function () {
-                var negative_rows = $('.negative_var');
-                if ($(this).hasClass('clicked')) {
-                    negative_rows.each(function () {
-                        $(this).parents('.level-container').removeClass('in').removeClass('hidden');
-                        $(this).removeClass('in').removeClass('hidden');
-                        $(this).parents('li').removeClass('target').removeClass('hidden');
-//                        $('ul.stdreport > li').not('.target').removeClass('hidden');
-                    });
-                    $(this).removeClass('clicked');
-                    wbs=0;
-                    activity=0;
-                    negative_clicked=0;
-                }
-                else {
-                    negative_rows.each(function () {
-                        $(this).parents('.level-container').addClass('in').removeClass('hidden');
-                        $(this).addClass('in').removeClass('hidden');
-                        $(this).parents('li').addClass('target').removeClass('hidden');
-                    });
-                    $(this).addClass('clicked');
-                    wbs=0;
-                    activity=0;
-                    negative_clicked=1;
-                }
-
-            })
-
-            $('.print').on('click',function () {
-                sessionStorage.removeItem('negative_var_'+project_id);
-                sessionStorage.removeItem('activity_'+project_id);
-                sessionStorage.removeItem('wbs_'+project_id);
-
-                sessionStorage.setItem('negative_var_'+project_id,negative_clicked);
-                sessionStorage.setItem('activity_'+project_id,activity);
-                sessionStorage.setItem('wbs_'+project_id,wbs);
-            })
-        })
+        });
     </script>
-    <script src="{{asset('/js/project.js')}}"></script>
-    <script src="{{asset('/js/tree-select.js')}}"></script>
-
 @endsection

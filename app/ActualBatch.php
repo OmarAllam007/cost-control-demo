@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\HasChangeLog;
 use Illuminate\Database\Eloquent\Model;
 
 class ActualBatch extends Model
 {
+    use HasChangeLog;
+
     protected $fillable = ['user_id', 'type', 'file', 'project_id', 'period_id'];
 
     protected $appends = ['uploaded_by', 'uploaded_at', 'period_name'];

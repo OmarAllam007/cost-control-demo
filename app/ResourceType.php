@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class ResourceType extends Model
 {
     use Tree, HasOptions, CachesQueries;
+    use HasChangeLog;
 
     protected $fillable = ['name', 'parent_id', 'code'];
 

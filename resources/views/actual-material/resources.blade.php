@@ -115,7 +115,7 @@
                 var _class = '.resource-' + $(this).data('counter');
                 var total = 0;
                 $(this).closest('table').find(_class).each(function (idx, elem) {
-                    total += $(elem).find('.store-qty').data('qty');
+                    total += parseFloat($(elem).find('.store-qty').data('qty'));
                 });
 
                 $(this).closest('.input-group').find('.physical-qty').val(total);

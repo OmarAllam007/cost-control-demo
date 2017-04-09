@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use App\Formatters\BreakdownResourceFormatter;
 use App\Http\Controllers\Caching\ResourcesCache;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Survey extends Model
 {
     use CachesQueries;
+    use HasChangeLog;
 
     protected $table = 'qty_surveys';
 

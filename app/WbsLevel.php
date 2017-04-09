@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use App\Jobs\CacheWBSTree;
@@ -16,6 +17,7 @@ class WbsLevel extends Model
     use SoftDeletes;
     use Tree, HasOptions;
     use CachesQueries;
+    use HasChangeLog;
 
     protected $fillable = ['name', 'project_id', 'parent_id', 'comments', 'code'];
 
@@ -182,5 +184,16 @@ class WbsLevel extends Model
             return $boq->dry_ur;
         }
         return 0;
+    }
+
+    function getParents()
+    {
+        $parents = collect([$this->name]);
+        $parent = $this->parent;
+        while ($parent) {
+            $parents->push($parent->name);
+            $parent = $parent->parent;
+        }
+        return $parents->reverse();
     }
 }

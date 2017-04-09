@@ -6,6 +6,7 @@ use App\Boq;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Jobs\Job;
+use App\MasterShadow;
 use App\Resources;
 use App\ResourceType;
 use App\StdActivity;
@@ -17,6 +18,7 @@ use Illuminate\Support\Collection;
 class ExportCostShadow extends Job
 {
 
+    /** @var Project */
     protected $project;
     /**
      * @var string
@@ -29,11 +31,16 @@ class ExportCostShadow extends Job
     protected $buffer = '';
 
     protected $cache = ['activity' => [], 'wbs' => []];
+    /**
+     * @var bool
+     */
+    private $export;
 
-    public function __construct($project, $perspective = '')
+    public function __construct($project, $perspective = '', $export = false)
     {
         $this->project = $project;
         $this->perspective = $perspective;
+        $this->export = $export;
     }
 
 
@@ -51,7 +58,9 @@ class ExportCostShadow extends Job
             'To Date Price/Unit(Eqv)', 'To Date Quantity', 'To Date Cost', 'Allowable (EV) cost', 'Var +/-',
             'Remaining Price/Unit', 'Remaining Qty', 'Remaining Cost', 'BL Allowable Cost', 'Var +/- 10',
             'Completion Price/Unit', 'Completion Qty', 'Completion Cost', 'Price/Unit Var', 'Qty Var +/-', 'Cost Var +/-',
-            'Physical Unit', '(P/W) Index', 'Cost Variance To Date Due to Unit Price', 'Allowable Quantity', 'Cost Variance Remaining Due to Unit Price',
+            'Physical Unit',
+//            '(P/W) Index',
+            'Cost Variance To Date Due to Unit Price', 'Allowable Quantity', 'Cost Variance Remaining Due to Unit Price',
             'Cost Variance Completion Due to Unit Price', 'Cost Variance Completion Due to Qty', 'Cost Variance to Date Due to Qty',
         ];
 
@@ -60,7 +69,7 @@ class ExportCostShadow extends Job
         $period = $this->project->open_period();
 
         if ($this->perspective == 'budget') {
-            $query = BreakDownResourceShadow::with('previous', 'current', 'cost')->where('project_id', $this->project->id);
+            $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
         } else {
             $query = CostShadow::joinShadow(null, $period);
         }
@@ -68,34 +77,43 @@ class ExportCostShadow extends Job
         /** @var $query Builder */
 
         $query->chunk(5000, function ($shadows) {
+
             $time = microtime(1);
             foreach ($shadows as $costShadow) {
-                $boqDescription = $this->getBoqDescription($costShadow);
+                if ($this->perspective == 'budget') {
+                    $levels = $costShadow['wbs'];
+                    $levels = array_pad($levels, 6, '');
+                    $levels = array_only($levels, range(0, 5));
+                    $wbs = implode(', ', array_map('csv_quote', $levels));
 
-                if (isset($this->cache['resources'][$costShadow->resource_id])) {
-                    $resource = $this->cache['resources'][$costShadow->resource_id];
+                    $activityDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['activity_divs'], 3, ''), range(0, 2))));
+                    $resourceDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'], 3, ''), range(0, 2))));
+
+                    $boq_description = $costShadow->boq;
                 } else {
-                    $this->cache['resources'][$costShadow->resource_id] = $resource = Resources::find($costShadow->resource_id);
+                    $wbs = $this->getWbs($costShadow);
+                    $activityDivs = $this->getActivityDivisions($costShadow);
+                    $resource = Resources::find($costShadow->resource_id);
+                    $resourceDivs = $this->getResourceDivisions($resource);
+                    $boq_description = $this->getBoqDescription($costShadow);
                 }
 
-                $wbs = $this->getWbs($costShadow);
-                $activityDivs = $this->getActivityDivisions($costShadow);
 
                 $this->buffer .= "\n" .
                     $wbs.','.
                     $activityDivs.','.
                     csv_quote($costShadow['activity']).','.
                     '"'.$costShadow['code'].'",'.
-                    csv_quote($boqDescription).','.
+                    csv_quote($boq_description).','.
                     '"'.$costShadow['cost_account'].'",'.
                     round($costShadow['eng_qty'] ?: '0', 2).','.
                     round($costShadow['budget_qty'] ?: '0', 2).','.
                     round($costShadow['resource_qty'] ?: '0', 2).','.
                     round($costShadow['resource_waste'] ?: '0', 2).','.
-                    $this->getResourceDivisions($resource).','.
+                    $resourceDivs.','.
                     '"'.$costShadow['resource_code'].'",'.
                     csv_quote($costShadow['resource_name']).','.
-                    csv_quote($resource->top_material) . ','.
+                    csv_quote($costShadow['top_material']) . ','.
                     '"'.round($costShadow['unit_price'] ?: '0', 2).'",'.
                     '"'.$costShadow['measure_unit'].'",'.
                     '"'.round($costShadow['budget_unit'] ?: '0', 2).'",'.
@@ -131,7 +149,7 @@ class ExportCostShadow extends Job
                     '"'.round($costShadow['qty_var'] ?: '0', 2).'",'.
                     '"'.round($costShadow['cost_var'] ?: '0', 2).'",'.
                     '"'.round($costShadow['physical_unit'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['pw_index'] ?: '0', 2).'",'.
+//                    '"'.round($costShadow['pw_index'] ?: '0', 2).'",'.
                     '"'.round($costShadow['cost_variance_to_date_due_unit_price'] ?: '0', 2).'",'.
                     '"'.round($costShadow['allowable_qty'] ?: '0', 2).'",'.
                     '"'.round($costShadow['cost_variance_remaining_due_unit_price'] ?: '0', 2).'",'.
@@ -146,9 +164,11 @@ class ExportCostShadow extends Job
             \Log::info('Chunk has been buffered; memory: ' . round(memory_get_usage() / (1024 * 1024), 2));
         });
 
-        file_put_contents(storage_path('app/cost-shadow-' . slug($this->project->name) . '_' . slug($this->project->open_period()->name) . '.csv'), $this->buffer);
-
-        return $this->buffer;
+        if ($this->export) {
+            file_put_contents(storage_path('app/cost-shadow-' . slug($this->project->name) . '_' . slug($this->project->open_period()->name) . '.csv'), $this->buffer);
+        } else {
+            return $this->buffer;
+        }
     }
 
     protected function getWbs($costShadow)

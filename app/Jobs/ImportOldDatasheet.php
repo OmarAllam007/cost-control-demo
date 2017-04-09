@@ -62,8 +62,11 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         BreakDownResourceShadow::flushEventListeners();
 
         $entries = collect();
+        $counter = 1;
+        $fh = fopen(storage_path('app/failed_old_data' . slug($this->project->name) . '.csv'), 'w');
         foreach ($rows as $row) {
             $rowData = $this->getDataFromCells($row->getCellIterator());
+            ++$counter;
             if (!array_filter($rowData)) {
                 continue;
             }
@@ -82,10 +85,13 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                     $entries = collect();
                 }
             } else {
-                $failed->push($rowData);
+                $failed->put($counter, $rowData);
+                fputcsv($fh, $rowData);
             }
 
         }
+
+        fclose($fh);
 
         if ($entries->count()) {
             CostShadow::insert($entries->pluck('shadow')->toArray());

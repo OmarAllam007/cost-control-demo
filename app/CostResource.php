@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use Illuminate\Database\Eloquent\Model;
 
 class CostResource extends Model
 {
+    use CachesQueries;
+
     protected $fillable = ['resource_id', 'period_id', 'rate', 'project_id'];
 
     protected $with = ['resource', 'resource.units', 'resource.types'];

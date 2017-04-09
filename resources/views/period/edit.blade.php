@@ -2,7 +2,7 @@
 
 @section('header')
     <h2>Edit fiscal period</h2>
-    <a href="{{ route('project.show', $period->project) }}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+    <a href="{{ route('project.cost-control', $period->project) }}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
 @stop
 
 @section('body')
