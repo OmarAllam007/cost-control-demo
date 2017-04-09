@@ -93,7 +93,8 @@ class ExportCostShadow extends Job
                 } else {
                     $wbs = $this->getWbs($costShadow);
                     $activityDivs = $this->getActivityDivisions($costShadow);
-                    $resourceDivs = $this->getResourceDivisions($costShadow->resource);
+                    $resource = Resources::find($costShadow->resource_id);
+                    $resourceDivs = $this->getResourceDivisions($resource);
                     $boq_description = $this->getBoqDescription($costShadow);
                 }
 
