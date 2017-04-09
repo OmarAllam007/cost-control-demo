@@ -30,7 +30,6 @@ class BudgetCostDryCostByDiscipline
     public function compareBudgetCostDryCostDiscipline(Project $project)
     {
         $total = ['budget' => 0, 'dry' => 0 , 'difference'=>0,'increase'=>0];
-        set_time_limit(300);
         $this->project = $project;
         $this->shadow = collect();
         $this->wbs_levels = collect();
@@ -45,7 +44,7 @@ GROUP BY cost_account'))->map(function ($shadow) {
             $this->shadow->put($shadow->cost_account, $shadow->sum);
         });
 
-        collect(\DB::select('Select DISTINCT wbs_id from break_down_resource_shadows where project_id=' . $project->id . ''))
+        collect(\DB::select('Select DISTINCT wbs_id from break_down_resource_shadows where project_id=' . $project->id))
             ->map(function ($level) {
                 $this->wbs_levels->push($level->wbs_id);
             });
@@ -100,7 +99,6 @@ GROUP BY cost_account'))->map(function ($shadow) {
                     $breakdowns = Breakdown::where('project_id', $this->project->id)
                         ->where('wbs_level_id', $parent->id)->get();
                     foreach ($breakdowns as $breakdown) {
-//
                         $dry = \DB::select("SELECT SUM(dry_ur * quantity) as sum from boqs
                                 WHERE project_id= ?
                                 AND wbs_id= ? AND boqs.cost_account =?", [$this->project->id, $parent->id, $breakdown['cost_account']]);
@@ -110,6 +108,8 @@ GROUP BY cost_account'))->map(function ($shadow) {
                         }
                         $this->data[$discpline]['dry'] += $dry[0]->sum;
                     }
+
+                    break;
                 }
             }
         }

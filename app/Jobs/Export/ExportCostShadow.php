@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
 class ExportCostShadow extends Job
 {
 
+    /** @var Project */
     protected $project;
     /**
      * @var string
@@ -79,20 +80,30 @@ class ExportCostShadow extends Job
 
             $time = microtime(1);
             foreach ($shadows as $costShadow) {
-                $levels = $costShadow['wbs'];
-                $levels = array_pad($levels, 6, '');
-                $levels = array_only($levels, range(0, 5));
-                $wbs = implode(', ', array_map('csv_quote', $levels));
+                if ($this->perspective == 'budget') {
+                    $levels = $costShadow['wbs'];
+                    $levels = array_pad($levels, 6, '');
+                    $levels = array_only($levels, range(0, 5));
+                    $wbs = implode(', ', array_map('csv_quote', $levels));
 
-                $activityDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['activity_divs'], 3, ''), range(0, 2))));
-                $resourceDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'], 3, ''), range(0, 2))));
+                    $activityDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['activity_divs'], 3, ''), range(0, 2))));
+                    $resourceDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'], 3, ''), range(0, 2))));
+
+                    $boq_description = $costShadow->boq;
+                } else {
+                    $wbs = $this->getWbs($costShadow);
+                    $activityDivs = $this->getActivityDivisions($costShadow);
+                    $resourceDivs = $this->getResourceDivisions($costShadow);
+                    $boq_description = $this->getBoqDescription($costShadow);
+                }
+
 
                 $this->buffer .= "\n" .
                     $wbs.','.
                     $activityDivs.','.
                     csv_quote($costShadow['activity']).','.
                     '"'.$costShadow['code'].'",'.
-                    csv_quote($costShadow->boq).','.
+                    csv_quote($boq_description).','.
                     '"'.$costShadow['cost_account'].'",'.
                     round($costShadow['eng_qty'] ?: '0', 2).','.
                     round($costShadow['budget_qty'] ?: '0', 2).','.
