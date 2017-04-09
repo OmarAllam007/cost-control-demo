@@ -31,16 +31,16 @@
             <tr class="tbl-content">
 
                 <td class="col-xs-3">{{$key}}</td>
-                <td class="col-xs-2">{{number_format($row['dry'],2)}}</td>
+                <td class="col-xs-2">{{number_format($row['dry'] ?? 0,2) }}</td>
                 <td class="col-xs-2">{{number_format($row['budget'],2)}}</td>
-                <td class="col-xs-2" @if($row['difference']<0) style="color: red;" @endif>{{number_format($row['difference'],2)}}</td>
-                <td class="col-xs-2" @if($row['difference']<0) style="color: red;" @endif> % {{number_format($row['increase'],2)}}</td>
+                <td class="col-xs-2" @if(isset($row['difference']) && $row['difference']<0) style="color: red;" @endif>{{number_format($row['difference'] ?? 0,2)}}</td>
+                <td class="col-xs-2" @if(isset($row['difference']) && $row['difference']<0) style="color: red;" @endif> % {{number_format($row['increase'] ?? 0 ,2)}}</td>
 
             </tr>
         @endforeach
         <tr style="border-top: solid #000000">
             <td class="col-xs-3 output-cell" style="font-weight: 800">Grand Total</td>
-            <td class="col-xs-2 output-cell">{{number_format($total['dry'],2)}}</td>
+            <td class="col-xs-2 output-cell">{{number_format($total['dry'] ??0 ,2)}}</td>
             <td class="col-xs-2 output-cell">{{number_format($total['budget'],2)}}</td>
             <td class="col-xs-2 output-cell">{{number_format($total['difference'],2)}}</td>
             <td class="col-xs-2 output-cell">% {{number_format($total['increase'],2)}}</td>
