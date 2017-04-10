@@ -69,6 +69,8 @@ class BoqReport
                 $tree[$key]['name'] = $level;
                 $tree[$key]['key'] = $key;
                 $tree[$key]['parent'] = $lastKey;
+                $tree[$key]['dry_cost'] += $boq->boq_record->dry_ur * $boq->boq_record->quantity;
+                $tree[$key]['boq_cost'] += $boq->boq_record->price_ur * $boq->boq_record->quantity;
                 $tree[$key]['budget_cost'] += $boq->budget_cost;
                 $tree[$key]['to_date_cost'] += $boq->to_date_cost;
                 $tree[$key]['to_date_allowable'] += $boq->to_date_allowable;
