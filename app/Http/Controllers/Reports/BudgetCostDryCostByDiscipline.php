@@ -16,6 +16,7 @@ use App\Project;
 use App\StdActivity;
 use App\Survey;
 use App\WbsLevel;
+use Beta\B;
 
 class BudgetCostDryCostByDiscipline
 {
@@ -25,40 +26,18 @@ class BudgetCostDryCostByDiscipline
     private $shadow;
     private $data;
     private $total_budget;
+    private $dry_Collect;
     private $wbs_levels;
 
     public function compareBudgetCostDryCostDiscipline (Project $project)
     {
+        set_time_limit(300);
         $total = ['budget' => 0, 'dry' => 0, 'difference' => 0, 'increase' => 0];
         $this->project = $project;
         $this->shadow = collect();
         $this->wbs_levels = collect();
-//        $this->activities = StdActivity::all()->keyBy('id')->map(function ($activity) {
-//            return $activity->discipline;
-//        });
 
-//        collect(\DB::select('SELECT cost_account, SUM(budget_cost) AS sum
-//FROM break_down_resource_shadows
-//WHERE project_id = ' . $project->id . '
-//GROUP BY cost_account'))->map(function ($shadow) {
-//            $this->shadow->put($shadow->cost_account, $shadow->sum);
-//        });
-
-//        collect(\DB::select('SELECT DISTINCT wbs_id FROM break_down_resource_shadows WHERE project_id=' . $project->id))
-//            ->map(function ($level) {
-//                $this->wbs_levels->push($level->wbs_id);
-//            });
-
-        $ids = collect(\DB::select('SELECT
-  DISTINCT
-  w.id,
-  w.name
-FROM wbs_levels w
-  JOIN boqs b
-WHERE b.wbs_id = w.id and w.project_id=?',[$project->id]))->pluck('id');
-
-        $wbs_levels = $project->wbs_levels()->whereIn('id',$ids)->get();
-        
+        $wbs_levels = $project->wbs_levels()->get();
         foreach ($wbs_levels as $level) {
             $treeLevel = $this->buildReport($level);
             $tree [] = $treeLevel;
@@ -72,10 +51,12 @@ WHERE b.wbs_id = w.id and w.project_id=?',[$project->id]))->pluck('id');
             $this->data[$shadow->discipline]['budget'] = $shadow->budget;
         });
 
+
         $data = $this->data;
         foreach ($data as $key => $value) {
-            if(isset($data[$key]['dry']) && $data[$key]['dry']!=0){
-                $data[$key]['difference'] = $data[$key]['dry'] - $data[$key]['budget'];
+
+            $data[$key]['difference'] = $data[$key]['dry'] - $data[$key]['budget'];
+            if ($data[$key]['dry']) {
                 $data[$key]['increase'] = $data[$key]['difference'] / $data[$key]['dry'];
                 $total['budget'] += $data[$key]['budget'];
                 $total['dry'] += $data[$key]['dry'];
@@ -89,22 +70,38 @@ WHERE b.wbs_id = w.id and w.project_id=?',[$project->id]))->pluck('id');
 
     private function buildReport (WbsLevel $level)
     {
+        $boqs = Boq::where('project_id', $this->project->id)->where('wbs_id', $level->id)->get();
+        $breakdowns = Breakdown::where('project_id', $this->project->id)
+            ->where('wbs_level_id', $level->id)->get();
 
-            $breakdowns = Breakdown::where('project_id', $this->project->id)
-                ->where('wbs_level_id', $level->id)->get();
-            if (count($breakdowns)) {
-                foreach ($breakdowns as $breakdown) {
-                    $dry = \DB::select("SELECT SUM(dry_ur * quantity) AS sum FROM boqs
-                                WHERE project_id= ?
-                                AND wbs_id= ? AND boqs.cost_account =?", [$this->project->id, $level->id, $breakdown['cost_account']]);
+        if(count($boqs) && count($breakdowns)){
+            foreach ($boqs as $boq) {
+                $breakdown = Breakdown::with('std_activity')->where('project_id', $this->project->id)
+                    ->where('wbs_level_id', $level->id)->where('cost_account', $boq->cost_account)->first();
+                if ($breakdown) {
                     $discpline = $breakdown->std_activity->discipline;
                     if (!isset($this->data[$discpline])) {
                         $this->data[$discpline] = ['budget' => 0, 'dry' => 0, 'difference' => 0, 'increase' => 0];
                     }
-                    $this->data[$discpline]['dry'] += $dry[0]->sum;
+                    $this->data[$discpline]['dry'] += ($boq->dry_ur * $boq->quantity);
                 }
-
+            }
         }
+        if(count($boqs) && !count($breakdowns)){
+            foreach ($boqs as $boq) {
+                $breakdown = Breakdown::with('std_activity')->where('project_id', $this->project->id)
+                    ->whereIn('wbs_level_id', $level->getChildrenIds())->where('cost_account', $boq->cost_account)->first();
+                if ($breakdown) {
+                    $discpline = $breakdown->std_activity->discipline;
+                    if (!isset($this->data[$discpline])) {
+                        $this->data[$discpline] = ['budget' => 0, 'dry' => 0, 'difference' => 0, 'increase' => 0];
+                    }
+                    $this->data[$discpline]['dry'] += ($boq->dry_ur * $boq->quantity);
+                }
+            }
+        }
+
+
 
 
     }
