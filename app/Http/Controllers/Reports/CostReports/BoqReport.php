@@ -62,7 +62,7 @@ class BoqReport
                 if (!isset($tree[$key])) {
                     $tree[$key] = [
                         'boqs' => [], 'budget_cost' => 0, 'to_date_cost' => 0, 'to_date_allowable' => 0, 'to_date_var' => 0,
-                        'remaining_cost' => 0, 'at_completion_cost' => 0, 'at_completion_var' => 0
+                        'remaining_cost' => 0, 'at_completion_cost' => 0, 'at_completion_var' => 0, 'dry_cost' => 0, 'boq_cost' => 0
                     ];
                 }
 

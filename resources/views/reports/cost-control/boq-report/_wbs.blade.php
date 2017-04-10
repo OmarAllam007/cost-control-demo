@@ -7,8 +7,8 @@
     <td class="number-cell"></td>
     <td class="number-cell"></td>
     <td class="number-cell"></td>
-    <td class="number-cell"></td>
-    <td class="number-cell"></td>
+    <td class="number-cell">{{number_format($level['dry_cost'], 2)}}</td>
+    <td class="number-cell">{{number_format($level['boq_cost'], 2)}}</td>
     <td class="number-cell">{{number_format($level['budget_cost'], 2)}}</td>
     <td class="number-cell">{{number_format($level['to_date_cost'], 2)}}</td>
     <td class="number-cell">{{number_format($level['to_date_allowable'], 2)}}</td>
