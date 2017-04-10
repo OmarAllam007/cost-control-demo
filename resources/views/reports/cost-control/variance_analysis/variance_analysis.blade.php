@@ -16,7 +16,7 @@
 @endsection
 
 @section('body')
-    {{--@include('reports.cost-control.resource_code._filters')--}}
+    @include('reports.cost-control.variance_analysis._filters')
 
     <div class="horizontal-scroll">
         <table class="table table-bordered  resources-table">
