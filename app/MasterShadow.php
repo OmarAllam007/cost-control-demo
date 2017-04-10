@@ -62,17 +62,18 @@ class MasterShadow extends Model
         $fields = ['resource_name', 'resource_type_id', 'boq_discipline'];
         $query->select($fields);
         $query->selectRaw(
-            'trim(rt.name) as resource_type, avg(unit_price), (CASE WHEN sum(prev_qty) = 0 THEN 0 ELSE sum(prev_cost) / sum(prev_qty) END) as prev_unit_price, ' .
-            'CASE WHEN sum(curr_qty) = 0 THEN 0 ELSE sum(curr_cost) / sum(curr_qty) END AS curr_unit_price,' .
-            'CASE WHEN sum(to_date_qty) = 0 THEN 0 ELSE sum(to_date_cost) / sum(to_date_qty) END AS curr_unit_price,' .
+            'trim(rt.name) as resource_type, avg(unit_price) as budget_unit_price,'.
+            '(CASE WHEN sum(prev_qty) = 0 THEN 0 ELSE sum(prev_cost) / sum(prev_qty) END) as prev_unit_price, ' .
+            '(CASE WHEN sum(curr_qty) = 0 THEN 0 ELSE sum(curr_cost) / sum(curr_qty) END) AS curr_unit_price,' .
+            '(CASE WHEN sum(to_date_qty) = 0 THEN 0 ELSE sum(to_date_cost) / sum(to_date_qty) END) AS to_date_unit_price,' .
             'sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_qty) to_date_allowable_qty,' .
-            'sum(cost_variance_to_date_due_unit_price) cost_unit_price_var, sum(cost_variance_to_date_due_qty) cost_qty_var'
+            'sum(cost_variance_completion_due_unit_price) cost_unit_price_var, sum(cost_variance_completion_due_qty) cost_qty_var'
         );
 
         $query->join('resource_types as rt', 'resource_type_id', '=', 'rt.id');
 
         $fields[] = 'resource_type';
-        $query->groupBy($fields)->orderByRaw('5, 3, 4, 1');
+        $query->groupBy($fields)->orderByRaw('4, 3, 1');
         return $query;
     }
 

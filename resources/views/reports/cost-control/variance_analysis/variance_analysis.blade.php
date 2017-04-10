@@ -18,7 +18,7 @@
 @section('body')
     {{--@include('reports.cost-control.resource_code._filters')--}}
 
-    <div class="fixed-table-container">
+    <div class="horizontal-scroll">
         <table class="table table-bordered  resources-table">
             <thead>
             <tr class="thead-top">
@@ -34,24 +34,27 @@
                 <th class="number-cell">Current Price/Unit</th>
                 <th class="number-cell">To Date Price/Unit</th>
                 <th class="number-cell">Price/Unit Var</th>
-                <th class="number-cell">To Date Cost Var</th>
+                <th class="number-cell right-border">To Date Cost Var</th>
 
                 {{-- Quantity Analysis --}}
                 <th class="number-cell">To Date Qty</th>
                 <th class="number-cell">Allowable Qty</th>
                 <th class="number-cell">Quantity Var</th>
-                <th class="number-cell">To Date Cost Var</th>
+                <th class="number-cell right-border">To Date Cost Var</th>
 
                 {{-- Effect of Variances --}}
                 <th class="number-cell">At Completion Var due to Unit Price Var</th>
-                <th class="number-cell">At Completion Var due to Qty Var</th>
+                <th class="number-cell right-border">At Completion Var due to Qty Var</th>
             </tr>
             </thead>
         </table>
 
-        <div class="fixed-table-container-inner">
+        <div class="vertical-scroll">
             <table class="table table-bordered table-hover resources-table" id="resourcesTable">
                 <tbody>
+                @foreach($tree as $type => $typeData)
+                    @include('reports.cost-control.variance_analysis._type')
+                @endforeach
                 </tbody>
             </table>
         </div>
@@ -64,20 +67,16 @@
             padding-left: 30px;
         }
 
-        .top-material td:first-child,.resource td:first-child{
+        .resource td:first-child{
             padding-left: 60px;
         }
 
-        .top-material-resource td:first-child{
-            padding-left: 80px;
-        }
-
-        .fixed-table-container {
+        .horizontal-scroll {
             overflow-x: auto;
         }
 
-        .fixed-table-container-inner {
-            width: 3320px;
+        .vertical-scroll {
+            min-width: 1760px;
             overflow-y: auto;
             max-height: 600px;
         }
@@ -151,8 +150,8 @@
             function closeRows(rows) {
                 rows.each(function() {
                     const link = $(this).find('a');
-                    const target = link.data('target');
-                    link.find('.fa').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+                    const target = '.' + link.data('target');
+                    link.find('.fa').removeClass('fa-minus-circle').addClass('fa-plus-circle');
                     const subRows = $(target).each(function() {
                         $(this).addClass('hidden').removeClass('open');
                     });
@@ -161,9 +160,9 @@
             }
 
             const resourcesTable = $('#resourcesTable').on('click', 'a', function() {
-                const target = $(this).data('target');
+                const target = '.' + $(this).data('target');
                 const rows = $(target).toggleClass('hidden');
-                $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
+                $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-circle fa-minus-circle');
                 if (!$(this).hasClass('open')) {
                     closeRows(rows);
                 }

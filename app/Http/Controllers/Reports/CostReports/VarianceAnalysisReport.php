@@ -39,11 +39,11 @@ class VarianceAnalysisReport
     function run()
     {
         $project = $this->project;
-        $tree = $this->buildTypeTree();
+        $tree = $this->buildTree();
         return view('reports.cost-control.variance_analysis.variance_analysis', compact('tree', 'project'));
     }
 
-    function buildTypeTree()
+    function buildTree()
     {
         $query = MasterShadow::forPeriod($this->period)->varAnalysisReport();
 
