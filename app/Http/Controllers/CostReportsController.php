@@ -167,25 +167,11 @@ class CostReportsController extends Controller
 
     public function varianceAnalysisReport(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        }
-        $variance = new VarianceAnalysisReport();
-        return $variance->getVarianceReport($project, $chosen_period_id);
+        $period_id = $this->getPeriod($project, $request);
+        $period = Period::find($period_id);
+
+        $variance = new VarianceAnalysisReport($period);
+        return $variance->run();
     }
 
     function issuesReport(Project $project, Request $request)

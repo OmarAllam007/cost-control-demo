@@ -77,8 +77,8 @@ class ExportCostShadow extends Job
         /** @var $query Builder */
 
         $query->chunk(5000, function ($shadows) {
-
             $time = microtime(1);
+
             foreach ($shadows as $costShadow) {
                 if ($this->perspective == 'budget') {
                     $levels = $costShadow['wbs'];

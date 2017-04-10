@@ -33,8 +33,8 @@ class CostShadowCalculator
     {
         $budgetAttributes = $this->costShadow->budget->getAttributes();
         $this->calculated = array_merge($budgetAttributes, [
-            'remaining_qty' => $this->costShadow->remaining_qty,
-            'remaining_unit_price' => $this->costShadow->remaining_unit_price,
+//            'remaining_qty' => $this->costShadow->remaining_qty,
+//            'remaining_unit_price' => $this->costShadow->remaining_unit_price,
 //            'allowable_ev_cost' => $this->costShadow->allowable_ev_cost,
         ]);
     }
