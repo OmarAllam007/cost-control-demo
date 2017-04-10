@@ -13,16 +13,18 @@ class RecalculateCost extends Command
     protected $signature = 'cost:recalculate';
     protected $description = 'Recalculate cost fields';
 
-    protected $fields = ['pw_index', 'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var'];
+    protected $fields = [
+        // 'pw_index', 'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var', 'remaining_qty', 'remaining_cost', 'remaining_unit_price'
+    ];
     /** @var ProgressBar */
     protected $bar;
 
     public function handle()
     {
-        $this->bar = $this->output->createProgressBar(CostShadow::count());
+        $this->bar = $this->output->createProgressBar(CostShadow::wherePeriodId(8)->count());
         $this->bar->setBarWidth(50);
 
-        CostShadow::chunk(1000, function (Collection $resources) {
+        CostShadow::wherePeriodId(8)->chunk(1000, function (Collection $resources) {
             $resources->each(function(CostShadow $resource) {
                 $calc = new CostShadowCalculator($resource);
                 $attributes = collect($calc->toArray());

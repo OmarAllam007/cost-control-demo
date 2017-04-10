@@ -101,8 +101,7 @@ class BreakdownResourceController extends Controller
 
     function wipe(WbsLevel $wbs_level, WipeRequest $request)
     {
-        $wbs_ids = $wbs_level->getChildrenIds();
-        $breakdown_ids = Breakdown::whereIn('wbs_level_id', $wbs_ids)->pluck('id');
+        $breakdown_ids = Breakdown::where('wbs_level_id', $wbs_level->id)->pluck('id');
         $breakdown_resource_ids = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->pluck('id');
 
         BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)->delete();
