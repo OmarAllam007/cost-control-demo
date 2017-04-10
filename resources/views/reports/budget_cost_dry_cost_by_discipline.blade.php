@@ -31,8 +31,8 @@
             <tr class="tbl-content">
 
                 <td class="col-xs-3">{{$key}}</td>
-                <td class="col-xs-2">{{number_format($row['dry'] ?? 0,2) }}</td>
-                <td class="col-xs-2">{{number_format($row['budget'],2)}}</td>
+                <td class="col-xs-2">{{number_format($row['dry'] ?? 0) }}</td>
+                <td class="col-xs-2">{{number_format($row['budget'])}}</td>
                 <td class="col-xs-2" @if(isset($row['difference']) && $row['difference']<0) style="color: red;" @endif>{{number_format($row['difference'] ?? 0,2)}}</td>
                 <td class="col-xs-2" @if(isset($row['difference']) && $row['difference']<0) style="color: red;" @endif> % {{number_format($row['increase'] ?? 0 ,2)}}</td>
 
