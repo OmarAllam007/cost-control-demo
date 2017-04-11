@@ -16,11 +16,15 @@
             <div class="panel-heading">
                 <h4 class="panel-title">{{$activity}}</h4>
             </div>
-
+        @php $counter = 0; @endphp
         @foreach($activityData as $resource)
             @php
                 $totalQty = $resource['resources']->sum('budget_unit');
             @endphp
+            @if ($counter > 0)
+                <div class="panel-body"></div>
+            @endif
+
                 <table class="table table-bordered table-condensed table-hover table-striped" data-total-qty="{{$totalQty}}" data-qty="{{$resource[4]}}">
                     <thead>
                     <tr>
@@ -82,6 +86,7 @@
                     </tr>
                     </tfoot>
                 </table>
+                @php $counter++; @endphp
         @endforeach
             </div>
     @endforeach
