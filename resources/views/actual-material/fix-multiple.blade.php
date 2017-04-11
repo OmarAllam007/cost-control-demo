@@ -12,7 +12,7 @@
 @section('body')
     {{Form::open(['method' => 'post'])}}
     @foreach($resources as $activity => $activityData)
-        <div class="panel panel-warning">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">{{$activity}}</h4>
             </div>
@@ -27,7 +27,7 @@
 
                 <table class="table table-bordered table-condensed table-hover table-striped" data-total-qty="{{$totalQty}}" data-qty="{{$resource[4]}}">
                     <thead>
-                    <tr>
+                    <tr class="info">
                         <th class="text-center">&nbsp;</th>
                         <th>Activity</th>
                         <th>Description</th>
