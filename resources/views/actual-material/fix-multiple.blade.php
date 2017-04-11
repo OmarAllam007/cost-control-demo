@@ -82,8 +82,8 @@
                     </tr>
                     </tfoot>
                 </table>
-            </div>
         @endforeach
+            </div>
     @endforeach
 
     <div class="form-group">
