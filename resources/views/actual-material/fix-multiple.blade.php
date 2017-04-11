@@ -105,9 +105,9 @@
                 style: 'currency',
                 currency: 'SAR',
                 minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
+                maximumFractionDigits: 4,
                 minimumSignificantDigits: 2,
-                maximumSignificantDigits: 2
+                maximumSignificantDigits: 4
             };
 
             $('.include').change(function () {
@@ -159,7 +159,7 @@
                     if (_this.find('.include').prop('checked')) {
                         if (!_this.data('manual')) {
                             var budget = _this.data('budget');
-                            _this.find('.qty').val(((budget * qty / totalBudget) || 0).toFixed(2));
+                            _this.find('.qty').val(((budget * qty / totalBudget) || 0).toFixed(4));
                         }
                         _this.find('.qty').prop('readonly', false);
                     } else {
@@ -176,7 +176,7 @@
                         var qty = parseFloat(_this.find('.qty').val()) || 0;
                         var unit_price = parseFloat(_this.find('.unit-price-cell').data('value'));
                         var total = qty * unit_price;
-                        _this.find('.total-cell').data('value', total).text(parseFloat(total.toFixed(2)).toLocaleString(formatOptions));
+                        _this.find('.total-cell').data('value', total).text(parseFloat(total.toFixed(4)).toLocaleString(formatOptions));
                         totalQty += qty;
                         totalAmount += total;
                     }
@@ -208,8 +208,8 @@
             }
 
             function cval(number) {
-                number += 0.005;
-                return Math.round(number * 100);
+                number += 0.00005;
+                return Math.round(number * 10000);
             }
         });
     </script>
