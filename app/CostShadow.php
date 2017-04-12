@@ -2,11 +2,14 @@
 
 namespace App;
 
+use App\Behaviors\HasChangeLog;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class CostShadow extends Model
 {
+    use HasChangeLog;
+
     protected $fillable = [
         "project_id", "wbs_level_id", "period_id", "resource_id", "breakdown_resource_id", "curr_cost", "curr_qty",
         "curr_unit_price", "prev_cost", "prev_qty", "to_date_cost", "to_date_qty", "prev_unit_price",

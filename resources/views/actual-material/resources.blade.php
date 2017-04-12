@@ -118,7 +118,7 @@
                     total += parseFloat($(elem).find('.store-qty').data('qty'));
                 });
 
-                $(this).closest('.input-group').find('.physical-qty').val(total);
+                $(this).closest('.input-group').find('.physical-qty').val(total).change();
             });
         });
     </script>
