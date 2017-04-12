@@ -35,7 +35,7 @@ class ChangeLogger
             $this->changeRequest = new ChangeLog([
                 'url' => $this->request->url(),
                 'method' => $this->request->method(),
-                'user_id' => $this->request->user()->id
+                'user_id' => $this->request->user()->id ?? '0'
             ]);
 
             if ($this->request->files->count()) {
