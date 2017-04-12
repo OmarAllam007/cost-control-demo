@@ -44,7 +44,7 @@
     @foreach($disciplineData as $resource)
         <tr class="{{slug($type)}}-{{slug($discipline ?: 'General')}} resource hidden">
             <td class="resource-cell right-border">
-                <i class="fa fa-caret-square-o-right"></i> {{$resource->resource_name}}
+                <i class="fa fa-caret-right"></i> {{$resource->resource_name}}
             </td>
 
             <td class="number-cell">{{number_format($resource->budget_unit_price, 2)}}</td>
