@@ -31,22 +31,22 @@
 
 
 ## Activity
-* Same as Std Activity report but replace divisions by WBS
+* _Same as Std Activity report but replace divisions by WBS_
 
 
 ## Var Analysis
-* Same hierarchy as resource dict. 
-* Add previous price/unit
-* If no current price/unit = 0
-* to date var is for price/unit
+* _Same hierarchy as resource dict._ 
+* _Add previous price/unit_
+* _If no current price/unit = 0_
+* _to date var is for price/unit_
 
 
 ## Boq
-* Unit/price will not be summed
-* Filters
-	* WBS
-	* Cost Account
-	* Status
+* _Unit/price will not be summed_
+* _Filters_
+	* _WBS_
+	* _Cost Account_
+	* _Status_
 
 
 ## Overdraft

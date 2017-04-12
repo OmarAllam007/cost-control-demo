@@ -29,6 +29,7 @@ use App\Productivity;
 use App\Project;
 use App\Resources;
 use App\StdActivityResource;
+use App\Support\ChangeLogger;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
@@ -70,6 +71,10 @@ class AppServiceProvider extends ServiceProvider
 //        BreakdownVariable::observe(BreakdownVariableObserver::class);
         BreakdownVariable::observe(BreakdownVariableObserver::class);
         WbsLevel::observe(WbsObserver::class);
+
+        if (PHP_SAPI == 'cli') {
+            app()->instance('change_log', new ChangeLogger());
+        }
     }
 
 
