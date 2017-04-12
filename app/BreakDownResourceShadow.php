@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CostAttributes;
+use App\Behaviors\HasChangeLog;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Query\JoinClause;
 
 class BreakDownResourceShadow extends Model
 {
-    use Tree;
+    use Tree, HasChangeLog;
     use CostAttributes {
         getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
         getRemainingCostAttribute as protected getRemainingCostAttributeFromTrait;

@@ -64,7 +64,8 @@ class ChangeLogger
         $this->changeRequest->changes()->create([
             'model' => get_class($model),
             'original' => $original,
-            'updated' => $updated
+            'updated' => $updated,
+            'model_id' => $model->id ?: 0,
         ]);
     }
 

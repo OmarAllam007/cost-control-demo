@@ -35,7 +35,8 @@ class CostController extends Controller
         ]);
 
         $cost_shadow->update($request->only(['remaining_qty', 'remaining_unit_price', 'allowable_ev_cost']));
-        $cost_shadow->budget->update(['progress' => $request->get('budget.progress'), 'status' => $request->get('budget.status')]);
+        $budget = $request->get('budget', ['progress' => 0, 'status' => '']);
+        $cost_shadow->budget->update(['progress' => $budget['progress'], 'status' => $budget['status']]);
 
         $calculator = new CostShadowCalculator($cost_shadow);
         $calculator->update();

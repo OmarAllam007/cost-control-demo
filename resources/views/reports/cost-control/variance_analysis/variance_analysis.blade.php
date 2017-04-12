@@ -65,10 +65,12 @@
     <style>
         .discipline td:first-child {
             padding-left: 30px;
+            font-weight: 700;
         }
 
         .resource td:first-child{
             padding-left: 60px;
+            font-weight: 700;
         }
 
         .horizontal-scroll {
