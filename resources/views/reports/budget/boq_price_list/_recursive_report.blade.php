@@ -9,7 +9,7 @@
                 @endif
             "
     >
-        <a href="#{{$level['id']}}" data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
+        <a href="#col-{{$level['id']}}" data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
             {{$level['name']}}
         </a>
 
@@ -17,7 +17,7 @@
 
     </p>
 
-        <article id="{{$level['id']}}" class="tree--child collapse" data-code="{{mb_strtolower($level['code'])}}">
+        <article id="col-{{$level['id']}}" class="tree--child collapse level-container" data-code="{{mb_strtolower($level['code'])}}">
             @if($level['boqs'] && count($level['boqs']))
             @foreach($level['boqs'] as $item=>$boq_details)
                 <ul class="list-unstyled">

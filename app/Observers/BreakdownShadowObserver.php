@@ -17,10 +17,11 @@ class BreakdownShadowObserver
 {
     function updating(BreakDownResourceShadow $resource)
     {
-//        $dirty = $resource->getDirty();
-//        if (isset($dirty['progress']) || isset($dirty['status'])) {
-//            $resource->update_cost = true;
-//        }
+        $dirty = $resource->getDirty();
+        if (isset($dirty['progress']) || isset($dirty['status'])) {
+            $resource->update_cost = true;
+        }
+
         $resource->update_cost = false;
     }
 
@@ -39,6 +40,7 @@ class BreakdownShadowObserver
                 'breakdown_resource_id' => $resource->breakdown_resource_id,
                 'project_id' => $resource->project_id
             ];
+
             $costShadow = CostShadow::where($conditions)->first();
             if ($costShadow && $recalculated) {
                 $costShadow->update($recalculated->toArray());

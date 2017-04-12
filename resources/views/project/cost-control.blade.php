@@ -73,7 +73,7 @@
                     Periods</a>
             @endcan
 
-            @can('cost_owner', $project)
+            @can('actual_resources', $project)
                 <a href="#data-uploads" class="btn btn-sm btn-info btn-outline"><i class="fa fa-upload"></i> Data
                     Uploads</a>
             @endcan
@@ -93,7 +93,7 @@
             @include('project.cost-control.periods')
         @endcan
 
-        @can('cost_owner', $project)
+        @can('actual_resources', $project)
             @include('project.cost-control.data-uploads')
         @endcan
 

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
 use App\Support\DuplicateProject;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use SoftDeletes, HasOptions, Tree, CachesQueries;
+    use HasChangeLog;
 
     protected static $alias = 'Project';
     protected $ids = [];
@@ -120,7 +122,7 @@ class Project extends Model
 
     function getDivisions()
     {
-        $divisions = $this->breakdowns()->with('wbs_level.parent', 'wbs_level.parent.parent', 'std_activity.division')->get()->pluck('std_activity.division');
+        $divisions = $this->breakdowns()->with('wbs_level.parent', 'wbs_level.parent.parent','wbs_level.parent.parent.parent', 'std_activity.division')->get()->pluck('std_activity.division');
         $all = collect();
         $parents = collect();
         foreach ($divisions as $division) {
@@ -239,10 +241,7 @@ class Project extends Model
 
     function getMaxPeriod()
     {
-        $max_id = \DB::select('SELECT  max(id) as max from periods
-where project_id=?
-AND periods.is_open=0', [$this->id]);
-        return $max_id[0]->max;
+        return $this->periods()->where('is_open', false)->max('id');
     }
 
 }

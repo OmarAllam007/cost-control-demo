@@ -4,18 +4,22 @@ namespace App\Http\Controllers;
 use App\ActivityDivision;
 use App\CsiCategory;
 use App\Filter\ProductivityFilter;
+use App\Http\Controllers\Reports\Export\ExportProductivityReport;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\Export\ExportProductivityJob;
 use App\Jobs\Export\ExportPublicProductivitiesJob;
 use App\Jobs\Modify\ModifyPublicProductivitiesJob;
 use App\Jobs\ProductivityImportJob;
+use App\LaborTrendUploadTable;
 use App\Productivity;
 use App\ProductivityList;
 use App\Project;
+use App\TrendUploadTable;
 use App\Unit;
 use App\UnitAlias;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductivityController extends Controller
 {
@@ -151,7 +155,7 @@ class ProductivityController extends Controller
         }
         if (count($status['dublicated'])) {
             flash($status['success'] . ' items have been imported', 'success');
-            return \Redirect::route('productivity.index', ['dublicate'=>$status['dublicated']]);
+            return \Redirect::route('productivity.index', ['dublicate' => $status['dublicated']]);
         }
 
         flash($status['success'] . ' items have been imported', 'success');
@@ -299,7 +303,8 @@ class ProductivityController extends Controller
         $this->dispatch(new ExportPublicProductivitiesJob());
     }
 
-    function modifyAllProductivities(){
+    function modifyAllProductivities()
+    {
         if (\Gate::denies('write', 'productivity')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
@@ -308,7 +313,8 @@ class ProductivityController extends Controller
         return view('productivity.modify');
     }
 
-    function postModifyAllProductivities(Request $request){
+    function postModifyAllProductivities(Request $request)
+    {
         if (\Gate::denies('write', 'productivity')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
@@ -318,4 +324,76 @@ class ProductivityController extends Controller
         $this->dispatch(new ModifyPublicProductivitiesJob($file));
         return redirect()->action('ProductivityController@index');
     }
+
+    function importReport($project)
+    {
+        $project = Project::find($project);
+        $data = TrendUploadTable::where('project_id', $project->id)->get();
+        return view('reports.cost-control.productivity.import_productivity')->with(['project' => $project, 'data' => $data]);
+    }
+
+    function postImportReport(Project $project, Request $request)
+    {
+        $file = $request->file('file');
+        $version = 1;
+        $lastOne = TrendUploadTable::orderBy('created_at', 'desc')->where('project_id', $project->id)->where('period_id', $project->getMaxPeriod())->first();
+        if ($lastOne) {
+            $last_ver = substr($lastOne->file_path, strpos($lastOne->file_path, '.xlsx') - 1, 1);
+            $version = $last_ver+1;
+            $file->move(storage_path('app/productivity_trend/'), 'productivitytrend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx');
+            $path = storage_path('app/productivity_trend/') . 'productivitytrend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx';
+            TrendUploadTable::create(['uploaded_by' => \Auth::user()->id, 'file_path' => $path, 'period_id' => $project->getMaxPeriod(), 'project_id' => $project->id]);
+        } else {
+            $file->move(storage_path('app/productivity_trend/'), 'productivitytrend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx');
+            $path = storage_path('app/productivity_trend/') . 'productivitytrend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx';
+            TrendUploadTable::create(['uploaded_by' => \Auth::user()->id, 'file_path' => $path, 'period_id' => $project->getMaxPeriod(), 'project_id' => $project->id]);
+        }
+        return redirect()->back();
+
+    }
+
+    function downloadTrend($id)
+    {
+        $file_path = TrendUploadTable::find($id)->file_path;
+        return response()->download($file_path);
+    }
+
+    function laborImportReport($project)
+    {
+        $project = Project::find($project);
+        $data = LaborTrendUploadTable::where('project_id', $project->id)->get();
+        return view('reports.cost-control.labor_trend.labor_trend')->with(['project' => $project, 'data' => $data]);
+    }
+
+    function laborPostImportReport(Project $project, Request $request)
+    {
+        $file = $request->file('file');
+        $version = 1;
+        $lastOne = LaborTrendUploadTable::orderBy('created_at', 'desc')->where('project_id', $project->id)->where('period_id', $project->getMaxPeriod())->first();
+        if ($lastOne) {
+            $last_ver = substr($lastOne->file_path, strpos($lastOne->file_path, '.xlsx') - 1, 1);
+            $version = $last_ver+1;
+            $file->move(storage_path('app/labor_trend/'), 'labor_trend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx');
+            $path = storage_path('app/labor_trend/') . 'labor_trend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx';
+            LaborTrendUploadTable::create(['uploaded_by' => \Auth::user()->id, 'file_path' => $path, 'period_id' => $project->getMaxPeriod(), 'project_id' => $project->id]);
+        } else {
+            $file->move(storage_path('app/labor_trend/'), 'labor_trend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx');
+            $path = storage_path('app/labor_trend/') . 'labor_trend' . $project->id . 'period_id' . $project->getMaxPeriod() . 'ver' . $version . '.xlsx';
+            LaborTrendUploadTable::create(['uploaded_by' => \Auth::user()->id, 'file_path' => $path, 'period_id' => $project->getMaxPeriod(), 'project_id' => $project->id]);
+
+        }
+        return redirect()->back();
+    }
+
+    function downloadLaborTrend($id)
+    {
+        $file_path = LaborTrendUploadTable::find($id)->file_path;
+        return response()->download($file_path);
+    }
+
+    function exportProductivityReport(Project $project){
+        $this->dispatch(new ExportProductivityJob($project));
+    }
+
+
 }

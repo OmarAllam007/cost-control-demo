@@ -60,10 +60,10 @@ class ReportController extends Controller
         set_time_limit(300);
         $div_ids = $project->getDivisions();
         $activity_ids = $project->getActivities()->toArray();
+
         $all = $div_ids['all'];
         $parent_ids = $div_ids['parents'];
         $parents = ActivityDivision::whereIn('id', $parent_ids)->get();
-
         return view('std-activity.report', compact('parents', 'all', 'activity_ids', 'project'));
     }
 

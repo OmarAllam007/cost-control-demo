@@ -94,7 +94,7 @@ class DuplicateProject
 
     protected function duplicateBreakdownTemplates()
     {
-        $templates = BreakdownTemplate::with('resources')->where('project_id', $this->project->id)->get()->keyBy('id');
+        $templates = BreakdownTemplate::withTrashed()->with('resources')->where('project_id', $this->project->id)->get()->keyBy('id');
         $this->templatesMap = $templates->map(function (BreakdownTemplate $template) {
             $attributes = $template->getAttributes();
             $attributes['project_id'] = $this->id;
@@ -184,6 +184,7 @@ class DuplicateProject
 
     protected function duplicateShadow()
     {
+        BreakDownResourceShadow::flushEventListeners();
         BreakDownResourceShadow::where('project_id', $this->project->id)->get()->each(function (BreakDownResourceShadow $resource) {
             $attributes = $resource->getAttributes();
             unset($attributes['id'], $attributes['created_at'], $attributes['updated_at']);
@@ -192,7 +193,10 @@ class DuplicateProject
             $attributes['breakdown_resource_id'] = $this->breakdownResourcesMap->get($resource->breakdown_resource_id);
             $attributes['wbs_id'] = $this->wbsMap->get($resource->wbs_id);
             $attributes['breakdown_id'] = $this->breakdownsMap->get($resource->breakdown_id);
-            $attributes['template_id'] = $this->templatesMap->get($resource->template_id);
+            if ($this->templatesMap->has($resource->template_id)) {
+                $attributes['template_id'] = $this->templatesMap->get($resource->template_id);
+            }
+
             $attributes['progress'] = 0;
             $attributes['status'] = '';
 

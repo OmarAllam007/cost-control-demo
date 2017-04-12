@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class Breakdown extends Model
 {
 //    use CachesQueries;
+    use HasChangeLog;
 
     protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code'];
     protected $cached_qty_survey;
@@ -95,7 +97,7 @@ class Breakdown extends Model
                 } else {
                     $this->variables()->create([
                         'qty_survey_id' => $this->qty_survey->id,
-                        'name' => $variableNames[$index],
+                        'name' => $variableNames->get($index, ''),
                         'value' => $value,
                         'display_order' => $index,
                     ]);
@@ -117,16 +119,23 @@ class Breakdown extends Model
         $newData['cost_account'] = $data['cost_account'];
         $newBreakdown = self::create($newData);
 
-        foreach ($this->resources as $resource) {
+        $qty_survey = Survey::where('cost_account', $newData['cost_account'])
+            ->where('wbs_level_id', $newData['wbs_level_id'])
+            ->select('id', 'budget_qty', 'eng_qty')->first();
 
-            $newResource = $resource->toArray();
+        foreach ($this->resources as $resource) {
+            $newResource = $resource->getAttributes();
+            if ($qty_survey) {
+                $newResource['budget_qty'] = $qty_survey->budget_qty;
+                $newResource['eng_qty'] = $qty_survey->eng_qty;
+            } else {
+                $newResource['budget_qty'] = 0;
+                $newResource['eng_qty'] = 0;
+            }
+
             unset($newResource['id'], $newResource['breakdown_id'], $newResource['created_at']);
             $newBreakdown->resources()->create($newResource);
         }
-
-        $qty_survey = Survey::where('cost_account', $newData['cost_account'])
-            ->where('wbs_level_id', $newData['wbs_level_id'])
-            ->select('id')->first();
 
         if ($qty_survey) {
             $qty_survey_id = $qty_survey->id;

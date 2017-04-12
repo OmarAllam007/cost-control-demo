@@ -12,18 +12,22 @@
 @section('body')
     {{Form::open(['method' => 'post'])}}
     @foreach($resources as $activity => $activityData)
-        <div class="panel panel-warning">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">{{$activity}}</h4>
             </div>
-
+        @php $counter = 0; @endphp
         @foreach($activityData as $resource)
             @php
                 $totalQty = $resource['resources']->sum('budget_unit');
             @endphp
+            @if ($counter > 0)
+                <div class="panel-body"></div>
+            @endif
+
                 <table class="table table-bordered table-condensed table-hover table-striped" data-total-qty="{{$totalQty}}" data-qty="{{$resource[4]}}">
                     <thead>
-                    <tr>
+                    <tr class="info">
                         <th class="text-center">&nbsp;</th>
                         <th>Activity</th>
                         <th>Description</th>
@@ -58,7 +62,7 @@
                             <td>{{$res->cost_account}}</td>
                             <td>{{$res->budget_unit}}</td>
                             <td>{{$res->remarks}}</td>
-                            <td>{{$res->cost ? number_format($res->cost->prev_qty, 2) : 0 }}</td>
+                            <td>{{number_format($res->qty_to_date, 2) }}</td>
                             <td>
                                 {{Form::text("resource[{$res->breakdown_resource_id}][qty]", $qty = $totalQty? round($res->budget_unit * $resource[4]/$totalQty, 2) : 0, ['class' => 'form-control input-sm qty'])}}
                             </td>
@@ -82,8 +86,9 @@
                     </tr>
                     </tfoot>
                 </table>
-            </div>
+                @php $counter++; @endphp
         @endforeach
+            </div>
     @endforeach
 
     <div class="form-group">
@@ -100,9 +105,9 @@
                 style: 'currency',
                 currency: 'SAR',
                 minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
+                maximumFractionDigits: 4,
                 minimumSignificantDigits: 2,
-                maximumSignificantDigits: 2
+                maximumSignificantDigits: 4
             };
 
             $('.include').change(function () {
@@ -154,7 +159,7 @@
                     if (_this.find('.include').prop('checked')) {
                         if (!_this.data('manual')) {
                             var budget = _this.data('budget');
-                            _this.find('.qty').val(((budget * qty / totalBudget) || 0).toFixed(2));
+                            _this.find('.qty').val(((budget * qty / totalBudget) || 0).toFixed(4));
                         }
                         _this.find('.qty').prop('readonly', false);
                     } else {
@@ -171,7 +176,7 @@
                         var qty = parseFloat(_this.find('.qty').val()) || 0;
                         var unit_price = parseFloat(_this.find('.unit-price-cell').data('value'));
                         var total = qty * unit_price;
-                        _this.find('.total-cell').data('value', total).text(parseFloat(total.toFixed(2)).toLocaleString(formatOptions));
+                        _this.find('.total-cell').data('value', total).text(parseFloat(total.toFixed(4)).toLocaleString(formatOptions));
                         totalQty += qty;
                         totalAmount += total;
                     }
@@ -203,8 +208,8 @@
             }
 
             function cval(number) {
-                number += 0.005;
-                return Math.round(number * 100);
+                number += 0.00005;
+                return Math.round(number * 10000);
             }
         });
     </script>

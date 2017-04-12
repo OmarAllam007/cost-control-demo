@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
 use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class StdActivityResource extends Model
 {
     use SoftDeletes, CachesQueries;
+    use HasChangeLog;
 
     protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks', 'code'];
 
@@ -68,7 +70,7 @@ class StdActivityResource extends Model
             'resource_name' => $this->resource->name,
             'resource_waste' => $this->resource->waste,
             'unit' => isset($this->resource->units->type) ? $this->resource->units->type : '',
-            'resource_type' => $this->resource->types->root->name,
+            'resource_type' => $this->resource->types->root->name ?? '',
             'budget_qty' => '',
             'eng_qty' => '',
             'remarks' => $this->remarks,

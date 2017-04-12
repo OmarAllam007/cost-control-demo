@@ -5,6 +5,7 @@ namespace App\Support;
 use App\ActivityMap;
 use App\ActualBatch;
 use App\BreakDownResourceShadow;
+use App\CostShadow;
 use App\ResourceCode;
 use App\WbsResource;
 use Carbon\Carbon;
@@ -146,9 +147,13 @@ class CostImportFixer
         $result = (new CostImporter($this->batch))->checkMultipleCostAccounts();
         $errors = $result['errors'];
 
+        $distributionLog = collect();
+
         foreach ($errors as $error) {
-            $this->rows->forget($error['hash']);
+            $date =$error[1];
             $resources = $error['resources']->keyBy('breakdown_resource_id');
+            $logEntry = ['oldRow' => $this->rows->get($error['hash']), 'newRows' => []];
+            $this->rows->forget($error['hash']);
             $unit_price = floatval($error[5]);
             foreach ($resources as $id => $resource) {
                 if (isset($data[$id]) && !empty($data[$id]['included']) && $data[$id]['qty']) {
@@ -156,15 +161,21 @@ class CostImportFixer
                     $total = $qty * $unit_price;
 
                     $newRow = [
-                        $resource->code, '', $resource->resource_name, $resource->measure_unit,
-                        $qty, $unit_price, $total, $resource->resource_code, $error[8],
+                        $resource->code, $date, $resource->resource_name, $resource->measure_unit,
+                        $qty, $unit_price, $total, $resource->resource_code, $error[8] ?? '',
                         'resource' => $resource
                     ];
 
                     $this->rows->push($newRow);
+                    $logEntry['newRows'][] = $newRow;
                 }
             }
+
+            $distributionLog->push($logEntry);
         }
+
+        $issueLog = new CostIssuesLog($this->batch);
+        $issueLog->recordCostAccountDistribution($distributionLog);
 
         $importer = new CostImporter($this->batch, $this->rows);
         return $importer->save();
@@ -184,9 +195,9 @@ class CostImportFixer
             }
             unset($resource->cost);
             $resource->update($data);
-            $resource->import_cost = WbsResource::joinShadow()->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
-                ->where('period_id', $this->batch->period_id)->get()->toArray();
-            $progressLog->push($resource);
+            $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
+            $log = ['resource' => $resource, 'remaining_qty' => $cost->remaining_qty, 'to_date_qty' => $cost->to_date_qty];
+            $progressLog->push($log);
         }
 
         $costIssues = new CostIssuesLog($this->batch);
@@ -208,9 +219,11 @@ class CostImportFixer
             if (strtolower($value) == 'closed') {
                 $resource->progress = 100;
             }
-            unset($resource->cost, $resource->imported_cost);
             $resource->save();
-            $statusLog->push($resource);
+            $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
+            $log = ['resource' => $resource, 'remaining_qty' => $cost->remaining_qty, 'to_date_qty' => $cost->to_date_qty];
+            unset($resource->cost, $resource->imported_cost);
+            $statusLog->push($log);
         }
 
         $costIssues = new CostIssuesLog($this->batch);

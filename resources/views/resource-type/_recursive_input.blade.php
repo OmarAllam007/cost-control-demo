@@ -6,7 +6,7 @@
         </label>
     </div>
     @if (count($division['children']))
-        <ul class="list-unstyled collapse" id="#resource-type-children-{{$division['id']}}">
+        <ul class="list-unstyled collapse" id="resource-type-children-{{$division['id']}}">
             @foreach($division['children'] as $division)
                 @include('resource-type._recursive_input', ['division' => $division, 'input' => isset($input)? $input : 'parent_id', 'value' => $value])
             @endforeach

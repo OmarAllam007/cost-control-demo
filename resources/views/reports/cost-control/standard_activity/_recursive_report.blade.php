@@ -1,108 +1,44 @@
-<li>
-    <p class="
-       @if($tree_level ==0)
-            blue-first-level
-         @elseif($tree_level ==1)
-            blue-third-level
-           @else
-            blue-fourth-level
-                @endif
-            "
-    >
-        <a href="#{{$division['id']}}" data-toggle="collapse"
-           @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
-            {{$division['name']}}
-        </a>
+@php
+    $subs = $tree->where('parent', $name);
+@endphp
+
+<tr class="level-{{$level['index']}} {{$level['index'] > 0 ? 'hidden' : ''}} {{$level['parent'] ? slug($level['parent']) : ''}}">
+    <td class="col-xs-2 level-label">
+        <a href="#" data-target="{{slug($name)}}" class="open-level"><i class="fa fa-plus-square-o"></i> {{$name}}</a>
+    </td>
+    <td class="col-xs-1">{{number_format($level['budget_cost'], 2)}}</td>
+    <td class="col-xs-1">{{number_format($level['previous_cost'], 2)}}</td>
+    <td class="col-xs-1">{{number_format($level['previous_allowable'], 2)}}</td>
+    <td class="col-xs-1 {{$level['previous_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['previous_var'], 2)}}</td>
+    <td class="col-xs-1">{{number_format($level['to_date_cost'], 2)}}</td>
+    <td class="col-xs-1">{{number_format($level['to_date_allowable'], 2)}}</td>
+    <td class="col-xs-1" class="{{$level['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['to_date_var'], 2)}}</td>
+    <td class="col-xs-1">{{number_format($level['remaining_cost'], 2)}}</td>
+    <td class="col-xs-1">{{number_format($level['completion_cost'], 2)}}</td>
+    <td class="col-xs-1 {{$level['completion_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['completion_var'], 2)}}</td>
+</tr>
+
+@if ($subs->count())
+    @foreach($subs as $subname => $sublevel)
+        @include('reports.cost-control.standard_activity._recursive_report', ['name' => $subname, 'level' => $sublevel])
+    @endforeach
+@endif
 
 
-    </p>
-
-    <article id="{{$division['id']}}" class="tree--child collapse">
-
-        @if (collect($division['activities'])->sortBy('name') && count($division['activities']))
-            @foreach($division['activities'] as $keyActivity=>$activity)
-                <ul class="list-unstyled">
-                    <li>
-                        <p class="blue-fourth-level">
-                            <a href="#{{$activity['id']}}" data-toggle="collapse">
-                                {{$activity['name']}}
-                            </a>
-
-                        </p>
-                        <article id="{{$activity['id']}}" class="tree--child collapse">
-                            @if(count($activity['cost_accounts']))
-                                @foreach($activity['cost_accounts'] as $keyAccount=>$cost_account)
-                                    <ul class="list-unstyled">
-                                        <li>
-                                            <p class="blue-third-level">
-                                                <a href="#{{str_replace(['.','-',' '],'',$keyAccount)}}" data-toggle="collapse">
-                                                    {{$keyAccount}}
-                                                </a>
-
-                                            </p>
-                                            <article id="{{str_replace(['.','-',' '],'',$keyAccount)}}" class="tree--child collapse">
-                                                @if(count($cost_account['resources']))
-                                                    <ul class="list-unstyled">
-                                                        <li>
-                                                            <table class="table table-condensed">
-                                                                <thead>
-                                                                <tr class="tbl-children-division">
-                                                                    <th>Resource Name</th>
-                                                                    <th>Base Line</th>
-                                                                    <th>Previous Cost</th>
-                                                                    <th>Previous allowable</th>
-                                                                    <th>Previous Variance</th>
-                                                                    <th>To Date Cost</th>
-                                                                    <th>Allowable (EV) Cost</th>
-                                                                    <th>To Date Variance</th>
-                                                                    <th>Remaining Cost</th>
-                                                                    <th>At Compeletion Cost</th>
-                                                                    <th>Cost Variance</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                @foreach(collect($cost_account['resources'])->sortBy('name') as $keyResource=>$resource)
-
-                                                                    <tr>
-                                                                        <td>{{$resource['name']}}</td>
-                                                                        <td>{{number_format($resource['budget_cost']??0,2) }}</td>
-                                                                        <td>{{number_format($resource['prev_cost']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['prev_allowabe']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['prev_variance']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['to_date_cost']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['to_date_allowable_cost']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['cost_var']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['remain_cost']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['at_completion_cost']??0,2)}}</td>
-                                                                        <td>{{number_format($resource['completion_cost']??0,2)}}</td>
-                                                                    </tr>
-                                                                @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </li>
-                                                    </ul>
-                                                @endif
-                                            </article>
-
-                                        </li>
-                                    </ul>
-                                @endforeach
-                            @endif
-                        </article>
-
-                    </li>
-                </ul>
-            @endforeach
-        @endif
-        @if (isset($division['children']) && count($division['children']))
-            <ul class="list-unstyled">
-                @foreach($division['children'] as $child)
-                    @if(count($child['activities']))
-                        @include('reports.cost-control.standard_activity._recursive_report', ['division' => $child, 'tree_level' => $tree_level + 1])
-                    @endif
-                @endforeach
-            </ul>
-        @endif
-
-    </article>
-</li>
+@if (!empty($level['activities']))
+    @foreach($level['activities'] as $activity)
+        <tr class="level-{{$level['index'] + 1}} level-activity hidden {{slug($name)}}">
+            <td class="col-xs-2 level-label"><i class="fa fa-caret-right"></i> {{$activity['name']}}</td>
+            <td class="col-xs-1">{{number_format($activity['budget_cost'], 2)}}</td>
+            <td class="col-xs-1">{{number_format($activity['previous_cost'], 2)}}</td>
+            <td class="col-xs-1">{{number_format($activity['previous_allowable'], 2)}}</td>
+            <td class="col-xs-1 {{$activity['previous_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['previous_var'], 2)}}</td>
+            <td class="col-xs-1">{{number_format($activity['to_date_cost'], 2)}}</td>
+            <td class="col-xs-1">{{number_format($activity['to_date_allowable'], 2)}}</td>
+            <td class="col-xs-1" class="{{$activity['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['to_date_var'], 2)}}</td>
+            <td class="col-xs-1">{{number_format($activity['remaining_cost'], 2)}}</td>
+            <td class="col-xs-1">{{number_format($activity['completion_cost'], 2)}}</td>
+            <td class="col-xs-1 {{$activity['completion_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['completion_var'], 2)}}</td>
+        </tr>
+    @endforeach
+@endif

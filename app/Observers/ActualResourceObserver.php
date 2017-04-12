@@ -27,12 +27,13 @@ class ActualResourceObserver
 
     function deleted(ActualResources $resource)
     {
-        $conditions = [
-            'breakdown_resource_id' => $resource->breakdown_resource_id,
-            'period_id' => $resource->period_id,
-        ];
-
-        CostShadow::where($conditions)->delete();
+//        $conditions = [
+//            'breakdown_resource_id' => $resource->breakdown_resource_id,
+//            'period_id' => $resource->period_id,
+//        ];
+//
+//        CostShadow::where($conditions)->delete();
+        $this->updateShadow($resource);
     }
 
     protected function updateShadow(ActualResources $resource)
@@ -47,10 +48,17 @@ class ActualResourceObserver
             'period_id' => $resource->period_id,
         ];
 
-        $shadow = CostShadow::firstOrCreate($conditions);
+        if ($trans) {
+            $shadow = CostShadow::firstOrCreate($conditions);
 
-        $attributes = $trans->toArray();
-        $attributes['batch_id'] = $resource->batch_id;
-        $shadow->update($attributes);
+
+            $attributes = $trans->toArray();
+            $attributes['batch_id'] = $resource->batch_id;
+            $shadow->update($attributes);
+        } else {
+            CostShadow::where($conditions)->get()->each(function ($resource) {
+                $resource->delete();
+            });
+        }
     }
 }

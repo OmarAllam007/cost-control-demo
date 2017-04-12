@@ -18,7 +18,7 @@ $text-color: #444;
 
   @page {
     size: A4;
-    margin: 8px;
+    margin: 4px;
     padding: 5px;
   }
   thead {
@@ -150,6 +150,20 @@ $text-color: #444;
 
   }
 
+  div.pull-right > a, button {
+    display: none;
+  }
+  div.pull-right button {
+    display: none;
+  }
+  form {
+    display: none !important;
+  }
+  table > tbody > tr > td > a {
+    display: none;
+  }
+
+
 }
 
 table.table > thead.output-cell > tr > th {
@@ -172,33 +186,32 @@ table.table > tbody > tr > td > a.visible-button {
   background-color: #366092 !important;
 }
 
-
-
 .blue-first-level {
   background-color: #366092 !important;
   color: white;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .blue-second-level {
   background-color: #95b3d8 !important;
   color: white;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .blue-third-level {
   background-color: #a9cbf3 !important;
   color: black;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
+
 .blue-fourth-level {
   background-color: #d8d8d8 !important;
   color: black;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
 }
 
 .tbl-header {
@@ -250,11 +263,68 @@ table.table > tbody > tr > td > a.visible-button {
   color: black;
   background-color: #e7f1fc !important;
 }
-
-@media print{
-  div.pull-right > a {
-    display: none;
-  }
+.wbsLevelOne{
+  background-color: #1B3C59 !important;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
 }
 
-//todo expand collapse in printing
+.boqLevelOne{
+  background-color: #34495E;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelOne > div > a{
+  background-color: #34495E;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelTwo{
+  background-color: #75C3C5;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelTwo  > div > a{
+  background-color: #75c3c5;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.boqLevelThree{
+  background-color: #AACFD0;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelThree  > div > a{
+  background-color: #AACFD0;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}
+.boqLevelFour{
+  background-color: #c3eaeb ;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+  -webkit-print-color-adjust: exact;
+}
+.boqLevelFour  > div > a{
+  background-color: #c3eaeb !important;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+}

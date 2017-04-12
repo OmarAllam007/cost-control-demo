@@ -45,10 +45,13 @@ class ModifyProjectBoq extends ImportJob
                 continue;
             }
             $level = $this->wbs_levels->get($data[13]);
+
+
             \DB::beginTransaction();
-            \DB::update('UPDATE boqs
-SET description = ?, type = ? , unit_id = ? , quantity =? ,
-  price_ur = ? , dry_ur = ? , kcc_qty = ? , materials = ? , subcon = ? , manpower = ?  WHERE project_id = ?  AND wbs_id = ? AND boqs.cost_account = ? ', [$data[2], $data[3], $this->getUnit($data[4]), $data[5], $data[6]
+             \DB::update('UPDATE boqs
+SET item_code=?, description = ?, type = ? , unit_id = ? , quantity =? ,
+  price_ur = ? , dry_ur = ? , kcc_qty = ? , materials = ? , subcon = ? , manpower = ?  WHERE project_id = ?  AND wbs_id = ? AND cost_account LIKE ?'
+                , [$data[0],$data[2], $data[3], $this->getUnit($data[4]), $data[5], $data[6]
                 , $data[7], $data[8], $data[9], $data[10], $data[11], $this->project->id, $level, $data[1]]
             );
             \DB::commit();

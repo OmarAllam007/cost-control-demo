@@ -12,132 +12,122 @@ namespace App\Http\Controllers\Reports\CostReports;
 use App\BreakDownResourceShadow;
 use App\BusinessPartner;
 use App\CostShadow;
+use App\MasterShadow;
+use App\Period;
 use App\Project;
 use App\Resources;
 use App\ResourceType;
+use Illuminate\Database\Eloquent\Builder;
 
 class ResourceCodeReport
 {
+    /** @var Project */
     protected $project;
-    protected $resources;
-    protected $period_cost;
-    protected $prev_cost;
+    /** @var Period */
+    protected $period;
 
-    public function getResourceCodeReport(Project $project, $chosen_period_id)
+    function __construct(Project $project, $chosen_period_id)
     {
-        set_time_limit(300);
         $this->project = $project;
-        $this->resources = collect();
-        $this->period_cost = collect();
-        $this->prev_cost = collect();
-        $this->types = collect();
-
-        $tree = [];
-        $types= \Cache::has('resources-tree')?\Cache::get('resources-tree') : ResourceType::tree()->get();
-        collect(\DB::select('SELECT  resource_id,measure_unit, SUM(budget_cost) AS budget_cost,sum(budget_unit) AS budget_unit 
-FROM break_down_resource_shadows
-WHERE project_id = ' . $project->id . '
-GROUP BY resource_id , measure_unit'))->map(function ($resource) {
-            $this->resources->put($resource->resource_id, ['unit' => $resource->measure_unit, 'budget_unit' => $resource->budget_unit, 'budget_cost' => $resource->budget_cost]);
-
-        });
-
-
-        collect(\DB::select('SELECT
-  c.resource_id,
-  SUM(c.to_date_cost)      AS to_data_cost,
-  SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
-  SUM(c.cost_var)          AS cost_var,
-  SUM(c.remaining_cost)    AS remain_cost,
-  SUM(c.allowable_var)     AS allowable_var,
-  SUM(c.completion_cost)   AS completion_cost
-FROM cost_shadows c, break_down_resource_shadows sh
-WHERE c.project_id = ? AND c.period_id = ?
-      AND c.breakdown_resource_id = sh.breakdown_resource_id
-GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($resource) {
-            $this->period_cost->put($resource->resource_id, ['to_date_cost' => $resource->to_date_cost ?? 0, 'to_date_allowable_cost' => $resource->to_date_allowable_cost ?? 0
-                , 'cost_var' => $resource->cost_var ?? 0
-                , 'remain_cost' => $resource->remain_cost ?? 0
-                , 'allowable_var' => $resource->allowable_var ?? 0
-                , 'completion_cost' => $resource->completion_cost ?? 0
-            ]);
-        });
-        collect(\DB::select('SELECT
-  c.resource_id,
-  SUM(c.to_date_cost)      AS to_data_cost,
-  SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
-  SUM(c.cost_var)          AS cost_var
-FROM cost_shadows c
-WHERE c.project_id = ? AND c.period_id < ?
-GROUP BY c.resource_id', [$project->id, $chosen_period_id]))->map(function ($resource) {
-            $this->prev_cost->put($resource->resource_id, ['to_date_cost' => $resource->to_data_cost ?? 0, 'to_date_allowable_cost' => $resource->to_date_allowable_cost ?? 0
-                , 'cost_var' => $resource->cost_var ?? 0
-            ]);
-        });
-
-        $this->partners = BusinessPartner::all()->keyBy('id')->map(function ($partner) {
-            return $partner->name;
-        });
-
-        $this->types = ResourceType::whereHas('resources', function ($q) {
-            $q->where('project_id', $this->project->id);
-        })->get()->keyBy('id')->map(function ($type) {
-            return $type->resources->where('project_id', $this->project->id);
-        });
-
-        foreach ($types as $type) {
-            $treeType = $this->buildTypeTree($type);
-            $tree[] = $treeType;
-        }
-        return view('reports.cost-control.resource_code.resource_code', compact('project', 'tree'));
+        $this->period = Period::find($chosen_period_id);
     }
 
-
-    /**
-     * @param $type
-     * @return array
-     */
-    private function buildTypeTree($type)
+    public function run()
     {
-        $tree = ['id' => $type['id'], 'name' => $type['name'], 'children' => [], 'resources' => [], 'budget_cost' => 0];
+        $tree = $this->buildTree();
+        $project = $this->project;
 
+        $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
 
-        $resources = $this->types->get($type['id']);
-        if (count($resources)) {
-            foreach ($resources as $resource) {
-                $tree['resources'][$resource['id']] = ['id' => $resource['id']
-                    , 'name' => $resource['name']
-                    , 'budget_cost' => $this->resources->get($resource['id'])['budget_cost'] ?? 0
-                    , 'prev_cost' => $this->prev_cost->get($resource['id'])['to_date_cost'] ?? 0
-                    , 'prev_allowable_cost' => $this->prev_cost->get($resource['id'])['to_date_allowable_cost'] ?? 0
-                    , 'prev_var' => $this->prev_cost->get($resource['id'])['cost_var'] ?? 0
-                    , 'to_data_cost' => $this->period_cost->get($resource['id'])['to_data_cost'] ?? 0
-                    , 'to_date_allowable_cost' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
-                    , 'cost_var' => $this->period_cost->get($resource['id'])['cost_var'] ?? 0
-                    , 'remain_cost' => $this->period_cost->get($resource['id'])['remain_cost'] ?? 0
-                    , 'allowable_var' => $this->period_cost->get($resource['id'])['allowable_var'] ?? 0
-                    , 'completion_cost' => $this->period_cost->get($resource['id'])['completion_cost'] ?? 0
+        $types = BreakDownResourceShadow::whereProjectId($this->project->id)
+            ->selectRaw('DISTINCT resource_type')->orderBy('resource_type')->pluck('resource_type');
 
-                ];
-                $tree['budget_cost'] += $this->resources->get($resource['id'])['budget_cost'];
-            }
-        }
+        $disciplines = MasterShadow::wherePeriodId($this->period->id)
+            ->selectRaw('DISTINCT boq_discipline')->orderBy('boq_discipline')->pluck('boq_discipline');
 
-        $tree['resources'] = collect($tree['resources'])->sortBy('code');
+        $topMaterials = MasterShadow::wherePeriodId($this->period->id)
+            ->selectRaw('DISTINCT top_material')->orderBy('top_material')->pluck('top_material')->filter();
 
-        if (collect($type['children'])->count()) {
-            $tree['children'] = collect($type['children'])->map(function ($child) use ($tree) {
-                $subtree = $this->buildTypeTree($child);
-                return $subtree;
+        return view('reports.cost-control.resource_code.resource_code',
+            compact('project', 'tree', 'periods', 'types', 'disciplines', 'topMaterials'));
+    }
+
+    private function buildTree()
+    {
+        $query = MasterShadow::forPeriod($this->period)->resourceDictReport();
+
+        $resourceData = $this->applyFilters($query)->get();
+
+        $tree = $resourceData->groupBy('resource_type')->map(function($typeGroup) {
+            return $typeGroup->groupBy('boq_discipline')->map(function($disciplineGroup) {
+                return $disciplineGroup->groupBy('top_material');
             });
-
-            foreach ($tree['children'] as $child) {
-                $tree['budget_cost'] += $child['budget_cost'];
-            }
-
-        }
+        });
 
         return $tree;
+    }
+
+    protected function applyFilters(Builder $query)
+    {
+        $request = request();
+
+        if ($status = strtolower($request->get('status', ''))) {
+            if ($status == 'not started') {
+                $query->havingRaw('sum(to_date_qty) = 0');
+            } elseif ($status == 'in progress') {
+                $query->havingRaw('sum(to_date_qty) > 0 AND AVG(progress) < 100');
+            } elseif ($status == 'closed') {
+                $query->where('to_date_qty', '>', 0)->where('progress', 100);
+            }
+        }
+
+        // We are doing like here because data is not clean and some types are repeated with spaces
+        // After data cleaning, where this still valid, we can safely rely on resource_type_id
+        if ($type = $request->get('type')) {
+            // rt is the alias for joined resource type table
+            $query->where('rt.name', 'like', "%$type%");
+        }
+
+        if ($top = $request->get('top')) {
+            // We have to consider that resources without discipline are mapped to general also
+            if (strtolower($top) == 'all') {
+                $query->whereNotNull('top_material')->where('top_material', '!=', '');
+            } elseif (strtolower($top) == 'other') {
+                $query->where(function($q) {
+                    $q->whereNull('top_material')->orWhere('top_material', '');
+                });
+            } else {
+                $query->where('top_material', $top);
+            }
+        }
+
+        if ($discipline = $request->get('discipline')) {
+            // We have to consider that resources without discipline are mapped to general also
+            if (strtolower($discipline) == 'general') {
+                $query->where(function($q) {
+                    $q->where('boq_discipline', 'general')->orWhere('boq_discipline', '')->orWhereNull('boq_discipline');
+                });
+            } else {
+                $query->where('boq_discipline', $discipline);
+            }
+        }
+
+        if ($resource = $request->get('resource')) {
+            $query->where(function($q) use ($resource) {
+                $term = "%$resource%";
+                $q->where('resource_code', 'like', $term)->orWhere('resource_name', 'like', $term);
+            });
+        }
+
+        if ($request->exists('negative_to_date')) {
+            $query->havingRaw('to_date_allowable - to_date_cost < 0');
+        }
+
+        if ($request->exists('negative_completion')) {
+            $query->having('cost_var', '<', 0);
+        }
+
+        return $query;
     }
 
 }

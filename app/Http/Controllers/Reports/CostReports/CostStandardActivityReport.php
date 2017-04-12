@@ -1,160 +1,164 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: omar
- * Date: 22/12/16
- * Time: 02:17 م
- */
 
 namespace App\Http\Controllers\Reports\CostReports;
 
-
 use App\ActivityDivision;
-use App\BreakDownResourceShadow;
-use App\CostShadow;
-use App\Http\Controllers\Reports\Productivity;
+use App\MasterShadow;
+use App\Period;
 use App\Project;
-use App\ResourceType;
 use App\StdActivity;
-use App\WbsLevel;
+use Illuminate\Support\Collection;
 
 class CostStandardActivityReport
 {
-    private $project;
-    private $project_activities;
-    private $prev_shadow;
-    private $period_shadow;
+    /** @var Project */
+    protected $project;
+
+    /** @var Period */
+    protected $period;
+
+    /** @var Period */
+    protected $previousPeriod;
+
+    /** @var Collection */
+    protected $activityNames;
 
     function getStandardActivities(Project $project, $chosen_period_id)
     {
         $this->project = $project;
-        $this->prev_shadow = collect();
-        $this->period_shadow = collect();
-        $this->project_activities = collect();
-
-        collect(\DB::select('SELECT
-  c.resource_id,
-  SUM(c.to_date_cost)      AS to_data_cost,
-  SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
-  SUM(c.cost_var)          AS cost_var,
-  SUM(c.remaining_cost)    AS remain_cost,
-  SUM(c.allowable_var)     AS allowable_var,
-  SUM(c.completion_cost)   AS completion_cost
-FROM cost_shadows c, break_down_resource_shadows sh
-WHERE c.project_id = ? AND c.period_id < ?
-      AND c.breakdown_resource_id = sh.breakdown_resource_id
-GROUP BY c.resource_id', [$this->project->id, $chosen_period_id]))->map(function ($resource) {
-            $this->prev_shadow->put($resource->resource_id, ['prev_cost' => $resource->to_data_cost
-                , 'prev_allowabe' => $resource->to_date_allowable_cost
-                , 'prev_variance' => $resource->cost_var
-            ]);
-        });
-        collect(\DB::select('SELECT
-  c.resource_id,
-  SUM(c.to_date_cost)      AS to_data_cost,
-  SUM(c.allowable_ev_cost) AS to_date_allowable_cost,
-  SUM(c.cost_var)          AS cost_var,
-  SUM(c.remaining_cost)    AS remain_cost,
-  SUM(c.allowable_var)     AS allowable_var,
-  SUM(c.completion_cost)   AS completion_cost
-FROM cost_shadows c, break_down_resource_shadows sh
-WHERE c.project_id = ? AND c.period_id = ?
-      AND c.breakdown_resource_id = sh.breakdown_resource_id
-GROUP BY c.resource_id', [$this->project->id, $chosen_period_id]))->map(function ($resource) {
-            $this->period_shadow->put($resource->resource_id, ['to_data_cost' => $resource->to_data_cost
-                , 'to_date_allowable_cost' => $resource->to_date_allowable_cost
-                , 'cost_var' => $resource->cost_var
-                , 'remain_cost' => $resource->remain_cost
-                , 'allowable_var' => $resource->allowable_var
-                , 'completion_cost' => $resource->completion_cost
-            ]);
-        });
-        collect(\DB::select('SELECT DISTINCT sh.activity_id , sh.cost_account FROM break_down_resource_shadows sh
-WHERE project_id=?', [$project->id]))->map(function ($activity) {
-            $this->project_activities->put($activity->activity_id, $activity->cost_account);
-        });
-
-
-        $activity_divisions_tree = ActivityDivision::tree()->get();
-        $tree = [];
-
-
-        foreach ($activity_divisions_tree as $level) {
-            $level_tree = $this->buildTree($level);
-            $tree[] = $level_tree;
+        $this->period = $project->periods()->find($chosen_period_id);
+        $this->previousPeriod = $project->periods()->where('id', '<', $chosen_period_id)->orderBy('id')->first();
+        if ($this->previousPeriod) {
+            $previousTotals = MasterShadow::whereProjectId($project->id)->wherePeriodId($this->previousPeriod->id)
+                ->selectRaw('sum(to_date_cost) previous_cost, sum(allowable_ev_cost) previous_allowable, sum(allowable_var) as previous_var')
+                ->first();
+        } else {
+            $previousTotals = ['previous_cost' => 0, 'previous_allowable' => 0, 'previous_var' => 0];
         }
 
-        return view('reports.cost-control.standard_activity.standard_acticity',compact('project','tree'));
+        $currentTotals = MasterShadow::whereProjectId($project->id)->wherePeriodId($this->period->id)->selectRaw(
+            'sum(to_date_cost) to_date_cost, sum(allowable_ev_cost) to_date_allowable, sum(allowable_var) as to_date_var,'
+            . 'sum(remaining_cost) as remaining, sum(completion_cost) at_completion_cost, sum(cost_var) cost_var, sum(budget_cost) budget_cost'
+        )->first();
 
+        $tree = $this->buildTree();
+
+        $periods = $this->project->periods()->readyForReporting()->pluck('name', 'id');
+        $activityNames = $this->activityNames;
+        $divisionNames = ActivityDivision::parents()->orderBy('code')->orderBy('name')->get(['id', 'code', 'name'])
+            ->keyBy('id')->map(function (ActivityDivision $div) {
+                return $div->code . ' ' . $div->name;
+            });
+
+        return view('reports.cost-control.standard_activity.standard_activity',
+            compact('project', 'period', 'currentTotals', 'previousTotals', 'tree', 'periods', 'activityNames', 'divisionNames'));
     }
 
-    protected function buildTree($level)
+    protected function buildTree()
     {
-        $tree = ['id' => $level->id, 'name' => $level->name, 'children' => [], 'activities' => []];
+        $query = \DB::table('master_shadows')->whereProjectId($this->project->id)->wherePeriodId($this->period->id)->selectRaw(
+            'activity_id, activity, sum(to_date_cost) to_date_cost, sum(allowable_ev_cost) to_date_allowable, sum(allowable_var) as to_date_var,'
+            . 'sum(remaining_cost) as remaining_cost, sum(completion_cost) completion_cost, sum(cost_var) completion_var, sum(budget_cost) budget_cost'
+        );
 
+        $this->applyFilters($query);
 
-        if ($level->children->count()) {
-            $tree['children'] = $level->children->map(function ($childLevel) {
-                return $this->buildTree($childLevel);
-            });
+        $currentActivities = collect($query->groupBy('activity', 'activity_id')->orderBy('activity')->get())->keyBy('activity_id');
+        $activity_ids = $currentActivities->pluck('activity_id');
+        $this->activityNames = $currentActivities->pluck('activity', 'activity_id')->sort();
+
+        if ($this->previousPeriod) {
+            $previousActivities = collect(\DB::table('master_shadows')->whereProjectId($this->project->id)->wherePeriodId($this->previousPeriod->id)->selectRaw(
+                'activity_id, activity, sum(to_date_cost) previous_cost, sum(allowable_ev_cost) previous_allowable, sum(allowable_var) as previous_var'
+            )->whereIn('activity_id', $activity_ids)->groupBy('activity', 'activity_id')->orderBy('activity')->get())->keyBy('activity_id');
+        } else {
+            $previousActivities = [];
         }
 
-        if ($level->activities->count()) {
-            $activities = $level->activities->whereIn('id', $this->project_activities->keys()->toArray());
-            foreach ($activities as $activity) {
-                $tree['activities'][$activity->id] = ['id' => $activity->id, 'name' => $activity->name, 'cost_accounts' => [], 'budget_cost' => 0];
-                $cost_accounts = collect(\DB::select('SELECT DISTINCT cost_account FROM break_down_resource_shadows
-WHERE project_id=?
-AND activity_id =?', [$this->project->id, $activity->id]))->map(function ($cost_account) {
-                return $cost_account->cost_account;
-                });
+        $activityDivs = collect(\DB::table('master_shadows')->whereProjectId($this->project->id)
+            ->wherePeriodId($this->period->id)->whereIn('activity_id', $activity_ids)
+            ->pluck('activity_divs', 'activity_id'))->map(function ($div) {
+            return json_decode($div, true);
+        });
 
-                foreach ($cost_accounts as $cost_account) {
-                    if (!isset($tree['activities'][$activity->id]['cost_accounts'][$cost_account])) {
-                        $tree['activities'][$activity->id]['cost_accounts'][$cost_account] = [
-                            'budget_cost' => 0,
-                            'prev_cost' => 0,
-                            'prev_allowabe' => 0,
-                            'prev_variance' => 0,
-                            'to_data_cost' => 0,
-                            'to_date_allowable_cost' => 0,
-                            'cost_var' => 0,
-                            'remain_cost' => 0,
-                            'allowable_var' => 0,
-                            'completion_cost' => 0,
-                            'resources' => [],
-                        ];
-                    }
+        $tree = [];
 
-
-                    $resources = collect(\DB::select('SELECT  sh.resource_name , resource_id , budget_cost FROM break_down_resource_shadows sh
-WHERE project_id=? AND cost_account =?', [$this->project->id, $cost_account]));
-
-                    foreach ($resources as $resource) {
-                        $tree['activities'][$activity->id]['cost_accounts'][$cost_account]['resources'][$resource->resource_id] = [
-                            'name' => $resource->resource_name,
-                            'budget_cost' => $resource->budget_cost,
-                            'prev_cost' => $this->prev_shadow->get($resource->resource_id)['prev_cost'],
-                            'prev_allowabe' => $this->prev_shadow->get($resource->resource_id)['prev_allowabe'],
-                            'prev_variance' => $this->prev_shadow->get($resource->resource_id)['prev_variance'],
-                            'to_data_cost' => $this->period_shadow->get($resource->resource_id)['to_data_cost'],
-                            'to_date_allowable_cost' => $this->period_shadow->get($resource->resource_id)['to_date_allowable_cost'],
-                            'cost_var' => $this->period_shadow->get($resource->resource_id)['cost_var'],
-                            'remain_cost' => $this->period_shadow->get($resource->resource_id)['remain_cost'],
-                            'allowable_var' => $this->period_shadow->get($resource->resource_id)['allowable_var'],
-                            'completion_cost' => $this->period_shadow->get($resource->resource_id)['completion_cost'],
-                        ];
-                        $tree['activities'][$activity->id]['cost_accounts'][$cost_account]['budget_cost'] += $resource->budget_cost;
-                    }
-
-                    $tree['activities'][$activity->id]['budget_cost'] += $tree['activities'][$activity->id]['cost_accounts'][$cost_account]['budget_cost'];
+        foreach ($currentActivities as $id => $current) {
+            $prevDiv = '';
+            $previous = $previousActivities[$id] ?? [];
+            foreach ($activityDivs[$id] as $index => $div) {
+                if (!isset($tree[$div])) {
+                    $tree[$div] = [
+                        'budget_cost' => 0, 'to_date_cost' => 0, 'to_date_allowable' => 0, 'to_date_var' => 0,
+                        'previous_cost' => 0, 'previous_allowable' => 0, 'previous_var' => 0,
+                        'remaining_cost' => 0, 'completion_cost' => 0, 'completion_var' => 0
+                    ];
                 }
+
+                $tree[$div]['index'] = $index;
+                $tree[$div]['parent'] = $prevDiv;
+                $tree[$div]['budget_cost'] += $current->budget_cost;
+                $tree[$div]['to_date_cost'] += $current->to_date_cost;
+                $tree[$div]['to_date_allowable'] += $current->to_date_allowable;
+                $tree[$div]['to_date_var'] += $current->to_date_var;
+                $tree[$div]['remaining_cost'] += $current->remaining_cost;
+                $tree[$div]['completion_cost'] += $current->completion_cost;
+                $tree[$div]['completion_var'] += $current->completion_var;
+                $tree[$div]['previous_cost'] += $previous->previous_cost ?? 0;
+                $tree[$div]['previous_allowable'] += $previous->previous_allowable ?? 0;
+                $tree[$div]['previous_var'] += $previous->previous_var ?? 0;
+
+                $prevDiv = $div;
+            }
+
+            $tree[$prevDiv]['activities'][] = [
+                'name' => $current->activity,
+                'budget_cost' => $current->budget_cost,
+                'to_date_cost' => $current->to_date_cost,
+                'to_date_allowable' => $current->to_date_allowable,
+                'to_date_var' => $current->to_date_var,
+                'remaining_cost' => $current->remaining_cost,
+                'completion_cost' => $current->completion_cost,
+                'completion_var' => $current->completion_var,
+                'previous_cost' => $previous->previous_cost ?? 0,
+                'previous_allowable' => $previous->previous_allowable ?? 0,
+                'previous_var' => $previous->previous_var ?? 0,
+            ];
+
+        }
+
+        return collect($tree)->sortByKeys();
+    }
+
+    protected function applyFilters($query)
+    {
+        $request = request();
+
+        if ($activity_id = $request->get('activity')) {
+            $query->where('activity_id', $activity_id);
+        }
+
+        if ($status = strtolower($request->get('status', ''))) {
+            if ($status == 'not started') {
+                $query->havingRaw('sum(to_date_qty) = 0');
+            } elseif ($status == 'in progress') {
+                $query->havingRaw('sum(to_date_qty) > 0 AND AVG(progress) < 100');
+            } elseif ($status == 'closed') {
+                $query->where('to_date_qty', '>', 0)->where('progress', 100);
             }
         }
 
+        if ($div_id = $request->get('div')) {
+            $div = ActivityDivision::find($div_id);
+            if ($div) {
+                $activity_ids = StdActivity::whereIn('division_id', $div->getChildrenIds())->pluck('id');
+                $query->whereIn('activity_id', $activity_ids);
+            }
+        }
 
-        return $tree;
+        if ($request->exists('negative')) {
+            $query->having('to_date_var', '<', 0);
+        }
+
     }
-
-
 }

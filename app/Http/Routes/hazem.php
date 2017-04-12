@@ -26,9 +26,13 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('breakdowns/{wbs_level}', 'Api\CostController@breakdowns');
         Route::get('resources/{project}', 'Api\CostController@resources');
         Route::get('activity-log/{wbs_level}', 'Api\CostController@activityLog');
+        Route::get('batches/{project}', 'Api\CostController@batches');
 
         Route::delete('/delete-resource/{breakdown_resource}', 'Api\CostController@deleteResource');
         Route::delete('/delete-activity/{breakdown}', 'Api\CostController@deleteActivity');
+        Route::delete('/delete-wbs/{wbs_level}', 'Api\CostController@deleteWbs');
+        Route::delete('/delete-current/{project}', 'Api\CostController@deleteProject');
+        Route::delete('/delete-batch/{actual_batch}', 'Api\CostController@deleteBatch');
     });
 });
 
@@ -173,9 +177,12 @@ Route::get('/actual-batches/{actual_batch}', 'ActualBatchesController@show');
 Route::get('/actual-batches/{actual_batch}/download', 'ActualBatchesController@download');
 
 Route::get('/blank', 'BlankController@index');
+Route::get('dashboard', 'DashboardController@index');
 
 Route::get('/summary', function() {
     return App\CostShadow::joinBudget('budget.resource_type')->sumFields([
         'cost.to_date_cost', 'cost.allowable_ev_cost', 'budget.budget_cost'
     ])->get();
 });
+
+Route::post('/concern/{project}','CostConcernsController@addConcernReport');

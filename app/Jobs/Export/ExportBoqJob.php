@@ -56,8 +56,8 @@ class ExportBoqJob extends Job
 //        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Division');
         $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'WBS_PATH');
         $rowCount = 2;
-
         foreach ($items as $item) {
+            $code = $item->wbs->code;
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $item->item_code);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $item->cost_account);
 
@@ -78,14 +78,20 @@ class ExportBoqJob extends Job
 
             $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $this->wbs_levels->get($item->wbs_id)->path);
 //            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $this->boqs->get($item->division_id));
-            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $item->wbs->code);
+            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $code);
             $rowCount++;
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $project->name . ' - BOQ.xlsx"');
+//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//        header('Content-Disposition: attachment;filename="' ."');
+//        header('Cache-Control: max-age=0');
+//        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+//        $objWriter->save('php://output');
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'.$project->name.'- BOQ.xlsx"');
         header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel,'Excel5');
         $objWriter->save('php://output');
     }
 }

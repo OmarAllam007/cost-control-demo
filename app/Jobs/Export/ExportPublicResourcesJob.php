@@ -29,7 +29,7 @@ class ExportPublicResourcesJob extends Job
         foreach ($resources as $resource) {
             $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource->resource_code);
             $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource->name);
-            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name);
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name ?? '');
 
             $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource->rate);
             $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $resource->units->type??'');

@@ -58,16 +58,12 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('cost_activity/{project}',['uses'=>'CostReportsController@activityReport','as'=>'cost.activity_report']);
     Route::get('cost_resource_dictionary/{project}',['uses'=>'CostReportsController@resourceDictionaryReport','as'=>'cost.dictionary']);
     Route::get('variance_analysis/{project}',['uses'=>'CostReportsController@varianceAnalysisReport','as'=>'cost.variance']);
-
     Route::get('reports/{project}', ['as' => 'project.reports', 'uses' => 'ReportController@getReports']);
-
     Route::get('wbs_report/{project}', ['as' => 'wbs.report', 'uses' => 'ReportController@wbsReport']);
     Route::get('productivity_report/{project}', ['as' => 'productivity.report', 'uses' => 'ReportController@productivityReport']);
     Route::get('standard_activity_report/{project}', ['as' => 'stdActivity.report', 'uses' => 'ReportController@stdActivityReport']);
 
-
     Route::get('resourse_dictionary/{project}', ['as' => 'resource_dictionary.report', 'uses' => 'ReportController@resourceDictionary']);
-
     Route::get('man_power/{project}', ['as' => 'man_power.report', 'uses' => 'ReportController@manPower']);
 
     Route::get('budget_summery/{project}', ['as' => 'budget_summery.report', 'uses' => 'ReportController@budgetSummery']);
@@ -105,7 +101,15 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('modify_boq/{project}',['as'=>'boq.modify','uses'=>'BoqController@modifyProjectBoqs']);
     Route::post('modify_boq/',['as'=>'boq.post-modify','uses'=>'BoqController@postModifyProjectBoqs']);
 
+
+
+    Route::get('show_productivity_report/{project}',['as'=>'productivity-cost-show.modify','uses'=>'CostReportsController@productivityReport']);
+    Route::get('show_issues/{project}',['as'=>'show_issues.report','uses'=>'CostReportsController@issuesReport']);
+
 });
+Route::get('/download_trend/{id}/download', 'ProductivityController@downloadTrend');
+Route::get('/download_labor_trend/{id}/download', 'ProductivityController@downloadLaborTrend');
+
 //reports cost control
 
 
@@ -114,6 +118,10 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('wbs_levels/export/{project}', ['as' => 'wbs_report.export', 'uses' => 'ExportReportController@exportWbsReport']);
 });
 
+Route::group(['prefix' => 'project'], function () {
+    Route::get('activity-mapping/export/{project}', ['as' => 'activity_mapping.export', 'uses' => 'ActivityMapController@exportActivityMapping']);
+    Route::get('resource-mapping/export/{project}', ['as' => 'resource_mapping.export', 'uses' => 'ResourcesController@exportResourceMapping']);
+});
 
 Route::group(['prefix' => 'survey'], function () {
     Route::get('export/{project}', ['as' => 'survey.export', 'uses' => 'SurveyController@exportQuantitySurvey']);
@@ -130,6 +138,8 @@ Route::group(['prefix' => 'resources'], function () {
     Route::get('modify/', ['as' => 'all-resources.modify', 'uses' => 'ResourcesController@modifyAllResources']);
     Route::post('modify/', ['as' => 'all-resources.post-modify', 'uses' => 'ResourcesController@postModifyAllResources']);
     Route::delete('deleteAll/{project}',['uses'=>'ResourcesController@projectWipeAll','as'=>'project-resources.wipeAll']);
+    Route::get('export-cost-resources/{project}', ['as' => 'resources-cost.export', 'uses' => 'ResourcesController@exportCostResources']);
+
 
 });
 Route::group(['prefix' => 'resource-type'], function () {
@@ -150,6 +160,17 @@ Route::group(['prefix'=>'actual-revenue','as'=>'actual-revenue.import'],function
    Route::get('import/{project}','ActualRevenueController@import');
    Route::post('import/{project}','ActualRevenueController@postImport');
 });
+Route::group(['prefix'=>'cost-productivity','as'=>'productivity-report.import'],function (){
+    Route::get('import/{project}','ProductivityController@importReport');
+    Route::post('import/{project}','ProductivityController@postImportReport');
+});
+
+Route::group(['prefix'=>'cost-labor','as'=>'cost-labor.import'],function (){
+    Route::get('import/{project}','ProductivityController@laborImportReport');
+    Route::post('import/{project}','ProductivityController@laborPostImportReport');
+});
+Route::get('export-std-activity-report-budget/{project}',['uses'=>'StdActivityController@exportStdActivityBudgetReport','as'=>'export.budget_std_Activity']);
+Route::get('export-productivity-report-budget/{project}',['uses'=>'ProductivityController@exportProductivityReport','as'=>'export.budget_productivity']);
 
 Route::resource('unit', 'UnitController');
 Route::resource('survey', 'SurveyController');
@@ -161,5 +182,7 @@ Route::resource('productivity', 'ProductivityController');
 Route::resource('category', 'CategoryController');
 Route::resource('category', 'CategoryController');
 
+//comment
 
+//Export Budget Reports
 

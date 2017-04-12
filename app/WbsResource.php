@@ -23,6 +23,11 @@ class WbsResource extends Model
         return $this->belongsTo(BreakdownResource::class);
     }
 
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     function wbs()
     {
         return $this->belongsTo(WbsLevel::class, 'wbs_id');

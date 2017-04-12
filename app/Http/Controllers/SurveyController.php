@@ -80,7 +80,7 @@ class SurveyController extends Controller
         }
 
         if (in_array($request->cost_account, $cost_accounts)) {
-            flash('Found dublicated Cost Account', 'danger');
+            flash('Found dublicated cost account', 'danger');
 
         } else {
             $survey = Survey::create($request->all());

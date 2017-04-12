@@ -4,6 +4,9 @@
     <h2>{{$project->name}} &mdash; Import Activity Map</h2>
 
     <div class="pull-right">
+        <a href="{{route('activity_mapping.export',$project)}}" class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
         <a href="#DeleteActivityModal" class="btn btn-sm btn-warning" data-toggle="modal"><i class="fa fa-trash"></i>
             Delete Mapping</a>
         <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-sm"><i

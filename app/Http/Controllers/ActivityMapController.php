@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ActivityMap;
 use App\BreakDownResourceShadow;
+use App\Jobs\Export\ExportActivityMapping;
 use App\Jobs\ImportActivityMapsJob;
 use App\Project;
 use Illuminate\Http\Request;
@@ -84,7 +85,6 @@ class ActivityMapController extends Controller
 
         $data = request('mapping');
         foreach ($data as $key => $value) {
-            dd($value);
             if ($value) {
                 ActivityMap::updateOrCreate([
                     'project_id' => $project->id, 'activity_code' => $value, 'equiv_code' => $key
@@ -109,5 +109,9 @@ class ActivityMapController extends Controller
 
         flash('All activity mapping for this project has been deleted', 'info');
         return \Redirect::route('activity-map.import', $project);
+    }
+
+    function exportActivityMapping(Project $project){
+        $this->dispatch(new ExportActivityMapping($project));
     }
 }

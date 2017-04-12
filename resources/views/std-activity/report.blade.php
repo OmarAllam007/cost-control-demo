@@ -5,12 +5,10 @@
 @section('header')
     <h2 class="">{{$project->name}} - Standard Activity</h2>
     <div class="pull-right">
-        {{--<a href="{{route('budget_std_activity.export',--}}
-        {{--['project'=>$project])}}"--}}
-           {{--target="_blank" class="btn--}}
-        {{--btn-info--}}
-        {{--btn-sm"><i class="fa fa-cloud-download"></i>--}}
-            {{--Export</a>--}}
+        <a href="{{route('export.budget_std_Activity',
+        ['project'=>$project])}}"
+            class="btn btn-info btn-sm"><i class="fa fa-cloud-download"></i>
+            Export</a>
 
         <a href="?print=1&paint=std-activity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>
             Print</a>

@@ -2,7 +2,7 @@
     <section id="Resources" class="project-tab">
 
         <div class="form-group pull-right tab-actions">
-            <a href="/cost-resources/export/{{$project->id}}" class="btn btn-info btn-sm">
+            <a href="{{route('resources-cost.export',$project->id)}}" class="btn btn-info btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
         </div>

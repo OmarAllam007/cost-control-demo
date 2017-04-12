@@ -8,7 +8,7 @@
 
         <div class="form-group form-group-sm {{ $errors->first('start_date', 'has-error') }}">
             {{ Form::label('start_date', null, ['class' => 'control-label']) }}
-            {{ Form::date('start_date', null, ['class' => 'form-control to-calendar']) }}
+            {{ Form::date('start_date', $period->start_date ?? '', ['class' => 'form-control to-calendar']) }}
             {!! $errors->first('start_date', '<div class="help-block">:message</div>') !!}
         </div>
 

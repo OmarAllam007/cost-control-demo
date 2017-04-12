@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ActualBatch;
 use App\ActualResources;
 use App\Breakdown;
 use App\BreakdownResource;
@@ -25,8 +26,12 @@ class CostController extends Controller
 
         $perspective = $request->get('perspective');
 
-        if ($perspective=='budget') {
-            return BreakDownResourceShadow::joinCost($wbs_level, $period)->get();
+        if ($perspective == 'budget') {
+            $rows = BreakDownResourceShadow::joinCost($wbs_level, $period)->get();
+            $rows->each(function (BreakDownResourceShadow $row) {
+                $row->appendFields();
+            });
+            return $rows;
         } else {
             return CostShadow::joinShadow($wbs_level, $period)->get();
         }
@@ -48,8 +53,8 @@ class CostController extends Controller
                 }
             });
 
-        return $activities->map(function($resources) {
-            return $resources->sortBy(function($resource) {
+        return $activities->map(function ($resources) {
+            return $resources->sortBy(function ($resource) {
                 return strtolower(trim($resource['store_resource_name']));
             });
         })->sortByKeys();
@@ -68,6 +73,20 @@ class CostController extends Controller
             ->get()->map(function (CostResource $resource) {
                 return $resource->jsonFormat();
             });
+    }
+
+    function batches(Project $project)
+    {
+        if (!can('actual_resources', $project)) {
+            return ['ok' => false, 'message' => 'Your are not authorized to do this action'];
+        }
+
+        $query = ActualBatch::whereProjectId($project->id)->latest();
+        if (!can('cost_owner', $project)) {
+            $query->whereUserId(auth()->id());
+        }
+
+        return ['ok' => true, 'batches' => $query->get()];
     }
 
     function deleteResource(BreakdownResource $breakdown_resource)
@@ -89,6 +108,24 @@ class CostController extends Controller
         }
     }
 
+    function deleteBatch(ActualBatch $actual_batch)
+    {
+        if (cannot('actual_resources', $actual_batch->project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        set_time_limit(600);
+
+        ActualResources::where('batch_id', $actual_batch->id)
+            ->get()->each(function (ActualResources $resource) {
+                $resource->delete();
+            });
+
+        $actual_batch->delete();
+
+        return ['ok' => true, 'message' => 'Resources data has been deleted'];
+    }
+
     function deleteActivity(Breakdown $breakdown)
     {
         if (cannot('actual_resources', $breakdown->project)) {
@@ -99,12 +136,46 @@ class CostController extends Controller
 
         ActualResources::whereIn('breakdown_resource_id', $resourceIds)
             ->where('period_id', $breakdown->project->open_period()->id)
-            ->chunk(100, function (Collection $resources) {
+            ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
                     $resource->delete();
                 });
             });
 
         return ['ok' => true, 'message' => 'Activity data has been deleted'];
+    }
+
+    function deleteWbs(WbsLevel $wbs_level)
+    {
+        if (cannot('cost_owner', $wbs_level->project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        ActualResources::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
+            ->where('period_id', $wbs_level->project->open_period()->id)
+            ->chunkById(1000, function (Collection $resources) {
+                $resources->each(function (ActualResources $resource) {
+                    $resource->delete();
+                });
+            });
+
+        return ['ok' => true, 'message' => 'WBS current data has been deleted'];
+    }
+
+    function deleteProject(Project $project)
+    {
+        if (cannot('cost_owner', $project)) {
+            return ['ok' => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+        ActualResources::whereIn('wbs_level_id', $project->id)
+            ->where('period_id', $project->open_period()->id)
+            ->chunkById(1000, function (Collection $resources) {
+                $resources->each(function (ActualResources $resource) {
+                    $resource->delete();
+                });
+            });
+
+        return ['ok' => true, 'message' => 'Project current data has been deleted'];
     }
 }

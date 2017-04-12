@@ -15,28 +15,27 @@
                 <thead>
                 <tr>
                     <th class="col-md-8">Activity</th>
-                    @can('write', 'std-activity')
                     <th>
                         <div class="pull-right">
                             Actions
                         </div>
                     </th>
-                    @endcan
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($division->activities as $activity)
                     <tr>
-                        <td>{{$activity->name}}</td>
-                        @can('write', 'std-activity')
+                        <td><a href="{{route('std-activity.show', $activity)}}">{{$activity->name}}</a></td>
                         <td>
                             <div class="pull-right">
+                                <a href="{{route('std-activity.show', $activity)}}" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> View</a>
+                                @can('write', 'std-activity')
                                 <a href="{{route('std-activity.edit', $activity)}}" class="btn btn-xs btn-primary">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
+                                @endcan
                             </div>
                         </td>
-                        @endcan
                     </tr>
                 @endforeach
                 </tbody>
@@ -50,7 +49,6 @@
                 @endforeach
             </ul>
         @endif
-
 
     </article>
 </li>

@@ -25,12 +25,6 @@ class BudgetCostByDiscipline
         $survey = [];
         $totalWeight = 0;
         $total = BreakDownResourceShadow::whereProjectId($project->id)->sum('budget_cost');
-//        $this->survies = Survey::where('project_id', $project->id)->get()->keyBy('cost_account')->map(function ($survey) {
-//            return $survey->discipline;
-//        });
-//        $this->activities = BreakDownResourceShadow::whereProjectId($project->id)->with('std_activity')->get()->keyBy('activity_id')->map(function ($shadow) use ($total) {
-//            return $shadow->std_activity->discipline;
-//        });
 
         $shadows = \DB::table('break_down_resource_shadows as sh')
             ->join('projects', 'sh.project_id', '=', 'projects.id')
@@ -50,6 +44,7 @@ class BudgetCostByDiscipline
             $survey[$value->discipline]['weight'] += floatval(($value->budget_cost / $total) * 100);
             $totalWeight += $survey[$value->discipline]['weight'];
         }
+
 
         $this->getBugetCostByBuildingColumnChart($survey);
         $this->getBugetCostByBuildingPieChart($survey);

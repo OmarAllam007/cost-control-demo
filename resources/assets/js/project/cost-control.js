@@ -4,6 +4,7 @@ import Datasheet from './components/datasheet';
 import Alert from './components/Alert';
 import Resources from './components/CostResources';
 import ActivityLog from './components/ActivityLog'
+import { DataUploads } from './components/data-uploads';
 
 Vue.filter('slug', function(value){
     return value.replace(/\W/g, '-').replace(/-{2,}/g, '-').toLowerCase();
@@ -29,7 +30,7 @@ window.app = new Vue({
     el: '#projectArea',
 
     data: {
-        selected: 0
+        selected: 0, loading: false
     },
 
     methods: {
@@ -37,6 +38,28 @@ window.app = new Vue({
             $('#IframeModal').modal('hide');
             this.$broadcast('reload_' + component);
             this.$broadcast('show_alert', alert);
+        },
+
+        deleteProjectCurrent() {
+            this.loading = true;
+            $.ajax({
+                url: '/api/cost/delete-current/' + this.project_id, method: 'delete', dataType: 'json',
+                data: { _method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
+            }).success(response => {
+                this.loading = false;
+                $('#DeleteCurrentModal').modal('hide');
+                this.reload('wbs');
+                this.$dispatch('request_alert', {
+                    type: response.ok? 'info' : 'error', message: response.message
+                });
+            }).error(() => {
+                this.loading = false;
+                $('#DeleteWbsDataModal').modal('hide');
+                this.$dispatch('request_alert', {
+                    type: 'error', message: 'Could not delete current data for this WBS'
+                });
+
+            });
         }
     },
 
@@ -56,7 +79,7 @@ window.app = new Vue({
     },
 
     components: {
-        Alert, Wbs, Datasheet, Resources, ActivityLog
+        Alert, Wbs, Datasheet, Resources, ActivityLog, DataUploads
     }
 });
 

@@ -9,6 +9,10 @@
     </h2>
 
     <div class="pull-right">
+        <a href="{{route('resource_mapping.export',$project_id)}}" class="btn btn-info btn-sm">
+            <i class="fa fa-cloud-download"></i> Export
+        </a>
+
         <a href="#DeleteResourceCodes" class="btn btn-warning btn-sm" data-toggle="modal"><i class="fa fa-trash"></i> Delete Mapping</a>
 
         @if ($project_id)

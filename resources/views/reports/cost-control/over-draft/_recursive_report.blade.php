@@ -29,11 +29,11 @@
                                     @foreach($division['activities'] as $actKey=>$activity)
                                         <li>
                                             <p class="blue-fourth-level">
-                                                <a href="#{{$actKey}}{{$key}}{{$level['id']}}">
+                                                <a href="#{{$actKey}}{{$key}}{{$level['id']}}" data-toggle="collapse">
                                                     {{$activity['activity_name']}}
                                                 </a>
                                             </p>
-                                            <article class="tree--child" id="{{$actKey}}{{$key}}{{$level['id']}}">
+                                            <article class="tree--child collapse" id="{{$actKey}}{{$key}}{{$level['id']}}">
                                                 <table class="table table-condensed">
                                                     <thead style="background:#95DAC2;color: #000; border-bottom: solid black">
                                                     <tr>

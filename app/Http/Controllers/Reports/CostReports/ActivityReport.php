@@ -1,159 +1,144 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: omar
- * Date: 28/12/16
- * Time: 02:07 م
- */
 
 namespace App\Http\Controllers\Reports\CostReports;
 
-
-use App\Breakdown;
-use App\BreakDownResourceShadow;
-use App\CostShadow;
+use App\MasterShadow;
+use App\Period;
 use App\Project;
 use App\WbsLevel;
+use Illuminate\Database\Eloquent\Builder;
 
 class ActivityReport
 {
-    //todo to be complete after modifications ...
+    /** @var Project */
     protected $project;
-    protected $activities;
-    protected $period_id;
-    protected $levels;
 
+    /** @var Period */
+    protected $period;
 
-    function getActivityReport(Project $project, $period_id)
+    function __construct(Period $period)
     {
-        $this->project = $project;
-        $this->period_id = $period_id;
-        $this->levels = $project->wbs_levels()->get()->keyBy('id')->map(function ($level){
-           return $level;
-        });
-        $tree = [];
-
-        $wbs_tree = \Cache::get('wbs-tree-' . $project->id);
-
-        foreach ($wbs_tree as $level) {
-            $treeLevel = $this->buildTree($level);
-            $tree[] = $treeLevel;
-
-        }
-        return view('reports.cost-control.activity.activity_report', compact('tree', 'project'));
+        $this->project = $period->project;
+        $this->period = $period;
     }
 
-
-    /**
-     * @param $level
-     * @return array
-     */
-    function buildTree($level)
+    function run()
     {
-        $actual_level = $this->levels->get($level['id']);
+        $project = $this->period->project;
 
-        $tree = ['id' => $level['id'], 'name' => $level['name'], 'children' => [], 'activities' => [], 'data' => [
-            'budget_cost' => 0,
-            'prev_cost' => 0,
-            'prev_allowable' => 0,
-            'prev_variance' => 0,
-            'to_date_cost' => 0,
-            'allowable_cost' => 0,
-            'cost_var' => 0,
-            'remain_cost' => 0,
-            'allowable_var' => 0,
-            'completion_cost' => 0,
-        ]];
+        $tree = $this->buildTree();
 
-        $period_activities = \DB::select('SELECT
-  sh.activity_id,sh.activity,
-  SUM(budget_cost) AS budget_cost,
-  SUM(cost.to_date_cost) AS to_date_cost,
-  SUM(cost.allowable_ev_cost) AS allowable_cost,
-  SUM(cost.cost_var) AS cost_var,
-  SUM(cost.remaining_cost) AS remain_cost,
-  SUM(cost.allowable_var) AS allowable_var,
-  SUM(cost.completion_cost) AS completion_cost
-FROM break_down_resource_shadows sh JOIN
-  cost_shadows cost ON sh.breakdown_resource_id = cost.breakdown_resource_id
-WHERE sh.project_id = ? AND cost.period_id =? AND sh.wbs_id=?
-GROUP BY activity_id , sh.activity', [$this->project->id, $this->period_id,$level['id']]);
-        $prev_activities = \DB::select('SELECT
-  sh.activity_id,sh.activity,
-  SUM(budget_cost) AS budget_cost,
-  SUM(cost.to_date_cost) AS to_date_cost,
-  SUM(cost.allowable_ev_cost) AS allowable_cost,
-  SUM(cost.cost_var) AS cost_var,
-  SUM(cost.remaining_cost) AS remain_cost,
-  SUM(cost.allowable_var) AS allowable_var,
-  SUM(cost.completion_cost) AS completion_cost
-FROM break_down_resource_shadows sh JOIN
-  cost_shadows cost ON sh.breakdown_resource_id = cost.breakdown_resource_id
-WHERE sh.project_id = ? AND cost.period_id < ? AND sh.wbs_id=?
-GROUP BY activity_id , sh.activity', [$this->project->id, $this->period_id,$level['id']]);
+        $periods = $this->project->periods()->readyForReporting()->orderBy('name')->pluck('name', 'id');
 
-        if (count($period_activities)) {
-            foreach ($period_activities as $activity) {
-                if(!isset($tree['activities'][$activity->activity_id])){
-                    $tree['activities'][$activity->activity_id]=[
-                        'activity_name'=>$activity->activity,
-                        'budget_cost'=>0,
-                        'prev_cost'=>0,
-                        'prev_allowable'=>0,
-                        'prev_variance'=>0,
-                        'to_date_cost'=>0,
-                        'allowable_cost'=>0,
-                        'cost_var'=>0,
-                        'remain_cost'=>0,
-                        'allowable_var'=>0,
-                        'completion_cost'=>0,
-                    ];
-                }
-                $tree['activities'][$activity->activity_id]['budget_cost'] += $activity->budget_cost;
-                $tree['activities'][$activity->activity_id]['to_date_cost'] += $activity->to_date_cost;
-                $tree['activities'][$activity->activity_id]['allowable_cost'] += $activity->allowable_cost;
-                $tree['activities'][$activity->activity_id]['cost_var'] += $activity->cost_var;
-                $tree['activities'][$activity->activity_id]['remain_cost'] += $activity->remain_cost;
-                $tree['activities'][$activity->activity_id]['allowable_var'] += $activity->allowable_var;
-                $tree['activities'][$activity->activity_id]['completion_cost'] += $activity->completion_cost;
-                $tree['data']['budget_cost']+=$activity->budget_cost;
-                $tree['data']['to_date_cost']+=$activity->to_date_cost;
-                $tree['data']['allowable_cost']+=$activity->allowable_cost;
-                $tree['data']['cost_var']+=$activity->cost_var;
-                $tree['data']['remain_cost']+=$activity->remain_cost;
-                $tree['data']['allowable_var']+=$activity->allowable_var;
-                $tree['data']['completion_cost']+=$activity->completion_cost;
+        $activities = MasterShadow::forPeriod($this->period)->orderBy('activity')->selectRaw('DISTINCT activity')->pluck('activity');
 
-            }
-        }
-        if(count($prev_activities)){
-            foreach ($period_activities as $prev_activity) {
-                $tree['activities'][$prev_activity->activity_id]['prev_cost'] += $prev_activity->to_date_cost;
-                $tree['activities'][$prev_activity->activity_id]['prev_allowable'] += $prev_activity->allowable_cost;
-                $tree['activities'][$prev_activity->activity_id]['prev_variance'] += $prev_activity->cost_var;
-                $tree['data']['prev_cost']+=$prev_activity->to_date_cost;
-                $tree['data']['prev_allowable']+=$prev_activity->prev_allowable;
-                $tree['data']['prev_variance']+=$prev_activity->prev_variance;
+        return view('reports.cost-control.activity.activity_report', compact('tree', 'project', 'periods', 'activities'));
+    }
 
-            }
-        }
-
-        if (collect($level['children'])->count()) {
-            $tree['children'] = collect($level['children'])->map(function ($childLevel) {
-                return $this->buildTree($childLevel);
+    function buildTree()
+    {
+        $previousPeriod = $this->period->project->periods()->where('id', '<', $this->period->id)->first();
+        if ($previousPeriod) {
+            $previousData = MasterShadow::previousActivityReport($this->period)->get()->groupBy('wbs_id')->map(function ($group) {
+                return $group->keyBy('activity');
             });
-        }
-        foreach ($tree['children'] as $child) {
-            $tree['data']['budget_cost'] += $child['data']['budget_cost'];
-            $tree['data']['to_date_cost'] += $child['data']['to_date_cost'];
-            $tree['data']['allowable_cost'] += $child['data']['allowable_cost'];
-            $tree['data']['cost_var'] += $child['data']['cost_var'];
-            $tree['data']['remain_cost'] += $child['data']['remain_cost'];
-            $tree['data']['allowable_var'] += $child['data']['allowable_var'];
-            $tree['data']['completion_cost'] += $child['data']['completion_cost'];
+        } else {
+            $previousData = [];
         }
 
-        return $tree;
+        $currentData = $this->applyFilters(MasterShadow::currentActivityReport($this->period))->get()->groupBy('wbs_id')->map(function ($group) {
+            return $group->keyBy('activity');
+        });
+
+        $wbsData = MasterShadow::forPeriod($this->period)->orderBy('wbs')->pluck('wbs', 'wbs_id')->map(function ($wbs) {
+            return json_decode($wbs, true);
+        });
+
+
+        $tree = [];
+        foreach ($currentData as $wbs_id => $wbsGroup) {
+            foreach ($wbsGroup as $activity => $activityCurrent) {
+                $key = '';
+                $activityPrevious = $previousData[$wbs_id][$activity] ?? ['prev_cost' => 0, 'prev_allowable' => 0, 'prev_cost_var' => 0];
+                foreach ($wbsData[$wbs_id] as $wbsLevel) {
+                    $lastKey = $key;
+                    $key .= $wbsLevel;
+                    if (!isset($tree[$key])) {
+                        $tree[$key] = [
+                            'budget_cost' => 0, 'to_date_cost' => 0, 'to_date_allowable' => 0, 'to_date_var' => 0,
+                            'prev_cost' => 0, 'prev_allowable' => 0, 'prev_cost_var' => 0,
+                            'remaining_cost' => 0, 'completion_cost' => 0, 'completion_var' => 0, 'activities' => []
+                        ];
+                    }
+
+                    $tree[$key]['parent'] = $lastKey;
+                    $tree[$key]['name'] = $wbsLevel;
+                    $tree[$key]['budget_cost'] += $activityCurrent['budget_cost'];
+                    $tree[$key]['to_date_cost'] += $activityCurrent['to_date_cost'];
+                    $tree[$key]['to_date_allowable'] += $activityCurrent['to_date_allowable'];
+                    $tree[$key]['to_date_var'] += $activityCurrent['to_date_var'];
+                    $tree[$key]['prev_cost'] += $activityPrevious['prev_cost'];
+                    $tree[$key]['prev_allowable'] += $activityPrevious['prev_allowable'];
+                    $tree[$key]['prev_cost_var'] += $activityPrevious['prev_cost_var'];
+                    $tree[$key]['remaining_cost'] += $activityCurrent['remaining_cost'];
+                    $tree[$key]['completion_cost'] += $activityCurrent['completion_cost'];
+                    $tree[$key]['completion_var'] += $activityCurrent['completion_var'];
+                }
+
+                $tree[$key]['activities'][$activity] = [
+                    'budget_cost' => $activityCurrent['budget_cost'],
+                    'to_date_cost' => $activityCurrent['to_date_cost'],
+                    'to_date_allowable' => $activityCurrent['to_date_allowable'],
+                    'to_date_var' => $activityCurrent['to_date_var'],
+                    'prev_cost' => $activityPrevious['prev_cost'],
+                    'prev_allowable' => $activityPrevious['prev_allowable'],
+                    'prev_cost_var' => $activityPrevious['prev_cost_var'],
+                    'remaining_cost' => $activityCurrent['remaining_cost'],
+                    'completion_cost' => $activityCurrent['completion_cost'],
+                    'completion_var' => $activityCurrent['completion_var'],
+                ];
+            }
+
+        }
+
+        return collect($tree);
+    }
+
+    private function applyFilters(Builder $query)
+    {
+        $request = request();
+
+        if ($status = strtolower($request->get('status', ''))) {
+            if ($status == 'not started') {
+                $query->havingRaw('sum(to_date_qty) = 0');
+            } elseif ($status == 'in progress') {
+                $query->havingRaw('sum(to_date_qty) > 0 AND AVG(progress) < 100');
+            } elseif ($status == 'closed') {
+                $query->where('to_date_qty', '>', 0)->where('progress', 100);
+            }
+        }
+
+        if ($wbs = $request->get('wbs')) {
+            $term = "%$wbs%";
+            $levels = WbsLevel::where('project_id', $this->project->id)->where(function ($q) use ($term) {
+                $q->where('code', 'like', $term)->orWhere('name', 'like', $term);
+            })->pluck('id');
+            $query->whereIn('wbs_id', $levels);
+        }
+
+        if ($activity = $request->get('activity')) {
+            $query->where('activity', $activity);
+        }
+
+        if ($request->exists('negative_to_date')) {
+            $query->havingRaw('to_date_var < 0');
+        }
+
+        if ($request->exists('negative_completion')) {
+            $query->having('completion_var', '<', 0);
+        }
+
+        return $query;
     }
 
 

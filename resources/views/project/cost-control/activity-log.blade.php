@@ -1,5 +1,5 @@
 <activity-log inline-template>
-
+<section>
     <div class="loader" v-show="loading">
         <i class="fa fa-refresh fa-spin fa-3x"></i>
     </div>
@@ -30,7 +30,7 @@
                     <td v-text="resource.store_resource_name"></td>
                     <td v-text="resource.store_measure_unit"></td>
                     <td v-text="resource.budget_resource_name"></td>
-                    <td v-text="resource.budget_unit_measure"></td>
+                    <td v-text="resource.budget_measure_unit"></td>
                     <td v-text="resource.qty"></td>
                     <td v-text="resource.unit_price"></td>
                     <td v-text="resource.cost"></td>
@@ -43,5 +43,5 @@
     </div>
 
     <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No data found</div>
-
+</section>
 </activity-log>

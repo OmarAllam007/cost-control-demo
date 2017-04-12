@@ -14,9 +14,9 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::paginate();
+        $projectGroups = Project::orderBy('client_name')->get()->groupBy('client_name');
 
-        return view('project.index', compact('projects'));
+        return view('project.index', compact('projectGroups'));
     }
 
     public function create()
@@ -138,7 +138,7 @@ class ProjectController extends Controller
         if ($request->has('name')) {
             $name = $request->get('name');
         } else {
-            $name = $project->name;
+            $name = 'Copy of ' . $project->name;
         }
 
         $id = $project->duplicate($name);

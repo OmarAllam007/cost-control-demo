@@ -27,7 +27,7 @@ class OverdraftReport
     protected $cost_account_data;
     protected $wbs_levels;
 
-    function getDraft(Project $project, $period_id)
+    function getDraft (Project $project, $period_id)
     {
         $this->period_id = $period_id;
         $this->boqs = collect();
@@ -35,23 +35,31 @@ class OverdraftReport
         $this->cost_account_data = collect();
 
         Boq::where('project_id', $project->id)->get()->map(function ($boq) {
-            $this->boqs->put($boq->wbs_id . $boq->cost_account, ['quantity' => $boq->quantity, 'price_ur' => $boq->price_ur , 'description'=>$boq->description]);
+            $this->boqs->put($boq->wbs_id . $boq->cost_account, ['quantity' => $boq->quantity, 'price_ur' => $boq->price_ur, 'description' => $boq->description]);
         });
-        $this->wbs_levels= WbsLevel::where('project_id',$project->id)->get()->keyBy('id')->map(function ($level){
+        $this->wbs_levels = WbsLevel::where('project_id', $project->id)->get()->keyBy('id')->map(function ($level) {
             return $level;
         });
-        ActualRevenue::where('project_id', $project->id)->where('period_id', $period_id)->get()->map(function ($actual) {
+        ActualRevenue::where('project_id', $project->id)->where('period_id', '<=', $period_id)->get()->map(function ($actual) {
             $this->actual_data->put($actual->wbs_id . $actual->cost_account, ['quantity' => $actual->quantity, 'actual_revenue' => $actual->value]);
         });
+        //main_data
+        collect(\DB::select('SELECT * FROM (
+       SELECT
+         budget.cost_account,
+         budget.wbs_id,
+         SUM(physical_unit)                                                                            AS ph_unit,
+         SUM((cost.to_date_cost - cost.cost_variance_to_date_due_unit_price) / budget.boq_equivilant_rate) AS ph_unit_e
+       FROM cost_shadows AS cost
 
-        collect(\DB::select('SELECT sh.cost_account ,sh.wbs_id, SUM(physical_unit) AS ph_unit ,
-  SUM((cost.to_date_cost-cost.cost_variance_to_date_due_unit_price)/sh.boq_equivilant_rate) AS ph_unit_e
-
-FROM cost_shadows cost
-  JOIN break_down_resource_shadows sh ON cost.breakdown_resource_id = sh.breakdown_resource_id
-WHERE sh.project_id = ? AND period_id=?
-GROUP BY sh.cost_account , sh.wbs_id', [$project->id,$this->period_id]))->map(function ($shadow) {
-            $this->cost_account_data->put(trim($shadow->wbs_id.$shadow->cost_account), ['ph_unit' => $shadow->ph_unit, 'ph_unit_e' => $shadow->ph_unit_e]);
+         LEFT JOIN break_down_resource_shadows AS budget ON (cost.breakdown_resource_id = budget.breakdown_resource_id)
+       WHERE cost.project_id = ? AND cost.period_id = (SELECT max(p.period_id)
+                                                        FROM cost_shadows p
+                                                        WHERE p.breakdown_resource_id = cost.breakdown_resource_id AND
+                                                              cost.period_id <= ?)
+       GROUP BY 1,2) AS data
+GROUP BY 1,2;', [$project->id, $period_id]))->map(function ($shadow) {
+            $this->cost_account_data->put(trim($shadow->wbs_id . $shadow->cost_account), ['ph_unit' => $shadow->ph_unit, 'ph_unit_e' => $shadow->ph_unit_e]);
         });
 
         $this->project = $project;
@@ -62,13 +70,14 @@ GROUP BY sh.cost_account , sh.wbs_id', [$project->id,$this->period_id]))->map(fu
             $tree[] = $levelTree;
         }
 
-        return view('reports.cost-control.over-draft.over_draft',compact('tree','project'));
+        return view('reports.cost-control.over-draft.over_draft', compact('tree', 'project'));
     }
 
-    protected function buildTree($wbs_level)
+    protected function buildTree ($wbs_level)
     {
 
         $tree = ['id' => $wbs_level['id'], 'name' => $wbs_level['name'], 'children' => [], 'divisions' => [], 'data' => []];
+
         $activitiy_ids = collect(\DB::select('SELECT sh.activity_id
 FROM cost_shadows cost
   JOIN break_down_resource_shadows sh ON cost.breakdown_resource_id = sh.breakdown_resource_id
@@ -107,16 +116,16 @@ WHERE sh.project_id =?
                 $price_ur = $this->boqs->get($wbs_level['id'] . $cost_account->cost_account)['price_ur'];
                 $description = $this->boqs->get($wbs_level['id'] . $cost_account->cost_account)['description'];
 
-                if($quantity==null){
+                if ($quantity == null) {
                     $level = $this->wbs_levels->get($wbs_level['id']);
                     $parent = $level;
-                    while($parent->parent){
+                    while ($parent->parent) {
                         $parent = $parent->parent;
 
                         $quantity = $this->boqs->get($parent->id . $cost_account->cost_account)['quantity'];
                         $price_ur = $this->boqs->get($parent->id . $cost_account->cost_account)['price_ur'];
                         $description = $this->boqs->get($parent->id . $cost_account->cost_account)['description'];
-                        if($quantity && $price_ur){
+                        if ($quantity && $price_ur) {
                             break;
                         }
                     }
@@ -162,21 +171,11 @@ WHERE sh.project_id =?
 
         }
 
-
         if (count($wbs_level['children'])) {
             $tree['children'] = collect($wbs_level['children'])->map(function ($childLevel) {
                 return $this->buildTree($childLevel);
             });
         }
-
-
         return $tree;
-    }
-
-
-    function getDivisions($level)
-    {
-
-
     }
 }

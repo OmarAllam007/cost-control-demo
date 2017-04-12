@@ -1,21 +1,22 @@
-@if($level['activities'] && count($level['activities']))
     <li>
-
         <div class="col-md-12 panel panel-default @if($tree_level ==0)
-                blue-first-level
+                boqLevelOne
              @elseif($tree_level ==1)
-                blue-third-level
-               @else
-                blue-fourth-level
+                boqLevelTwo
+               @elseif($tree_level ==2)
+                boqLevelThree
+                @elseif($tree_level==3)
+                boqLevelFour
                     @endif
-                " style="
-            padding: 5px; display: inline-block">
+                " >
             <div class="col-md-12  @if($tree_level ==0)
-                    blue-first-level
+                    boqLevelOne
                  @elseif($tree_level ==1)
-                    blue-third-level
-                   @else
-                    blue-fourth-level
+                    boqLevelTwo
+                   @elseif($tree_level ==2)
+                    boqLevelThree
+                    @elseif($tree_level==3)
+                    boqLevelFour
                         @endif
                     ">
                 <div class="col-md-6">
@@ -39,8 +40,6 @@
                     </tbody>
                 </table>
             </div>
-
-
         </div>
 
 
@@ -120,16 +119,16 @@
                     @endforeach
                 </li>
             </ul>
-            {{--@if ($level['children'] && count($level['children']))--}}
-            {{--<ul class="list-unstyled">--}}
-            {{--@foreach($level['children'] as $child)--}}
-            {{--@include('reports.budget.resource_dictionary._recursive_resource_dictionary', ['level' => $child, 'tree_level' => $tree_level + 1])--}}
-            {{--@endforeach--}}
-            {{--</ul>--}}
-            {{--@endif--}}
+
+            @if ($level['children'] && count($level['children']))
+            <ul class="list-unstyled">
+            @foreach($level['children'] as $child)
+            @include('reports.budget.revised_boq._recursive_revised_boq', ['level' => $child, 'tree_level' => $tree_level + 1])
+            @endforeach
+            </ul>
+            @endif
 
 
         </article>
 
     </li>
-@endif

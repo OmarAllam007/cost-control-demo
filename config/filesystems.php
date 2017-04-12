@@ -48,6 +48,14 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'productivity_trend' => [
+            'driver' => 'local',
+            'root' => storage_path('app/productivity_trend'),
+        ],
+        'labor_trend' => [
+            'driver' => 'local',
+            'root' => storage_path('app/labor_trend'),
+        ],
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -61,6 +69,8 @@ return [
             'region' => 'your-region',
             'bucket' => 'your-bucket',
         ],
+
+
 
     ],
 

@@ -30,13 +30,13 @@
 
                 </thead>
                 <tbody>
-                @foreach($activityData as $resource)
+                @foreach($activityData as $activityResourceCounter => $resource)
                     @php
                     $row_span = count($resource['rows']);
                     @endphp
 
                     @foreach($resource['rows'] as $counter => $store_resource)
-                        <tr>
+                        <tr class="resource-{{$activityResourceCounter}}">
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_code}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_name}}</td>
@@ -44,11 +44,16 @@
                             @endif
                             <td>{{$store_resource[7]}}</td>
                             <td>{{$store_resource[2]}}</td>
-                            <td>{{number_format($store_resource[4], 2)}}</td>
+                            <td class="store-qty" data-qty="{{$store_resource[4]}}">{{number_format($store_resource[4], 2)}}</td>
                             <td>{{$store_resource[3]}}</td>
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">
-                                    {{Form::text("quantities[{$resource['resource']->id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
+                                    <div class="input-group">
+                                        {{Form::text("quantities[{$resource['resource']->id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary btn-sm sum-qty" data-counter="{{$activityResourceCounter}}" title="SUM">&sum;</button>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td rowspan="{{$row_span}}" class="unit-price-cell">0.00</td>
                                 <td rowspan="{{$row_span}}" class="total-cell"
@@ -102,7 +107,19 @@
                     }
                     prevRow.find('.physical-qty').focus();
                 }
-            }).first().focus();;
+            }).first().focus();
+
+            $('.sum-qty').on('click', function(e) {
+                e.preventDefault();
+
+                var _class = '.resource-' + $(this).data('counter');
+                var total = 0;
+                $(this).closest('table').find(_class).each(function (idx, elem) {
+                    total += parseFloat($(elem).find('.store-qty').data('qty'));
+                });
+
+                $(this).closest('.input-group').find('.physical-qty').val(total).change();
+            });
         });
     </script>
 @endsection

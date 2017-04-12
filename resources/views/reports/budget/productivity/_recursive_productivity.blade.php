@@ -17,7 +17,7 @@
 
     </p>
 
-    <article id="{{$category['id']}}" class="tree--child collapse">
+    <article id="{{$category['id']}}" class="tree--child collapse division-container">
         @if ($category['productivities'] && count($category['productivities']))
             <ul class="list-unstyled">
                 <li>

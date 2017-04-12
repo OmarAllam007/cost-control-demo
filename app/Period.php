@@ -3,10 +3,13 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\HasChangeLog;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Period extends Model
 {
+    use HasChangeLog;
     use CachesQueries;
 
     protected $fillable = ['name', 'start_date', 'is_open'];
@@ -23,6 +26,11 @@ class Period extends Model
         $relation = $this->hasMany(ActualBatch::class);
         $relation->orderBy('id', 'DESC');
         return $relation;
+    }
+
+    function scopeReadyForReporting(Builder $query)
+    {
+        return $query->where('is_open', false);
     }
 
     protected static function boot()

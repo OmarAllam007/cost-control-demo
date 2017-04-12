@@ -62,8 +62,11 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         BreakDownResourceShadow::flushEventListeners();
 
         $entries = collect();
+        $counter = 1;
+        $fh = fopen(storage_path('app/failed_old_data' . slug($this->project->name) . '.csv'), 'w');
         foreach ($rows as $row) {
             $rowData = $this->getDataFromCells($row->getCellIterator());
+            ++$counter;
             if (!array_filter($rowData)) {
                 continue;
             }
@@ -82,10 +85,13 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
                     $entries = collect();
                 }
             } else {
-                $failed->push($rowData);
+                $failed->put($counter, $rowData);
+                fputcsv($fh, $rowData);
             }
 
         }
+
+        fclose($fh);
 
         if ($entries->count()) {
             CostShadow::insert($entries->pluck('shadow')->toArray());
@@ -154,8 +160,8 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         $shadow = [
             'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
             'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
-            'previous_cost' => $row[6], 'previous_qty' => $row[7], 'previous_unit_price' => $row[8],
-            'current_cost' => $row[9], 'current_qty' => $row[10], 'current_unit_price' => $row[11],
+            'prev_cost' => $row[6], 'prev_qty' => $row[7], 'prev_unit_price' => $row[8],
+            'curr_cost' => $row[9], 'curr_qty' => $row[10], 'curr_unit_price' => $row[11],
             'to_date_cost' => $row[12], 'to_date_qty' => $row[13], 'to_date_unit_price' => $row[14],
             'remaining_cost' => $row[15], 'remaining_qty' => $row[16], 'remaining_unit_price' => $row[17],
             'completion_qty' => $row[18], 'completion_cost' => $row[19], 'completion_unit_price' => $row[20],

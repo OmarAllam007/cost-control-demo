@@ -66,7 +66,7 @@ class CostImporter
         foreach ($this->rows as $row) {
             $code = trim(strtolower($row[0]));
             if (!$this->activityCodes->has($code)) {
-                $errors['activity']->push($row[0]);
+                $errors['activity']->push($row);
             }
         }
 
@@ -237,7 +237,7 @@ class CostImporter
             $actual_resource = ActualResources::create([
                 'project_id' => $project_id, 'period_id' => $period_id, 'wbs_level_id' => $resource->wbs_id, 'batch_id' => $batch_id,
                 'breakdown_resource_id' => $resource->breakdown_resource_id, 'original_code' => $row[7], 'qty' => $row[4], 'unit_price' => $row[5], 'cost' => $row[6],
-                'unit_id' => $resource->unit_id, 'resource_id' => $resource->resource_id, 'doc_no' => $row[8], 'original_data' => json_encode($row),
+                'unit_id' => $resource->unit_id, 'resource_id' => $resource->resource_id, 'doc_no' => $row[8] ?? '', 'original_data' => json_encode($row),
                 'action_date' => $row[1]
             ]);
 

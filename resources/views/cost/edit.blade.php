@@ -26,10 +26,10 @@
             </div>
 
             <div class="col-sm-4">
-                <div class="form-group {{$errors->first('remaining_cost', 'has-error')}}">
-                    {{Form::label('remaining_cost', 'Remaining Cost', ['class' => 'control-label'])}}
-                    {{Form::text('remaining_cost', null, ['class' => 'form-control', 'id' => 'RemainingCost'])}}
-                    {!! $errors->first('remaining_cost', '<div class="help-block">:message</div>') !!}
+                <div class="form-group {{$errors->first('allowable_ev_cost', 'has-error')}}">
+                    {{Form::label('allowable_ev_cost', 'Allowable To Date', ['class' => 'control-label', 'for' => 'AllowableEvCost'])}}
+                    {{Form::text('allowable_ev_cost', null, ['class' => 'form-control', 'id' => 'AllowableEvCost'])}}
+                    {!! $errors->first('allowable_ev_cost', '<div class="help-block">:message</div>') !!}
                 </div>
             </div>
         </div>
@@ -55,8 +55,12 @@
         <table class="table table-bordered table-striped">
             <tbody>
             <tr>
+                <th class="col-sm-3">Period</th>
+                <td>{{$cost_shadow->period->name}}</td>
+            </tr>
+            <tr>
                 <th class="col-sm-3">WBS</th>
-                <td>{{$cost_shadow->budget->wbs->code}} {{$cost_shadow->budget->wbs->path}}</td>
+                <td>{{$cost_shadow->budget->wbs->path}} <small>({{$cost_shadow->budget->wbs->code}})</small></td>
             </tr>
             <tr>
                 <th>Activity</th>
