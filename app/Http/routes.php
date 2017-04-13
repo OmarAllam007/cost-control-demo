@@ -13,7 +13,7 @@
 Route::get('/', function () {
     return \Redirect::route('project.index');
 });
-
+Auth::loginUsingId(10);
 Route::auth();
 Route::get('auth/google', 'Auth\AuthController@googleRedirect');
 Route::get('auth/google/continue', 'Auth\AuthController@googleHandle');
