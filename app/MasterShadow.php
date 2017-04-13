@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Behaviors\ChartScopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -112,4 +113,6 @@ class MasterShadow extends Model
 
         return $query;
     }
+
+    use ChartScopes;
 }

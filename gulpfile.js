@@ -12,13 +12,15 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix.sass('app.scss');
-    mix.webpack('project/cost-control.js', 'public/js/cost-control.js')
-        .webpack('project/index.js', 'public/js/project.js')
-        .webpack('project-permissions.js');
-    mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
-    mix.webpack('project/components/Boq.js', 'public/js/public/js/breakdown.js');
-    mix.scripts('tree-select.js');
+    mix.webpack('cost-dashboard/index.js', 'public/js/cost-dashboard.js')
+        .copy('node_modules/c3/c3.min.css', 'public/css/c3.min.css')
+        .sass('app.scss');
+    // mix.webpack('project/cost-control.js', 'public/js/cost-control.js')
+    //     .webpack('project/index.js', 'public/js/project.js')
+    //     .webpack('project-permissions.js');
+    // mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
+    // mix.webpack('project/components/Boq.js', 'public/js/public/js/breakdown.js');
+    // mix.scripts('tree-select.js');
     // .sass('print.scss')
     // .webpack('resource-codes.js');
 //comment again
