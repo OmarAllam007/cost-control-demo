@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AddBoqAndSurveyToBreakdownShadow;
+use App\Console\Commands\AddBoqAndSurveyToBreakdownShadowProject;
 use App\Console\Commands\AddBoqDisciplineToMasterShadow;
 use App\Console\Commands\AddBoqToMasterSahdow;
 use App\Console\Commands\CleanResourceTypes;
@@ -37,6 +39,8 @@ class Kernel extends ConsoleKernel
         FixModResources::class,
         AddBoqDisciplineToMasterShadow::class,
         AddBoqToMasterSahdow::class,
+        AddBoqAndSurveyToBreakdownShadow::class,
+        AddBoqAndSurveyToBreakdownShadowProject::class,
     ];
 
     /**

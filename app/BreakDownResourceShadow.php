@@ -240,4 +240,12 @@ class BreakDownResourceShadow extends Model
 
         return $this->getRemainingUnitPriceAttributeFromTrait();
     }
+
+    function boq(){
+        return $this->belongsTo(Boq::class,'boq_id');
+    }
+
+    function survey(){
+        return $this->belongsTo(Survey::class,'survey_id');
+    }
 }
