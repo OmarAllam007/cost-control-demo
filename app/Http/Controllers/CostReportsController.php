@@ -221,9 +221,12 @@ class CostReportsController extends Controller
         $resourceTypes = BreakDownResourceShadow::whereProjectId($project->id)
             ->selectRaw('distinct trim(resource_type) as name')->orderByRaw('trim(resource_type)')->get();
 
+        $resources = BreakDownResourceShadow::whereProjectId($project->id)
+            ->selectRaw('distinct resource_id id, resource_name name, resource_code code')->orderBy('name')->get();
+
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
 
-        return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes'));
+        return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources'));
     }
 
     public function chart(Request $request)

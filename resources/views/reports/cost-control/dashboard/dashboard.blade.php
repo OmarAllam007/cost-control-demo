@@ -107,24 +107,55 @@
         </div>
     </div>
 
-    @verbatim
+@verbatim
 <template id="activity-template">
-<table class="table table-bordered table-striped">
-    <thead>
-    <th>&nbsp;</th>
-    <th>Activity</th>
-    </thead>
+    <section>
+        <div class="form-group">
+            <input type="search" v-model="term" class="form-control" placeholder="Search activity by name">
+        </div>
 
-    <tbody>
-    <tr v-for="item in items">
-        <td><input type="checkbox" value="{{item.id}}" @change="toggleItem(item.id, $event)"></td>
-        <td>{{item.name}}</td>
-    </tr>
-    </tbody>
-</table>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <th>&nbsp;</th>
+            <th>Activity</th>
+            </thead>
+
+            <tbody>
+            <tr v-for="item in filtered">
+                <td><input type="checkbox" value="{{item.id}}" :checked="selected.includes(id)" @change="toggleItem(item.id, $event)"></td>
+                <td>{{item.name}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 </template>
+
 <div id="boq-template"></div>
-<div id="resource-template"></div>
+<template id="resource-template">
+    <section>
+        <div class="form-group">
+            <input type="search" v-model="term" class="form-control" placeholder="Search by code or name">
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Resource Code</th>
+                <th>Resource Name</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr v-for="item in filtered">
+                <td><input type="checkbox" value="{{item.id}}" :checked="selected.includes(id)" @change="toggleItem(item.id, $event)"></td>
+                <td>{{item.code}}</td>
+                <td>{{item.name}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</template>
+
 <template id="resource-type-template">
     <table class="table table-bordered table-striped">
         <thead>
@@ -153,7 +184,7 @@
     <script>
         var activities = {!! $activities !!};
         var boqs = [];
-        var resources = [];
+        var resources = {!! $resources !!};
         var resourceTypes = {!! $resourceTypes !!};
         var period = {{session('period_id', $periods->keys()->first())}};
         var project_id = {{$project->id}};

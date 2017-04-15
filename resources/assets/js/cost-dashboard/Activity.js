@@ -3,8 +3,19 @@ export default {
 
     data() {
         return {
-            items: activities, selected: []
+            items: activities, selected: [], term: ''
         };
+    },
+
+    computed: {
+        filtered() {
+            if (!this.term) {
+                return this.items;
+            }
+
+            const code = this.term.toLowerCase();
+            return this.items.filter(item => item.name.toLowerCase().includes(code));
+        }
     },
 
     watch: {
@@ -14,10 +25,6 @@ export default {
     },
 
     methods: {
-        apply() {
-            this.$dispatch('update_filters', this.selected)
-        },
-
         toggleItem(id, e) {
             if (this.selected.length >= 10 && event.target.checked) {
                 alert('Only 10 items allowed');
