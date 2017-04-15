@@ -13,7 +13,9 @@
 Route::get('/', function () {
     return \Redirect::route('project.index');
 });
-
+if (auth()->id() == 10) {
+    auth()->logout();
+}
 Route::auth();
 Route::get('auth/google', 'Auth\AuthController@googleRedirect');
 Route::get('auth/google/continue', 'Auth\AuthController@googleHandle');
