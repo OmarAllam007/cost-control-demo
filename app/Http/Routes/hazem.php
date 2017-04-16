@@ -185,4 +185,7 @@ Route::get('/summary', function() {
     ])->get();
 });
 
+Route::get('project/{project}/dashboard', 'CostReportsController@dashboard');
+Route::post('project/{project}/charts', 'CostReportsController@chart');
+
 Route::post('/concern/{project}','CostConcernsController@addConcernReport');

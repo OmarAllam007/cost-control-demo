@@ -70,7 +70,7 @@ class ActivityResourceBreakDown
                 $tree['activities'][$std_activity_item]['cost_accounts'][$breakDown_resource['cost_account']] = [
                     'cost_account' => $breakDown_resource['cost_account'],
                     'account_total_cost' => 0,
-                    'boq_description' => $boq,
+                    'boq_description' => $boq ?? 0,
                     'resources' => [],
                 ];
             }

@@ -30,7 +30,7 @@ class Period extends Model
 
     function scopeReadyForReporting(Builder $query)
     {
-        return $query->where('is_open', false);
+        return $query->where('is_open', false)->orderBy('id', 'desc');
     }
 
     protected static function boot()
