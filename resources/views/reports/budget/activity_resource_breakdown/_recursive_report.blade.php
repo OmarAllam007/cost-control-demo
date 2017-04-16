@@ -23,18 +23,18 @@
                 <ul class="list-unstyled">
                     <li>
                         <p class="blue-second-level">
-                            <a href="#{{$level['id']}}{{str_replace([' ','(',')','.','/','&'],'',$item)}}" data-toggle="collapse" style="color:white;text-decoration: none">
+                            <a href="#{{$level['id']}}{{str_replace([' ','(',')','.','/','&',','],'',$item)}}" data-toggle="collapse" style="color:white;text-decoration: none">
                                 {{$item}}
                             </a>
                             <span class="pull-right">{{number_format($activity['activity_total_cost'],2)}}</span>
                         </p>
-                        <article id="{{$level['id']}}{{str_replace([' ','(',')','.','/','&'],'',$item)}}" class="tree--child collapse">
+                        <article id="{{$level['id']}}{{str_replace([' ','(',')','.','/','&',','],'',$item)}}" class="tree--child collapse">
                             @foreach($activity['cost_accounts'] as $costKey=>$cost_account)
                                 <ul class="list-unstyled">
                                     <li>
                                         <p class="blue-fourth-level" style="text-align: center">
-                                            {{$cost_account['cost_account']}} - <abbr>({{$cost_account['boq_description']}}
-                                                )</abbr>
+                                            {{$cost_account['cost_account']}} - <abbr @if($cost_account['boq_description']==0) style="color: red" @endif>( @if($cost_account['boq_description']==0) Cost Account Not Exist In BOQ @else {{$cost_account['boq_description']}} @endif
+                                                </abbr>
 {{--                                            <span class="pull-right">{{number_format($cost_account['account_total_cost'],2)}}</span>--}}
 
                                         </p>

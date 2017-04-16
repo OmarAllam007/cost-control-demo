@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Boq division</h2>
-    <a href="{{ route('boq-division.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add boq_division</a>
+    <h2>BOQ Division</h2>
+    <a href="{{ route('boq-division.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add BOQ Division</a>
 @stop
 
 @section('body')

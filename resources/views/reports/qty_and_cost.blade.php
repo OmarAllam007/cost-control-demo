@@ -25,8 +25,8 @@
         @foreach($data as $key=>$row)
             <tr class="tbl-content">
                 <td class="col-xs-4">{{$key}}</td>
-                <td class="col-xs-4" @if($row ['left']<0) style="color: #c42737;" @endif>{{number_format($row['left'],2)}}</td>
-                <td class="col-xs-4" @if($row ['right']<0) style="color: #c42737;" @endif>{{number_format($row['right'],2)}}</td>
+                <td class="col-xs-4" @if($row ['left_eq']<0) style="color: #c42737;" @endif>{{number_format($row['left_eq'],2)}}</td>
+                <td class="col-xs-4" @if($row ['right_eq']<0) style="color: #c42737;" @endif>{{number_format($row['right_eq'],2)}}</td>
 
             </tr>
         @endforeach
