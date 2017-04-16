@@ -57,32 +57,26 @@ GROUP BY cost_account', [$project->id]))->each(function ($shadow) {
             'right_eq' => 0,
         ];
 
-        BreakDownResourceShadow::with(['boq', 'std_activity'])->where('project_id', $project->id)->chunk(100000, function ($shadows) {
+        BreakDownResourceShadow::with(['boq', 'std_activity', 'survey'])->where('project_id', $project->id)->chunk(10000, function ($shadows) {
             foreach ($shadows as $shadow) {
                 if (!isset($this->data[$shadow->std_activity->discipline])) {
-                    $this->data[$shadow->std_activity->discipline] = ['left_equ' => 0, 'right_equ' => 0];
+                    $this->data[$shadow->std_activity->discipline] = ['left_eq' => 0, 'right_eq' => 0];
                 }
                 if ($shadow->boq_id != 0 && $shadow->boq_wbs_id != 0) {
-                    $code = $shadow->boq_id . $shadow->boq_wbs_id;
+                    $code = $shadow->boq_id . $shadow->boq_wbs_id.$shadow->wbs_id;
                     if (!$this->codes->has($code)) {
                         $budget_cost = $this->cost_account_budget_cost->get($shadow->cost_account);
-                            $this->data[$shadow->std_activity->discipline]['left_equ'] += ($budget_cost - $shadow->boq->dry_ur ) * $shadow->boq->quantity;
-                            $this->data[$shadow->std_activity->discipline]['right_equ'] += ($shadow->survey->budget_qty - $shadow->boq->quantity ) * $budget_cost;
+                        $this->data[$shadow->std_activity->discipline]['left_eq'] += ($budget_cost - $shadow->boq->dry_ur) * $shadow->boq->quantity;
+                        $this->data[$shadow->std_activity->discipline]['right_eq'] += ($shadow->survey->budget_qty - $shadow->boq->quantity) * $budget_cost;
                     }
                     $this->codes->put($code, $code);
                 }
             }
         });
-        dd($this->data);
-        $wbs_levels = $project->wbs_tree;
-        $tree = [];
-        foreach ($wbs_levels as $level) {
-            $treeLevel = $this->buildReport($level);
-            $tree [] = $treeLevel;
-        }
+
         foreach ($this->data as $item) {
-            $total['left_eq'] += $item['left'];
-            $total['right_eq'] += $item['right'];
+            $total['left_eq'] += $item['left_eq'];
+            $total['right_eq'] += $item['right_eq'];
         }
         $data = $this->data;
         ksort($data);
