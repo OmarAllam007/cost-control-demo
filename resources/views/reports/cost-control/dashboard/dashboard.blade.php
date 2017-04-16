@@ -130,7 +130,32 @@
     </section>
 </template>
 
-<div id="boq-template"></div>
+<template id="boq-template">
+    <section>
+        <div class="form-group">
+            <input type="search" v-model="term" class="form-control" placeholder="Search by cost account or description">
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Code</th>
+                <th>Cost Account</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr v-for="item in filtered">
+                <td><input type="checkbox" value="{{item.id}}" :checked="selected.includes(id)" @change="toggleItem(item.id, $event)"></td>
+                <td>{{item.wbs_code}}</td>
+                <td>{{item.cost_account}}</td>
+                <td>{{item.description}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</template>
 <template id="resource-template">
     <section>
         <div class="form-group">
@@ -183,7 +208,7 @@
 @section('javascript')
     <script>
         var activities = {!! $activities !!};
-        var boqs = [];
+        var boqs = {!! $boqs !!};
         var resources = {!! $resources !!};
         var resourceTypes = {!! $resourceTypes !!};
         var period = {{session('period_id', $periods->keys()->first())}};

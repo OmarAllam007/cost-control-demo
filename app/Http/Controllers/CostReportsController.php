@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
@@ -208,9 +209,13 @@ class CostReportsController extends Controller
         $resources = BreakDownResourceShadow::whereProjectId($project->id)
             ->selectRaw('distinct resource_id id, resource_name name, resource_code code')->orderBy('name')->get();
 
+        $boqs = Boq::with('wbs')->whereProjectId($project->id)->get()->map(function ($boq) {
+            return ['id' => $boq->id, 'wbs_code' => $boq->wbs->code, 'description' => $boq->description, 'cost_account' => $boq->cost_account];
+        });
+
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
 
-        return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources'));
+        return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources', 'boqs'));
     }
 
     public function chart(Request $request)

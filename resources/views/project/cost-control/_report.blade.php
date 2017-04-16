@@ -7,18 +7,13 @@
                 <a href="{{route('cost_control.info',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
                    style="width:100%; margin-bottom: 8px;">
                     Project Information</a><br>
-                <a href="#" target="_blank" class="hvr-float-shadow btn btn-primary"
-                   style="width:100%;margin-bottom: 8px;">Dashboard</a><br>
+                <a href="/project/{{$project->id}}/dashboard" target="_blank" class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Dashboard</a><br>
                 <a href="{{route('cost.boq_report',$project)}}" target="_blank"  class="hvr-float-shadow btn btn-primary" target="" style="width:100%;margin-bottom: 8px;">BOQ</a><br>
 
 
-                <a href="{{route('cost.overdraft',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary"
-                   style="width:100%;margin-bottom: 8px;">Overdraft</a><br>
-                <a href="{{route('cost-labor.import',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary"
-                   style="width:100%; margin-bottom: 8px;">Labor Trend Analysis</a><br>
-                <a href="{{route('cost.variance',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Issues</a><br>
+                <a href="{{route('cost.overdraft',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Overdraft</a><br>
+                <a href="{{route('cost-labor.import',$project)}}" target="_blank"class="hvr-float-shadow btn btn-primary" style="width:100%; margin-bottom: 8px;">Labor Trend Analysis</a><br>
+                <a href="{{route('cost.variance',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary" style="width:100%;margin-bottom: 8px;">Issues</a><br>
 
                 {{--<a href="{{route('show_issues.report',$project)}}" target="_blank"--}}
                    {{--class="hvr-float-shadow btn btn-primary"--}}

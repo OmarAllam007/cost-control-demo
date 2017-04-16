@@ -6,6 +6,7 @@ export default {
             items: resources, selected: [], term: ''
         };
     },
+
     watch: {
         selected() {
             this.$dispatch('update_items', this.selected);

@@ -108,22 +108,22 @@
                     <h4 class="panel-title">Revision 01</h4>
                 </div>
 
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr class="active">
-                            <th>Direct Cost (Material & Labor & Subcon)</th>
-                            <th>Indirect Cost (General Requirement)</th>
-                            <th>Total Budget Cost</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{number_format((float)$project->direct_cost_material ?? 0 ,2)}}</td>
-                            <td>{{number_format((float)$project->indirect_cost_general ?? 0 ,2)}}</td>
-                            <td>{{number_format((float)$project->total_budget_cost ?? 0 ,2)}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr class="active">
+                        <th>Direct Cost (Material & Labor & Subcon)</th>
+                        <th>Indirect Cost (General Requirement)</th>
+                        <th>Total Budget Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{number_format((float)$project->direct_cost_material ?? 0 ,2)}}</td>
+                        <td>{{number_format((float)$project->indirect_cost_general ?? 0 ,2)}}</td>
+                        <td>{{number_format((float)$project->total_budget_cost ?? 0 ,2)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </article>
         </article>
     </section>
