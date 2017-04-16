@@ -63,9 +63,11 @@ GROUP BY cost_account', [$project->id]))->each(function ($shadow) {
                     $this->data[$shadow->std_activity->discipline] = ['left_eq' => 0, 'right_eq' => 0];
                 }
                 if ($shadow->boq_id != 0 && $shadow->boq_wbs_id != 0) {
-                    $code = $shadow->boq_id . $shadow->boq_wbs_id.$shadow->wbs_id;
+
+                    $code = $shadow->boq_id . $shadow->boq_wbs_id;
                     if (!$this->codes->has($code)) {
-                        $budget_cost = $this->cost_account_budget_cost->get($shadow->cost_account);
+                        $budget_cost = BreakDownResourceShadow::where('project_id',$this->project->id)
+                            ->where('wbs_id',$shadow->wbs_id)->where('cost_account',$shadow->cost_account)->sum('budget_cost');
                         $this->data[$shadow->std_activity->discipline]['left_eq'] += ($budget_cost - $shadow->boq->dry_ur) * $shadow->boq->quantity;
                         $this->data[$shadow->std_activity->discipline]['right_eq'] += ($shadow->survey->budget_qty - $shadow->boq->quantity) * $budget_cost;
                     }
