@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
@@ -15,11 +16,14 @@ use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
 use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
+use App\MasterShadow;
 use App\Period;
 use App\Project;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class CostReportsController extends Controller
 {
@@ -207,6 +211,46 @@ class CostReportsController extends Controller
 
         $chosen_period_id = \Session::get('period_id_' . $project->id);
         return intval($chosen_period_id);
+    }
+
+    public function  dashboard(Project $project)
+    {
+        $activities = BreakDownResourceShadow::whereProjectId($project->id)
+            ->selectRaw('distinct activity as name, activity_id as id')->orderBy('activity')->get();
+
+        $resourceTypes = BreakDownResourceShadow::whereProjectId($project->id)
+            ->selectRaw('distinct trim(resource_type) as name')->orderByRaw('trim(resource_type)')->get();
+
+        $resources = BreakDownResourceShadow::whereProjectId($project->id)
+            ->selectRaw('distinct resource_id id, resource_name name, resource_code code')->orderBy('name')->get();
+
+        $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
+
+        return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources'));
+    }
+
+    public function chart(Request $request)
+    {
+        $query = MasterShadow::query();
+
+        $typeMethod = camel_case($request->type . '_chart');
+        $filter = $request->filter;
+        $filterMethod = camel_case($filter. '_chart_filter');
+
+        $query->$typeMethod($request->get('period_id', 0))
+            ->$filterMethod($request->get('filter_items', []));
+
+        /** @var Collection $data */
+        $data = $query->get();
+        $columns = [];
+        if (!$data->isEmpty()) {
+            $keys = array_keys($data->first()->getAttributes());
+            $columns = collect($keys)->filter(function ($column) use ($filter) {
+                return $column != $filter;
+            });
+        }
+
+        return ['ok' => true, 'data' => $data, 'columns' => $columns, 'filter' => $filter];
     }
 
 

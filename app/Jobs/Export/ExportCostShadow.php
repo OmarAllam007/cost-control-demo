@@ -70,6 +70,9 @@ class ExportCostShadow extends Job
 
         if ($this->perspective == 'budget') {
             $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
+            if (!$query->count()) {
+                $query = BreakDownResourceShadow::where('project_id', $this->project->id);
+            }
         } else {
             $query = CostShadow::joinShadow(null, $period);
         }
@@ -80,7 +83,7 @@ class ExportCostShadow extends Job
             $time = microtime(1);
 
             foreach ($shadows as $costShadow) {
-                if ($this->perspective == 'budget') {
+                if ($costShadow instanceof MasterShadow) {
                     $levels = $costShadow['wbs'];
                     $levels = array_pad($levels, 6, '');
                     $levels = array_only($levels, range(0, 5));

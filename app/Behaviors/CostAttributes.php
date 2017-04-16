@@ -125,7 +125,12 @@ trait CostAttributes
             return $this->calculated['remaining_qty'] = ($this->to_date_qty * (1 - $this->progress_value)) / $this->progress_value;
         }
 
-        return $this->calculated['remaining_qty'] = $this->budget_unit - $this->to_date_qty;
+        $remaining = $this->budget_unit - $this->to_date_qty;
+        if ($remaining < 0) {
+            $remaining = 0;
+        }
+
+        return $this->calculated['remaining_qty'] = $remaining;
     }
 
     function getRemainingCostAttribute()
