@@ -15,6 +15,4 @@ const app = new Vue({
     },
 
     components: { ChartArea }
-
-
 });

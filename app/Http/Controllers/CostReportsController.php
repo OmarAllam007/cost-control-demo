@@ -218,7 +218,7 @@ class CostReportsController extends Controller
         return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources', 'boqs'));
     }
 
-    public function chart(Request $request)
+    public function chart(Project $project, Request $request)
     {
         $query = MasterShadow::query();
 
@@ -226,7 +226,7 @@ class CostReportsController extends Controller
         $filter = $request->filter;
         $filterMethod = camel_case($filter. '_chart_filter');
 
-        $query->$typeMethod($request->get('period_id', 0))
+        $query->where('master_shadows.project_id', $project->id)->$typeMethod($request->get('period_id', 0))
             ->$filterMethod($request->get('filter_items', []));
 
         /** @var Collection $data */

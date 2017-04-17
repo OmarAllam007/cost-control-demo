@@ -16,9 +16,33 @@ trait ChartScopes
         $query->selectRaw('sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')->wherePeriodId($period_id);
     }
 
-    function scopeTodateCostTrend(Builder $query, $period_id)
+    function scopeTodateCostTrendChart(Builder $query, $period_id)
     {
-        $query->selectRaw('sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')->wherePeriodId($period_id);
+        $query->selectRaw('sum(to_date_cost) as value')
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+    }
+
+    function scopeCompletionCostTrendChart(Builder $query, $period_id)
+    {
+        $query->selectRaw('sum(completion_cost) as value')
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+    }
+
+    function scopeTodateVarTrendChart(Builder $query, $period_id)
+    {
+        $query->selectRaw('sum(allowable_var) as value')
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+    }
+
+    function scopeCompletionVarTrendChart(Builder $query, $period_id)
+    {
+        $query->selectRaw('sum(cost_var) as value')
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+    }
+
+    function scopeChartFilter(Builder $query)
+    {
+        return $query->groupBy('master_shadows.project_id');
     }
 
     function scopeActivityChartFilter(Builder $query, $items)
