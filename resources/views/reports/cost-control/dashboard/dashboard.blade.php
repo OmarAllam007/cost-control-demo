@@ -201,7 +201,7 @@
     @endverbatim
 @endsection
 
-@section('css')
+@section('head')
     <link rel="stylesheet" href="{{asset('css/c3.min.css')}}">
 @endsection
 
