@@ -43,7 +43,6 @@ class AddBoqAndSurveyToBreakdownShadowProject extends Command
 
         BreakDownResourceShadow::with('wbs')->where('project_id',41)->chunk(10000, function ($shadows) {
             $shadows->each(function (BreakDownResourceShadow $shadow) {
-
                 $code = $shadow->wbs->code . '#' . $shadow->cost_account;
                 if ($this->boqs->has($code) && $this->survies->has($code)) {
                     $boq = $this->boqs->get($code);

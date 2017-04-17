@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
@@ -30,25 +31,9 @@ class CostReportsController extends Controller
 
     public function projectInformation(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        }
-        $projectInfo = new ProjectInformation();
-        return $projectInfo->getProjectInformation($project, $chosen_period_id);
+       $period_id = $this->getPeriod($project, $request);
+        $projectInfo = new ProjectInformation(Period::find($period_id));
+        return $projectInfo->run();
     }
 
     public function costSummery(Project $project, Request $request)
@@ -224,9 +209,13 @@ class CostReportsController extends Controller
         $resources = BreakDownResourceShadow::whereProjectId($project->id)
             ->selectRaw('distinct resource_id id, resource_name name, resource_code code')->orderBy('name')->get();
 
+        $boqs = Boq::with('wbs')->whereProjectId($project->id)->get()->map(function ($boq) {
+            return ['id' => $boq->id, 'wbs_code' => $boq->wbs->code, 'description' => $boq->description, 'cost_account' => $boq->cost_account];
+        });
+
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
 
-        return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources'));
+        return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources', 'boqs'));
     }
 
     public function chart(Request $request)

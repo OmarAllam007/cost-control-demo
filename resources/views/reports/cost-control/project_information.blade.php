@@ -10,175 +10,143 @@
         <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
                     class="fa fa-chevron-left"></i> Back</a>
     </div>
-    <style>
-        #main-panel{
-            padding: 15px;
-        }
-        table {
-            font-size: 16px;
-        }
-    </style>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
 @endsection
 
 @section('body')
 
     <div class="row" style="margin-bottom: 10px;">
         <form action="{{route('cost_control.info',$project)}}" class="form-inline col col-md-8" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->lists('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
-            {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
+            {{Form::select('period', $periods, session('period_id_'.$project->id), ['class'=>'form-control padding'])}}
+            <button class="btn btn-primary btn-rounded"><i class="fa fa-check"></i> Submit</button>
         </form>
         <br>
     </div>
 
-    <div class="row">
-        <div class="panel panel-primary ">
-            <div class="panel-heading">
-                <h2 class="panel-title" style="font-size: x-large"><a href="#miles" data-toggle="collapse">Project Milestones</a></h2>
-            </div>
-            <div class="panel-body collapse" id="miles" >
-                <br>
-                <table class="table table-bordered " >
-                    <thead>
-                    <tr class="danger">
-                        <th>Project Cost Center</th>
-                        <th>Project Name</th>
-                        <th>Original Start date</th>
-                        <th>Original Finish Date</th>
-                        <th>Time elappsed</th>
-                        <th>Expected Finish Date</th>
-                        <th>Time remaining</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{$project->project_code}}</td>
-                        <td>{{$project->name}}</td>
-                        <td>{{$project->project_start_date}}</td>
-                        <td>{{$project->original_finished_date}}</td>
-                        <td>@if($project->project_start_date!=0) {{(strtotime(date("Y-m-d"))-strtotime($project->project_start_date))/86400}} @else
-                                0 @endif Day/s
-                        </td>
-                        <td>{{$project->expected_finished_date}}</td>
-                        <td>@if($project->expected_finished_date!=0) {{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400 }} @else
-                                0 @endif Day/s
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    <section id="milestones">
+        <h2 class="page-header">Project Milestones</h2>
+        <table class="table table-bordered ">
+            <thead>
+            <tr class="active">
+                <th>Project Cost Center</th>
+                <th>Project Name</th>
+                <th>Original Start date</th>
+                <th>Original Finish Date</th>
+                <th>Time elappsed</th>
+                <th>Expected Finish Date</th>
+                <th>Time remaining</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{$project->project_code}}</td>
+                <td>{{$project->name}}</td>
+                <td>{{$project->project_start_date}}</td>
+                <td>{{$project->original_finished_date}}</td>
+                <td>@if($project->project_start_date!=0) {{(strtotime(date("Y-m-d"))-strtotime($project->project_start_date))/86400}} @else
+                        0 @endif Day/s
+                </td>
+                <td>{{$project->expected_finished_date}}</td>
+                <td>@if($project->expected_finished_date!=0) {{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400 }} @else
+                        0 @endif Day/s
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 
-    <div class="row">
-        <div class="panel panel-warning ">
-            <div class="panel-heading">
-                <h2 class="panel-title" style="font-size: x-large"><a href="#info" data-toggle="collapse">Project Cost Information</a></h2>
-            </div>
-            <div class="panel-body collapse" id="info">
-                <br>
-                <h2>Project Value: </h2>
+    <section id="cost-info">
+        <h2 class="page-header">Project Cost Information</h2>
 
-                <table class="table table-bordered">
-                    <thead>
-                    <tr class="success">
-                        <th>Project Contract Amount</th>
-                        <th>Project Dry Cost</th>
-                        <th>Change Order Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{number_format((float)$project->project_contract_signed_value ?? 0 ,2)}}</td>
-                        <td>{{number_format((float)$project->project_contract_budget_value ?? 0 ,2)}}</td>
-                        <td>{{number_format((float)$project->change_order_amount ?? 0 ,2)}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <br>
-                <h2>Budget Information : </h2><br>
-                <ul class="list-unstyled tree">
-                    <li>
-                        <h2><p>Revision 00</p></h2>
-                        <article class="tree-item">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr class="success">
-                                    <th>Direct Cost (Material & Labor & Subcon)</th>
-                                    <th>Indirect Cost (General Requirement)</th>
-                                    <th>Total Budget Cost</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>{{number_format((float)$project->direct_cost_material ?? 0 ,2)}}</td>
-                                    <td>{{number_format((float)$project->indirect_cost_general ?? 0 ,2)}}</td>
-                                    <td>{{number_format((float)$project->total_budget_cost ?? 0 ,2)}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </article>
-                    </li>
-                    <li>
-                        <h2><p>Revision 01</p></h2>
-                        <article>
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr class="success">
-                                    <th>Direct Cost (Material & Labor & Subcon)</th>
-                                    <th>Indirect Cost (General Requirement)</th>
-                                    <th>Total Budget Cost</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>{{number_format((float)$project->direct_cost_material ?? 0 ,2)}}</td>
-                                    <td>{{number_format((float)$project->indirect_cost_general ?? 0 ,2)}}</td>
-                                    <td>{{number_format((float)$project->total_budget_cost ?? 0 ,2)}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </article>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+        <article>
+            <h3 class="page-header"><em>Project Value:</em></h3>
+            <table class="table table-bordered">
+                <thead>
+                <tr class="active">
+                    <th>Project Contract Amount</th>
+                    <th>Project Dry Cost</th>
+                    <th>Change Order Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{number_format((float)$project->project_contract_signed_value ?? 0 ,2)}}</td>
+                    <td>{{number_format((float)$project->project_contract_budget_value ?? 0 ,2)}}</td>
+                    <td>{{number_format((float)$project->change_order_amount ?? 0 ,2)}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
 
-    <div class="row">
-        <div class="panel panel-primary ">
-            <div class="panel-heading">
-                <h2 class="panel-title" style="font-size: x-large"><a href="#perf" data-toggle="collapse">Project Cost Performance</a></h2>
-            </div>
-            <div class="panel-body collapse" id="perf">
-                <br>
+        <article>
+            <h3 class="page-header"><em>Budget Information:</em></h3>
+
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Revision 00</h4>
+                </div>
+
                 <table class="table table-bordered">
                     <thead>
                     <tr class="active">
-                        <th>Allowable Cost</th>
-                        <th>Actual Cost</th>
-                        <th>Cost Variance</th>
-                        <th>Cost Performance Index</th>
+                        <th>Direct Cost (Material & Labor & Subcon)</th>
+                        <th>Indirect Cost (General Requirement)</th>
+                        <th>Total Budget Cost</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-
-                            <td>{{number_format($data['actual_cost'],2)}}</td>
-                            <td>{{number_format($data['allowable_cost'],2)}}</td>
-                            <td @if(number_format($data['allowable_cost']-$data['actual_cost'],2) < 0 ) style="color: red;" @endif >{{number_format($data['allowable_cost']-$data['actual_cost'],2)}}</td>
-                            <td style="@if($data['allowable_cost']/$data['actual_cost']<1) color: red; @endif">{{number_format($data['actual_cost']?$data['allowable_cost']/$data['actual_cost']:0,2)}}</td>
-
+                        <td>{{number_format((float)$project->direct_cost_material ?? 0 ,2)}}</td>
+                        <td>{{number_format((float)$project->indirect_cost_general ?? 0 ,2)}}</td>
+                        <td>{{number_format((float)$project->total_budget_cost ?? 0 ,2)}}</td>
                     </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
+            </article>
 
+            <article class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Revision 01</h4>
+                </div>
 
+                <table class="table table-bordered">
+                    <thead>
+                    <tr class="active">
+                        <th>Direct Cost (Material & Labor & Subcon)</th>
+                        <th>Indirect Cost (General Requirement)</th>
+                        <th>Total Budget Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{number_format((float)$project->direct_cost_material ?? 0 ,2)}}</td>
+                        <td>{{number_format((float)$project->indirect_cost_general ?? 0 ,2)}}</td>
+                        <td>{{number_format((float)$project->total_budget_cost ?? 0 ,2)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </article>
+        </article>
+    </section>
 
+    <section id="cost-performance">
+        <h2 class="page-header">Project Cost Performance</h2>
+        <table class="table table-bordered">
+            <thead>
+            <tr class="active">
+                <th>Allowable Cost</th>
+                <th>Actual Cost</th>
+                <th>Cost Variance</th>
+                <th>Cost Performance Index</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{number_format($data['to_date_cost'],2)}}</td>
+                <td>{{number_format($data['allowable_cost'],2)}}</td>
+                <td class="{{$data['cost_var'] < 0? 'text-danger' : 'text-success'}}">{{number_format($data['cost_var'],2)}}</td>
+                <td class="{{$data['cpi'] < 1? 'text-danger' : 'text-success'}}">{{number_format($data['cpi'] * 100,2)}}%</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 @endsection

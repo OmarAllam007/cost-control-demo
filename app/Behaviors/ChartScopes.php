@@ -18,7 +18,7 @@ trait ChartScopes
 
     function scopeTodateCostTrend(Builder $query, $period_id)
     {
-
+        $query->selectRaw('sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')->wherePeriodId($period_id);
     }
 
     function scopeActivityChartFilter(Builder $query, $items)
