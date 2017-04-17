@@ -72,10 +72,11 @@ class ChangeLogger
     protected function handleFiles()
     {
         $files = [];
+
         foreach ($this->request->files as $file) {
             /** @var UploadedFile $file */
-            $originalName = $file->getClientOriginalName();
-            if ($file->isFile()) {
+            if (!$file->getError()) {
+                $originalName = $file->getClientOriginalName();
                 \File::copy($file->getRealPath(), storage_path('uploads/' . uniqid() . '_' . $originalName));
                 $files[] = $originalName;
             }
