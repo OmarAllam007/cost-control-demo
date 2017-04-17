@@ -127,7 +127,7 @@ GROUP BY 1;', [$project->id, $chosen_period_id]))->map(function ($resource) {
         foreach ($shadows as $shadow){
             $to_date_cost +=$shadow->curr_cost;
         }
-        dd($to_date_cost);
+
         foreach ($shadows as $shadow) {
             if (!isset($data[$shadow->resource_type_id])) {
                 $data[$shadow->resource_type_id] = [
