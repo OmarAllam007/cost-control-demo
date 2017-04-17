@@ -75,8 +75,10 @@ class ChangeLogger
         foreach ($this->request->files as $file) {
             /** @var UploadedFile $file */
             $originalName = $file->getClientOriginalName();
-            \File::copy($file->getRealPath(), storage_path('uploads/' . uniqid() . '_' . $originalName));
-            $files[] = $originalName;
+            if ($file->isFile()) {
+                \File::copy($file->getRealPath(), storage_path('uploads/' . uniqid() . '_' . $originalName));
+                $files[] = $originalName;
+            }
        }
 
         return $files;
