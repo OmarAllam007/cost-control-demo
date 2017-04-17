@@ -456,11 +456,6 @@ class ResourcesController extends Controller
 
     function fixImportCodes($key)
     {
-        if (cannot('write', 'resources')) {
-            flash("You are not authorized to do this action");
-            return \Redirect::to('/resources');
-        }
-
         $data = \Cache::get($key);
         if (!$data) {
             flash('No data found');
@@ -472,6 +467,9 @@ class ResourcesController extends Controller
                 flash("You are not authorized to do this action");
                 return \Redirect::route('project.cost-control', $data['project']);
             }
+        } elseif (cannot('write', 'resources')) {
+            flash("You are not authorized to do this action");
+            return \Redirect::to('/resources');
         }
 
         $resourcesQuery = Resources::query();
@@ -488,11 +486,6 @@ class ResourcesController extends Controller
 
     function postFixImportCodes($key, Request $request)
     {
-        if (cannot('write', 'resources')) {
-            flash("You are not authorized to do this action");
-            return \Redirect::to('/resources');
-        }
-
         $data = \Cache::get($key);
         if (!$data) {
             flash('No data found');
@@ -504,6 +497,9 @@ class ResourcesController extends Controller
                 flash("You are not authorized to do this action");
                 return \Redirect::route('project.cost-control', $data['project']);
             }
+        } elseif (cannot('write', 'resources')) {
+            flash("You are not authorized to do this action");
+            return \Redirect::to('/resources');
         }
 
         $resources = $request->get('mapping');
