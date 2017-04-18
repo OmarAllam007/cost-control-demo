@@ -58,12 +58,12 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
         $success = 0;
 
         CostShadow::flushEventListeners();
-        ActualResources::flushEventListeners();
+//        ActualResources::flushEventListeners();
         BreakDownResourceShadow::flushEventListeners();
 
-        $entries = collect();
         $counter = 1;
         $fh = fopen(storage_path('app/failed_old_data' . slug($this->project->name) . '.csv'), 'w');
+        \DB::beginTransaction();
         foreach ($rows as $row) {
             $rowData = $this->getDataFromCells($row->getCellIterator());
             ++$counter;
@@ -73,32 +73,17 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
             $entry = $this->getEntry($rowData);
             if ($entry) {
-                $entries->push($entry);
-
-                if ($entries->count() >= 500) {
-                    \DB::beginTransaction();
-                    CostShadow::insert($entries->pluck('shadow')->toArray());
-                    ActualResources::insert($entries->pluck('resource')->toArray());
-                    \DB::commit();
-                    $success += $entries->count();
-                    unset($entries);
-                    $entries = collect();
-                }
+                ActualResources::create($entry);
+                ++$success;
             } else {
                 $failed->put($counter, $rowData);
                 fputcsv($fh, $rowData);
             }
 
         }
+        \DB::commit();
 
         fclose($fh);
-
-        if ($entries->count()) {
-            CostShadow::insert($entries->pluck('shadow')->toArray());
-            ActualResources::insert($entries->pluck('resource')->toArray());
-            $success += $entries->count();
-            unset($entries);
-        }
 
         dispatch(new UpdateResourceDictJob($this->project));
 
@@ -157,22 +142,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
         $shadow->save();
 
-        $shadow = [
-            'project_id' => $this->project->id, 'period_id' => $this->period_id, 'batch_id' => $this->batch->id,
-            'wbs_level_id' => $shadow->wbs_id, 'resource_id' => $shadow->resource_id, 'breakdown_resource_id' => $shadow->breakdown_resource_id,
-            'prev_cost' => $row[6], 'prev_qty' => $row[7], 'prev_unit_price' => $row[8],
-            'curr_cost' => $row[9], 'curr_qty' => $row[10], 'curr_unit_price' => $row[11],
-            'to_date_cost' => $row[12], 'to_date_qty' => $row[13], 'to_date_unit_price' => $row[14],
-            'remaining_cost' => $row[15], 'remaining_qty' => $row[16], 'remaining_unit_price' => $row[17],
-            'completion_qty' => $row[18], 'completion_cost' => $row[19], 'completion_unit_price' => $row[20],
-            'allowable_var' => $row[21], 'allowable_ev_cost' => $row[22], 'bl_allowable_cost' => $row[23], 'bl_allowable_var' => $row[24],
-            'qty_var' => $row[25], 'cost_var' => $row[26], 'unit_price_var' => $row[27], 'physical_unit' => $row[28], 'pw_index' => $row[29],
-            'cost_variance_to_date_due_unit_price' => $row[30], 'allowable_qty' => $row[31],
-            'cost_variance_remaining_due_unit_price' => $row[32], 'cost_variance_completion_due_unit_price' => $row[33],
-            'cost_variance_completion_due_qty' => $row[34], 'cost_variance_to_date_due_qty' => $row[35],
-        ];
-
-        return compact('shadow', 'resource');
+        return $resource;
     }
 
     protected function loadShadows()
