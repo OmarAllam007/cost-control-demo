@@ -22,8 +22,11 @@
         <br>
     </div>
 
-    <section id="milestones">
-        <h2 class="page-header">Project Milestones</h2>
+    <section id="milestones" class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">Project Milestones</h2>
+        </div>
+
         <table class="table table-bordered ">
             <thead>
             <tr class="active">
@@ -54,11 +57,16 @@
         </table>
     </section>
 
-    <section id="cost-info">
-        <h2 class="page-header">Project Cost Information</h2>
+    <section id="cost-info" class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">Project Cost Information</h2>
+        </div>
 
-        <article>
-            <h3 class="page-header"><em>Project Value:</em></h3>
+        <div class="panel-body">
+        <article class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"><em>Project Value:</em></h3>
+            </div>
             <table class="table table-bordered">
                 <thead>
                 <tr class="active">
@@ -77,10 +85,8 @@
             </table>
         </article>
 
-        <article>
-            <h3 class="page-header"><em>Budget Information:</em></h3>
-
-            <article class="panel panel-default">
+            <h4 class="page-header"><em>Budget Information:</em></h4>
+            <article class="panel panel-info">
                 <div class="panel-heading">
                     <h4 class="panel-title">Revision 00</h4>
                 </div>
@@ -103,7 +109,7 @@
                 </table>
             </article>
 
-            <article class="panel panel-default">
+            <article class="panel panel-info">
                 <div class="panel-heading">
                     <h4 class="panel-title">Revision 01</h4>
                 </div>
@@ -125,11 +131,14 @@
                     </tbody>
                 </table>
             </article>
-        </article>
+        </div>
     </section>
 
-    <section id="cost-performance">
-        <h2 class="page-header">Project Cost Performance</h2>
+    <section id="cost-performance" class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 class="panel-title">Project Cost Performance</h2>
+        </div>
+
         <table class="table table-bordered">
             <thead>
             <tr class="active">
@@ -141,10 +150,10 @@
             </thead>
             <tbody>
             <tr>
-                <td>{{number_format($data['to_date_cost'],2)}}</td>
-                <td>{{number_format($data['allowable_cost'],2)}}</td>
-                <td class="{{$data['cost_var'] < 0? 'text-danger' : 'text-success'}}">{{number_format($data['cost_var'],2)}}</td>
-                <td class="{{$data['cpi'] < 1? 'text-danger' : 'text-success'}}">{{number_format($data['cpi'],2)}}%</td>
+                <td><strong>{{number_format($data['allowable_cost'],2)}}</strong></td>
+                <td><strong>{{number_format($data['to_date_cost'],2)}}</strong></td>
+                <td class="{{$data['cost_var'] < 0? 'text-danger' : 'text-success'}}"><strong>{{number_format($data['cost_var'],2)}}</strong></td>
+                <td class="{{$data['cpi'] < 1? 'text-danger' : 'text-success'}}"><strong>{{number_format($data['cpi'],2)}}</strong></td>
             </tr>
             </tbody>
         </table>
