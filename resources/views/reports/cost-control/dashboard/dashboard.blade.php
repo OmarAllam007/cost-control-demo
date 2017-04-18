@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="panel panel-primary" v-show="show_chart">
-                    <div class="panel-body">
+                    <div class="panel-body chart-container">
                         <div class="loading" v-show="loading">
                             <i class="fa fa-spinner fa-spin fa-3x"></i>
                         </div>

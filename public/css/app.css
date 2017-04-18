@@ -8606,7 +8606,19 @@ table.collapse.in {
 .chart-container {
   position: relative; }
   .chart-container .loading {
-    position: absolute; }
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    z-index: 99; }
   .chart-container .chart {
     min-height: 320px;
     width: 100%;
