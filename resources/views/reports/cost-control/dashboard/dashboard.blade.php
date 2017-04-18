@@ -21,13 +21,7 @@
                                     <label for="type" class="control-label">Chart</label>
                                     <select name="type" id="type" class="form-control" v-model="type">
                                         <option value="">Select Chart</option>
-                                        <option value="budget_vs_completion">Budget Cost VS at completion Cost</option>
-                                        <option value="todate_vs_allowable">Allowable Cost VS To date cost</option>
-                                        <option value="todate_var_trend">Cost Variance to date &mdash; trend analysis</option>
-                                        <option value="completion_var_trend">Cost variance at completion &mdash; trend analysis</option>
-                                        <option value="completion_cost_trend">Cost at completion &mdash; trend analysis</option>
-                                        <option value="todate_cost_trend">Cost to date &mdash; trend analysis</option>
-                                        <option value="cpi_trend">CPI trend analysis</option>
+                                        <option :value="key" v-for="(key, chart) in charts" v-text="chart.name"></option>
                                     </select>
                                 </div>
                             </div>
@@ -48,7 +42,7 @@
                                 <div class="form-group">
                                     <label for="filter" class="control-label">Filter By</label>
                                     <select name="filter" id="filter" v-model="filter" class="form-control">
-                                        <option value="">Select Filter</option>
+                                        <option value="">[Overall]</option>
                                         <option value="activity">Activity</option>
                                         <option value="boq">BOQ</option>
                                         <option value="resource">Resource</option>
@@ -92,10 +86,11 @@
 
                 <div class="panel panel-primary" v-show="show_chart">
                     <div class="panel-body">
+                        <div class="loading" v-show="loading">
+                            <i class="fa fa-spinner fa-spin fa-3x"></i>
+                        </div>
                         <div class="chart">
-                            <div class="loading">
-                                <i class="fa fa-spinner fa-spin fa-3x"></i>
-                            </div>
+
                         </div>
                     </div>
                 </div>

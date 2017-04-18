@@ -144,7 +144,7 @@
                 <td>{{number_format($data['to_date_cost'],2)}}</td>
                 <td>{{number_format($data['allowable_cost'],2)}}</td>
                 <td class="{{$data['cost_var'] < 0? 'text-danger' : 'text-success'}}">{{number_format($data['cost_var'],2)}}</td>
-                <td class="{{$data['cpi'] < 1? 'text-danger' : 'text-success'}}">{{number_format($data['cpi'] * 100,2)}}%</td>
+                <td class="{{$data['cpi'] < 1? 'text-danger' : 'text-success'}}">{{number_format($data['cpi'],2)}}%</td>
             </tr>
             </tbody>
         </table>

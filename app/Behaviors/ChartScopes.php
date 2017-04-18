@@ -19,25 +19,36 @@ trait ChartScopes
     function scopeTodateCostTrendChart(Builder $query, $period_id)
     {
         $query->selectRaw('sum(to_date_cost) as value')
-            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')
+            ->groupBy('p.name')->orderBy('p.id');
     }
 
     function scopeCompletionCostTrendChart(Builder $query, $period_id)
     {
         $query->selectRaw('sum(completion_cost) as value')
-            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')
+            ->groupBy('p.name')->orderBy('p.id');
     }
 
     function scopeTodateVarTrendChart(Builder $query, $period_id)
     {
         $query->selectRaw('sum(allowable_var) as value')
-            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')
+            ->groupBy('p.name')->orderBy('p.id');
     }
 
     function scopeCompletionVarTrendChart(Builder $query, $period_id)
     {
         $query->selectRaw('sum(cost_var) as value')
-            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')->groupBy('p.name');
+            ->join('periods as p', 'p.id', '=', 'master_shadows.period_id')->selectRaw('p.name as name')
+            ->groupBy('p.name')->orderBy('p.id');
+    }
+
+    function scopeCpiTrendChart(Builder $query)
+    {
+        $query->join('periods as p', 'p.id', '=', 'master_shadows.period_id')
+            ->selectRaw('p.name as name, sum(allowable_ev_cost) / sum(to_date_cost) as value')
+            ->groupBy('p.name')->orderBy('p.id');
     }
 
     function scopeChartFilter(Builder $query)

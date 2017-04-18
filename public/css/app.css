@@ -8603,20 +8603,17 @@ table.collapse.in {
   max-height: 400px;
   overflow-y: auto; }
 
-.chart {
-  min-height: 320px;
-  width: 100%;
-  display: -webkit-box;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  flex-direction: column; }
-  .chart .loading {
-    position: relative;
-    text-align: center; }
-    .chart .loading .fa {
-      position: absolute;
-      top: 160px;
-      margin-top: -20px; }
+.chart-container {
+  position: relative; }
+  .chart-container .loading {
+    position: absolute; }
+  .chart-container .chart {
+    min-height: 320px;
+    width: 100%;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column; }
 
 /*# sourceMappingURL=app.css.map */
