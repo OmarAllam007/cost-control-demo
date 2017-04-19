@@ -156,10 +156,10 @@ Route::group(['prefix' => 'breakdown-resource'], function () {
     Route::delete('/delete-all/{project}', ['uses' => 'BreakdownResourceController@deleteAllBreakdowns', 'as' => 'breakdownresources.deleteAllBreakdowns']);
 });
 
-Route::group(['prefix'=>'actual-revenue','as'=>'actual-revenue.import'],function (){
-   Route::get('import/{project}','ActualRevenueController@import');
-   Route::post('import/{project}','ActualRevenueController@postImport');
-});
+//Route::group(['prefix'=>'actual-revenue','as'=>'actual-revenue.import'],function (){
+//   Route::get('import/{project}','ActualRevenueController@import');
+//   Route::post('import/{project}','ActualRevenueController@postImport');
+//});
 Route::group(['prefix'=>'cost-productivity','as'=>'productivity-report.import'],function (){
     Route::get('import/{project}','ProductivityController@importReport');
     Route::post('import/{project}','ProductivityController@postImportReport');

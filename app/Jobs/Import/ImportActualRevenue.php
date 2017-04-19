@@ -3,40 +3,48 @@
 namespace App\Jobs\Import;
 
 use App\ActualRevenue;
+use App\Boq;
 use App\Jobs\ImportJob;
 use App\Jobs\Job;
+use App\Period;
+use App\Project;
 use App\WbsLevel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Collection;
 
 class ImportActualRevenue extends ImportJob
 {
     protected $file;
-    protected $project_id;
+
+    /** @var Project */
     protected $project;
+
+    /** @var Collection */
     protected $wbs_levels;
 
-    public function __construct($file, $project)
+    /** @var Period */
+    protected $period;
+
+    public function __construct($file, $period_id)
     {
         $this->file = $file;
-        $this->project = $project;
-        $this->wbs_levels = WbsLevel::where('project_id', $project->id)
-            ->get()->keyBy('code')->map(function ($level) {
-                return $level->id;
-            });
-
+        $this->period = Period::find($period_id);
+        $this->project = $this->period->project;
+        $this->wbs_levels = WbsLevel::where('project_id', $this->project->id)->get()->keyBy('code');
     }
 
 
     public function handle()
     {
-
-        ini_set('max_execution_time', 500);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
         $sheet = $excel->getSheet(0);
         $rows = $sheet->getRowIterator(2);
+        $failed = collect();
+
+        $counter = 0;
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             /** @var \PHPExcel_Cell $cell */
@@ -46,16 +54,35 @@ class ImportActualRevenue extends ImportJob
                 continue;
             }
 
-            $wbs_level_id = $this->wbs_levels->get($data[0]);
-            $cost_account = $data[1];
-            $actual_revenue = $data[2];
-            $actual_revenue_qty = $data[3];
-            $period_id = $this->project->getMaxPeriod();
+            $wbs = $this->wbs_levels->get($data[0]);
+            if (!$wbs) {
+                $failed->push($row);
+                continue;
+            }
 
-            ActualRevenue::create(['wbs_id'=>$wbs_level_id , 'cost_account'=>$cost_account,
-            'value'=>$actual_revenue ,'quantity'=>$actual_revenue_qty, 'period_id'=>$period_id]);
+            $cost_account = $data[1];
+            $boq = Boq::costAccountOnWbs($wbs, $cost_account)->first();
+            if (!$boq) {
+                $failed->push($row);
+                continue;
+            }
+
+            $attributes = [ 'project_id' => $this->project->id, 'period_id' => $this->period->id,
+                'wbs_id' => $wbs->id, 'cost_account' => $cost_account, 'boq_id' => $boq->id ];
+
+            $record = ActualRevenue::firstOrCreate($attributes);
+            $record->value = $data[2];
+
+            $record->save();
+            ++$counter;
         }
 
+        $content = $failed->map(function($row) {
+            return implode(',', array_map('csv_quote', $row));
+        })->implode(PHP_EOL);
 
+        file_put_contents(storage_path('app/failed_actual_revenue_' . $this->project->id . '.csv'), $content);
+
+        return $counter;
     }
 }

@@ -197,3 +197,6 @@ Route::get('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesCo
 Route::get('/project/{project}/issue-files/{cost_issue_file}/edit', 'CostIssueFilesController@edit');
 Route::patch('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesController@update');
 Route::delete('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesController@destroy');
+
+Route::get('/project/{project}/actual-revenue','ActualRevenueController@import');
+Route::post('/project/{project}/actual-revenue','ActualRevenueController@postImport');

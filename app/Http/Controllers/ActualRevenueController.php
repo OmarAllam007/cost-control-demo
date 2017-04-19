@@ -18,14 +18,19 @@ class ActualRevenueController extends Controller
 
     function import(Project $project)
     {
-        return view('actual-revenue.import', compact('project'));
+        $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
+
+        return view('actual-revenue.import', compact('project', 'periods'));
     }
 
     function postImport(Project $project, Request $request)
     {
+        $this->validate($request, ['period_id' => 'required', 'file' => 'required|file|mimes:xls,xlsx|max:1024']);
         $file = $request->file('file');
-        $this->dispatch(new ImportActualRevenue($file->path(), $project));
-        return view('actual-revenue.import',compact('project'));
 
+        $count = $this->dispatch(new ImportActualRevenue($file->path(), $request->input('period_id')));
+
+        flash("$count rows has been imported", 'info');
+        return redirect()->back();
     }
 }
