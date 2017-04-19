@@ -10,10 +10,27 @@ namespace App\Http\Controllers\Reports\CostReports;
 
 
 use App\CostConcerns;
+use App\Period;
 
 class IssuesReport
 {
-    function getIssuesReport($project, $period_id)
+
+    /**
+     * @var Period
+     */
+    private $period;
+
+    function __construct(Period $period)
+    {
+        $this->period = $period;
+    }
+
+    function run()
+    {
+
+    }
+
+    /*function getIssuesReport($project, $period_id)
     {
         $concerns = CostConcerns::where('project_id',$project->id)->where('period_id',$period_id)->get();
         $data = [];
@@ -23,6 +40,6 @@ class IssuesReport
 
         }
         dd($data);
-    }
+    }*/
 
 }

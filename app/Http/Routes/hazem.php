@@ -189,3 +189,11 @@ Route::get('project/{project}/dashboard', 'CostReportsController@dashboard');
 Route::post('project/{project}/charts', 'CostReportsController@chart');
 
 Route::post('/concern/{project}','CostConcernsController@addConcernReport');
+
+Route::get('/project/{project}/issue-files', 'CostIssueFilesController@index');
+Route::get('/project/{project}/issue-files/create', 'CostIssueFilesController@create');
+Route::post('/project/{project}/issue-files', 'CostIssueFilesController@store');
+Route::get('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesController@show');
+Route::get('/project/{project}/issue-files/{cost_issue_file}/edit', 'CostIssueFilesController@edit');
+Route::patch('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesController@update');
+Route::delete('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesController@destroy');

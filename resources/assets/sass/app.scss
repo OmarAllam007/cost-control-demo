@@ -685,3 +685,13 @@ table.collapse.in {
     flex-direction: column;
   }
 }
+
+.display-flex {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.flex {
+  flex: 1;
+}

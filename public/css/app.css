@@ -8628,4 +8628,15 @@ table.collapse.in {
     -webkit-box-direction: normal;
     flex-direction: column; }
 
+.display-flex {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  align-content: center; }
+
+.flex {
+  -webkit-box-flex: 1;
+  flex: 1; }
+
 /*# sourceMappingURL=app.css.map */
