@@ -3,10 +3,11 @@
 @section('header')
     <div class="display-flex">
         <h2 class="flex">{{$project->name}} &mdash; Cost Issues</h2>
-        <a href="/project/{{$project->id}}/issue-files/create" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Upload file</a>
+        <div class="btn-toolbar">
+            <a href="/project/{{$project->id}}/issue-files/create" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Upload file</a>
+            <a href="/project/cost-control/{{$project->id}}" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i> Back</a>
+        </div>
     </div>
-    
-    
 @endsection
 
 @section('body')
