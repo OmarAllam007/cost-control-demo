@@ -94,5 +94,15 @@ trait Tree
         return $this->children_ids = $ids;
     }
 
+    function getPathArrayAttribute()
+    {
+        $stack = collect([$this->name]);
+        $parent = $this->parent;
+        while ($parent) {
+            $stack->push($parent->name);
+            $parent = $parent->parent;
+        }
 
+        return $stack->reverse();
+    }
 }

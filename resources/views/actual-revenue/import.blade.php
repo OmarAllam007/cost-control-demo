@@ -2,7 +2,7 @@
 
 @section('header')
     <h2>{{$project->name}} &mdash; Import Actual Revenue</h2>
-    <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-sm pull-right">
+    <a href="/project/cost_overdraft/{{$project->id}}" class="btn btn-default btn-sm pull-right">
         <i class="fa fa-chevron-left"></i> Back
     </a>
 @endsection

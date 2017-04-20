@@ -40,7 +40,7 @@
                         @endif
                     @endcan
 
-                    <li><a href="{{route('actual-revenue.import', $project)}}">Actual Revenue</a></li>
+                    {{--<li><a href="{{route('actual-revenue.import', $project)}}">Actual Revenue</a></li>--}}
                 </ul>
             </div>
         @endif

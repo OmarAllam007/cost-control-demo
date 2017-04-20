@@ -109,25 +109,9 @@ class CostReportsController extends Controller
 
     public function overdraftReport(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        }
-        $draft = new OverdraftReport();
-        return $draft->getDraft($project, $chosen_period_id);
+        $period_id = $this->getPeriod($project, $request);
+        $draft = new OverdraftReport(Period::find($period_id));
+        return $draft->run();
     }
 
     public function activityReport(Project $project, Request $request)
