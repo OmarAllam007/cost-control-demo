@@ -36,14 +36,14 @@ class BudgetCostDryCostByDiscipline
 
         $budgetData = BreakDownResourceShadow::from('break_down_resource_shadows as sh')
             ->where('sh.project_id', $project->id)
-            ->join('boqs', 'sh.boq_id', '=', 'boqs.id')->select('boqs.type')
+            ->join('boqs', 'sh.boq_id', '=', 'boqs.id')->selectRaw("CASE WHEN boqs.type != '' THEN boqs.type ELSE 'General' END as type")
             ->selectRaw('sum(budget_cost) as budget_cost')
-            ->groupBy('type')->orderBy('type')
+            ->groupBy(\DB::raw(1))->orderByRaw('1')
             ->get()->keyBy('type');
 
         $boqData = Boq::whereProjectId($project->id)
-            ->select('type')->selectRaw('sum(dry_ur * quantity) as dry_cost')
-            ->groupBy('type')->get()->keyBy('type');
+            ->selectRaw("CASE WHEN boqs.type != '' THEN boqs.type ELSE 'General' END as type, sum(dry_ur * quantity) as dry_cost")
+            ->groupBy(\DB::raw(1))->orderByRaw('1')->get()->keyBy('type');
 
         return view('reports.budget_cost_dry_cost_by_discipline', compact('budgetData', 'boqData', 'project'));
     }
