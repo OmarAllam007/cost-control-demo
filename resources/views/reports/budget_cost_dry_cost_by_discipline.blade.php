@@ -38,7 +38,7 @@
                 $diff = $dry_cost - $budget_cost;
                 $increase = $dry_cost? $diff * 100 / $dry_cost : 0;
             @endphp
-            <tr class="bg-{{$diff < 0? 'danger' : 'success'}}">
+            <tr class="bg-{{$diff < 0? 'danger' : ''}}">
                 <td class="col-xs-3">{{$type ?: 'General'}}</td>
                 <td class="col-xs-2">{{number_format($dry_cost, 2) }}</td>
                 <td class="col-xs-2">{{number_format($budget_cost ?: 0, 2)}}</td>
