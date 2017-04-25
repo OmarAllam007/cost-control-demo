@@ -20,53 +20,32 @@ use Beta\B;
 
 class BudgetCostDryCostByDiscipline
 {
+    /**
+     * @var Project
+     */
+    protected $project;
 
-    private $project;
-    private $activities;
-    private $shadow;
-    private $data;
-    private $total_budget;
-    private $dry_Collect;
-    private $wbs_levels;
-    private $codes;
-
-    public function compareBudgetCostDryCostDiscipline(Project $project)
+    function __construct(Project $project)
     {
-        set_time_limit(300);
-        $total = ['budget' => 0, 'dry' => 0, 'difference' => 0, 'increase' => 0];
         $this->project = $project;
-        $this->shadow = collect();
-        $this->wbs_levels = collect();
-        $this->codes = collect();
-        BreakDownResourceShadow::with(['boq', 'std_activity'])->where('project_id', $project->id)->chunk(100000, function ($shadows) {
-            foreach ($shadows as $shadow) {
-                if (!isset($this->data[$shadow->std_activity->discipline])) {
-                    $this->data[$shadow->std_activity->discipline] = ['dry' => 0, 'budget' => 0, 'difference' => 0, 'increase' => 0];
-                }
-                if ($shadow->boq_id != 0 && $shadow->boq_wbs_id != 0) {
-                    $code = $shadow->boq_id . $shadow->boq_wbs_id;
-                    if (!$this->codes->has($code)) {
-                        $this->data[$shadow->std_activity->discipline]['dry'] += $shadow->boq->dry_ur * $shadow->boq->quantity;
-                    }
-                    $this->codes->put($code, $code);
-                }
-                $this->data[$shadow->std_activity->discipline]['budget'] += $shadow->budget_cost;
-            }
-        });
-        $data = $this->data;
-        foreach ($data as $key => $value) {
-            $data[$key]['difference'] = $data[$key]['dry'] - $data[$key]['budget'];
-            if ($data[$key]['dry']) {
-                $data[$key]['increase'] = $data[$key]['difference'] / $data[$key]['dry'];
-                $total['dry'] += $data[$key]['dry'];
-                $total['increase'] = $total['difference'] / $total['dry'];
-            }
-            $total['difference'] += $data[$key]['difference'];
-            $total['budget'] += $data[$key]['budget'];
+    }
 
-        }
+    public function run()
+    {
+        $project = $this->project;
 
-        return view('reports.budget_cost_dry_cost_by_discipline', compact('data', 'total', 'project'));
+        $budgetData = BreakDownResourceShadow::from('break_down_resource_shadows as sh')
+            ->where('sh.project_id', $project->id)
+            ->join('boqs', 'sh.boq_id', '=', 'boqs.id')->select('boqs.type')
+            ->selectRaw('sum(budget_cost) as budget_cost')
+            ->groupBy('type')->orderBy('type')
+            ->get()->keyBy('type');
+
+        $boqData = Boq::whereProjectId($project->id)
+            ->select('type')->selectRaw('sum(dry_ur * quantity) as dry_cost')
+            ->groupBy('type')->get()->keyBy('type');
+
+        return view('reports.budget_cost_dry_cost_by_discipline', compact('budgetData', 'boqData', 'project'));
     }
 
 

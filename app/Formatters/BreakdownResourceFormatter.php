@@ -9,6 +9,7 @@
 namespace App\Formatters;
 
 
+use App\Boq;
 use App\BreakdownResource;
 
 class BreakdownResourceFormatter implements \JsonSerializable
@@ -27,6 +28,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
     {
 //        $budget_qty = $this->resource->breakdown->wbs_level->getBudgetQty($this->resource->breakdown->cost_account);
 //        $eng_qty = $this->resource->breakdown->wbs_level->getEngQty($this->resource->breakdown->cost_account);
+        $boq = Boq::costAccountOnWbs($this->resource->breakdown->wbs_level, $this->resource->breakdown->cost_account)->first();
         return [
             'breakdown_resource_id' => $this->resource->id,
             'code' => $this->resource->code,
@@ -58,6 +60,8 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'productivity_id'=>$this->resource->project_productivity->id ?? 0,
             'template_id'=>$this->resource->breakdown->template->id,
             'unit_id'=>$this->resource->resource->units->id??0,
+            'boq_id' => $boq->id,
+            'boq_wbs_id' => $boq->wbs_id
         ];
     }
 

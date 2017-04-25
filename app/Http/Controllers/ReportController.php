@@ -164,8 +164,8 @@ AND resource_type LIKE \'%lab%\'');
 
     public function budgetCostDryCostDiscipline(Project $project)
     {
-        $budget_cost = new BudgetCostDryCostByDiscipline();
-        return $budget_cost->compareBudgetCostDryCostDiscipline($project);
+        $budget_cost = new BudgetCostDryCostByDiscipline($project);
+        return $budget_cost->run();
     }
 
     public function budgetCostForBuilding(Project $project)
