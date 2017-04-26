@@ -17,6 +17,7 @@ use App\StdActivity;
 use App\Survey;
 use App\WbsLevel;
 use Beta\B;
+use Illuminate\Database\Eloquent\Collection;
 
 class BudgetCostDryCostByDiscipline
 {
@@ -34,16 +35,26 @@ class BudgetCostDryCostByDiscipline
     {
         $project = $this->project;
 
+        /** @var Collection $budgetData */
         $budgetData = BreakDownResourceShadow::from('break_down_resource_shadows as sh')
             ->where('sh.project_id', $project->id)
-            ->join('boqs', 'sh.boq_id', '=', 'boqs.id')->selectRaw("CASE WHEN boqs.type != '' THEN boqs.type ELSE 'General' END as type")
+            ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')->selectRaw("CASE WHEN a.discipline != '' THEN a.discipline ELSE 'General' END as type")
             ->selectRaw('sum(budget_cost) as budget_cost')
             ->groupBy(\DB::raw(1))->orderByRaw('1')
             ->get()->keyBy('type');
 
-        $boqData = Boq::whereProjectId($project->id)
-            ->selectRaw("CASE WHEN boqs.type != '' THEN boqs.type ELSE 'General' END as type, sum(dry_ur * quantity) as dry_cost")
-            ->groupBy(\DB::raw(1))->orderByRaw('1')->get()->keyBy('type');
+        $boqData = collect();
+        $budgetData->keys()->each(function($discipline) use ($boqData, $project) {
+            $ids = BreakDownResourceShadow::from('break_down_resource_shadows as sh')
+                ->where('sh.project_id', $project->id)
+                ->where('a.discipline', $discipline)
+                ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')
+                ->pluck('boq_id');
+
+            $dry = Boq::whereIn('id', $ids)->selectRaw('sum(dry_ur * quantity) as dry_cost')->first();
+
+            $boqData->put($discipline, $dry);
+        });
 
         return view('reports.budget_cost_dry_cost_by_discipline', compact('budgetData', 'boqData', 'project'));
     }
