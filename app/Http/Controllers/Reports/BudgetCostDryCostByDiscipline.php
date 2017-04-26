@@ -45,13 +45,14 @@ class BudgetCostDryCostByDiscipline
 
         $boqData = collect();
         $budgetData->keys()->each(function($discipline) use ($boqData, $project) {
-            $ids = BreakDownResourceShadow::from('break_down_resource_shadows as sh')
-                ->where('sh.project_id', $project->id)
-                ->where('a.discipline', $discipline)
-                ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')
-                ->pluck('boq_id');
 
-            $dry = Boq::whereIn('id', $ids)->selectRaw('sum(dry_ur * quantity) as dry_cost')->first();
+            $dry = Boq::whereIn('id', function($query) use ($project, $discipline) {
+                $query->from('break_down_resource_shadows as sh')
+                    ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')
+                    ->where('sh.project_id', $project->id)
+                    ->where('a.discipline', $discipline)
+                    ->select('boq_id');
+            })->selectRaw('sum(dry_ur * quantity) as dry_cost')->first();
 
             $boqData->put($discipline, $dry);
         });
