@@ -60,8 +60,8 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'productivity_id'=>$this->resource->project_productivity->id ?? 0,
             'template_id'=>$this->resource->breakdown->template->id,
             'unit_id'=>$this->resource->resource->units->id??0,
-            'boq_id' => $boq->id,
-            'boq_wbs_id' => $boq->wbs_id
+            'boq_id' => $boq->id ?? 0,
+            'boq_wbs_id' => $boq->wbs_id ?? 0
         ];
     }
 
