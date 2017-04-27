@@ -47,6 +47,7 @@ class BudgetCostDryCostByDiscipline
         $budgetData->keys()->each(function($discipline) use ($boqData, $project) {
 
             $dry = Boq::whereIn('id', function($query) use ($project, $discipline) {
+                // Subquery
                 $query->from('break_down_resource_shadows as sh')
                     ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')
                     ->where('sh.project_id', $project->id)

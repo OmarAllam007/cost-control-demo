@@ -209,7 +209,7 @@
 
             function cval(number) {
                 number += 0.00005;
-                return Math.round(number * 10000);
+                return Math.floor(number * 10000);
             }
         });
     </script>
