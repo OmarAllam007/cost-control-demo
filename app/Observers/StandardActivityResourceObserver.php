@@ -29,7 +29,7 @@ class StandardActivityResourceObserver
                     'resource_waste' => $resource->resource_waste ?: 0,
                     'labor_count' => $resource->labor_count,
                     'remarks' => $resource->remarks,
-                    'productivity_id' => $resource->productivity_id? Productivity::version($breakdown->project_id, $resource->productivity_id)->first()->id : null,
+                    'productivity_id' => $resource->productivity_id,
                     'resource_id' => $resource->resource_id
                 ]);
             });
