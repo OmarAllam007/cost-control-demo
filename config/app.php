@@ -223,7 +223,9 @@ $config = [
 
     'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil',
         'ARCHITECTURAL' => 'ARCHITECTURAL', 'MECHANICAL' => 'Mechanical',
-        'ELECTRICAL' => 'Electrical','Civil Work'=>'Civil Work','Arch Work'=>'Arch Work'],
+        'ELECTRICAL' => 'Electrical', 'MANAGEMENT RESERVE' => 'Management Reserve',
+//      'Civil Work'=>'Civil Work','Arch Work'=>'Arch Work'
+    ],
 
     'cost_status'=> collect([
         'In Progress' => 'In Progress', 'Closed' => 'Closed'
