@@ -14,7 +14,7 @@ class BreakDownResourceShadow extends Model
 {
     use Tree, HasChangeLog;
     use CostAttributes {
-        getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
+//        getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
         getRemainingCostAttribute as protected getRemainingCostAttributeFromTrait;
         getRemainingQtyAttribute as protected getRemainingQtyAttributeFromTrait;
         getRemainingUnitPriceAttribute as protected getRemainingUnitPriceAttributeFromTrait;
@@ -205,14 +205,14 @@ class BreakDownResourceShadow extends Model
         return 0;
     }
 
-    public function getAllowableEvCostAttribute()
-    {
-        if (!empty($this->cost->allowable_ev_cost)) {
-            return $this->cost->allowable_ev_cost;
-        }
-
-        return $this->getAllowableEvCostAttributeFromTrait();
-    }
+//    public function getAllowableEvCostAttribute()
+//    {
+//        if (!empty($this->cost->allowable_ev_cost)) {
+//            return $this->cost->allowable_ev_cost;
+//        }
+//
+//        return $this->getAllowableEvCostAttributeFromTrait();
+//    }
 
     function getRemainingCostAttribute()
     {
