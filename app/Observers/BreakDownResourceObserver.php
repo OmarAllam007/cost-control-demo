@@ -60,21 +60,23 @@ class BreakDownResourceObserver
         $breakdownResource->resource_id = $projectResource->id;
 
         //
-        $productivity_id = $breakdownResource->productivity_id;
-        $projectProductivity = Productivity::where(function (Builder $q) use ($productivity_id) {
-            $q->where('productivity_id', $productivity_id)->orWhere('id', $productivity_id);
-        })->whereProjectId($project_id)->first();
+        if ($breakdownResource->productivity_id) {
+            $productivity_id = $breakdownResource->productivity_id;
+            $projectProductivity = Productivity::where(function (Builder $q) use ($productivity_id) {
+                $q->where('productivity_id', $productivity_id)->orWhere('id', $productivity_id);
+            })->whereProjectId($project_id)->first();
 
-        if (!$projectProductivity) {
-            $productivity = Productivity::find($productivity_id);
-            $newProductivity = $productivity->toArray();
-            unset($newProductivity['id'], $newProductivity['created_at'], $newProductivity['updated_at']);
-            $newProductivity['project_id'] = $project_id;
-            $newProductivity['resource_id'] = $resource->id;
-            Productivity::flushEventListeners();
-            $projectProductivity = Productivity::create($newProductivity);
+            if (!$projectProductivity) {
+                $productivity = Productivity::find($productivity_id);
+                $newProductivity = $productivity->toArray();
+                unset($newProductivity['id'], $newProductivity['created_at'], $newProductivity['updated_at']);
+                $newProductivity['project_id'] = $project_id;
+                $newProductivity['productivity_id'] = $productivity->id;
+                Productivity::flushEventListeners();
+                $projectProductivity = Productivity::create($newProductivity);
+            }
+            $breakdownResource->productivity_id = $projectProductivity->id;
         }
-        $breakdownResource->productivity_id = $projectProductivity->id;
     }
 
 
