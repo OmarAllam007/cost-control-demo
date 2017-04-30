@@ -17,26 +17,32 @@ class CostShadowCalculator
 
     use CostAttributes;
 
-    function __construct(CostShadow $costShadow)
+    function __construct(CostShadow $costShadow, $keepRemaining = true)
     {
         $this->costShadow = $costShadow;
-        $this->setCalculated();
+        $this->setCalculated($keepRemaining);
     }
 
     function update()
     {
         $this->costShadow->fill($this->toArray());
         $this->costShadow->save();
+
+        return $this->costShadow;
     }
 
-    protected function setCalculated()
+    protected function setCalculated($keepRemaining)
     {
         $budgetAttributes = $this->costShadow->budget->getAttributes();
-        $this->calculated = array_merge($budgetAttributes, [
-            'remaining_qty' => $this->costShadow->remaining_qty,
-            'remaining_unit_price' => $this->costShadow->remaining_unit_price,
-            'allowable_ev_cost' => $this->costShadow->allowable_ev_cost,
-        ]);
+        $merged = [];
+        if ($keepRemaining) {
+            $merged = [
+                'remaining_qty' => $this->costShadow->remaining_qty,
+                'remaining_unit_price' => $this->costShadow->remaining_unit_price,
+                'allowable_ev_cost' => $this->costShadow->allowable_ev_cost,
+            ];
+        }
+        $this->calculated = array_merge($budgetAttributes, $merged);
     }
 
     public function toArray()

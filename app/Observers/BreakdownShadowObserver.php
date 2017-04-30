@@ -21,30 +21,19 @@ class BreakdownShadowObserver
         if (isset($dirty['progress']) || isset($dirty['status'])) {
             $resource->update_cost = true;
         }
-
-        $resource->update_cost = false;
     }
 
     function updated(BreakDownResourceShadow $resource)
     {
         if ($resource->update_cost) {
             $conditions = [
-                'wbs_resources.breakdown_resource_id' => $resource->breakdown_resource_id,
-                'wbs_resources.project_id' => $resource->project_id
-            ];
-
-            $recalculated = WbsResource::joinShadow()->where($conditions)->first();
-
-            $conditions = [
                 'period_id' => $resource->project->open_period()->id,
                 'breakdown_resource_id' => $resource->breakdown_resource_id,
                 'project_id' => $resource->project_id
             ];
 
-            $costShadow = CostShadow::where($conditions)->first();
-            if ($costShadow && $recalculated) {
-                $costShadow->update($recalculated->toArray());
-            }
+            $costShadow = CostShadow::firstOrCreate($conditions);
+            $costShadow->recalculate(false);
         }
     }
 }

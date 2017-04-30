@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Resource Types')
+
 @section('header')
     <h2>Resource Type</h2>
     <div class="btn-toolbar pull-right">

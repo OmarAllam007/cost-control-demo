@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\HasChangeLog;
+use App\Support\CostShadowCalculator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -78,9 +79,9 @@ class CostShadow extends Model
         return $query;
     }
 
-    function recalculate()
+    function recalculate($keepRemaining)
     {
-
+        return (new CostShadowCalculator($this, $keepRemaining))->update();
     }
 
     function getProgressAttribute()
