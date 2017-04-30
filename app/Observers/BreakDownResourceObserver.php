@@ -61,7 +61,7 @@ class BreakDownResourceObserver
 
         //
         $productivity_id = $breakdownResource->productivity_id;
-        $projectProductivity = Resources::where(function (Builder $q) use ($productivity_id) {
+        $projectProductivity = Productivity::where(function (Builder $q) use ($productivity_id) {
             $q->where('productivity_id', $productivity_id)->orWhere('id', $productivity_id);
         })->whereProjectId($project_id)->first();
 
