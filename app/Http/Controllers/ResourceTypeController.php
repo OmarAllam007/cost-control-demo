@@ -23,6 +23,7 @@ class ResourceTypeController extends Controller
         }
 
         $resource_levels = ResourceType::tree()->with('children.resources', 'children.children.resources', 'children.children.children.resources')
+            ->with('children.children.children.children.children')
             ->orderBy('name')->paginate();
         $resources = Resources::lists('id', 'name')->all();
 

@@ -17,9 +17,7 @@
         @endif
 
         @php
-            $resources = $resource_level->resources->filter(function($resource) {
-                return !$resource->project_id;
-            })->sortBy('name');
+            $resources = $resource_level->resources()->basic()->orderBy('name')->get();
         @endphp
 
         @if ($resources->count())
