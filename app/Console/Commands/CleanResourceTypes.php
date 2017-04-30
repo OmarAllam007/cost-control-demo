@@ -40,6 +40,22 @@ class CleanResourceTypes extends Command
      */
     public function handle()
     {
+        $bar = $this->output->createProgressBar(ResourceType::count());
+        ResourceType::all()->each(function(ResourceType $type) use ($bar) {
+            $type->name = trim($type->name);
+            $type->save();
+            $bar->advance();
+        });
+        $bar->finish();
+
+        $bar = $this->output->createProgressBar(Resources::count());
+        Resources::all()->each(function(Resources $r) use ($bar) {
+            $r->name = trim($r->name);
+            $r->save();
+            $bar->advance();
+        });
+        $bar->finish();
+
         $mainTypeNames = ['equip', 'scaff', 'general', 'lab', 'mat', 'other', 'subcon'];
 
         foreach ($mainTypeNames as $typeName) {
@@ -55,23 +71,6 @@ class CleanResourceTypes extends Command
 
             $this->cleanChildren($first);
         }
-
-        /*$bar = $this->output->createProgressBar(ResourceType::count());
-        ResourceType::all()->each(function(ResourceType $type) use ($bar) {
-            $type->name = trim($type->name);
-            $type->save();
-            $bar->advance();
-        });
-        $bar->finish();
-
-        $bar = $this->output->createProgressBar(Resources::count());
-        Resources::all()->each(function(Resources $r) use ($bar) {
-            $r->name = trim($r->name);
-            $r->save();
-            $bar->advance();
-        });
-        $bar->finish();*/
-
         // $this->output->success('Resources Count: ' .
         //     ResourceType::parents()->get()->keyBy('id')->map(function($type) { return Resources::whereIn('resource_type_id', $type->getChildrenIds())->count(); })->sum());
     }
