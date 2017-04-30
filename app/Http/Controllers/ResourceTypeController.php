@@ -22,7 +22,8 @@ class ResourceTypeController extends Controller
             return \Redirect::to('/');
         }
 
-        $resource_levels = ResourceType::tree()->orderBy('name')->paginate();
+        $resource_levels = ResourceType::tree()->with('children.resources', 'children.children.resources', 'children.children.children.resources')
+            ->orderBy('name')->paginate();
         $resources = Resources::lists('id', 'name')->all();
 
         return view('resource-type.index', compact('resources', 'resource_levels','resource_types'));
