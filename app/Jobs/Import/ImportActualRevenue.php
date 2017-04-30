@@ -56,14 +56,14 @@ class ImportActualRevenue extends ImportJob
 
             $wbs = $this->wbs_levels->get($data[0]);
             if (!$wbs) {
-                $failed->push($row);
+                $failed->push($data);
                 continue;
             }
 
             $cost_account = $data[1];
             $boq = Boq::costAccountOnWbs($wbs, $cost_account)->first();
             if (!$boq) {
-                $failed->push($row);
+                $failed->push($data);
                 continue;
             }
 
