@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Console\Command;
+use Make\Makers\Resource;
 
 class CleanResourceTypes extends Command
 {
@@ -68,7 +69,9 @@ class CleanResourceTypes extends Command
             $ids = $types->pluck('id');
 
             ResourceType::whereIn('parent_id', $ids)->update(['parent_id' => $first->id]);
-            Resources::whereIn('resource_type_id', $ids)->update(['resource_type_id' => $first->id]);
+            Resources::whereIn('resource_type_id', $ids)->get()->each(function(Resources $resource) use ($first) {
+                $resource->update(['resource_type_id' => $first->id]);
+            });
 
             ResourceType::whereIn('id', $ids)->where('id', '!=', $first->id)->delete();
 
