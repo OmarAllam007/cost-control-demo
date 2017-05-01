@@ -97,7 +97,7 @@ class CleanResourceTypes extends Command
         return $this->cache[$resource->id] = json_encode(array_reverse($divisions));
     }
 
-    protected function cleanTypeName(): \Symfony\Component\Console\Helper\ProgressBar
+    protected function cleanTypeName()
     {
         $this->info('Initiate cleaning resource types');
         $this->output->newLine();
@@ -119,7 +119,7 @@ class CleanResourceTypes extends Command
     /**
      * @return \Symfony\Component\Console\Helper\ProgressBar
      */
-    protected function cleanResourceName(): \Symfony\Component\Console\Helper\ProgressBar
+    protected function cleanResourceName()
     {
         $this->info('Initiate cleaning resources');
         $this->output->newLine();
