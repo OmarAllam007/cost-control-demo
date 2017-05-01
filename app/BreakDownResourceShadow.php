@@ -13,12 +13,13 @@ use Illuminate\Database\Query\JoinClause;
 class BreakDownResourceShadow extends Model
 {
     use Tree, HasChangeLog;
-    use CostAttributes {
-//        getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
-        getRemainingCostAttribute as protected getRemainingCostAttributeFromTrait;
-        getRemainingQtyAttribute as protected getRemainingQtyAttributeFromTrait;
-        getRemainingUnitPriceAttribute as protected getRemainingUnitPriceAttributeFromTrait;
-    }
+    use CostAttributes;
+//    use CostAttributes {
+////        getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
+//        getRemainingCostAttribute as protected getRemainingCostAttributeFromTrait;
+////        getRemainingQtyAttribute as protected getRemainingQtyAttributeFromTrait;
+//        getRemainingUnitPriceAttribute as protected getRemainingUnitPriceAttributeFromTrait;
+//    }
 
     protected $table = 'break_down_resource_shadows';
     protected $fillable = [
@@ -214,32 +215,32 @@ class BreakDownResourceShadow extends Model
 //        return $this->getAllowableEvCostAttributeFromTrait();
 //    }
 
-    function getRemainingCostAttribute()
-    {
-        if (!empty($this->cost->remaining_cost)) {
-            return $this->cost->remaining_cost;
-        }
+//    function getRemainingCostAttribute()
+//    {
+//        if (!empty($this->cost->remaining_cost)) {
+//            return $this->cost->remaining_cost;
+//        }
+//
+//        return $this->getRemainingCostAttributeFromTrait();
+//    }
+//
+//    function getRemainingQtyAttribute()
+//    {
+//        if (!empty($this->cost->remaining_qty)) {
+//            return $this->cost->remaining_qty;
+//        }
+//
+//        return $this->getRemainingQtyAttributeFromTrait();
+//    }
 
-        return $this->getRemainingCostAttributeFromTrait();
-    }
-
-    function getRemainingQtyAttribute()
-    {
-        if (!empty($this->cost->remaining_qty)) {
-            return $this->cost->remaining_qty;
-        }
-
-        return $this->getRemainingQtyAttributeFromTrait();
-    }
-
-    function getRemainingUnitPriceAttribute()
-    {
-        if (!empty($this->cost->remaining_unit_price)) {
-            return $this->cost->remaining_unit_price;
-        }
-
-        return $this->getRemainingUnitPriceAttributeFromTrait();
-    }
+//    function getRemainingUnitPriceAttribute()
+//    {
+//        if (!empty($this->cost->remaining_unit_price)) {
+//            return $this->cost->remaining_unit_price;
+//        }
+//
+//        return $this->getRemainingUnitPriceAttributeFromTrait();
+//    }
 
     function boq(){
         return $this->belongsTo(Boq::class,'boq_id');
