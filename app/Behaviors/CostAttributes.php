@@ -144,18 +144,14 @@ trait CostAttributes
 
     function getRemainingUnitPriceAttribute()
     {
-        /*$resource = CostResource::where('resource_id', $this->resource_id)
-            ->where('project_id', $this->project_id)->where('period_id', $this->period_id)->first();
 
-        if ($resource) {
-            return $resource->rate;
-        }*/
         if (isset($this->calculated['remaining_unit_price'])) {
             return $this->calculated['remaining_unit_price'];
         }
 
-        if (!empty($this->attributes['curr_unit_price'])) {
-            return $this->attributes['curr_unit_price'];
+
+        if ($this->curr_unit_price) {
+            return $this->curr_unit_price;
         }
 
         $resource = CostResource::where('resource_id', $this->resource_id)
