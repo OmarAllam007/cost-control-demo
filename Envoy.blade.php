@@ -7,7 +7,7 @@
 
 @task('deploy-dev', ['on' => 'dev'])
     cd cost-control
-    git pull origin master
+    git pull origin develop
 @endtask
 
 @task('migrate')
