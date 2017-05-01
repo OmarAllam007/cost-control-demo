@@ -73,6 +73,10 @@ class Resources extends Model
 
     function scopeBasic(Builder $query)
     {
+        $query->where(function (Builder $query) {
+            $query->where('project_id', 0)
+                ->orWhereNull('project_id');
+        });
     }
 
     function morphToJSON()

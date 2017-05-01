@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\ChartScopes;
+use App\Behaviors\ReportScopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,7 +40,10 @@ class MasterShadow extends Model
         return $query->wherePeriodId($period->id)->whereProjectId($period->project_id);
     }
 
+    function resource()
+    {
+        return $this->belongsTo(Resources::class);
+    }
 
-
-    use ChartScopes, \App\Behaviors\ReportScopes;
+    use ChartScopes, ReportScopes;
 }

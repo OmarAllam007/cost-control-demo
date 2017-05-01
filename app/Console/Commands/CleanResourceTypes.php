@@ -2,9 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\BreakDownResourceShadow;
+use App\MasterShadow;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Make\Makers\Resource;
 
 class CleanResourceTypes extends Command
@@ -23,6 +26,9 @@ class CleanResourceTypes extends Command
      */
     protected $description = 'Clean resource types';
 
+    /** @var  Collection */
+    protected $cache;
+
     /**
      * Create a new command instance.
      *
@@ -31,6 +37,7 @@ class CleanResourceTypes extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->cache = collect();
     }
 
     /**
@@ -40,6 +47,9 @@ class CleanResourceTypes extends Command
      */
     public function handle()
     {
+        $this->info('Initiate cleaning resource types');
+        $this->output->newLine();
+        Resources::flushEventListeners();
         $bar = $this->output->createProgressBar(ResourceType::count());
         ResourceType::all()->each(function(ResourceType $type) use ($bar) {
             $type->name = trim($type->name);
@@ -47,7 +57,11 @@ class CleanResourceTypes extends Command
             $bar->advance();
         });
         $bar->finish();
+        $this->output->newLine();
+        $this->output->newLine();
 
+        $this->info('Initiate cleaning resources');
+        $this->output->newLine();
         $bar = $this->output->createProgressBar(Resources::count());
         Resources::all()->each(function(Resources $r) use ($bar) {
             $r->name = trim($r->name);
@@ -55,9 +69,11 @@ class CleanResourceTypes extends Command
             $bar->advance();
         });
         $bar->finish();
+        $this->output->newLine();
+        $this->output->newLine();
 
+        $this->info('Removing duplicate resource types');
         $mainTypeNames = ['equip', 'scaff', 'general', 'lab', 'mat', 'other', 'subcon'];
-
         foreach ($mainTypeNames as $typeName) {
             $types = ResourceType::parents()->where('name', 'like', "%$typeName%")->orderBy('id')->get();
             $first = $types->first();
@@ -71,8 +87,46 @@ class CleanResourceTypes extends Command
 
             $this->cleanChildren($first);
         }
-        // $this->output->success('Resources Count: ' .
-        //     ResourceType::parents()->get()->keyBy('id')->map(function($type) { return Resources::whereIn('resource_type_id', $type->getChildrenIds())->count(); })->sum());
+        $this->output->newLine(2);
+
+        $this->info('Updating budget shadow');
+        $this->output->newLine();
+        BreakDownResourceShadow::flushEventListeners();
+        $query = BreakDownResourceShadow::whereNotIn('resource_type_id', function($q) {
+            $q->from('resource_types')->where('parent_id', 0)->select('id');
+        })->with('resource');
+        $bar = $this->output->createProgressBar($query->count());
+        $resources = $query->get();
+        foreach($resources as $resource) {
+            $baseResource = $resource->resource;
+            $resource->resource_type = $baseResource->types->root->name;
+            $resource->resource_name = $baseResource->name;
+            $resource->resource_type_id = $baseResource->types->root->id;
+            $resource->save();
+        }
+        $bar->finish();
+        $this->output->newLine();
+        $this->output->newLine();
+
+        $this->info('Updating master shadow');
+        $this->output->newLine();
+        MasterShadow::flushEventListeners();
+        $query = MasterShadow::whereNotIn('resource_type_id', function($q) {
+            $q->from('resource_types')->where('parent_id', 0)->select('id');
+        })->with('resource');
+        $bar = $this->output->createProgressBar($query->count());
+        $resources = $query->get();
+        foreach($resources as $resource) {
+            $baseResource = $resource->resource;
+            $resource->resource_name = $baseResource->name;
+            $resource->resource_divs = $this->getResourceDivisions($baseResource);
+            $resource->resource_type_id = $baseResource->types->root->id;
+            $resource->save();
+        }
+        $bar->finish();
+        $this->output->newLine(2);
+
+        $this->output->success('Data cleaning done');
     }
 
     protected function cleanChildren($node)
@@ -92,5 +146,20 @@ class CleanResourceTypes extends Command
 
             $this->cleanChildren($first);
         }
+    }
+
+    protected function getResourceDivisions(Resources $resource)
+    {
+        if (isset($this->cache[$resource->id])) {
+            return $this->cache[$resource->id];
+        }
+
+        $parent = $division = $resource->types;
+        $divisions = [$division->name];
+        while ($parent = $parent->parent) {
+            $divisions[] = $parent->name;
+        }
+
+        return $this->cache[$resource->id] = json_encode(array_reverse($divisions));
     }
 }
