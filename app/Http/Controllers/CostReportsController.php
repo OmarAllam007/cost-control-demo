@@ -7,7 +7,7 @@ use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
-use App\Http\Controllers\Reports\CostReports\CostSummery;
+use App\Http\Controllers\Reports\CostReports\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
 use App\Http\Controllers\Reports\CostReports\ProductivityReport;
@@ -31,33 +31,23 @@ class CostReportsController extends Controller
 
     public function projectInformation(Project $project, Request $request)
     {
-       $period_id = $this->getPeriod($project, $request);
+        $period_id = $this->getPeriod($project, $request);
         $projectInfo = new ProjectInformation(Period::find($period_id));
         return $projectInfo->run();
     }
 
-    public function costSummery(Project $project, Request $request)
+    public function costSummary(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
-            }
+        $period_id = $this->getPeriod($project, $request);
+        $period = $project->periods()->find($period_id);
+        $costSummary = new CostSummary($project, $period);
+
+        if ($request->exists('excel')) {
+            $filename = view('reports.cost-control.cost-summary.excel', $costSummary->run())->render();
+            return response()->download($filename, slug($project->name) . '-cost-summary.xlsx');
         }
 
-        $cost_summery = new CostSummery();
-        return $cost_summery->getCostSummery($project, $chosen_period_id);
+        return view('reports.cost-control.cost-summary.index', $costSummary->run());
     }
 
     public function significantMaterials(Project $project, Request $request)
@@ -170,7 +160,7 @@ class CostReportsController extends Controller
         return $variance->getIssuesReport($project, $chosen_period_id);
     }
 
-    protected function getPeriod(Project $project, Request $request)
+    protected function getPeriod(Project $project, Request $request) : int
     {
         if ($request->period) {
             \Session::set('period_id_' . $project->id, $request->period);

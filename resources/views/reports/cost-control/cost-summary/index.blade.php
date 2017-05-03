@@ -1,13 +1,11 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
 
-@section('head')
+@section('css')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
 @endsection
 
 @section('header')
-
-
-    <h2 id="report_name">{{$project->name. '- Cost Summary Report'}}</h2>
+    <h2 id="report_name">{{$project->name}} &mdash; Cost Summary Report</h2>
 
     <div class="pull-right">
         {{--<a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">--}}
@@ -16,14 +14,13 @@
 
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
 
-        <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm"><i
-                    class="fa fa-chevron-left"></i> Back</a>
+        <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i> Back</a>
     </div>
 @endsection
 @section('body')
 
     <div class="row" style="margin-bottom: 10px;">
-        <form action="{{route('cost_control.cost-summery',$project)}}" class="form-inline col col-md-8" method="get">
+        <form action="" class="form-inline col col-md-8" method="get">
             {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->pluck('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
@@ -33,7 +30,7 @@
     <table class="table table-condensed">
         <thead>
         <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
-            <th></th>
+            <th class="col-sm-2" rowspan="2" style="border: 2px solid black;text-align: center">Resource Type</th>
             <th style="border: 2px solid black;text-align: center">Budget</th>
             <th colspan="3" style="border: 2px solid black;text-align: center">Previous</th>
             <th colspan="3" style="border: 2px solid black;text-align: center">To-Date</th>
@@ -41,7 +38,6 @@
             <th colspan="3" style="text-align: center; border: 2px solid black;">At Completion</th>
         </tr>
         <tr style="background: #C6F1E7">
-            <th class="col-xs-2" style="border: 2px solid black;text-align: center">Resource Type</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Base Line</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous (EV) Allowable</th>
@@ -53,7 +49,6 @@
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost Variance</th>
             {{--<th class="col-xs-1" style="border: 2px solid black;text-align: center">Concern</th>--}}
-
         </tr>
 
         </thead>
@@ -88,7 +83,7 @@
         <tfoot>
         <tr style="background: #F0FFF3">
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Total</th>
-            <td style="border: 2px solid black;text-align: center; ">{{number_format($toDateData->sum('budget_cost'))}}</td>
+            <td style="border: 2px solid black;text-align: center;">{{number_format($toDateData->sum('budget_cost'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_cost'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_allowable'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_var'))}}</td>

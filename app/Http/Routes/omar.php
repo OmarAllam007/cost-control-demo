@@ -49,7 +49,7 @@ Route::group(['prefix' => 'unit'], function () {
 //reports budget cost
 Route::group(['prefix' => 'project'], function () {
     Route::get('projectInfo/{project}',['uses'=>'CostReportsController@projectInformation','as'=>'cost_control.info']);
-    Route::get('cost_summery/{project}',['uses'=>'CostReportsController@costSummery','as'=>'cost_control.cost-summery']);
+    Route::get('cost_summary/{project}',['uses'=>'CostReportsController@costSummary','as'=>'cost_control.cost-summary']);
     Route::get('cost_significant_materials/{project}',['uses'=>'CostReportsController@significantMaterials','as'=>'cost.significant']);
     Route::get('cost_standard_activity/{project}',['uses'=>'CostReportsController@standardActivity','as'=>'cost.standard_activity_report']);
     Route::get('cost_boq/{project}',['uses'=>'CostReportsController@boqReport','as'=>'cost.boq_report']);
