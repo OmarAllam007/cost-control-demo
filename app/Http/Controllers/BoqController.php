@@ -262,7 +262,10 @@ class BoqController extends Controller
         $project = Project::find($request->get('project'));
         $file = $request->file('file');
 
-        $this->dispatch(new ModifyProjectBoq($file,$project));
+        $counter = $this->dispatch(new ModifyProjectBoq($file,$project));
+
+        flash("$counter Records have been updated", 'success');
+
 
         return view('project.show',compact('project'));
     }
