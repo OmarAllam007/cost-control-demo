@@ -7,10 +7,12 @@
 @section('header')
     <h2 id="report_name">{{$project->name}} &mdash; Cost Summary Report</h2>
 
-    <div class="pull-right">
+    <div class="btn-toolbar pull-right">
         {{--<a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#AllModal">--}}
         {{--<i class="fa fa-warning"></i> Concerns--}}
         {{--</a>--}}
+
+        <a href="?excel" target="_blank" class="btn btn-success btn-default btn-sm"><i class="fa fa-file-excel-o"></i> Excel</a>
 
         <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
 
@@ -20,7 +22,7 @@
 @section('body')
 
     <div class="row" style="margin-bottom: 10px;">
-        <form action="" class="form-inline col col-md-8" method="get">
+        <form action="" class="form-inline col-sm-6 col-md-4" method="get">
             {{Form::select('period_id', \App\Period::where('project_id',$project->id)->where('is_open',0)->pluck('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
