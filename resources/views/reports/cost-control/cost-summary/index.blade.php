@@ -1,5 +1,7 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
 
+@section('title', 'Cost Summary Report | ' . $project->name)
+
 @section('css')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
 @endsection

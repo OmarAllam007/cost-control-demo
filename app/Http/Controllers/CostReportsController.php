@@ -42,12 +42,14 @@ class CostReportsController extends Controller
         $period = $project->periods()->find($period_id);
         $costSummary = new CostSummary($project, $period);
 
+        $data = $costSummary->run();
+
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.cost-summary.excel', $costSummary->run())->render();
+            $filename = view('reports.cost-control.cost-summary.excel', $data)->render();
             return response()->download($filename, slug($project->name) . '-cost-summary.xlsx');
         }
 
-        return view('reports.cost-control.cost-summary.index', $costSummary->run());
+        return view('reports.cost-control.cost-summary.index', $data);
     }
 
     public function significantMaterials(Project $project, Request $request)
@@ -76,9 +78,17 @@ class CostReportsController extends Controller
     public function standardActivity(Project $project, Request $request)
     {
         $chosen_period_id = $this->getPeriod($project, $request);
+        $period = $project->periods()->find($chosen_period_id);
 
-        $standard_activity = new CostStandardActivityReport();
-        return $standard_activity->getStandardActivities($project, $chosen_period_id);
+        $standard_activity = new CostStandardActivityReport($project, $period);
+        $data = $standard_activity->run();
+
+        if ($request->exists('excel')) {
+            $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
+            return response()->download($filename, slug($project->name) . '-cost-summary.xlsx');
+        }
+
+        return view('reports.cost-control.standard_activity.index', $data);
     }
 
     public function boqReport(Project $project, Request $request)

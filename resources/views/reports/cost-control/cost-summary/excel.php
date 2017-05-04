@@ -15,16 +15,15 @@ $varCondition->getStyle()->getFont()->getColor()->setARGB(PHPExcel_Style_Color::
 $projectCell = $sheet->getCell('A4');
 $issueDateCell = $sheet->getCell('A5');
 
+$projectCell->setValue($projectCell->getValue() . ' ' . $project->name);
+$issueDateCell->setValue($issueDateCell->getValue() . ' ' . date('d M Y'));
+
 $logo = imagecreatefrompng(public_path('images/kcc.png'));
 $drawing = new PHPExcel_Worksheet_MemoryDrawing();
 $drawing->setName('Logo')->setImageResource($logo)
     ->setRenderingFunction(PHPExcel_Worksheet_MemoryDrawing::RENDERING_PNG)
     ->setMimeType(PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
     ->setCoordinates('J2')->setWorksheet($sheet);
-
-
-$projectCell->setValue($projectCell->getValue() . ' ' . $project->name);
-$issueDateCell->setValue($issueDateCell->getValue() . ' ' . date('d M Y'));
 
 $start = 11;
 $counter = $start;
@@ -77,7 +76,7 @@ $sheet->getStyle("H{$start}:H{$counter}")->setConditionalStyles([$varCondition])
 $sheet->getStyle("K{$start}:K{$counter}")->setConditionalStyles([$varCondition]);
 
 
-//<editor-fold defaultstate=""collapsed desc="Budget Cost VS Completion Cost">
+//<editor-fold defaultstate="collapsed desc="Budget Cost VS Completion Cost Chart">
 $end = $counter - 1;
 
 $xAxisLabels = [
@@ -116,8 +115,7 @@ $budgetVsCompletionChart->setTopLeftCell("A" . ($counter + 5))->setBottomRightCe
 $sheet->addChart($budgetVsCompletionChart);
 //</editor-fold>
 
-$end = $counter - 1;
-
+//<editor-fold defaultstate="collapsed desc="To Date Vs Allowable Chart">
 $todateVsAllowableValues = [
     new PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!F$start:F$end"),
     new PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!G$start:G$end"),
@@ -148,6 +146,7 @@ $todateVsAllowableChart = new PHPExcel_Chart(
 
 $todateVsAllowableChart->setTopLeftCell("G" . ($counter + 5))->setBottomRightCell('L' . ($counter + 25));
 $sheet->addChart($todateVsAllowableChart);
+//</editor-fold>
 
 $saveTo = storage_path('app/') . uniqid() . '.xlsx';
 $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->setIncludeCharts(true)->save($saveTo);

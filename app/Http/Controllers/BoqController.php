@@ -258,7 +258,7 @@ class BoqController extends Controller
 
         return view('boq.modify',compact('project'));
     }
-    
+
     function postModifyProjectBoqs(Request $request){
         $project = Project::find($request->get('project'));
 
