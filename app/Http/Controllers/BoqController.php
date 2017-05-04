@@ -260,10 +260,13 @@ class BoqController extends Controller
     }
     function postModifyProjectBoqs(Request $request){
         $project = Project::find($request->get('project'));
+
         $file = $request->file('file');
 
-        $this->dispatch(new ModifyProjectBoq($file,$project));
+        $counter = $this->dispatch(new ModifyProjectBoq($file,$project));
 
-        return view('project.show',compact('project'));
+        flash("$counter Records have been imported", 'success');
+
+        return redirect()->route('project.show', $project);
     }
 }
