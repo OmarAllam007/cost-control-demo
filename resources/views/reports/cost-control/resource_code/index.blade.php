@@ -4,33 +4,34 @@
 @endif
 @section('header')
     <h2 class="">{{$project->name}} - Resource Dictionary Report</h2>
-    <div class="pull-right">
+    <div class="pull-right btn-toolbar">
         {{--<a href="?print=1&paint=std-activity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>--}}
         {{--Print</a>--}}
+        <a href="?excel" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Excel</a>
         <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
-    </div>
-@endsection
+        </div>
+    @endsection
 
-@section('body')
-    @include('reports.cost-control.resource_code._filters')
+    @section('body')
+        @include('reports.cost-control.resource_code._filters')
 
-    <div class="fixed-table-container">
+        <div class="fixed-table-container">
 
-            <table class="table table-bordered  resources-table">
-                <thead>
-                <tr class="thead-top">
-                    <th class="resource-cell right-border" rowspan="2">Resource</th>
-                    <th class="text-center right-border" colspan="3">Budget</th>
-                    <th class="text-center right-border" colspan="3">Previous</th>
-                    <th class="text-center right-border" colspan="3">Current</th>
-                    <th class="text-center right-border" colspan="7">To Date</th>
-                    <th class="text-center right-border" colspan="3">Remaining</th>
-                    <th class="text-center" colspan="6">At Completion</th>
-                </tr>
-                <tr class="thead-bottom">
-                    {{-- Budget --}}
+                <table class="table table-bordered  resources-table">
+                    <thead>
+                    <tr class="thead-top">
+                        <th class="resource-cell right-border" rowspan="2">Resource</th>
+                        <th class="text-center right-border" colspan="3">Budget</th>
+                        <th class="text-center right-border" colspan="3">Previous</th>
+                        <th class="text-center right-border" colspan="3">Current</th>
+                        <th class="text-center right-border" colspan="7">To Date</th>
+                        <th class="text-center right-border" colspan="3">Remaining</th>
+                        <th class="text-center" colspan="6">At Completion</th>
+                    </tr>
+                    <tr class="thead-bottom">
+                        {{-- Budget --}}
                     <th class="text-center number-cell" width="100">U.Price</th>
                     <th class="text-center number-cell" width="100">Qty</th>
                     <th class="text-center number-cell right-border" width="100">Cost</th>

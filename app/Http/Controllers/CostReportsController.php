@@ -85,7 +85,7 @@ class CostReportsController extends Controller
 
         if ($request->exists('excel')) {
             $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-cost-summary.xlsx');
+            return response()->download($filename, slug($project->name) . '-std-activity.xlsx');
         }
 
         return view('reports.cost-control.standard_activity.index', $data);
@@ -102,9 +102,18 @@ class CostReportsController extends Controller
 
     public function resourceCodeReport(Project $project, Request $request)
     {
-        $period = $this->getPeriod($project, $request);
+        $period_id = $this->getPeriod($project, $request);
+        $period = $project->periods()->find($period_id);
+
         $resourceCodeReport = new ResourceCodeReport($project, $period);
-        return $resourceCodeReport->run();
+        $data = $resourceCodeReport->run();
+
+        if ($request->exists('excel')) {
+            $filename = view('reports.cost-control.resource_code.excel', $data)->render();
+            return response()->download($filename, slug($project->name) . '-resource_dict.xlsx');
+        }
+
+        return view('reports.cost-control.resource_code.index', $data);
     }
 
     public function overdraftReport(Project $project, Request $request)

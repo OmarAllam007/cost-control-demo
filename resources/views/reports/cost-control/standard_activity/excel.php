@@ -82,15 +82,18 @@ $sheet->fromArray([
     $currentTotals['remaining'], $currentTotals['at_completion_cost'], $currentTotals->cost_var,
 ], '', "A{$counter}");
 
-$totalsStyles = $sheet->getStyle("A{$counter}:K{$counter}");
+$sheet->getStyle("B{$start}:K{$counter}")->getNumberFormat()->setFormatCode('_(#,##0.00_);_(\(#,##0.00\);_("-"??_);_(@_)');
+
+$totalsStyles = $sheet->getStyle("A{$counter}:Y{$counter}");
 $totalsStyles->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->setStartColor(new PHPExcel_Style_Color('DAEEF3'));
 $totalsStyles->getFont()->setBold(true);
 
-$sheet->getStyle("B{$start}:K{$counter}")->getNumberFormat()->setFormatCode('_(#,##0.00_);_(\(#,##0.00\);_("-"??_);_(@_)');
+$sheet->getStyle("B{$start}:Y{$counter}")->getNumberFormat()->setFormatCode('_(#,##0.00_);_(\(#,##0.00\);_("-"??_);_(@_)');
 $sheet->getStyle("E{$start}:E{$counter}")->setConditionalStyles([$varCondition]);
 $sheet->getStyle("H{$start}:H{$counter}")->setConditionalStyles([$varCondition]);
 $sheet->getStyle("K{$start}:K{$counter}")->setConditionalStyles([$varCondition]);
 
+$sheet->setShowGridlines(false);
 
 $saveTo = storage_path('app/') . uniqid() . '.xlsx';
 $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->setIncludeCharts(true)->save($saveTo);

@@ -148,6 +148,8 @@ $todateVsAllowableChart->setTopLeftCell("G" . ($counter + 5))->setBottomRightCel
 $sheet->addChart($todateVsAllowableChart);
 //</editor-fold>
 
+$sheet->setShowGridlines(false);
+
 $saveTo = storage_path('app/') . uniqid() . '.xlsx';
 $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->setIncludeCharts(true)->save($saveTo);
 echo $saveTo;
