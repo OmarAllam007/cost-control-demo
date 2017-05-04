@@ -29,7 +29,7 @@ class ImportJob extends Job
         foreach ($cells as $cell) {
             $data[] = $cell->getFormattedValue()?: $cell->getValue()?: '';
         }
-        return $data;
+        return array_map('trim', $data);
     }
 
     protected function getUnit($unit)
