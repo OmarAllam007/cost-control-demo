@@ -1,7 +1,7 @@
 <?php
-$template = storage_path('app/templates/cost-summary.xlsx');
+$template = storage_path('templates/cost-summary.xlsx');
 $reader = new PHPExcel_Reader_Excel2007();
-$reader->setIncludeCharts(true);
+//$reader->setIncludeCharts(true);
 $excel = $reader->load($template);
 
 $sheet = $excel->getActiveSheet();
@@ -14,6 +14,15 @@ $varCondition->getStyle()->getFont()->getColor()->setARGB(PHPExcel_Style_Color::
 
 $projectCell = $sheet->getCell('A4');
 $issueDateCell = $sheet->getCell('A5');
+
+$logo = imagecreatefrompng(public_path('images/kcc.png'));
+$drawing = new PHPExcel_Worksheet_MemoryDrawing();
+$drawing->setName('Logo')->setImageResource($logo)
+    ->setRenderingFunction(PHPExcel_Worksheet_MemoryDrawing::RENDERING_PNG)
+    ->setMimeType(PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
+    ->setCoordinates('J2')->setWorksheet($sheet);
+
+
 
 $projectCell->setValue($projectCell->getValue() . ' ' . $project->name);
 $issueDateCell->setValue($issueDateCell->getValue() . ' ' . date('d M Y'));
@@ -68,6 +77,19 @@ $sheet->getStyle("E{$start}:E{$counter}")->setConditionalStyles([$varCondition])
 $sheet->getStyle("H{$start}:H{$counter}")->setConditionalStyles([$varCondition]);
 $sheet->getStyle("K{$start}:K{$counter}")->setConditionalStyles([$varCondition]);
 
+$chartLabels = [
+    new PHPExcel_Chart_DataSeriesValues('String', "A{$start}:A{$counter}")
+];
+
+$budgetVsCompletionColumns = [
+    new PHPExcel_Chart_DataSeriesValues('Number', "B$start:B$end"),
+    new PHPExcel_Chart_DataSeriesValues('Number', "J$start:J$end"),
+];
+
+$budgetVsCompletionTitle = new PHPExcel_Chart_Title('Budget Cost vs At Completion');
+
+
+
 $saveTo = storage_path('app/') . uniqid() . '.xlsx';
-$writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->setIncludeCharts(true)->save($saveTo);
+$writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($saveTo);
 echo $saveTo;
