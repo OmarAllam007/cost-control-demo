@@ -23,13 +23,12 @@ $drawing->setName('Logo')->setImageResource($logo)
     ->setCoordinates('J2')->setWorksheet($sheet);
 
 
-
 $projectCell->setValue($projectCell->getValue() . ' ' . $project->name);
 $issueDateCell->setValue($issueDateCell->getValue() . ' ' . date('d M Y'));
 
 $start = 11;
 $counter = $start;
-foreach($resourceTypes as $id => $value) {
+foreach ($resourceTypes as $id => $value) {
     $typePreviousData = $previousData[$id] ?? [];
     $typeToDateData = $toDateData[$id] ?? [];
 
@@ -47,7 +46,7 @@ foreach($resourceTypes as $id => $value) {
         $typeToDateData['completion_cost_var'] ?: '0.00',
     ];
 
-    $sheet->fromArray($row, '',"A{$counter}");
+    $sheet->fromArray($row, '', "A{$counter}");
     ++$counter;
 }
 
@@ -77,19 +76,79 @@ $sheet->getStyle("E{$start}:E{$counter}")->setConditionalStyles([$varCondition])
 $sheet->getStyle("H{$start}:H{$counter}")->setConditionalStyles([$varCondition]);
 $sheet->getStyle("K{$start}:K{$counter}")->setConditionalStyles([$varCondition]);
 
-$chartLabels = [
-    new PHPExcel_Chart_DataSeriesValues('String', "A{$start}:A{$counter}")
+
+//<editor-fold defaultstate=""collapsed desc="Budget Cost VS Completion Cost">
+$end = $counter - 1;
+
+$xAxisLabels = [
+    new PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!A{$start}:A{$end}", null, $counter - $start)
 ];
 
-$budgetVsCompletionColumns = [
-    new PHPExcel_Chart_DataSeriesValues('Number', "B$start:B$end"),
-    new PHPExcel_Chart_DataSeriesValues('Number', "J$start:J$end"),
+$budgetVsCompletionValues = [
+    new PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!B$start:B$end"),
+    new PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!J$start:J$end"),
+];
+
+$budgetVsCompletionLabels = [
+    new PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!B" . ($start - 1), NULL, 1),
+    new PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!J" . ($start - 1), NULL, 1),
 ];
 
 $budgetVsCompletionTitle = new PHPExcel_Chart_Title('Budget Cost vs At Completion');
+$budgetVsCompletionLegend = new PHPExcel_Chart_Legend(\PHPExcel_Chart_Legend::POSITION_BOTTOM, NULL, false);
+$budgetVsCompletionDataSeries = new PHPExcel_Chart_DataSeries(
+    PHPExcel_Chart_DataSeries::TYPE_BARCHART,
+    PHPExcel_Chart_DataSeries::GROUPING_STANDARD,
+    [0, 1],
+    $budgetVsCompletionLabels,
+    $xAxisLabels,
+    $budgetVsCompletionValues
+);
+$budgetVsCompletionDataSeries->setPlotDirection(PHPExcel_Chart_DataSeries::DIRECTION_BAR);
 
+$budgetVsCompletionPlot = new PHPExcel_Chart_PlotArea(null, [$budgetVsCompletionDataSeries]);
+$budgetVsCompletionChart = new PHPExcel_Chart(
+    'budget_vs_comp', $budgetVsCompletionTitle, $budgetVsCompletionLegend,
+    $budgetVsCompletionPlot, true, '0', null, null
+);
 
+$budgetVsCompletionChart->setTopLeftCell("A" . ($counter + 5))->setBottomRightCell('F' . ($counter + 25));
+$sheet->addChart($budgetVsCompletionChart);
+//</editor-fold>
+
+$end = $counter - 1;
+
+$todateVsAllowableValues = [
+    new PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!F$start:F$end"),
+    new PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!G$start:G$end"),
+];
+
+$todateVsAllowableLabels = [
+    new PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!F" . ($start - 1), NULL, 1),
+    new PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!G" . ($start - 1), NULL, 1),
+];
+
+$todateVsAllowableTitle = new PHPExcel_Chart_Title('To Date vs Allowable');
+$todateVsAllowableLegend = new PHPExcel_Chart_Legend(\PHPExcel_Chart_Legend::POSITION_BOTTOM, NULL, false);
+$todateVsAllowableDataSeries = new PHPExcel_Chart_DataSeries(
+    PHPExcel_Chart_DataSeries::TYPE_BARCHART,
+    PHPExcel_Chart_DataSeries::GROUPING_STANDARD,
+    [0, 1],
+    $todateVsAllowableLabels,
+    $xAxisLabels,
+    $todateVsAllowableValues
+);
+$todateVsAllowableDataSeries->setPlotDirection(PHPExcel_Chart_DataSeries::DIRECTION_BAR);
+
+$todateVsAllowablePlot = new PHPExcel_Chart_PlotArea(null, [$todateVsAllowableDataSeries]);
+$todateVsAllowableChart = new PHPExcel_Chart(
+    'budget_vs_comp', $todateVsAllowableTitle, $todateVsAllowableLegend,
+    $todateVsAllowablePlot, true, '0', null, null
+);
+
+$todateVsAllowableChart->setTopLeftCell("G" . ($counter + 5))->setBottomRightCell('L' . ($counter + 25));
+$sheet->addChart($todateVsAllowableChart);
 
 $saveTo = storage_path('app/') . uniqid() . '.xlsx';
-$writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($saveTo);
+$writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->setIncludeCharts(true)->save($saveTo);
 echo $saveTo;
