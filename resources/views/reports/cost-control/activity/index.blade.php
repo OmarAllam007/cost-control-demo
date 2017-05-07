@@ -6,8 +6,11 @@
 
 @section('header')
     <h2 class="">{{$project->name}} - Activity report</h2>
-    <div class="pull-right">
+    <div class="pull-right btn-toolbar">
         {{--<a href="?print=1" target="_blank" class="btn btn-default btn-sm print"><i class="fa fa-print"></i> Print</a>--}}
+
+        <a href="?excel" target="_blank" class="btn btn-success btn-sm print"><i class="fa fa-file-excel-o"></i> Print</a>
+
         <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm back">
             <i class="fa fa-chevron-left"></i> Back
         </a>

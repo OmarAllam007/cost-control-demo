@@ -32,7 +32,9 @@ class ActivityReport
 
         $activities = MasterShadow::forPeriod($this->period)->orderBy('activity')->selectRaw('DISTINCT activity')->pluck('activity');
 
-        return view('reports.cost-control.activity.activity_report', compact('tree', 'project', 'periods', 'activities'));
+        $period = $this->period;
+
+        return compact('tree', 'project', 'periods', 'activities', 'period');
     }
 
     function buildTree()

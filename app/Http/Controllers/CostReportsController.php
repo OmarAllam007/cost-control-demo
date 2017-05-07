@@ -129,7 +129,14 @@ class CostReportsController extends Controller
 
         $report = new ActivityReport($period);
 
-        return $report->run();
+        $data = $report->run();
+
+        if ($request->exists('excel')) {
+            $filename = view('reports.cost-control.activity.excel', $data)->render();
+            return response()->download($filename, slug($project->name) . '-activity.xlsx');
+        }
+
+        return view('reports.cost-control.activity.index', $data);
     }
 
     public function resourceDictionaryReport(Project $project)
