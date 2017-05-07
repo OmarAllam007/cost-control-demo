@@ -50,7 +50,7 @@ class ModifyProjectBoq extends ImportJob
             $level = $this->wbs_levels->get($data[13]);
 
             $result = \DB::update('UPDATE boqs
-              SET item_code=:item_code, description = :description, type = :type, unit_id = $unit_id, 
+              SET item_code=:item_code, description = :description, type = :type, unit_id = :unit_id, 
               quantity = :quantity,
               price_ur = :price_ur , dry_ur = :dry_ur, kcc_qty = :kcc_qty, materials = :material , 
               subcon = :subcon , manpower = :manpower  WHERE 
