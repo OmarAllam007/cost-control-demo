@@ -47,13 +47,18 @@ class ModifyProjectBoq extends ImportJob
                 continue;
             }
 
-            $level = $this->wbs_levels->get($data[0]);
+            $level = $this->wbs_levels->get($data[13]);
 
             $result = \DB::update('UPDATE boqs
-              SET item_code=?, description = ?, type = ?, unit_id = ?, quantity =?,
-              price_ur = ? , dry_ur = ? , kcc_qty = ? , materials = ? , subcon = ? , manpower = ?  WHERE project_id = ?  AND wbs_id = ? AND cost_account LIKE ?', [
-                    $data[0], $data[2], $data[3], $this->getUnit($data[4]), $data[5], $data[6],
-                    $data[7], $data[8], $data[9], $data[10], $data[11], $this->project->id, $level, $data[2]
+              SET item_code=:item_code, description = :description, type = :type, unit_id = $unit_id, 
+              quantity = :quantity,
+              price_ur = :price_ur , dry_ur = :dry_ur, kcc_qty = :kcc_qty, materials = :material , 
+              subcon = :subcon , manpower = :manpower  WHERE 
+              project_id = :project_id  AND wbs_id = :wbs_id AND cost_account LIKE :cost_account', [
+                    'item_code' => $data[0], 'description' => $data[2],
+                    'type' => $data[3], 'unit_id' => $this->getUnit($data[4]), 'quantity' => $data[5], 'price_ur' => $data[6], 'dry_ur' => $data[7],
+                    'kcc_qty' => $data[8], 'material' => $data[9], 'subcon' => $data[10], 'manpower' => $data[11],
+                    'project_id' => $this->project->id, 'wbs_id' => $level, 'cost_account' => $data[1]
                 ]
             );
 
@@ -64,7 +69,6 @@ class ModifyProjectBoq extends ImportJob
         }
 
         \DB::commit();
-
         return $counter;
     }
 }
