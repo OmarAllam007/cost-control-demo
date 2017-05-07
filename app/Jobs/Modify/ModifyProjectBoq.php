@@ -26,7 +26,12 @@ class ModifyProjectBoq extends ImportJob
     {
         $this->file = $file;
         $this->project = $project;
-        $this->wbs_levels = WbsLevel::where('project_id', $project->id)->pluck('id', 'code');
+        $this->wbs_levels = WbsLevel::select('id', 'code')->where('project_id', $project->id)
+            ->get()->keyBy(function ($level) {
+                return trim(strtolower($level->code));
+            })->map(function($level){
+                return $level->id;
+            });
     }
 
     public function handle()
@@ -40,6 +45,8 @@ class ModifyProjectBoq extends ImportJob
         $counter = 0;
         \DB::beginTransaction();
 
+        $failed = collect();
+
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -47,7 +54,14 @@ class ModifyProjectBoq extends ImportJob
                 continue;
             }
 
-            $level = $this->wbs_levels->get($data[13]);
+            $wbs_code = trim(strtolower($data[13]));
+            $level = $this->wbs_levels->get($wbs_code);
+
+            $conditions = ['project_id' => $this->project->id, 'wbs_id' => $level, 'cost_account' => $data[1]];
+            if (!Boq::where($conditions)->exists()) {
+                $failed->push($data);
+                continue;
+            }
 
             $result = \DB::update('UPDATE boqs
               SET item_code=:item_code, description = :description, type = :type, unit_id = :unit_id, 
@@ -63,12 +77,15 @@ class ModifyProjectBoq extends ImportJob
             );
 
 
-            if ($result) {
-                ++$counter;
-            }
-        }
+            ++$counter;
 
+        }
         \DB::commit();
+
+        $content = $failed->map(function ($row) { return implode(',', array_map('csv_quote', $row)); })->implode(PHP_EOL);
+        $filename = storage_path('app/modify_boq_' . $this->project->id . '.csv');
+        file_put_contents($filename, $content);
+
         return $counter;
     }
 }
