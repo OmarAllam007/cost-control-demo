@@ -41,10 +41,16 @@ class BudgetCostDryCostByDiscipline
             ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')->selectRaw("CASE WHEN a.discipline != '' THEN a.discipline ELSE 'General' END as type")
             ->selectRaw('sum(budget_cost) as budget_cost')
             ->groupBy(\DB::raw(1))->orderByRaw('1')
-            ->get()->keyBy('type');
+            ->get()->keyBy(function($row) {
+                return trim(strtolower($row->type));
+            });
 
-        $boqData = collect();
-        $budgetData->keys()->each(function($discipline) use ($boqData, $project) {
+        $boqData = Boq::whereProjectId($project->id)->groupBy('type')
+            ->selectRaw('type, sum(dry_ur * quantity) as dry_cost')->get()->keyBy(function($row) {
+                return trim(strtolower($row->type));
+            });
+
+        /*$budgetData->keys()->each(function($discipline) use ($boqData, $project) {
 
             $dry = Boq::whereIn('id', function($query) use ($project, $discipline) {
                 // Subquery
@@ -56,7 +62,7 @@ class BudgetCostDryCostByDiscipline
             })->selectRaw('sum(dry_ur * quantity) as dry_cost')->first();
 
             $boqData->put($discipline, $dry);
-        });
+        });*/
 
         return view('reports.budget_cost_dry_cost_by_discipline', compact('budgetData', 'boqData', 'project'));
     }
