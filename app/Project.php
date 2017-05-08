@@ -81,12 +81,13 @@ class Project extends Model
 
     function getProductivitiesAttribute()
     {
-        $refs = $this->shadows()->with('productivity')
+        $refs = $this->shadows()
 //            ->select('id', 'productivity_ref')
             ->where('productivity_ref', '!=', '')->whereNotNull('productivity_ref')
             ->pluck('productivity_id')->unique()->filter();
 
-        return Productivity::whereIn('id', $refs)->get();
+//        dd(Productivity::whereIn('id', $refs)->with('units')->count());
+        return Productivity::whereIn('id', $refs)->with('units')->get();
     }
 
     /*function getResourcesAttribute()
