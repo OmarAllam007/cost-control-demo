@@ -90,7 +90,7 @@ trait CostAttributes
             return $this->calculated['allowable_var'];
         }
 
-        return $this->calculated['allowable_var'] = $this->allowable_ev_cost - $this->to_date_cost;
+        return $this->calculated['allowable_var'] = $this->latest_allowable_cost - $this->to_date_cost;
     }
 
     function getBlAllowableCostAttribute()
@@ -99,7 +99,7 @@ trait CostAttributes
             return $this->calculated['bl_allowable_cost'];
         }
 
-        return $this->calculated['bl_allowable_cost'] = $this->budget_cost - $this->allowable_ev_cost;
+        return $this->calculated['bl_allowable_cost'] = $this->budget_cost - $this->latest_allowable_cost;
     }
 
     function getBlAllowableVarAttribute()
@@ -174,7 +174,7 @@ trait CostAttributes
             return $this->calculated['completion_cost'];
         }
 
-        return $this->calculated['completion_cost'] = $this->remaining_cost + $this->to_date_cost;
+        return $this->calculated['completion_cost'] = $this->latest_remaining_cost + $this->to_date_cost;
     }
 
     function getCompletionQtyAttribute()
@@ -183,7 +183,7 @@ trait CostAttributes
             return $this->calculated['completion_qty'];
         }
 
-        return $this->calculated['completion_qty'] = $this->remaining_qty + $this->to_date_qty;
+        return $this->calculated['completion_qty'] = $this->latest_remaining_qty + $this->to_date_qty;
     }
 
     function getCompletionUnitPriceAttribute()
@@ -193,7 +193,7 @@ trait CostAttributes
         }
 
         if ($this->completion_qty == 0) {
-            return $this->calculated['completion_unit_price'] = $this->remaining_unit_price;
+            return $this->calculated['completion_unit_price'] = $this->latest_remaining_unit_price;
         } else {
             return $this->calculated['completion_unit_price'] = $this->completion_cost / $this->completion_qty;
         }
@@ -364,6 +364,26 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         }
 
         return $this->calculation_period;
+    }
+
+    public function getLatestAllowableCostAttribute()
+    {
+        return $this->allowable_ev_cost;
+    }
+
+    function getLatestRemainingCostAttribute()
+    {
+        return $this->remaining_cost;
+    }
+
+    function getLatestRemainingQtyAttribute()
+    {
+        return $this->remaining_qty;
+    }
+
+    function getLatestRemainingUnitPriceAttribute()
+    {
+        return $this->remaining_unit_price;
     }
 
 }

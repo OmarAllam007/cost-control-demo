@@ -7,6 +7,7 @@ use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Jobs\Job;
 use App\MasterShadow;
+use App\Period;
 use App\Resources;
 use App\ResourceType;
 use App\StdActivity;
@@ -20,6 +21,9 @@ class ExportCostShadow extends Job
 
     /** @var Project */
     protected $project;
+
+    /** @var Period */
+    protected $period;
     /**
      * @var string
      */
@@ -36,16 +40,21 @@ class ExportCostShadow extends Job
      */
     private $export;
 
-    public function __construct($project, $perspective = '', $export = false)
+    public function __construct($project, $perspective = '', $export = false, $period = null)
     {
         $this->project = $project;
         $this->perspective = $perspective;
         $this->export = $export;
+        if (!$period) {
+            $period = $this->project->open_period();
+        }
+        $this->period = $period;
     }
 
 
     public function handle()
     {
+        $period = $this->period;
         $headers = [
             'WBS Level 1', 'WBS Level 2', 'WBS Level 3', 'WBS Level 4', 'WBS Level 5', 'WBS Level 6',
             'Activity Division 1', 'Activity Division 2', 'Activity Division 3', 'Activity Name', 'Activity ID',
@@ -66,11 +75,9 @@ class ExportCostShadow extends Job
 
         $this->buffer = implode(',', array_map('csv_quote', $headers));
 
-        $period = $this->project->open_period();
-
         if ($this->perspective == 'budget') {
             $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
-            if (!$query->count()) {
+            if (!$query->exists()) {
                 $query = BreakDownResourceShadow::where('project_id', $this->project->id);
             }
         } else {
@@ -138,11 +145,11 @@ class ExportCostShadow extends Job
                     '"'.round($costShadow['to_date_unit_price'] ?: '0', 2).'",'.
                     '"'.round($costShadow['to_date_qty'] ?: '0', 2).'",'.
                     '"'.round($costShadow['to_date_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['allowable_ev_cost'] ?: '0', 2).'",'.
+                    '"'.round($costShadow['latest_allowable_cost'] ?: '0', 2).'",'.
                     '"'.round($costShadow['allowable_var'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['remaining_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['remaining_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['remaining_cost'] ?: '0', 2).'",'.
+                    '"'.round($costShadow['latest_remaining_unit_price'] ?: '0', 2).'",'.
+                    '"'.round($costShadow['latest_remaining_qty'] ?: '0', 2).'",'.
+                    '"'.round($costShadow['latest_remaining_cost'] ?: '0', 2).'",'.
                     '"'.round($costShadow['bl_allowable_cost'] ?: '0', 2).'",'.
                     '"'.round($costShadow['bl_allowable_var'] ?: '0', 2).'",'.
                     '"'.round($costShadow['completion_unit_price'] ?: '0', 2).'",'.
