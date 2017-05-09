@@ -174,7 +174,7 @@ trait CostAttributes
             return $this->calculated['completion_cost'];
         }
 
-        return $this->calculated['completion_cost'] = $this->remaining_cost + $this->to_date_cost;
+        return $this->calculated['completion_cost'] = $this->latest_remaining_cost + $this->to_date_cost;
     }
 
     function getCompletionQtyAttribute()
@@ -183,7 +183,7 @@ trait CostAttributes
             return $this->calculated['completion_qty'];
         }
 
-        return $this->calculated['completion_qty'] = $this->remaining_qty + $this->to_date_qty;
+        return $this->calculated['completion_qty'] = $this->latest_remaining_qty + $this->to_date_qty;
     }
 
     function getCompletionUnitPriceAttribute()
@@ -193,7 +193,7 @@ trait CostAttributes
         }
 
         if ($this->completion_qty == 0) {
-            return $this->calculated['completion_unit_price'] = $this->remaining_unit_price;
+            return $this->calculated['completion_unit_price'] = $this->latest_remaining_unit_price;
         } else {
             return $this->calculated['completion_unit_price'] = $this->completion_cost / $this->completion_qty;
         }

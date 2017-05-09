@@ -13,13 +13,13 @@ use Illuminate\Database\Query\JoinClause;
 class BreakDownResourceShadow extends Model
 {
     use Tree, HasChangeLog;
-//    use CostAttributes;
-    use CostAttributes {
-        getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
-        getRemainingCostAttribute as protected getRemainingCostAttributeFromTrait;
-        getRemainingQtyAttribute as protected getRemainingQtyAttributeFromTrait;
-        getRemainingUnitPriceAttribute as protected getRemainingUnitPriceAttributeFromTrait;
-    }
+    use CostAttributes;
+//    use CostAttributes {
+//        getAllowableEvCostAttribute as protected getAllowableEvCostAttributeFromTrait;
+//        getRemainingCostAttribute as protected getRemainingCostAttributeFromTrait;
+//        getRemainingQtyAttribute as protected getRemainingQtyAttributeFromTrait;
+//        getRemainingUnitPriceAttribute as protected getRemainingUnitPriceAttributeFromTrait;
+//    }
 
     protected $table = 'break_down_resource_shadows';
     protected $fillable = [
@@ -248,5 +248,10 @@ class BreakDownResourceShadow extends Model
 
     function survey(){
         return $this->belongsTo(Survey::class,'survey_id');
+    }
+
+    function getTopMaterialAttribute()
+    {
+        return $this->resource->top_material;
     }
 }
