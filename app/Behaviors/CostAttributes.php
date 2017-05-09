@@ -90,7 +90,7 @@ trait CostAttributes
             return $this->calculated['allowable_var'];
         }
 
-        return $this->calculated['allowable_var'] = $this->allowable_ev_cost - $this->to_date_cost;
+        return $this->calculated['allowable_var'] = $this->latest_allowable_cost - $this->to_date_cost;
     }
 
     function getBlAllowableCostAttribute()
@@ -99,7 +99,7 @@ trait CostAttributes
             return $this->calculated['bl_allowable_cost'];
         }
 
-        return $this->calculated['bl_allowable_cost'] = $this->budget_cost - $this->allowable_ev_cost;
+        return $this->calculated['bl_allowable_cost'] = $this->budget_cost - $this->latest_allowable_cost;
     }
 
     function getBlAllowableVarAttribute()
@@ -364,6 +364,26 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         }
 
         return $this->calculation_period;
+    }
+
+    public function getLatestAllowableCostAttribute()
+    {
+        return $this->allowable_ev_cost;
+    }
+
+    function getLatestRemainingCostAttribute()
+    {
+        return $this->remaining_cost;
+    }
+
+    function getLatestRemainingQtyAttribute()
+    {
+        return $this->remaining_qty;
+    }
+
+    function getLatestRemainingUnitPriceAttribute()
+    {
+        return $this->remaining_unit_price;
     }
 
 }
