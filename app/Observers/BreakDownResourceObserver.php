@@ -68,12 +68,13 @@ class BreakDownResourceObserver
 
             if (!$projectProductivity) {
                 $productivity = Productivity::find($productivity_id);
-                $newProductivity = $productivity->toArray();
-                unset($newProductivity['id'], $newProductivity['created_at'], $newProductivity['updated_at']);
-                $newProductivity['project_id'] = $project_id;
-                $newProductivity['productivity_id'] = $productivity->id;
+                $attributes = $productivity->toArray();
+                unset($attributes['id'], $attributes['created_at'], $attributes['updated_at']);
                 Productivity::flushEventListeners();
-                $projectProductivity = Productivity::create($newProductivity);
+                $projectProductivity = new Productivity($attributes);
+                $projectProductivity->project_id = $project_id;
+                $projectProductivity->productivity_id = $productivity->id;
+                $projectProductivity->save();
             }
             $breakdownResource->productivity_id = $projectProductivity->id;
         }
