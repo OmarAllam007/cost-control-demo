@@ -131,7 +131,7 @@ class BreakDownResourceShadow extends Model
     public function getCurrQtyAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
-        if ($this->attributes['curr_qty']) {
+        if (isset($this->attributes['curr_qty'])) {
             return $this->attributes['curr_qty'];
         }
 
@@ -150,7 +150,7 @@ class BreakDownResourceShadow extends Model
     public function getCurrCostAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
-        if ($this->attributes['curr_cost']) {
+        if (isset($this->attributes['curr_cost'])) {
             return $this->attributes['curr_cost'];
         }
         if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
@@ -167,7 +167,7 @@ class BreakDownResourceShadow extends Model
 
     public function getCurrUnitPriceAttribute()
     {
-        if ($this->attributes['curr_unit_price']) {
+        if (isset($this->attributes['curr_unit_price'])) {
             return $this->attributes['curr_unit_price'];
         }
 
@@ -185,7 +185,7 @@ class BreakDownResourceShadow extends Model
     public function getPrevQtyAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
-        if ($this->attributes['prev_qty']) {
+        if (isset($this->attributes['prev_qty'])) {
             return $this->attributes['prev_qty'];
         }
 
@@ -203,7 +203,7 @@ class BreakDownResourceShadow extends Model
 
     public function getPrevCostAttribute()
     {
-        if ($this->attributes['prev_cost']) {
+        if (isset($this->attributes['prev_cost'])) {
             return $this->attributes['prev_cost'];
         }
 
@@ -221,7 +221,7 @@ class BreakDownResourceShadow extends Model
 
     public function getPrevUnitPriceAttribute()
     {
-        if ($this->attributes['prev_unit_price']) {
+        if (isset($this->attributes['prev_unit_price'])) {
             return $this->attributes['prev_unit_price'];
         }
 
@@ -238,6 +238,10 @@ class BreakDownResourceShadow extends Model
 
     public function getLatestAllowableCostAttribute()
     {
+        if (isset($this->attributes['allowable_ev_cost'])) {
+            return $this->attributes['allowable_ev_cost'];
+        }
+
         if (!empty($this->cost->allowable_ev_cost)) {
             return $this->cost->allowable_ev_cost;
         }
