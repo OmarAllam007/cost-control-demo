@@ -93,6 +93,8 @@ class CostImporter
 
         $resourcesLog = collect();
 
+        $invalid = collect();
+
         foreach ($this->rows as $hash => $row) {
 
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
@@ -100,7 +102,7 @@ class CostImporter
 
             $shadowResource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->first();
             if (!$shadowResource) {
-                // TODO: Log invalid records
+                $invalid->push('row');
                 continue;
             }
 
@@ -137,6 +139,9 @@ class CostImporter
         }
 
         $this->cache();
+
+        $costIssues = new CostIssuesLog($this->batch);
+        $costIssues->recordInvalid($invalid);
 
         if ($errors->count()) {
             return ['error' => 'physical_qty', 'errors' => $errors, 'batch' => $this->batch];
@@ -177,6 +182,7 @@ class CostImporter
     {
         $errors = collect();
 
+        $invalid = collect();
         foreach ($this->rows as $hash => $row) {
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
@@ -186,18 +192,21 @@ class CostImporter
                 ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'")
                 ->get();
 
-            //TODO: If shadows not found add to invalid
-
             if ($shadows->count() > 1) {
                 $row['hash'] = $hash;
                 $row['resources'] = $shadows;
                 $errors->push($row);
+            } elseif ($shadows->count() < 1) {
+                $invalid->push($row);
             }
         }
 
         if ($errors->count()) {
             return ['error' => 'cost_accounts', 'errors' => $errors, 'batch' => $this->batch];
         }
+
+        $costIssues = new CostIssuesLog($this->batch);
+        $costIssues->recordInvalid($invalid);
 
         return $this->save();
     }
@@ -214,6 +223,7 @@ class CostImporter
         $batch_id = $this->batch->id;
 
         $this->actual_resources = collect();
+        $invalid = collect();
 
         $resource_dict = collect();
 
@@ -230,7 +240,7 @@ class CostImporter
             }
 
             if (!$resource) {
-                //TODO: add to invalid
+                $invalid->push($row);
                 continue;
             }
 
@@ -250,6 +260,9 @@ class CostImporter
 
         $this->rows = collect();
         $this->cache();
+
+        $costIssues = new CostIssuesLog($this->batch);
+        $costIssues->recordInvalid($invalid);
 
         return $this->checkProgress();
     }
@@ -285,6 +298,10 @@ class CostImporter
         }
 
         $resources = BreakDownResourceShadow::with('cost')->whereIn('breakdown_resource_id', $breakdown_ids)->get();
+
+        if (!$resources->count()) {
+            return ['error' => 'no_resources', 'batch' => $this->batch];
+        }
 
         return ['error' => 'status', 'errors' => $resources, 'batch' => $this->batch];
     }

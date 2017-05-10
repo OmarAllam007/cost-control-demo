@@ -200,6 +200,7 @@ class ActualMaterialController extends Controller
     function status(ActualBatch $actual_batch)
     {
         $result = (new CostImporter($actual_batch))->checkStatus();
+
         $resources = $result['errors']->groupBy(function ($resource){
             return $resource->wbs->path . ' / ' . $resource->activity;
         })->sortByKeys();
@@ -250,6 +251,10 @@ class ActualMaterialController extends Controller
                    return \Redirect::route('actual-material.progress', $key);
                case 'status':
                    return \Redirect::route('actual-material.status', $key);
+               case 'no_resources':
+                   flash('No resources has been imported. Please check uploaded data', 'warning');
+                   $this->dispatch(new NotifyCostOwnerForUpload($batch));
+                   return redirect()->route('project.cost-control', $batch->project);
            }
        } else {
             flash("{$result['success']} resources has been updated", 'success');
