@@ -103,12 +103,16 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(Productivity::class);
     }
 
-    function scopeJoinCost(Builder $query, WbsLevel $wbsLevel = null)
+    function scopeJoinCost(Builder $query, WbsLevel $wbsLevel = null, Period $period)
     {
         $query->from("$this->table as budget")
-            ->leftJoin('current_resources as curr', 'budget.breakdown_resource_id', '=', 'curr.curr_breakdown_resource_id')
-            ->leftJoin('previous_resources as prev', 'budget.breakdown_resource_id', '=', 'prev.prev_breakdown_resource_id')
-            ->selectRaw('budget.*, curr.curr_qty, curr.curr_cost, curr_unit_price, prev.prev_qty, prev.prev_cost, prev_unit_price');
+            ->leftJoin('cost_shadows as cost', function(JoinClause $on) use ($period) {
+                $on->where('budget.breakdown_resource_id', '=', 'budget.breakdown_resource_id')
+                    ->where('cost.period_id', '=', $period->id);
+            })
+//            ->leftJoin('current_resources as curr', 'budget.breakdown_resource_id', '=', 'curr.curr_breakdown_resource_id')
+//            ->leftJoin('previous_resources as prev', 'budget.breakdown_resource_id', '=', 'prev.prev_breakdown_resource_id')
+            ->selectRaw('budget.*, cost.curr_qty, cost.curr_cost, cost.curr_unit_price, cost.prev_qty, cost.prev_cost, prev_unit_price');
 
         if ($wbsLevel) {
             $query->whereIn('budget.wbs_id', $wbsLevel->getChildrenIds());
@@ -121,12 +125,16 @@ class BreakDownResourceShadow extends Model
 
     function getQtyToDateAttribute()
     {
-        return ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
+        return $this->actual_resources->sum('qty');
     }
 
     public function getCurrQtyAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
+        if ($this->attributes['curr_qty']) {
+            return $this->attributes['curr_qty'];
+        }
+
         if (isset($this->cost->curr_qty) && $this->cost->period_id == $period_id) {
             return $this->cost->curr_qty;
         }
@@ -135,12 +143,16 @@ class BreakDownResourceShadow extends Model
             return $this->calculated['curr_qty'];
         }
 
-        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
+//        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['curr_qty'] = $this->actual_resources->where('period_id', $period_id)->sum('qty') ?: 0;
     }
 
     public function getCurrCostAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
+        if ($this->attributes['curr_cost']) {
+            return $this->attributes['curr_cost'];
+        }
         if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
             return $this->cost->curr_cost;
         }
@@ -149,11 +161,16 @@ class BreakDownResourceShadow extends Model
             return $this->calculated['curr_cost'];
         }
 
-        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
+//        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['curr_cost'] = $this->actual_resources->where('period_id', $period_id)->sum('cost') ?: 0;
     }
 
     public function getCurrUnitPriceAttribute()
     {
+        if ($this->attributes['curr_unit_price']) {
+            return $this->attributes['curr_unit_price'];
+        }
+
         if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->curr_unit_price;
         }
@@ -168,6 +185,10 @@ class BreakDownResourceShadow extends Model
     public function getPrevQtyAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
+        if ($this->attributes['prev_qty']) {
+            return $this->attributes['prev_qty'];
+        }
+
         if (isset($this->cost->prev_qty) && $this->cost->period_id == $period_id) {
             return $this->cost->prev_qty;
         }
@@ -176,11 +197,16 @@ class BreakDownResourceShadow extends Model
             return $this->calculated['prev_qty'];
         }
 
-        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
+//        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['prev_qty'] = $this->actual_resources->where('period_id', '<', $period_id)->sum('qty') ?: 0;
     }
 
     public function getPrevCostAttribute()
     {
+        if ($this->attributes['prev_cost']) {
+            return $this->attributes['prev_cost'];
+        }
+
         $period_id = $this->getCalculationPeriod()->id;
         if (isset($this->cost->prev_cost) && $this->cost->period_id == $period_id) {
             return $this->cost->prev_cost;
@@ -190,11 +216,15 @@ class BreakDownResourceShadow extends Model
             return $this->calculated['prev_cost'];
         }
 
-        return $this->calculated['prev_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['prev_cost'] = $this->actual_resources->where('period_id', '<', $period_id)->sum('cost') ?: 0;
     }
 
     public function getPrevUnitPriceAttribute()
     {
+        if ($this->attributes['prev_unit_price']) {
+            return $this->attributes['prev_unit_price'];
+        }
+
         if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->prev_unit_price;
         }

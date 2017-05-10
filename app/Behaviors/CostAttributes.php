@@ -9,6 +9,7 @@
 namespace App\Behaviors;
 
 
+use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostResource;
 use App\Period;
@@ -155,7 +156,7 @@ trait CostAttributes
         }
 
         $resource = CostResource::where('resource_id', $this->resource_id)
-            ->where('project_id', $this->project_id)->where('period_id', $this->getCalculationPeriod())->first();
+            ->where('project_id', $this->project_id)->where('period_id', $this->getCalculationPeriod()->id)->first();
 
         if ($resource) {
             return $this->calculated['remaining_unit_price'] = $resource->rate;
@@ -336,9 +337,11 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     {
         return $this->appends = [
             'to_date_qty', 'to_date_cost', 'to_date_unit_price', 'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var', 'remaining_qty', 'remaining_cost',
-            'remaining_unit_price', 'completion_cost', 'completion_qty', 'completion_unit_price', 'unit_price_var', 'qty_var', 'cost_var', 'physical_unit', 'pw_index', 'allowable_qty',
+            'remaining_unit_price', 'completion_cost', 'completion_qty', 'completion_unit_price', 'unit_price_var', 'qty_var', 'cost_var', 'physical_unit', 'allowable_qty',
             'cost_variance_to_date_due_unit_price', 'cost_variance_remaining_due_unit_price', 'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty',
-            'cost_variance_to_date_due_qty', 'budget_unit_rate'
+            'cost_variance_to_date_due_qty',
+            //'budget_unit_rate',
+            //'pw_index',
         ];
     }
 
@@ -366,4 +369,8 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         return $this->calculation_period;
     }
 
+    function actual_resources()
+    {
+        return $this->hasMany(ActualResources::class, 'breakdown_resource_id', 'breakdown_resource_id');
+    }
 }

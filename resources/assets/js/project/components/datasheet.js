@@ -1,6 +1,6 @@
 import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
-import Pagination from './pagination';
+import Pagination from './server-pagination';
 
 export default {
 
@@ -19,51 +19,33 @@ export default {
 
     //<editor-fold defaultstate="collapsed" desc="Computed properties">
     computed: {
-        filtered_breakdowns() {
-            const resources = this.breakdowns.filter((item) => {
-                if (this.activity) {
-                    return (item.activity_id == this.activity);
+        url() {
+            let url = '/api/cost/breakdowns/' + this.wbs_id + (this.perspective ? ('?perspective=' + this.perspective) : '')
+            const filters = ['activity', 'resource_type', 'resource', 'cost_account'];
+            filters.forEach(filter => {
+                if (this[filter]) {
+                    url += '&' + filter + '=' + this[filter];
                 }
-                return true;
-            }).filter((item) => {
-                if (this.resource_type) {
-                    return (item.resource_type_id == this.resource_type);
-                }
-                return true;
-            }).filter((item) => {
-                if (this.cost_account) {
-                    return item.cost_account.toLowerCase().indexOf(this.cost_account.toLowerCase()) >= 0;
-                }
-                return true;
-            }).filter((item) => {
-                if (this.resource) {
-                    return item.resource_name.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0 ||
-                        item.resource_code.toLowerCase().indexOf(this.resource.toLowerCase()) >= 0;
-                }
-                return true;
             });
-
-            this.count = resources.length;
-            return resources.slice(this.first, this.last);
+            return url;
         }
     },
     //</editor-fold>
 
     methods: {
         loadBreakdowns(cache = true) {
-            if (this.wbs_id) {
-                this.loading = true;
-                $.ajax({
-                    url: '/api/cost/breakdowns/' + this.wbs_id + (this.perspective ? ('?perspective=' + this.perspective) : ''),
-                    dataType: 'json', cache
-                }).success(response => {
-                    this.loading = false;
-                    this.breakdowns = response;
-                }).error(() => {
-                    this.loading = false;
-                    this.breakdowns = [];
-                });
-            }
+            // if (this.wbs_id) {
+            //     this.loading = true;
+            //     $.ajax({
+            //         dataType: 'json', cache
+            //     }).success(response => {
+            //         this.loading = false;
+            //         this.breakdowns = response;
+            //     }).error(() => {
+            //         this.loading = false;
+            //         this.breakdowns = [];
+            //     });
+            // }
         },
 
         deleteResource(resource) {
@@ -82,7 +64,7 @@ export default {
             }).success(response => {
                 this.loading = false;
                 $('#DeleteWbsDataModal').modal('hide');
-                this.loadBreakdowns(false);
+                this.$broadcast('reloadPage');
                 this.$dispatch('request_alert', {
                     type: response.ok? 'info' : 'error', message: response.message
                 });
@@ -99,25 +81,26 @@ export default {
 
     events: {
         wbs_changed(params) {
-            this.wbs_id = params.selection;
-            this.loadBreakdowns();
+            if (this.wbs_id != params.selection) {
+                this.loading = true;
+                this.wbs_id = params.selection;
+            }
         },
 
-        reload_breakdowns() {
-            this.loadBreakdowns();
+        changingPage() {
+            this.loading = true;
         },
 
-        pageChanged(params) {
-            this.first = params.first;
-            this.last = params.last;
+        pageChanged(data) {
+            this.breakdowns = data;
+            this.loading = false;
         }
     },
 
     watch: {
         perspective(view) {
-            console.log(view);
+            this.loading = true;
             window.localStorage.perspective = view;
-            this.loadBreakdowns();
         }
     },
 

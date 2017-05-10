@@ -22,19 +22,43 @@ class CostController extends Controller
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
         set_time_limit(180);
+$time = microtime(1);
         $period = $wbs_level->project->open_period();
 
         $perspective = $request->get('perspective');
 
         if ($perspective == 'budget') {
-            $rows = BreakDownResourceShadow::joinCost($wbs_level, $period)->get();
-            $rows->each(function (BreakDownResourceShadow $row) {
-                $row->appendFields();
-            });
-            return $rows;
+            $query = BreakDownResourceShadow::joinCost($wbs_level, $period)->with('actual_resources');
         } else {
-            return CostShadow::joinShadow($wbs_level, $period)->get();
+            $query = CostShadow::joinShadow($wbs_level, $period);
         }
+
+        if ($activity_id = $request->get('activity')) {
+            $query->where(compact('activity_id'));
+        }
+
+        if ($resource_type_id = $request->get('resource_type')) {
+            $query->where(compact('resource_type_id'));
+        }
+
+        if ($cost_account = $request->get('cost_account')) {
+            $query->where('cost_account', 'like', "%{$cost_account}%");
+        }
+
+        if ($resource = $request->get('resource')) {
+            $query->where(function ($q) use ($resource) {
+                $q->where('resource_code', 'like', "%{$resource}%")->orWhere('resource_name', 'like', "%{$resource}%");
+            });
+        }
+
+        $rows = $query->paginate(100);
+        if ($perspective == 'budget') {
+            $rows->each(function (BreakDownResourceShadow $resource) {
+                $resource->appendFields();
+            });
+        }
+
+        return $rows;
     }
 
     function activityLog(WbsLevel $wbs_level, Request $request)
