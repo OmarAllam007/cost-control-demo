@@ -47,7 +47,7 @@
                 <div class="col-sm-3">
                     <div class="form-group form-group-sm">
                         {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
-                        {{Form::text('cost_account', session('filters.breakdown.' . $project->id . '.cost_account'), ['class' => 'form-control', 'v-model' => 'cost_account'])}}
+                        {{Form::text('cost_account', session('filters.breakdown.' . $project->id . '.cost_account'), ['class' => 'form-control', 'v-model' => 'cost_account', 'debounce' => 500])}}
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@
                 </div>
             </section>
 
-            <section v-if="filtered_breakdowns.length">
+            <section v-if="breakdowns.length">
                 <div class="scrollpane">
                     <table class="table table-condensed table-striped table-hover table-breakdown">
                         <thead>
@@ -160,7 +160,7 @@
                     </table>
                     <table class="table table-condensed table-striped table-hover table-breakdown">
                         <tbody>
-                        <tr v-for="breakdown in filtered_breakdowns">
+                        <tr v-for="breakdown in breakdowns">
                             @if (can('manual_edit', $project) || can('delete_resources', $project))
                                 <td style="min-width: 30px; max-width: 30px">
                                     <div class="dropdown">
@@ -293,10 +293,11 @@
                     </table>
 
                 </div>
-                <pagination :total="count"></pagination>
             </section>
 
             <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No breakdowns found</div>
+
+            <pagination :url="url"></pagination>
 
             @can('delete_resources', $project)
                 <delete-resource-modal inline-template>
