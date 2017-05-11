@@ -53,7 +53,18 @@ class ExportCostToMaster extends Job
             $records = [];
             foreach ($shadows as $costShadow) {
                 $costShadow->setCalculationPeriod($this->period);
-                $boqDescription = $this->getBoqDescription($costShadow);
+                $boq = $this->getBoq($costShadow);
+                if ($boq) {
+                    $boqDescription = $boq->description;
+                    $boqDiscipline = $boq->type;
+                    $boq_id = $boq->id;
+                    $boq_wbs_id = $boq->wbs_id;
+                } else {
+                    $boqDescription = '';
+                    $boqDiscipline = '';
+                    $boq_id = 0;
+                    $boq_wbs_id = 0;
+                }
 
                 if (isset($this->cache['resources'][$costShadow->resource_id])) {
                     $resource = $this->cache['resources'][$costShadow->resource_id];
@@ -63,6 +74,8 @@ class ExportCostToMaster extends Job
 
                 $wbs = $this->getWbs($costShadow);
                 $activityDivs = $this->getActivityDivisions($costShadow);
+
+
 
                 $records[] = [
                     'budget_id' => $costShadow['id'], 'project_id' => $this->project->id, 'period_id' => $this->period->id,
@@ -98,6 +111,9 @@ class ExportCostToMaster extends Job
                     'cost_variance_completion_due_unit_price' => $costShadow['cost_variance_completion_due_unit_price'],
                     'cost_variance_completion_due_qty' => $costShadow['cost_variance_completion_due_qty'],
                     'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
+                    'boq_discipline' => $boqDiscipline,
+                    'boq_id' => $boq_id,
+                    'boq_wbs_id' => $boq_wbs_id
                 ];
             }
 
@@ -159,19 +175,19 @@ class ExportCostToMaster extends Job
         return $this->cache['divisions'][$resource->id] = array_reverse($divisions);
     }
 
-    protected function getBoqDescription($costShadow)
+    protected function getBoq($costShadow)
     {
-        $boqDescription = '';
+
         $boqCode = $costShadow->wbs . '#' . $costShadow->cost_account;
         if (isset($this->cache['boqs'][$boqCode])) {
             return $this->cache['boqs'][$boqCode];
         } else {
             $boq = Boq::costAccountOnWbs($costShadow->wbs, $costShadow->cost_account)->first();
             if ($boq) {
-                return $this->cache['boqs'][$boqCode] = $boq->description;
+                return $this->cache['boqs'][$boqCode] = $boq;
             }
         }
 
-        return $this->cache['boqs'][$boqCode] = '';
+        return $this->cache['boqs'][$boqCode] = null;
     }
 }
