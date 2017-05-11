@@ -44,11 +44,14 @@ class BoqReport
 
         $query = MasterShadow::with('boq_record', 'boq_wbs')->boqReport($this->period);
         $currentData = $this->applyFilters($query)->get();
-
         foreach ($currentData as $boq) {
+
             if ($this->wbs_levels->has($boq->boq_wbs_id)) {
                 $levels = $this->wbs_levels->get($boq->boq_wbs_id);
             } else {
+                if (!$boq->boq_wbs) {
+                    continue;
+                }
                 $levels = $boq->boq_wbs->getParents();
                 $this->wbs_levels->put($boq->boq_wbs_id, $levels);
             }
