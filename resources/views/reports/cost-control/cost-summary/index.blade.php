@@ -14,9 +14,9 @@
         {{--<i class="fa fa-warning"></i> Concerns--}}
         {{--</a>--}}
 
-        <a href="?excel" target="_blank" class="btn btn-success btn-default btn-sm"><i class="fa fa-file-excel-o"></i> Excel</a>
+        <a href="?excel" class="btn btn-success btn-default btn-sm"><i class="fa fa-file-excel-o"></i> Excel</a>
 
-        <a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
+        {{--<a href="?print=1" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>--}}
 
         <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i> Back</a>
     </div>

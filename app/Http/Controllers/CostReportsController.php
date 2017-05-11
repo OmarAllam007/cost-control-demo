@@ -159,8 +159,15 @@ class CostReportsController extends Controller
         $period_id = $this->getPeriod($project, $request);
         $period = Period::find($period_id);
 
-        $variance = new VarianceAnalysisReport($period);
-        return $variance->run();
+        $report = new VarianceAnalysisReport($period);
+        $data = $report->run();
+
+        if ($request->exists('excel')) {
+            $filename = view('reports.cost-control.variance_analysis.excel', $data)->render();
+            return response()->download($filename, slug($project->name) . '-variance-analysis.xlsx');
+        }
+
+        return view('reports.cost-control.variance_analysis.index', $data);
     }
 
     function issuesReport(Project $project, Request $request)

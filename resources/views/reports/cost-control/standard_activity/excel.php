@@ -40,9 +40,9 @@ function renderLevel($tree, PHPExcel_Worksheet $sheet, $parent, $counter, $outli
 
     foreach ($tree->where('parent', $parent) as $name => $level) {
         $sheet->fromArray([
-            str_repeat("    ", $outlineLevel) . $name, $level['budget_cost'], $level['previous_cost'], $level['previous_allowable'], $level['previous_var'],
-            $level['to_date_cost'], $level['to_date_allowable'], $level['to_date_var'], $level['remaining_cost'],
-            $level['completion_cost'], $level['completion_var'],
+            str_repeat("    ", $outlineLevel) . $name, $level['budget_cost'] ?: 0, $level['previous_cost'] ?: 0, $level['previous_allowable'] ?: 0, $level['previous_var'] ?: 0,
+            $level['to_date_cost'] ?: 0, $level['to_date_allowable'] ?: 0, $level['to_date_var'] ?: 0, $level['remaining_cost'] ?: 0,
+            $level['completion_cost'] ?: 0, $level['completion_var'] ?: 0,
         ], 0, "A{$counter}");
 
         $sheet->getCell("A$counter")->getStyle()->applyFromArray($styleArray);
@@ -60,9 +60,9 @@ function renderLevel($tree, PHPExcel_Worksheet $sheet, $parent, $counter, $outli
         if (!empty($level['activities'])) {
             foreach ($level['activities'] as $activity) {
                 $sheet->fromArray($arr = [
-                    str_repeat("    ", $outlineLevel + 1) . $activity['name'], $activity['budget_cost'], $activity['previous_cost'], $activity['previous_allowable'],
-                    $activity['previous_var'], $activity['to_date_cost'], $activity['to_date_allowable'], $activity['to_date_var'],
-                    $activity['remaining_cost'], $activity['completion_cost'], $activity['completion_var'],
+                    str_repeat("    ", $outlineLevel + 1) . $activity['name'], $activity['budget_cost'] ?: 0, $activity['previous_cost'] ?: 0, $activity['previous_allowable'] ?: 0,
+                    $activity['previous_var'] ?: 0, $activity['to_date_cost'] ?: 0, $activity['to_date_allowable'] ?: 0, $activity['to_date_var'] ?: 0,
+                    $activity['remaining_cost'] ?: 0, $activity['completion_cost'] ?: 0, $activity['completion_var'] ?: 0,
                 ], '', "A{$counter}");
 
                 $sheet->getRowDimension($counter)->setOutlineLevel($outlineLevel + 1)->setVisible(false)->setCollapsed(true);
@@ -77,12 +77,10 @@ function renderLevel($tree, PHPExcel_Worksheet $sheet, $parent, $counter, $outli
 $counter = renderLevel($tree, $sheet, '', $counter);
 
 $sheet->fromArray([
-    "Totals", $currentTotals['budget_cost'], $previousTotals['previous_cost'], $previousTotals['previous_allowable'],
-    $previousTotals['previous_var'], $currentTotals['to_date_cost'], $currentTotals['to_date_allowable'], $currentTotals['to_date_var'],
-    $currentTotals['remaining'], $currentTotals['at_completion_cost'], $currentTotals->cost_var,
+    "Totals", $currentTotals['budget_cost'] ?: 0, $previousTotals['previous_cost'] ?: 0, $previousTotals['previous_allowable'] ?: 0,
+    $previousTotals['previous_var'] ?: 0, $currentTotals['to_date_cost'] ?: 0, $currentTotals['to_date_allowable'] ?: 0, $currentTotals['to_date_var'] ?: 0,
+    $currentTotals['remaining'] ?: 0, $currentTotals['at_completion_cost'] ?: 0, $currentTotals->cost_var ?: 0,
 ], '', "A{$counter}");
-
-$sheet->getStyle("B{$start}:K{$counter}")->getNumberFormat()->setFormatCode('_(#,##0.00_);_(\(#,##0.00\);_("-"??_);_(@_)');
 
 $totalsStyles = $sheet->getStyle("A{$counter}:Y{$counter}");
 $totalsStyles->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->setStartColor(new PHPExcel_Style_Color('DAEEF3'));

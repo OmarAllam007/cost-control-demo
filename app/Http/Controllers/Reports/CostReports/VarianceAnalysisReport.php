@@ -39,6 +39,7 @@ class VarianceAnalysisReport
     function run()
     {
         $project = $this->project;
+        $period = $this->period;
         $tree = $this->buildTree();
 
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
@@ -49,7 +50,7 @@ class VarianceAnalysisReport
         $disciplines = MasterShadow::wherePeriodId($this->period->id)
             ->selectRaw('DISTINCT boq_discipline')->orderBy('boq_discipline')->pluck('boq_discipline');
 
-        return view('reports.cost-control.variance_analysis.variance_analysis', compact('tree', 'project', 'periods', 'types', 'disciplines'));
+        return compact('tree', 'project', 'periods', 'types', 'disciplines', 'period');
     }
 
     function buildTree()

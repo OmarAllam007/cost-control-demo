@@ -5,10 +5,13 @@
 @endif
 
 @section('header')
-    <h2 class="">{{$project->name}} - Resource Dictionary Report</h2>
+    <h2 class="">{{$project->name}} - Variance Analysis Report</h2>
     <div class="pull-right">
         {{--<a href="?print=1&paint=std-activity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>--}}
         {{--Print</a>--}}
+
+        <a href="?excel" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Excel</a>
+
         <a href="{{route('project.cost-control', $project)}}#report" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back
         </a>
