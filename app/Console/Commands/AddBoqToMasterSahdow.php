@@ -24,11 +24,12 @@ class AddBoqToMasterSahdow extends Command
      */
     public function handle()
     {
-        $this->bar = $this->output->createProgressBar(MasterShadow::count());
+        $query = MasterShadow::where('boq_id', 0);
+        $this->bar = $this->output->createProgressBar($query->count());
         $this->bar->setBarWidth(50);
         $this->boqs = collect();
 
-        MasterShadow::with('wbs_level')->chunk(10000, function (Collection $shadows) {
+        $query->with('wbs_level')->chunk(10000, function (Collection $shadows) {
             $shadows->each(function (MasterShadow $shadow) {
                 $code = $shadow->wbs_level->code . '#' . $shadow->cost_account;
                 if ($this->boqs->has($code)) {
