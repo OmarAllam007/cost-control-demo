@@ -43,7 +43,7 @@ function renderWBS(PHPExcel_Worksheet $sheet, \Illuminate\Support\Collection $tr
         $level['at_completion_var'] ?: '0.00',
     ], '', "A{$counter}");
 
-    if ($depth > 1) {
+    if ($depth > 0) {
         $sheet->getRowDimension($counter)->setOutlineLevel($depth)->setCollapsed(true)->setVisible(false);
     }
     ++$counter;
