@@ -91,8 +91,6 @@ $sheet->getStyle("E{$start}:E{$counter}")->setConditionalStyles([$varCondition])
 $sheet->getStyle("H{$start}:H{$counter}")->setConditionalStyles([$varCondition]);
 $sheet->getStyle("K{$start}:K{$counter}")->setConditionalStyles([$varCondition]);
 
-$sheet->setShowGridlines(false);
-
 $saveTo = storage_path('app/') . uniqid() . '.xlsx';
 $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->setIncludeCharts(true)->save($saveTo);
 echo $saveTo;

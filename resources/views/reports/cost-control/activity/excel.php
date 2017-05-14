@@ -27,9 +27,6 @@ $drawing->setName('Logo')->setImageResource($logo)
 $start = 11;
 $counter = $start;
 
-
-
-
 function renderLevel($tree, PHPExcel_Worksheet $sheet, $parent, $counter, $outlineLevel = 0)
 {
     $styleArray = ['font' => ['bold' => true]];

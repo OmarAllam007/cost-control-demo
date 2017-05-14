@@ -97,7 +97,14 @@ class CostReportsController extends Controller
         $period = $project->periods()->find($period_id);
 
         $boq = new BoqReport($period);
-        return $boq->run();
+        $data = $boq->run();
+
+        if ($request->exists('excel')) {
+            $filename = view('reports.cost-control.boq-report.excel', $data)->render();
+            return response()->download($filename, slug($project->name) . '-boq.xlsx');
+        }
+
+        return view('reports.cost-control.boq-report.index', $data);
     }
 
     public function resourceCodeReport(Project $project, Request $request)
