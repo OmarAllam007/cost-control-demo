@@ -125,13 +125,13 @@ class BreakDownResourceShadow extends Model
 
     function getQtyToDateAttribute()
     {
-        return $this->actual_resources->sum('qty');
+        return $this->actual_resources()->sum('qty');
     }
 
     public function getCurrQtyAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
-        if (isset($this->attributes['curr_qty'])) {
+        if (!empty($this->attributes['curr_qty'])) {
             return $this->attributes['curr_qty'];
         }
 
@@ -144,13 +144,13 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['curr_qty'] = $this->actual_resources->where('period_id', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['curr_qty'] = $this->actual_resources()->where('period_id', $period_id)->sum('qty') ?: 0;
     }
 
     public function getCurrCostAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
-        if (isset($this->attributes['curr_cost'])) {
+        if (!empty($this->attributes['curr_cost'])) {
             return $this->attributes['curr_cost'];
         }
         if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
@@ -162,12 +162,12 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
-        return $this->calculated['curr_cost'] = $this->actual_resources->where('period_id', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['curr_cost'] = $this->actual_resources()->where('period_id', $period_id)->sum('cost') ?: 0;
     }
 
     public function getCurrUnitPriceAttribute()
     {
-        if (isset($this->attributes['curr_unit_price'])) {
+        if (!empty($this->attributes['curr_unit_price'])) {
             return $this->attributes['curr_unit_price'];
         }
 
@@ -185,7 +185,7 @@ class BreakDownResourceShadow extends Model
     public function getPrevQtyAttribute()
     {
         $period_id = $this->getCalculationPeriod()->id;
-        if (isset($this->attributes['prev_qty'])) {
+        if (!empty($this->attributes['prev_qty'])) {
             return $this->attributes['prev_qty'];
         }
 
@@ -198,12 +198,12 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['prev_qty'] = $this->actual_resources->where('period_id', '<', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['prev_qty'] = $this->actual_resources()->where('period_id', '<', $period_id)->sum('qty') ?: 0;
     }
 
     public function getPrevCostAttribute()
     {
-        if (isset($this->attributes['prev_cost'])) {
+        if (!empty($this->attributes['prev_cost'])) {
             return $this->attributes['prev_cost'];
         }
 
@@ -216,12 +216,12 @@ class BreakDownResourceShadow extends Model
             return $this->calculated['prev_cost'];
         }
 
-        return $this->calculated['prev_cost'] = $this->actual_resources->where('period_id', '<', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['prev_cost'] = $this->actual_resources()->where('period_id', '<', $period_id)->sum('cost') ?: 0;
     }
 
     public function getPrevUnitPriceAttribute()
     {
-        if (isset($this->attributes['prev_unit_price'])) {
+        if (!empty($this->attributes['prev_unit_price'])) {
             return $this->attributes['prev_unit_price'];
         }
 
@@ -238,7 +238,7 @@ class BreakDownResourceShadow extends Model
 
     public function getLatestAllowableCostAttribute()
     {
-        if (isset($this->attributes['allowable_ev_cost'])) {
+        if (!empty($this->attributes['allowable_ev_cost'])) {
             return $this->attributes['allowable_ev_cost'];
         }
 
