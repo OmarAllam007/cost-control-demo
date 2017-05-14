@@ -14,15 +14,17 @@
         {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
     </div>
 
+
     <div class="form-group {{$errors->first('std_activity_id', 'has-error')}}">
         {{Form::label('activity', null, ['class' => 'control-label'])}}
         <p>
-            <a href="#ActivitiesModal" data-toggle="modal">
-                <em>{{($activity_id = Form::getValueAttribute('std_activity_id'))? \App\StdActivity::find($activity_id)->name : 'Select Activity'}}</em>
-            </a>
+            {{--<a href="#ActivitiesModal" data-toggle="modal">--}}
+                <strong><em>{{($activity_id = Form::getValueAttribute('std_activity_id'))? \App\StdActivity::find($activity_id)->name : 'Select Activity'}}</em></strong>
+            {{--</a>--}}
         </p>
         {!! $errors->first('std_activity_id', '<div class="help-block">:message</div>') !!}
     </div>
+
 
     <div class="form-group {{$errors->first('cost_account', 'has-error')}}">
         {{Form::label('cost_account', null, ['class' => 'control-label'])}}
