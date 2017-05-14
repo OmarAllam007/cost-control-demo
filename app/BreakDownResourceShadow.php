@@ -125,7 +125,7 @@ class BreakDownResourceShadow extends Model
 
     function getQtyToDateAttribute()
     {
-        return $this->actual_resources->sum('qty');
+        return $this->actual_resources()->sum('qty');
     }
 
     public function getCurrQtyAttribute()
@@ -144,7 +144,7 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['curr_qty'] = $this->actual_resources->where('period_id', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['curr_qty'] = $this->actual_resources()->where('period_id', $period_id)->sum('qty') ?: 0;
     }
 
     public function getCurrCostAttribute()
@@ -162,7 +162,7 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
-        return $this->calculated['curr_cost'] = $this->actual_resources->where('period_id', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['curr_cost'] = $this->actual_resources()->where('period_id', $period_id)->sum('cost') ?: 0;
     }
 
     public function getCurrUnitPriceAttribute()
@@ -198,7 +198,7 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['prev_qty'] = $this->actual_resources->where('period_id', '<', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['prev_qty'] = $this->actual_resources()->where('period_id', '<', $period_id)->sum('qty') ?: 0;
     }
 
     public function getPrevCostAttribute()
@@ -216,7 +216,7 @@ class BreakDownResourceShadow extends Model
             return $this->calculated['prev_cost'];
         }
 
-        return $this->calculated['prev_cost'] = $this->actual_resources->where('period_id', '<', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['prev_cost'] = $this->actual_resources()->where('period_id', '<', $period_id)->sum('cost') ?: 0;
     }
 
     public function getPrevUnitPriceAttribute()
