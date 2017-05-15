@@ -145,10 +145,13 @@ class Productivity extends Model
         $equip_powers = array_map('strtolower',
             array_column(ProductivityList::where('name', '=', 'Equipment')->get(array('type'))->toArray(), 'type'));
         $equip_numbers = [];
-        $lines = explode("\n", strtolower($this->crew_structure));
+        $lines = preg_split("(\r\n|\n)", strtolower($this->crew_structure));
         foreach ($lines as $line) {
             $tokens = [];
             preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
+            if (empty($tokens)) {
+                continue;
+            }
             $key = trim($tokens[2]);
             $number = trim($tokens[1]);
             if (array_search($key, $equip_powers)) {//if(array_search($key,$crew) !== false){
