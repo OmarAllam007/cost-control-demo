@@ -126,14 +126,14 @@ class ExportCostShadow extends Job
                     csv_quote($costShadow['top_material']) . ','.
                     '"'.round($costShadow['unit_price'] ?: '0', 2).'",'.
                     '"'.$costShadow['measure_unit'].'",'.
-                    '"'.round($costShadow['budget_unit'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['budget_cost'] ?: '0', 2).'",'.
+                    '"'.$costShadow['budget_unit'] ?: '0'.'",'.
+                    '"'.$costShadow['budget_cost'] ?: '0'.'",'.
                     '"'.round($costShadow['boq_equivilant_rate'] ?: '0', 2).'",'.
                     '"'.round($costShadow['budget_unit_rate'] ?: '0', 2).'",'.
                     '"'.round($costShadow['labors_count'], 2).'",'.
                     '"'.round($costShadow['productivity_output'] ?: '0', 2).'",'.
                     '"'.$costShadow['productivity_ref'].'",'.
-                    '"'.$costShadow['remarks'].'",'.
+                    csv_quote($costShadow['remarks']).','.
                     '"'.round($costShadow['progress'], 2).'",'.
                     '"'.($costShadow['status'] ?: 'Not Started').'",'.
                     '"'.round($costShadow['prev_unit_price'] ?: '0', 2).'",'.
