@@ -109,7 +109,7 @@ class ExportCostShadow extends Job
                 }
 
 
-                $this->buffer .= "\n" .
+                $this->buffer .= "\r\n" .
                     $wbs.','.
                     $activityDivs.','.
                     csv_quote($costShadow['activity']).','.
@@ -124,48 +124,48 @@ class ExportCostShadow extends Job
                     '"'.$costShadow['resource_code'].'",'.
                     csv_quote($costShadow['resource_name']).','.
                     csv_quote($costShadow['top_material']) . ','.
-                    '"'.round($costShadow['unit_price'] ?: '0', 2).'",'.
+                    '"'.($costShadow['unit_price'] ?: '0').'",'.
                     '"'.$costShadow['measure_unit'].'",'.
-                    '"'.$costShadow['budget_unit'] ?: '0'.'",'.
-                    '"'.$costShadow['budget_cost'] ?: '0'.'",'.
-                    '"'.round($costShadow['boq_equivilant_rate'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['budget_unit_rate'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['labors_count'], 2).'",'.
-                    '"'.round($costShadow['productivity_output'] ?: '0', 2).'",'.
+                    '"'.($costShadow['budget_unit'] ?: '0').'",'.
+                    '"'.($costShadow['budget_cost'] ?: '0').'",'.
+                    '"'.($costShadow['boq_equivilant_rate'] ?: '0').'",'.
+                    '"'.($costShadow['budget_unit_rate'] ?: '0').'",'.
+                    '"'.($costShadow['labors_count']).'",'.
+                    '"'.($costShadow['productivity_output'] ?: '0').'",'.
                     '"'.$costShadow['productivity_ref'].'",'.
                     csv_quote($costShadow['remarks']).','.
-                    '"'.round($costShadow['progress'], 2).'",'.
+                    '"'.($costShadow['progress']).'",'.
                     '"'.($costShadow['status'] ?: 'Not Started').'",'.
-                    '"'.round($costShadow['prev_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['prev_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['prev_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['curr_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['curr_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['curr_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['to_date_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['to_date_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['to_date_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['latest_allowable_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['allowable_var'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['latest_remaining_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['latest_remaining_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['latest_remaining_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['bl_allowable_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['bl_allowable_var'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['completion_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['completion_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['completion_cost'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['unit_price_var'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['qty_var'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['cost_var'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['physical_unit'] ?: '0', 2).'",'.
-//                    '"'.round($costShadow['pw_index'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['cost_variance_to_date_due_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['allowable_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['cost_variance_remaining_due_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['cost_variance_completion_due_unit_price'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['cost_variance_completion_due_qty'] ?: '0', 2).'",'.
-                    '"'.round($costShadow['cost_variance_to_date_due_qty'] ?: '0',2) . '"';
+                    '"'.($costShadow['prev_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['prev_qty'] ?: '0').'",'.
+                    '"'.($costShadow['prev_cost'] ?: '0').'",'.
+                    '"'.($costShadow['curr_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['curr_qty'] ?: '0').'",'.
+                    '"'.($costShadow['curr_cost'] ?: '0').'",'.
+                    '"'.($costShadow['to_date_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['to_date_qty'] ?: '0').'",'.
+                    '"'.($costShadow['to_date_cost'] ?: '0').'",'.
+                    '"'.($costShadow['latest_allowable_cost'] ?: '0').'",'.
+                    '"'.($costShadow['allowable_var'] ?: '0').'",'.
+                    '"'.($costShadow['latest_remaining_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['latest_remaining_qty'] ?: '0').'",'.
+                    '"'.($costShadow['latest_remaining_cost'] ?: '0').'",'.
+                    '"'.($costShadow['bl_allowable_cost'] ?: '0').'",'.
+                    '"'.($costShadow['bl_allowable_var'] ?: '0').'",'.
+                    '"'.($costShadow['completion_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['completion_qty'] ?: '0').'",'.
+                    '"'.($costShadow['completion_cost'] ?: '0').'",'.
+                    '"'.($costShadow['unit_price_var'] ?: '0').'",'.
+                    '"'.($costShadow['qty_var'] ?: '0').'",'.
+                    '"'.($costShadow['cost_var'] ?: '0').'",'.
+                    '"'.($costShadow['physical_unit'] ?: '0').'",'.
+//                    '"'.($costShadow['pw_index'] ?: '0').'",'.
+                    '"'.($costShadow['cost_variance_to_date_due_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['allowable_qty'] ?: '0').'",'.
+                    '"'.($costShadow['cost_variance_remaining_due_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['cost_variance_completion_due_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['cost_variance_completion_due_qty'] ?: '0').'",'.
+                    '"'.($costShadow['cost_variance_to_date_due_qty'] ?: '0') . '"';
             }
 
             unset($shadows);
