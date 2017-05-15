@@ -16,12 +16,13 @@
             <td>Qty</td>
             <td>Unit Price</td>
             <td>Cost</td>
-            <td>Resource COde</td>
+            <td>Resource Code</td>
             <td>Doc #</td>
         </tr>
         </thead>
         <tbody>
         @foreach($rows as $row)
+            @if (is_string($row)) @continue @endif
             <tr>
                 <td>{{$row[0]}}</td>
                 <td>{{$row[1]}}</td>

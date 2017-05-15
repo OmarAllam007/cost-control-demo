@@ -102,7 +102,7 @@ class CostImporter
 
             $shadowResource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->first();
             if (!$shadowResource) {
-                $invalid->push('row');
+                $invalid->push($row);
                 continue;
             }
 
