@@ -150,7 +150,6 @@ trait CostAttributes
             return $this->calculated['remaining_unit_price'];
         }
 
-
         if ($this->curr_unit_price) {
             return $this->curr_unit_price;
         }
