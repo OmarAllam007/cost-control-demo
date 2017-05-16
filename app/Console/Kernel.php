@@ -17,6 +17,7 @@ use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
 use App\Console\Commands\RecalculateCost;
 use App\Console\Commands\UpdateActivityCode;
+use App\Console\Commands\UpdateResourceTypesAndResources;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -43,6 +44,7 @@ class Kernel extends ConsoleKernel
         AddBoqAndSurveyToBreakdownShadow::class,
         AddBoqAndSurveyToBreakdownShadowProject::class,
         FixProductivity::class,
+        UpdateResourceTypesAndResources::class,
     ];
 
     /**

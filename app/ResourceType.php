@@ -17,7 +17,7 @@ class ResourceType extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-    protected $orderBy = ['code', 'name'];
+    protected $orderBy = ['name', 'code'];
 
     protected $root;
 

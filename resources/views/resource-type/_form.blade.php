@@ -12,12 +12,18 @@
             </p>
             {!! $errors->first('division_id', '<div class="help-block">:message</div>') !!}
         </div>
+
+        <div class="form-group {{$errors->first('code', 'has-error')}}">
+            {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
+            {{ Form::text('code', null, ['class' => 'form-control']) }}
+            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             {{ Form::text('name', null, ['class' => 'form-control']) }}
             {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
         </div>
-
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
