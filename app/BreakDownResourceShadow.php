@@ -242,7 +242,7 @@ class BreakDownResourceShadow extends Model
             return $this->attributes['allowable_ev_cost'];
         }
 
-        if (!empty($this->cost->allowable_ev_cost)) {
+        if (!empty($this->cost->allowable_ev_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->allowable_ev_cost;
         }
 
@@ -251,7 +251,7 @@ class BreakDownResourceShadow extends Model
 
     function getLatestRemainingCostAttribute()
     {
-        if (!empty($this->cost->remaining_cost)) {
+        if (!empty($this->cost->remaining_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->remaining_cost;
         }
 
@@ -260,7 +260,7 @@ class BreakDownResourceShadow extends Model
 
     function getLatestRemainingQtyAttribute()
     {
-        if (!empty($this->cost->remaining_qty)) {
+        if (!empty($this->cost->remaining_qty) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->remaining_qty;
         }
 
@@ -269,7 +269,7 @@ class BreakDownResourceShadow extends Model
 
     function getLatestRemainingUnitPriceAttribute()
     {
-        if (!empty($this->cost->remaining_unit_price)) {
+        if (!empty($this->cost->remaining_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
             return $this->cost->remaining_unit_price;
         }
 
