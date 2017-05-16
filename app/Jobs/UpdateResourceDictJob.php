@@ -46,10 +46,11 @@ class UpdateResourceDictJob
 
     function handle()
     {
-        $query = ActualResources::groupBy('project_id', 'resource_id')
+        $query = ActualResources::groupBy('project_id', 'resource_id', 'period_id')
             ->select('project_id', 'resource_id')
             ->selectRaw('avg(unit_price) as rate')
-            ->where('project_id', $this->project->id);
+            ->where('project_id', $this->project->id)
+            ->where('period_id', $this->open_period_id);
 
         if ($this->resource_dict->count()) {
             $query->whereIn('resource_id', $this->resource_dict);
