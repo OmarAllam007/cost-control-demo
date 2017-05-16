@@ -27,7 +27,7 @@ class UpdateResourceTypesAndResources extends Command
     {
         parent::__construct();
 
-        $this->excel = \PHPExcel_IOFactory::createReader('Excel2007')->load(storage_path('misc/resources-data.xlsx'));
+
 
         $this->typesCache = collect();
         $this->resourceTypeMap = collect();
@@ -42,13 +42,15 @@ class UpdateResourceTypesAndResources extends Command
 
     function handle()
     {
-//        $this->updateRootTypes();
-//
-//        $this->updateResourceTypes();
-//
-//        $this->updateResources();
-//
-//        $this->updateBudgetShadow();
+        $this->excel = \PHPExcel_IOFactory::createReader('Excel2007')->load(storage_path('misc/resources-data.xlsx'));
+
+        $this->updateRootTypes();
+
+        $this->updateResourceTypes();
+
+        $this->updateResources();
+
+        $this->updateBudgetShadow();
 
         $this->updateMasterShadow();
     }
