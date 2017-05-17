@@ -376,7 +376,7 @@ class ResourcesController extends Controller
     }
     function exportCostResources(Project $project)
     {
-        if (\Gate::denies('resources', $project)) {
+        if (\Gate::denies('actual_resources', $project)) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
