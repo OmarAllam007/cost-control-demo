@@ -125,6 +125,7 @@ class ActualMaterialController extends Controller
 
     function postResources(ActualBatch $actual_batch, Request $request)
     {
+        $this->validate($request, ['quantities.*' => 'gt:0']);
         $fixer = new CostImportFixer($actual_batch);
         $result = $fixer->fixPhysicalQuantity($request->get('quantities', []));
 

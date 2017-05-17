@@ -94,7 +94,7 @@ return [
     */
     'boq_unique' => 'Cost account already exists in this WBS',
     'gte' => ':attribute must be greater than or equal to :gte',
-    'gt' => ':attribute must be greater than or equal to :gt',
+    'gt' => 'Value must be greater than :gt',
     'lte' => ':attribute must be greater than or equal to :lte',
     'lt' => ':attribute must be greater than or equal to :lt',
 

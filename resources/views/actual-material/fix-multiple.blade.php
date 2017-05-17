@@ -54,7 +54,7 @@
                                 {{Form::checkbox("resource[{$res->breakdown_resource_id}][included]", 1, true, ['class' => 'include'])}}
                             </td>
                             <td>{{$res->breakdown_resource->code}}</td>
-                            <td>{{$boq->description}}</td>
+                            <td>{{$boq->description ?? ''}}</td>
                             <td>{{$resource[7]}}</td>
                             <td>{{$resource[2]}}</td>
                             <td>{{$res->resource_code}}</td>
