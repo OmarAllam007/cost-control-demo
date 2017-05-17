@@ -77,7 +77,8 @@ class UpdateResourceTypesAndResources extends Command
             $type->code = $attributes['code'];
             $type->parent_id = 0;
             $type->save();
-            $this->typesCache->put($attributes['name'], $type);
+            $key =$attributes['code'] . $attributes['name'];
+            $this->typesCache->put($key, $type);
         }
 
         $this->output->success('Root resource types created');
@@ -105,14 +106,14 @@ class UpdateResourceTypesAndResources extends Command
             $codeBuffer = [];
             foreach ($data as $index => $name) {
                 $codeBuffer[] = $codeTokens[$index];
+                $typeCode = implode('.', $codeBuffer);
+                $key = $typeCode . $name;
 
-                if (!$parent || $this->typesCache->has($name)) {
-                    $parent = $this->typesCache->get($name);
+                if (!$parent || $this->typesCache->has($key)) {
+                    $parent = $this->typesCache->get($key);
                 } else {
-                    $typeCode = implode('.', $codeBuffer);
-
                     $parent = ResourceType::create(['name' => $name, 'code' => $typeCode, 'parent_id' => $parent->id ?? 0]);
-                    $this->typesCache->put($name, $parent);
+                    $this->typesCache->put($key, $parent);
                 }
             }
             $bar->advance();
@@ -146,10 +147,15 @@ class UpdateResourceTypesAndResources extends Command
             $name = $data[5];
             $resource_code = $data[19];
 
-            $types = array_filter([$data[11], $data[12], $data[13], $data[14]]);
-            $type = $this->typesCache->get(end($types));
+            $typeNames = array_filter([$data[11], $data[12], $data[13], $data[14]]);
+            $parent_id = 0;
+            foreach ($typeNames as $typeName) {
+                $type =  ResourceType::where('parent_id', $parent_id)->where('name', $typeName)->first();
+                $parent_id = $type->id;
+            }
 
-            $resource_type_id = $type->id;
+
+            $resource_type_id = $parent_id;
 
             $resource= Resources::find($id);
             $resource->update(compact('name', 'resource_code', 'resource_type_id'));
@@ -254,6 +260,4 @@ class UpdateResourceTypesAndResources extends Command
 
         return $this->divisionsCache['divisions'][$resource->resource_type_id] = array_reverse($divisions);
     }
-
-
 }
