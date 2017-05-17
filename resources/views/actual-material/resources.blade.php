@@ -54,6 +54,7 @@
                                             <button class="btn btn-primary btn-sm sum-qty" data-counter="{{$activityResourceCounter}}" title="SUM">&sum;</button>
                                         </span>
                                     </div>
+                                    {!! $errors->first("quantities.{$resource['resource']->id}", '<div class="text-danger">:message</div>') !!}
                                 </td>
                                 <td rowspan="{{$row_span}}" class="unit-price-cell">0.00</td>
                                 <td rowspan="{{$row_span}}" class="total-cell"
