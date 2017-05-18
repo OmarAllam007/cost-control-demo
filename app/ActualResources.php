@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use App\Observers\ActualResourceObserver;
 use function GuzzleHttp\json_decode;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActualResources extends Model
 {
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = [
         'project_id', 'wbs_level_id', 'breakdown_resource_id', 'period_id', 'original_code',

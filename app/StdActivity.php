@@ -5,12 +5,13 @@ namespace App;
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
+use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Model;
 
 class StdActivity extends Model
 {
     use HasOptions, CachesQueries;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $orderBy = ['name','code'];
     protected static $alias = 'Activity';

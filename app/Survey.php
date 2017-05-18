@@ -4,6 +4,7 @@ namespace App;
 
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use App\Formatters\BreakdownResourceFormatter;
 use App\Http\Controllers\Caching\ResourcesCache;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class Survey extends Model
 {
     use CachesQueries;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $table = 'qty_surveys';
 

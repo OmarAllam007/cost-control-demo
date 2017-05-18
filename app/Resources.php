@@ -6,6 +6,7 @@ use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Overridable;
+use App\Behaviors\RecordsUser;
 use App\Behaviors\Tree;
 use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Resources extends Model
 {
     use SoftDeletes, HasOptions, Tree, Overridable;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $table = 'resources';
 

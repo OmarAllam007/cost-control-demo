@@ -3,11 +3,12 @@
 namespace App;
 
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Model;
 
 class BreakdownVariable extends Model
 {
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = ['name', 'value', 'display_order', 'qty_survey_id', 'breakdown_id'];
 

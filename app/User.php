@@ -3,12 +3,13 @@
 namespace App;
 
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     /**
      * The attributes that are mass assignable.

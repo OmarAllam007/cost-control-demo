@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use App\Filter\BreakdownFilter;
 use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BreakdownResource extends Model
 {
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level_id', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_id', 'equation'];
 

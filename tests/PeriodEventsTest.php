@@ -14,7 +14,7 @@ class PeriodEventsTest extends TestCase
         $project = factory(\App\Project::class)->create();
         $period = $project->periods()->save(factory(App\Period::class)->make());
 
-        $this->assertTrue($period->is_open);
+        $this->assertTrue(!! $period->is_open);
     }
 
     /** @test */
@@ -24,15 +24,15 @@ class PeriodEventsTest extends TestCase
         $firstPeriod = $project->periods()->save(factory(App\Period::class)->make());
         $project->periods()->save(factory(App\Period::class)->make());
         $middlePeriod = $project->periods()->save(factory(App\Period::class)->make());
-        $lastPeriod = $project->periods()->save(factory(App\Period::class)->make());
+        $project->periods()->save(factory(App\Period::class)->make());
 
-        $this->assertTrue($firstPeriod->is_open);
+        $this->assertTrue(!! $firstPeriod->is_open);
 
-        $middlePeriod->is_open = true;
+        $middlePeriod->is_open = 1;
         $middlePeriod->save();
 
-//        $this->assertFalse($firstPeriod->fresh()->is_open);
-        $this->assertCount(3, $project->periods()->where('is_open', false)->get());
-        $this->assertCount(1, $project->periods()->where('is_open', true)->get());
+        $this->assertFalse(!! $firstPeriod->fresh()->is_open);
+        $this->assertCount(1, $project->periods()->where('is_open', 1)->get());
+        $this->assertCount(3, $project->periods()->where('is_open', 0)->get());
     }
 }

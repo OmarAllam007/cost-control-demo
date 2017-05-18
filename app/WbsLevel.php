@@ -5,6 +5,7 @@ namespace App;
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
+use App\Behaviors\RecordsUser;
 use App\Behaviors\Tree;
 use App\Jobs\CacheWBSTree;
 use App\Jobs\CacheWBSTreeInQueue;
@@ -17,7 +18,7 @@ class WbsLevel extends Model
     use SoftDeletes;
     use Tree, HasOptions;
     use CachesQueries;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = ['name', 'project_id', 'parent_id', 'comments', 'code'];
 

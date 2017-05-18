@@ -5,6 +5,7 @@ namespace App;
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
+use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class BreakdownTemplate extends Model
 {
     use SoftDeletes, HasOptions, CachesQueries;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected static $alias = 'Template';
 

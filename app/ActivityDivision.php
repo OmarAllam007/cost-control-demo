@@ -4,6 +4,7 @@ namespace App;
 
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ class ActivityDivision extends Model
 {
     use Tree;
     use SoftDeletes, CachesQueries;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = ['code', 'name', 'parent_id'];
 
