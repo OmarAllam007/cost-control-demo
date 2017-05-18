@@ -140,8 +140,10 @@ class CostImporter
 
         $this->cache();
 
-        $costIssues = new CostIssuesLog($this->batch);
-        $costIssues->recordInvalid($invalid);
+        if ($invalid->count()) {
+            $costIssues = new CostIssuesLog($this->batch);
+            $costIssues->recordInvalid($invalid);
+        }
 
         if ($errors->count()) {
             return ['error' => 'physical_qty', 'errors' => $errors, 'batch' => $this->batch];
@@ -205,8 +207,10 @@ class CostImporter
             return ['error' => 'cost_accounts', 'errors' => $errors, 'batch' => $this->batch];
         }
 
-        $costIssues = new CostIssuesLog($this->batch);
-        $costIssues->recordInvalid($invalid);
+        if ($invalid->count()) {
+            $costIssues = new CostIssuesLog($this->batch);
+            $costIssues->recordInvalid($invalid);
+        }
 
         return $this->save();
     }
@@ -261,8 +265,10 @@ class CostImporter
         $this->rows = collect();
         $this->cache();
 
-        $costIssues = new CostIssuesLog($this->batch);
-        $costIssues->recordInvalid($invalid);
+        if ($invalid->count()) {
+            $costIssues = new CostIssuesLog($this->batch);
+            $costIssues->recordInvalid($invalid);
+        }
 
         return $this->checkProgress();
     }
