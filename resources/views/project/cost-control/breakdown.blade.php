@@ -251,11 +251,11 @@
                             <td class="bg-orange"
                                 style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.allowable_var : 0 | number_format }}</td>
                             <td class="bg-violet"
-                                style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_unit_price : 0 | number_format }}</td>
+                                style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.latest_remaining_unit_price : 0 | number_format }}</td>
                             <td class="bg-violet"
-                                style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_qty : 0 | number_format }}</td>
+                                style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.latest_remaining_qty : 0 | number_format }}</td>
                             <td class="bg-violet"
-                                style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.remaining_cost : 0 | number_format }}</td>
+                                style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.latest_remaining_cost : 0 | number_format }}</td>
                             <td class="bg-violet"
                                 style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.bl_allowable_cost : 0 | number_format }}</td>
                             <td class="bg-violet"

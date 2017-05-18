@@ -21,6 +21,8 @@ class CostShadow extends Model
         "cost_variance_completion_due_qty", "cost_variance_to_date_due_qty", 'batch_id', 'doc_no', 'budget_unit_rate'
     ];
 
+    protected $appends = ['latest_remaining_qty', 'latest_remaining_cost', 'latest_remaining_unit_price'];
+
     function budget()
     {
         return $this->belongsTo(BreakDownResourceShadow::class, 'breakdown_resource_id', 'breakdown_resource_id');
@@ -102,5 +104,25 @@ class CostShadow extends Model
     function getBudgetCostAttribute()
     {
         return $this->budget->budget_cost;
+    }
+
+    public function getLatestAllowableCostAttribute()
+    {
+        return $this->allowable_ev_cost;
+    }
+
+    function getLatestRemainingCostAttribute()
+    {
+        return $this->remaining_cost;
+    }
+
+    function getLatestRemainingQtyAttribute()
+    {
+        return $this->remaining_qty;
+    }
+
+    function getLatestRemainingUnitPriceAttribute()
+    {
+        return $this->remaining_unit_price;
     }
 }
