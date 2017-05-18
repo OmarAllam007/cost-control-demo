@@ -3,6 +3,7 @@ namespace App\Support;
 
 use App\Behaviors\CostAttributes;
 use App\CostShadow;
+use Illuminate\Support\Arr;
 
 class CostShadowCalculator
 {
@@ -48,7 +49,7 @@ class CostShadowCalculator
     public function toArray()
     {
         $attributes = [];
-        $fields = $this->appendFields();
+        $fields = $this->costShadow->getFillable();
         foreach ($fields as $field) {
             $attributes[$field] = $this->getAttribute($field);
         }
