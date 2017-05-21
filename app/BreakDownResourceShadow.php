@@ -267,14 +267,14 @@ class BreakDownResourceShadow extends Model
         return $this->remaining_qty;
     }
 
-    function getLatestRemainingUnitPriceAttribute()
-    {
-        if (!empty($this->cost->remaining_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-            return $this->cost->remaining_unit_price;
-        }
-
-        return $this->remaining_unit_price;
-    }
+//    function getLatestRemainingUnitPriceAttribute()
+//    {
+//        if (!empty($this->cost->remaining_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
+//            return $this->cost->remaining_unit_price;
+//        }
+//
+//        return $this->remaining_unit_price;
+//    }
 
     function boq(){
         return $this->belongsTo(Boq::class,'boq_id');

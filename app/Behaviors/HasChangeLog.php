@@ -13,12 +13,14 @@ trait HasChangeLog
 {
     protected static function bootHasChangeLog()
     {
-        static::saving(function($model) {
-            app()->make('change_log')->record($model);
-        });
+        if (app()->environment() !== 'testing') {
+            static::saving(function($model) {
+                app()->make('change_log')->record($model);
+            });
 
-        static::deleting(function($model) {
-            app()->make('change_log')->record($model);
-        });
+            static::deleting(function($model) {
+                app()->make('change_log')->record($model);
+            });
+        }
     }
 }
