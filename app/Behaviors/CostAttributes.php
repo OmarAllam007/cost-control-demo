@@ -127,10 +127,6 @@ trait CostAttributes
         }
 
         $remaining = $this->budget_unit - $this->to_date_qty;
-        if ($remaining < 0) {
-            $remaining = 0;
-        }
-
         return $this->calculated['remaining_qty'] = $remaining;
     }
 
@@ -150,7 +146,39 @@ trait CostAttributes
             return $this->calculated['remaining_unit_price'];
         }
 
-        if ($this->curr_unit_price) {
+        $conditions = ['project_id' => $this->project_id];
+        if ($this->resource->isMaterial()) {
+            // For material we calculate over resource in all activities
+            $conditions['resource_id'] = $this->resource_id;
+        } else {
+            // For non-material we calculate on the resource in each activity
+            $conditions['breakdown_resource_id'] = $this->breakdown_resource_id;
+        }
+
+        // Find current data for the resource
+        $current = ActualResources::where($conditions)
+            ->where('period_id', $this->getCalculationPeriod()->id)
+            ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+
+        if ($current->unit_price !== null) {
+            $remainingUnitPrice = $current->unit_price;
+        } else {
+            // If no current data, find to date data for the resource
+            $todate = ActualResources::where($conditions)
+                ->where('period_id', '<=', $this->getCalculationPeriod()->id)
+                ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+
+            if ($todate->unit_price !== null) {
+                $remainingUnitPrice = $todate->unit_price;
+            } else {
+                // If the resource didn't start use budget unit rate
+                $remainingUnitPrice = $this->resource->rate;
+            }
+        }
+        
+        return $this->calculated['remaining_unit_price'] = $remainingUnitPrice;
+
+        /*if ($this->curr_unit_price) {
             return $this->curr_unit_price;
         }
 
@@ -165,7 +193,7 @@ trait CostAttributes
             return $this->calculated['remaining_unit_price'] = $this->prev_unit_price;
         }
 
-        return $this->calculated['remaining_unit_price'] = $this->unit_price;
+        return $this->calculated['remaining_unit_price'] = $this->unit_price;*/
     }
 
     function getCompletionCostAttribute()
