@@ -13,6 +13,7 @@ use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostResource;
 use App\Period;
+use App\Resources;
 use App\StdActivity;
 
 trait CostAttributes
@@ -147,7 +148,10 @@ trait CostAttributes
         }
 
         $conditions = ['project_id' => $this->project_id];
-        if ($this->resource->isMaterial()) {
+
+        $resource = Resources::find($this->resource_id);
+
+        if ($resource->isMaterial()) {
             // For material we calculate over resource in all activities
             $conditions['resource_id'] = $this->resource_id;
         } else {
