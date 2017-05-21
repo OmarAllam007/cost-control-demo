@@ -127,10 +127,6 @@ trait CostAttributes
         }
 
         $remaining = $this->budget_unit - $this->to_date_qty;
-        if ($remaining < 0) {
-            $remaining = 0;
-        }
-
         return $this->calculated['remaining_qty'] = $remaining;
     }
 
