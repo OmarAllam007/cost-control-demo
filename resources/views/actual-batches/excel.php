@@ -2,12 +2,26 @@
 
 $excel = \PHPExcel_IOFactory::createReader('Excel2007')->load(storage_path('templates/cost-issue-log.xlsx'));
 
+$typeMap = [
+    'physical_qty' => 'physical_qty',
+    'closed_resources' => 'closed',
+    'activity_mapping_unprivileged' => 'activity_mapping',
+    'resource_mapping_unprivileged' => 'resource_mapping',
+    'invalid' => 'invalid',
+    'account_distribution' => 'account_distribution',
+    'progress' => 'progress',
+    'status' => 'progress',
+    'activity_mapping_privileged' => 'activity_mapping',
+    'resource_mapping_privileged' => 'resource_mapping',
+];
+
 $counters = [
     'activity_mapping' => 2,
     'resource_mapping' => 2,
     'physical_qty' => 2,
     'closed_resources' => 2,
     'account_distribution' => 2,
+    'closed' => 2,
     'progress' => 2,
     'status' => 2,
     'invalid' => 2,
@@ -35,13 +49,14 @@ $sheets['info']->getCell('C9')->setValue($actual_batch->created_at->format('Y-m-
 $sheets['info']->setShowGridlines(false);
 
 foreach ($actual_batch->issues as $issue) {
-    $sheet = $sheets[$issue->type];
-    $counter = $counters[$issue->type];
-    $file = __DIR__ . '/excel/' . $issue->type . '.php';
+    $type = $typeMap[$issue->type];
+    $sheet = $sheets[$type];
+    $counter = $counters[$type];
+    $file = __DIR__ . '/excel/' . $type . '.php';
 
     if (file_exists($file)) {
         include $file;
-        $counters[$issue->type] = $counter;
+        $counters[$type] = $counter;
     }
 }
 
