@@ -201,7 +201,7 @@ class UpdateResourceTypesAndResources extends Command
                     $root = $shadow->resource->types->root;
                     $shadow->resource_type_id = $root->id;
                     $shadow->resource_type = $root->name;
-                    $shadow->resource_code = $shadow->resource->code;
+                    $shadow->resource_code = $shadow->resource->resource_code;
                     $shadow->save();
                 }
 
@@ -230,7 +230,7 @@ class UpdateResourceTypesAndResources extends Command
 
                     $shadow->resource_type_id = $root->id;
                     $shadow->resource_divs = $this->getResourceDivisions($shadow->resource);
-                    $shadow->resource_code = $shadow->resource->code;
+                    $shadow->resource_code = $shadow->resource->resource_code;
 
                     $shadow->save();
                 }
