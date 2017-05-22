@@ -12,6 +12,7 @@ namespace App\Behaviors;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostResource;
+use App\CostShadow;
 use App\Period;
 use App\Resources;
 use App\StdActivity;
@@ -19,6 +20,19 @@ use App\StdActivity;
 trait CostAttributes
 {
     protected $calculated;
+
+    /** @var CostShadow */
+    protected $latestCost = null;
+
+    protected function getLatestCost()
+    {
+        if ($this->latestCost !== null) {
+            return $this->latestCost;
+        }
+
+        $latest = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)->orderBy('period_id', 'desc')->first();
+        return $latest;
+    }
 
     function getPreviousUnitPriceAttribute()
     {
@@ -70,6 +84,11 @@ trait CostAttributes
             return $this->calculated['allowable_ev_cost'];
         }
 
+
+        if ($this->getLatestCost()) {
+            return $this->calculated['allowable_ev_cost'] = $this->getLatestCost()->allowable_ev_cost;
+        }
+
         if (!$this->budget_cost) {
             return 0;
         }
@@ -119,6 +138,11 @@ trait CostAttributes
             return $this->calculated['remaining_qty'];
         }
 
+        $latest = $this->getLatestCost();
+        if ($latest) {
+            return $this->calculated['remaining_qty'] = $latest->remaining_qty;
+        }
+
         if (!$this->budget_unit || $this->progress_value == 1 || strtolower($this->status) == 'closed') {
             return $this->calculated['remaining_qty'] = 0;
         }
@@ -142,7 +166,6 @@ trait CostAttributes
 
     function getRemainingUnitPriceAttribute()
     {
-
         if (isset($this->calculated['remaining_unit_price'])) {
             return $this->calculated['remaining_unit_price'];
         }
@@ -157,6 +180,11 @@ trait CostAttributes
         } else {
             // For non-material we calculate on the resource in each activity
             $conditions['breakdown_resource_id'] = $this->breakdown_resource_id;
+        }
+
+        $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
+        if ($latest) {
+            return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
         }
 
         // Find current data for the resource
