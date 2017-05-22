@@ -213,12 +213,17 @@ class CostImportFixer
         $resources = $result['errors']->keyBy('breakdown_resource_id');
 
         $statusLog = collect();
-        foreach ($status as $id => $value) {
+        foreach ($status['status'] as $id => $value) {
             $resource = $resources[$id];
             $resource->status = $value;
+            $resource->progress = $status['progress'][$id];
+
             if (strtolower($value) == 'closed') {
                 $resource->progress = 100;
+            } elseif($resource->progress == 100) {
+                $resource->status = 'Closed';
             }
+
             $resource->save();
             $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
             $log = ['resource' => $resource, 'remaining_qty' => $cost->remaining_qty, 'to_date_qty' => $cost->to_date_qty];
