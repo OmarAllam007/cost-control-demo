@@ -59,30 +59,30 @@ class ResourcesImportJob extends ImportJob
                 continue;
             }
 
-            $code = mb_strtolower($data[4]);
+            $code = mb_strtolower($data[6]);
             if (!$oldResourceCodes->has($code)) {
                 $type_id = $this->getTypeId($data);
-                $unit_id = $this->getUnit($data[7]);
+                $unit_id = $this->getUnit($data[9]);
                 $item = [
                     'resource_type_id' => $type_id,
-                    'resource_code' => $data[4],
-                    'name' => $data[5],
-                    'rate' => floatval($data[6]),
+                    'resource_code' => $data[6],
+                    'name' => $data[7],
+                    'rate' => floatval($data[8]),
                     'unit' => $unit_id,
-                    'waste' => $this->getWaste($data[8]),
-                    'business_partner_id' => $this->getPartner($data[9]),
-                    'reference' => $data[10],
-                    'project_id' => $this->project->id??null,
+                    'waste' => $this->getWaste($data[10]),
+                    'business_partner_id' => $this->getPartner($data[11]),
+                    'reference' => $data[12],
+                    'project_id' => $this->project->id ?? null,
                 ];
                 if ($unit_id) {
                     Resources::create($item);
                     ++$status['success'];
                 } else {
-                    $item['orig_unit'] = $data[7];
+                    $item['orig_unit'] = $data[9];
                     $status['failed']->push($item);
                 }
             } else {
-                $status['dublicated'][] = $data[4];
+                $status['dublicated'][] = $data[6];
             }
         }
 
@@ -95,7 +95,7 @@ class ResourcesImportJob extends ImportJob
     {
         $this->loadTypes();
 
-        $levels = array_filter(array_slice($data, 0, 4));
+        $levels = array_filter(array_slice($data, 0, 6));
         $type_id = 0;
         $path = [];
         foreach ($levels as $level) {
@@ -104,13 +104,13 @@ class ResourcesImportJob extends ImportJob
 
             if ($this->types->has($key)) {
                 $type_id = $this->types->get($key);
-            } else {
-                $resource = ResourceType::create([
-                    'name' => $level,
-                    'parent_id' => $type_id
-                ]);
-                $type_id = $type_id = $resource->id;
-                $this->types->put($key, $type_id);
+//            } else {
+//                $resource = ResourceType::create([
+//                    'name' => $level,
+//                    'parent_id' => $type_id
+//                ]);
+//                $type_id = $type_id = $resource->id;
+//                $this->types->put($key, $type_id);
             }
         }
 
