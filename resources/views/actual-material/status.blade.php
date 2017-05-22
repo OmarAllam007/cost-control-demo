@@ -48,7 +48,7 @@
                         <td>{{number_format($resource->cost->to_date_qty, 2)}}</td>
                         <td>
                             <div class="input-group">
-                                {{Form::text("progress[{$resource->breakdown_resource_id}]", $resource->progress, ['class' => 'form-control input-sm'])}}
+                                {{Form::text("progress[{$resource->breakdown_resource_id}]", $resource->calculateProgress(), ['class' => 'form-control input-sm'])}}
                                 <span class="input-group-addon">%</span>
                             </div>
                         </td>

@@ -288,4 +288,17 @@ class BreakDownResourceShadow extends Model
     {
         return $this->resource->top_material;
     }
+
+    function calculateProgress()
+    {
+        if ($this->budget_unit) {
+            $progress = $this->to_date_qty * 100 / $this->budget_unit;
+
+            if ($progress < 100 && !$this->std_activity->isGeneral()) {
+                return $progress;
+            }
+        }
+
+        return floatval($this->progress);
+    }
 }
