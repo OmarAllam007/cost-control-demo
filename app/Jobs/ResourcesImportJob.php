@@ -52,7 +52,7 @@ class ResourcesImportJob extends ImportJob
         })->pluck('resource_code', 'resource_code');
 
         Resources::flushEventListeners();
-        foreach ($rows as $row) {
+        foreach ($rows as $index => $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
             if (!array_filter($data)) {
@@ -63,6 +63,7 @@ class ResourcesImportJob extends ImportJob
             if (!$oldResourceCodes->has($code)) {
                 $type_id = $this->getTypeId($data);
                 $unit_id = $this->getUnit($data[9]);
+
                 $item = [
                     'resource_type_id' => $type_id,
                     'resource_code' => $data[6],
