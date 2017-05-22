@@ -212,8 +212,8 @@ class ActualMaterialController extends Controller
 
     function postStatus(ActualBatch $actual_batch, Request $request)
     {
-        $this->validate($request, ['status.*' => 'required'], ['required' => 'This field is required']);
-        $result = (new CostImportFixer($actual_batch))->fixStatus($request->get('status'));
+        $this->validate($request, ['status.*' => 'required', 'progress.*' => 'required|gt:0'], ['required' => 'This field is required']);
+        $result = (new CostImportFixer($actual_batch))->fixStatus($request->only('status', 'progress'));
 
         $this->dispatch(new NotifyCostOwnerForUpload($actual_batch));
 
