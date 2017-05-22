@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CostIssue extends Model
 {
-    use RecordsUser;
+//    use RecordsUser;
 
     protected $fillable = ['batch_id', 'type', 'data'];
 
