@@ -30,11 +30,16 @@ class CostController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $this->validate($request, [
+        $rules = [
             'remaining_qty' => 'required|numeric|gte:0', 'remaining_unit_price' => 'required|numeric|gte:0',
-            'allowable_ev_cost' => 'required|numeric|gte:0',
             'progress' => 'numeric|gt:0|lte:100'
-        ]);
+        ];
+
+        if ($cost_shadow->budget->std_activity->isGeneral()) {
+            $rules['allowable_ev_cost'] = 'required|numeric|gte:0';
+        }
+
+        $this->validate($request, $rules);
 
         CostShadow::flushEventListeners();
         BreakDownResourceShadow::flushEventListeners();
