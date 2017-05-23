@@ -157,6 +157,7 @@ Route::group(['prefix' => 'actual-material', 'as' => 'actual-material.'], functi
 
 Route::group(['prefix' => 'cost', 'as' => 'cost.'], function () {
     Route::get('{cost_shadow}/edit', ['as' => 'edit', 'uses' => 'CostController@edit']);
+    Route::get('{breakdown_resource}/pseudo-edit', ['as' => 'pseudo-edit', 'uses' => 'CostController@pseudoEdit']);
     Route::post('{cost_shadow}', ['as' => 'update', 'uses' => 'CostController@update']);
 
     Route::get('{project}/old-data', ['as' => 'old-data', 'uses' => 'CostController@importOldData']);
