@@ -87,9 +87,9 @@ class CostController extends Controller
         if ($cost_shadow->budget->std_activity->isGeneral()) {
             $fields[] = 'allowable_ev_cost';
         }
-        $cost_shadow->fill($request->only('fields'));
+        $cost_shadow->fill($request->only($fields));
         if ($cost_shadow->isDirty()) {
-            $cost_shadow->manual_edit = true;
+            $cost_shadow->manual_edit = 1;
             $cost_shadow->save();
         }
 
