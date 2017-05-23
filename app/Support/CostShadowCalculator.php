@@ -26,7 +26,7 @@ class CostShadowCalculator
 
     function update()
     {
-        $this->costShadow->fill($this->toArray());
+        $this->costShadow->fill($fields = $this->toArray());
         $this->costShadow->save();
 
         return $this->costShadow;

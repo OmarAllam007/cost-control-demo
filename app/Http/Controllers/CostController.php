@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Jobs\ImportOldDatasheet;
 use App\Project;
@@ -34,11 +36,14 @@ class CostController extends Controller
             'progress' => 'numeric|gt:0|lte:100'
         ]);
 
+        CostShadow::flushEventListeners();
+        BreakDownResourceShadow::flushEventListeners();
+
         $cost_shadow->update($request->only(['remaining_qty', 'remaining_unit_price', 'allowable_ev_cost']));
         $budget = $request->get('budget', ['progress' => 0, 'status' => '']);
         $cost_shadow->budget->update(['progress' => $budget['progress'], 'status' => $budget['status']]);
 
-        $calculator = new CostShadowCalculator($cost_shadow);
+        $calculator = new CostShadowCalculator($cost_shadow, true);
         $calculator->update();
 
         flash('Resource data has been updated', 'success');

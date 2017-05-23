@@ -12,6 +12,7 @@ namespace App\Behaviors;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostResource;
+use App\CostShadow;
 use App\Period;
 use App\Resources;
 use App\StdActivity;
@@ -19,6 +20,22 @@ use App\StdActivity;
 trait CostAttributes
 {
     protected $calculated;
+
+    /** @var CostShadow */
+    protected $latestCost = null;
+
+    protected function getLatestCost()
+    {
+        if ($this->latestCost !== null) {
+            return $this->latestCost;
+        }
+
+        $latest = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)
+            ->where('period_id', '<=', $this->getCalculationPeriod()->id)
+            ->orderBy('period_id', 'desc')->first();
+
+        return $latest;
+    }
 
     function getPreviousUnitPriceAttribute()
     {
@@ -68,6 +85,14 @@ trait CostAttributes
     {
         if (isset($this->calculated['allowable_ev_cost'])) {
             return $this->calculated['allowable_ev_cost'];
+        }
+
+        $hasCurrent = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)->wherePeriodId($this->getCalculationPeriod()->id)->exists();
+        if (!$hasCurrent) {
+            $latest = $this->getLatestCost();
+            if ($latest) {
+                return $this->calculated['allowable_ev_cost'] = $latest->allowable_ev_cost;
+            }
         }
 
         if (!$this->budget_cost) {
@@ -142,7 +167,6 @@ trait CostAttributes
 
     function getRemainingUnitPriceAttribute()
     {
-
         if (isset($this->calculated['remaining_unit_price'])) {
             return $this->calculated['remaining_unit_price'];
         }
@@ -167,6 +191,11 @@ trait CostAttributes
         if ($current->unit_price !== null) {
             $remainingUnitPrice = $current->unit_price;
         } else {
+            $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
+            if ($latest) {
+                return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
+            }
+
             // If no current data, find to date data for the resource
             $todate = ActualResources::where($conditions)
                 ->where('period_id', '<=', $this->getCalculationPeriod()->id)
@@ -181,23 +210,6 @@ trait CostAttributes
         }
         
         return $this->calculated['remaining_unit_price'] = $remainingUnitPrice;
-
-        /*if ($this->curr_unit_price) {
-            return $this->curr_unit_price;
-        }
-
-        $resource = CostResource::where('resource_id', $this->resource_id)
-            ->where('project_id', $this->project_id)->where('period_id', $this->getCalculationPeriod()->id)->first();
-
-        if ($resource) {
-            return $this->calculated['remaining_unit_price'] = $resource->rate;
-        }
-
-        if ($this->prev_unit_price) {
-            return $this->calculated['remaining_unit_price'] = $this->prev_unit_price;
-        }
-
-        return $this->calculated['remaining_unit_price'] = $this->unit_price;*/
     }
 
     function getCompletionCostAttribute()
