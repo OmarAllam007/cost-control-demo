@@ -30,7 +30,10 @@ trait CostAttributes
             return $this->latestCost;
         }
 
-        $latest = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)->orderBy('period_id', 'desc')->first();
+        $latest = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)
+            ->where('period_id', '<=', $this->getCalculationPeriod()->id)
+            ->orderBy('period_id', 'desc')->first();
+
         return $latest;
     }
 
@@ -84,9 +87,12 @@ trait CostAttributes
             return $this->calculated['allowable_ev_cost'];
         }
 
-
-        if ($this->getLatestCost()) {
-            return $this->calculated['allowable_ev_cost'] = $this->getLatestCost()->allowable_ev_cost;
+        $hasCurrent = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)->wherePeriodId($this->getCalculationPeriod()->id)->exists();
+        if (!$hasCurrent) {
+            $latest = $this->getLatestCost();
+            if ($latest) {
+                return $this->calculated['allowable_ev_cost'] = $latest->allowable_ev_cost;
+            }
         }
 
         if (!$this->budget_cost) {
@@ -138,11 +144,6 @@ trait CostAttributes
             return $this->calculated['remaining_qty'];
         }
 
-        $latest = $this->getLatestCost();
-        if ($latest) {
-            return $this->calculated['remaining_qty'] = $latest->remaining_qty;
-        }
-
         if (!$this->budget_unit || $this->progress_value == 1 || strtolower($this->status) == 'closed') {
             return $this->calculated['remaining_qty'] = 0;
         }
@@ -182,11 +183,6 @@ trait CostAttributes
             $conditions['breakdown_resource_id'] = $this->breakdown_resource_id;
         }
 
-        $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
-        if ($latest) {
-            return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
-        }
-
         // Find current data for the resource
         $current = ActualResources::where($conditions)
             ->where('period_id', $this->getCalculationPeriod()->id)
@@ -195,6 +191,11 @@ trait CostAttributes
         if ($current->unit_price !== null) {
             $remainingUnitPrice = $current->unit_price;
         } else {
+            $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
+            if ($latest) {
+                return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
+            }
+
             // If no current data, find to date data for the resource
             $todate = ActualResources::where($conditions)
                 ->where('period_id', '<=', $this->getCalculationPeriod()->id)
@@ -209,23 +210,6 @@ trait CostAttributes
         }
         
         return $this->calculated['remaining_unit_price'] = $remainingUnitPrice;
-
-        /*if ($this->curr_unit_price) {
-            return $this->curr_unit_price;
-        }
-
-        $resource = CostResource::where('resource_id', $this->resource_id)
-            ->where('project_id', $this->project_id)->where('period_id', $this->getCalculationPeriod()->id)->first();
-
-        if ($resource) {
-            return $this->calculated['remaining_unit_price'] = $resource->rate;
-        }
-
-        if ($this->prev_unit_price) {
-            return $this->calculated['remaining_unit_price'] = $this->prev_unit_price;
-        }
-
-        return $this->calculated['remaining_unit_price'] = $this->unit_price;*/
     }
 
     function getCompletionCostAttribute()

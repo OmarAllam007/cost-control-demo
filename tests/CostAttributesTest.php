@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CostAttributesTest extends TestCase
 {
-    use DatabaseTransactions;
+//    use DatabaseTransactions;
 
     /** @var \App\Project */
     protected $project;
