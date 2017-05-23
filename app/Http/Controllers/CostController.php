@@ -46,6 +46,12 @@ class CostController extends Controller
         }
 
         $budget = $request->get('budget', ['progress' => 0, 'status' => '']);
+        if (strtolower($budget['status']) == 'closed') {
+            $budget['progress'] = 100;
+        } elseif ($budget['progress'] == 100) {
+            $budget['status'] = 'Closed';
+        }
+
         $cost_shadow->budget->update(['progress' => $budget['progress'], 'status' => $budget['status']]);
 
         $cost_shadow->recalculate(true);
