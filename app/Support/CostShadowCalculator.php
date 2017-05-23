@@ -34,16 +34,16 @@ class CostShadowCalculator
 
     protected function setCalculated($keepRemaining)
     {
-        $budgetAttributes = $this->costShadow->budget->getAttributes();
+        $this->calculated = $this->costShadow->budget->getAttributes();
         $merged = [];
-        if ($keepRemaining) {
-            $merged = [
-                'remaining_qty' => $this->costShadow->remaining_qty,
-                'remaining_unit_price' => $this->costShadow->remaining_unit_price,
-                'allowable_ev_cost' => $this->costShadow->allowable_ev_cost,
-            ];
-        }
-        $this->calculated = array_merge($budgetAttributes, $merged);
+//        if ($keepRemaining) {
+//            $merged = [
+//                'remaining_qty' => $this->costShadow->remaining_qty,
+//                'remaining_unit_price' => $this->costShadow->remaining_unit_price,
+//                'allowable_ev_cost' => $this->costShadow->allowable_ev_cost,
+//            ];
+//        }
+//         = array_merge($budgetAttributes, $merged);
     }
 
     public function toArray()
