@@ -39,7 +39,11 @@ class CostController extends Controller
         CostShadow::flushEventListeners();
         BreakDownResourceShadow::flushEventListeners();
 
-        $cost_shadow->fill($request->only(['remaining_qty', 'remaining_unit_price', 'allowable_ev_cost']));
+        $fields = ['remaining_qty', 'remaining_unit_price'];
+        if ($cost_shadow->budget->activity->isGeneral()) {
+            $fields[] = 'allowable_ev_cost';
+        }
+        $cost_shadow->fill($request->only('fields'));
         if ($cost_shadow->isDirty()) {
             $cost_shadow->manual_edit = true;
             $cost_shadow->save();
@@ -51,7 +55,6 @@ class CostController extends Controller
         } elseif ($budget['progress'] == 100) {
             $budget['status'] = 'Closed';
         }
-
         $cost_shadow->budget->update(['progress' => $budget['progress'], 'status' => $budget['status']]);
 
         $cost_shadow->recalculate(true);

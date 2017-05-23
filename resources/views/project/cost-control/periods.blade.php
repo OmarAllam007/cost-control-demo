@@ -1,10 +1,13 @@
 <section id="periods" class="project-tab">
+
+    @can('periods', $project)
     <div class="form-group">
         <div class="btn-toolbar pull-right">
             <a href="{{route('period.create', compact('project'))}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Period</a>
         </div>
-    <div class="clearfix"></div>
+        <div class="clearfix"></div>
     </div>
+    @endcan
 
     @if ($project->periods->count())
         <table class="table table-condensed table-striped">
