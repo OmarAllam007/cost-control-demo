@@ -39,12 +39,16 @@ class CostController extends Controller
         CostShadow::flushEventListeners();
         BreakDownResourceShadow::flushEventListeners();
 
-        $cost_shadow->update($request->only(['remaining_qty', 'remaining_unit_price', 'allowable_ev_cost']));
+        $cost_shadow->fill($request->only(['remaining_qty', 'remaining_unit_price', 'allowable_ev_cost']));
+        if ($cost_shadow->isDirty()) {
+            $cost_shadow->manual_edit = true;
+            $cost_shadow->save();
+        }
+
         $budget = $request->get('budget', ['progress' => 0, 'status' => '']);
         $cost_shadow->budget->update(['progress' => $budget['progress'], 'status' => $budget['status']]);
 
-        $calculator = new CostShadowCalculator($cost_shadow, true);
-        $calculator->update();
+        $cost_shadow->recalculate(true);
 
         flash('Resource data has been updated', 'success');
         return \Redirect::to('/blank?reload=breakdowns');
