@@ -40,7 +40,7 @@ class CostController extends Controller
         BreakDownResourceShadow::flushEventListeners();
 
         $fields = ['remaining_qty', 'remaining_unit_price'];
-        if ($cost_shadow->budget->activity->isGeneral()) {
+        if ($cost_shadow->budget->std_activity->isGeneral()) {
             $fields[] = 'allowable_ev_cost';
         }
         $cost_shadow->fill($request->only('fields'));

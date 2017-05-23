@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            @if ($cost_shadow->budget->activity->isGeneral())
+            @if ($cost_shadow->budget->std_activity->isGeneral())
                 <div class="col-sm-4">
                     <div class="form-group {{$errors->first('allowable_ev_cost', 'has-error')}}">
                         {{Form::label('allowable_ev_cost', 'Allowable (EV) Cost', ['class' => 'control-label', 'for' => 'AllowableEvCost'])}}
