@@ -41,7 +41,9 @@ class ActualResourceObserver
             $attributes = $trans->toArray();
 
             $shadow = CostShadow::firstOrCreate($conditions);
-            $shadow->update(collect($attributes)->only($shadow->getFillable())->toArray());
+            $shadow->fill(collect($attributes)->only($shadow->getFillable())->toArray());
+            $shadow->manual_edit = false;
+            $shadow->save();
         } else {
             CostShadow::where($conditions)->get()->each(function ($resource) {
                 $resource->delete();

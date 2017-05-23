@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 class CostShadow extends Model
 {
     use HasChangeLog;
-    use CachesQueries;
 
     protected $fillable = [
         "project_id", "wbs_level_id", "period_id", "resource_id", "breakdown_resource_id", "curr_cost", "curr_qty",

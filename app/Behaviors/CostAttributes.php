@@ -87,12 +87,10 @@ trait CostAttributes
             return $this->calculated['allowable_ev_cost'];
         }
 
-        $hasCurrent = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)->wherePeriodId($this->getCalculationPeriod()->id)->exists();
-        if (!$hasCurrent) {
-            $latest = $this->getLatestCost();
-            if ($latest) {
-                return $this->calculated['allowable_ev_cost'] = $latest->allowable_ev_cost;
-            }
+
+        $latest = $this->getLatestCost();
+        if ($latest && $latest->manual_edit) {
+            return $this->calculated['allowable_ev_cost'] = $latest->allowable_ev_cost;
         }
 
         if (!$this->budget_cost) {
@@ -148,6 +146,12 @@ trait CostAttributes
             return $this->calculated['remaining_qty'] = 0;
         }
 
+        $latest = $this->getLatestCost();
+        if ($latest && $latest->manual_edit) {
+            return $this->calculated['remaining_qty'] = $latest->remaining_qty;
+        }
+
+
         if ($this->to_date_qty > $this->budget_unit && $this->progress_value) {
             return $this->calculated['remaining_qty'] = ($this->to_date_qty * (1 - $this->progress_value)) / $this->progress_value;
         }
@@ -183,6 +187,11 @@ trait CostAttributes
             $conditions['breakdown_resource_id'] = $this->breakdown_resource_id;
         }
 
+        $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
+        if ($latest && $latest->manual_edit) {
+            return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
+        }
+
         // Find current data for the resource
         $current = ActualResources::where($conditions)
             ->where('period_id', $this->getCalculationPeriod()->id)
@@ -191,11 +200,6 @@ trait CostAttributes
         if ($current->unit_price !== null) {
             $remainingUnitPrice = $current->unit_price;
         } else {
-            $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
-            if ($latest) {
-                return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
-            }
-
             // If no current data, find to date data for the resource
             $todate = ActualResources::where($conditions)
                 ->where('period_id', '<=', $this->getCalculationPeriod()->id)
