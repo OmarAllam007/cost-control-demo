@@ -184,6 +184,10 @@ trait CostAttributes
 
         $resource = Resources::find($this->resource_id);
 
+        if (!$resource->rate) {
+            return $this->calculated['remaining_unit_price'] = 0;
+        }
+
         if ($resource->isMaterial()) {
             // For material we calculate over resource in all activities
             $conditions['resource_id'] = $this->resource_id;
