@@ -15,6 +15,7 @@ use App\CostResource;
 use App\CostShadow;
 use App\Period;
 use App\Resources;
+use App\ResourceType;
 use App\StdActivity;
 
 trait CostAttributes
@@ -209,7 +210,8 @@ trait CostAttributes
                 $remainingUnitPrice = $todate->unit_price;
             } else {
                 // If the resource didn't start use budget unit rate
-                $remainingUnitPrice = $this->resource->rate;
+                $budgetResource = Resources::find($this->resource_id);
+                $remainingUnitPrice = $budgetResource->rate;
             }
         }
         
