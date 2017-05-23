@@ -125,6 +125,10 @@ trait CostAttributes
             return $this->calculated['bl_allowable_cost'];
         }
 
+        if (!$this->remaining_qty == 0 || $this->progress_value = 1 || strtolower($this->status) == 'closed') {
+            return $this->calculated['bl_allowable_cost'] = 0;
+        }
+
         return $this->calculated['bl_allowable_cost'] = $this->budget_cost - $this->latest_allowable_cost;
     }
 
