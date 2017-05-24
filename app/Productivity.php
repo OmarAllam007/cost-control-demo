@@ -108,18 +108,19 @@ class Productivity extends Model
         $man_numbers = [];
         foreach ($lines as $line) {
             $tokens = [];
-            preg_match('/([\d.]+)\s?(.*)/', $line, $tokens);
-            $key = strtolower(trim($tokens[2]));
-            $man_number = trim($tokens[1]);
-            $resource = Resources::where('name', 'like', "%$key%")->first();
-            if (!$resource) {
-                continue;
-            }
-            $type = $resource->types->root->name;
-            $is_labour = stristr($type, '02.LABORS');
+            if (preg_match('/([\d.]+)\s+?(.*)/', $line, $tokens)) {
+                $key = strtolower(trim($tokens[2]));
+                $man_number = trim($tokens[1]);
+                $resource = Resources::where('name', 'like', "%$key%")->first();
+                if (!$resource) {
+                    continue;
+                }
+                $type = $resource->types->root->name;
+                $is_labour = stristr($type, '02.LABORS');
 
-            if ($is_labour) {//if(array_search($key,$crew) !== false){
-                $man_numbers[] = $man_number * 10;
+                if ($is_labour) {//if(array_search($key,$crew) !== false){
+                    $man_numbers[] = $man_number * 10;
+                }
             }
         }
 
