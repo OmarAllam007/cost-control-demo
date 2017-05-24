@@ -126,7 +126,7 @@ export default {
 
     events: {
         reloadPage() {
-            this.changingPage(this.pager.current_page);
+            this.changePage(this.pager.current_page);
         }
     }
 };

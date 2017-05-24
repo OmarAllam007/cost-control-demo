@@ -20,20 +20,22 @@ export default {
     //<editor-fold defaultstate="collapsed" desc="Computed properties">
     computed: {
         url() {
-            let url = '/api/cost/breakdowns/' + this.wbs_id + (this.perspective ? ('?perspective=' + this.perspective) : '')
+            let url = '/api/cost/breakdowns/' + this.wbs_id + '?' + (this.perspective ? `perspective=${this.perspective}` : '')
+            const urlTokens = [];
             const filters = ['activity', 'resource_type', 'resource', 'cost_account'];
             filters.forEach(filter => {
                 if (this[filter]) {
-                    url += '&' + filter + '=' + this[filter];
+                    urlTokens.push(`${filter}=${this[filter]}`);
                 }
             });
-            return url;
+            return url + urlTokens.join('&');
         }
     },
     //</editor-fold>
 
     methods: {
         loadBreakdowns(cache = true) {
+            this.$broadcast('reloadPage');
             // if (this.wbs_id) {
             //     this.loading = true;
             //     $.ajax({
@@ -94,6 +96,10 @@ export default {
         pageChanged(data) {
             this.breakdowns = data;
             this.loading = false;
+        },
+
+        reload_breakdowns() {
+            this.loadBreakdowns();
         }
     },
 
