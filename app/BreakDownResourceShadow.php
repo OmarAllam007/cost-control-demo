@@ -236,7 +236,7 @@ class BreakDownResourceShadow extends Model
         return 0;
     }
 
-    public function getLatestAllowableCostAttribute()
+    /*public function getLatestAllowableCostAttribute()
     {
         if (!empty($this->attributes['allowable_ev_cost'])) {
             return $this->attributes['allowable_ev_cost'];
@@ -247,7 +247,7 @@ class BreakDownResourceShadow extends Model
         }
 
         return $this->allowable_ev_cost;
-    }
+    }*/
 
     function getLatestRemainingCostAttribute()
     {
