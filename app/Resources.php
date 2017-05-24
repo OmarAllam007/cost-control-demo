@@ -189,4 +189,10 @@ class Resources extends Model
         $query->where('project_id', $project->id);
     }
 
+    function isMaterial()
+    {
+        //TODO: use id instead of name after data cleaning
+        return strpos(strtolower($this->types->root->name), 'material') !== false;
+    }
+
 }

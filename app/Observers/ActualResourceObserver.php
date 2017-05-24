@@ -15,24 +15,13 @@ use App\WbsResource;
 
 class ActualResourceObserver
 {
-    function created(ActualResources $resource)
-    {
-        $this->updateShadow($resource);
-    }
-
-    function updated(ActualResources $resource)
+    function saved(ActualResources $resource)
     {
         $this->updateShadow($resource);
     }
 
     function deleted(ActualResources $resource)
     {
-//        $conditions = [
-//            'breakdown_resource_id' => $resource->breakdown_resource_id,
-//            'period_id' => $resource->period_id,
-//        ];
-//
-//        CostShadow::where($conditions)->delete();
         $this->updateShadow($resource);
     }
 
@@ -49,12 +38,12 @@ class ActualResourceObserver
         ];
 
         if ($trans) {
-            $shadow = CostShadow::firstOrCreate($conditions);
-
-
             $attributes = $trans->toArray();
-            $attributes['batch_id'] = $resource->batch_id;
-            $shadow->update($attributes);
+
+            $shadow = CostShadow::firstOrCreate($conditions);
+            $shadow->fill(collect($attributes)->only($shadow->getFillable())->toArray());
+            $shadow->manual_edit = false;
+            $shadow->save();
         } else {
             CostShadow::where($conditions)->get()->each(function ($resource) {
                 $resource->delete();

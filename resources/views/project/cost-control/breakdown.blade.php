@@ -169,7 +169,7 @@
                                                     class="caret"></span></button>
                                         <ul class="dropdown-menu">
                                             @can('manual_edit', $project)
-                                                <li><a :href="'/cost/' + breakdown.cost_id + '/edit/'" class="in-iframe"
+                                                <li><a :href="'/cost/' + breakdown.breakdown_resource_id + '/pseudo-edit'" class="in-iframe"
                                                        title="Edit Resource Data"><i class="fa fa-fw fa-edit"></i> Edit</a>
                                                 </li>
                                             @endcan

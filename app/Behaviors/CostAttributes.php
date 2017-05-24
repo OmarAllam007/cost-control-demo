@@ -12,12 +12,31 @@ namespace App\Behaviors;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostResource;
+use App\CostShadow;
 use App\Period;
+use App\Resources;
+use App\ResourceType;
 use App\StdActivity;
 
 trait CostAttributes
 {
     protected $calculated;
+
+    /** @var CostShadow */
+    protected $latestCost = null;
+
+    protected function getLatestCost()
+    {
+        if ($this->latestCost !== null) {
+            return $this->latestCost;
+        }
+
+        $latest = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)
+            ->where('period_id', '<=', $this->getCalculationPeriod()->id)
+            ->orderBy('period_id', 'desc')->first();
+
+        return $latest;
+    }
 
     function getPreviousUnitPriceAttribute()
     {
@@ -69,6 +88,12 @@ trait CostAttributes
             return $this->calculated['allowable_ev_cost'];
         }
 
+
+        $latest = $this->getLatestCost();
+        if ($latest && $latest->manual_edit) {
+            return $this->calculated['allowable_ev_cost'] = $latest->allowable_ev_cost;
+        }
+
         if (!$this->budget_cost) {
             return 0;
         }
@@ -100,6 +125,10 @@ trait CostAttributes
             return $this->calculated['bl_allowable_cost'];
         }
 
+        if (!$this->remaining_qty == 0 || $this->progress_value = 1 || strtolower($this->status) == 'closed') {
+            return $this->calculated['bl_allowable_cost'] = 0;
+        }
+
         return $this->calculated['bl_allowable_cost'] = $this->budget_cost - $this->latest_allowable_cost;
     }
 
@@ -122,15 +151,17 @@ trait CostAttributes
             return $this->calculated['remaining_qty'] = 0;
         }
 
+        $latest = $this->getLatestCost();
+        if ($latest && $latest->manual_edit) {
+            return $this->calculated['remaining_qty'] = $latest->remaining_qty;
+        }
+
+
         if ($this->to_date_qty > $this->budget_unit && $this->progress_value) {
             return $this->calculated['remaining_qty'] = ($this->to_date_qty * (1 - $this->progress_value)) / $this->progress_value;
         }
 
         $remaining = $this->budget_unit - $this->to_date_qty;
-        if ($remaining < 0) {
-            $remaining = 0;
-        }
-
         return $this->calculated['remaining_qty'] = $remaining;
     }
 
@@ -145,27 +176,54 @@ trait CostAttributes
 
     function getRemainingUnitPriceAttribute()
     {
-
         if (isset($this->calculated['remaining_unit_price'])) {
             return $this->calculated['remaining_unit_price'];
         }
 
-        if ($this->curr_unit_price) {
-            return $this->curr_unit_price;
+        $conditions = ['project_id' => $this->project_id];
+
+        $resource = Resources::find($this->resource_id);
+
+        if (!$resource->rate) {
+            return $this->calculated['remaining_unit_price'] = 0;
         }
 
-        $resource = CostResource::where('resource_id', $this->resource_id)
-            ->where('project_id', $this->project_id)->where('period_id', $this->getCalculationPeriod()->id)->first();
-
-        if ($resource) {
-            return $this->calculated['remaining_unit_price'] = $resource->rate;
+        if ($resource->isMaterial()) {
+            // For material we calculate over resource in all activities
+            $conditions['resource_id'] = $this->resource_id;
+        } else {
+            // For non-material we calculate on the resource in each activity
+            $conditions['breakdown_resource_id'] = $this->breakdown_resource_id;
         }
 
-        if ($this->prev_unit_price) {
-            return $this->calculated['remaining_unit_price'] = $this->prev_unit_price;
+        $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
+        if ($latest && $latest->manual_edit) {
+            return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
         }
 
-        return $this->calculated['remaining_unit_price'] = $this->unit_price;
+        // Find current data for the resource
+        $current = ActualResources::where($conditions)
+            ->where('period_id', $this->getCalculationPeriod()->id)
+            ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+
+        if ($current->unit_price !== null) {
+            $remainingUnitPrice = $current->unit_price;
+        } else {
+            // If no current data, find to date data for the resource
+            $todate = ActualResources::where($conditions)
+                ->where('period_id', '<=', $this->getCalculationPeriod()->id)
+                ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+
+            if ($todate->unit_price !== null) {
+                $remainingUnitPrice = $todate->unit_price;
+            } else {
+                // If the resource didn't start use budget unit rate
+                $budgetResource = Resources::find($this->resource_id);
+                $remainingUnitPrice = $budgetResource->rate;
+            }
+        }
+        
+        return $this->calculated['remaining_unit_price'] = $remainingUnitPrice;
     }
 
     function getCompletionCostAttribute()

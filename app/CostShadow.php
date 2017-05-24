@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Support\CostShadowCalculator;
 use Illuminate\Database\Eloquent\Builder;

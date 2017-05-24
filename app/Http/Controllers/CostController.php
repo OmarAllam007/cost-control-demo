@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Jobs\ImportOldDatasheet;
 use App\Project;
@@ -16,6 +18,45 @@ class CostController extends Controller
 
     }
 
+    public function pseudoEdit(BreakdownResource $breakdown_resource) {
+        $shadow = BreakDownResourceShadow::whereBreakdownResourceId($breakdown_resource->id)->first();
+
+        $current_period_id = $shadow->project->open_period()->id;
+
+        $costShadow = CostShadow::whereBreakdownResourceId($breakdown_resource->id)
+            ->where('period_id', '<=', $current_period_id)
+            ->orderBy('period_id', 'DESC')->first();
+
+        if (!$costShadow) {
+            $attributes = [
+                'project_id' => $shadow->project_id,
+                'wbs_level_id' => $shadow->wbs_id,
+                'period_id' => $current_period_id,
+                'breakdown_resource_id' => $breakdown_resource->id
+            ];
+
+            $costShadow = CostShadow::create($attributes);
+        } elseif ($costShadow->period_id != $current_period_id) {
+            $attributes = $costShadow->getAttributes();
+            unset($attributes['id'], $attributes['created_at'], $attributes['updated_at']);
+            unset($attributes['period_id']);
+
+            $attributes['manual_edit'] = 0;
+            $attributes['period_id'] = $current_period_id;
+            $attributes['curr_qty'] = 0;
+            $attributes['curr_cost'] = 0;
+            $attributes['curr_unit_price'] = 0;
+            $attributes['prev_qty'] = $attributes['to_date_qty'];
+            $attributes['prev_cost'] = $attributes['to_date_cost'];
+            $attributes['prev_unit_price'] = $attributes['to_date_unit_price'];
+            $attributes['period_id'] = $current_period_id;
+
+            $costShadow = CostShadow::create($attributes);
+        }
+
+        return redirect()->to(route('cost.edit', $costShadow) . (request()->iframe? '?iframe=1' : ''));
+    }
+
     public function edit(CostShadow $cost_shadow)
     {
         return view('cost.edit', compact('cost_shadow'));
@@ -28,18 +69,39 @@ class CostController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $this->validate($request, [
+        $rules = [
             'remaining_qty' => 'required|numeric|gte:0', 'remaining_unit_price' => 'required|numeric|gte:0',
-            'allowable_ev_cost' => 'required|numeric|gte:0',
             'progress' => 'numeric|gt:0|lte:100'
-        ]);
+        ];
 
-        $cost_shadow->update($request->only(['remaining_qty', 'remaining_unit_price', 'allowable_ev_cost']));
+        if ($cost_shadow->budget->std_activity->isGeneral()) {
+            $rules['allowable_ev_cost'] = 'required|numeric|gte:0';
+        }
+
+        $this->validate($request, $rules);
+
+        CostShadow::flushEventListeners();
+        BreakDownResourceShadow::flushEventListeners();
+
+        $fields = ['remaining_qty', 'remaining_unit_price'];
+        if ($cost_shadow->budget->std_activity->isGeneral()) {
+            $fields[] = 'allowable_ev_cost';
+        }
+        $cost_shadow->fill($request->only($fields));
+        if ($cost_shadow->isDirty()) {
+            $cost_shadow->manual_edit = 1;
+            $cost_shadow->save();
+        }
+
         $budget = $request->get('budget', ['progress' => 0, 'status' => '']);
+        if (strtolower($budget['status']) == 'closed') {
+            $budget['progress'] = 100;
+        } elseif ($budget['progress'] == 100) {
+            $budget['status'] = 'Closed';
+        }
         $cost_shadow->budget->update(['progress' => $budget['progress'], 'status' => $budget['status']]);
 
-        $calculator = new CostShadowCalculator($cost_shadow);
-        $calculator->update();
+        $cost_shadow->recalculate(true);
 
         flash('Resource data has been updated', 'success');
         return \Redirect::to('/blank?reload=breakdowns');

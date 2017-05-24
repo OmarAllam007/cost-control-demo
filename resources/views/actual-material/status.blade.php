@@ -46,9 +46,21 @@
                         <td>{{$resource->remarks}}</td>
                         <td>{{number_format($resource->budget_unit, 2)}}</td>
                         <td>{{number_format($resource->cost->to_date_qty, 2)}}</td>
-                        <td>{{number_format($resource->progress, 1)}}%</td>
                         <td>
-                            {{Form::select("status[{$resource->breakdown_resource_id}]", config('app.cost_status'), $resource->progress == 100? 'Closed' : $resource->status ?: 'In Progress', ['class' => 'form-control input-sm'])}}
+                            <div class="input-group">
+                                {{
+                                    Form::text("progress[{$resource->breakdown_resource_id}]", $resource->calculateProgress(),
+                                        ['class' => 'form-control input-sm progress', 'data-init' => $resource->calculateProgress()])
+                                }}
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </td>
+                        <td>
+                            {{
+                                Form::select("status[{$resource->breakdown_resource_id}]", config('app.cost_status'),
+                                    $resource->progress == 100? 'Closed' : $resource->status ?: 'In Progress',
+                                    ['class' => 'form-control input-sm status'])
+                            }}
                         </td>
                     </tr>
                 @endforeach
@@ -66,11 +78,33 @@
     <script>
         $(function(){
             $('.select-all').on('change', function(){
-                var value = $(this).val();
+                const value = $(this).val();
                 if (value) {
-                    $(this).closest('.panel').find('table').find('select').val(value);
+                    $(this).closest('.panel').find('table').find('select').val(value).change();
+                }
+            });
+
+            $('.status').on('change', function() {
+                const parent = $(this).closest('tr');
+                const progressField = parent.find('.progress');
+
+                if ($(this).val().toLowerCase() === 'closed') {
+                    progressField.val(100);
+                } else {
+                    progressField.val(progressField.data('init'));
+                }
+            });
+
+            $('.progress').on('change', function() {
+                let parent = $(this).closest('tr');
+                const statusField = parent.find('.status');
+
+                if (parseInt($(this).val()) === 100) {
+                    statusField.val('Closed');
+                } else {
+                    statusField.val('In Progress');
                 }
             });
         });
     </script>
-    @endsection
+@endsection

@@ -25,13 +25,15 @@
                 </div>
             </div>
 
-            <div class="col-sm-4">
-                <div class="form-group {{$errors->first('allowable_ev_cost', 'has-error')}}">
-                    {{Form::label('allowable_ev_cost', 'Allowable To Date', ['class' => 'control-label', 'for' => 'AllowableEvCost'])}}
-                    {{Form::text('allowable_ev_cost', null, ['class' => 'form-control', 'id' => 'AllowableEvCost'])}}
-                    {!! $errors->first('allowable_ev_cost', '<div class="help-block">:message</div>') !!}
+            @if ($cost_shadow->budget->std_activity->isGeneral())
+                <div class="col-sm-4">
+                    <div class="form-group {{$errors->first('allowable_ev_cost', 'has-error')}}">
+                        {{Form::label('allowable_ev_cost', 'Allowable (EV) Cost', ['class' => 'control-label', 'for' => 'AllowableEvCost'])}}
+                        {{Form::text('allowable_ev_cost', null, ['class' => 'form-control', 'id' => 'AllowableEvCost'])}}
+                        {!! $errors->first('allowable_ev_cost', '<div class="help-block">:message</div>') !!}
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
 
         <div class="row">

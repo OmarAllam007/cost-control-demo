@@ -33,7 +33,7 @@ class BreakdownShadowObserver
             ];
 
             $costShadow = CostShadow::firstOrCreate($conditions);
-            $costShadow->recalculate(false);
+            $costShadow->recalculate(true);
         }
     }
 }

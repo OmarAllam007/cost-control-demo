@@ -16,7 +16,7 @@ class PeriodController extends Controller
             return \Redirect::route('project.index');
         }
 
-        if (cannot('period', $project)) {
+        if (cannot('periods', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.cost-control', $project);
         }
@@ -32,7 +32,7 @@ class PeriodController extends Controller
             return \Redirect::route('project.index');
         }
 
-        if (cannot('period', $project)) {
+        if (cannot('periods', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.cost-control', $project);
         }
@@ -48,7 +48,7 @@ class PeriodController extends Controller
     {
         $project = $period->project;
 
-        if (cannot('period', $project)) {
+        if (cannot('periods', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.cost-control', $project);
         }
@@ -60,7 +60,7 @@ class PeriodController extends Controller
     {
         $project = $period->project;
 
-        if (cannot('period', $project)) {
+        if (cannot('periods', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.cost-control', $project);
         }

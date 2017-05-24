@@ -258,23 +258,23 @@ class BreakDownResourceShadow extends Model
         return $this->remaining_cost;
     }
 
-    function getLatestRemainingQtyAttribute()
-    {
-        if (!empty($this->cost->remaining_qty) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-            return $this->cost->remaining_qty;
-        }
+//    function getLatestRemainingQtyAttribute()
+//    {
+//        if (!empty($this->cost->remaining_qty) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
+//            return $this->cost->remaining_qty;
+//        }
+//
+//        return $this->remaining_qty;
+//    }
 
-        return $this->remaining_qty;
-    }
-
-    function getLatestRemainingUnitPriceAttribute()
-    {
-        if (!empty($this->cost->remaining_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-            return $this->cost->remaining_unit_price;
-        }
-
-        return $this->remaining_unit_price;
-    }
+//    function getLatestRemainingUnitPriceAttribute()
+//    {
+//        if (!empty($this->cost->remaining_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
+//            return $this->cost->remaining_unit_price;
+//        }
+//
+//        return $this->remaining_unit_price;
+//    }
 
     function boq(){
         return $this->belongsTo(Boq::class,'boq_id');
@@ -287,5 +287,18 @@ class BreakDownResourceShadow extends Model
     function getTopMaterialAttribute()
     {
         return $this->resource->top_material;
+    }
+
+    function calculateProgress()
+    {
+        if ($this->budget_unit) {
+            $progress = $this->to_date_qty * 100 / $this->budget_unit;
+
+            if ($progress < 100 && !$this->std_activity->isGeneral()) {
+                return $progress;
+            }
+        }
+
+        return floatval($this->progress);
     }
 }
