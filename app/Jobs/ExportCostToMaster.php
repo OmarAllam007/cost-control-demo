@@ -99,7 +99,7 @@ class ExportCostToMaster extends Job
                     'prev_cost' => $costShadow['prev_cost'], 'curr_unit_price' => $costShadow['curr_unit_price'],
                     'curr_qty' => $costShadow['curr_qty'], 'curr_cost' => $costShadow['curr_cost'],
                     'to_date_unit_price' => $costShadow['to_date_unit_price'], 'to_date_qty' => $costShadow['to_date_qty'],
-                    'to_date_cost' => $costShadow['to_date_cost'], 'allowable_ev_cost' => $costShadow['latest_allowable_ev_cost'],
+                    'to_date_cost' => $costShadow['to_date_cost'], 'allowable_ev_cost' => $costShadow['allowable_ev_cost'],
                     'allowable_var' => $costShadow['allowable_var'], 'remaining_unit_price' => $costShadow['latest_remaining_unit_price'],
                     'remaining_qty' => $costShadow['latest_remaining_qty'], 'remaining_cost' => $costShadow['latest_remaining_cost'],
                     'bl_allowable_cost' => $costShadow['bl_allowable_cost'], 'bl_allowable_var' => $costShadow['bl_allowable_var'],
