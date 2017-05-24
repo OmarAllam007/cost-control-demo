@@ -22,7 +22,7 @@ class CostController extends Controller
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
         set_time_limit(180);
-$time = microtime(1);
+
         $period = $wbs_level->project->open_period();
 
         $perspective = $request->get('perspective');
