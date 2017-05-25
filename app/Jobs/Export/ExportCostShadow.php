@@ -94,10 +94,10 @@ class ExportCostShadow extends Job
                     $levels = $costShadow['wbs'];
                     $levels = array_pad($levels, 6, '');
                     $levels = array_only($levels, range(0, 5));
-                    $wbs = implode(', ', array_map('csv_quote', $levels));
+                    $wbs = implode(',', array_map('csv_quote', $levels));
 
-                    $activityDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['activity_divs'], 3, ''), range(0, 2))));
-                    $resourceDivs = implode(', ', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'], 3, ''), range(0, 2))));
+                    $activityDivs = implode(',', array_map('csv_quote', array_only(array_pad($costShadow['activity_divs'], 3, ''), range(0, 2))));
+                    $resourceDivs = implode(',', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'], 3, ''), range(0, 2))));
 
                     $boq_description = $costShadow->boq;
                 } else {
@@ -145,11 +145,11 @@ class ExportCostShadow extends Job
                     '"'.($costShadow['to_date_unit_price'] ?: '0').'",'.
                     '"'.($costShadow['to_date_qty'] ?: '0').'",'.
                     '"'.($costShadow['to_date_cost'] ?: '0').'",'.
-                    '"'.($costShadow['latest_allowable_cost'] ?: '0').'",'.
+                    '"'.($costShadow['allowable_ev_cost'] ?: '0').'",'.
                     '"'.($costShadow['allowable_var'] ?: '0').'",'.
-                    '"'.($costShadow['latest_remaining_unit_price'] ?: '0').'",'.
-                    '"'.($costShadow['latest_remaining_qty'] ?: '0').'",'.
-                    '"'.($costShadow['latest_remaining_cost'] ?: '0').'",'.
+                    '"'.($costShadow['remaining_unit_price'] ?: '0').'",'.
+                    '"'.($costShadow['remaining_qty'] ?: '0').'",'.
+                    '"'.($costShadow['remaining_cost'] ?: '0').'",'.
                     '"'.($costShadow['bl_allowable_cost'] ?: '0').'",'.
                     '"'.($costShadow['bl_allowable_var'] ?: '0').'",'.
                     '"'.($costShadow['completion_unit_price'] ?: '0').'",'.
