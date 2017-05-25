@@ -35,10 +35,10 @@ class CostShadowObserver
         $latestShadow = CostShadow::where('breakdown_resource_id', $resource->breakdown_resource_id)
             ->where('period_id', '<', $resource->period_id)->first();
 
-        if ($latestShadow) {
-            $resource->budget->update(['progress' => $latestShadow->progress, 'status' => $latestShadow->status]);
-        } else {
-            $resource->budget->update(['progress' => 0, 'status' => 'Not Started']);
-        }
+//        if ($latestShadow) {
+//            $resource->budget->update(['progress' => $latestShadow->progress, 'status' => $latestShadow->status]);
+//        } else {
+//            $resource->budget->update(['progress' => 0, 'status' => 'Not Started']);
+//        }
     }
 }
