@@ -9,6 +9,7 @@
 namespace App\Observers;
 
 
+use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\WbsResource;
@@ -33,7 +34,12 @@ class BreakdownShadowObserver
             ];
 
             $costShadow = CostShadow::firstOrCreate($conditions);
+            $costShadow->progress = $resource->progress;
+            $costShadow->status = $resource->status;
             $costShadow->recalculate(true);
+
+            ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
+                ->latest()->first()->update(['progress' => $resource->progress, 'status' => $resource->status]);
         }
     }
 }
