@@ -20,7 +20,7 @@ export default {
     //<editor-fold defaultstate="collapsed" desc="Computed properties">
     computed: {
         url() {
-            let url = '/api/cost/breakdowns/' + this.wbs_id + '?' + (this.perspective ? `perspective=${this.perspective}` : '')
+            let url = '/api/cost/breakdowns/' + this.wbs_id + '?' + (this.perspective ? `perspective=${this.perspective}&` : '')
             const urlTokens = [];
             const filters = ['activity', 'resource_type', 'resource', 'cost_account'];
             filters.forEach(filter => {
