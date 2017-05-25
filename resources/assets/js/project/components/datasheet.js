@@ -28,7 +28,7 @@ export default {
                     urlTokens.push(`${filter}=${this[filter]}`);
                 }
             });
-            return url + urlTokens.join('&');
+            return url + urlTokens.join('&') + '&';
         }
     },
     //</editor-fold>
