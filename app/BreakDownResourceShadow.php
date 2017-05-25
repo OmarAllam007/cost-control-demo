@@ -236,27 +236,6 @@ class BreakDownResourceShadow extends Model
         return 0;
     }
 
-    /*public function getLatestAllowableCostAttribute()
-    {
-        if (!empty($this->attributes['allowable_ev_cost'])) {
-            return $this->attributes['allowable_ev_cost'];
-        }
-
-        if (!empty($this->cost->allowable_ev_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-            return $this->cost->allowable_ev_cost;
-        }
-
-        return $this->allowable_ev_cost;
-    }*/
-
-    function getLatestRemainingCostAttribute()
-    {
-        if (!empty($this->cost->remaining_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-            return $this->cost->remaining_cost;
-        }
-
-        return $this->remaining_cost;
-    }
 
 //    function getLatestRemainingQtyAttribute()
 //    {
