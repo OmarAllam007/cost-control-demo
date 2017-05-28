@@ -30,7 +30,7 @@ $headerStyles = [
 if ($activities->count()) {
     foreach ($activities as $activity => $resources) {
         $sheet->setCellValue("A{$counter}", $activity);
-        $sheet->mergeCells("A{$counter}:G{$counter}");
+        $sheet->mergeCells("A{$counter}:F{$counter}");
         $sheet->getCell("A$counter")->getStyle()->applyFromArray($headerStyles);
         ++$counter;
 

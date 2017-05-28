@@ -8,3 +8,7 @@ if ($data) {
         ++$counter;
     }
 }
+
+foreach (range('A', 'I') as $column) {
+    $sheet->getColumnDimension($column)->setAutoSize(true);
+}

@@ -12,11 +12,11 @@
             <table class="table table-bordered table-hover table-condensed table-striped">
                 <thead>
                 <tr>
-                    <th colspan="4">Reopened</th>
+                    <th colspan="5">Reopened</th>
                 </tr>
                 <tr>
                     <td>Activity</td>
-                    <td>Count Account</td>
+                    <td>Cost Account</td>
                     <td>Resource</td>
                     <td>Remarks</td>
                     <td>Progress</td>
