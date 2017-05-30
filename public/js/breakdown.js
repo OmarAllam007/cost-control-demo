@@ -204,7 +204,6 @@
                     variable = variables[key];
                     varHtml = variableTemplate;
                     for (prop in variable) {
-                        console.log(prop);
                         var regexp = new RegExp('\{' + prop + '\}', 'g');
                         varHtml = varHtml.replace(regexp, variable[prop]);
                     }
@@ -353,7 +352,8 @@ $(function () {
 
     $('.tree-radio').on('change', function(){
         if (this.checked) {
-            var selector = '#' + $(this).parents('.modal').attr('id');
+            var selector = '#' + $(this).closest('.modal').attr('id');
+            console.log(selector);
             var trigger = $('[href="' + selector +'"]');
 
             var label = $(this).data('label');

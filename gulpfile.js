@@ -12,7 +12,14 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix.webpack('project/cost-control.js', 'public/js/cost-control.js')
+    mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
+    mix.scripts([
+        'breakdown/load-templates.js',
+        'breakdown/load-resources.js',
+        'breakdown/load-variables.js',
+        'autocomplete.js',
+        'tree-select.js'
+    ], 'public/js/breakdown.js');
     // mix.webpack('cost-dashboard/index.js', 'public/js/cost-dashboard.js')
     //     .copy('node_modules/c3/c3.min.js', 'public/css/c3.min.js')
     //     .copy('node_modules/c3/c3.min.css', 'public/css/c3.min.css')
@@ -47,13 +54,7 @@ elixir(function (mix) {
      mix.scripts(['jquery.js', 'bootstrap.js'], 'public/js/bootstrap.js');
 
      mix.scripts('autocomplete.js');
-     mix.scripts([
-     'breakdown/load-templates.js',
-     'breakdown/load-resources.js',
-     'breakdown/load-variables.js',
-     'autocomplete.js',
-     'tree-select.js'
-     ], 'public/js/breakdown.js');
+
 
 
 
