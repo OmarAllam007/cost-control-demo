@@ -14,6 +14,7 @@ use App\ResourceType;
 use App\StdActivity;
 use App\WbsLevel;
 use App\WbsResource;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -46,14 +47,16 @@ class ExportCostToMaster extends Job
 
     public function handle()
     {
+
         MasterShadow::where('project_id', $this->project->id)->where('period_id', $this->period->id)->delete();
 
         BreakDownResourceShadow::where('project_id', $this->project->id)->chunk(200, function ($shadows) {
-            $start = microtime(1);
+//            $start = microtime(1);
             $records = [];
+            $now = Carbon::now()->format('Y-m-d H:i:s');
             foreach ($shadows as $costShadow) {
                 $costShadow->setCalculationPeriod($this->period);
-                $boq = $this->getBoq($costShadow);
+                $boq = Boq::find($costShadow->boq_id);
                 if ($boq) {
                     $boqDescription = $boq->description;
                     $boqDiscipline = $boq->type;
@@ -74,8 +77,6 @@ class ExportCostToMaster extends Job
 
                 $wbs = $this->getWbs($costShadow);
                 $activityDivs = $this->getActivityDivisions($costShadow);
-
-
 
                 $records[] = [
                     'budget_id' => $costShadow['id'], 'project_id' => $this->project->id, 'period_id' => $this->period->id,
@@ -111,19 +112,20 @@ class ExportCostToMaster extends Job
                     'cost_variance_completion_due_unit_price' => $costShadow['cost_variance_completion_due_unit_price'],
                     'cost_variance_completion_due_qty' => $costShadow['cost_variance_completion_due_qty'],
                     'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
-                    'boq_discipline' => $boqDiscipline,
-                    'boq_id' => $boq_id,
-                    'boq_wbs_id' => $boq_wbs_id
+                    'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
+                    'created_at' => $now, 'updated_at' => $now,
                 ];
+
             }
 
-            MasterShadow::insert($records);
+            \DB::transaction(function() use ($records) {
+                MasterShadow::insert($records);
+            });
 
+//            $time = microtime(1) - $start;
             unset($shadows, $records);
             gc_collect_cycles();
-
-            $time = microtime(1) - $start;
-            \Log::info('Chunk has been buffered; memory: ' . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4));
+//            \Log::info("Chunk has been buffered; memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4) . '; Insert time: ' . round($insertTime, 4));
         });
     }
 

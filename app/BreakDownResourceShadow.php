@@ -6,10 +6,14 @@ use App\Behaviors\CostAttributes;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\Tree;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
 
 
+/**
+ * @property Collection actual_resources
+ */
 class BreakDownResourceShadow extends Model
 {
     use Tree, HasChangeLog;
@@ -67,7 +71,6 @@ class BreakDownResourceShadow extends Model
     {
         return $this->belongsTo(Breakdown::class);
     }
-
 
     function cost()
     {
@@ -144,7 +147,7 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['curr_qty'] = $this->actual_resources()->where('period_id', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['curr_qty'] = $this->actual_resources->where('period_id', $period_id)->sum('qty') ?: 0;
     }
 
     public function getCurrCostAttribute()
@@ -162,7 +165,7 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
-        return $this->calculated['curr_cost'] = $this->actual_resources()->where('period_id', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['curr_cost'] = $this->actual_resources->where('period_id', $period_id)->sum('cost') ?: 0;
     }
 
     public function getCurrUnitPriceAttribute()
@@ -198,7 +201,9 @@ class BreakDownResourceShadow extends Model
         }
 
 //        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['prev_qty'] = $this->actual_resources()->where('period_id', '<', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['prev_qty'] = $this->actual_resources->filter(function($r) use ($period_id){
+            return $r->period_id < $period_id;
+        })->sum('qty') ?: 0;
     }
 
     public function getPrevCostAttribute()
@@ -216,7 +221,9 @@ class BreakDownResourceShadow extends Model
             return $this->calculated['prev_cost'];
         }
 
-        return $this->calculated['prev_cost'] = $this->actual_resources()->where('period_id', '<', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['prev_cost'] = $this->actual_resources->filter(function($r) use ($period_id){
+            return $r->period_id < $period_id;
+        })->sum('cost') ?: 0;
     }
 
     public function getPrevUnitPriceAttribute()
