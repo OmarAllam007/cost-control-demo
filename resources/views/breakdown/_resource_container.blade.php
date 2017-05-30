@@ -10,6 +10,7 @@
             <th>Labors Count</th>
             <th>Productivity Ref</th>
             <th>Remarks</th>
+            <th>Equation</th>
         </tr>
         </thead>
         <tbody>
