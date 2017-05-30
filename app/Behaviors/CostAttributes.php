@@ -27,15 +27,13 @@ trait CostAttributes
 
     protected function getLatestCost()
     {
-        if ($this->latestCost !== null) {
+        if ($this->latestCost) {
             return $this->latestCost;
         }
 
-        $latest = CostShadow::where('breakdown_resource_id', $this->breakdown_resource_id)
-            ->where('period_id', '<=', $this->getCalculationPeriod()->id)
+        return $this->latestCost = CostShadow::where('period_id', '<=', $this->getCalculationPeriod()->id)
+            ->where('breakdown_resource_id', $this->breakdown_resource_id)
             ->orderBy('period_id', 'desc')->first();
-
-        return $latest;
     }
 
     function getPreviousUnitPriceAttribute()
@@ -87,7 +85,6 @@ trait CostAttributes
         if (isset($this->calculated['allowable_ev_cost'])) {
             return $this->calculated['allowable_ev_cost'];
         }
-
 
         $latest = $this->getLatestCost();
         if ($latest && $latest->manual_edit) {
