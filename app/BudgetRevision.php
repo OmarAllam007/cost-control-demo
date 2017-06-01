@@ -5,6 +5,10 @@ namespace App;
 use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property mixed project_id
+ * @property Project project
+ */
 class BudgetRevision extends Model
 {
     use RecordsUser;
@@ -29,6 +33,12 @@ class BudgetRevision extends Model
             }
 
             $rev->rev_num = $lastRevNum + 1;
+        });
+
+        self::saved(function (self $rev) {
+            if ($rev->is_open) {
+                $rev->project->revisions()->where('id', '!=', $rev->id)->update(['is_open' => 0]);
+            }
         });
     }
 

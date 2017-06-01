@@ -20,6 +20,7 @@
     <nav class="project-nav">
         @can('budget', $project)
             <a href="#wbsArea" class="btn btn-sm btn-primary"><i class="fa fa-building-o"></i> WBS &amp; Activity</a>
+            <a href="#revisions" class="btn btn-sm btn-outline btn-primary"><i class="fa fa-sliders"></i> Revisions</a>
             <a href="#ProjectResources" class="btn btn-sm btn-outline btn-info"><i class="fa fa-bullseye"></i> Resources</a>
             <a href="#ProjectProductivities" class="btn btn-sm btn-outline btn-info"><i class="fa fa-male"></i> Productivity</a>
             <a href="#ProjectTemplates" class="btn btn-sm btn-outline btn-violet"><i class="fa fa-magic"></i> Breakdown Templates</a>
@@ -33,12 +34,17 @@
         @can('budget', $project)
             @include('project.tabs.wbs-area')
 
+            <article id="Revisions" class="project-tab">
+                @include('project.templates.revisions')
+            </article>
+
             <article id="ProjectResources" class="project-tab">
                 @include('project.templates.resources')
             </article>
 
+
             <article id="ProjectTemplates" class="project-tab">
-            @include('project.templates.breakdown-template')
+                @include('project.templates.breakdown-template')
             </article>
 
             <article id="ProjectProductivities" class="project-tab">
