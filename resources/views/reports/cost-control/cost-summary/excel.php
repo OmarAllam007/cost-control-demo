@@ -34,9 +34,9 @@ foreach ($resourceTypes as $id => $value) {
     $row = [
         $value,
         $typeToDateData['budget_cost'] ?: '0.00',
-        $typePreviousData['previous_cost'] ?: '0.00',
-        $typePreviousData['previous_allowable'] ?: '0.00',
-        $typePreviousData['previous_var'] ?: '0.00',
+        $typePreviousData['previous_cost'] ?? '0.00',
+        $typePreviousData['previous_allowable'] ?? '0.00',
+        $typePreviousData['previous_var'] ?? '0.00',
         $typeToDateData['to_date_cost'] ?: '0.00',
         $typeToDateData['to_date_allowable'] ?: '0.00',
         $typeToDateData['to_date_var'] ?: '0.00',

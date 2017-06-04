@@ -31,8 +31,7 @@ class CostSummary
 
     function run()
     {
-        $resourceTypes = ResourceType::where('parent_id', 0)->whereIn('id', [20, 21, 40, 96, 1, 17, 81, 95])
-            ->orderBy('name')->pluck('name', 'id');
+        $resourceTypes = ResourceType::where('parent_id', 0)->orderBy('name')->pluck('name', 'id');
 
         $previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->latest()->first();
         if ($previousPeriod) {
@@ -44,7 +43,7 @@ class CostSummary
         }
 
         $fields = [
-            'resource_type_id', 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as to_date_allowable',
+            'resource_type_id', 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as ev',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var'
         ];
