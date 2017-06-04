@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\RecordsUser;
+use App\Jobs\CreateRevisionForProject;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -35,11 +36,14 @@ class BudgetRevision extends Model
             $rev->rev_num = $lastRevNum + 1;
         });
 
-        self::saved(function (self $rev) {
-            if ($rev->is_open) {
-                $rev->project->revisions()->where('id', '!=', $rev->id)->update(['is_open' => 0]);
-            }
+        self::created(function (self $rev) {
+            dispatch(new CreateRevisionForProject($rev));
         });
+    }
+
+    function url()
+    {
+        return url("/project/{$this->project_id}/revision/{$this->id}");
     }
 
 }

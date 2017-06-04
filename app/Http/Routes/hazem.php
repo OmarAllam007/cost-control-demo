@@ -203,8 +203,9 @@ Route::delete('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFile
 Route::get('/project/{project}/actual-revenue','ActualRevenueController@import');
 Route::post('/project/{project}/actual-revenue','ActualRevenueController@postImport');
 
-Route::get('revisions/{project}', ['as' => 'revisions.index', 'uses' => 'BudgetRevisionsController@index']);
-Route::get('revisions/create/{project}', ['as' => 'revisions.create', 'uses' => 'BudgetRevisionsController@create']);
-Route::get('revisions/{revision}/edit', ['as' => 'revisions.edit', 'uses' => 'BudgetRevisionsController@edit']);
-Route::post('revisions/{project}', ['as' => 'revisions.store', 'uses' => 'BudgetRevisionsController@store']);
-Route::put('revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);
+Route::get('project/{project}/revisions', ['as' => 'revisions.index', 'uses' => 'BudgetRevisionsController@index']);
+Route::get('project/{project}/revisions/create', ['as' => 'revisions.create', 'uses' => 'BudgetRevisionsController@create']);
+Route::post('project/{project}/revisions', ['as' => 'revisions.store', 'uses' => 'BudgetRevisionsController@store']);
+Route::post('project/{project}/revisions/{revision}', ['as' => 'revisions.show', 'uses' => 'BudgetRevisionsController@show']);
+//Route::get('project/{project}/revisions/{revision}/edit', ['as' => 'revisions.edit', 'uses' => 'BudgetRevisionsController@edit']);
+//Route::put('project/{project}/revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);

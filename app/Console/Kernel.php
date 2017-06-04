@@ -8,6 +8,7 @@ use App\Console\Commands\AddBoqDisciplineToMasterShadow;
 use App\Console\Commands\AddBoqToMasterSahdow;
 use App\Console\Commands\CleanResourceTypes;
 use App\Console\Commands\CostUpdateReminder;
+use App\Console\Commands\CreateRevisions;
 use App\Console\Commands\CreateRevisionsForCurrentProject;
 use App\Console\Commands\ExportAllResources;
 use App\Console\Commands\FixBreakdownVars;
@@ -46,7 +47,8 @@ class Kernel extends ConsoleKernel
 //        AddBoqAndSurveyToBreakdownShadowProject::class,
         FixProductivity::class,
         UpdateResourceTypesAndResources::class,
-        CreateRevisionsForCurrentProject::class
+        CreateRevisionsForCurrentProject::class,
+        CreateRevisions::class
     ];
 
     /**
