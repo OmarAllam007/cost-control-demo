@@ -14,7 +14,7 @@ class CreateRevisions extends Command
     public function handle()
     {
         BudgetRevision::groupBy('project_id')
-            ->selectRaw('project_id, min(id) as first_rev_id, max(id) as last_rev_id')
+            ->selectRaw('project_id, min(id) as first_rev_id')
             ->get()->each(function($rev) {
                 dd($rev);
             });

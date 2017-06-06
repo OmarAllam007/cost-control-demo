@@ -81,22 +81,20 @@ class CreateRevisionForProject extends Job implements ShouldQueue
     //<editor-fold defaultstate=collapsed desc="Copy functions">
     protected function copyBasicModels()
     {
-        $params = ['rev' => $this->revision->id, 'project' => $this->project->id, 'user' => $this->user->id];
-
         \DB::insert("INSERT INTO revision_breakdowns(breakdown_id, revision_id, wbs_level_id, project_id, template_id, std_activity_id, cost_account, `code`, created_by, updated_by, created_at, updated_at)
-                  SELECT id AS breakdown_id, :rev revision_id, wbs_level_id, project_id, template_id, std_activity_id, cost_account, `code`, :user AS created_by, :user AS updated_by, now() AS created_at, now() AS updated_at FROM breakdowns WHERE project_id = :project", $params);
+                  SELECT id AS breakdown_id, {$this->revision->id} revision_id, wbs_level_id, project_id, template_id, std_activity_id, cost_account, `code`, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM breakdowns WHERE project_id = {$this->project->id}");
 
         \DB::insert("INSERT INTO revision_boqs(boq_id, revision_id, wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, division_id, `code`, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, created_by, updated_by, created_at, updated_at) 
-                  SELECT id AS boq_id, :rev revision_id, wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, division_id, `code`, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, :user AS created_by, :user AS updated_by, now() AS created_at, now() AS updated_at FROM boqs WHERE project_id = :project", $params);
+                  SELECT id AS boq_id, {$this->revision->id} revision_id, wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, division_id, `code`, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM boqs WHERE project_id = {$this->project->id}");
 
         \DB::insert("INSERT INTO revision_qty_surveys(revision_id, qty_survey_id, cost_account, description, unit_id, budget_qty, eng_qty, deleted_at, wbs_level_id, project_id, `code`, discipline, created_by, updated_by, created_at, updated_at) 
-                  SELECT :rev AS revision_id, id AS qty_survey_id, cost_account, description, unit_id, budget_qty, eng_qty, deleted_at, wbs_level_id, project_id, `code`, discipline, :user created_by, :user updated_by, now() AS created_at, now() AS updated_at FROM qty_surveys WHERE project_id = :project", $params);
+                  SELECT {$this->revision->id} AS revision_id, id AS qty_survey_id, cost_account, description, unit_id, budget_qty, eng_qty, deleted_at, wbs_level_id, project_id, `code`, discipline, {$this->user->id} created_by, {$this->user->id} updated_by, now() AS created_at, now() AS updated_at FROM qty_surveys WHERE project_id = {$this->project->id}");
 
         \DB::insert("INSERT INTO revision_resources(original_id, revision_id, resource_type_id, resource_code, name, rate, unit, waste, reference, business_partner_id, project_id, resource_id, top_material, created_by, updated_by, created_at, updated_at)  
-                  SELECT id AS original_id, :rev AS revision_id, resource_type_id, resource_code, name, rate, unit, waste, reference, business_partner_id, project_id, resource_id, top_material, :user AS created_by, :user AS updated_by, now() AS created_at, now() AS updated_at FROM resources WHERE project_id = :project", $params);
+                  SELECT id AS original_id, {$this->revision->id} AS revision_id, resource_type_id, resource_code, name, rate, unit, waste, reference, business_partner_id, project_id, resource_id, top_material, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM resources WHERE project_id = {$this->project->id}");
 
         \DB::insert("INSERT INTO revision_productivities(original_id, revision_id, project_id, csi_code, csi_category_id, description, unit, crew_structure, crew_hours, crew_equip, daily_output, man_hours, equip_hours, reduction_factor, after_reduction, source, code, productivity_id, created_by, updated_by, created_at, updated_at)   
-                  SELECT id AS original_id, :rev AS revision_id, project_id, csi_code, csi_category_id, description, unit, crew_structure, crew_hours, crew_equip, daily_output, man_hours, equip_hours, reduction_factor, after_reduction, source, code, productivity_id, :user AS created_by, :user AS updated_by, now() AS created_at, now() AS updated_at FROM productivities WHERE project_id = :project", $params);
+                  SELECT id AS original_id, {$this->revision->id} AS revision_id, project_id, csi_code, csi_category_id, description, unit, crew_structure, crew_hours, crew_equip, daily_output, man_hours, equip_hours, reduction_factor, after_reduction, source, code, productivity_id, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM productivities WHERE project_id = {$this->project->id}");
     }
 
     protected function copyBreakdownResources()
@@ -160,10 +158,10 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         /** @var Collection $users */
         $users = $this->project->users->pluck('email');
 
-        $users->prepend($this->project->cost_owner);
-        $users->prepend($this->project->owner);
+        $users->prepend($this->project->cost_owner->email);
+        $users->prepend($this->project->owner->email);
 
-        \Mail::send('mail.revision.created',
+        \Mail::send('mail.revision-created',
             ['project' => $this->project, 'revision' => $this->revision],
             function (Message $msg) use ($users) {
                 $msg->to($users->toArray());
