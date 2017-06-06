@@ -25,4 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
     require __DIR__ . '/Routes/omar.php';
 });
 
+Route::get('/info', function() {
+    phpinfo();
+});
 

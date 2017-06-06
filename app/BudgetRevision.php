@@ -43,7 +43,7 @@ class BudgetRevision extends Model
 
     function url()
     {
-        return url("/project/{$this->project_id}/revision/{$this->id}");
+        return url("/project/{$this->project_id}/revisions/{$this->id}");
     }
 
 }
