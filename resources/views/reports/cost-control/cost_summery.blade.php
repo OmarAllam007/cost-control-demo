@@ -173,6 +173,9 @@
         $allowable_values = collect(['Allowable Cost']);
         $typeNames = collect();
         foreach ($resourceTypes as $id => $name) {
+            if (!isset($toDateData[$id])) {
+                continue;
+            }
             $to_date_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_cost : 0;
             $completion_values[$id] = $toDateData[$id]? $toDateData[$id]->completion_cost : 0;
             $allowable_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_allowable : 0;
