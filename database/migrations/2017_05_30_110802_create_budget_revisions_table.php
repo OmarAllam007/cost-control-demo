@@ -18,6 +18,7 @@ class CreateBudgetRevisionsTable extends Migration
             $table->string('name');
             $table->unsignedInteger('rev_num');
             $table->boolean('is_automatic');
+            $table->boolean('is_generated');
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();

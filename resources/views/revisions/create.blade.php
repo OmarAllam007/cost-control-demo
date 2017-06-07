@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.' . (request('iframe')? 'iframe':'app'))
 
 @section('header')
     <h4>Create revision &mdash; {{$project->name}}</h4>

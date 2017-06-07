@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BudgetRevision;
+use App\Jobs\ExportRevisionJob;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -42,9 +43,15 @@ class BudgetRevisionsController extends Controller
         return redirect()->to(route('project.budget', $project));
     }
 
-    function show(BudgetRevision $revision)
+    function show(Project $project, BudgetRevision $revision)
     {
+        return view('revisions.show', compact('project', 'revision'));
+    }
 
+    function export(Project $project, BudgetRevision $revision) {
+        $file = dispatch(new ExportRevisionJob($revision));
+
+        return \Response::download($file)->deleteFileAfterSend(true);
     }
 
     function edit(BudgetRevision $revision)

@@ -20,7 +20,6 @@ class ExportBreakdownJob extends Job
 
     public function handle()
     {
-        set_time_limit(600);
         $filename = storage_path('app/' . uniqid('breakdown_csv_'));
 
         $headers = [
