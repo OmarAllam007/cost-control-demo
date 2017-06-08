@@ -49,7 +49,6 @@ class CostController extends Controller
             $attributes['prev_qty'] = $attributes['to_date_qty'];
             $attributes['prev_cost'] = $attributes['to_date_cost'];
             $attributes['prev_unit_price'] = $attributes['to_date_unit_price'];
-            $attributes['period_id'] = $current_period_id;
 
             $costShadow = CostShadow::create($attributes);
         }
