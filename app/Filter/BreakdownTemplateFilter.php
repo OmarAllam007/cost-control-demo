@@ -17,8 +17,6 @@ class BreakdownTemplateFilter extends AbstractFilter
 
     protected function resource_id($id)
     {
-        $this->query->whereHas('resources', function (Builder $q) use ($id) {
-            $q->where('resource_id', $id);
-        });
+        $this->query->whereRaw('id in (select template_id from std_activity_resources where resource_id = ?)', [$id]);
     }
 }
