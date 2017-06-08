@@ -5,7 +5,7 @@
 @endsection
 
 @section('body')
-    <form action="{{route('revisions.create', $project)}}" method="post">
+    <form action="{{route('revisions.store', $project) . (request('iframe')? '?iframe=1' : '')}}" method="post">
         {{csrf_field()}}
 
         @include('revisions._form')
