@@ -50,10 +50,11 @@
                             <div class="input-group">
                                 {{
                                     Form::text("progress[{$resource->breakdown_resource_id}]", $resource->calculateProgress(),
-                                        ['class' => 'form-control input-sm progress', 'data-init' => $resource->calculateProgress()])
+                                        ['class' => 'form-control input-sm progress-val', 'data-init' => $resource->calculateProgress()])
                                 }}
                                 <span class="input-group-addon">%</span>
                             </div>
+                            {!! $errors->first("progress.{$resource->breakdown_resource_id}", '<div class="text-danger">Invalid Progress</div>') !!}
                         </td>
                         <td>
                             {{
@@ -86,7 +87,7 @@
 
             $('.status').on('change', function() {
                 const parent = $(this).closest('tr');
-                const progressField = parent.find('.progress');
+                const progressField = parent.find('.progress-val');
 
                 if ($(this).val().toLowerCase() === 'closed') {
                     progressField.val(100);
@@ -95,7 +96,7 @@
                 }
             });
 
-            $('.progress').on('change', function() {
+            $('.progress-val').on('change', function() {
                 let parent = $(this).closest('tr');
                 const statusField = parent.find('.status');
 

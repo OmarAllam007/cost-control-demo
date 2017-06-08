@@ -24,15 +24,15 @@
             </thead>
             @foreach($data as $row)
                 <tr>
-                    <td>{{$row[0]}}</td>
-                    <td>{{$row[1]}}</td>
-                    <td>{{$row[2]}}</td>
-                    <td>{{$row[3]}}</td>
-                    <td>{{$row[4]}}</td>
-                    <td>{{$row[5]}}</td>
-                    <td>{{$row[6]}}</td>
-                    <td>{{$row[7]}}</td>
-                    <td>{{$row[8]}}</td>
+                    <td>{{$row[0] ?? ''}}</td>
+                    <td>{{$row[1] ?? ''}}</td>
+                    <td>{{$row[2] ?? ''}}</td>
+                    <td>{{$row[3] ?? ''}}</td>
+                    <td>{{$row[4] ?? ''}}</td>
+                    <td>{{$row[5] ?? ''}}</td>
+                    <td>{{$row[6] ?? ''}}</td>
+                    <td>{{$row[7] ?? ''}}</td>
+                    <td>{{$row[8] ?? ''}}</td>
                 </tr>
             @endforeach
         </table>
