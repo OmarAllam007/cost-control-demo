@@ -2,7 +2,7 @@
     <div class="qty-survey">
         <div class="form-group tab-actions clearfix">
             <div class="pull-right">
-                @can('qty_survey')
+                @can('qty_survey', $project)
                 <a href="/survey/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe">
                     <i class="fa fa-plus"></i> Add Quantity Survey
                 </a>
