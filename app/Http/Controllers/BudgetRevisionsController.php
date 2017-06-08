@@ -40,6 +40,11 @@ class BudgetRevisionsController extends Controller
         $project->revisions()->create($request->only('name'));
 
         flash('Revision has been created');
+
+        if ($request->exists('iframe')) {
+            return redirect()->to('/blank?reload=revisions');
+        }
+
         return redirect()->to(route('project.budget', $project));
     }
 
