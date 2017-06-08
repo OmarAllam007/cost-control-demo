@@ -246,4 +246,8 @@ class Project extends Model
         return $this->periods()->where('is_open', false)->max('id');
     }
 
+    function revisions()
+    {
+        return $this->hasMany(BudgetRevision::class);
+    }
 }

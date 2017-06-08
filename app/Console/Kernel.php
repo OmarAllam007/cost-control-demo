@@ -8,6 +8,8 @@ use App\Console\Commands\AddBoqDisciplineToMasterShadow;
 use App\Console\Commands\AddBoqToMasterSahdow;
 use App\Console\Commands\CleanResourceTypes;
 use App\Console\Commands\CostUpdateReminder;
+use App\Console\Commands\CreateRevisions;
+use App\Console\Commands\CreateRevisionsForCurrentProject;
 use App\Console\Commands\ExportAllResources;
 use App\Console\Commands\FixBreakdownVars;
 use App\Console\Commands\FixBudgetQty;
@@ -30,21 +32,23 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         CostUpdateReminder::class,
-        CleanResourceTypes::class,
-        FixBudgetQty::class,
-        RebuildCostShadow::class,
-        RebuildBudgetShadow::class,
-        UpdateActivityCode::class,
-        FixBreakdownVars::class,
+//        CleanResourceTypes::class,
+//        FixBudgetQty::class,
+//        RebuildCostShadow::class,
+//        RebuildBudgetShadow::class,
+//        UpdateActivityCode::class,
+//        FixBreakdownVars::class,
         ExportAllResources::class,
-        RecalculateCost::class,
-        FixModResources::class,
-        AddBoqDisciplineToMasterShadow::class,
-        AddBoqToMasterSahdow::class,
-        AddBoqAndSurveyToBreakdownShadow::class,
-        AddBoqAndSurveyToBreakdownShadowProject::class,
+//        RecalculateCost::class,
+//        FixModResources::class,
+//        AddBoqDisciplineToMasterShadow::class,
+//        AddBoqToMasterSahdow::class,
+//        AddBoqAndSurveyToBreakdownShadow::class,
+//        AddBoqAndSurveyToBreakdownShadowProject::class,
         FixProductivity::class,
         UpdateResourceTypesAndResources::class,
+        CreateRevisionsForCurrentProject::class,
+        CreateRevisions::class
     ];
 
     /**
