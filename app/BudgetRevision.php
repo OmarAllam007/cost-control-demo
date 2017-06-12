@@ -4,7 +4,9 @@ namespace App;
 
 use App\Behaviors\RecordsUser;
 use App\Jobs\CreateRevisionForProject;
+use App\Revision\RevisionBreakdownResourceShadow;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * @property mixed project_id
@@ -46,6 +48,17 @@ class BudgetRevision extends Model
         self::created(function (self $rev) {
             dispatch(new CreateRevisionForProject($rev));
         });
+    }
+
+    /**
+     * @return Collection
+     */
+    public function statsByDiscipline()
+    {
+        return RevisionBreakdownResourceShadow::join('std_activities', 'activity_id', '=', 'std_activities.id')
+            ->groupBy('std_activities.discipline, std_activities.name')->orderBy('std_activities.discipline')->selectRaw('std_activities.discipline as discipline, std_activities.name as activity, sum(budget_cost) as cost')
+            ->where('revision_id', $this->id)
+            ->get()->keyBy('discipline');
     }
 
     protected function getUserAttribute()

@@ -106,6 +106,8 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('show_productivity_report/{project}',['as'=>'productivity-cost-show.modify','uses'=>'CostReportsController@productivityReport']);
     Route::get('show_issues/{project}',['as'=>'show_issues.report','uses'=>'CostReportsController@issuesReport']);
 
+    Route::get('{project}/budget-trend', 'ReportController@budgetTrend');
+
 });
 Route::get('/download_trend/{id}/download', 'ProductivityController@downloadTrend');
 Route::get('/download_labor_trend/{id}/download', 'ProductivityController@downloadLaborTrend');

@@ -50,7 +50,14 @@ class BudgetRevisionsController extends Controller
 
     function show(Project $project, BudgetRevision $revision)
     {
-        return view('revisions.show', compact('project', 'revision'));
+        /** @var BudgetRevision $rev1 */
+        $rev1 = $project->revisions()->orderBy('id')->first();
+
+        $firstRevision = $rev1->statsByDiscipline();
+        $thisRevision = $revision->statsByDiscipline();
+        $disciplines = $thisRevision->keys();
+
+        return view('revisions.show', compact('project', 'revision', 'firstRevision', 'thisRevision', 'rev1', 'disciplines'));
     }
 
     function export(Project $project, BudgetRevision $revision) {
