@@ -30,4 +30,19 @@ class RevisionBreakdownResourceShadow extends Model
 
         return $query;
     }
+
+    function scopeDisciplineTotals(Builder $query, Project $project)
+    {
+        return $query->join('std_activities as a', 'activity_id', '=', 'a.id')
+            ->groupBy('a.discipline', 'revision_id')->orderBy('a.discipline', 'revision_id')
+            ->selectRaw('a.discipline as discipline, revision_id, sum(budget_cost) as cost')
+            ->where('project_id', $project->id);
+    }
+
+    function scopeActivityTotals(Builder $query, Project $project)
+    {
+        return $query->groupBy('activity', 'revision_id')->orderBy('activity', 'revision_id')
+            ->selectRaw('activity, revision_id, sum(budget_cost) as cost')
+            ->where('project_id', $project->id);
+    }
 }

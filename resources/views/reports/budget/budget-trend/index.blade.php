@@ -8,7 +8,7 @@
     @if ($data->count())
         @php
             $rev_id = 2;
-            $totals = $data->flatten()->groupBy('revision_id')->map(function ($group) {
+            $totals = $disciplineTotals->flatten()->groupBy('revision_id')->map(function ($group) {
                 return $group->sum('cost');
             });
 
@@ -36,56 +36,43 @@
                         <tr>
                             <td class="discipline" width="300"><a href=".{{slug($discipline)}}"><i
                                             class="fa fa-plus-circle"></i> {{$discipline}}</a></td>
-                            @php $diff = 0; $diffPercent = 0; $firstTotal = 0; @endphp
+                            @php
+                                $firstTotal = $disciplineTotals[$discipline][$firstRev]['cost'];
+                                $lastTotal = $disciplineTotals[$discipline][$lastRev]['cost'];
+                                $diff = $lastTotal - $firstTotal;
+
+                                if (!$diff) {
+                                    $diffPercent = 0;
+                                } elseif ($firstTotal) {
+                                    $diffPercent = $diff * 100 / $firstTotal;
+                                } else {
+                                    $diffPercent = 100;
+                                }
+                            @endphp
                             @foreach($revisions as $rev_id => $rev_name)
-                                @php
-                                    $total = $disciplineData->map(function($activityData)use ($rev_id) {
-                                        return $activityData->flatMap(function($resources) use ($rev_id){
-                                            return $resources->where('revision_id', $rev_id);
-                                        })->sum('cost');
-                                    })->sum();
-
-                                    if ($rev_id == $firstRev) {
-                                        $firstTotal = $total;
-                                    }
-
-                                    if ($rev_id == $lastRev) {
-                                        $lastTotal = $total;
-                                        $diff = $lastTotal - $firstTotal;
-                                        $diffPercent = $diff * 100 / $firstTotal;
-                                    }
-                                @endphp
-                                <td width="150">{{number_format($total, 2)}}</td>
+                                <td width="150">{{number_format($disciplineTotals[$discipline][$rev_id]['cost'], 2)}}</td>
                             @endforeach
-                            <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</td>
+                            <td width="150"class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</td>
                             <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}%</td>
                         </tr>
                         @foreach ($disciplineData as $activity => $activityData)
                             <tr class="{{slug($discipline)}} hidden">
-                                <td class="activity" width="300"><a href=".{{slug($activity)}}"><i
-                                                class="fa fa-plus-circle"></i> {{$activity}}</a></td>
-                                @php $diff = 0; $diffPercent = 0; $firstTotal = 0; @endphp
+                                <td class="activity" width="300"><a href=".{{slug($activity)}}"><i class="fa fa-plus-circle"></i> {{$activity}}</a></td>
+                                @php
+                                    $firstTotal = $activityTotals[$activity][$firstRev]['cost'];
+                                    $lastTotal = $activityTotals[$activity][$lastRev]['cost'];
+                                    $diff = $lastTotal - $firstTotal;
+
+                                    if (!$diff) {
+                                        $diffPercent = 0;
+                                    } elseif ($firstTotal) {
+                                        $diffPercent = $diff * 100 / $firstTotal;
+                                    } else {
+                                        $diffPercent = 100;
+                                    }
+                                @endphp
                                 @foreach($revisions as $rev_id => $rev_name)
-                                    @php
-                                        $total = $activityData->flatMap(function($resources) use ($rev_id){
-                                            return $resources->where('revision_id', $rev_id);
-                                        })->sum('cost');
-
-                                        if ($rev_id == $firstRev) {
-                                            $firstTotal = $total;
-                                        }
-
-                                        if ($rev_id == $lastRev) {
-                                            $lastTotal = $total;
-                                            $diff = $lastTotal - $firstTotal;
-                                            if ($firstTotal != 0) {
-                                                $diffPercent = $diff * 100 / $firstTotal;
-                                            } else {
-                                                $diffPercent = 100;
-                                            }
-                                        }
-                                    @endphp
-                                    <td width="150">{{number_format($total, 2)}}</td>
+                                    <td width="150">{{number_format($activityTotals[$activity][$rev_id]['cost'], 2)}}</td>
                                 @endforeach
                                 <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</td>
                                 <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}</td>
@@ -93,27 +80,24 @@
                             @foreach ($activityData as $resource => $resourceData)
                                 <tr class="{{slug($activity)}} hidden">
                                     <td class="resource" width="300">{{$resource}}</td>
-                                    @php $firstTotal = 0; $lastTotal = 0; $diff = 0; $diffPercent = 0; @endphp
-                                    @foreach($revisions as $rev_id => $rev_name)
-                                        @php
-                                            if ($rev_id == $firstRev) {
-                                                $firstTotal = $resourceData[$rev_id]['cost'];
-                                            }
+                                    @php
+                                        $firstTotal = $resourceData[$firstRev]['cost'];
+                                        $lastTotal = $resourceData[$lastRev]['cost'];
+                                        $diff = $lastTotal - $firstTotal;
 
-                                            if ($rev_id == $lastRev) {
-                                                $lastTotal = $resourceData[$rev_id]['cost'];
-                                                $diff = $lastTotal - $firstTotal;
-                                                if ($firstTotal != 0) {
-                                                    $diffPercent = $diff * 100 / $firstTotal;
-                                                } else {
-                                                    $diffPercent = 100;
-                                                }
-                                            }
-                                        @endphp
+                                        if (!$diff) {
+                                            $diffPercent = 0;
+                                        } elseif ($firstTotal) {
+                                            $diffPercent = $diff * 100 / $firstTotal;
+                                        } else {
+                                            $diffPercent = 100;
+                                        }
+                                    @endphp
+                                    @foreach($revisions as $rev_id => $rev_name)
                                         <td width="150">{{number_format($resourceData[$rev_id]['cost'] ?? 0, 2)}}</td>
                                     @endforeach
                                     <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</td>
-                                    <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}</td>
+                                    <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}%</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -128,20 +112,25 @@
                         @endforeach
                         @php
                             $diff = $totals[$lastRev] - $totals[$firstRev];
-                            if ($totals[$firstRev] != 0) {
+                            if (!$diff) {
+                                $diffPercent = 0;
+                            } elseif ($firstTotal) {
                                 $diffPercent = $diff * 100 / $totals[$firstRev];
                             } else {
                                 $diffPercent = 100;
                             }
                         @endphp
                         <th width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</th>
-                        <th width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}</th>
+                        <th width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}%</th>
                     </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
 
+        <div class="col-sm-8 col-sm-offset-2">
+            <div id="chart" style="min-height: 300px;"></div>
+        </div>
     @else
         <div class="alert alert-info"><i class="fa fa-info circle"></i> No revision data found</div>
     @endif
@@ -153,7 +142,7 @@
             function closeActivity(item) {
                 const link = $(item).find('a');
                 const targets = $(link.attr('href')).addClass('hidden');
-                $(this).find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $(link).find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
             }
 
             $('.discipline a').click(function (e) {
@@ -173,12 +162,35 @@
                 return false;
             });
 
-            const contentsTable = $('#ContentsTable').on('click', 'tr', function() {
+            const contentsTable = $('#ContentsTable').on('click', 'tr', function () {
                 contentsTable.find('tr').removeClass('info');
                 $(this).addClass('info');
             });
         });
     </script>
+
+    @if ($data->count())
+        <script src="/js/d3.min.js"></script>
+        <script src="/js/c3.min.js"></script>
+        @php
+        $chartData = $totals->values()->prepend('Budget Cost');
+        @endphp
+
+        <script>
+            const chart = c3.generate({
+                bindto: '#chart',
+                data: {
+                    columns: [{!! $chartData !!}]
+                },
+                axis: {
+                    x: {
+                        type: 'category',
+                        categories: {!! $revisions->values() !!}
+                    }
+                }
+            })
+        </script>
+    @endif
 @endsection
 
 @section('css')
@@ -211,4 +223,8 @@
             padding-left: 40px;
         }
     </style>
+
+    @if ($data->count())
+        <link rel="stylesheet" href="{{asset('/css/c3.min.css')}}">
+    @endif
 @endsection
