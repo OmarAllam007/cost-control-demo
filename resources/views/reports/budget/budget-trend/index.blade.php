@@ -222,6 +222,10 @@
         .table-condensed > tbody > tr > td.resource {
             padding-left: 40px;
         }
+
+        #chart {
+            margin-top: 30px;
+        }
     </style>
 
     @if ($data->count())

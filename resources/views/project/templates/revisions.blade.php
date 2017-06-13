@@ -4,14 +4,19 @@
             <i class="fa fa-spinner fa-spin fa-3x"></i>
         </div>
 
-        @can('owner', $project)
             <div class="form-group clearfix">
-                <a href="{{route('revisions.create', $project)}}" class="btn btn-primary btn-sm in-iframe pull-right" title="Add Revision">
-                    <i class="fa fa-plus"></i> Add Revision
-                </a>
+                <div class="pull-right">
+                    @if ($project->revisions()->count() > 1)
+                        <a href="{{route('project.budget-trend', $project)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-line-chart"></i> Budget Trend</a>
+                    @endif
+                    @can('owner', $project)
+                        <a href="{{route('revisions.create', $project)}}" class="btn btn-primary btn-sm in-iframe" title="Add Revision">
+                            <i class="fa fa-plus"></i> Add Revision
+                        </a>
+                    @endcan
+                </div>
             </div>
-        @endcan
-        
+
         <table class="table table-striped table-condensed" v-if="revisions.length">
             <thead>
             <tr>
