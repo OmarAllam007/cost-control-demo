@@ -187,6 +187,10 @@
                         type: 'category',
                         categories: {!! $revisions->values() !!}
                     }
+                },
+                grid: {
+                    x: {show: true},
+                    y: {show: true},
                 }
             })
         </script>
