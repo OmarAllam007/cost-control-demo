@@ -55,8 +55,8 @@ class BudgetRevision extends Model
      */
     public function statsByDiscipline()
     {
-        return RevisionBreakdownResourceShadow::join('std_activities', 'activity_id', '=', 'std_activities.id')
-            ->groupBy('std_activities.discipline, std_activities.name')->orderBy('std_activities.discipline')->selectRaw('std_activities.discipline as discipline, std_activities.name as activity, sum(budget_cost) as cost')
+        return RevisionBreakdownResourceShadow::join('std_activities as a', 'activity_id', '=', 'a.id')
+            ->groupBy('a.discipline')->orderBy('a.discipline')->selectRaw('a.discipline as discipline, sum(budget_cost) as cost')
             ->where('revision_id', $this->id)
             ->get()->keyBy('discipline');
     }
