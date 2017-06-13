@@ -30,6 +30,21 @@
 
                 <div class="col-sm-2">
                     <div class="form-group">
+                        <label for="top">Top Material</label>
+                        @php $top = strtolower(request('top')) @endphp
+                        <select name="top" id="top" class="form-control">
+                            <option value="">[All Resources]</option>
+                            <option value="all" {{'all' == $top? 'selected' : ''}}>[Top Material]</option>
+                            <option value="other" {{'other' == $top? 'selected' : ''}}>[Other]</option>
+                            @foreach($topMaterials as $name)
+                                <option value="{{$name}}" {{strtolower($name) == $top? 'selected' : ''}}>{{$name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
                         <label for="discipline">Discipline</label>
                         @php $discipline = strtolower(request('discipline')) @endphp
                         <select name="discipline" id="discipline" class="form-control">
@@ -62,7 +77,7 @@
                 </div>
 
                 <div class="col-sm-2">
-                    <button class="btn btn-rounded btn-outline btn-primary" type="submit" style="margin-top: 25px;">
+                    <button class="btn btn-rounded btn-outline btn-primary" type="submit">
                         <i class="fa fa-filter"></i> Filter
                     </button>
                 </div>
