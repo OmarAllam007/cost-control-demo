@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         CostUpdateReminder::class,
-//        CleanResourceTypes::class,
+        CleanResourceTypes::class,
 //        FixBudgetQty::class,
 //        RebuildCostShadow::class,
 //        RebuildBudgetShadow::class,
