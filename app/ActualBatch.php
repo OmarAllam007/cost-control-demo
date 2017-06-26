@@ -3,11 +3,12 @@
 namespace App;
 
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Model;
 
 class ActualBatch extends Model
 {
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = ['user_id', 'type', 'file', 'project_id', 'period_id'];
 

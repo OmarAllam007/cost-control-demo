@@ -23,20 +23,24 @@ class CostStandardActivityReport
     /** @var Collection */
     protected $activityNames;
 
-    function getStandardActivities(Project $project, $chosen_period_id)
+    function __construct(Project $project, Period $period)
     {
         $this->project = $project;
-        $this->period = $project->periods()->find($chosen_period_id);
-        $this->previousPeriod = $project->periods()->where('id', '<', $chosen_period_id)->orderBy('id')->first();
+        $this->period = $period;
+    }
+
+    function run()
+    {
+        $this->previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->orderBy('id')->first();
         if ($this->previousPeriod) {
-            $previousTotals = MasterShadow::whereProjectId($project->id)->wherePeriodId($this->previousPeriod->id)
+            $previousTotals = MasterShadow::whereProjectId($this->project->id)->wherePeriodId($this->previousPeriod->id)
                 ->selectRaw('sum(to_date_cost) previous_cost, sum(allowable_ev_cost) previous_allowable, sum(allowable_var) as previous_var')
                 ->first();
         } else {
             $previousTotals = ['previous_cost' => 0, 'previous_allowable' => 0, 'previous_var' => 0];
         }
 
-        $currentTotals = MasterShadow::whereProjectId($project->id)->wherePeriodId($this->period->id)->selectRaw(
+        $currentTotals = MasterShadow::whereProjectId($this->project->id)->wherePeriodId($this->period->id)->selectRaw(
             'sum(to_date_cost) to_date_cost, sum(allowable_ev_cost) to_date_allowable, sum(allowable_var) as to_date_var,'
             . 'sum(remaining_cost) as remaining, sum(completion_cost) at_completion_cost, sum(cost_var) cost_var, sum(budget_cost) budget_cost'
         )->first();
@@ -50,8 +54,8 @@ class CostStandardActivityReport
                 return $div->code . ' ' . $div->name;
             });
 
-        return view('reports.cost-control.standard_activity.standard_activity',
-            compact('project', 'period', 'currentTotals', 'previousTotals', 'tree', 'periods', 'activityNames', 'divisionNames'));
+        $project = $this->project; $period = $this->period;
+        return compact('project', 'period', 'currentTotals', 'previousTotals', 'tree', 'periods', 'activityNames', 'divisionNames');
     }
 
     protected function buildTree()

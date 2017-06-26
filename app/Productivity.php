@@ -6,6 +6,7 @@ use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Overridable;
+use App\Behaviors\RecordsUser;
 use App\Behaviors\Tree;
 use App\Jobs\CacheCsiCategoryTree;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Productivity extends Model
 {
     use SoftDeletes, Tree, HasOptions, Overridable;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = [
         'csi_category_id',

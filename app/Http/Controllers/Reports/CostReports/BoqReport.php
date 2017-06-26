@@ -30,12 +30,13 @@ class BoqReport
     function run()
     {
         $project = $this->project;
+        $period = $this->period;
 
         $tree = $this->buildTree();
 
         $periods = $this->project->periods()->readyForReporting()->orderBy('name')->pluck('name', 'id');
 
-        return view('reports.cost-control.boq-report.boq_report', compact('tree', 'project', 'periods'));
+        return compact('tree', 'project', 'periods', 'period');
     }
 
     function buildTree()

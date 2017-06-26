@@ -10,6 +10,7 @@ namespace App\Observers;
 
 
 use App\ActualResources;
+use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\WbsResource;
 
@@ -22,7 +23,19 @@ class ActualResourceObserver
 
     function deleted(ActualResources $resource)
     {
+        $budget = BreakDownResourceShadow::where('breakdown_resource_id', $resource->breakdown_resource_id)
+            ->first();
+
+        $latest = ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
+            ->where('period_id', '<', $resource->period_id)->latest()->first();
+
         $this->updateShadow($resource);
+
+        if ($latest) {
+            $budget->update(['progress' => $latest->progress, 'status' => $latest->status]);
+        } else {
+            $budget->update(['progress' => 0, 'status' => 'Not Started']);
+        }
     }
 
     protected function updateShadow(ActualResources $resource)

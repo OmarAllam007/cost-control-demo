@@ -8,6 +8,8 @@ use App\Console\Commands\AddBoqDisciplineToMasterShadow;
 use App\Console\Commands\AddBoqToMasterSahdow;
 use App\Console\Commands\CleanResourceTypes;
 use App\Console\Commands\CostUpdateReminder;
+use App\Console\Commands\CreateRevisions;
+use App\Console\Commands\CreateRevisionsForCurrentProject;
 use App\Console\Commands\ExportAllResources;
 use App\Console\Commands\FixBreakdownVars;
 use App\Console\Commands\FixBudgetQty;
@@ -17,6 +19,7 @@ use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
 use App\Console\Commands\RecalculateCost;
 use App\Console\Commands\UpdateActivityCode;
+use App\Console\Commands\UpdateResourceTypesAndResources;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -29,20 +32,23 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         CostUpdateReminder::class,
-        CleanResourceTypes::class,
-        FixBudgetQty::class,
-        RebuildCostShadow::class,
-        RebuildBudgetShadow::class,
-        UpdateActivityCode::class,
-        FixBreakdownVars::class,
+//        CleanResourceTypes::class,
+//        FixBudgetQty::class,
+//        RebuildCostShadow::class,
+//        RebuildBudgetShadow::class,
+//        UpdateActivityCode::class,
+//        FixBreakdownVars::class,
         ExportAllResources::class,
-        RecalculateCost::class,
-        FixModResources::class,
-        AddBoqDisciplineToMasterShadow::class,
-        AddBoqToMasterSahdow::class,
-        AddBoqAndSurveyToBreakdownShadow::class,
-        AddBoqAndSurveyToBreakdownShadowProject::class,
+//        RecalculateCost::class,
+//        FixModResources::class,
+//        AddBoqDisciplineToMasterShadow::class,
+//        AddBoqToMasterSahdow::class,
+//        AddBoqAndSurveyToBreakdownShadow::class,
+//        AddBoqAndSurveyToBreakdownShadowProject::class,
         FixProductivity::class,
+        UpdateResourceTypesAndResources::class,
+        CreateRevisionsForCurrentProject::class,
+        CreateRevisions::class
     ];
 
     /**

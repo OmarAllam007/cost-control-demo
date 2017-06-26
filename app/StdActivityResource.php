@@ -4,6 +4,7 @@ namespace App;
 
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
+use App\Behaviors\RecordsUser;
 use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class StdActivityResource extends Model
 {
     use SoftDeletes, CachesQueries;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks', 'code'];
 

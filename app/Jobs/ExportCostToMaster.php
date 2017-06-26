@@ -38,19 +38,19 @@ class ExportCostToMaster extends Job
      */
     private $period;
 
-    public function __construct(Project $project, Period $period)
+    public function __construct(Period $period)
     {
-        $this->project = $project;
         $this->period = $period;
+        $this->project = $period->project;
     }
 
 
     public function handle()
     {
 
-        MasterShadow::where('project_id', $this->project->id)->where('period_id', $this->period->id)->delete();
+        MasterShadow::where('period_id', $this->period->id)->delete();
 
-        BreakDownResourceShadow::where('project_id', $this->project->id)->chunk(200, function ($shadows) {
+        BreakDownResourceShadow::where('project_id', $this->project->id)->chunk(900, function ($shadows) {
 //            $start = microtime(1);
             $records = [];
             $now = Carbon::now()->format('Y-m-d H:i:s');

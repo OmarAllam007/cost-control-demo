@@ -26,16 +26,17 @@ class ResourceCodeReport
     /** @var Period */
     protected $period;
 
-    function __construct(Project $project, $chosen_period_id)
+    function __construct(Project $project, $period)
     {
         $this->project = $project;
-        $this->period = Period::find($chosen_period_id);
+        $this->period = $period;
     }
 
     public function run()
     {
         $tree = $this->buildTree();
         $project = $this->project;
+        $period = $this->period;
 
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
 
@@ -48,8 +49,7 @@ class ResourceCodeReport
         $topMaterials = MasterShadow::wherePeriodId($this->period->id)
             ->selectRaw('DISTINCT top_material')->orderBy('top_material')->pluck('top_material')->filter();
 
-        return view('reports.cost-control.resource_code.resource_code',
-            compact('project', 'tree', 'periods', 'types', 'disciplines', 'topMaterials'));
+        return compact('project', 'tree', 'periods', 'types', 'disciplines', 'topMaterials', 'period');
     }
 
     private function buildTree()

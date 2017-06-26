@@ -5,6 +5,7 @@ namespace App;
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
+use App\Behaviors\RecordsUser;
 use App\Behaviors\Tree;
 use App\Support\DuplicateProject;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use SoftDeletes, HasOptions, Tree, CachesQueries;
-    use HasChangeLog;
+    use HasChangeLog, RecordsUser;
 
     protected static $alias = 'Project';
     protected $ids = [];
@@ -245,4 +246,8 @@ class Project extends Model
         return $this->periods()->where('is_open', false)->max('id');
     }
 
+    function revisions()
+    {
+        return $this->hasMany(BudgetRevision::class);
+    }
 }

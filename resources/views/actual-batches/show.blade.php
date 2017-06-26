@@ -23,13 +23,16 @@
         </div>
     </div>
 
-    @can('cost_owner', $batch->project)
     <div class="form-group clearfix">
         <div class="pull-right">
+            @can('actual_resources', $batch->project)
+            <a  href="/actual-batches/{{$batch->id}}/excel" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Excel</a>
+            @endcan
             <a  href="#DeleteBatchModal" class="btn btn-danger" data-toggle="modal"><i class="fa fa-trash"></i> Delete</a>
         </div>
     </div>
 
+    @can('actual_resources', $batch->project)
     <div class="modal fade" id="DeleteBatchModal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">

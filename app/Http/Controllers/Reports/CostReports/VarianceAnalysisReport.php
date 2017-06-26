@@ -39,6 +39,7 @@ class VarianceAnalysisReport
     function run()
     {
         $project = $this->project;
+        $period = $this->period;
         $tree = $this->buildTree();
 
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
@@ -49,7 +50,10 @@ class VarianceAnalysisReport
         $disciplines = MasterShadow::wherePeriodId($this->period->id)
             ->selectRaw('DISTINCT boq_discipline')->orderBy('boq_discipline')->pluck('boq_discipline');
 
-        return view('reports.cost-control.variance_analysis.variance_analysis', compact('tree', 'project', 'periods', 'types', 'disciplines'));
+        $topMaterials = MasterShadow::wherePeriodId($this->period->id)
+            ->selectRaw('DISTINCT top_material')->orderBy('top_material')->pluck('top_material')->filter();
+
+        return compact('tree', 'project', 'periods', 'types', 'disciplines', 'period', 'topMaterials');
     }
 
     function buildTree()
@@ -94,6 +98,19 @@ class VarianceAnalysisReport
                 });
             } else {
                 $query->where('boq_discipline', $discipline);
+            }
+        }
+
+        if ($top = $request->get('top')) {
+            // We have to consider that resources without discipline are mapped to general also
+            if (strtolower($top) == 'all') {
+                $query->whereNotNull('top_material')->where('top_material', '!=', '');
+            } elseif (strtolower($top) == 'other') {
+                $query->where(function($q) {
+                    $q->whereNull('top_material')->orWhere('top_material', '');
+                });
+            } else {
+                $query->where('top_material', $top);
             }
         }
 

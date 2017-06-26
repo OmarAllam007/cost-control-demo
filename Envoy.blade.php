@@ -1,8 +1,13 @@
-@servers(['web' => 'app@kps.alkifahcont.com', 'dev' => '192.168.90.33'])
+@servers(['web' => 'app@kps.alkifahcont.com', 'dev' => 'app@192.168.90.33'])
 
-@task('deploy')
+@task('deploy', ['on' => 'web'])
     cd cost-control
     git pull origin master
+@endtask
+
+@task('deploy-dev', ['on' => 'dev'])
+    cd cost-control
+    git pull origin develop
 @endtask
 
 @task('migrate')

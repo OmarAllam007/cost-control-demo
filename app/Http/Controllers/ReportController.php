@@ -23,6 +23,7 @@ use App\Http\Controllers\Reports\QuantitiySurveySummery;
 use App\Http\Controllers\Reports\ResourceDictionary;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
+use App\Reports\Budget\BudgetTrendReport;
 use App\Resources;
 use App\ResourceType;
 use App\StdActivity;
@@ -280,6 +281,14 @@ GROUP BY r.name, r.resource_type_id  , t.name , r.id', [$this->project->id, $typ
             }
         }
         return $tree;
+    }
+
+    function budgetTrend(Project $project)
+    {
+        $report = new BudgetTrendReport($project);
+        $data = $report->run();
+
+        return view('reports.budget.budget-trend.index', $data);
     }
 
 }
