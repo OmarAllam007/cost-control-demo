@@ -158,8 +158,13 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         /** @var Collection $users */
         $users = $this->project->users->pluck('email');
 
-        $users->prepend($this->project->cost_owner->email);
-        $users->prepend($this->project->owner->email);
+        if ($this->project->cost_owner_id) {
+            $users->prepend($this->project->cost_owner->email);
+        }
+
+        if ($this->project->owner_id) {
+            $users->prepend($this->project->owner->email);
+        }
 
         \Mail::send('mail.revision-created',
             ['project' => $this->project, 'revision' => $this->revision],
