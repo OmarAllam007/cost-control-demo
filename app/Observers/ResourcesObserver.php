@@ -25,7 +25,7 @@ class ResourcesObserver
 
     function creating(Resources $resource)
     {
-        $this->generateResourceCode($resource);
+        $resource->resource_code = $this->generateResourceCode($resource);
     }
 
     function updated(Resources $resource)
@@ -41,42 +41,17 @@ class ResourcesObserver
 
     public function generateResourceCode($resource)
     {
-        $rootName = substr($resource->types->root->name, strpos($resource->types->root->name, '.') + 1, 1);
+        $lastResourceInType = Resources::where('resource_type_id', $resource->resource_type_id)->max('resource_code');
 
-        $names = explode('»', $resource->types->path);
-        $code = [];
-        $code [] = $rootName;
-        //if Labors get by letter else by number
-        if ($rootName != 'L') {
-            foreach ($names as $key => $name) {
-                if ($key == 0) {
-                    continue;
-                }
-
-                $name = trim($name);
-                $divname = substr($name, 0, strpos($resource->types->root->name, '.'));
-                $code [] = $divname;
-
-            }
-        } else {
-            foreach ($names as $key => $name) {
-                if ($key == 0) {
-                    continue;
-                }
-                $name = trim($name);
-                $divname = substr($name, strpos($resource->types->root->name, '.') + 1, 1);
-                $code [] = $divname;
-
-            }
+        if ($lastResourceInType) {
+            $tokens = explode('.', $lastResourceInType);
+            $last = count($tokens) - 1;
+            $length = strlen($tokens[$last]);
+            $tokens[$last] = sprintf("%0{$length}d", $tokens[$last] + 1);
+            return implode('.', $tokens);
         }
 
-
-        $resourceNumber = Resources::where('resource_type_id', $resource->types->id)->count();
-        $resourceNumber++;
-        $code[] = $resourceNumber <= 10 ? '0' . $resourceNumber : $resourceNumber;
-        $finalCode = implode('.', $code);
-
-        $resource->resource_code = $finalCode;
+        return $resource->types->code . '.001';
     }
 
 }
