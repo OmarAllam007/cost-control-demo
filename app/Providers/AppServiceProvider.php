@@ -28,6 +28,7 @@ use App\Observers\WbsObserver;
 use App\Productivity;
 use App\Project;
 use App\Resources;
+use App\ResourceType;
 use App\StdActivityResource;
 use App\Support\ChangeLogger;
 use App\Survey;
@@ -107,11 +108,11 @@ class AppServiceProvider extends ServiceProvider
     }
     public function ResourceTypeActions()
     {
-        CsiCategory::saved(function () {
+        ResourceType::saved(function () {
             \Cache::forget('resources-tree');
             dispatch(new CacheResourcesTree());
         });
-        CsiCategory::deleted(function () {
+        ResourceType::deleted(function () {
             \Cache::forget('resources-tree');
             dispatch(new CacheResourcesTree());
         });

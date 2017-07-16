@@ -43,9 +43,9 @@ class ResourceType extends Model
             return $this;
         }
         $parent = $this->parent;
-        if (!$this->parent) {
-            dd($this->getAttributes());
-        }
+//        if (!$this->parent) {
+//            dd($this->getAttributes());
+//        }
         while ($parent->parent_id && $parent->id != $parent->parent_id) {
             if (!$parent->parent) {
                 return $this->root = $parent;

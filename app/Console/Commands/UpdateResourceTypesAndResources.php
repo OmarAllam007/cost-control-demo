@@ -7,6 +7,7 @@ use App\MasterShadow;
 use App\Resources;
 use App\ResourceType;
 use Illuminate\Console\Command;
+use Illuminate\Pagination\Paginator;
 
 class UpdateResourceTypesAndResources extends Command
 {
@@ -97,18 +98,21 @@ class UpdateResourceTypesAndResources extends Command
         $bar = $this->output->createProgressBar($count);
         foreach ($rowIterator as $row) {
             $cellsIterator = $row->getCellIterator();
-            $data = $this->getCellsFromIterator($cellsIterator);
-            $data = array_filter($data);
-            $code = array_shift($data);
+            $cells = $this->getCellsFromIterator($cellsIterator);
+            $data = array_filter(array_map('trim', array_slice($cells, 1, 5)));
+            $code = $cells[0];
             $codeTokens = explode('.', $code);
 
             $parent = null;
             $codeBuffer = [];
+            // Creates types tree by accumulating code parts
             foreach ($data as $index => $name) {
                 $codeBuffer[] = $codeTokens[$index];
                 $typeCode = implode('.', $codeBuffer);
                 $key = $typeCode . $name;
 
+                // If this is the first iteration, which means it is a root type,
+                // or we already have this type in cache, then get it from cache
                 if (!$parent || $this->typesCache->has($key)) {
                     $parent = $this->typesCache->get($key);
                 } else {
@@ -143,14 +147,20 @@ class UpdateResourceTypesAndResources extends Command
             $cellsIterator = $row->getCellIterator();
             $data = $this->getCellsFromIterator($cellsIterator);
 
-            $id = $data[0];
-            $name = $data[5];
-            $resource_code = $data[19];
+            $id = trim($data[0]);
+            $name = trim($data[5]);
+            $resource_code = trim($data[19]);
 
-            $typeNames = array_filter([$data[11], $data[12], $data[13], $data[14]]);
+            $typeNames = array_filter(array_map('trim', array_slice($data, 11, 5)));
             $parent_id = 0;
+            $types = [];
             foreach ($typeNames as $typeName) {
                 $type =  ResourceType::where('parent_id', $parent_id)->where('name', $typeName)->first();
+
+                if (!$type) {
+                    dd($parent_id, $typeName, $typeNames, $types);
+                }
+                $types[] = $type;
                 $parent_id = $type->id;
             }
 
@@ -158,6 +168,9 @@ class UpdateResourceTypesAndResources extends Command
             $resource_type_id = $parent_id;
 
             $resource= Resources::find($id);
+            if (!$resource) {
+                dd($id);
+            }
             $resource->update(compact('name', 'resource_code', 'resource_type_id'));
 
             Resources::where('resource_id', $id)->update(compact('resource_code', 'resource_type_id'));
