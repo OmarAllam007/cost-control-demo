@@ -148,10 +148,10 @@ class UpdateResourceTypesAndResources extends Command
             $data = $this->getCellsFromIterator($cellsIterator);
 
             $id = trim($data[0]);
-            $name = trim($data[5]);
-            $resource_code = trim($data[19]);
+            $name = trim($data[4]);
+            $resource_code = trim($data[3]);
 
-            $typeNames = array_filter(array_map('trim', array_slice($data, 11, 5)));
+            $typeNames = array_filter(array_map('trim', array_slice($data, 10, 5)));
             $parent_id = 0;
             $types = [];
             foreach ($typeNames as $typeName) {
