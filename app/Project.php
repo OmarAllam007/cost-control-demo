@@ -227,12 +227,12 @@ class Project extends Model
 
     function owner()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     function cost_owner()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'cost_owner_id');
     }
 
     function duplicate($newName)

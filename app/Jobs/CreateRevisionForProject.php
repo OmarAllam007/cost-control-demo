@@ -69,6 +69,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
 
     public function handle()
     {
+        \Log::info("Creating a revision for project {$this->project->name}");
         $this->copyBasicModels();
 
         $this->copyBreakdownResources();
@@ -76,6 +77,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         $this->copyShadows();
 
         $this->sendNotificationEmail();
+        \Log::info("Revision for project {$this->project->name} has been created");
     }
 
     //<editor-fold defaultstate=collapsed desc="Copy functions">
@@ -158,12 +160,16 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         /** @var Collection $users */
         $users = $this->project->users->pluck('email');
 
-        if ($this->project->cost_owner_id) {
+        if ($this->project->cost_owner) {
             $users->prepend($this->project->cost_owner->email);
         }
 
-        if ($this->project->owner_id) {
+        if ($this->project->owner) {
             $users->prepend($this->project->owner->email);
+        }
+
+        if (!$users->count()) {
+            return false;
         }
 
         \Mail::send('mail.revision-created',
