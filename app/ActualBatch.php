@@ -38,6 +38,10 @@ class ActualBatch extends Model
 
     function getUploadedByAttribute()
     {
+        if (!$this->user) {
+            return '';
+        }
+        
         return $this->user->name;
     }
 
