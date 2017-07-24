@@ -55,10 +55,6 @@ class ValidationProvider extends ServiceProvider
         \Validator::replacer('lt', function ($message, $attribute, $rule, $parameters) {
             return str_replace(':lt', $parameters[0], $message);
         });
-
-        \Validator::extend('valid_unit_price', function ($attribute, $value, $parameters) {
-            dd(compact('attribute', 'value', 'parameters'));
-        });
     }
 
     /**
