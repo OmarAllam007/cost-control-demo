@@ -16,7 +16,7 @@
                                 <li><a :href="'/wbs-level/' + selected + '/edit'" class="in-iframe" title="Edit WBS Level" v-show="selected"><i class="fa fa-fw fa-edit"></i> Edit WBS Level</a></li>
                                 <li><a href="#DeleteWBSModal" data-toggle="modal" title="Delete WBS Level" v-show="selected"><span class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete WBS Level</span></a></li>
                                 <li class="divider"></li>
-                                <li><a href="{{route('wbs-level.import', $project)}}" data-title="Import WBS" class="in-iframe" title="import"><i class="fa fa-fw fa-cloud-upload"></i> Import WBS Tree</a></li>
+                                <li><a href="{{route('wbs-level.import', $project)}}" data-title="Import WBS" class="in-iframe" title="Import WBS"><i class="fa fa-fw fa-cloud-upload"></i> Import WBS Tree</a></li>
                                 <li><a href="{{route('wbs-level.export', $project)}}" data-title="Export WBS" title="export"><i class="fa fa-fw fa-cloud-download"></i> Export WBS Tree</a></li>
                         @endcan
 

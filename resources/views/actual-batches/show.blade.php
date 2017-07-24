@@ -64,7 +64,7 @@
 @stop
 
 @section('javascript')
-    @can('cost_owner', $batch->project)
+    @can('actual_resources', $batch->project)
         <script>
             $(function() {
                 $('#DeleteBtn').on('click', function () {

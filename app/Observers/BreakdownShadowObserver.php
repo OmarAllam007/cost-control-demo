@@ -38,8 +38,12 @@ class BreakdownShadowObserver
             $costShadow->status = $resource->status;
             $costShadow->recalculate(true);
 
-            ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
-                ->latest()->first()->update(['progress' => $resource->progress, 'status' => $resource->status]);
+            $latestResource = ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
+                ->latest()->first();
+            
+            if ($latestResource) {
+                $latestResource->update(['progress' => $resource->progress, 'status' => $resource->status]);
+            }
         }
     }
 }
