@@ -47,7 +47,7 @@ class ReportController extends Controller
 
     public function wbsReport(Project $project)
     {
-        return view('wbs-level.report', compact('project'));
+        return view('reports.budget.wbs.index', compact('project'));
     }
 
     public function productivityReport(Project $project)

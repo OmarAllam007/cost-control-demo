@@ -38,7 +38,7 @@
             </thead>
             <tbody>
             @foreach($wbsTree as $wbs_level)
-                @include('wbs-level._recursive_report', ['wbs_level' => $wbs_level, 'tree_level' => 0,'child'=>false])
+                @include('reports.budget.wbs._recursive', ['wbs_level' => $wbs_level, 'tree_level' => 0,'child'=>false])
             @endforeach
             </tbody>
         </table>
