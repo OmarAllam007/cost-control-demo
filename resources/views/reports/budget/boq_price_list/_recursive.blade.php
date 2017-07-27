@@ -1,3 +1,17 @@
+<tr>
+    <td>{{$wbs_level->name}}</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+
 <li>
     <p class="
        @if($tree_level ==0)

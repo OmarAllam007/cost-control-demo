@@ -14,21 +14,28 @@
 
 @endsection
 @section('body')
-    <div class="row" style="margin-bottom: 10px;">
-        <div class="btn-group btn-group-sm  btn-group-block col-md-2">
-            <a href="#WBSModal" data-toggle="modal" class="btn btn-default btn-block  tree-open">Select WBS-Level</a>
-            <a href="#" class="remove-tree-input-wbs btn btn-warning" data-target="#WBSModal"
-               data-label="Select WBS-Level"><span class="fa fa-times-circle"></span></a>
-
-        </div>
-    </div>
-    <ul class="list-unstyled tree report_tree">
-        @foreach($tree as $parentKey=>$level)
-            @include('reports.budget.boq_price_list._recursive_report', ['level'=>$level,'tree_level'=>0])
+    <table class="table table-condensed table-striped table-bordered">
+        <thead>
+        <tr>
+            <td>Item</td>
+            <td>Cost Account</td>
+            <td>U.O.M</td>
+            <td>General Requirement</td>
+            <td>Labours</td>
+            <td>Material</td>
+            <td>Subcontractors</td>
+            <td>Equipment</td>
+            <td>Scaffolding</td>
+            <td>Others</td>
+            <td>Grand Total</td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach ($wbs_levels as $wbs_level)
+            @include('reports.budget.boq_price_list._recursive', ['level' => 0, 'wbs_level' => $wbs_level])
         @endforeach
-    </ul>
-    @include('wbs-level._modal')
-    <input type="hidden" value="{{$project->id}}" id="project_id">
+        </tbody>
+    </table>
 @endsection
 @section('javascript')
     <script>

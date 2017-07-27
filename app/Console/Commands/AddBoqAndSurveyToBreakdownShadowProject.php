@@ -36,12 +36,12 @@ class AddBoqAndSurveyToBreakdownShadowProject extends Command
      */
     public function handle()
     {
-        $this->bar = $this->output->createProgressBar(BreakDownResourceShadow::where('project_id',41)->count());
+        $this->bar = $this->output->createProgressBar(BreakDownResourceShadow::where('project_id',35)->count());
         $this->bar->setBarWidth(50);
         $this->boqs = collect();
         $this->survies = collect();
 
-        BreakDownResourceShadow::with('wbs')->where('project_id',41)->chunk(10000, function ($shadows) {
+        BreakDownResourceShadow::with('wbs')->where('project_id',35)->chunk(10000, function ($shadows) {
             $shadows->each(function (BreakDownResourceShadow $shadow) {
                 $code = $shadow->wbs->code . '#' . $shadow->cost_account;
                 if ($this->boqs->has($code) && $this->survies->has($code)) {

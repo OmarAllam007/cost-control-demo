@@ -31,7 +31,6 @@ use App\StdActivityResource;
 use App\Unit;
 use App\WbsLevel;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 
@@ -134,8 +133,8 @@ AND resource_type LIKE \'%lab%\'');
 
     public function boqPriceList(Project $project)
     {
-        $boq_price_list = new BoqPriceList();
-        return $boq_price_list->getBoqPriceList($project);
+        $report = new BoqPriceList($project);
+        return view('reports.budget.boq_price_list.index', $report->run());
     }
 
 
