@@ -236,4 +236,29 @@ class CostImportFixer
 
         return ['success' => $resources->count(), 'batch' => $this->batch];
     }
+
+    public function validatePhysicalQty($request)
+    {
+        $checker = new CostImporter($this->batch);
+        $result = $checker->checkPhysicalQty();
+        $errors = $result['errors'];
+
+        $quantities = $request->input('quantities');
+
+        $validationErrors = [];
+        foreach ($quantities as $resource_id => $quantity) {
+            $total = $errors->get($resource_id)->get('rows')->sum(6);
+            if ($quantity) {
+                $unit_price = $total / $quantity;
+                if ($unit_price < 0) {
+                    $validationErrors["quantities.$resource_id"] = 'Invalid quantity';
+                }
+            } else {
+                $validationErrors["quantities.$resource_id"] = 'Invalid quantity';
+            }
+        }
+
+        return $validationErrors;
+    }
+
 }
