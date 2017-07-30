@@ -189,10 +189,17 @@ class CostImporter
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
 
+            $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
+                ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'");
 
-            $shadows = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
-                ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'")
-                ->get();
+            if (!empty($row[9])) {
+                dump($row[9]);
+                $query->where('cost_account', $row[9]);
+            }
+
+            $shadows = $query->get();
+
+            dump($shadows);
 
             if ($shadows->count() > 1) {
                 $row['hash'] = $hash;
@@ -238,9 +245,14 @@ class CostImporter
             } else {
                 $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
                 $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
-                $resource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
-                    ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'")
-                    ->first();
+                $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
+                    ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'");
+
+                if (!empty($row[9])) {
+                    $query->where('cost_account', $row[9]);
+                }
+
+                $resource = $query->first();
             }
 
             if (!$resource) {
