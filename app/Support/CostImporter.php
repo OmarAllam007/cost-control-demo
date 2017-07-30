@@ -397,24 +397,22 @@ class CostImporter
         $this->rows->map(function($data, $hash) {
             $data['hash'] = $hash;
             return $data;
-        })->groupBy(0)->map(function (Collection $group) {
-            return $group->groupBy(7)->map(function(Collection $group) {
-                return $group->groupBy(3);
-            });
-        })->each(function (Collection $row) use ($newRows) {
-            $row->each(function (Collection $resources) use ($newRows) {
-                $resources->each(function ($entries) use ($newRows) {
-                    $first = $entries->first();
+        })->groupBy(0)->each(function (Collection $group) use($newRows) {
+            $group->groupBy(7)->each(function(Collection $group) use($newRows) {
+                $group->groupBy(3)->each(function(Collection $costAccounts) use($newRows) {
+                    $costAccounts->groupBy(9)->each(function ($entries) use ($newRows) {
+                        $first = $entries->first();
 
-                    $first[4] = $entries->sum(4);
-                    $first[6] = $entries->sum(6);
-                    if ($first[4]) {
-                        $first[5] = $first[6] / $first[4];
-                    } else {
-                        $first[5] = 0;
-                    }
+                        $first[4] = $entries->sum(4);
+                        $first[6] = $entries->sum(6);
+                        if ($first[4]) {
+                            $first[5] = $first[6] / $first[4];
+                        } else {
+                            $first[5] = 0;
+                        }
 
-                    $newRows->push($first);
+                        $newRows->push($first);
+                    });
                 });
             });
         });
