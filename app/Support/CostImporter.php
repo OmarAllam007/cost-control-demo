@@ -193,13 +193,10 @@ class CostImporter
                 ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'");
 
             if (!empty($row[9])) {
-                dump($row[9]);
                 $query->where('cost_account', $row[9]);
             }
 
             $shadows = $query->get();
-
-            dump($shadows);
 
             if ($shadows->count() > 1) {
                 $row['hash'] = $hash;
@@ -388,9 +385,43 @@ class CostImporter
 
     protected function cache()
     {
+        $this->preProcess();
+
         $key = 'batch_' . $this->batch->id;
         \Cache::put($key, ['batch' => $this->batch, 'rows' => $this->rows, 'actual_resources' => $this->actual_resources], 1440);
     }
 
+    protected function preProcess()
+    {
+        $newRows = collect();
+        $this->rows->map(function($data, $hash) {
+            $data['hash'] = $hash;
+            return $data;
+        })->groupBy(0)->map(function (Collection $group) {
+            return $group->groupBy(7)->map(function(Collection $group) {
+                return $group->groupBy(3);
+            });
+        })->each(function (Collection $row) use ($newRows) {
+            $row->each(function (Collection $resources) use ($newRows) {
+                $resources->each(function ($entries) use ($newRows) {
+                    $first = $entries->first();
 
+                    $first[4] = $entries->sum(4);
+                    $first[6] = $entries->sum(6);
+                    if ($first[4]) {
+                        $first[5] = $first[6] / $first[4];
+                    } else {
+                        $first[5] = 0;
+                    }
+
+                    $newRows->push($first);
+                });
+            });
+        });
+
+        $newRows = $newRows->keyBy('hash');
+
+
+        return $this->rows = $newRows;
+    }
 }
