@@ -208,7 +208,7 @@ class DuplicateProject
                 $attributes['resource_id'] = $this->resourcesMap->get($resource->resource_id);
             }
 
-            if ($this->resourcesMap->has($resource->productivity_id)) {
+            if ($this->productivityMap->has($resource->productivity_id)) {
                 $attributes['productivity_id'] = $this->productivityMap->get($resource->productivity_id);
             }
 
