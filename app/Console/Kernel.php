@@ -48,7 +48,8 @@ class Kernel extends ConsoleKernel
         FixProductivity::class,
         UpdateResourceTypesAndResources::class,
         CreateRevisionsForCurrentProject::class,
-        CreateRevisions::class
+        CreateRevisions::class,
+        Commands\FixProductivityForDhahran::class,
     ];
 
     /**
