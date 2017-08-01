@@ -166,7 +166,12 @@ class CostImporter
         foreach ($this->rows as $hash => $row) {
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
-            $resources = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->get();
+            $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds);
+            if (!empty($row['9'])) {
+                $query->where('cost_account', $row[9]);
+            }
+
+            $resources = $query->get();
             foreach ($resources as $resource) {
                 if (strtolower($resource->status) == 'closed' || $resource->progress == 100) {
                     $errors->push($resource);
