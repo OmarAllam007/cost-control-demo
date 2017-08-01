@@ -409,25 +409,32 @@ class CostImporter
         })->groupBy(0)->each(function (Collection $group) use($newRows) {
             $group->groupBy(7)->each(function(Collection $group) use($newRows) {
                 $group->groupBy(3)->each(function(Collection $costAccounts) use($newRows) {
-                    $costAccounts->groupBy(9)->each(function ($entries) use ($newRows) {
-                        $first = $entries->first();
-
-                        $first[4] = $entries->sum(4);
-                        $first[6] = $entries->sum(6);
-                        if ($first[4]) {
-                            $first[5] = $first[6] / $first[4];
+                    $costAccounts->groupBy(9)->each(function (Collection $entries) use ($newRows) {
+                        $hasResources = $entries->pluck('resource')->filter()->count();
+                        if ($hasResources) {
+                            foreach ($entries as $hash => $entry) {
+                                $newRows->put($hash, $entry);
+                            }
                         } else {
-                            $first[5] = 0;
+                            $first = $entries->first();
+
+                            $first[4] = $entries->sum(4);
+                            $first[6] = $entries->sum(6);
+                            if ($first[4]) {
+                                $first[5] = $first[6] / $first[4];
+                            } else {
+                                $first[5] = 0;
+                            }
+
+                            $newRows->put($first['hash'], $first);
                         }
 
-                        $newRows->push($first);
                     });
                 });
             });
         });
 
         $newRows = $newRows->keyBy('hash');
-
 
         return $this->rows = $newRows;
     }
