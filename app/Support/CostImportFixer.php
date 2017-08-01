@@ -98,16 +98,18 @@ class CostImportFixer
             $resource = $resources[$id];
 
             $rows = $errors[$id]['rows'];
+
             $total = $rows->sum(6);
             $unit_price = $total / $qty;
             $doc_no = $rows->pluck(8)->unique()->implode(', ');
+            $cost_account = $rows->pluck(9)->first();
 
             $newResource = [
                 $resource->code, '',
                 $resource->resource_name, $resource->measure_unit,
                 $qty, $unit_price, $total,
                 $resource->resource_code,
-                $doc_no
+                $doc_no, $cost_account
             ];
 
             $this->rows->put($hash, $newResource);
