@@ -36,7 +36,7 @@ class QuantitySurveyImportJob extends ImportJob
         set_time_limit(300);
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
-        $failed = collect();
+        $failed = collect(['unit' => collect(), 'wbs' => collect()]);
         $success = 0;
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $dublicated = collect();
@@ -64,15 +64,16 @@ class QuantitySurveyImportJob extends ImportJob
                     $data['wbs'][$cells[0]] = $cells[1];
                     $dublicated->push($data);
                 } else {
-                    if (!$wbs_level_id || !$unit_id) {
+                    if (!$wbs_level_id) {
                         $data['wbs_code'] = $cells[0];
+                        $failed->get('wbs')->push($data);
+                    }elseif (!$unit_id) {
                         $data['unit'] = $cells[3];
-                        $failed->push($data);
+                        $failed->get('unit')->push($data);
                     } else {
                         Survey::create($data);
                         ++$success;
                     }
-
                 }
 
             }
