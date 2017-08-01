@@ -100,7 +100,11 @@ class CostImporter
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
 
-            $shadowResource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->first();
+            $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds);
+            if (!empty($row[9])) {
+                $query->where('cost_account', $row[9]);
+            }
+            $shadowResource = $query->first();
             if (!$shadowResource) {
                 $invalid->push($row);
                 continue;
