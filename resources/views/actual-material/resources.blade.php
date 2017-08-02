@@ -7,6 +7,7 @@
 
 @section('body')
     {{Form::open()}}
+    @php $key = 0; @endphp
     @foreach($activities as $activity => $activityData)
         <div class="panel panel-warning">
             <div class="panel-heading">
@@ -49,18 +50,20 @@
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">
                                     <div class="input-group">
-                                        {{Form::text("quantities[{$resource['resource']->id}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
+                                        {{Form::text("quantities[{$key}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary btn-sm sum-qty" data-counter="{{$activityResourceCounter}}" title="SUM">&sum;</button>
                                         </span>
                                     </div>
-                                    {!! $errors->first("quantities.{$resource['resource']->id}", '<div class="text-danger">:message</div>') !!}
+                                    {!! $errors->first("quantities.{$key}", '<div class="text-danger">:message</div>') !!}
                                 </td>
                                 <td rowspan="{{$row_span}}" class="unit-price-cell">0.00</td>
                                 <td rowspan="{{$row_span}}" class="total-cell"
                                     data-value="{{$total = $resource['rows']->sum(6)}}">
                                     {{number_format($total, 2)}}
                                 </td>
+
+                                @php $key++; @endphp
                             @endif
                         </tr>
 
