@@ -69,7 +69,7 @@
                 <td style="border: 2px solid black;text-align: center">{{number_format($typePreviousData['previous_allowable']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typePreviousData['previous_var']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['to_date_cost']??0, 2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['to_date_allowable']??0,2)}}</td>
+                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['ev']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center; @if(($typeToDateData['to_date_var'] ?? 0) < 0) color: red; @endif">{{number_format($typeToDateData['to_date_var']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['remaining_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['completion_cost']??0,2)}}</td>
@@ -92,7 +92,7 @@
             <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_allowable'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($previousData->sum('previous_var'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('to_date_cost'))}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('to_date_allowable'))}}</td>
+            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('ev'))}}</td>
             <td style="border: 2px solid black;text-align: center;@if($toDateData->sum('to_date_var') <0) color: red; @endif">{{number_format($toDateData->sum('to_date_var'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('remaining_cost'))}}</td>
             <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('completion_cost'))}}</td>
