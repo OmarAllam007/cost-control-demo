@@ -119,25 +119,28 @@ class CostImporter
 
         $this->loadUnits();
         foreach ($resourcesLog as $id => $record) {
-            if ($record['rows']->count() > 1) {
-                $count = $record['rows']->pluck(7)->unique()->count();
-                if ($count > 1) {
-                    $errors->put($id, $record);
-                    continue;
-                }
-
-                foreach ($record['rows'] as $row) {
-                    $unit_id = $this->unitsMap->get($row[3]);
-                    if ($record['resource']->unit_id != $unit_id) {
-                        $errors->put($id, $record);
-                        break;
+            $record['resource_id'] = $id;
+            foreach ($record['rows']->groupBy(9) as $rows) {
+                if ($rows->count() > 1) {
+                    $count = $rows->pluck(7)->unique()->count();
+                    if ($count > 1) {
+                        $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                        continue;
                     }
-                }
-            } else {
-                $row = $record['rows']->first();
-                $unit_id = $this->unitsMap->get(trim(strtolower($row[3])));
-                if ($record['resource']->unit_id != $unit_id) {
-                    $errors->put($id, $record);
+
+                    foreach ($rows as $row) {
+                        $unit_id = $this->unitsMap->get($row[3]);
+                        if ($record['resource']->unit_id != $unit_id) {
+                            $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                            break;
+                        }
+                    }
+                } else {
+                    $row = $rows->first();
+                    $unit_id = $this->unitsMap->get(trim(strtolower($row[3])));
+                    if ($record['resource']->unit_id != $unit_id) {
+                        $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                    }
                 }
             }
         }
