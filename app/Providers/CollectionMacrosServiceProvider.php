@@ -33,6 +33,16 @@ class CollectionMacrosServiceProvider extends ServiceProvider
 
             return $newCollection;
         });
+
+        Collection::macro('dump', function() {
+            dump($this);
+            return $this;
+        });
+
+        Collection::macro('dd', function() {
+            dd($this);
+            return $this;
+        });
     }
 
     /**

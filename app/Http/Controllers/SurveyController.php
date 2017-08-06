@@ -157,14 +157,14 @@ class SurveyController extends Controller
         }
 
         $this->validate($request, [
-            'file' => 'required|file'//|mimes:xls,xlsx',
+            'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
 
         $status = $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
 
-        if ($status['failed']->count()) {
+        if ($status['failed']->flatten()->count()) {
             $key = 'qs_import_' . time();
             \Cache::add($key, $status, 180);
             flash('Could not import some items.', 'warning');

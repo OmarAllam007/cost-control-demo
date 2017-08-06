@@ -100,7 +100,11 @@ class CostImporter
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
 
-            $shadowResource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->first();
+            $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds);
+            if (!empty($row[9])) {
+                $query->where('cost_account', $row[9]);
+            }
+            $shadowResource = $query->first();
             if (!$shadowResource) {
                 $invalid->push($row);
                 continue;
@@ -115,25 +119,28 @@ class CostImporter
 
         $this->loadUnits();
         foreach ($resourcesLog as $id => $record) {
-            if ($record['rows']->count() > 1) {
-                $count = $record['rows']->pluck(7)->unique()->count();
-                if ($count > 1) {
-                    $errors->put($id, $record);
-                    continue;
-                }
-
-                foreach ($record['rows'] as $row) {
-                    $unit_id = $this->unitsMap->get($row[3]);
-                    if ($record['resource']->unit_id != $unit_id) {
-                        $errors->put($id, $record);
-                        break;
+            $record['resource_id'] = $id;
+            foreach ($record['rows']->groupBy(9) as $rows) {
+                if ($rows->count() > 1) {
+                    $count = $rows->pluck(7)->unique()->count();
+                    if ($count > 1) {
+                        $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                        continue;
                     }
-                }
-            } else {
-                $row = $record['rows']->first();
-                $unit_id = $this->unitsMap->get(trim(strtolower($row[3])));
-                if ($record['resource']->unit_id != $unit_id) {
-                    $errors->put($id, $record);
+
+                    foreach ($rows as $row) {
+                        $unit_id = $this->unitsMap->get($row[3]);
+                        if ($record['resource']->unit_id != $unit_id) {
+                            $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                            break;
+                        }
+                    }
+                } else {
+                    $row = $rows->first();
+                    $unit_id = $this->unitsMap->get(trim(strtolower($row[3])));
+                    if ($record['resource']->unit_id != $unit_id) {
+                        $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                    }
                 }
             }
         }
@@ -162,7 +169,12 @@ class CostImporter
         foreach ($this->rows as $hash => $row) {
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
-            $resources = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)->get();
+            $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds);
+            if (!empty($row['9'])) {
+                $query->where('cost_account', $row[9]);
+            }
+
+            $resources = $query->get();
             foreach ($resources as $resource) {
                 if (strtolower($resource->status) == 'closed' || $resource->progress == 100) {
                     $errors->push($resource);
@@ -189,10 +201,14 @@ class CostImporter
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
 
+            $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
+                ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'");
 
-            $shadows = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
-                ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'")
-                ->get();
+            if (!empty($row[9])) {
+                $query->where('cost_account', $row[9]);
+            }
+
+            $shadows = $query->get();
 
             if ($shadows->count() > 1) {
                 $row['hash'] = $hash;
@@ -238,9 +254,14 @@ class CostImporter
             } else {
                 $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
                 $resourceIds = $this->resourcesMap->get(trim(strtolower($row[7])));
-                $resource = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
-                    ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'")
-                    ->first();
+                $query = BreakDownResourceShadow::where('code', $activityCode)->whereIn('resource_id', $resourceIds)
+                    ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'");
+
+                if (!empty($row[9])) {
+                    $query->where('cost_account', $row[9]);
+                }
+
+                $resource = $query->first();
             }
 
             if (!$resource) {
@@ -376,9 +397,47 @@ class CostImporter
 
     protected function cache()
     {
+        $this->preProcess();
+
         $key = 'batch_' . $this->batch->id;
         \Cache::put($key, ['batch' => $this->batch, 'rows' => $this->rows, 'actual_resources' => $this->actual_resources], 1440);
     }
 
+    protected function preProcess()
+    {
+        $newRows = collect();
+        $this->rows->map(function($data, $hash) {
+            $data['hash'] = $hash;
+            return $data;
+        })->groupBy(0)->each(function (Collection $group) use($newRows) {
+            $group->groupBy(7)->each(function(Collection $group) use($newRows) {
+                $group->groupBy(3)->each(function(Collection $costAccounts) use($newRows) {
+                    $costAccounts->groupBy(9)->each(function (Collection $entries) use ($newRows) {
+                        $hasResources = $entries->pluck('resource')->filter()->count();
+                        if ($hasResources) {
+                            foreach ($entries as $entry) {
+                                $newRows->put($entry['hash'], $entry);
+                            }
+                        } else {
+                            $first = $entries->first();
 
+                            $first[4] = $entries->sum(4);
+                            $first[6] = $entries->sum(6);
+                            if ($first[4]) {
+                                $first[5] = $first[6] / $first[4];
+                            } else {
+                                $first[5] = 0;
+                            }
+
+                            $newRows->put($first['hash'], $first);
+                        }
+
+                    });
+                });
+            });
+        });
+
+        $newRows = $newRows->keyBy('hash');
+        return $this->rows = $newRows;
+    }
 }

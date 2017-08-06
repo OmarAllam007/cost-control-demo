@@ -3,75 +3,82 @@
 @section('header')
     <h2>Fix import</h2>
 
-    <a href="{{ route('project.show', $project) }}" class="btn btn-sm btn-warning pull-right"><i class="fa fa-remove"></i>
+    <a href="{{ route('project.show', $project) }}" class="btn btn-sm btn-warning pull-right"><i
+                class="fa fa-remove"></i>
         Cancel</a>
 @endsection
 
 @section('body')
     {{Form::open(['route' => ['survey.post-fix-import', $key]])}}
-    <div class="row">
-        <div class="col-sm-6">
-            <h4>Units</h4>
-            <table class="table table-striped table-condensed table-hover">
-                <thead>
-                <tr>
-                    <th>Unit</th>
-                    <th>Equivalent</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($items->pluck('unit')->unique() as $unit)
-                    <tr class="{{$errors->first("units.$unit", 'danger')}}">
-                        <td class="col-sm-6">
-                            {{$unit}}
-                        </td>
-                        <td class="col-sm-6">
-                            {{Form::select("data[units][$unit]", App\Unit::options(), null, ['class' => 'form-control input-sm'])}}
-                        </td>
+    @php $units = $items['unit']->pluck('unit')->unique() @endphp
+        <div class="row">
+            @if ($units->count())
+            <div class="col-sm-6">
+                <h4>Units</h4>
+                <table class="table table-striped table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>Unit</th>
+                        <th>Equivalent</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach ($units as $unit)
+                        <tr class="{{$errors->first("units.$unit", 'danger')}}">
+                            <td class="col-sm-6">
+                                {{$unit}}
+                            </td>
+                            <td class="col-sm-6">
+                                {{Form::select("data[units][$unit]", App\Unit::options(), null, ['class' => 'form-control input-sm'])}}
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
+
+            @php $wbs_levels = $items['wbs']->pluck('wbs_level_id')->unique() @endphp
+            @if ($wbs_levels->count())
+                <div class="col-sm-6">
+                    <h4>WBS</h4>
+                    <table class="table table-striped table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th>Wbs-Code</th>
+                            <th>Equivalent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($wbs_levels as $level)
+                            <tr class="{{$errors->first("wbs.$level", 'danger')}}">
+                                <td>
+                                    {{$level}}
+                                </td>
+                                <td>
+                                    <a href="#" class="select-wbs">
+                                        @if (Form::getValueAttribute("data[wbs][$level]"))
+                                            {{App\WbsLevel::find(Form::getValueAttribute("data[wbs][$level]"))->code}}
+                                        @else
+                                            Select WBS
+                                        @endif
+                                    </a>
+                                    {{Form::hidden("data[wbs][$level]")}}
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
 
-        <div class="col-sm-6">
-            <h4>WBS</h4>
-            <table class="table table-striped table-condensed table-hover">
-                <thead>
-                <tr>
-                    <th>Wbs-Code</th>
-                    <th>Equivalent</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($items->pluck('wbs_code')->unique() as $level)
-                    <tr class="{{$errors->first("wbs.$level", 'danger')}}">
-                        <td>
-                            {{$level}}
-                        </td>
-                        <td>
-                            <a href="#" class="select-wbs">
-                                @if (Form::getValueAttribute("data[wbs][$level]"))
-                                    {{App\WbsLevel::find(Form::getValueAttribute("data[wbs][$level]"))->code}}
-                                @else
-                                    Select WBS
-                                @endif
-                            </a>
-                            {{Form::hidden("data[wbs][$level]")}}
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+        <div class="form-group">
+            <button class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
         </div>
-    </div>
+        {{Form::close()}}
 
-    <div class="form-group">
-        <button class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
-    </div>
-    {{Form::close()}}
-
-    @include('wbs-level._modal', ['value' => '', 'project_id' => $project->id])
+        @include('wbs-level._modal', ['value' => '', 'project_id' => $project->id])
 @endsection
 
 @section('javascript')
