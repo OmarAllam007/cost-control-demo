@@ -413,7 +413,7 @@ class CostImporter
             $group->groupBy(7)->each(function(Collection $group) use($newRows) {
                 $group->groupBy(3)->each(function(Collection $costAccounts) use($newRows) {
                     $costAccounts->groupBy(9)->each(function (Collection $entries) use ($newRows) {
-                        $hasResources = $entries->dump()->pluck('resource')->filter()->count();
+                        $hasResources = $entries->pluck('resource')->filter()->count();
                         if ($hasResources) {
                             foreach ($entries as $entry) {
                                 $newRows->put($entry['hash'], $entry);
