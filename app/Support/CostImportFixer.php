@@ -93,24 +93,18 @@ class CostImportFixer
 
         $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
         $resourcesLog = collect();
-        foreach ($data as $id => $qty) {
+        foreach ($data as $key => $qty) {
             $hash = str_random(6);
-            $resource = $resources[$id];
 
-            $rows = $errors[$id]['rows'];
+            $rows = $errors[$key]['rows'];
+            $newResource = $rows->first();
 
-            $total = $rows->sum(6);
-            $unit_price = $total / $qty;
-            $doc_no = $rows->pluck(8)->unique()->implode(', ');
-            $cost_account = $rows->pluck(9)->first();
+            $newResource[4] = $qty;
+            $newResource[6] = $rows->sum(6);
+            $newResource[5] = $newResource[6] / $qty;
+            $newResource[8] = $rows->pluck(8)->unique()->implode(', ');
 
-            $newResource = [
-                $resource->code, '',
-                $resource->resource_name, $resource->measure_unit,
-                $qty, $unit_price, $total,
-                $resource->resource_code,
-                $doc_no, $cost_account
-            ];
+            $resource = $errors[$key]['resource'];
 
             $this->rows->put($hash, $newResource);
             $resourcesLog->push(compact('resource', 'rows', 'newResource'));
@@ -248,15 +242,15 @@ class CostImportFixer
         $quantities = $request->input('quantities');
 
         $validationErrors = [];
-        foreach ($quantities as $resource_id => $quantity) {
-            $total = $errors->get($resource_id)->get('rows')->sum(6);
+        foreach ($quantities as $key => $quantity) {
+            $total = $errors->get($key)->get('rows')->sum(6);
             if ($quantity) {
                 $unit_price = $total / $quantity;
                 if ($unit_price < 0) {
-                    $validationErrors["quantities.$resource_id"] = 'Invalid quantity';
+                    $validationErrors["quantities.$key"] = 'Invalid quantity';
                 }
             } else {
-                $validationErrors["quantities.$resource_id"] = 'Invalid quantity';
+                $validationErrors["quantities.$key"] = 'Invalid quantity';
             }
         }
 
