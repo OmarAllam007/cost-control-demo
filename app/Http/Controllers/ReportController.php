@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\ActivityDivision;
 use App\Boq;
+use App\BreakDownResourceShadow;
 use App\Breakdown;
 use App\BreakdownResource;
-use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\ActivityResourceBreakDown;
 use App\Http\Controllers\Reports\BoqPriceList;
 use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
@@ -22,16 +22,17 @@ use App\Http\Controllers\Reports\QtyAndCost;
 use App\Http\Controllers\Reports\QuantitiySurveySummery;
 use App\Http\Controllers\Reports\ResourceDictionary;
 use App\Http\Controllers\Reports\RevisedBoq;
+use App\Http\Requests;
 use App\Project;
 use App\Reports\Budget\BudgetTrendReport;
-use App\Resources;
+use App\Reports\Budget\WbsReport;
 use App\ResourceType;
+use App\Resources;
 use App\StdActivity;
 use App\StdActivityResource;
 use App\Unit;
 use App\WbsLevel;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 
 class ReportController extends Controller
@@ -46,7 +47,10 @@ class ReportController extends Controller
 
     public function wbsReport(Project $project)
     {
-        return view('reports.budget.wbs.index', compact('project'));
+        $report = new WbsReport($project);
+        $data = $report->run();
+
+        return view('reports.budget.wbs.index', $data);
     }
 
     public function productivityReport(Project $project)
