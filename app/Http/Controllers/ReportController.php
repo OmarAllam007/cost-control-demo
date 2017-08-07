@@ -48,8 +48,13 @@ class ReportController extends Controller
     public function wbsReport(Project $project)
     {
         $report = new WbsReport($project);
-        $data = $report->run();
+        $report->run();
 
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
         return view('reports.budget.wbs.index', $data);
     }
 
