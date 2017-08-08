@@ -74,18 +74,7 @@ class ReportController extends Controller
             return $report->excel();
         }
 
-        //TODO: remove this after generating the report
-        //compact('parents', 'all', 'activity_ids', 'project')
         return view('reports.budget.std-activity.index', $data);
-
-        /*set_time_limit(300);
-        $div_ids = $project->getDivisions();
-        $activity_ids = $project->getActivities()->toArray();
-
-        $all = $div_ids['all'];
-        $parent_ids = $div_ids['parents'];
-        $parents = ActivityDivision::whereIn('id', $parent_ids)->get();*/
-
     }
 
     public function resourceDictionary(Project $project)

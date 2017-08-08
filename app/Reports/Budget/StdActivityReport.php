@@ -8,6 +8,9 @@ use App\BreakDownResourceShadow;
 use App\Project;
 use App\StdActivity;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class StdActivityReport
 {
@@ -25,6 +28,8 @@ class StdActivityReport
 
     /** @var Collection */
     protected $divisions;
+
+    protected $row = 1;
 
     public function __construct(Project $project)
     {
@@ -87,6 +92,61 @@ class StdActivityReport
 
     function excel()
     {
+        \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
+
+            $writer->sheet('Std Activity', function (LaravelExcelWorksheet $sheet) {
+                $sheet->row(1, ['Activity', 'Budget Cost']);
+                $sheet->cells('A1:B1', function(CellWriter $cells) {
+                    $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
+                });
+
+                $this->tree->each(function ($division) use ($sheet) {
+                    $this->buildExcel($sheet, $division);
+                });
+
+                $sheet->setColumnFormat(["B2:B{$this->row}" => '#,##0.00']);
+
+                $sheet->setAutoFilter();
+                $sheet->freezeFirstRow();
+            });
+
+            $writer->download('xlsx');
+        });
+    }
+
+    protected function buildExcel(LaravelExcelWorksheet $sheet, $division, $depth = 0)
+    {
+        $hasChildren = $division->subtree->count() || $division->std_activities->count();
+        if (!$hasChildren) {
+            return;
+        }
+
+        $this->row++;
+        $name = (str_repeat(' ', $depth * 6)) . $division->code . ' ' . $division->name;
+        $sheet->row($this->row, [$name, $division->cost]);
+        $sheet->cells("A{$this->row}:B{$this->row}", function (CellWriter $cells) {
+            $cells->setFont(['bold' => true]);
+        });
+
+        if ($depth) {
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel($depth < 7 ? $depth : 7)
+                ->setVisible(false)->setCollapsed(true);
+        }
+
+        ++$depth;
+
+        $division->subtree->each(function($subdivision) use ($sheet, $depth) {
+            $this->buildExcel($sheet, $subdivision, $depth);
+        });
+
+        $division->std_activities->each(function ($activity) use ($sheet, $depth) {
+            $name = (str_repeat(' ', $depth * 6)) . $activity->name;
+            $sheet->row(++$this->row, [$name, $activity->cost]);
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel($depth < 7 ? $depth : 7)
+                ->setVisible(false)->setCollapsed(true);
+        });
 
     }
 }

@@ -1,12 +1,23 @@
-@extends('layouts.app')
+@extends('layouts.' . (request()->has('print') ? 'print' : 'app'))
 
 @section('title', 'Std Activity')
 
 @section('header')
     <div class="display-flex">
         <h4 class="flex">Std Activity &mdash; {{$project->name}}</h4>
+
+        @if (!request()->has('print'))
+        <div>
+        <a href="?print=1&" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i> Excel</a>
+        <a href="?print=1&paint=std-activity" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>
         <a href="{{route('project.show', $project)}}#Reports" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+        </div>
+        @endif
     </div>
+@endsection
+
+@section('image')
+    <img src="{{asset('images/reports/standard-activity.jpg')}}" height="80%">
 @endsection
 
 @section('body')
