@@ -101,7 +101,8 @@ class ProductivityReport
                 $sheet->setAutoFilter();
                 $sheet->freezeFirstRow();
 
-                $sheet->setAutosize(['B', 'C', 'D']);
+                $sheet->setAutoSize(['B', 'C', 'D']);
+                $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(10);
             });
 
             $writer->download('xlsx');
@@ -116,11 +117,12 @@ class ProductivityReport
         }
 
         $this->row++;
-        $name = (str_repeat(' ', $depth * 6)) . $division->code . ' ' . $division->name;
+        $prefix = ''; //(str_repeat(' ', $depth * 6));
+        $name = $prefix . $division->code . ' ' . $division->name;
         $sheet->row($this->row, [$name, $division->cost]);
         $sheet->mergeCells("A{$this->row}:D{$this->row}")
-            ->cells("A{$this->row}", function (CellWriter $cells) {
-                $cells->setFont(['bold' => true]);
+            ->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
+                $cells->setFont(['bold' => true])->setTextIndent($depth * 2);
             });
 
         if ($depth) {
@@ -136,15 +138,19 @@ class ProductivityReport
         });
 
         $division->productivities->each(function ($productivity) use ($sheet, $depth) {
-            $name = (str_repeat(' ', $depth * 6)) . $productivity->description;
             $sheet->row(++$this->row, [
-                $name, $productivity->crew_structure,
+                $productivity->description, $productivity->crew_structure,
                 $productivity->after_reduction, $productivity->units->type
-            ]);
+            ])->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
+                $cells->setTextIndent($depth * 2);
+            });;
+
+
 
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel($depth < 7 ? $depth : 7)
-                ->setVisible(false)->setCollapsed(true);
+                ->setVisible(false)->setCollapsed(true)
+                ->setRowHeight();
         });
 
     }
