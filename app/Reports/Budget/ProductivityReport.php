@@ -84,11 +84,11 @@ class ProductivityReport
 
     function excel()
     {
-        \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
+        \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function (LaravelExcelWriter $writer) {
 
             $writer->sheet('Productivity', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, ['Productivity', 'Budget Cost']);
-                $sheet->cells('A1:B1', function(CellWriter $cells) {
+                $sheet->row(1, ['Description', 'Crew Structure', 'Output', 'Unit of measure']);
+                $sheet->cells('A1:D1', function (CellWriter $cells) {
                     $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
                 });
 
@@ -96,10 +96,12 @@ class ProductivityReport
                     $this->buildExcel($sheet, $division);
                 });
 
-                $sheet->setColumnFormat(["B2:B{$this->row}" => '#,##0.00']);
+                $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
 
                 $sheet->setAutoFilter();
                 $sheet->freezeFirstRow();
+
+                $sheet->setAutosize(['B', 'C', 'D']);
             });
 
             $writer->download('xlsx');
@@ -108,7 +110,7 @@ class ProductivityReport
 
     protected function buildExcel(LaravelExcelWorksheet $sheet, $division, $depth = 0)
     {
-        $hasChildren = $division->subtree->count() || $division->std_activities->count();
+        $hasChildren = $division->subtree->count() || $division->productivities->count();
         if (!$hasChildren) {
             return;
         }
@@ -116,9 +118,10 @@ class ProductivityReport
         $this->row++;
         $name = (str_repeat(' ', $depth * 6)) . $division->code . ' ' . $division->name;
         $sheet->row($this->row, [$name, $division->cost]);
-        $sheet->cells("A{$this->row}:B{$this->row}", function (CellWriter $cells) {
-            $cells->setFont(['bold' => true]);
-        });
+        $sheet->mergeCells("A{$this->row}:D{$this->row}")
+            ->cells("A{$this->row}", function (CellWriter $cells) {
+                $cells->setFont(['bold' => true]);
+            });
 
         if ($depth) {
             $sheet->getRowDimension($this->row)
@@ -128,13 +131,17 @@ class ProductivityReport
 
         ++$depth;
 
-        $division->subtree->each(function($subdivision) use ($sheet, $depth) {
+        $division->subtree->each(function ($subdivision) use ($sheet, $depth) {
             $this->buildExcel($sheet, $subdivision, $depth);
         });
 
-        $division->std_activities->each(function ($activity) use ($sheet, $depth) {
-            $name = (str_repeat(' ', $depth * 6)) . $activity->name;
-            $sheet->row(++$this->row, [$name, $activity->cost]);
+        $division->productivities->each(function ($productivity) use ($sheet, $depth) {
+            $name = (str_repeat(' ', $depth * 6)) . $productivity->description;
+            $sheet->row(++$this->row, [
+                $name, $productivity->crew_structure,
+                $productivity->after_reduction, $productivity->units->type
+            ]);
+
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel($depth < 7 ? $depth : 7)
                 ->setVisible(false)->setCollapsed(true);

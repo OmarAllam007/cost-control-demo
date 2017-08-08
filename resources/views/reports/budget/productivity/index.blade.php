@@ -8,7 +8,7 @@
 
         @if (!request()->has('print'))
             <div>
-                <a href="?print=1&" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i> Excel</a>
+                <a href="?excel" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i> Excel</a>
                 <a href="?print=1&paint=productivity" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>
                 <a href="{{route('project.show', $project)}}#Reports" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
             </div>
@@ -77,6 +77,14 @@
 @section('css')
     <style>
 
+        @media print {
+            tr.hidden {
+                display: table-row !important;
+                visibility: visible;
+            }
+
+
+        }
         #report-table tbody tr:hover > td {
             background-color: rgba(255, 255, 204, 0.7);
         }
@@ -87,19 +95,19 @@
         }
 
         .level-0 td {
-            background: hsl(0, 0%, 97%);
+            background: #f7f7f7;
         }
 
         .level-1 td {
-            background: hsl(0, 0%, 93%);
+            background: #ededed;
         }
 
         .level-2 td {
-            background: hsl(0, 0%, 90%);
+            background: #e6e6e6;
         }
 
         .level-3 td {
-            background: hsl(0, 0%, 87%);
+            background: #dedede;
         }
 
         .level-1 .level-label {
