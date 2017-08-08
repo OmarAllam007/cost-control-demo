@@ -1,0 +1,24 @@
+@if ($division->subtree->count() || $division->productivities->count())
+    <tr class="level-{{$depth}} child-{{$division->parent_id}} {{$depth? 'hidden' : ''}} text-strong">
+        <td class="level-label" colspan="4">
+            <a href="#" class="open-level" data-target="child-{{$division->id}}">
+                <strong><i class="fa fa-plus-square"></i> {{$division->name}}</strong>
+            </a>
+        </td>
+    </tr>
+
+    @forelse($division->subtree as $subdivision)
+        @include('reports.budget.productivity._recursive', ['division' => $subdivision, 'depth' => $depth + 1])
+    @empty
+    @endforelse
+
+    @forelse($division->productivities as $productivity)
+        <tr class="level-{{$depth + 1}} child-{{$division->id}} hidden">
+            <td class="level-label">{{$productivity->description}}</td>
+            <td>{!! nl2br(e($productivity->crew_structure)) !!}</td>
+            <td>{{$productivity->after_reduction}}</td>
+            <td>{{$productivity->units->type}}</td>
+        </tr>
+    @empty
+    @endforelse
+@endif

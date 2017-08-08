@@ -25,6 +25,7 @@ use App\Http\Controllers\Reports\RevisedBoq;
 use App\Http\Requests;
 use App\Project;
 use App\Reports\Budget\BudgetTrendReport;
+use App\Reports\Budget\ProductivityReport;
 use App\Reports\Budget\StdActivityReport;
 use App\Reports\Budget\WbsReport;
 use App\ResourceType;
@@ -49,7 +50,6 @@ class ReportController extends Controller
     public function wbsReport(Project $project)
     {
         $report = new WbsReport($project);
-        $report->run();
 
         if (request()->exists('excel')) {
             return $report->excel();
@@ -61,8 +61,14 @@ class ReportController extends Controller
 
     public function productivityReport(Project $project)
     {
-        $productivity = new Productivity();
-        return $productivity->getProductivity($project);
+        $report = new ProductivityReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.productivity.index', $data);
     }
 
     public function stdActivityReport(Project $project)
