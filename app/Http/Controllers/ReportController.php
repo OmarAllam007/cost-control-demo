@@ -16,6 +16,7 @@ use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostDiscipline;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
+use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
 use App\Http\Controllers\Reports\Productivity;
 use App\Http\Controllers\Reports\QtyAndCost;
@@ -26,6 +27,7 @@ use App\Http\Requests;
 use App\Project;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ProductivityReport;
+use App\Reports\Budget\ResourceDictReport;
 use App\Reports\Budget\StdActivityReport;
 use App\Reports\Budget\WbsReport;
 use App\ResourceType;
@@ -85,8 +87,14 @@ class ReportController extends Controller
 
     public function resourceDictionary(Project $project)
     {
-        $resource = new ResourceDictionary();
-        return $resource->getResourceDictionary($project);
+        $report = new ResourceDictReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.resource-dict.index', $data);
     }
 
 

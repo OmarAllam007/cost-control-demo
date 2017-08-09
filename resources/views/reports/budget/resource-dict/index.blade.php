@@ -1,15 +1,15 @@
 @extends('layouts.' . (request()->has('print') ? 'print' : 'app'))
 
-@section('title', 'Productivity')
+@section('title', 'Resource Dictionary')
 
 @section('header')
     <div class="display-flex">
-        <h4 class="flex">Productivity &mdash; {{$project->name}}</h4>
+        <h4 class="flex">Resource Dictionary &mdash; {{$project->name}}</h4>
 
         @if (!request()->has('print'))
             <div>
                 <a href="?excel" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i> Excel</a>
-                <a href="?print=1&paint=productivity" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>
+                <a href="?print=1&paint=resource-dictionary" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>
                 <a href="{{route('project.show', $project)}}#Reports" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
             </div>
         @endif
@@ -20,16 +20,23 @@
     <table class="table table-condensed table-bordered" id="report-table">
         <thead>
         <tr class="bg-primary">
-            <th class="col-sm-5">Description</th>
-            <th class="col-sm-3">Crew Structure</th>
-            <th class="col-sm-2">Output</th>
-            <th class="col-sm-2">Unit of Measure</th>
+            <th class="col-sm-3">Resource</th>
+            <th class="col-sm-2">Code</th>
+            <th class="col-sm-1">Rate</th>
+            <th class="col-sm-1">Unit of measure</th>
+            <th class="col-sm-1">Waste (%)</th>
+            <th class="col-sm-2">Budget Unit</th>
+            <th class="col-sm-2">Budget Cost</th>
+        </tr>
+        <tr class="info">
+            <th colspan="6">Total</th>
+            <th>{{number_format($tree->sum('budget_cost'), 2)}}</th>
         </tr>
         </thead>
         <tbody>
 
         @foreach($tree as $division)
-            @include('reports.budget.productivity._recursive', ['division' => $division, 'depth' => 0])
+            @include('reports.budget.resource-dict._recursive', ['division' => $division, 'depth' => 0])
         @endforeach
         </tbody>
     </table>
