@@ -98,9 +98,9 @@ class ResourceDictReport
     {
         \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
 
-            $writer->sheet('Std Activity', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, ['Activity', 'Budget Cost']);
-                $sheet->cells('A1:B1', function(CellWriter $cells) {
+            $writer->sheet('Resource Dictionary', function (LaravelExcelWorksheet $sheet) {
+                $sheet->row(1, ['Resource', 'Code', 'Rate', 'Unit of measure', 'Waste (%)', 'Budget Unit', 'Budget Cost']);
+                $sheet->cells('A1:G1', function(CellWriter $cells) {
                     $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
                 });
 
@@ -108,7 +108,13 @@ class ResourceDictReport
                     $this->buildExcel($sheet, $division);
                 });
 
-                $sheet->setColumnFormat(["B2:B{$this->row}" => '#,##0.00']);
+                $sheet->setColumnFormat([
+                    "B2:B{$this->row}" => '#,##0.00',
+                    "C2:C{$this->row}" => '#,##0.00',
+                    "E2:E{$this->row}" => '#,##0.00',
+                    "F2:F{$this->row}" => '#,##0.00',
+                    "G2:G{$this->row}" => '#,##0.00',
+                ]);
 
                 $sheet->setAutoFilter();
                 $sheet->freezeFirstRow();
@@ -120,15 +126,17 @@ class ResourceDictReport
 
     protected function buildExcel(LaravelExcelWorksheet $sheet, $division, $depth = 0)
     {
-        $hasChildren = $division->subtree->count() || $division->std_activities->count();
+        $hasChildren = $division->subtree->count() || $division->resources->count();
         if (!$hasChildren) {
             return;
         }
 
         $this->row++;
-        $name = (str_repeat(' ', $depth * 6)) . $division->code . ' ' . $division->name;
-        $sheet->row($this->row, [$name, $division->cost]);
-        $sheet->cells("A{$this->row}:B{$this->row}", function (CellWriter $cells) {
+        $name = (str_repeat(' ', $depth * 6)) . $division->name;
+        $sheet->mergeCells("A{$this->row}:F{$this->row}");
+        $sheet->setCellValue("A{$this->row}", $name);
+        $sheet->setCellValue("G{$this->row}", $division->budget_cost ?: 0);
+        $sheet->cells("A{$this->row}:G{$this->row}", function (CellWriter $cells) {
             $cells->setFont(['bold' => true]);
         });
 
@@ -136,6 +144,10 @@ class ResourceDictReport
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel($depth < 7 ? $depth : 7)
                 ->setVisible(false)->setCollapsed(true);
+
+            $sheet->cell("A{$this->row}", function () {
+
+            });
         }
 
         ++$depth;
@@ -144,9 +156,12 @@ class ResourceDictReport
             $this->buildExcel($sheet, $subdivision, $depth);
         });
 
-        $division->std_activities->each(function ($activity) use ($sheet, $depth) {
-            $name = (str_repeat(' ', $depth * 6)) . $activity->name;
-            $sheet->row(++$this->row, [$name, $activity->cost]);
+        $division->resources->each(function ($resource) use ($sheet, $depth) {
+            $name = (str_repeat(' ', $depth * 6)) . $resource->name;
+            $sheet->row(++$this->row, [
+                $name, $resource->resource_code, $resource->rate, $resource->units->type ?? '', $resource->waste,
+                $resource->budget_unit, $resource->budget_cost
+            ]);
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel($depth < 7 ? $depth : 7)
                 ->setVisible(false)->setCollapsed(true);
