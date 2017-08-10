@@ -27,6 +27,7 @@ use App\Http\Requests;
 use App\Project;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ProductivityReport;
+use App\Reports\Budget\QsSummaryReport;
 use App\Reports\Budget\ResourceDictReport;
 use App\Reports\Budget\StdActivityReport;
 use App\Reports\Budget\WbsReport;
@@ -97,6 +98,18 @@ class ReportController extends Controller
         return view('reports.budget.resource-dict.index', $data);
     }
 
+    public function qsSummary(Project $project)
+    {
+        $report = new QsSummaryReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.qs-summary.index', $data);
+    }
+
 
     public function manPower(Project $project)
     {
@@ -162,11 +175,7 @@ AND resource_type LIKE \'%lab%\'');
     }
 
 
-    public function qsSummery(Project $project)
-    {
-        $quantity_survey = new QuantitiySurveySummery();
-        return $quantity_survey->qsSummeryReport($project);
-    }
+
 
     public function budgetCostVSDryCost(Project $project)
     {
