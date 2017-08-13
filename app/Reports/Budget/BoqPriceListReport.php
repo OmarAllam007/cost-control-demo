@@ -8,6 +8,9 @@ use App\Project;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class BoqPriceListReport
 {
@@ -22,6 +25,9 @@ class BoqPriceListReport
 
     /** @var Collection */
     protected $cost_accounts;
+
+    /** @var int */
+    protected $row = 1;
 
     public function __construct(Project $project)
     {
@@ -87,11 +93,64 @@ class BoqPriceListReport
 
     function excel()
     {
+        \Excel::create(slug($this->project->name) . '_boq-price-list.xlsx', function (LaravelExcelWriter $excel) {
+            $excel->sheet('BOQ Price List', function (LaravelExcelWorksheet $sheet) {
+                $sheet->row(1, [
+                    'Item', 'Cost Account', 'Budget Qty', 'U.O.M', 'General Requirement', 'Labours', 'Material',
+                    'Subcontractors', 'Equipment', 'Scaffolding', 'Others', 'Grand Total'
+                ]);
 
+                $this->tree->each(function (WbsLevel $level) use ($sheet) {
+                    $this->buildExcel($sheet, $level);
+                });
+
+                $sheet->setAutoFilter();
+                $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
+                $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
+                $sheet->setColumnFormat(["E2:L{$this->row}" => '#,##0.00']);
+            });
+
+            $excel->download('xlsx');
+        });
     }
 
-    protected function buildExcel()
+    protected function buildExcel(LaravelExcelWorksheet $sheet, WbsLevel $level, $depth = 0)
     {
+        ++$this->row;
+        $sheet->mergeCells("A{$this->row}:K{$this->row}");
+        $name = (str_repeat(' ', 6 * $depth)) . $level->name;
+        $sheet->row($this->row, [$name, $level->cost]);
 
+        $sheet->cells("A{$this->row}:L{$this->row}", function (CellWriter $cells) {
+            $cells->setBackground('#f7f7f7')->setFont(['bold' => true]);
+        });
+
+        if ($depth) {
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel($depth < 8 ? $depth : 8)
+                ->setCollapsed(true)->setVisible(false);
+        }
+
+
+        $level->subtree->each(function (WbsLevel $level) use ($sheet, $depth) {
+            $this->buildExcel($sheet, $level, $depth + 1);
+        });
+
+        $level->cost_accounts->sortBy('description')->each(function ($cost_account) use ($sheet, $depth) {
+            ++$this->row;
+            $description = str_repeat(' ', 6 * ($depth + 1)) . $cost_account['description'];
+            $sheet->row($this->row, [
+                $description, $cost_account['cost_account'], $cost_account['budget_qty'], $cost_account['unit_of_measure'],
+                $cost_account['types']['01.general requirment'] ?? 0, $cost_account['types']['02.labors'] ?? 0,
+                $cost_account['types']['03.material'] ?? 0, $cost_account['types']['04.subcontractors'] ?? 0,
+                $cost_account['types']['05.equipment'] ?? 0, $cost_account['types']['06.scaffolding'] ?? 0,
+                $cost_account['types']['07.others'] ?? 0,
+                $cost_account['grand_total'],
+            ]);
+
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel($depth + 1 < 8? $depth + 1 : 8)
+                ->setCollapsed(true)->setVisible(false);
+        });
     }
 }
