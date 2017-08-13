@@ -83,19 +83,19 @@
     }
 
     .level-0 td {
-        background: hsl(0, 0%, 97%);
+        background: #f7f7f7;
     }
 
     .level-1 td {
-        background: hsl(0, 0%, 93%);
+        background: #ededed;
     }
 
     .level-2 td {
-        background: hsl(0, 0%, 90%);
+        background: #e6e6e6;
     }
 
     .level-3 td {
-        background: hsl(0, 0%, 87%);
+        background: #dedede;
     }
 
     .level-1 .level-label {

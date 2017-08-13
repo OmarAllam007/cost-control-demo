@@ -11,7 +11,7 @@
     @include('reports.budget.qs-summary._recursive', ['wbs_level' => $child, 'depth' => $depth +1])
 @endforeach
 {{--
-@if($wbs_level->activities->count())
+@if($wbs_level->activitis->count())
 {{dd($wbs_level->activities)}}
 @endif--}}
 
