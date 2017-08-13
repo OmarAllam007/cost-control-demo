@@ -1,92 +1,31 @@
-<tr>
-    <td>{{$wbs_level->name}}</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+<tr class="level-{{$depth}} child-{{$wbs_level->parent_id}} {{$depth? 'hidden' : ''}}">
+    <td class="level-label" colspan="11">
+        <a href="#" class="open-level" data-target="child-{{$wbs_level->id}}">
+            <strong><i class="fa fa-plus-square"></i> {{$wbs_level->name}}</strong>
+        </a>
+    </td>
+    <td><strong>{{number_format($wbs_level->cost, 2)}}</strong></td>
 </tr>
 
-<li>
-    <p class="
-       @if($tree_level ==0)
-            blue-first-level
-         @elseif($tree_level ==1)
-            blue-third-level
-           @else
-            blue-fourth-level
-                @endif
-            "
-    >
-        <a href="#col-{{$level['id']}}" data-toggle="collapse" @if($tree_level ==0) style="color:white;text-decoration: none" @endif>
-            {{$level['name']}}
-        </a>
+@forelse($wbs_level->subtree as $sublevel)
+    @include('reports.budget.boq_price_list._recursive', ['wbs_level' => $sublevel, 'depth' => $depth + 1])
+@empty
+@endforelse
 
-        <span class="pull-right">{{number_format($level['level_boq_equavalent_rate'],2)}}</span>
-
-    </p>
-
-        <article id="col-{{$level['id']}}" class="tree--child collapse level-container" data-code="{{mb_strtolower($level['code'])}}">
-            @if($level['boqs'] && count($level['boqs']))
-            @foreach($level['boqs'] as $item=>$boq_details)
-                <ul class="list-unstyled">
-                    <p class="blue-third-level">{{$item}}</p>
-
-                    <li>
-                        <div class="tree--item">
-                            <article>
-                                <table class="table table-condensed table-striped ">
-                                    <thead>
-                                    <tr class="tbl-content">
-                                        <th class="col-md-1">Cost Account</th>
-                                        <th class="col-md-1">Unit Of Measure</th>
-                                        <th class="col-md-1">GENERAL REQUIRMENT</th>
-                                        <th class="col-md-1">LABORS</th>
-                                        <th class="col-md-1">MATERIAL</th>
-                                        <th class="col-md-1">Subcontractors</th>
-                                        <th class="col-md-1">EQUIPMENT</th>
-                                        <th class="col-md-1">SCAFFOLDING</th>
-                                        <th class="col-md-1">OTHERS</th>
-                                        <th class="col-md-2">Grand Total</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($boq_details['items'] as $kCostAccount=>$costAccount)
-                                        <tr class="tbl-content">
-                                            <td class="col-md-1">{{$costAccount['cost_account']}}</td>
-                                            <td class="col-md-1">{{$costAccount['unit']}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['GEN'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['LAB'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['MAT'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['SUB'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['EQU'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['SCA'],2)}}</td>
-                                            <td class="col-md-1">{{number_format($costAccount['OTH'],2)}}</td>
-                                            <td class="col-md-2">{{number_format($costAccount['total_resources'],2)}}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </article>
-                        </div>
-
-                    </li>
-                </ul>
-            @endforeach
-            @endif
-            @if (isset($level['children']) && count($level['children']))
-                <ul class="list-unstyled">
-                    @foreach($level['children'] as $child)
-                        @include('reports.budget.boq_price_list._recursive_report', ['level' => $child, 'tree_level' => $tree_level + 1])
-                    @endforeach
-                </ul>
-
-        </article>
-
-    @endif
-</li>
+@forelse($wbs_level->cost_accounts->sortBy('description') as $cost_account)
+    <tr class="level-{{$depth + 1}} child-{{$wbs_level->id}} hidden">
+        <td class="level-label">{{$cost_account['description']}}</td>
+        <td>{{$cost_account['cost_account']}}</td>
+        <td>{{number_format($cost_account['budget_qty'], 2)}}</td>
+        <td>{{$cost_account['unit_of_measure']}}</td>
+        <td>{{number_format($cost_account['types']['01.general requirment'] ?? 0, 2)}}</td>
+        <td>{{number_format($cost_account['types']['02.labors'] ?? 0, 2)}}</td>
+        <td>{{number_format($cost_account['types']['03.material'] ?? 0, 2)}}</td>
+        <td>{{number_format($cost_account['types']['04.subcontractors'] ?? 0, 2)}}</td>
+        <td>{{number_format($cost_account['types']['05.equipment'] ?? 0, 2)}}</td>
+        <td>{{number_format($cost_account['types']['06.scaffolding'] ?? 0, 2)}}</td>
+        <td>{{number_format($cost_account['types']['07.others'] ?? 0, 2)}}</td>
+        <td>{{number_format($cost_account['grand_total'], 2)}}</td>
+    </tr>
+@empty
+@endforelse

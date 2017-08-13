@@ -25,6 +25,7 @@ use App\Http\Controllers\Reports\ResourceDictionary;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Http\Requests;
 use App\Project;
+use App\Reports\Budget\BoqPriceListReport;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ProductivityReport;
 use App\Reports\Budget\QsSummaryReport;
@@ -110,6 +111,18 @@ class ReportController extends Controller
         return view('reports.budget.qs-summary.index', $data);
     }
 
+    public function boqPriceList(Project $project)
+    {
+        $report = new BoqPriceListReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.boq_price_list.index', $data);
+    }
+
 
     public function manPower(Project $project)
     {
@@ -168,11 +181,7 @@ AND resource_type LIKE \'%lab%\'');
         return $activity->getActivityResourceBreakDown($project);
     }
 
-    public function boqPriceList(Project $project)
-    {
-        $report = new BoqPriceList($project);
-        return view('reports.budget.boq_price_list.index', $report->run());
-    }
+
 
 
 
