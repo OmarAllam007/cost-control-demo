@@ -5,8 +5,14 @@
 @section('header')
     <h2 class="">{{$project->name}} - BOQ PRICE LIST Report</h2>
     <div class="pull-right">
-        <a href="?print=1&paint=boq-price" target="_blank" class="btn btn-default btn-sm print"><i class="fa fa-print"></i>
-            Print</a>
+        <a href="?excel" class="btn btn-info btn-sm print">
+            <i class="fa fa-cloud-download"></i> Excel
+        </a>
+
+        <a href="?print=1&paint=boq-price" target="_blank" class="btn btn-success btn-sm print">
+            <i class="fa fa-print"></i> Print
+        </a>
+
         <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm back">
             <i class="fa fa-chevron-left"></i> Back
         </a>

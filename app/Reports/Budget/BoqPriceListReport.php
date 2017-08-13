@@ -78,7 +78,7 @@ class BoqPriceListReport
     {
         $tree = $this->wbs_levels->get($parent_id) ?: collect();
 
-        $tree->map(function (WbsLevel $level) {
+        return $tree->map(function (WbsLevel $level) {
             $level->subtree = $this->buildTree($level->id);
 
             $level->cost_accounts = $this->cost_accounts->get($level->id) ?: collect();
@@ -86,9 +86,9 @@ class BoqPriceListReport
             $level->cost = $level->cost_accounts->sum('grand_total') + $level->subtree->sum('cost');
 
             return $level;
+        })->filter(function ($level) {
+            return $level->cost_accounts->count() || $level->subtree->count();
         });
-
-        return $tree;
     }
 
     function excel()
