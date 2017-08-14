@@ -27,6 +27,7 @@ use App\Http\Requests;
 use App\Project;
 use App\Reports\Budget\BoqPriceListReport;
 use App\Reports\Budget\BudgetTrendReport;
+use App\Reports\Budget\ManPowerReport;
 use App\Reports\Budget\ProductivityReport;
 use App\Reports\Budget\QsSummaryReport;
 use App\Reports\Budget\ResourceDictReport;
@@ -126,47 +127,14 @@ class ReportController extends Controller
 
     public function manPower(Project $project)
     {
-        set_time_limit(300);
-        $resources = [];
-        $root = '';
-        $total_budget_cost = '';
-        $total_budget_unit = '';
-        $breakdown_resources = \DB::select('SELECT
-  resource_id,
-  resource_name,
-  resource_type,
-  budget_cost,
-  budget_unit,
-  measure_unit
-FROM break_down_resource_shadows
-WHERE project_id=' . $project->id . '
-AND resource_type LIKE \'%lab%\'');
-        foreach ($breakdown_resources as $resource) {
-            $rootName = $resource->resource_type;
-            $root = $rootName;
-            if (!isset($resources[$resource->resource_id])) {
-                $resources[$resource->resource_id] = [
-                    'id' => $resource->resource_id,
-                    'name' => $resource->resource_name,
-                    'type' => $rootName,
-                    'budget_cost' => 0,
-                    'budget_unit' => 0,
-                    'unit' => $resource->measure_unit??'',
-                ];
+        $report = new ManPowerReport($project);
 
-
-                $resources[$resource->resource_id]['budget_cost'] += $resource->budget_cost;
-                $resources[$resource->resource_id]['budget_unit'] += $resource->budget_unit;
-            }
-
+        if (request()->exists('excel')) {
+            return $report->excel();
         }
 
-        foreach ($resources as $resource) {
-            $total_budget_cost += $resource['budget_cost'];
-            $total_budget_unit += $resource['budget_unit'];
-        }
-
-        return view('resources.manpower_report', compact('project', 'resources', 'root', 'total_budget_cost', 'total_budget_unit'));
+        $data = $report->run();
+        return view('reports.budget.man_power.index', $data);
     }
 
     public function budgetSummery(Project $project)
@@ -180,10 +148,6 @@ AND resource_type LIKE \'%lab%\'');
         $activity = new ActivityResourceBreakDown();
         return $activity->getActivityResourceBreakDown($project);
     }
-
-
-
-
 
 
     public function budgetCostVSDryCost(Project $project)
