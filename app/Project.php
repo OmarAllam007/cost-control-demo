@@ -243,7 +243,7 @@ class Project extends Model
 
     function getMaxPeriod()
     {
-        return $this->periods()->where('is_open', false)->max('id');
+        return $this->periods()->readyForReporting()->max('id');
     }
 
     function revisions()
