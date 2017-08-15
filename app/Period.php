@@ -13,6 +13,12 @@ class Period extends Model
     use HasChangeLog;
     use CachesQueries, RecordsUser;
 
+    const GENERATING = -1;
+
+    const GENERATED = 1;
+
+    const NONE = 0;
+
     protected $fillable = ['name', 'start_date', 'is_open'];
 
     protected $dates = ['created_at', 'update_at', 'start_date'];
@@ -31,7 +37,8 @@ class Period extends Model
 
     function scopeReadyForReporting(Builder $query)
     {
-        return $query->where('is_open', false)->orderBy('id', 'desc');
+//        return $query->where('is_open', false)->orderBy('id', 'desc');
+        return $query->where('status', self::GENERATED)->orderBy('id', 'desc');
     }
 
     protected static function boot()

@@ -15,11 +15,15 @@ use App\StdActivity;
 use App\WbsLevel;
 use App\WbsResource;
 use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
-class ExportCostToMaster extends Job
+class ExportCostToMaster extends Job implements ShouldQueue
 {
+    use SerializesModels, InteractsWithQueue;
 
     protected $project;
 
@@ -47,7 +51,6 @@ class ExportCostToMaster extends Job
 
     public function handle()
     {
-
         MasterShadow::where('period_id', $this->period->id)->delete();
 
         BreakDownResourceShadow::where('project_id', $this->project->id)->chunk(900, function ($shadows) {
@@ -127,6 +130,8 @@ class ExportCostToMaster extends Job
             gc_collect_cycles();
 //            \Log::info("Chunk has been buffered; memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4) . '; Insert time: ' . round($insertTime, 4));
         });
+
+        $this->period->update(['status' => Period::GENERATED]);
     }
 
     protected function getWbs($costShadow)
