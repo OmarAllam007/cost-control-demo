@@ -223,8 +223,8 @@ class ResourcesController extends Controller
             flash('Could not import some resources', 'warning');
             return redirect()->route('resources.fix-import', $key);
         }
-        if (count($status['dublicated'])) {
-            flash(nl2br("<strong>{$status['success']} Resources have been imported\n\nThe following items already exists</strong>\n" . implode("\n", $status['dublicated'])), 'info');
+        if (count($status['duplicated'])) {
+            flash(nl2br("<strong>{$status['success']} Resources have been imported\n\nThe following items already exists</strong>\n" . implode("\n", $status['duplicated'])), 'info');
         } else {
             flash($status['success'] . ' Resources have been imported', 'success');
         }
