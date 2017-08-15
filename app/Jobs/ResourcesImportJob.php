@@ -40,16 +40,12 @@ class ResourcesImportJob extends ImportJob
         $rows = $excel->getSheet(0)->getRowIterator(2);
         $status = ['failed' => collect(), 'success' => 0, 'dublicated' => [], 'project' => $this->project];
 
-        if ($this->project) {
-            $oldResources = Resources::where('project_id', $this->project->id)->get();
-        } else {
-            $oldResources = Resources::whereNull('project_id')->get();
-        }
+        $oldResources = Resources::pluck('resource_code')->unique();
 
-        $oldResourceCodes = $oldResources->map(function (Resources $resource) {
-            $resource->resource_code = mb_strtolower($resource->resource_code);
-            return $resource;
-        })->pluck('resource_code', 'resource_code');
+        /** @var Collection $oldResourceCodes */
+        $oldResourceCodes = $oldResources->map(function ($code) {
+            return mb_strtolower($code);
+        });
 
         Resources::flushEventListeners();
         foreach ($rows as $index => $row) {
@@ -60,7 +56,7 @@ class ResourcesImportJob extends ImportJob
             }
 
             $code = mb_strtolower($data[6]);
-            if (!$oldResourceCodes->has($code)) {
+            if (!$oldResourceCodes->contains($code)) {
                 $type_id = $this->getTypeId($data);
                 $unit_id = $this->getUnit($data[9]);
 
@@ -83,7 +79,7 @@ class ResourcesImportJob extends ImportJob
                     $status['failed']->push($item);
                 }
             } else {
-                $status['dublicated'][] = $data[6];
+                $status['duplicated'][] = $data[6];
             }
         }
 
