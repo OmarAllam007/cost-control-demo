@@ -19,7 +19,7 @@ class Period extends Model
 
     const NONE = 0;
 
-    protected $fillable = ['name', 'start_date', 'is_open'];
+    protected $fillable = ['name', 'start_date', 'is_open', 'status'];
 
     protected $dates = ['created_at', 'update_at', 'start_date'];
 
