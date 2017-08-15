@@ -1,12 +1,13 @@
 <section id="periods" class="project-tab">
 
     @can('periods', $project)
-    <div class="form-group">
-        <div class="btn-toolbar pull-right">
-            <a href="{{route('period.create', compact('project'))}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Period</a>
+        <div class="form-group">
+            <div class="btn-toolbar pull-right">
+                <a href="{{route('period.create', compact('project'))}}" class="btn btn-primary btn-sm"><i
+                            class="fa fa-plus"></i> Add Period</a>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
-    </div>
     @endcan
 
     @if ($project->periods->count())
@@ -27,9 +28,26 @@
                     <td class="text-{{$period->is_open? 'success' : 'muted'}}"><i
                                 class="fa fa-{{$period->is_open? 'check' : 'close'}}"></i></td>
                     <td>
-                        <a href="{{route('period.edit', $period)}}" class="btn btn-primary btn-sm">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
+                        <form action="{{route('period-report.store', $period)}}" method="post">
+                            {{csrf_field()}}
+                            <a href="{{route('period.edit', $period)}}" class="btn btn-primary btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            @if ($period->status == \App\Period::NONE)
+                                <button class="btn btn-success btn-sm">
+                                    <i class="fa fa-calculator"></i> Generate Reports
+                                </button>
+                            @elseif ($period->status == \App\Period::GENERATED)
+                                <button class="btn btn-default btn-sm">
+                                    <i class="fa fa-refresh"></i> Regenerate Reports
+                                </button>
+                            @else
+                                <button class="btn btn-info btn-sm disabled" disabled>
+                                    <i class="fa fa-spin fa-refresh"></i> Generating ...
+                                </button>
+                            @endif
+                        </form>
                     </td>
                 </tr>
                 </tbody>
