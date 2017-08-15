@@ -4,7 +4,9 @@ $data = json_decode($issue->data);
 
 if ($data) {
     foreach ($data as $row) {
-        $sheet->fromArray($row, '', "A{$counter}");
+        $cells = (array) $row;
+        unset($cells['hash']);
+        $sheet->fromArray($cells, '', "A{$counter}");
         ++$counter;
     }
 }
