@@ -1,10 +1,10 @@
 @extends('layouts.' . (request()->has('print') ? 'print' : 'app'))
 
-@section('title', 'QS Summary')
+@section('title', 'Activity Resource Breakdown')
 
 @section('header')
     <div class="display-flex">
-        <h4 class="flex">QS Summary &mdash; {{$project->name}}</h4>
+        <h4 class="flex">Activity Resource Breakdown &mdash; {{$project->name}}</h4>
 
         @if (!request()->has('print'))
             <div>
@@ -21,17 +21,18 @@
         <thead>
         <tr class="bg-primary">
             <th class="col-sm-3">Activity</th>
-            <th class="col-sm-2">Cost Account</th>
-            <th class="col-sm-3">BOQ Description</th>
-            <th class="col-sm-1">Eng Qty</th>
-            <th class="col-sm-1">Budget Qty</th>
-            <th class="col-sm-2">Unit of measure</th>
+            <th class="col-sm-2">Resource Name</th>
+            <th class="col-sm-2">Resource Type</th>
+            <th class="col-sm-2">Price/Unit</th>
+            <th class="col-sm-1">Budget Unit</th>
+            <th class="col-sm-1">Unit of Measure</th>
+            <th class="col-sm-1">Budget Cost</th>
         </tr>
         </thead>
         <tbody>
 
         @foreach($tree as $wbs_level)
-            @include('reports.budget.qs-summary._recursive', ['wbs_level' => $wbs_level, 'depth' => 0])
+            @include('reports.budget.activity_resource_breakdown._recursive', ['level' => $wbs_level, 'depth' => 0])
         @endforeach
         </tbody>
     </table>

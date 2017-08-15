@@ -2,13 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\ActivityDivision;
-use App\Boq;
-use App\BreakDownResourceShadow;
-use App\Breakdown;
-use App\BreakdownResource;
-use App\Http\Controllers\Reports\ActivityResourceBreakDown;
-use App\Http\Controllers\Reports\BoqPriceList;
 use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostByDiscipline;
@@ -16,15 +9,11 @@ use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostDiscipline;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
-use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
-use App\Http\Controllers\Reports\Productivity;
 use App\Http\Controllers\Reports\QtyAndCost;
-use App\Http\Controllers\Reports\QuantitiySurveySummery;
-use App\Http\Controllers\Reports\ResourceDictionary;
 use App\Http\Controllers\Reports\RevisedBoq;
-use App\Http\Requests;
 use App\Project;
+use App\Reports\Budget\ActivityResourceBreakDownReport;
 use App\Reports\Budget\BoqPriceListReport;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ManPowerReport;
@@ -33,14 +22,9 @@ use App\Reports\Budget\QsSummaryReport;
 use App\Reports\Budget\ResourceDictReport;
 use App\Reports\Budget\StdActivityReport;
 use App\Reports\Budget\WbsReport;
-use App\ResourceType;
 use App\Resources;
-use App\StdActivity;
-use App\StdActivityResource;
-use App\Unit;
-use App\WbsLevel;
+use App\ResourceType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 
 class ReportController extends Controller
 {
@@ -137,18 +121,25 @@ class ReportController extends Controller
         return view('reports.budget.man_power.index', $data);
     }
 
+
+    public function activityResourceBreakDown(Project $project)
+    {
+        $report = new ActivityResourceBreakDownReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.activity_resource_breakdown.index', $data);
+    }
+
     public function budgetSummery(Project $project)
     {
         $budgetSummery = new BudgetSummeryReport();
         return $budgetSummery->getReport($project);
     }
-
-    public function activityResourceBreakDown(Project $project)
-    {
-        $activity = new ActivityResourceBreakDown();
-        return $activity->getActivityResourceBreakDown($project);
-    }
-
 
     public function budgetCostVSDryCost(Project $project)
     {
