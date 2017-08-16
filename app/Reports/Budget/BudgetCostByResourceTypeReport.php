@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
-class BudgetCostByDisciplineReport
+class BudgetCostByResourceTypeReport
 {
     /**
      * @var Project
@@ -30,9 +30,8 @@ class BudgetCostByDisciplineReport
     function run()
     {
         $costs = BreakDownResourceShadow::whereProjectId($this->project->id)->from('break_down_resource_shadows as sh')
-            ->leftJoin('std_activities as stda', 'sh.activity_id' , '=' ,'stda.id')
-            ->selectRaw('stda.discipline as discipline, sum(budget_cost) as budget_cost')
-            ->groupBy('stda.discipline')->orderBy('stda.discipline')
+            ->selectRaw('resource_type as resource_type, sum(budget_cost) as budget_cost')
+            ->groupBy('resource_type')->orderBy('resource_type')
             ->get();
 
         $total_cost = $costs->sum('budget_cost');
@@ -48,14 +47,14 @@ class BudgetCostByDisciplineReport
     {
 
         \Excel::create(slug($this->project->name) . '-budget_cost_by_discipline', function (LaravelExcelWriter $excel){
-            $excel->sheet('Budget Cost by Discipline', function (LaravelExcelWorksheet $sheet) {
+            $excel->sheet('Budget Cost by Resource Type', function (LaravelExcelWorksheet $sheet) {
                 $data = $this->run();
 
-                $sheet->row(1, ['Discipline', 'Budget Cost', 'Weight']);
+                $sheet->row(1, ['Resource Type', 'Budget Cost', 'Weight']);
 
 
                 $this->costs->each(function ($cost) use ($sheet) {
-                    $sheet->row($this->row, [$cost->discipline, $cost->budget_cost, $cost->weight / 100]);
+                    $sheet->row($this->row, [$cost->resource_type, $cost->budget_cost, $cost->weight / 100]);
                     ++$this->row;
                 });
 

@@ -16,6 +16,7 @@ use App\Project;
 use App\Reports\Budget\ActivityResourceBreakDownReport;
 use App\Reports\Budget\BoqPriceListReport;
 use App\Reports\Budget\BudgetCostByDisciplineReport;
+use App\Reports\Budget\BudgetCostByResourceTypeReport;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ManPowerReport;
 use App\Reports\Budget\ProductivityReport;
@@ -136,6 +137,31 @@ class ReportController extends Controller
         return view('reports.budget.activity_resource_breakdown.index', $data);
     }
 
+    function budgetCostDiscipline(Project $project)
+    {
+        $report = new  BudgetCostByDisciplineReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+        return view('reports.budget.budget_cost_by_discipline.index', $data);
+    }
+
+    function budgetCostByResourceType(Project $project)
+    {
+        $report = new BudgetCostByResourceTypeReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.budget_cost_by_resource_type.index', $data);
+    }
+
     public function budgetSummery(Project $project)
     {
         $budgetSummery = new BudgetSummeryReport();
@@ -152,18 +178,6 @@ class ReportController extends Controller
     {
         $budget_breakDown = new  BudgetCostByBreakDownItem();
         return $budget_breakDown->compareBudgetCostByBreakDownItem($project);
-    }
-
-    public function budgetCostDiscipline(Project $project)
-    {
-        $report = new  BudgetCostByDisciplineReport($project);
-
-        if (request()->exists('excel')) {
-            return $report->excel();
-        }
-
-        $data = $report->run();
-        return view('reports.budget.budget_cost_by_discipline.index', $data);
     }
 
     public function budgetCostDryCostDiscipline(Project $project)

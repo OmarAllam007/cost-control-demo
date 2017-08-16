@@ -1,10 +1,10 @@
 @extends('layouts.' . (request()->has('print') ? 'print' : 'app'))
 
-@section('title', 'Budget Cost By Discipline')
+@section('title', 'Budget Cost By Resource Type')
 
 @section('header')
     <div class="display-flex">
-        <h4 class="flex">Budget Cost By Discipline &mdash; {{$project->name}}</h4>
+        <h4 class="flex">Budget Cost By Resource Type &mdash; {{$project->name}}</h4>
 
         @if (!request()->has('print'))
             <div>
@@ -21,7 +21,7 @@
     <table class="table table-condensed table-bordered table-striped" id="report-table">
         <thead>
         <tr class="bg-primary">
-            <th class="col-sm-3">Discipline</th>
+            <th class="col-sm-3">Resource Type</th>
             <th class="col-sm-2">Budget Cost</th>
             <th class="col-sm-3">Weight</th>
         </tr>
@@ -29,7 +29,7 @@
         <tbody>
         @foreach($costs as $cost)
             <tr>
-                <td>{{strtoupper($cost->discipline)}}</td>
+                <td>{{strtoupper($cost->resource_type)}}</td>
                 <td>{{number_format($cost->budget_cost, 2)}}</td>
                 <td>%{{number_format($cost->weight, 2)}}</td>
             </tr>
@@ -73,7 +73,7 @@
             axis: {
                 x: {
                     type: 'category',
-                    categories: {!! $costs->pluck('discipline') !!}
+                    categories: {!! $costs->pluck('resource_type') !!}
                 },
                 y : {
                     tick: {
@@ -90,13 +90,13 @@
         c3.generate({
             bindto: '#pie-chart-area',
             data: {
-                columns: {!! $costs->map(function($cost) { return [$cost->discipline, $cost->weight]; })!!},
+                columns: {!! $costs->map(function($cost) { return [$cost->resource_type, $cost->weight]; })!!},
                 type: 'pie',
             },
             axis: {
                 x: {
                     type: 'category',
-                    categories: {!! $costs->pluck('discipline') !!}
+                    categories: {!! $costs->pluck('resource_type') !!}
                 },
                 y : {
                     tick: {
