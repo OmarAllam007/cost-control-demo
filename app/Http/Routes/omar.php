@@ -70,7 +70,7 @@ Route::group(['prefix' => 'project'], function () {
 
     Route::get('activity_resource_breakdown/{project}', ['as' => 'activity_resource_breakdown.report', 'uses' => 'ReportController@activityResourceBreakDown']);
 
-    Route::get('qs_summery_report/{project}', ['as' => 'qsReport.report', 'uses' => 'ReportController@qsSummery']);
+    Route::get('qs_summary_report/{project}', ['as' => 'qsReport.report', 'uses' => 'ReportController@qsSummary']);
 
     Route::get('budget_cost_dry_cost/{project}', ['as' => 'budget_cost_dry_cost.report', 'uses' => 'ReportController@budgetCostVSDryCost']);
 

@@ -2,13 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\ActivityDivision;
-use App\Boq;
-use App\Breakdown;
-use App\BreakdownResource;
-use App\BreakDownResourceShadow;
-use App\Http\Controllers\Reports\ActivityResourceBreakDown;
-use App\Http\Controllers\Reports\BoqPriceList;
 use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostByDiscipline;
@@ -17,23 +10,21 @@ use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostDiscipline;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
-use App\Http\Controllers\Reports\Productivity;
 use App\Http\Controllers\Reports\QtyAndCost;
-use App\Http\Controllers\Reports\QuantitiySurveySummery;
-use App\Http\Controllers\Reports\ResourceDictionary;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
+use App\Reports\Budget\ActivityResourceBreakDownReport;
+use App\Reports\Budget\BoqPriceListReport;
 use App\Reports\Budget\BudgetTrendReport;
+use App\Reports\Budget\ManPowerReport;
+use App\Reports\Budget\ProductivityReport;
+use App\Reports\Budget\QsSummaryReport;
+use App\Reports\Budget\ResourceDictReport;
+use App\Reports\Budget\StdActivityReport;
+use App\Reports\Budget\WbsReport;
 use App\Resources;
 use App\ResourceType;
-use App\StdActivity;
-use App\StdActivityResource;
-use App\Unit;
-use App\WbsLevel;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use Illuminate\Support\Facades\Input;
 
 class ReportController extends Controller
 {
@@ -47,102 +38,107 @@ class ReportController extends Controller
 
     public function wbsReport(Project $project)
     {
-        return view('wbs-level.report', compact('project'));
+        $report = new WbsReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+        return view('reports.budget.wbs.index', $data);
     }
 
     public function productivityReport(Project $project)
     {
-        $productivity = new Productivity();
-        return $productivity->getProductivity($project);
+        $report = new ProductivityReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.productivity.index', $data);
     }
 
     public function stdActivityReport(Project $project)
     {
-        set_time_limit(300);
-        $div_ids = $project->getDivisions();
-        $activity_ids = $project->getActivities()->toArray();
+        $report = new StdActivityReport($project);
+        $data = $report->run();
 
-        $all = $div_ids['all'];
-        $parent_ids = $div_ids['parents'];
-        $parents = ActivityDivision::whereIn('id', $parent_ids)->get();
-        return view('std-activity.report', compact('parents', 'all', 'activity_ids', 'project'));
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.std-activity.index', $data);
     }
 
     public function resourceDictionary(Project $project)
     {
-        $resource = new ResourceDictionary();
-        return $resource->getResourceDictionary($project);
+        $report = new ResourceDictReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.resource-dict.index', $data);
+    }
+
+    public function qsSummary(Project $project)
+    {
+        $report = new QsSummaryReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.qs-summary.index', $data);
+    }
+
+    public function boqPriceList(Project $project)
+    {
+        $report = new BoqPriceListReport($project);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.boq_price_list.index', $data);
     }
 
 
     public function manPower(Project $project)
     {
-        set_time_limit(300);
-        $resources = [];
-        $root = '';
-        $total_budget_cost = '';
-        $total_budget_unit = '';
-        $breakdown_resources = \DB::select('SELECT
-  resource_id,
-  resource_name,
-  resource_type,
-  budget_cost,
-  budget_unit,
-  measure_unit
-FROM break_down_resource_shadows
-WHERE project_id=' . $project->id . '
-AND resource_type LIKE \'%lab%\'');
-        foreach ($breakdown_resources as $resource) {
-            $rootName = $resource->resource_type;
-            $root = $rootName;
-            if (!isset($resources[$resource->resource_id])) {
-                $resources[$resource->resource_id] = [
-                    'id' => $resource->resource_id,
-                    'name' => $resource->resource_name,
-                    'type' => $rootName,
-                    'budget_cost' => 0,
-                    'budget_unit' => 0,
-                    'unit' => $resource->measure_unit??'',
-                ];
+        $report = new ManPowerReport($project);
 
-
-                $resources[$resource->resource_id]['budget_cost'] += $resource->budget_cost;
-                $resources[$resource->resource_id]['budget_unit'] += $resource->budget_unit;
-            }
-
+        if (request()->exists('excel')) {
+            return $report->excel();
         }
 
-        foreach ($resources as $resource) {
-            $total_budget_cost += $resource['budget_cost'];
-            $total_budget_unit += $resource['budget_unit'];
+        $data = $report->run();
+        return view('reports.budget.man_power.index', $data);
+    }
+
+
+    public function activityResourceBreakDown(Project $project)
+    {
+        $report = new ActivityResourceBreakDownReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
         }
 
-        return view('resources.manpower_report', compact('project', 'resources', 'root', 'total_budget_cost', 'total_budget_unit'));
+        $data = $report->run();
+
+        return view('reports.budget.activity_resource_breakdown.index', $data);
     }
 
     public function budgetSummery(Project $project)
     {
         $budgetSummery = new BudgetSummeryReport();
         return $budgetSummery->getReport($project);
-    }
-
-    public function activityResourceBreakDown(Project $project)
-    {
-        $activity = new ActivityResourceBreakDown();
-        return $activity->getActivityResourceBreakDown($project);
-    }
-
-    public function boqPriceList(Project $project)
-    {
-        $boq_price_list = new BoqPriceList();
-        return $boq_price_list->getBoqPriceList($project);
-    }
-
-
-    public function qsSummery(Project $project)
-    {
-        $quantity_survey = new QuantitiySurveySummery();
-        return $quantity_survey->qsSummeryReport($project);
     }
 
     public function budgetCostVSDryCost(Project $project)

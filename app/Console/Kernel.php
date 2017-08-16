@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
 //        AddBoqDisciplineToMasterShadow::class,
 //        AddBoqToMasterSahdow::class,
 //        AddBoqAndSurveyToBreakdownShadow::class,
-//        AddBoqAndSurveyToBreakdownShadowProject::class,
+        AddBoqAndSurveyToBreakdownShadowProject::class,
         FixProductivity::class,
         UpdateResourceTypesAndResources::class,
         CreateRevisionsForCurrentProject::class,
