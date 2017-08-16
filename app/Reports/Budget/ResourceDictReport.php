@@ -47,7 +47,7 @@ class ResourceDictReport
             ->get()->keyBy('resource_id');
 
 
-        $this->resources = Resources::orderBy('name')->with('types')
+        $this->resources = Resources::orderBy('name')->with(['types', 'parteners'])
             ->find($this->resources_info->keys()->toArray())
             ->groupBy('resource_type_id');
 
