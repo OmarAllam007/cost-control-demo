@@ -15,6 +15,7 @@ use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
 use App\Reports\Budget\ActivityResourceBreakDownReport;
 use App\Reports\Budget\BoqPriceListReport;
+use App\Reports\Budget\BudgetCostByDisciplineReport;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ManPowerReport;
 use App\Reports\Budget\ProductivityReport;
@@ -155,8 +156,14 @@ class ReportController extends Controller
 
     public function budgetCostDiscipline(Project $project)
     {
-        $budget_breakDown = new  BudgetCostByDiscipline();
-        return $budget_breakDown->compareBudgetCostDiscipline($project);
+        $report = new  BudgetCostByDisciplineReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+        return view('reports.budget.budget_cost_by_discipline.index', $data);
     }
 
     public function budgetCostDryCostDiscipline(Project $project)
