@@ -1,6 +1,6 @@
 @if ($division->subtree->count() || $division->resources->count())
     <tr class="level-{{$depth}} child-{{$division->parent_id}} {{$depth? 'hidden' : ''}} text-strong">
-        <td class="level-label" colspan="6">
+        <td class="level-label" colspan="8">
             <a href="#" class="open-level" data-target="child-{{$division->id}}">
                 <strong><i class="fa fa-plus-square"></i> {{$division->name}}</strong>
             </a>
@@ -21,6 +21,8 @@
             <td>{{$resource->resource_code}}</td>
             <td>{{number_format($resource->rate, 2)}}</td>
             <td>{{$resource->units->type ?? ''}}</td>
+            <td>{{$resource->parteners->name?? ''}}</td>
+            <td>{{$resource->reference ?? ''}}</td>
             <td>{{number_format($resource->waste, 2)}}</td>
             <td>{{number_format($resource->budget_unit, 2)}}</td>
             <td>{{number_format($resource->budget_cost, 2)}}</td>

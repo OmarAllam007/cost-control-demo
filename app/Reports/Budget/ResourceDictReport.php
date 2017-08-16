@@ -47,7 +47,7 @@ class ResourceDictReport
             ->get()->keyBy('resource_id');
 
 
-        $this->resources = Resources::orderBy('name')->with('types')
+        $this->resources = Resources::orderBy('name')->with(['types', 'parteners'])
             ->find($this->resources_info->keys()->toArray())
             ->groupBy('resource_type_id');
 
@@ -99,8 +99,8 @@ class ResourceDictReport
         \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
 
             $writer->sheet('Resource Dictionary', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, ['Resource', 'Code', 'Rate', 'Unit of measure', 'Waste (%)', 'Budget Unit', 'Budget Cost']);
-                $sheet->cells('A1:G1', function(CellWriter $cells) {
+                $sheet->row(1, ['Resource', 'Code', 'Rate', 'Unit of measure', 'Supplier/Subcontractor', 'Reference','Waste (%)', 'Budget Unit', 'Budget Cost']);
+                $sheet->cells('A1:I1', function(CellWriter $cells) {
                     $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
                 });
 
@@ -109,15 +109,20 @@ class ResourceDictReport
                 });
 
                 $sheet->setColumnFormat([
-                    "B2:B{$this->row}" => '#,##0.00',
+                    "B2:B{$this->row}" => '@',
                     "C2:C{$this->row}" => '#,##0.00',
-                    "E2:E{$this->row}" => '#,##0.00',
-                    "F2:F{$this->row}" => '#,##0.00',
                     "G2:G{$this->row}" => '#,##0.00',
+                    "H2:H{$this->row}" => '#,##0.00',
+                    "I2:I{$this->row}" => '#,##0.00',
                 ]);
 
                 $sheet->setAutoFilter();
                 $sheet->freezeFirstRow();
+                $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(80);
+                $sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(20);
+                $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(20);
+                $sheet->setAutoSize(['B', 'C', 'D', 'G', 'H', 'I']);
+                $sheet->setAutoSize(false);
             });
 
             $writer->download('xlsx');
@@ -132,22 +137,23 @@ class ResourceDictReport
         }
 
         $this->row++;
-        $name = (str_repeat(' ', $depth * 6)) . $division->name;
-        $sheet->mergeCells("A{$this->row}:F{$this->row}");
+//        $name = (str_repeat(' ', $depth * 6)) . $division->name;
+        $name = $division->name;
+        $sheet->mergeCells("A{$this->row}:H{$this->row}");
         $sheet->setCellValue("A{$this->row}", $name);
-        $sheet->setCellValue("G{$this->row}", $division->budget_cost ?: 0);
-        $sheet->cells("A{$this->row}:G{$this->row}", function (CellWriter $cells) {
+        $sheet->setCellValue("I{$this->row}", $division->budget_cost ?: 0);
+        $sheet->cells("A{$this->row}:I{$this->row}", function (CellWriter $cells) {
             $cells->setFont(['bold' => true]);
+        });
+
+        $sheet->cells("A{$this->row}", function ($cells) use ($depth) {
+            $cells->setTextIndent($depth * 4);
         });
 
         if ($depth) {
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel($depth < 7 ? $depth : 7)
                 ->setVisible(false)->setCollapsed(true);
-
-            $sheet->cell("A{$this->row}", function () {
-
-            });
         }
 
         ++$depth;
@@ -157,14 +163,20 @@ class ResourceDictReport
         });
 
         $division->resources->each(function ($resource) use ($sheet, $depth) {
-            $name = (str_repeat(' ', $depth * 6)) . $resource->name;
+//            $name = (str_repeat(' ', $depth * 6)) . $resource->name;
+            $name = $resource->name;
             $sheet->row(++$this->row, [
-                $name, $resource->resource_code, $resource->rate, $resource->units->type ?? '', $resource->waste,
-                $resource->budget_unit, $resource->budget_cost
+                $name, $resource->resource_code, $resource->rate, $resource->units->type ?? '',
+                $resource->parteners->name ?? '', $resource->reference,
+                $resource->waste, $resource->budget_unit, $resource->budget_cost
             ]);
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel($depth < 7 ? $depth : 7)
                 ->setVisible(false)->setCollapsed(true);
+
+            $sheet->cells("A{$this->row}", function ($cells) use ($depth) {
+                $cells->setTextIndent($depth * 4);
+            });
         });
 
     }

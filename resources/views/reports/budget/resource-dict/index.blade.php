@@ -8,7 +8,7 @@
 
         @if (!request()->has('print'))
             <div>
-                <a href="?excel" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i> Excel</a>
+                <a href="?excel" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Excel</a>
                 <a href="?print=1&paint=resource-dictionary" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>
                 <a href="{{route('project.show', $project)}}#Reports" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
             </div>
@@ -21,15 +21,17 @@
         <thead>
         <tr class="bg-primary">
             <th class="col-sm-3">Resource</th>
-            <th class="col-sm-2">Code</th>
+            <th class="col-sm-1">Code</th>
             <th class="col-sm-1">Rate</th>
             <th class="col-sm-1">Unit of measure</th>
+            <th class="col-sm-2">Supplier/Subcontractor</th>
+            <th class="col-sm-1">Reference</th>
             <th class="col-sm-1">Waste (%)</th>
-            <th class="col-sm-2">Budget Unit</th>
-            <th class="col-sm-2">Budget Cost</th>
+            <th class="col-sm-1">Budget Unit</th>
+            <th class="col-sm-1">Budget Cost</th>
         </tr>
         <tr class="info">
-            <th colspan="6">Total</th>
+            <th colspan="8">Total</th>
             <th>{{number_format($tree->sum('budget_cost'), 2)}}</th>
         </tr>
         </thead>
