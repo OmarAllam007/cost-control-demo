@@ -74,7 +74,7 @@ Route::group(['prefix' => 'project'], function () {
 
     Route::get('budget_cost_dry_cost/{project}', ['as' => 'budget_cost_dry_cost.report', 'uses' => 'ReportController@budgetCostVSDryCost']);
 
-    Route::get('budget_cost_vs_break_down/{project}', ['as' => 'budget_cost_vs_break_down.report', 'uses' => 'ReportController@budgetCostVSBreadDown']);
+    Route::get('budget_cost_by_resource_type/{project}', ['as' => 'budget_cost_vs_break_down.report', 'uses' => 'ReportController@budgetCostByResourceType']);
 
     Route::get('budget_cost_by_discipline/{project}', ['as' => 'budget_cost_by_discipline.report', 'uses' => 'ReportController@budgetCostDiscipline']);
 
