@@ -93,20 +93,36 @@
             background-color: #ffc;
         }
 
-        .level-0 td {
+        .table-bordered > tbody > tr.level-1 td:first-child,
+        .table-bordered > tbody > tr.level-2 td:first-child,
+        .table-bordered > tbody > tr.level-3 td:first-child {
+            border-left: 1px solid #ddd;
+        }
+
+        .table-bordered > tbody > tr.level-1 td:last-child,
+        .table-bordered > tbody > tr.level-2 td:last-child,
+        .table-bordered > tbody > tr.level-3 td:last-child {
+            border-right: 1px solid #ddd;
+        }
+
+        .table-bordered > tbody > tr.wbs-level td {
             background: #f7f7f7;
+            border: 1px solid #fff;
         }
 
-        .level-1 td {
-            background: #ededed;
+        .table-bordered > tbody > tr.activity-level td {
+            background: hsl(0, 0%, 93%);
+            border: 1px solid #fff;
         }
 
-        .level-2 td {
-            background: #e6e6e6;
+        .table-bordered > tbody > tr.cost-account-level td {
+            background: hsl(0, 0%, 90%);
+            border: 1px solid #fff;
         }
 
-        .level-3 td {
-            background: #dedede;
+        .table-bordered > tbody > tr.resource-level td {
+            background: hsl(0, 0%, 85%);
+            border: 1px solid #fff;
         }
 
         .level-1 .level-label {
@@ -123,6 +139,14 @@
 
         .level-4 .level-label {
             padding-left: 80px;
+        }
+
+        .level-5 .level-label {
+            padding-left: 100px;
+        }
+
+        .level-5 .level-label {
+            padding-left: 110px;
         }
     </style>
 @endsection

@@ -38,9 +38,10 @@ class ActivityResourceBreakDownReport
     {
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
-        $this->boqs = Boq::whereProjectId($this->project->id)->get()->groupBy('wbs_id')->map(function($group) {
-            return $group->keyBy('cost_account');
-        });
+        $this->boqs = Boq::whereProjectId($this->project->id)->get()->keyBy('id');
+//            ->groupBy('wbs_id')->map(function($group) {
+//            return $group->keyBy('cost_account');
+//        });
 
         $this->tree = $this->buildTree();
 
@@ -58,7 +59,7 @@ class ActivityResourceBreakDownReport
         return $tree->map(function ($level) {
             $level->activities = $this->buildActivities($level->id);
 
-            $level->boqs = $this->boqs->get($level->id)?: collect();
+//            $level->boqs = $this->boqs->get($level->id)?: collect();
 
             $level->subtree = $this->buildTree($level->id);
 
@@ -76,7 +77,14 @@ class ActivityResourceBreakDownReport
         return BreakDownResourceShadow::where('project_id', $this->project->id)
             ->where('wbs_id', $wbs_id)
             ->get()->groupBy('activity')->map(function ($group) {
-                return $group->groupBy('cost_account');
+                return $group->groupBy('cost_account')->map(function (Collection $resources) {
+                    $cost_account = collect(['resources' => $resources, 'cost' => $resources->sum('budget_cost')]);
+                    $first = $resources->first();
+                    $boq = $this->boqs->get($first->boq_id);
+                    $cost_account->put('boq', $boq);
+
+                    return $cost_account;
+                });
             });
     }
 
