@@ -25,7 +25,7 @@
 
     <div class="row" style="margin-bottom: 10px;">
         <form action="" class="form-inline col-sm-6 col-md-4" method="get">
-            {{Form::select('period_id', \App\Period::where('project_id',$project->id)->readyForReporting()->pluck('name','id') ,Session::has('period_id'.$project->id) ? Session::get('period_id'.$project->id) : 'Select Period',  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
+            {{Form::select('period', \App\Period::where('project_id',$project->id)->readyForReporting()->pluck('name','id'), Session::get('period_id_'.$project->id),  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
             {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
         </form>
         <br>
