@@ -76,7 +76,6 @@ class WbsLevel extends Model
 
     public function getBudgetCostAttribute()
     {
-
         $children = [];
         $children =$this->getChildrenIds();
         $budget_cost = BreakDownResourceShadow::whereIn('wbs_id', $this->getChildrenIds())->sum('budget_cost');

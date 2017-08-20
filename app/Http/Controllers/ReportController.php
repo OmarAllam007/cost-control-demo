@@ -17,6 +17,7 @@ use App\Reports\Budget\ActivityResourceBreakDownReport;
 use App\Reports\Budget\BoqPriceListReport;
 use App\Reports\Budget\BudgetCostByDisciplineReport;
 use App\Reports\Budget\BudgetCostByResourceTypeReport;
+use App\Reports\Budget\BudgetCostDryCostByBuildingReport;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ManPowerReport;
 use App\Reports\Budget\ProductivityReport;
@@ -162,16 +163,23 @@ class ReportController extends Controller
         return view('reports.budget.budget_cost_by_resource_type.index', $data);
     }
 
+    public function budgetCostVSDryCostByBuilding(Project $project)
+    {
+        $report = new BudgetCostDryCostByBuildingReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.budget_cost_vs_dr_by_building.index', $data);
+    }
+
     public function budgetSummery(Project $project)
     {
         $budgetSummery = new BudgetSummeryReport();
         return $budgetSummery->getReport($project);
-    }
-
-    public function budgetCostVSDryCost(Project $project)
-    {
-        $budget_cost = new BudgetCostDryCostByBuilding();
-        return $budget_cost->compareBudgetCostDryCost($project);
     }
 
     public function budgetCostVSBreadDown(Project $project)
