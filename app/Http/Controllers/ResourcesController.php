@@ -71,25 +71,25 @@ class ResourcesController extends Controller
     {
         if ($project_id = request('project')) {
             $project = Project::find($project_id);
-            if (\Gate::denies('resources', $project)) {
+            if (cannot('resources', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
         }
 
-        if (\Gate::denies('write', 'resources')) {
+        if (cannot('write', 'resources')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
+
         $this->validate($request, $this->rules);
 
-//        if ($request['waste'] <= 1) {
-        $request['waste'] = $request->waste;//updated from Eng.kareem 27/12/2016
-//        } else {
-//            $request['waste'] = ($request->waste / 100);
-//        }
-        $request['project_id'] = $request['project'];
-        $newResource = Resources::create($request->all());
+        $attributes = $request->all();
+        if ($request->has('project')) {
+            $attributes['project_id'] = $request->get('project');
+        }
+
+        $newResource = Resources::create($attributes);
 
         flash('Resource has been saved', 'success');
         if ($newResource->project_id) {

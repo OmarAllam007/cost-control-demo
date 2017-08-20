@@ -37,9 +37,7 @@ class CleanResourceTypes extends Command
     public function __construct()
     {
         parent::__construct();
-        Resources::flushEventListeners();
-        MasterShadow::flushEventListeners();
-        BreakDownResourceShadow::flushEventListeners();
+
 
         $this->cache = collect();
     }
@@ -51,6 +49,10 @@ class CleanResourceTypes extends Command
      */
     public function handle()
     {
+        Resources::flushEventListeners();
+        MasterShadow::flushEventListeners();
+        BreakDownResourceShadow::flushEventListeners();
+
         $this->cleanTypeName();
         $this->cleanResourceName();
 

@@ -17,6 +17,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'password' => bcrypt(str_random(10)),
         'remember_token' => str_random(10),
+        'is_admin' => false,
     ];
 });
 
@@ -24,7 +25,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Project::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->text(50),
-        'project_code' => $faker->slug(1)
+        'project_code' => $faker->slug(1),
+        'owner_id' => function() {
+            return factory('App\User')->create()->id;
+        },
+        'cost_owner_id' => function() {
+            return factory('App\User')->create()->id;
+        },
     ];
 });
 

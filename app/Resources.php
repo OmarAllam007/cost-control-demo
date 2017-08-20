@@ -9,6 +9,7 @@ use App\Behaviors\Overridable;
 use App\Behaviors\RecordsUser;
 use App\Behaviors\Tree;
 use App\Formatters\BreakdownResourceFormatter;
+use App\Observers\ResourcesObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
