@@ -90,10 +90,11 @@ class BudgetCostDryCostByBuildingReport
     {
         $this->run();
 
-        \Excel::create(($this->project->name) . '-budget_cost_vs_dry_by_building', function(LaravelExcelWriter $writer) {
+        \Excel::create(slug($this->project->name) . '-budget_cost_vs_dry_by_building', function(LaravelExcelWriter $writer) {
             $writer->sheet('BudgetCostVSDryCostBuilding', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
             });
+
             $writer->download('xlsx');
         });
     }
@@ -118,13 +119,10 @@ class BudgetCostDryCostByBuildingReport
         ]);
 
         $varCondition = new \PHPExcel_Style_Conditional();
-        $varCondition->setConditionType(\PHPExcel_Style_Conditional::CONDITION_CELLIS);
-        $varCondition->setOperatorType(\PHPExcel_Style_Conditional::OPERATOR_LESSTHAN);
-        $varCondition->addCondition(0);
-        $varCondition->getStyle()->getFont()->getColor()->setARGB(\PHPExcel_Style_Color::COLOR_RED);
-        $sheet->getStyle("D2:D{$this->row}")->setConditionalStyles([$varCondition]);
-        $sheet->getStyle("E2:E{$this->row}")->setConditionalStyles([$varCondition]);
-
+        $varCondition->setConditionType(\PHPExcel_Style_Conditional::CONDITION_CELLIS)
+            ->setOperatorType(\PHPExcel_Style_Conditional::OPERATOR_LESSTHAN)->addCondition(0)
+            ->getStyle()->getFont()->getColor()->setARGB(\PHPExcel_Style_Color::COLOR_RED);
+        $sheet->getStyle("D2:E{$this->row}")->setConditionalStyles([$varCondition]);
 
         $sheet->freezeFirstRow();
         $sheet->setAutoFilter();
