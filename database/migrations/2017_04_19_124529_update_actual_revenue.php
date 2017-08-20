@@ -12,9 +12,9 @@ class UpdateActualRevenue extends Migration
      */
     public function up()
     {
-        Schema::table('actual_revenue', function (Blueprint $table) {
-            $table->unsignedInteger('boq_id');
-        });
+//        Schema::table('actual_revenue', function (Blueprint $table) {
+//            $table->unsignedInteger('boq_id');
+//        });
     }
 
     /**
@@ -24,8 +24,8 @@ class UpdateActualRevenue extends Migration
      */
     public function down()
     {
-        Schema::table('actual_revenue', function (Blueprint $table) {
-            $table->dropColumn('boq_id');
-        });
+//        Schema::table('actual_revenue', function (Blueprint $table) {
+//            $table->dropColumn('boq_id');
+//        });
     }
 }

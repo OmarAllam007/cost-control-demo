@@ -40,6 +40,15 @@ class CreateBreakDownResourceShadowsTable extends Migration
             $table->double('productivity_output',12,2)->nullable();
             $table->string('productivity_ref')->nullable();
             $table->string('remarks')->nullable();
+            $table->integer('productivity_id')->unsigned();
+            $table->integer('unit_id')->unsigned();
+            $table->integer('template_id')->unsigned();
+            $table->double('progress',12,2)->nullable();
+            $table->string('status')->nullable();
+            $table->unsignedInteger('boq_id');
+            $table->unsignedInteger('survey_id');
+            $table->unsignedInteger('boq_wbs_id');
+            $table->unsignedInteger('survey_wbs_id');
             $table->timestamps();
 
         });

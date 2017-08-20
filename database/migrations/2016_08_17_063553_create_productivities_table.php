@@ -21,6 +21,8 @@ class CreateProductivitiesTable extends Migration
             $table->double('reduction_factor',12,2);
             $table->double('after_reduction',12,2);
             $table->string('source',12,2)->nullable();
+            $table->integer('project_id')->nullable()->unsigned();
+            $table->integer('productivity_id')->nullable()->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });

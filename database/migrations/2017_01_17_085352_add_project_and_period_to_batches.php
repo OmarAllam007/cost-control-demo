@@ -12,10 +12,10 @@ class AddProjectAndPeriodToBatches extends Migration
      */
     public function up()
     {
-        Schema::table('actual_batches', function (Blueprint $table) {
+        /*Schema::table('actual_batches', function (Blueprint $table) {
             $table->integer('project_id')->unsigned();
             $table->integer('period_id')->unsigned();
-        });
+        });*/
     }
 
     /**
@@ -25,9 +25,9 @@ class AddProjectAndPeriodToBatches extends Migration
      */
     public function down()
     {
-        Schema::table('actual_batches', function (Blueprint $table) {
+        /*Schema::table('actual_batches', function (Blueprint $table) {
             $table->dropColumn('project_id');
             $table->dropColumn('period_id');
-        });
+        });*/
     }
 }

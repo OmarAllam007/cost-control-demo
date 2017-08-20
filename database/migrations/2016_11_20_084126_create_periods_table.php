@@ -20,6 +20,7 @@ class CreatePeriodsTable extends Migration
             $table->string('end_date')->nullable();
             $table->boolean('is_open')->nullable();
             $table->datetime('closed_at')->nullable();
+            $table->tinyInteger('status')->default(0)->nunllable();
             $table->timestamps();
         });
     }

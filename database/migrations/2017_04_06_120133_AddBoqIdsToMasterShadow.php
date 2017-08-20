@@ -12,10 +12,10 @@ class AddBoqIdsToMasterShadow extends Migration
      */
     public function up()
     {
-        Schema::table('master_shadows', function (Blueprint $table) {
+        /*Schema::table('master_shadows', function (Blueprint $table) {
             $table->unsignedInteger('boq_id');
             $table->unsignedInteger('boq_wbs_id');
-        });
+        });*/
     }
 
     /**
@@ -25,9 +25,9 @@ class AddBoqIdsToMasterShadow extends Migration
      */
     public function down()
     {
-        Schema::table('master_shadows', function (Blueprint $table) {
+        /*Schema::table('master_shadows', function (Blueprint $table) {
             $table->dropColumn('boq_id');
             $table->dropColumn('boq_wbs_id');
-        });
+        });*/
     }
 }

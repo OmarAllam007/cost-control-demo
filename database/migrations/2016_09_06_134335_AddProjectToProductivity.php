@@ -12,10 +12,10 @@ class AddProjectToProductivity extends Migration
      */
     public function up()
     {
-        Schema::table('productivities', function (Blueprint $table) {
+        /*Schema::table('productivities', function (Blueprint $table) {
             $table->integer('project_id')->nullable()->unsigned();
             $table->integer('productivity_id')->nullable()->unsigned();
-        });
+        });*/
     }
 
     /**
@@ -25,9 +25,9 @@ class AddProjectToProductivity extends Migration
      */
     public function down()
     {
-        Schema::table('productivities', function (Blueprint $table) {
+        /*Schema::table('productivities', function (Blueprint $table) {
             $table->dropColumn('project_id');
             $table->dropColumn('productivity_id');
-        });
+        });*/
     }
 }

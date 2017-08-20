@@ -25,6 +25,15 @@ class CreateProjectUsersTable extends Migration
             $table->boolean('reports');
             $table->boolean('cost_control');
             $table->boolean('actual_resources');
+            $table->boolean('boq');
+            $table->boolean('qty_survey');
+            $table->boolean('activity_mapping')->nullable();
+            $table->boolean('resource_mapping')->nullable();
+            $table->boolean('periods')->nullable();
+            $table->boolean('remaining_unit_price')->nullable();
+            $table->boolean('remaining_unit_qty')->nullable();
+            $table->boolean('manual_edit')->nullable();
+            $table->boolean('delete_resources')->nullable();
             $table->timestamps();
         });
     }

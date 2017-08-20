@@ -12,7 +12,7 @@ class UpdateProjectTable extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        /*Schema::table('projects', function (Blueprint $table) {
             $table->date('original_finished_date');
             $table->date('expected_finished_date');
             $table->text('project_contract_signed_value',15,2)->nullable();
@@ -21,7 +21,7 @@ class UpdateProjectTable extends Migration
             $table->text('direct_cost_material',15,2)->nullable();
             $table->text('indirect_cost_general',15,2)->nullable();
             $table->text('total_budget_cost',15,2)->nullable();
-        });
+        });*/
     }
 
     /**
@@ -31,7 +31,7 @@ class UpdateProjectTable extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        /*Schema::table('projects', function (Blueprint $table) {
             $table->dropColumn('original_finished_date');
             $table->dropColumn('expected_finished_date');
             $table->dropColumn('project_contract_signed_value');
@@ -40,6 +40,6 @@ class UpdateProjectTable extends Migration
             $table->dropColumn('direct_cost_material');
             $table->dropColumn('indirect_cost_general');
             $table->dropColumn('total_budget_cost');
-        });
+        });*/
     }
 }

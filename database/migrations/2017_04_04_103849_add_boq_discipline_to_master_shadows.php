@@ -7,16 +7,16 @@ class AddBoqDisciplineToMasterShadows extends Migration
 {
     public function up()
     {
-        Schema::table('master_shadows', function (Blueprint $table) {
+        /*Schema::table('master_shadows', function (Blueprint $table) {
             $table->string('boq_discipline')->nullable();
-        });
+        });*/
     }
 
 
     public function down()
     {
-        Schema::table('master_shadows', function (Blueprint $table) {
+        /*Schema::table('master_shadows', function (Blueprint $table) {
             $table->dropColumn('boq_discipline');
-        });
+        });*/
     }
 }

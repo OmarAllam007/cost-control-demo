@@ -7,15 +7,15 @@ class AddProgressToBudgetShadow extends Migration
 {
     public function up()
     {
-        Schema::table('break_down_resource_shadows', function (Blueprint $table){
+        /*Schema::table('break_down_resource_shadows', function (Blueprint $table){
             $table->double('progress',12,2)->nullable();
-        });
+        });*/
     }
 
     public function down()
     {
-        Schema::table('break_down_resource_shadows', function (Blueprint $table){
+        /*Schema::table('break_down_resource_shadows', function (Blueprint $table){
             $table->dropColumn('progress');
-        });
+        });*/
     }
 }

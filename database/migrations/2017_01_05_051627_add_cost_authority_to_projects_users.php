@@ -7,7 +7,7 @@ class AddCostAuthorityToProjectsUsers extends Migration
 {
     public function up()
     {
-        Schema::table('project_users', function (Blueprint $table) {
+        /*Schema::table('project_users', function (Blueprint $table) {
             $table->boolean('activity_mapping')->nullable();
             $table->boolean('resource_mapping')->nullable();
             $table->boolean('periods')->nullable();
@@ -15,12 +15,12 @@ class AddCostAuthorityToProjectsUsers extends Migration
             $table->boolean('remaining_unit_qty')->nullable();
             $table->boolean('manual_edit')->nullable();
             $table->boolean('delete_resources')->nullable();
-        });
+        });*/
     }
 
     public function down()
     {
-        Schema::table('project_users', function (Blueprint $table) {
+        /*Schema::table('project_users', function (Blueprint $table) {
             $table->dropColumn('activity_mapping');
             $table->dropColumn('resource_mapping');
             $table->dropColumn('periods');
@@ -28,6 +28,6 @@ class AddCostAuthorityToProjectsUsers extends Migration
             $table->dropColumn('remaining_unit_qty');
             $table->dropColumn('manual_edit');
             $table->dropColumn('delete_resources');
-        });
+        });*/
     }
 }

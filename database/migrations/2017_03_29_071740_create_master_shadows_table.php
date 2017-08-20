@@ -79,6 +79,9 @@ class CreateMasterShadowsTable extends Migration
             $table->double('cost_variance_completion_due_unit_price', 18, 6);
             $table->double('cost_variance_completion_due_qty', 18, 6);
             $table->double('cost_variance_to_date_due_qty', 18, 6);
+            $table->unsignedInteger('boq_id');
+            $table->unsignedInteger('boq_wbs_id');
+            $table->string('boq_discipline')->nullable();
             $table->timestamps();
         });
     }
