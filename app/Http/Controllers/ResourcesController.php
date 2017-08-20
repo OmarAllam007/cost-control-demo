@@ -29,7 +29,10 @@ use Illuminate\Routing\Route;
 
 class ResourcesController extends Controller
 {
-    protected $rules = ['name' => 'required', 'resource_code' => 'unique:resources'];
+    protected $rules = [
+        'name' => 'required', 'resource_code' => 'unique:resources',
+        'resource_type_id' => 'no_resource_on_parent', 'unit' => 'required'
+    ];
 
     public function index()
     {
@@ -139,7 +142,7 @@ class ResourcesController extends Controller
             return \Redirect::to('/');
         }
 
-//        $this->validate($request, $this->rules);
+        $this->validate($request, $this->rules);
 //        if ($request['waste'] <= 1) {
         $request['waste'] = $request->waste;
 //        } else {

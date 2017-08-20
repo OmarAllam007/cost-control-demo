@@ -13,7 +13,7 @@ class ResourceTypeController extends Controller
 {
 
 
-    protected $rules = [];
+    protected $rules = ['code' => 'required', 'name' => 'required', 'parent_id' => 'required|no_children_on_leaf'];
 
     public function index()
     {
