@@ -14,6 +14,9 @@ use App\BreakDownResourceShadow;
 use App\Project;
 use App\WbsLevel;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 class BudgetCostDryCostByBuildingReport
@@ -35,6 +38,9 @@ class BudgetCostDryCostByBuildingReport
 
     /** @var Collection */
     protected $boqs;
+
+    /** @var int */
+    protected $row = 1;
 
     public function __construct(Project $project)
     {
@@ -82,7 +88,77 @@ class BudgetCostDryCostByBuildingReport
 
     function excel()
     {
+        $this->run();
 
+        \Excel::create(($this->project->name) . '-budget_cost_vs_dry_by_building', function(LaravelExcelWriter $writer) {
+            $writer->sheet('BudgetCostVSDryCostBuilding', function (LaravelExcelWorksheet $sheet) {
+                $this->sheet($sheet);
+            });
+            $writer->download('xlsx');
+        });
+    }
+
+    function sheet(LaravelExcelWorksheet $sheet)
+    {
+        $sheet->row(1, ['WBS Level', 'Budget Cost', 'Dry Cost', 'Difference', 'Increase']);
+
+        $sheet->cells("A1:E1", function(CellWriter $cells) {
+            $cells->setFont(['bold' => true])->setBackground('#5182bb')->setFontColor('#ffffff');
+        });
+
+        $this->tree->each(function($level) use ($sheet) {
+            $this->buildExcelTree($sheet, $level);
+        });
+
+        $sheet->setColumnFormat([
+            "B2:B{$this->row}" => '#,##0.00',
+            "C2:C{$this->row}" => '#,##0.00',
+            "D2:D{$this->row}" => '#,##0.00_-',
+            "E2:E{$this->row}" => '0.00%',
+        ]);
+
+        $varCondition = new \PHPExcel_Style_Conditional();
+        $varCondition->setConditionType(\PHPExcel_Style_Conditional::CONDITION_CELLIS);
+        $varCondition->setOperatorType(\PHPExcel_Style_Conditional::OPERATOR_LESSTHAN);
+        $varCondition->addCondition(0);
+        $varCondition->getStyle()->getFont()->getColor()->setARGB(\PHPExcel_Style_Color::COLOR_RED);
+        $sheet->getStyle("D2:D{$this->row}")->setConditionalStyles([$varCondition]);
+        $sheet->getStyle("E2:E{$this->row}")->setConditionalStyles([$varCondition]);
+
+
+        $sheet->freezeFirstRow();
+        $sheet->setAutoFilter();
+
+        return $sheet;
+    }
+
+    protected function buildExcelTree(LaravelExcelWorksheet $sheet, $level, $depth = 0)
+    {
+        ++$this->row;
+
+        $sheet->row($this->row, [
+            $level->name, $level->cost, $level->dry_cost, $level->difference, $level->increase / 100
+        ]);
+
+        if ($depth) {
+            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+                $cells->setTextIndent($depth * 4);
+            });
+
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel($depth < 8 ? $depth : 8)
+                ->setVisible(false)->setCollapsed(true);
+        }
+
+        if ($level->subtree->count()) {
+            $sheet->cells("A{$this->row}:E{$this->row}", function(CellWriter $cells) use ($depth) {
+                $cells->setFont(['bold' => true]);
+            });
+
+            $level->subtree->each(function($sub_level) use ($sheet, $depth) {
+                $this->buildExcelTree($sheet, $sub_level, $depth + 1);
+            });
+        }
     }
 
 }
