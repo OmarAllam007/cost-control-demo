@@ -17,8 +17,8 @@ class ResourcesComposer
 {
     function compose(View $view)
     {
-        $resourcesTree = (new ResourcesCache())->cacheResources(false);
-//        $resourcesTree = dispatch(new CacheResourcesTree());
+//        $resourcesTree = (new ResourcesCache())->cacheResources(false);
+        $resourcesTree = dispatch(new CacheResourcesTree());
         $view->with(compact('resourcesTree'));
     }
 }

@@ -102,8 +102,8 @@ return [
     'no_children_on_leaf' => 'Cannot add resource type on a type with resources',
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'code' => [
+            'required_if' => 'Code is required when adding root type',
         ],
     ],
 

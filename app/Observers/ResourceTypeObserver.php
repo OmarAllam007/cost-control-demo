@@ -23,7 +23,7 @@ class ResourceTypeObserver
 
     function saved()
     {
-        \Cache::forget('resources-tree');
+
         dispatch(new CacheResourcesTree());
     }
 

@@ -65,7 +65,7 @@
         <button class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
     </div>
 
-    @include('std-activity._modal', ['value' => $activity_id])
+{{--    @include('std-activity._modal', ['value' => $activity_id])--}}
     @include('std-activity-resource._resources_modal')
     @include('wbs-level._modal', ['value' => $wbs_id, 'input' => 'wbs_level_id', 'project_id' => $breakdown_resource->breakdown->project_id])
 
