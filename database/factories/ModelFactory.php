@@ -137,7 +137,7 @@ $factory->define(App\Survey::class, function (Faker\Generator $faker) {
 $factory->define(App\Resources::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->text(50),
-        'resource_code' => $faker->slug(1),
+//        'resource_code' => $faker->slug(1),
         'resource_type_id' => function() {
             return factory(App\ResourceType::class)->create()->id;
         },

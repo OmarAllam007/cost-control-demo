@@ -30,8 +30,7 @@ use Illuminate\Routing\Route;
 class ResourcesController extends Controller
 {
     protected $rules = [
-        'name' => 'required', 'resource_code' => 'unique:resources',
-        'resource_type_id' => 'no_resource_on_parent', 'unit' => 'required'
+        'name' => 'required', 'resource_type_id' => 'required|no_resource_on_parent', 'unit' => 'required'
     ];
 
     public function index()
@@ -143,15 +142,10 @@ class ResourcesController extends Controller
         }
 
         $this->validate($request, $this->rules);
-//        if ($request['waste'] <= 1) {
         $request['waste'] = $request->waste;
-//        } else {
-//            $request['waste'] = ($request->waste / 100);
-//        }
 
-        $resources->update($request->all());
+        $resources->update($request->except('resource_code'));
         $resources->syncCodes($request->get('codes'));
-
 
         flash('Resource has been saved', 'success');
         if ($resources->project_id) {

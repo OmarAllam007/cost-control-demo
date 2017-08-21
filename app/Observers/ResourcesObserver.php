@@ -62,9 +62,6 @@ class ResourcesObserver
             return implode('.', $tokens);
         }
 
-        if (!$resource->types) {
-            dd($resource);
-        }
         return $resource->types->code . '.001';
     }
 
