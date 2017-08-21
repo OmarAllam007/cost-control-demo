@@ -35,6 +35,11 @@ class WbsLevel extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function boqs()
+    {
+        return $this->belongsTo(Boq::class);
+    }
+
     public function scopeForProject(Builder $query, $project_id)
     {
         $query->where('project_id', $project_id);
@@ -71,7 +76,6 @@ class WbsLevel extends Model
 
     public function getBudgetCostAttribute()
     {
-
         $children = [];
         $children =$this->getChildrenIds();
         $budget_cost = BreakDownResourceShadow::whereIn('wbs_id', $this->getChildrenIds())->sum('budget_cost');
