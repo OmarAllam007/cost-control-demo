@@ -3,64 +3,51 @@
     <div class="col-sm-8">
         <div class="form-group {{$errors->first('resource_type_id', 'has-error')}}">
             {{ Form::label('resource_type', 'Resource type', ['class' => 'control-label']) }}
-            {{--{{  Form::select('resource_type_id',$resource_types,null, ['class' => 'form-control']) }}--}}
-            <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
-                <div class="hidden">
-                    {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
-                </div>
-                <p>
-                    <a href="#LevelsModal" data-toggle="modal" class="tree-open">
-                        @if ($type_id = Form::getValueAttribute('resource_type_id'))
-                            @if ($type = App\ResourceType::with('parent')->find($type_id))
-                                {{$type->path ?? ''}}
-                            @else
-                                Select Type
-                            @endif
-                        @else
-                            Select Type
-                        @endif
-                    </a>
-                    <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span
-                                class="fa fa-times"></span></a>
-                </p>
-                {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
-            </div>
+            {{ Form::hidden('resource_type_id') }}
+            @php
+                $type_id = Form::getValueAttribute('resource_type_id');
+                $type = App\ResourceType::with('parent')->find($type_id);
+            @endphp
 
+            @if ($resources->project_id)
+                <input class="form-control" disabled value="{{$type->path ?? 'Type not found'}}">
+            @else
+                <div class="btn-group btn-group-sm btn-group-block">
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open btn btn-default btn-sm flex text-right">{{$type->path ?? 'Select Type'}}</a>
+                    <a class="remove-tree-input btn btn-warning btn-sm" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times-circle"></span></a>
+                </div>
+                <div class="clearfix"></div>
+            @endif
+            {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
+            {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
+            {{ Form::text('resource_code',old('resource_code', $resources->resource_code), ['class' => 'form-control', 'readonly'=> !empty($edit)]) }}
 
-            @if(!empty($edit))
-                {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-                {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
-            @elseif(!empty($override))
-                {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-                {{ Form::text('resource_code',$resources->code, ['class' => 'form-control','readonly'=>'readonly']) }}
-            @endif
             {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
-
         </div>
 
         <div class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             @if(!empty($override))
-                {{ Form::text('name', $resources->name, ['class' => 'form-control']) }}
+                {{ Form::text('name', $resources->name, ['class' => 'form-control', 'readonly' => $resources->project_id]) }}
             @else
                 {{ Form::text('name', null, ['class' => 'form-control']) }}
                 {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
             @endif
         </div>
 
+        <div class="form-group {{$errors->first('unit', 'has-error')}}">
+            {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
+            {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control', 'disabled' => $resources->project_id]) }}
+            {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('rate', 'has-error')}}">
             {{ Form::label('rate', 'Rate', ['class' => 'control-label']) }}
             {{ Form::number('rate', null, ['class' => 'form-control','step'=>'any']) }}
             {!! $errors->first('rate', '<div class="help-block">:message</div>') !!}
-        </div>
-
-        <div class="form-group {{$errors->first('unit', 'has-error')}}">
-            {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
-            {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control']) }}
-            {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('waste', 'has-error')}}">
