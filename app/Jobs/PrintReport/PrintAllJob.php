@@ -8,7 +8,7 @@ use App\Http\Controllers\Reports\BoqPriceList;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
-use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
+use App\Http\Controllers\Reports\BudgetCostDryCostByDisciplineReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
 use App\Http\Controllers\Reports\Productivity;
 use App\Http\Controllers\Reports\QtyAndCost;
@@ -81,7 +81,7 @@ class PrintAllJob extends Job
         $budgetCostDryCostByBuilding = new BudgetCostDryCostByBuilding();
         $budgetCostDryCostByBuildingHtml = $budgetCostDryCostByBuilding->compareBudgetCostDryCost($this->project)->render();
 
-        $budgetCostDryCostByDiscipline = new BudgetCostDryCostByDiscipline();
+        $budgetCostDryCostByDiscipline = new BudgetCostDryCostByDisciplineReport();
         $budgetCostDryCostByDisciplineHtml = $budgetCostDryCostByDiscipline->compareBudgetCostDryCostDiscipline($this->project)->render();
 
         $budgetCostVsDry = new QtyAndCost();

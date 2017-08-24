@@ -5,12 +5,16 @@
 @endif
 
 @section('header')
-    <h2 class="flex">Budget Cost By VS Dry Cost By Discipline</h2>
+    <div class="display-flex">
+        <h2 class="flex">Budget Cost By VS Dry Cost By Discipline</h2>
 
-    <div class="btn-toolbar">
-        <a href="?excel" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-excel"></i> Excel</a>
-        <a href="?print=1&paint=cost-dry-discipline" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
-        <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i> Back</a>
+        @if (!request('print'))
+        <div class="btn-toolbar">
+            <a href="?excel" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i> Excel</a>
+            <a href="?print=1&paint=cost-dry-discipline" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
+            <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i> Back</a>
+        </div>
+        @endif
     </div>
 @endsection
 
@@ -36,7 +40,7 @@
                 <td class="col-xs-2">{{number_format($cost->dry_cost, 2) }}</td>
                 <td class="col-xs-2">{{number_format($cost->budget_cost ?: 0, 2)}}</td>
                 <td class="col-xs-2">{{number_format($cost->difference, 2)}}</td>
-                <td class="col-xs-2 {{$cost->increase < 0? 'text-danger' : 'text-success'}}">{{number_format($cost->increase, 2)}} %</td>
+                <td class="col-xs-2 {{$cost->increase < 0? 'text-danger' : 'text-success'}}">{{number_format($cost->increase, 2)}}%</td>
             </tr>
         @endforeach
         </tbody>
@@ -72,7 +76,9 @@
 @section('css')
     <link rel="stylesheet" href="/css/c3.min.css">
     <style>
-        .chart { min-height: 300px; }
+        .chart {
+            min-height: 300px;
+        }
     </style>
 @endsection
 
@@ -92,7 +98,7 @@
             },
             axis: {
                 x: {type: 'category', categories: {!! $disciplines->pluck('type') !!}},
-                y : {tick: {format: d3.format(",.2f")}}
+                y: {tick: {format: d3.format(",.2f")}}
             },
             grid: {x: {show: true}, y: {show: true}}
         });
@@ -104,9 +110,9 @@
             },
             axis: {
                 x: {type: 'category', categories: {!! $disciplines->pluck('type') !!}},
-                y : {tick: {format: d3.format(",.2f")}}
+                y: {tick: {format: d3.format(",.2f")}}
             },
-            grid: {x: {show: true}, y: {show: true} },
+            grid: {x: {show: true}, y: {show: true}},
             bar: {width: {ratio: 0.25}}
         });
     </script>

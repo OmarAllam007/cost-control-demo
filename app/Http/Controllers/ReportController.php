@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
-use App\Http\Controllers\Reports\BudgetCostByDiscipline;
-use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
-use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
-use App\Http\Controllers\Reports\BudgetCostDryCostDiscipline;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
 use App\Http\Controllers\Reports\QtyAndCost;
@@ -18,6 +14,7 @@ use App\Reports\Budget\BoqPriceListReport;
 use App\Reports\Budget\BudgetCostByDisciplineReport;
 use App\Reports\Budget\BudgetCostByResourceTypeReport;
 use App\Reports\Budget\BudgetCostDryCostByBuildingReport;
+use App\Reports\Budget\BudgetCostDryCostByDisciplineReport;
 use App\Reports\Budget\BudgetTrendReport;
 use App\Reports\Budget\ManPowerReport;
 use App\Reports\Budget\ProductivityReport;
@@ -178,7 +175,7 @@ class ReportController extends Controller
 
     public function budgetCostDryCostDiscipline(Project $project)
     {
-        $report = new BudgetCostDryCostByDiscipline($project);
+        $report = new BudgetCostDryCostByDisciplineReport($project);
 
         if (request()->exists('excel')) {
             return $report->excel();
