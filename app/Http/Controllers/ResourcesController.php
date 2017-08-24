@@ -30,8 +30,8 @@ use Illuminate\Routing\Route;
 class ResourcesController extends Controller
 {
     protected $rules = [
-        'name' => 'required', 'resource_type_id' => 'required|no_resource_on_parent', 'unit' => 'required',
-        'rate' => 'required|gt:0', 'waste' => 'gt:0|lt:100'
+        'name' => 'required|unique_name', 'resource_type_id' => 'required|no_resource_on_parent', 'unit' => 'required',
+        'rate' => 'required|gte:0', 'waste' => 'gte:0|lt:100'
     ];
 
     public function index()
@@ -219,18 +219,30 @@ class ResourcesController extends Controller
 
         $status = $this->dispatch(new ResourcesImportJob($file->path(), $project));
 
-        if ($status['failed']->count()) {
-            $key = 'res_' . time();
+        if ($status['units']->count()) {
+            $key = 'res_units_' . time();
             \Cache::add($key, $status, 180);
 
             flash('Could not import some resources', 'warning');
             return redirect()->route('resources.fix-import', $key);
         }
-        if (count($status['dublicated'])) {
-            flash(nl2br("<strong>{$status['success']} Resources have been imported\n\nThe following items already exists</strong>\n" . implode("\n", $status['dublicated'])), 'info');
-        } else {
-            flash($status['success'] . ' Resources have been imported', 'success');
+
+        if ($status['failed']) {
+            return view('resources.import-failed', compact('status'));
         }
+
+//        if ($status['failed']->count()) {
+//            $key = 'res_' . time();
+//            \Cache::add($key, $status, 180);
+//
+//            flash('Could not import some resources', 'warning');
+//            return redirect()->route('resources.fix-import', $key);
+//        }
+//        if (count($status['dublicated'])) {
+//            flash(nl2br("<strong>{$status['success']} Resources have been imported\n\nThe following items already exists</strong>\n" . implode("\n", $status['dublicated'])), 'info');
+//        } else {
+//            flash($status['success'] . ' Resources have been imported', 'success');
+//        }
 
         if ($project) {
             return redirect()->route('project.budget', $project);
@@ -258,7 +270,7 @@ class ResourcesController extends Controller
         }
 
 
-        $items = $status['failed'];
+        $items = $status['units'];
 
         return view('resources.fix-import', compact('items', 'key'));
     }
@@ -290,7 +302,7 @@ class ResourcesController extends Controller
             $units = $data['units'];
 
             Resources::flushEventListeners();
-            foreach ($status['failed'] as $item) {
+            foreach ($status['units'] as $item) {
                 if (isset($units[$item['orig_unit']])) {
                     $item['unit'] = $units[$item['orig_unit']];
                     Resources::create($item);
@@ -301,6 +313,10 @@ class ResourcesController extends Controller
             }
 
             $this->dispatch(new CacheResourcesTree());
+
+            if ($status['failed']) {
+                return view('resources.import-failed', compact('status'));
+            }
 
             flash($status['success'] . ' Resources have been imported', 'success');
             return \Redirect::route('resources.index');
