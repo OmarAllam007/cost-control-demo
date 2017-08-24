@@ -50,6 +50,14 @@ class BudgetCostDryCostByDiscipline
                 return trim(strtolower($row->type));
             });
 
+        $disciplines = $budgetData->map(function ($cost, $type) use ($boqData) {
+            $cost->dry_cost = $boqData[$type]->dry_cost ?? 0;
+            $cost->difference = $cost->budget_cost - $cost->dry_cost;
+            $cost->increase = $cost->dry_cost ? ($cost->difference * 100 / $cost->dry_cost) : 0;
+
+            return $cost;
+        });
+
         /*$budgetData->keys()->each(function($discipline) use ($boqData, $project) {
 
             $dry = Boq::whereIn('id', function($query) use ($project, $discipline) {
@@ -64,7 +72,7 @@ class BudgetCostDryCostByDiscipline
             $boqData->put($discipline, $dry);
         });*/
 
-        return view('reports.budget_cost_dry_cost_by_discipline', compact('budgetData', 'boqData', 'project'));
+        return compact('project', 'disciplines');
     }
 
 

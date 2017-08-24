@@ -176,6 +176,19 @@ class ReportController extends Controller
         return view('reports.budget.budget_cost_vs_dr_by_building.index', $data);
     }
 
+    public function budgetCostDryCostDiscipline(Project $project)
+    {
+        $report = new BudgetCostDryCostByDiscipline($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.budget_cost_dry_cost_by_discipline.index', $data);
+    }
+
     public function budgetSummery(Project $project)
     {
         $budgetSummery = new BudgetSummeryReport();
@@ -188,11 +201,7 @@ class ReportController extends Controller
         return $budget_breakDown->compareBudgetCostByBreakDownItem($project);
     }
 
-    public function budgetCostDryCostDiscipline(Project $project)
-    {
-        $budget_cost = new BudgetCostDryCostByDiscipline($project);
-        return $budget_cost->run();
-    }
+
 
     public function budgetCostForBuilding(Project $project)
     {
