@@ -11,8 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CacheWBSTree extends Job
 {
-    use InteractsWithQueue, SerializesModels;
-
     /**
      * @var Project
      */
@@ -27,24 +25,18 @@ class CacheWBSTree extends Job
     public function handle()
     {
 
-        $wbs_levels = WbsLevel::where('project_id', $this->project->id)->tree()->get();
-        $tree = [];
-        foreach ($wbs_levels as $wbs_level) {
-            $levelTree = $this->buildTree($wbs_level);
-            $tree[] = $levelTree;
-        }
-        return $tree;
+        $this->wbs_levels = WbsLevel::where('project_id', $this->project->id)->get();
+
+
+        return $this->wbs_levels->where('parent_id', 0)->map([$this, 'buildTree'])->values()->toArray();
+
     }
 
-    protected function buildTree(WbsLevel $wbs_level)
+    public function buildTree(WbsLevel $wbs_level)
     {
-        $tree = ['id'=>$wbs_level->id,'name'=>$wbs_level->name,'code'=>$wbs_level->code,'children'=>[]];
-        if($wbs_level->children()->count())
-        {
-            $tree['children'] = $wbs_level->children->map(function(WbsLevel $childLevel){
-                return $this->buildTree($childLevel);
-            });
-        }
+        $tree = ['id'=>$wbs_level->id,'name'=>$wbs_level->name,'code'=>$wbs_level->code];
+
+        $tree['children'] = $this->wbs_levels->where('parent_id', $wbs_level->id)->map([$this, 'buildTree'])->values()->toArray();
 
         return $tree;
     }

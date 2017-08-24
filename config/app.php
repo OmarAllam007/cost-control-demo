@@ -160,7 +160,7 @@ $config = [
         Make\MakeServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
-
+        \Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -220,6 +220,7 @@ $config = [
         'Form' => \Collective\Html\FormFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Lava' => \Khill\Lavacharts\Laravel\LavachartsFacade::class,
+        'Excel' => \Maatwebsite\Excel\Facades\Excel::class,
     ],
 
     'discipline' => ['' => 'Select Discipline', 'GENERAL' => 'General', 'CIVIL' => 'Civil',
