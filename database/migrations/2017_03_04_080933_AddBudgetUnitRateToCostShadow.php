@@ -12,9 +12,9 @@ class AddBudgetUnitRateToCostShadow extends Migration
      */
     public function up()
     {
-        Schema::table('cost_shadows', function (Blueprint $table) {
+        /*Schema::table('cost_shadows', function (Blueprint $table) {
             $table->float('budget_unit_rate', 16, 4)->nullable();
-        });
+        });*/
     }
 
     /**
@@ -24,8 +24,8 @@ class AddBudgetUnitRateToCostShadow extends Migration
      */
     public function down()
     {
-        Schema::table('cost_shadows', function (Blueprint $table) {
+        /*Schema::table('cost_shadows', function (Blueprint $table) {
             $table->dropColumn();
-        });
+        });*/
     }
 }

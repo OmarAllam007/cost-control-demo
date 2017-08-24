@@ -15,21 +15,21 @@ class AddCreatedByAndUpdatedBy extends Migration
 
     public function up()
     {
-        foreach ($this->tables as $tableName) {
+        /*foreach ($this->tables as $tableName) {
             Schema::table($tableName, function(Blueprint $table) {
                 $table->unsignedInteger('created_by')->nullable();
                 $table->unsignedInteger('updated_by')->nullable();
             });
-        }
+        }*/
     }
 
     public function down()
     {
-        foreach ($this->tables as $tableName) {
+        /*foreach ($this->tables as $tableName) {
             Schema::table($tableName, function(Blueprint $table) {
                 $table->dropColumn('created_by');
                 $table->dropColumn('updated_by');
             });
-        }
+        }*/
     }
 }

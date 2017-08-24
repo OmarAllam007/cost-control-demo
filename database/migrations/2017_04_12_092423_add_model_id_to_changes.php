@@ -12,9 +12,9 @@ class AddModelIdToChanges extends Migration
      */
     public function up()
     {
-        Schema::table('changes', function (Blueprint $table) {
-            $table->unsignedInteger('model_id');
-        });
+//        Schema::table('changes', function (Blueprint $table) {
+//            $table->unsignedInteger('model_id');
+//        });
     }
 
     /**
@@ -24,8 +24,8 @@ class AddModelIdToChanges extends Migration
      */
     public function down()
     {
-        Schema::table('changes', function (Blueprint $table) {
-            $table->dropColumn('model_id');
-        });
+//        Schema::table('changes', function (Blueprint $table) {
+//            $table->dropColumn('model_id');
+//        });
     }
 }

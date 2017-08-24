@@ -22,6 +22,10 @@ class CreateBreakdownResourcesTable extends Migration
             $table->double('labor_count',12,2)->nullable();
             $table->integer('productivity_id')->unsigned()->nullable();
             $table->double('resource_waste',12,2)->nullable();
+            $table->double('resource_qty',12,2)->nullable();
+            $table->boolean('resource_qty_manual')->nullable();
+            $table->integer('resource_id')->unsigned()->nullable();
+            $table->string('equation')->nullable();
             $table->timestamps();
         });
     }

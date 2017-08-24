@@ -12,9 +12,9 @@ class AddDivIdBoqsTable extends Migration
      */
     public function up()
     {
-        Schema::table('boqs', function (Blueprint $table) {
+        /*Schema::table('boqs', function (Blueprint $table) {
             $table->integer('division_id');
-        });
+        });*/
     }
 
     /**
@@ -24,8 +24,8 @@ class AddDivIdBoqsTable extends Migration
      */
     public function down()
     {
-        Schema::table('boqs', function (Blueprint $table) {
+        /*Schema::table('boqs', function (Blueprint $table) {
             $table->dropColumn('division_id');
-        });
+        });*/
     }
 }

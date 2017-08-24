@@ -12,6 +12,9 @@ class CreateBreakdownTemplatesTable extends Migration
             $table->string('code')->nullable();
             $table->string('name');
             $table->string('std_activity_id');
+            $table->integer('project_id')->nullable();
+//            $table->integer('wbs_id')->nullable();
+            $table->integer('parent_template_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -30,19 +30,19 @@ class BreakdownResource extends Model
 
     function getWbsLevelIdAttribute()
     {
-        $this->load(['breakdown']);
+//        $this->load(['breakdown']);
         return $this->breakdown->wbs_level_id;
     }
 
     function getCostAccountAttribute()
     {
-        $this->load(['breakdown']);
+//        $this->load(['breakdown']);
         return $this->breakdown->cost_account;
     }
 
     function getStdActivityIdAttribute()
     {
-        $this->load(['breakdown']);
+//        $this->load(['breakdown']);
         return $this->breakdown->std_activity_id;
     }
 

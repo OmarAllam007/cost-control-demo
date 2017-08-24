@@ -12,11 +12,11 @@ class UpdateBreakdownResourcesShadowTable extends Migration
      */
     public function up()
     {
-        Schema::table('break_down_resource_shadows', function (Blueprint $table) {
+        /*Schema::table('break_down_resource_shadows', function (Blueprint $table) {
             $table->integer('productivity_id')->unsigned();
             $table->integer('unit_id')->unsigned();
             $table->integer('template_id')->unsigned();
-        });
+        });*/
     }
 
     /**
@@ -26,10 +26,10 @@ class UpdateBreakdownResourcesShadowTable extends Migration
      */
     public function down()
     {
-        Schema::table('break_down_resource_shadows', function (Blueprint $table) {
+        /*Schema::table('break_down_resource_shadows', function (Blueprint $table) {
             $table->dropColumn('productivity_id');
             $table->dropColumn('unit_id');
             $table->dropColumn('template_id');
-        });
+        });*/
     }
 }

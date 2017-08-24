@@ -13,7 +13,7 @@ class ResourceTypeController extends Controller
 {
 
 
-    protected $rules = [];
+    protected $rules = ['code' => 'required_if:parent_id,0', 'name' => 'required', 'parent_id' => 'no_children_on_leaf'];
 
     public function index()
     {
@@ -56,6 +56,7 @@ class ResourceTypeController extends Controller
         ResourceType::create([
             'name' => $request->name,
             'parent_id' => $request->parent_id?:0,
+            'code' => $request->code
         ]);
         flash('Resource type has been saved', 'success');
 
@@ -92,7 +93,12 @@ class ResourceTypeController extends Controller
         }
 
         $this->validate($request, $this->rules);
-        $resource_type->update($request->all());
+        $resource_type->update([
+            'name' => $request->name,
+            'parent_id' => $request->parent_id?:0,
+            'code' => $request->code
+        ]);
+
         flash('Resource type has been saved', 'success');
         return \Redirect::route('resource-type.index');
     }

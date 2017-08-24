@@ -98,9 +98,12 @@ return [
     'lte' => ':attribute must be greater than or equal to :lte',
     'lt' => ':attribute must be greater than or equal to :lt',
 
+    'no_resource_on_parent' => 'Cannot add resource on a resource type with sub-types',
+    'no_children_on_leaf' => 'Cannot add resource type on a type with resources',
+
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'code' => [
+            'required_if' => 'Code is required when adding root type',
         ],
     ],
 

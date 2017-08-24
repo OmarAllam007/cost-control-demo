@@ -4,6 +4,7 @@
 
         <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
             {{ Form::label('parent_id', 'Resource Type', ['class' => 'control-label']) }}
+            <input type="hidden" name="parent_id" value="0">
             <p>
                 <a href="#ResourceTypeModal" data-toggle="modal" class="tree-open">
                     {{Form::getValueAttribute('parent_id')? App\ResourceType::with('parent')->find(Form::getValueAttribute('parent_id'))->path : 'Select Resource Type' }}

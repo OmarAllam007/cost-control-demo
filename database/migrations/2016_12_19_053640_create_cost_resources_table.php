@@ -12,7 +12,7 @@ class CreateCostResourcesTable extends Migration
      */
     public function up()
     {
-        Schema::table('cost_resources', function (Blueprint $table) {
+        Schema::create('cost_resources', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('project_id')->unsigned();
             $table->integer('period_id')->unsigned();

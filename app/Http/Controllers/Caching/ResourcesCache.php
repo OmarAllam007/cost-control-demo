@@ -8,17 +8,19 @@ class ResourcesCache
 {
     public function cacheResources($forget = true)
     {
-        set_time_limit(120);
-
+//        set_time_limit(120);
+//
         if ($forget) {
             \Cache::forget('resources-tree');
         }
+//
+//        $resourcesTree = \Cache::remember('resources-tree', 7 * 24 * 60, function () {
+//            return dispatch(new CacheResourcesTree());
+//        });
+//
+//        return $resourcesTree;
 
-        $resourcesTree = \Cache::remember('resources-tree', 7 * 24 * 60, function () {
-            return dispatch(new CacheResourcesTree());
-        });
-
-        return $resourcesTree;
+        return dispatch(new CacheResourcesTree());
 
     }
 

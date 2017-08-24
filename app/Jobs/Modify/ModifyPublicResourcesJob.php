@@ -77,25 +77,22 @@ class ModifyPublicResourcesJob extends ImportJob
                 continue;
             }
 
-            /*if ($type_id = $divisions->get(mb_strtolower('type_name'))) {
-                $resource->resource_type_id = $type_id;
-            }*/
-
-            $resource->resource_code = $data[0];
-            $resource->name = $data[1];
             $resource->rate = floatval($data[3]);
-            $resource->unit = $this->getUnit($data[4]);
             $resource->waste = $data[5];
             $resource->business_partner_id = $this->getPartner($data[7]);
             $resource->reference = $data[6];
+
             if ($this->project) {
                 $resource->project_id = $this->project;
+            } else {
+                $resource->name = $data[1];
+                $resource->unit = $this->getUnit($data[4]);
             }
             $resource->save();
             $resource->updateBreakdownResources();
         }
 
-        dispatch(new CacheResourcesInQueue());
+        dispatch(new CacheResourcesTree());
         return $status;
     }
 

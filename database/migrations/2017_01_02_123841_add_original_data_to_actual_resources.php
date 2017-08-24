@@ -12,13 +12,13 @@ class AddOriginalDataToActualResources extends Migration
      */
     public function up()
     {
-        Schema::table('actual_resources', function (Blueprint $table) {
+        /*Schema::table('actual_resources', function (Blueprint $table) {
             $table->text('original_data')->nullable();
         });
 
         Schema::table('cost_shadows', function (Blueprint $table) {
             $table->text('original_data')->nullable();
-        });
+        });*/
     }
 
     /**
@@ -28,12 +28,12 @@ class AddOriginalDataToActualResources extends Migration
      */
     public function down()
     {
-        Schema::table('actual_resources', function (Blueprint $table) {
+        /*Schema::table('actual_resources', function (Blueprint $table) {
             $table->dropColumn('original_data');
         });
 
         Schema::table('cost_shadows', function (Blueprint $table) {
             $table->dropColumn('original_data');
-        });
+        });*/
     }
 }

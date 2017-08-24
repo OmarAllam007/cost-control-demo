@@ -24,6 +24,13 @@ class CreateActualResourcesTable extends Migration
             $table->double('cost', 12, 2)->unsigned();
             $table->double('unit_id', 12, 2)->unsigned();
             $table->date('action_date')->nullable();
+            $table->integer('resource_id')->unsigned();
+            $table->integer('user_id')->undigned();
+            $table->integer('batch_id');
+            $table->string('doc_no')->nullable();
+            $table->text('original_data')->nullable();
+            $table->float('progress')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

@@ -12,7 +12,7 @@ class CreateCostShadowsTable extends Migration
      */
     public function up()
     {
-        Schema::table('cost_shadows', function (Blueprint $table) {
+        Schema::create('cost_shadows', function (Blueprint $table) {
             $table->increments('id');
             $table->integer("project_id")->unsigned();
             $table->integer("wbs_level_id")->unsigned();
@@ -50,6 +50,10 @@ class CreateCostShadowsTable extends Migration
             $table->double("cost_variance_completion_due_unit_price", 12, 2)->nullable();
             $table->double("cost_variance_completion_due_qty", 12, 2)->nullable();
             $table->double("cost_variance_to_date_due_qty", 12, 2)->nullable();
+            $table->integer('batch_id');
+            $table->string('doc_no')->nullable();
+            $table->text('original_data')->nullable();
+            $table->float('budget_unit_rate', 16, 4)->nullable();
             $table->timestamps();
         });
     }
