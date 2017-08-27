@@ -9,7 +9,7 @@ use App\Http\Controllers\Reports\BoqPriceList;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetCostByDiscipline;
 use App\Http\Controllers\Reports\BudgetCostDryCostByBuilding;
-use App\Http\Controllers\Reports\BudgetCostDryCostByDiscipline;
+use App\Http\Controllers\Reports\BudgetCostDryCostByDisciplineReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
 use App\Http\Controllers\Reports\Productivity;
 use App\Http\Controllers\Reports\QtyAndCost;

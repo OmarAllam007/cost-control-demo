@@ -32,18 +32,12 @@
         </thead>
         <tbody>
         @foreach($budgetData as $type => $cost)
-            @php
-                $dry_cost = $boqData[$type]->dry_cost ?? 0;
-                $budget_cost = $cost->budget_cost;
-                $diff = $dry_cost - $budget_cost;
-                $increase = $dry_cost? $diff * 100 / $dry_cost : 0;
-            @endphp
-            <tr class="bg-{{$diff < 0? 'danger' : ''}}">
+            <tr class="bg-{{$cost->difference < 0 ? 'danger' : ''}}">
                 <td class="col-xs-3">{{$cost->type ?: 'General'}}</td>
-                <td class="col-xs-2">{{number_format($dry_cost, 2) }}</td>
-                <td class="col-xs-2">{{number_format($budget_cost ?: 0, 2)}}</td>
-                <td class="col-xs-2">{{number_format($diff, 2)}}</td>
-                <td class="col-xs-2 {{$increase < 0? 'text-danger' : 'text-success'}}">{{number_format($increase, 2)}} %</td>
+                <td class="col-xs-2">{{number_format($cost->dry_cost, 2) }}</td>
+                <td class="col-xs-2">{{number_format($cost->budget_cost ?: 0, 2)}}</td>
+                <td class="col-xs-2">{{number_format($cost->difference, 2)}}</td>
+                <td class="col-xs-2 {{$$cost->increase < 0? 'text-danger' : 'text-success'}}">{{number_format($cost->increase, 2)}} %</td>
             </tr>
         @endforeach
         <tfoot>
