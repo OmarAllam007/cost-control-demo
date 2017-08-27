@@ -6,7 +6,7 @@ use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
-use App\Http\Controllers\Reports\QtyAndCost;
+use App\Reports\Budget\QtyAndCostReport;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
 use App\Reports\Budget\ActivityResourceBreakDownReport;
@@ -198,8 +198,6 @@ class ReportController extends Controller
         return $budget_breakDown->compareBudgetCostByBreakDownItem($project);
     }
 
-
-
     public function budgetCostForBuilding(Project $project)
     {
 
@@ -209,8 +207,15 @@ class ReportController extends Controller
 
     public function quantityAndCostByDiscipline(Project $project)
     {
-        $discipline = new QtyAndCost();
-        return $discipline->compare($project);
+        $report = new QtyAndCostReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.quantity_and_cost_by_discipline.index', $data);
     }
 
     public function revisedBoq(Project $project)
@@ -267,51 +272,6 @@ class ReportController extends Controller
         Resources::flushEventListeners();
         Resources::where('project_id', $project->id)->whereNotNull('top_material')->update(['top_material' => null]);
         return redirect()->route('project.show', $project);
-    }
-
-    private function getTree($type, $request)
-    {
-        $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => [], 'budget_cost' => 0, 'budget_unit' => 0];
-        foreach ($request->get('checked') as $resource) {
-            $shadow = \DB::select('SELECT
-  r.name AS resource_name,
-  r.id AS resource_id,
-  r.resource_type_id,
-  t.name type_name,
-  sum(sh.budget_cost) AS budget_cost , 
-  sum(sh.budget_unit) AS budget_unit
-FROM resources r, break_down_resource_shadows sh, resource_types t
-WHERE sh.project_id = ?
-      AND r.id = sh.resource_id
-      AND t.id = r.resource_type_id
-      AND t.id = ?
-      AND r.id = ?
-GROUP BY r.name, r.resource_type_id  , t.name , r.id', [$this->project->id, $type->id, $resource]);
-            if(isset($shadow[0])){
-                if (!isset($tree['resources'][$shadow[0]->resource_name])) {
-                    $tree['resources'][$shadow[0]->resource_name] = [
-                        'id' => $shadow[0]->resource_id,
-                        'name' => $shadow[0]->resource_name,
-                        'budget_cost' => $shadow[0]->budget_cost,
-                        'budget_unit' => $shadow[0]->budget_unit,
-                    ];
-                    $tree['budget_cost'] += $shadow[0]->budget_cost;
-                    $tree['budget_unit'] += $shadow[0]->budget_unit;
-                }
-            }
-        }
-
-
-        if ($type->children->count()) {
-            $tree['children'] = $type->children->map(function (ResourceType $childLevel) use ($request) {
-                return $this->getTree($childLevel, $request);
-            });
-
-            foreach ($tree['children'] as $child) {
-                $tree['budget_cost'] += $child['budget_cost'];
-            }
-        }
-        return $tree;
     }
 
     function budgetTrend(Project $project)
