@@ -14,6 +14,8 @@ use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Project;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class ActivityResourceBreakDownReport
 {
@@ -86,6 +88,27 @@ class ActivityResourceBreakDownReport
                     return $cost_account;
                 });
             });
+    }
+
+    public function excel()
+    {
+        \Excel::create(slug($this->project->name) . '-activity-resource-breakdown', function (LaravelExcelWriter $excel) {
+            $excel->sheet('Activity Resource Breakdown', function(LaravelExcelWorksheet $sheet) {
+                $this->sheet($sheet);
+            });
+
+            $excel->download('xlsx');
+        });
+    }
+
+    public function sheet(LaravelExcelWorksheet $sheet)
+    {
+
+    }
+
+    protected function buildExcel(LaravelExcelWorksheet $sheet)
+    {
+
     }
 
 }
