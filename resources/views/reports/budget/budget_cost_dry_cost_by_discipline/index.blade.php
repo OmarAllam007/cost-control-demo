@@ -4,9 +4,11 @@
     @include('reports.all._budget_dry_discipline')
 @endif
 
+@section('title', 'Budget Cost By VS Dry Cost By Discipline &mdash; ' . $project->name)
+
 @section('header')
     <div class="display-flex">
-        <h2 class="flex">Budget Cost By VS Dry Cost By Discipline</h2>
+        <h2 class="flex">Budget Cost By VS Dry Cost By Discipline &mdash; {{$project->name}}</h2>
 
         @if (!request('print'))
         <div class="btn-toolbar">

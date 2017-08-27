@@ -4,17 +4,17 @@
     @include('reports.all._budget_dry_discipline')
 @endif
 
+@section('title', 'Qty &amp; Cost By Discipline &mdash; ' . $project->name)
+
 @section('header')
     <div class="display-flex">
-        <h2 class="flex">Budget Cost By VS Dry Cost By Discipline</h2>
+        <h2 class="flex">Qty &amp; Cost By Discipline &mdash; {{$project->name}}</h2>
 
         @if (!request('print'))
             <div class="btn-toolbar">
                 <a href="?excel" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i> Excel</a>
-                <a href="?print=1&paint=cost-dry-discipline" target="_blank" class="btn btn-primary btn-sm"><i
-                            class="fa fa-print"></i> Print</a>
-                <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i>
-                    Back</a>
+                <a href="?print=1&paint=cost-dry-discipline" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
+                <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i> Back</a>
             </div>
         @endif
     </div>

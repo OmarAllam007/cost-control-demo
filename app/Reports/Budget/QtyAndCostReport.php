@@ -44,7 +44,7 @@ class QtyAndCostReport
 
     function excel()
     {
-        \Excel::create(slug($this->project->name), function (LaravelExcelWriter $writer) {
+        $writer = \Excel::create(slug($this->project->name), function (LaravelExcelWriter $writer) {
             $writer->sheet('Dry Vs Budget', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
             });
