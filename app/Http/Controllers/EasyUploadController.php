@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Jobs\EasyUploadJob;
+use App\Project;
+use Illuminate\Http\Request;
+
+class EasyUploadController extends Controller
+{
+    function create(Request $request, Project $project)
+    {
+        if (!can('breakdown', $project)) {
+            flash('This action is not authorized');
+            if ($request->has('iframe')) {
+                return redirect('/blank');
+            } else {
+                return redirect('/');
+            }
+        }
+
+        return view('easy-upload.create', compact('project'));
+    }
+
+    function store(Request $request, Project $project)
+    {
+        if (!can('breakdown', $project)) {
+            flash('This action is not authorized');
+            if ($request->has('iframe')) {
+                return redirect('/blank');
+            } else {
+                return redirect('/');
+            }
+        }
+
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx',
+        ]);
+
+        $file = $request->file('file');
+
+        $status = dispatch(new EasyUploadJob($project, $file->path()));
+
+        if ($status['failed']->count()) {
+            return view('easy-upload.failed', compact('project', 'status'));
+        }
+
+        flash('File has been imported successfully');
+        return redirect('/blank?reload=breakdowns');
+    }
+}
