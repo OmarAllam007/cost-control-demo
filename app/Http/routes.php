@@ -23,6 +23,9 @@ Route::get('auth/google/continue', 'Auth\AuthController@googleHandle');
 Route::group(['middleware' => 'auth'], function () {
     require __DIR__ . '/Routes/hazem.php';
     require __DIR__ . '/Routes/omar.php';
+
+    Route::get('/breakdowns/import/{project}', ['as' => 'breakdowns.import', 'uses' => 'EasyUploadController@create']);
+    Route::post('/breakdowns/import/{project}', ['as' => 'breakdowns.postImport', 'uses' => 'EasyUploadController@store']);
 });
 
 Route::get('/info', function() {

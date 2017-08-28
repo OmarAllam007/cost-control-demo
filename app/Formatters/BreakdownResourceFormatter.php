@@ -40,7 +40,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'activity' => $this->resource->breakdown->std_activity->name,
             'activity_id' => $this->resource->breakdown->std_activity->id,
             'cost_account' => $this->resource->breakdown->cost_account,
-            'resource_waste' => $this->resource->resource_waste,
+            'resource_waste' => $this->resource->resource_waste ?: 0,
             'eng_qty' => $this->resource->eng_qty,
             'budget_qty' => $this->resource->budget_qty,
             'resource_qty' => $this->resource->resource_qty,
