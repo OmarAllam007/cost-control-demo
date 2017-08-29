@@ -23,7 +23,7 @@ class BreakdownShadowObserver
 
     function updated(BreakDownResourceShadow $resource)
     {
-        if ($resource->update_cost) {
+        if ($resource->update_cost && $resource->project->open_period()) {
             $conditions = [
                 'period_id' => $resource->project->open_period()->id,
                 'breakdown_resource_id' => $resource->breakdown_resource_id,
