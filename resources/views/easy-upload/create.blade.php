@@ -41,9 +41,20 @@
         <div class="form-group">
             <button class="btn btn-primary"><i class="fa fa-check"></i> Submit</button>
         </div>
-
     </form>
+
+    <div class="col-sm-9">
+        <div class="alert alert-info">
+            <h4>Please notice that the following rules will apply:</h4>
+            <ul>
+                <li>WBS Code must be found in project</li>
+                <li>Breakdown template must be imported in project</li>
+                <li>A QS for cost account must be found under selected WBS or one of its parents</li>
+            </ul>
+        </div>
+    </div>
 </div>
+
 
 @endsection
 
@@ -70,13 +81,13 @@
     <script>
         $('.upload').on('change', function() {
             let tokens = this.value.split(/[\\\/]/);
-            let filename = tokens[tokens.length - 1];
+            let filename = tokens[tokens.length - 1] || '';
 
             $(this).parent('.dropzone').find('.filename').text(filename);
         }).on('dragover', function (ev) {
             $(this).parent('.dropzone').find('.drop-panel').addClass('bg-success').css({opacity: 0.7});
         }).on('dragleave dragexit drop', function() {
             $(this).parent('.dropzone').find('.drop-panel').removeClass('bg-success').css({opacity: 1});
-        });
+        }).change();
     </script>
 @endsection
