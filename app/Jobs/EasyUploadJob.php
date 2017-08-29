@@ -114,6 +114,8 @@ class EasyUploadJob extends ImportJob
             ]);
         });
 
+        $breakdown->syncVariables($this->getVariables($data));
+
         $this->status['success'] ++;
     }
 
@@ -165,6 +167,17 @@ class EasyUploadJob extends ImportJob
         }
 
         return true;
+    }
+
+    protected function getVariables($data)
+    {
+        $index = 1;
+        $vars = [];
+        for ($i = 3; $i < count($data); ++$i) {
+            $vars[$index] = floatval($data[$i]);
+            ++$index;
+        }
+        return $vars;
     }
 
 }
