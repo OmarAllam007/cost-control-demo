@@ -1,23 +1,23 @@
 <breakdown-template project="{{$project->id}}" inline-template>
     <section id="BreakdownTemplateArea">
-        <div class="form-group tab-actions clearfix">
-            @can('breakdown_templates',$project)
+        @can('breakdown_templates',$project)
+            <div class="form-group tab-actions clearfix">
                 <div class="pull-right">
-                    <a href="{{route('breakdown-template.create', ['project' => $project])}}"
-                       class="btn btn-primary btn-sm in-iframe" title="Add Template">
-                        <i class="fa fa-plus"></i> Add Breakdown Template
-                    </a>
+                    @can('owner', $project)
+                        <a href="{{route('breakdown-template.create', ['project' => $project])}}"
+                           class="btn btn-primary btn-sm in-iframe" title="Add Template">
+                            <i class="fa fa-plus"></i> Add Breakdown Template
+                        </a>
+                    @endcan
 
                     <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
                        class="btn btn-success btn-sm in-iframe" title="Import Template">
                         <i class="fa fa-level-down" aria-hidden="true"></i>
                         Import Template
                     </a>
-
-
                 </div>
-            @endcan
-        </div>
+            </div>
+        @endcan
 
         <section class="filters row">
             <div class="col-sm-3">
@@ -33,18 +33,20 @@
             <table class="table table-condensed table-striped table-fixed">
                 <thead>
                 <tr>
-                    <th class="col-xs-8">Name</th>
-
-                    <th class="col-xs-4"> @can('breakdown_templates',$project)
-                            Actions @endcan </th>
-
+                    <th class="col-xs-2">Code</th>
+                    <th class="col-xs-6">Name</th>
+                    <th class="col-xs-4"> @can('breakdown_templates',$project) Actions @endcan </th>
                 </tr>
                 </thead>
                 <tbody>
                 {{--                @foreach($project->templates->sortBy('name') as $breakdown_template)--}}
                 <tr v-for="template in filterd_templates">
-                    <td class="col-xs-8"><a
-                                :href="'/breakdown-template/' + template.id + '?project_id=' + template.project_id">@{{ template.name }}</a>
+                    <td class="col-xs-2">
+                        <a :href="'/breakdown-template/' + template.id + '?project_id=' + template.project_id">@{{ template.code }}</a>
+                    </td>
+
+                    <td class="col-xs-6">
+                        <a :href="'/breakdown-template/' + template.id + '?project_id=' + template.project_id">@{{ template.name }}</a>
                     </td>
 
                     <td class="col-xs-4">
@@ -55,7 +57,6 @@
                                 <button class="btn btn-sm btn-warning"><i class="fa fa-trash-o"></i> Delete</button>
                             </form>
                         @endcan
-
                     </td>
                 </tr>
                 {{--@endforeach--}}
