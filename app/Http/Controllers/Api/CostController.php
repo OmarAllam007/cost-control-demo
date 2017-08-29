@@ -67,7 +67,8 @@ class CostController extends Controller
         ActualResources::with('budget')->whereIn('wbs_level_id', $wbs_level->getChildrenIds())
             ->chunk(1000, function (Collection $resources) use ($activities) {
                 foreach ($resources as $resource) {
-                    $activity = $resource->budget->activity;
+                    $activity = $resource->budget->activity ?? null;
+                    if (!$activity) continue;
 
                     if (!$activities->has($activity)) {
                         $activities->put($activity, collect());
