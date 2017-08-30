@@ -65,12 +65,21 @@
             {!! $errors->first('reference', '<div class="help-block">:message</div>') !!}
         </div>
 
-
         <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
             {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
             {{ Form::select('business_partner_id', App\BusinessPartner::options(), null, ['class' => 'form-control']) }}
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </div>
+
+        @if ($resources->project_id)
+        <div class="form-group checkbox">
+            <input type="hidden" name="top_material" value="0">
+            <label for="" class="control-label">
+                <input type="checkbox" name="top_material" {{old('top_material', $resources->top_material) ? 'checked' : ''}}>
+                Top material
+            </label>
+        </div>
+        @endif
     </div>
 
     @include('resources._codes')
