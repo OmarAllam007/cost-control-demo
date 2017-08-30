@@ -1,10 +1,10 @@
 <tr class="level-{{$depth}} child-{{$wbs_level->parent_id}} {{$depth? 'hidden' : ''}}">
-    <td class="level-label" colspan="11">
+    <td class="level-label" colspan="12">
         <a href="#" class="open-level" data-target="child-{{$wbs_level->id}}">
             <strong><i class="fa fa-plus-square"></i> {{$wbs_level->name}}</strong>
         </a>
     </td>
-    <td><strong>{{number_format($wbs_level->cost, 2)}}</strong></td>
+    {{--<td><strong>{{number_format($wbs_level->cost, 2)}}</strong></td>--}}
 </tr>
 
 @forelse($wbs_level->subtree as $sublevel)
