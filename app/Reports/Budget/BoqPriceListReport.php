@@ -3,9 +3,9 @@
 namespace App\Reports\Budget;
 
 
+use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Project;
-use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
@@ -24,6 +24,9 @@ class BoqPriceListReport
     protected $tree;
 
     /** @var Collection */
+    protected $boqs;
+
+    /** @var Collection */
     protected $cost_accounts;
 
     /** @var int */
@@ -40,22 +43,22 @@ class BoqPriceListReport
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
         $raw_cost_accounts = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->selectRaw('wbs_id, survey_id, resource_type, sum(budget_cost) as budget_cost')
-            ->groupBy(['wbs_id', 'survey_id', 'resource_type'])->get();
-        $time = microtime(1);
+            ->selectRaw('wbs_id, boq_id, resource_type, budget_qty, sum(boq_equivilant_rate) as budget_cost')
+            ->groupBy(['wbs_id', 'boq_id', 'resource_type', 'budget_qty'])->get();
 
-        $this->surveys = Survey::with('unit')
-            ->find($raw_cost_accounts->pluck('survey_id')->unique()->toArray())
+        $this->boqs = Boq::with('unit')
+            ->find($raw_cost_accounts->pluck('boq_id')->unique()->toArray())
             ->keyBy('id');
 
         $this->cost_accounts = $raw_cost_accounts->groupBy('wbs_id')->map(function (Collection $surveys) {
-            return $surveys->groupBy('survey_id')->map(function (Collection $resource_types, $survey_id) {
-                $survey = $this->surveys->get($survey_id);
+            return $surveys->groupBy('boq_id')->map(function (Collection $resource_types, $boq_id) {
+                $boq = $this->boqs->get($boq_id);
+                $first = $resource_types->first();
                 return collect([
-                    'description' => $survey->description ?? '',
-                    'unit_of_measure' => $survey->unit->type ?? '',
-                    'budget_qty' => $survey->budget_qty ?? 0,
-                    'cost_account' => $survey->cost_account ?? '',
+                    'description' => $boq->description ?? '',
+                    'unit_of_measure' => $boq->unit->type ?? '',
+                    'budget_qty' => $first->budget_qty ?? 0,
+                    'cost_account' => $boq->cost_account ?? '',
                     'types' => $resource_types->map(function ($type) {
                         $type->resource_type = strtolower($type->resource_type);
                         return $type;
