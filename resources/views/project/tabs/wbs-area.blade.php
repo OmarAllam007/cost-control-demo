@@ -1,8 +1,5 @@
 <section id="wbsArea" class="project-tab">
     <div class="row">
-        <div class="col-sm-12">
-            <a href="#" id="WBSTreeToggle" class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></a>
-        </div>
         <div class="col-sm-3" id="wbs-panel-container">
             <aside class="panel panel-default wbs-panel">
                 <div class="panel-heading clearfix">

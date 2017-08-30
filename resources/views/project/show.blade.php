@@ -17,19 +17,29 @@
 
 @section('body')
 
-    <nav class="project-nav">
-        @can('budget', $project)
-            <a href="#wbsArea" class="btn btn-sm btn-primary"><i class="fa fa-building-o"></i> WBS &amp; Activity</a>
-            <a href="#Revisions" class="btn btn-sm btn-outline btn-primary"><i class="fa fa-sliders"></i> Revisions</a>
-            <a href="#ProjectResources" class="btn btn-sm btn-outline btn-info"><i class="fa fa-bullseye"></i> Resources</a>
-            <a href="#ProjectProductivities" class="btn btn-sm btn-outline btn-info"><i class="fa fa-male"></i> Productivity</a>
-            <a href="#ProjectTemplates" class="btn btn-sm btn-outline btn-violet"><i class="fa fa-magic"></i> Breakdown Templates</a>
-        @endcan
+    <section class="display-flex">
+        <nav class="proect-actions flex">
+            <a href="#" id="WBSTreeToggle" class="btn btn-default btn-sm"><i class="fa fa-angle-double-left"></i></a>
+            <a href="{{route('breakdowns.import', $project)}}" class="btn btn-sm btn-primary in-iframe" title="Import Breakdowns"><i class="fa fa-cloud-upload"></i> Import Breakdowns</a>
+            <a href="{{route('break_down.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+                <i class="fa fa-cloud-download"></i> Export
+            </a>
+        </nav>
+        <nav class="project-nav">
+            @can('budget', $project)
+                <a href="#wbsArea" class="btn btn-sm btn-primary"><i class="fa fa-building-o"></i> WBS &amp; Activity</a>
+                <a href="#Revisions" class="btn btn-sm btn-outline btn-primary"><i class="fa fa-sliders"></i> Revisions</a>
+                <a href="#ProjectResources" class="btn btn-sm btn-outline btn-info"><i class="fa fa-bullseye"></i> Resources</a>
+                <a href="#ProjectProductivities" class="btn btn-sm btn-outline btn-info"><i class="fa fa-male"></i> Productivity</a>
+                <a href="#ProjectTemplates" class="btn btn-sm btn-outline btn-violet"><i class="fa fa-magic"></i> Breakdown Templates</a>
+            @endcan
 
-        @can('reports', $project)
-            <a href="#ReportsArea" class="btn btn-sm btn-outline btn-success"><i class="fa fa-line-chart"></i> Reports</a>
-        @endcan
-    </nav>
+            @can('reports', $project)
+                <a href="#ReportsArea" class="btn btn-sm btn-outline btn-success"><i class="fa fa-line-chart"></i> Reports</a>
+            @endcan
+        </nav>
+    </section>
+
     <div id="projectArea" class="hidden">
         @can('budget', $project)
             @include('project.tabs.wbs-area')
