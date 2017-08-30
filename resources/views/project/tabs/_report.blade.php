@@ -30,7 +30,7 @@
                    style="width:100%; margin-bottom: 2px;">High Priority Materials</a><br>
                 <a href="{{route('man_power.report',$project)}}" target="_blank" class="btn btn-success threeD"
                    style="width:100%;margin-bottom: 2px;">Budget Number (Manpower)</a><br>
-                <a href="{{route('budget_summery.report',$project)}}" target="_blank" class="btn btn-success threeD"
+                <a href="{{route('budget_summary.report',$project)}}" target="_blank" class="btn btn-success threeD"
                    style="width:100%;margin-bottom: 2px;">Budget Summary</a><br>
                 <a href="{{route('activity_resource_breakdown.report',$project)}}" target="_blank"
                    class="btn btn-success threeD" style="width:100%;margin-bottom: 2px;">Activity Resource Breakdown</a><br>

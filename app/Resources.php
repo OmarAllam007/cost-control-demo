@@ -25,6 +25,8 @@ class Resources extends Model
         'resource_code', 'name', 'rate', 'unit', 'waste', 'business_partner_id', 'resource_type_id', 'reference', 'project_id', 'resource_id'
     ];
 
+    protected $casts = ['top_material' => 'boolean'];
+
     protected $dates = ['created_at', 'updated_at'];
 
     public function types()

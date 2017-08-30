@@ -11,7 +11,9 @@
         @endif
         
     </td>
+    @if ($includeCost)
     <td class="col-sm-4 {{ $wbs_level->subtree->count()? 'text-strong' : '' }}">{{ number_format($wbs_level->cost, 2) }}</td>
+    @endif
 </tr>
 
 @if ($wbs_level->subtree && count($wbs_level->subtree))

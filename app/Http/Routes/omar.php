@@ -66,7 +66,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('resourse_dictionary/{project}', ['as' => 'resource_dictionary.report', 'uses' => 'ReportController@resourceDictionary']);
     Route::get('man_power/{project}', ['as' => 'man_power.report', 'uses' => 'ReportController@manPower']);
 
-    Route::get('budget_summery/{project}', ['as' => 'budget_summery.report', 'uses' => 'ReportController@budgetSummery']);
+    Route::get('budget-summary/{project}', ['as' => 'budget_summery.report', 'uses' => 'ReportController@budgetSummary']);
 
     Route::get('activity_resource_breakdown/{project}', ['as' => 'activity_resource_breakdown.report', 'uses' => 'ReportController@activityResourceBreakDown']);
 
@@ -78,7 +78,7 @@ Route::group(['prefix' => 'project'], function () {
 
     Route::get('budget_cost_by_discipline/{project}', ['as' => 'budget_cost_by_discipline.report', 'uses' => 'ReportController@budgetCostDiscipline']);
 
-    Route::get('budget_cost_by_building/{project}', ['as' => 'budget_cost_by_building.report', 'uses' => 'ReportController@budgetCostForBuilding']);
+    Route::get('budget_cost_by_building/{project}', ['as' => 'budget_cost_by_building.report', 'uses' => 'ReportController@budgetCostByBuilding']);
 
     Route::get('budget_cost_dry_cost_discipline/{project}', ['as' => 'budget_cost_dry_cost_discipline.report', 'uses' => 'ReportController@budgetCostDryCostDiscipline']);
 

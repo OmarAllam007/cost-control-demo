@@ -7,7 +7,9 @@
                 <i class="fa fa-plus-square"></i> {{$division->code}} {{$division->name}}
             </a>
         </td>
-        <td>{{number_format($division->cost, 2)}}</td>
+        @if ($includeCost)
+            <td>{{number_format($division->cost, 2)}}</td>
+        @endif
     </tr>
 
     @if ($division->subtree->count())
@@ -20,7 +22,9 @@
         @foreach($division->std_activities as $activity)
             <tr class="level-{{$depth + 1}} hidden child-{{$activity->division_id}}">
                 <td class="level-label">{{$activity->name}}</td>
-                <td>{{number_format($activity->cost, 2)}}</td>
+                @if ($includeCost)
+                    <td>{{number_format($activity->cost, 2)}}</td>
+                @endif
             </tr>
         @endforeach
     @endif

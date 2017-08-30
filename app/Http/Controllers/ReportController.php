@@ -38,6 +38,18 @@ class ReportController extends Controller
 
     public function wbsReport(Project $project)
     {
+        $report = new WbsReport($project, false);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+        return view('reports.budget.wbs.index', $data);
+    }
+
+    public function budgetCostByBuilding(Project $project)
+    {
         $report = new WbsReport($project);
 
         if (request()->exists('excel')) {
@@ -61,6 +73,18 @@ class ReportController extends Controller
     }
 
     public function stdActivityReport(Project $project)
+    {
+        $report = new StdActivityReport($project, false);
+        $data = $report->run();
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.budget.std-activity.index', $data);
+    }
+
+    public function budgetSummary(Project $project)
     {
         $report = new StdActivityReport($project);
         $data = $report->run();
@@ -184,25 +208,6 @@ class ReportController extends Controller
         $data = $report->run();
 
         return view('reports.budget.budget_cost_dry_cost_by_discipline.index', $data);
-    }
-
-    public function budgetSummery(Project $project)
-    {
-        $budgetSummery = new BudgetSummeryReport();
-        return $budgetSummery->getReport($project);
-    }
-
-    public function budgetCostVSBreadDown(Project $project)
-    {
-        $budget_breakDown = new  BudgetCostByBreakDownItem();
-        return $budget_breakDown->compareBudgetCostByBreakDownItem($project);
-    }
-
-    public function budgetCostForBuilding(Project $project)
-    {
-
-        $budget = new BudgetCostByBuilding();
-        return $budget->getBudgetCostForBuilding($project);
     }
 
     public function quantityAndCostByDiscipline(Project $project)

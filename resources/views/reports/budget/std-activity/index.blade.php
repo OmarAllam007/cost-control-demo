@@ -7,11 +7,11 @@
         <h4 class="flex">Std Activity &mdash; {{$project->name}}</h4>
 
         @if (!request()->has('print'))
-        <div>
-        <a href="?excel" class="btn btn-sm btn-success"><i class="fa fa-file-excel-o"></i> Excel</a>
-        <a href="?print=1&paint=std-activity" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>
-        <a href="{{route('project.show', $project)}}#Reports" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
-        </div>
+            <div>
+                <a href="?excel" class="btn btn-sm btn-info"><i class="fa fa-cloud-download"></i> Export</a>
+                <a href="?print=1&paint=std-activity" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Print</a>
+                <a href="{{route('project.show', $project)}}#Reports" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+            </div>
         @endif
     </div>
 @endsection
@@ -25,25 +25,29 @@
         <thead>
         <tr class="bg-primary">
             <th class="col-sm-8">Activity</th>
-            <th class="col-sm-4">Budget Cost</th>
+            @if ($includeCost)
+                <th class="col-sm-4">Budget Cost</th>
+            @endif
         </tr>
-        <tr class="info">
-            <th>Total</th>
-            <th>{{number_format($tree->sum('cost'), 2)}}</th>
-        </tr>
+        @if ($includeCost)
+            <tr class="info">
+                <th>Total</th>
+                <th>{{number_format($tree->sum('cost'), 2)}}</th>
+            </tr>
+        @endif
         </thead>
         <tbody>
 
-            @foreach($tree as $division)
-                @include('reports.budget.std-activity._recursive', ['division' => $division, 'depth' => 0])
-            @endforeach
+        @foreach($tree as $division)
+            @include('reports.budget.std-activity._recursive', ['division' => $division, 'depth' => 0])
+        @endforeach
         </tbody>
     </table>
 @endsection
 
 @section('javascript')
     <script>
-        $('.open-level').click(function(e) {
+        $('.open-level').click(function (e) {
             e.preventDefault();
             const target = $('.' + $(this).data('target'));
 
@@ -56,7 +60,7 @@
         });
 
         const rows = $('#report-table').find('tbody > tr');
-        rows.click(function(e) {
+        rows.click(function (e) {
             const isHighlighted = $(this).hasClass('highlighted');
 
             rows.removeClass('highlighted');
@@ -67,7 +71,7 @@
 
         function closeRecursive(elem) {
             const target = $('.' + $(elem).data('target'));
-            target.addClass('hidden').each(function(){
+            target.addClass('hidden').each(function () {
                 closeRecursive($(this).find('a'));
             });
 
