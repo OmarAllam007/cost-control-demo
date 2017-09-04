@@ -4,49 +4,76 @@ namespace App\Jobs\Export;
 
 use App\Jobs\Job;
 use App\Resources;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\ResourceType;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class ExportPublicResourcesJob extends Job
 {
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
+    /** @var int */
+    protected $row = 2;
+
+    /** @var Collection */
+    protected $types;
+
     public function handle()
     {
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->fromArray(['Code', 'Resource Name', 'Type', 'Rate', 'Unit'
-            , 'Waste', 'reference', 'Business Partner'], 'A1');
+        $this->loadTypes();
 
+        $excel = \PHPExcel_IOFactory::load(public_path('files/templates/resources.xlsx'));
 
+        $sheet = $excel->getSheet(0);
 
-        $rowCount = 2;
-        $resources = Resources::whereNull('project_id')->get();
-        foreach ($resources as $resource) {
-            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $resource->resource_code);
-            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $resource->name);
-            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $resource->types->root->name ?? '');
+        Resources::whereNull('project_id')->with('units')
+            ->chunk(3000, function (Collection $resources) use ($sheet) {
+                $missingType = array_fill(0, 6, '');
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $resource->rate);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $resource->units->type??'');
+                /** @var Resources $resource */
+                foreach ($resources as $resource) {
+                    $types = $this->types->get($resource->resource_type_id, $missingType);
+                    $rate = number_format(floatval($resource->rate), 2, '.', '');
+                    $unit = $resource->units->type ?? '';
+                    $waste = number_format(floatval($resource->waste), 2, '.', '');
+                    $supplier = $resource->parteners->name ?? '';
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $resource->waste);
+                    $resource_data = [
+                        $resource->resource_code, $resource->name, $rate, $unit, $waste, $supplier, $resource->reference
+                    ];
 
-            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $resource->reference);
-            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount,  isset($resource->parteners->name)?$resource->parteners->name:'');
-            $rowCount++;
+                    $data = array_merge($types, $resource_data);
 
-        }
+                    $sheet->fromArray($data, '', "A{$this->row}");
 
+                    ++$this->row;
+                }
+            });
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="All-Resources.xlsx"');
-        header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save('php://output');
+        $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $filename = storage_path('app/' . uniqid() . '.xlsx');
+        $writer->save($filename);
+
+        return \Response::download($filename, 'KPS_Resources.xlsx')->deleteFileAfterSend(true);
+    }
+
+    protected function loadTypes()
+    {
+        $this->types = ResourceType::with('parent.parent.parent.parent.parent')
+            ->whereRaw('id in (select resource_type_id from resources)')
+            ->get()->map(function (ResourceType $type) {
+                $tree = [$type->name];
+
+                $parent = $type->parent;
+                while ($parent) {
+                    $tree[] = $parent->name;
+                    $parent = $parent->parent;
+                }
+
+                $tree = array_pad(array_reverse($tree), 6, '');
+
+                $type->tree = $tree;
+                return $type;
+            })->pluck('tree', 'id');
+
+//        dd($this->types);
     }
 }
