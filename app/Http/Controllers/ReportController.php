@@ -6,6 +6,7 @@ use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
+use App\Reports\Budget\HighPriorityMaterialsReport;
 use App\Reports\Budget\QtyAndCostReport;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
@@ -223,53 +224,23 @@ class ReportController extends Controller
         return view('reports.budget.quantity_and_cost_by_discipline.index', $data);
     }
 
+    public function highPriorityMaterials(Project $project)
+    {
+        $report = new HighPriorityMaterialsReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.high_priority_materials.index', $data);
+    }
+
     public function revisedBoq(Project $project)
     {
         $boq = new  RevisedBoq();
         return $boq->getRevised($project);
-    }
-
-    public function highPriority(Project $project, Request $request)
-    {
-        $resources = Resources::where('project_id', $project->id)->whereNotNull('top_material')->pluck('id')->toArray();
-        if (count($resources)) {
-            return $this->topMaterialResources($project, $request, $resources);
-        } else {
-            $high_materials = new HighPriorityMaterials();
-            return $high_materials->getTopHighPriorityMaterials($project, $request);
-        }
-
-    }
-
-    public function topMaterialResources(Project $project, Request $request, $resources = false)
-    {
-        if($request->get('checked')){
-            $resources = Resources::where('project_id', $project->id)->whereIn('id', $request['checked'])->get();
-            Resources::flushEventListeners();
-            foreach ($resources as $resource) {
-                $resource->top_material = $resource->types->name;
-                $resource->update();
-            }
-        }
-        if (!$request->get('checked')) {
-            $request['checked'] = $resources;
-        }
-        $tree = [];
-        $this->project = $project;
-        $this->request = $request;
-
-        $resource_types = ResourceType::tree()->with('children', 'children.children', 'children.children.children')->get();
-        $types = $resource_types->where('name', '03.MATERIAL');
-        foreach ($types as $type) {
-            $level = $this->getTree($type, $request);
-            $tree[] = $level;
-        }
-
-
-
-        return view('reports.budget.high_priority_materials.top_resources', compact('tree', 'project'));
-
-
     }
 
     public function topMaterialResourcesReset(Project $project)

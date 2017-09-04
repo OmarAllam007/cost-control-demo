@@ -20,7 +20,7 @@ class ResourcesObserver
 {
     function created(Resources $resource)
     {
-        dispatch(new CacheResourcesInQueue);
+//        dispatch(new CacheResourcesInQueue);
     }
 
     function creating(Resources $resource)
@@ -42,12 +42,12 @@ class ResourcesObserver
     function updated(Resources $resource)
     {
         $resource->updateBreakdownResources();
-        dispatch(new CacheResourcesInQueue);
+//        dispatch(new CacheResourcesInQueue);
     }
 
     function deleted(Resources $resource)
     {
-        dispatch(new CacheResourcesInQueue);
+//        dispatch(new CacheResourcesInQueue);
     }
 
     public function generateResourceCode($resource)

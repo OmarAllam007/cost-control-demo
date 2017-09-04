@@ -66,7 +66,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('resourse_dictionary/{project}', ['as' => 'resource_dictionary.report', 'uses' => 'ReportController@resourceDictionary']);
     Route::get('man_power/{project}', ['as' => 'man_power.report', 'uses' => 'ReportController@manPower']);
 
-    Route::get('budget-summary/{project}', ['as' => 'budget_summery.report', 'uses' => 'ReportController@budgetSummary']);
+    Route::get('budget-summary/{project}', ['as' => 'budget_summary.report', 'uses' => 'ReportController@budgetSummary']);
 
     Route::get('activity_resource_breakdown/{project}', ['as' => 'activity_resource_breakdown.report', 'uses' => 'ReportController@activityResourceBreakDown']);
 
@@ -88,8 +88,10 @@ Route::group(['prefix' => 'project'], function () {
 
     Route::get('boq_price_list/{project}', ['as' => 'boq_price_list.report', 'uses' => 'ReportController@boqPriceList']);
 
-    Route::get('high_priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriority']);
+    Route::get('high-priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriorityMaterials']);
+
     Route::post('high_priority_resources/{project}', ['as' => 'generate_top_matrial_reports.report', 'uses' => 'ReportController@topMaterialResources']);
+
     Route::post('high_priority_resources_reset/{project}', ['as' => 'reset_top_matrial_reports.report', 'uses' => 'ReportController@topMaterialResourcesReset']);
 
 

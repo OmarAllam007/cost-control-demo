@@ -145,7 +145,7 @@ class ResourcesController extends Controller
         $this->validate($request, array_only($this->rules, ['rate', 'waste']));
 
         if ($resources->project_id) {
-            $attributes = $request->only(['unit', 'waste', 'reference', 'business_partner_id']);
+            $attributes = $request->only(['rate', 'unit', 'waste', 'reference', 'business_partner_id', 'top_material']);
         } else {
             $attributes = $request->except('resource_code');
         }
