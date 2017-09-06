@@ -21,7 +21,9 @@
             <thead>
                <tr class="bg-primary">
                    <th>Wbs Level</th>
-                   <th>Budget Cost</th>
+                   @if ($includeCost)
+                       <th>Budget Cost</th>
+                   @endif
                 </tr>
             </thead>
             <tbody>

@@ -31,9 +31,13 @@ class StdActivityReport
 
     protected $row = 1;
 
-    public function __construct(Project $project)
+    /** @var bool */
+    private $includeCost;
+
+    public function __construct(Project $project, $includeCost = true)
     {
         $this->project = $project;
+        $this->includeCost = $includeCost;
     }
 
     function run()
@@ -54,7 +58,7 @@ class StdActivityReport
 
         $this->tree = $this->buildTree();
 
-        return ['project' => $this->project, 'tree' => $this->tree];
+        return ['project' => $this->project, 'tree' => $this->tree, 'includeCost' => $this->includeCost];
     }
 
     /**
@@ -73,16 +77,18 @@ class StdActivityReport
 
             $division->std_activities = $this->activities->get($division->id) ?: collect();
 
-            $cost = $division->std_activities->map(function ($activity) {
-                $activity->cost = $this->activity_info->get($activity->id) ?: 0;
-                return $activity;
-            })->reduce(function ($sum, $activity) {
-                return $sum + $activity->cost;
-            }, 0);
+            if ($this->includeCost) {
+                $cost = $division->std_activities->map(function ($activity) {
+                    $activity->cost = $this->activity_info->get($activity->id) ?: 0;
+                    return $activity;
+                })->reduce(function ($sum, $activity) {
+                    return $sum + $activity->cost;
+                }, 0);
 
-            $division->cost = $division->subtree->reduce(function ($sum, $division) {
-                return $sum + $division->cost;
-            }, $cost);
+                $division->cost = $division->subtree->reduce(function ($sum, $division) {
+                    return $sum + $division->cost;
+                }, $cost);
+            }
 
             return $division;
         });
@@ -95,7 +101,7 @@ class StdActivityReport
         \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
 
             $writer->sheet('Std Activity', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, ['Activity', 'Budget Cost']);
+                $sheet->row(1, ['Activity', $this->includeCost? 'Budget Cost' : '']);
                 $sheet->cells('A1:B1', function(CellWriter $cells) {
                     $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
                 });
