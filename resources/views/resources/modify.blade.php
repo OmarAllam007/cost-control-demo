@@ -12,8 +12,13 @@
         <div class="col-md-6 col-sm-9">
 
             {{Form::open(['route' => ['all-resources.post-modify','project'=>request('project')], 'files' => true])}}
+
+            <div class="alert alert-info">
+                <i class="fa fa-download"></i> Please <a href="{{asset('/files/templates/modify-resources.xlsx')}}">click here</a> to download a sample template
+            </div>
+
             <div class="form-group {{$errors->first('file', 'has-errors')}}">
-                {{Form::label('file', null, ['class' => 'control-label'])}}
+                {{Form::label('file', null, ['class' => 'control-label sr-only'])}}
                 {{Form::file('file', ['class' => 'form-control'])}}
                 {!! $errors->first('file', '<div class="help-block">:message</div>') !!}
             </div>
