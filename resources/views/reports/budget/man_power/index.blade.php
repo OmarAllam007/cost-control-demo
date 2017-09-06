@@ -20,36 +20,39 @@
     <table class="table table-condensed table-striped table-bordered" id="report-table">
         <thead>
         <tr class="bg-primary">
-            <th class="col-sm-4">Description</th>
             <th class="col-sm-2">Code</th>
-            <th class="col-sm-2">Budget Cost</th>
-            <th class="col-sm-2">Budget Unit</th>
+            <th class="col-sm-4">Description</th>
             <th class="col-sm-2">Unit of Measure</th>
+            <th class="col-sm-2">Budget Unit</th>
+            <th class="col-sm-2">Budget Cost</th>
+        </tr>
+        <tr class="info">
+            <th colspan="4" class="text-right">Total</th>
+            <th>{{number_format($tree->sum('budget_cost'), 2)}}</th>
         </tr>
         </thead>
         <tbody>
-        @foreach($resources as $resource)
-            <tr>
-                <td>{{$resource->resource_name}}</td>
-                <td>{{$resource->resource_code}}</td>
-                <td>{{number_format($resource->budget_cost, 2)}}</td>
-                <td>{{number_format($resource->budget_unit, 2)}}</td>
-                <td>{{$resource->measure_unit}}</td>
-            </tr>
+        @foreach($tree as $type)
+            @include('reports.budget.man_power._recursive', ['type' => $type, 'depth' => 0])
         @endforeach
         </tbody>
-
-        <tfoot>
-        <tr class="info">
-            <th colspan="2" class="text-right">Total</th>
-            <th colspan="3">{{number_format($resources->sum('budget_cost'), 2)}}</th>
-        </tr>
-        </tfoot>
     </table>
 @endsection
 
 @section('javascript')
     <script>
+        $('.open-level').click(function(e) {
+            e.preventDefault();
+            const target = $('.' + $(this).data('target'));
+
+            if (target.hasClass('hidden')) {
+                target.removeClass('hidden');
+                $(this).find('i.fa').removeClass('fa-plus-square').addClass('fa-minus-square');
+            } else {
+                closeRecursive(this);
+            }
+        });
+
         const rows = $('#report-table').find('tbody > tr');
         rows.click(function(e) {
             const isHighlighted = $(this).hasClass('highlighted');
@@ -59,6 +62,15 @@
                 $(this).addClass('highlighted');
             }
         });
+
+        function closeRecursive(elem) {
+            const target = $('.' + $(elem).data('target'));
+            target.addClass('hidden').each(function(){
+                closeRecursive($(this).find('a'));
+            });
+
+            $(elem).find('i.fa').removeClass('fa-minus-square').addClass('fa-plus-square');
+        }
     </script>
 @endsection
 
@@ -80,6 +92,38 @@
         #report-table tbody tr.highlighted > td,
         #report-table thead tr.highlighted > th {
             background-color: #ffc;
+        }
+
+        .level-0 td {
+            background: #f7f7f7;
+        }
+
+        .level-1 td {
+            background: #ededed;
+        }
+
+        .level-2 td {
+            background: #e6e6e6;
+        }
+
+        .level-3 td {
+            background: #dedede;
+        }
+
+        .level-1 .level-label {
+            padding-left: 20px;
+        }
+
+        .level-2 .level-label {
+            padding-left: 40px;
+        }
+
+        .level-3 .level-label {
+            padding-left: 60px;
+        }
+
+        .level-4 .level-label {
+            padding-left: 80px;
         }
     </style>
 @endsection

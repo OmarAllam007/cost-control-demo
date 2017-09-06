@@ -239,7 +239,7 @@ class ReportController extends Controller
 
     public function revisedBoq(Project $project)
     {
-        $boq = new  RevisedBoq();
+        $boq = new  RevisedBoqReport();
         return $boq->getRevised($project);
     }
 
