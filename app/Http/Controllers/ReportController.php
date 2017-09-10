@@ -239,8 +239,17 @@ class ReportController extends Controller
 
     public function revisedBoq(Project $project)
     {
-        $boq = new  RevisedBoqReport();
-        return $boq->getRevised($project);
+        $report = new HighPriorityMaterialsReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.revised_boq.index', $data);
+//        $boq = new  RevisedBoq();
+//        return $boq->getRevised($project);
     }
 
     public function topMaterialResourcesReset(Project $project)
