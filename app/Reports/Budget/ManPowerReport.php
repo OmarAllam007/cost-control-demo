@@ -14,6 +14,7 @@ use App\Project;
 use App\ResourceType;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class ManPowerReport
@@ -64,22 +65,7 @@ class ManPowerReport
 
         \Excel::create(slug($this->project->name) . '_man-power', function (LaravelExcelWriter $writer) {
             $writer->sheet('Man Power', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, ['Description', 'Code', 'Budget Cost', 'Budget Unit', 'Unit of Measure']);
-                $sheet->cells('A1:E1', function ($cells) {
-                    $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
-                });
-
-                $this->resources->each(function ($resource) use ($sheet) {
-                    $sheet->row(++$this->row, [
-                        $resource->resource_name, $resource->resource_code, $resource->budget_cost,
-                        $resource->budget_unit, $resource->measure_unit
-                    ]);
-                });
-
-                $sheet->getColumnDimension('A')->setWidth(100);
-                $sheet->setAutoFilter();
-                $sheet->setAutoSize(['B', 'C', 'D', 'E']);
-                $sheet->setAutoSize(false);
+                $this->sheet($sheet);
             });
 
             $writer->download('xlsx');
@@ -106,5 +92,56 @@ class ManPowerReport
         });
 
         return $tree;
+    }
+
+    public function sheet(LaravelExcelWorksheet $sheet)
+    {
+        $this->run();
+
+        $sheet->row($this->row, ['Description', 'Code', 'Unit of Measure', 'Budget Unit', 'Budget Cost']);
+        $sheet->cells("A{$this->row}:E{$this->row}", function ($cells) {
+            $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
+        });
+
+        $this->tree->each(function ($type) use ($sheet) {
+            $this->buildSheet($sheet, $type);
+        });
+
+        $sheet->getColumnDimension('A')->setWidth(70);
+        $sheet->setAutoFilter();
+        $sheet->setAutoSize(['B', 'C', 'D', 'E']);
+        $sheet->setAutoSize(false);
+    }
+
+    protected function buildSheet(LaravelExcelWorksheet $sheet, $type, $depth = 0)
+    {
+        ++$this->row;
+        $sheet->mergeCells("A{$this->row}:D{$this->row}");
+        $sheet->setCellValue("A{$this->row}", $type->name);
+        $sheet->setCellValue("E{$this->row}", $type->budget_cost);
+
+        if ($depth) {
+            $sheet->getRowDimension($this->row)->setVisible(false)->setCollapsed(true)->setOutlineLevel($depth > 7 ? 7 : $depth);
+            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+                $cells->setTextIndent(5 * $depth);
+            });
+        }
+
+        $type->subtypes->each(function ($type) use ($sheet, $depth) {
+            $this->buildSheet($sheet, $type, $depth + 1);
+        });
+
+        ++$depth;
+        $type->labours->each(function ($resource) use ($sheet, $depth) {
+            $sheet->row(++$this->row, [
+                $resource->resource_name, $resource->resource_code, $resource->measure_unit, $resource->budget_unit, $resource->budget_cost
+            ]);
+
+            $sheet->getRowDimension($this->row)->setVisible(false)->setCollapsed(true)->setOutlineLevel($depth > 7 ? 7 : $depth);
+            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+                $cells->setTextIndent(5 * $depth);
+            });
+        });
+
     }
 }
