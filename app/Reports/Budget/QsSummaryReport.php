@@ -125,8 +125,8 @@ class QsSummaryReport
                 });
 
                 $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
+                $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
                 $sheet->setColumnFormat(["D2:D{$this->row}" => '#,##0.00']);
-                $sheet->setColumnFormat(["E2:E{$this->row}" => '#,##0.00']);
             });
 
             $excel->download('xlsx');
