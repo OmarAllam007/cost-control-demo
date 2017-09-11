@@ -37,12 +37,12 @@
         </thead>
         <tbody>
         @foreach($disciplines as $cost)
-            <tr class="bg-{{$cost->difference < 0 ? 'danger' : ''}}">
+            <tr class="bg-{{$cost->difference > 0 ? 'danger' : ''}}">
                 <td class="col-xs-3">{{$cost->type ?: 'General'}}</td>
                 <td class="col-xs-2">{{number_format($cost->dry_cost, 2) }}</td>
                 <td class="col-xs-2">{{number_format($cost->budget_cost ?: 0, 2)}}</td>
                 <td class="col-xs-2">{{number_format($cost->difference, 2)}}</td>
-                <td class="col-xs-2 {{$cost->increase < 0? 'text-danger' : 'text-success'}}">{{number_format($cost->increase, 2)}}%</td>
+                <td class="col-xs-2 {{$cost->increase > 0? 'text-danger' : 'text-success'}}">{{number_format($cost->increase, 2)}}%</td>
             </tr>
         @endforeach
         </tbody>
@@ -53,12 +53,12 @@
             $dry_cost = $disciplines->sum('dry_cost');
             $increase = $dry_cost ? ($diff * 100 / $dry_cost) : 0;
         @endphp
-        <tr class="bg-{{$diff < 0? 'danger' : 'success'}}" style="border-top: 3px solid #fff;">
+        <tr class="bg-{{$diff > 0? 'danger' : 'success'}}" style="border-top: 3px solid #fff;">
             <th class="col-xs-3"><strong>Grand Total</strong></th>
             <th class="col-xs-2"><strong>{{number_format($dry_cost, 2)}}</strong></th>
             <th class="col-xs-2"><strong>{{number_format($disciplines->sum('budget_cost'), 2)}}</strong></th>
-            <th class="col-xs-2 {{$diff < 0? 'text-danger' : 'text-success'}}">{{number_format($diff, 2)}}</th>
-            <th class="col-xs-2 {{$increase < 0? 'text-danger' : 'text-success'}}">{{number_format($increase, 2)}}%</th>
+            <th class="col-xs-2 {{$diff > 0? 'text-danger' : ''}}">{{number_format($diff, 2)}}</th>
+            <th class="col-xs-2 {{$increase > 0? 'text-danger' : ''}}">{{number_format($increase, 2)}}%</th>
         </tr>
         </tfoot>
     </table>

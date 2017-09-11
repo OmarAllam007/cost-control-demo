@@ -65,6 +65,8 @@ class BudgetCostDryCostByDisciplineReport
             return $cost;
         });
 
+//        dd($this->disciplines);
+
         return ['project' => $this->project, 'disciplines' => $this->disciplines];
     }
 

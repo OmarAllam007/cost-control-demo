@@ -21,6 +21,7 @@ use App\Reports\Budget\ManPowerReport;
 use App\Reports\Budget\ProductivityReport;
 use App\Reports\Budget\QsSummaryReport;
 use App\Reports\Budget\ResourceDictReport;
+use App\Reports\Budget\RevisedBoqReport;
 use App\Reports\Budget\StdActivityReport;
 use App\Reports\Budget\WbsReport;
 use App\Resources;
@@ -239,8 +240,15 @@ class ReportController extends Controller
 
     public function revisedBoq(Project $project)
     {
-        $boq = new  RevisedBoqReport();
-        return $boq->getRevised($project);
+        $report = new RevisedBoqReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.budget.revised_boq.index', $data);
     }
 
     public function topMaterialResourcesReset(Project $project)
