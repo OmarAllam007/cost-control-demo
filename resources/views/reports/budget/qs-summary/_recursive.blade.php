@@ -32,7 +32,7 @@
                 </a>
             </td>
         </tr>
-        @foreach($activity->cost_accounts as $cost_account)
+        @foreach($activity->items as $cost_account)
             <tr class="level-{{ $depth + 3 }} activity-{{ $wbs_level->id }}-{{$activity->id}} hidden">
                 <td>&nbsp;</td>
                 <td class="text-center">{{$cost_account->cost_account}}</td>

@@ -17,6 +17,7 @@ use App\StdActivity;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
@@ -67,6 +68,7 @@ class QsSummaryReport
 
         $this->tree = $this->buildTree();
 
+
         return ['project' => $this->project, 'tree' => $this->tree];
     }
 
@@ -74,28 +76,31 @@ class QsSummaryReport
     {
         $tree = $this->wbs_levels->get($parent) ?: collect();
 
-        $tree->map(function (WbsLevel $level) {
+        return $tree->map(function (WbsLevel $level) {
             $level->subtree = $this->buildTree($level->id);
 
             $level->activities = collect();
             if ($this->info->has($level->id)) {
                 $info = $this->info->get($level->id);
+
                 $activity_ids = $info->keys();
                 $level->activities = $this->activities->only($activity_ids->toArray())
-                    ->map(function ($activity) use ($info) {
-                        $activity->cost_accounts = $info->get($activity->id)->map(function($cost_account){
+                    ->map(function ($activity) use ($info, $level) {
+
+                        $items = $info->get($activity->id)->map(function ($cost_account) {
                             $cost_account->boq_description = $this->survies->get($cost_account->survey_id)->description ?? '';
                             $cost_account->unit_of_measure = $this->survies->get($cost_account->survey_id)->unit->type ?? '';
                             return $cost_account;
                         });
-                        return $activity;
-                    })->groupBy('division.name')->sortByKeys();
+                        return new Fluent(['id' => $activity['id'], 'name' => $activity->name, 'division' => $activity->division->name, 'items' => $items]);
+                    })->groupBy('division')->sortByKeys();
             }
+
 
             return $level;
         });
 
-        return $tree;
+//        return $tree;
     }
 
     function excel()
