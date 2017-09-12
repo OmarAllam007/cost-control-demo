@@ -21,7 +21,7 @@
 @endsection
 
 @section('body')
-    <table class="table table-condensed table-bordered" id="report-table">
+    <table class="table table-condensed table-bordered" id="report-head">
         <thead>
         <tr class="bg-primary">
             <th class="col-sm-8">Activity</th>
@@ -36,13 +36,17 @@
             </tr>
         @endif
         </thead>
-        <tbody>
-
-        @foreach($tree as $division)
-            @include('reports.budget.std-activity._recursive', ['division' => $division, 'depth' => 0])
-        @endforeach
-        </tbody>
     </table>
+    <section class="vertical-scroll">
+        <table class="table table-condensed table-bordered" id="report-body">
+            <tbody>
+
+            @foreach($tree as $division)
+                @include('reports.budget.std-activity._recursive', ['division' => $division, 'depth' => 0])
+            @endforeach
+            </tbody>
+        </table>
+    </section>
 @endsection
 
 @section('javascript')
@@ -82,13 +86,20 @@
 
 @section('css')
     <style>
+        .vertical-scroll {
+            max-height: 500px;
+            overflow-x: auto;
+        }
 
-        #report-table tbody tr:hover > td {
+        .table {
+            margin-bottom: 0;
+        }
+
+        #report-body tbody tr:hover > td {
             background-color: rgba(255, 255, 204, 0.7);
         }
 
-        #report-table tbody tr.highlighted > td,
-        #report-table thead tr.highlighted > th {
+        #report-body tbody tr.highlighted > td {
             background-color: #ffc;
         }
 

@@ -31,12 +31,16 @@
             <th>{{number_format($tree->sum('budget_cost'), 2)}}</th>
         </tr>
         </thead>
-        <tbody>
-        @foreach($tree as $type)
-            @include('reports.budget.man_power._recursive', ['type' => $type, 'depth' => 0])
-        @endforeach
-        </tbody>
     </table>
+    <section class="vertical-scroll">
+        <table class="table table-condensed table-striped table-bordered" id="report-table">
+            <tbody>
+            @foreach($tree as $type)
+                @include('reports.budget.man_power._recursive', ['type' => $type, 'depth' => 0])
+            @endforeach
+            </tbody>
+        </table>
+    </section>
 @endsection
 
 @section('javascript')
@@ -85,12 +89,20 @@
 
 
         }
-        #report-table tbody tr:hover > td {
+        .vertical-scroll {
+            max-height: 500px;
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        #report-body tbody tr:hover > td {
             background-color: rgba(255, 255, 204, 0.7);
         }
 
-        #report-table tbody tr.highlighted > td,
-        #report-table thead tr.highlighted > th {
+        #report-body tbody tr.highlighted > td {
             background-color: #ffc;
         }
 

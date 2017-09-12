@@ -17,7 +17,7 @@
 @endsection
 
 @section('body')
-    <table class="table table-condensed table-bordered" id="report-table">
+    <table class="table table-condensed table-bordered" id="report-head">
         <thead>
         <tr class="bg-primary">
             <th class="col-sm-3">Resource</th>
@@ -35,18 +35,22 @@
             <th>{{number_format($tree->sum('budget_cost'), 2)}}</th>
         </tr>
         </thead>
-        <tbody>
-
-        @foreach($tree as $division)
-            @include('reports.budget.resource-dict._recursive', ['division' => $division, 'depth' => 0])
-        @endforeach
-        </tbody>
     </table>
+
+    <section class="vertical-scroll">
+        <table class="table table-condensed table-bordered" id="report-body">
+            <tbody>
+            @foreach($tree as $division)
+                @include('reports.budget.resource-dict._recursive', ['division' => $division, 'depth' => 0])
+            @endforeach
+            </tbody>
+        </table>
+    </section>
 @endsection
 
 @section('javascript')
     <script>
-        $('.open-level').click(function(e) {
+        $('.open-level').click(function (e) {
             e.preventDefault();
             const target = $('.' + $(this).data('target'));
 
@@ -59,7 +63,7 @@
         });
 
         const rows = $('#report-table').find('tbody > tr');
-        rows.click(function(e) {
+        rows.click(function (e) {
             const isHighlighted = $(this).hasClass('highlighted');
 
             rows.removeClass('highlighted');
@@ -70,7 +74,7 @@
 
         function closeRecursive(elem) {
             const target = $('.' + $(elem).data('target'));
-            target.addClass('hidden').each(function(){
+            target.addClass('hidden').each(function () {
                 closeRecursive($(this).find('a'));
             });
 
@@ -88,15 +92,27 @@
                 visibility: visible;
             }
 
-
         }
-        #report-table tbody tr:hover > td {
+
+        .vertical-scroll {
+            max-height: 500px;
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        #report-body tbody tr:hover > td {
             background-color: rgba(255, 255, 204, 0.7);
         }
 
-        #report-table tbody tr.highlighted > td,
-        #report-table thead tr.highlighted > th {
+        #report-body tbody tr.highlighted > td {
             background-color: #ffc;
+        }
+
+        #report-body > tbody > tr > td {
+            border-color: #f7f7f7;
         }
 
         .level-0 td {
@@ -117,18 +133,27 @@
 
         .level-1 .level-label {
             padding-left: 20px;
+            border-left: #dedede;
         }
 
         .level-2 .level-label {
             padding-left: 40px;
+            border-left: #dedede;
         }
 
         .level-3 .level-label {
             padding-left: 60px;
+            border-left: #dedede;
         }
 
         .level-4 .level-label {
             padding-left: 80px;
+            border-left: #dedede;
+        }
+
+        .level-5 .level-label {
+            padding-left: 90px;
+            border-left: #dedede;
         }
     </style>
 @endsection

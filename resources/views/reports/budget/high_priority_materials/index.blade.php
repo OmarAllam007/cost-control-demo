@@ -23,34 +23,55 @@
     <table class="table table-bordered table-hover">
         <thead>
         <tr class="bg-primary">
-            <th>Resource Name</th>
-            <th>Resource Code</th>
-            <th>Budget Unit</th>
-            <th>Budget Cost</th>
+            <th class="col-sm-6">Resource Name</th>
+            <th class="col-sm-2">Resource Code</th>
+            <th class="col-sm-2">Budget Unit</th>
+            <th class="col-sm-2">Budget Cost</th>
         </tr>
         </thead>
-
-        <tbody>
-        @foreach ($tree as $group)
-            <tr class="bg-info">
-                <th colspan="3">{{$group['name']}}</th>
-                <th class="text-right">{{number_format($group['budget_cost'], 2)}}</th>
-            </tr>
-
-            @foreach($group['resources'] as $resource)
-                <tr>
-                    <td>{{$resource->name}}</td>
-                    <td>{{$resource->resource_code}}</td>
-                    <td class="text-right">{{number_format($resource->budget_unit, 2)}}</td>
-                    <td class="text-right">{{number_format($resource->budget_cost, 2)}}</td>
-                </tr>
-            @endforeach
-
-        @endforeach
-        </tbody>
     </table>
+    <section class="vertical-scroll">
+        <table class="table table-bordered table-hover" id="report-body">
+            <tbody>
+            @foreach ($tree as $group)
+                <tr class="bg-info">
+                    <th colspan="3">{{$group['name']}}</th>
+                    <th class="text-right">{{number_format($group['budget_cost'], 2)}}</th>
+                </tr>
+
+                @foreach($group['resources'] as $resource)
+                    <tr>
+                        <td class="col-sm-6">{{$resource->name}}</td>
+                        <td class="col-sm-2">{{$resource->resource_code}}</td>
+                        <td class="col-sm-2 text-right">{{number_format($resource->budget_unit, 2)}}</td>
+                        <td class="col-sm-2 text-right">{{number_format($resource->budget_cost, 2)}}</td>
+                    </tr>
+                @endforeach
+
+            @endforeach
+            </tbody>
+        </table>
+    </section>
 
 @endsection
 
-@section('javascript')
+@section('css')
+    <style>
+        .vertical-scroll {
+            max-height: 500px;
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        #report-body tbody tr:hover > td {
+            background-color: rgba(255, 255, 204, 0.7);
+        }
+
+        #report-body tbody tr.highlighted > td {
+            background-color: #ffc;
+        }
+    </style>
 @endsection

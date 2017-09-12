@@ -14,10 +14,10 @@
 
     @forelse($division->productivities as $productivity)
         <tr class="level-{{$depth + 1}} child-{{$division->id}} hidden">
-            <td class="level-label">{{$productivity->description}}</td>
-            <td>{!! nl2br(e($productivity->crew_structure)) !!}</td>
-            <td>{{$productivity->after_reduction}}</td>
-            <td>{{$productivity->units->type}}</td>
+            <td class="level-label col-sm-5">{{$productivity->description}}</td>
+            <td class="cols-m-3">{!! nl2br(e($productivity->crew_structure)) !!}</td>
+            <td class="cols-m-2">{{$productivity->after_reduction}}</td>
+            <td class="cols-m-2">{{$productivity->units->type}}</td>
         </tr>
     @empty
     @endforelse
