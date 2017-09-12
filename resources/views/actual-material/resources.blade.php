@@ -7,7 +7,6 @@
 
 @section('body')
     {{Form::open()}}
-    @php $key = 0; @endphp
     @foreach($activities as $activity => $activityData)
         <div class="panel panel-warning">
             <div class="panel-heading">
@@ -31,13 +30,15 @@
 
                 </thead>
                 <tbody>
-                @foreach($activityData as $activityResourceCounter => $resource)
+
+                @foreach($activityData as $resource)
                     @php
-                    $row_span = count($resource['rows']);
+                        $hash = $resource['hash'];
+                        $row_span = count($resource['rows']);
                     @endphp
 
                     @foreach($resource['rows'] as $counter => $store_resource)
-                        <tr class="resource-{{$activityResourceCounter}}">
+                        <tr class="resource-{{$hash}}">
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_code}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_name}}</td>
@@ -50,20 +51,18 @@
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">
                                     <div class="input-group">
-                                        {{Form::text("quantities[{$key}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
+                                        {{Form::text("quantities[{$hash}]", '0.00', ['class' => 'form-control input-sm physical-qty'])}}
                                         <span class="input-group-btn">
-                                            <button class="btn btn-primary btn-sm sum-qty" data-counter="{{$activityResourceCounter}}" title="SUM">&sum;</button>
+                                            <button class="btn btn-primary btn-sm sum-qty" data-counter="{{$hash}}" title="SUM">&sum;</button>
                                         </span>
                                     </div>
-                                    {!! $errors->first("quantities.{$key}", '<div class="text-danger">:message</div>') !!}
+                                    {!! $errors->first("quantities.{$hash}", '<div class="text-danger">:message</div>') !!}
                                 </td>
                                 <td rowspan="{{$row_span}}" class="unit-price-cell">0.00</td>
-                                <td rowspan="{{$row_span}}" class="total-cell"
-                                    data-value="{{$total = $resource['rows']->sum(6)}}">
+                                <td rowspan="{{$row_span}}" class="total-cell" data-value="{{$total = $resource['rows']->sum(6)}}">
                                     {{number_format($total, 2)}}
                                 </td>
 
-                                @php $key++; @endphp
                             @endif
                         </tr>
 
