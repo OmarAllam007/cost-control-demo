@@ -90,8 +90,7 @@ class CostImportFixer
 
         $hashes = $errors->pluck('rows.*.hash')->flatten();
         $this->rows = $this->rows->forget($hashes->toArray());
-
-        $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
+//        $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
         $resourcesLog = collect();
         foreach ($data as $key => $qty) {
             $hash = str_random(6);
@@ -243,7 +242,7 @@ class CostImportFixer
 
         $validationErrors = [];
         foreach ($quantities as $key => $quantity) {
-            $total = $errors->get($key)->get('rows')->sum(6);
+            $total = $errors->get($key)['rows']->sum(6);
             if ($quantity) {
                 $unit_price = $total / $quantity;
                 if ($unit_price < 0) {

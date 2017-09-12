@@ -58,33 +58,6 @@ class CostImporter
     }
 
     /**
-     * #E01 - Check mapping
-     */
-    function checkMapping()
-    {
-        $errors = ['activity' => collect(), 'resources' => collect()];
-        foreach ($this->rows as $row) {
-            $code = trim(strtolower($row[0]));
-            if (!$this->activityCodes->has($code)) {
-                $errors['activity']->push($row);
-            }
-        }
-
-        foreach ($this->rows as $row) {
-            $code = trim(strtolower($row[7]));
-            if (!$this->resourcesMap->has($code)) {
-                $errors['resources']->push($row);
-            }
-        }
-
-        if ($errors['activity']->count() || $errors['resources']->count()) {
-            return ['error' => 'mapping', 'errors' => $errors, 'batch' => $this->batch];
-        }
-
-        return $this->checkPhysicalQty();
-    }
-
-    /**
      * #E02 - Physical Qty
      */
     public function checkPhysicalQty()
@@ -118,20 +91,22 @@ class CostImporter
         }
 
         $this->loadUnits();
+        $counter = 0;
         foreach ($resourcesLog as $id => $record) {
             $record['resource_id'] = $id;
             foreach ($record['rows']->groupBy(9) as $rows) {
+                $hash = sha1($counter . json_encode($rows));
                 if ($rows->count() > 1) {
                     $count = $rows->pluck(7)->unique()->count();
                     if ($count > 1) {
-                        $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                        $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
                         continue;
                     }
 
                     foreach ($rows as $row) {
                         $unit_id = $this->unitsMap->get($row[3]);
                         if ($record['resource']->unit_id != $unit_id) {
-                            $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                            $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
                             break;
                         }
                     }
@@ -139,9 +114,11 @@ class CostImporter
                     $row = $rows->first();
                     $unit_id = $this->unitsMap->get(trim(strtolower($row[3])));
                     if ($record['resource']->unit_id != $unit_id) {
-                        $errors->push(collect(['rows' => $rows, 'resource' => $record['resource']]));
+                        $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
                     }
                 }
+
+                ++$counter;
             }
         }
 
@@ -187,6 +164,33 @@ class CostImporter
         }
 
         return $this->checkMultipleCostAccounts();
+    }
+
+    /**
+     * #E01 - Check mapping
+     */
+    function checkMapping()
+    {
+        $errors = ['activity' => collect(), 'resources' => collect()];
+        foreach ($this->rows as $row) {
+            $code = trim(strtolower($row[0]));
+            if (!$this->activityCodes->has($code)) {
+                $errors['activity']->push($row);
+            }
+        }
+
+        foreach ($this->rows as $row) {
+            $code = trim(strtolower($row[7]));
+            if (!$this->resourcesMap->has($code)) {
+                $errors['resources']->push($row);
+            }
+        }
+
+        if ($errors['activity']->count() || $errors['resources']->count()) {
+            return ['error' => 'mapping', 'errors' => $errors, 'batch' => $this->batch];
+        }
+
+        return $this->checkPhysicalQty();
     }
 
     /**
