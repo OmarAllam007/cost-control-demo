@@ -64,7 +64,7 @@ class ExportSurveyJob extends Job
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Unit');
         $col++;
 
-
+//dd($this->project->quantities);
 
         foreach ($this->project->quantities as $quantity) {
 
@@ -95,10 +95,10 @@ class ExportSurveyJob extends Job
             $col = 6;
             $rowCount++;
         }
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'.$project->name.'- Survey.xls"');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.slug($project->name).'- Survey.xlsx"');
         header('Cache-Control: max-age=0');
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
     }
 }
