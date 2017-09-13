@@ -1,5 +1,5 @@
 <tr class="level-{{ $tree_level }} child-{{ $wbs_level->parent_id }} {{ $tree_level ? 'hidden' : '' }}">
-    <td class="level-label {{ $wbs_level->subtree->count() ? 'text-strong' : '' }}">
+    <td class="cols-m-{{$includeCost?9:12}} level-label {{ $wbs_level->subtree->count() ? 'text-strong' : '' }}">
         @if($wbs_level->subtree->count())
             <a href="#" class="open-level" data-target="child-{{ $wbs_level->id }}" data-open="false">
                 <i class="fa fa-plus-square"></i>
@@ -12,7 +12,7 @@
         
     </td>
     @if ($includeCost)
-    <td class="col-sm-4 {{ $wbs_level->subtree->count()? 'text-strong' : '' }}">{{ number_format($wbs_level->cost, 2) }}</td>
+    <td class="col-sm-3 {{ $wbs_level->subtree->count()? 'text-strong' : '' }}">{{ number_format($wbs_level->cost, 2) }}</td>
     @endif
 </tr>
 

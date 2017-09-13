@@ -1,12 +1,12 @@
 <tr class="level-{{$depth}} child-{{$wbs_level->parent_id}} {{$depth? 'hidden' : ''}}">
-    <th class="level-label">
+    <th class="level-label cols-sm-5">
         <a href="#" class="open-level" data-target="child-{{$wbs_level->id}}">
             <i class="fa fa-plus-square"></i> {{$wbs_level->name}} <small>({{$wbs_level->code}})</small>
         </a>
     </th>
-    <th></th>
-    <th>{{number_format($wbs_level->original_boq, 2)}}</th>
-    <th>{{number_format($wbs_level->revised_boq, 2)}}</th>
+    <th class="col-sm-3"></th>
+    <th class="col-sm-2">{{number_format($wbs_level->original_boq, 2)}}</th>
+    <th class="col-sm-2">{{number_format($wbs_level->revised_boq, 2)}}</th>
 </tr>
 
 @foreach($wbs_level->subtree as $sub_level)

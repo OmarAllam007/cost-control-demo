@@ -20,35 +20,41 @@
 
 @endsection
 @section('body')
-    <table class="table table-condensed table-bordered" id="report-table">
+    <section class="horizontal-scroll">
+    <table class="table table-condensed table-bordered" id="report-head">
         <thead>
-        <tr>
-            <td>Item</td>
-            <td>Cost Account</td>
-            <td>Budget Qty</td>
-            <td>U.O.M</td>
-            <td>General Requirement</td>
-            <td>Labours</td>
-            <td>Material</td>
-            <td>Subcontractors</td>
-            <td>Equipment</td>
-            <td>Scaffolding</td>
-            <td>Others</td>
-            <td>Grand Total</td>
+        <tr class="bg-primary">
+            <th style="min-width: 400px;max-width: 400px;">Item</th>
+            <th style="min-width: 150px;max-width: 150px;">Cost Account</th>
+            <th style="min-width: 150px;max-width: 150px;">Budget Qty</th>
+            <th style="min-width: 150px;max-width: 150px;">U.O.M</th>
+            <th style="min-width: 150px;max-width: 150px;">General Requirement</th>
+            <th style="min-width: 150px;max-width: 150px;">Labours</th>
+            <th style="min-width: 150px;max-width: 150px;">Material</th>
+            <th style="min-width: 150px;max-width: 150px;">Subcontractors</th>
+            <th style="min-width: 150px;max-width: 150px;">Equipment</th>
+            <th style="min-width: 150px;max-width: 150px;">Scaffolding</th>
+            <th style="min-width: 150px;max-width: 150px;">Others</th>
+            <th style="min-width: 150px;max-width: 150px;">Grand Total</th>
         </tr>
         </thead>
-        <tbody>
-        @foreach ($tree as $wbs_level)
-            @include('reports.budget.boq_price_list._recursive', ['depth' => 0, 'wbs_level' => $wbs_level])
-        @endforeach
-        </tbody>
     </table>
+    <section class="vertical-scroll">
+        <table class="table table-condensed table-bordered" id="report-body">
+            <tbody>
+            @foreach ($tree as $wbs_level)
+                @include('reports.budget.boq_price_list._recursive', ['depth' => 0, 'wbs_level' => $wbs_level])
+            @endforeach
+            </tbody>
+        </table>
+    </section>
+    </section>
 @endsection
 
 
 @section('javascript')
     <script>
-        $('.open-level').click(function(e) {
+        $('.open-level').click(function (e) {
             e.preventDefault();
             const target = $('.' + $(this).data('target'));
 
@@ -60,7 +66,7 @@
             }
         });
 
-        $('#report-table tbody > tr').click(function(e) {
+        $('#report-table tbody > tr').click(function (e) {
             const isHighlighted = $(this).hasClass('highlighted');
 
             $('#report-table tbody tr').removeClass('highlighted');
@@ -71,7 +77,7 @@
 
         function closeRecursive(elem) {
             const target = $('.' + $(elem).data('target'));
-            target.addClass('hidden').each(function(){
+            target.addClass('hidden').each(function () {
                 closeRecursive($(this).find('a'));
             });
 
@@ -83,11 +89,27 @@
 @section('css')
     <style>
 
-        #report-table tbody tr:hover > td {
+        .horizontal-scroll {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .vertical-scroll {
+            max-height: 500px;
+            width: 2050px;
+            overflow-x: visible;
+            overflow-y: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        #report-body tbody tr:hover > td {
             background-color: rgba(255, 255, 204, 0.7);
         }
 
-        #report-table tbody tr.highlighted > td {
+        #report-body tbody tr.highlighted > td {
             background-color: #ffc;
         }
 

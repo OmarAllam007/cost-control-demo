@@ -34,12 +34,12 @@
         </tr>
         @foreach($activity->items as $cost_account)
             <tr class="level-{{ $depth + 3 }} activity-{{ $wbs_level->id }}-{{$activity->id}} hidden">
-                <td>&nbsp;</td>
-                <td class="text-center">{{$cost_account->cost_account}}</td>
-                <td>{{$cost_account->boq_description}}</td>
-                <td class="text-center">{{number_format($cost_account->eng_qty, 2)}}</td>
-                <td class="text-center">{{number_format($cost_account->budget_qty, 2)}}</td>
-                <td class="text-center">{{$cost_account->unit_of_measure}}</td>
+                <td class="col-sm-3">&nbsp;</td>
+                <td class="text-center col-sm-2">{{$cost_account->cost_account}}</td>
+                <td class="col-sm-3">{{$cost_account->boq_description}}</td>
+                <td class="text-center col-sm-1">{{number_format($cost_account->eng_qty, 2)}}</td>
+                <td class="text-center col-sm-1">{{number_format($cost_account->budget_qty, 2)}}</td>
+                <td class="text-center col-sm-2">{{$cost_account->unit_of_measure}}</td>
             </tr>
         @endforeach
     @endforeach

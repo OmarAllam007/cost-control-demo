@@ -17,7 +17,7 @@
 @endsection
 
 @section('body')
-    <table class="table table-condensed table-bordered" id="report-table">
+    <table class="table table-condensed table-bordered" id="report-head">
         <thead>
         <tr class="bg-primary">
             <th class="col-sm-4">WBS Level</th>
@@ -27,6 +27,9 @@
             <th class="col-sm-2">Increase</th>
         </tr>
         </thead>
+    </table>
+    <section class="vertical-scroll">
+    <table class="table table-condensed table-bordered" id="report-body">
         <tbody>
 
         @foreach($tree as $wbs_level)
@@ -34,6 +37,7 @@
         @endforeach
         </tbody>
     </table>
+    </section>
 @endsection
 
 @section('javascript')
@@ -73,7 +77,6 @@
 
 @section('css')
     <style>
-
         @media print {
             tr.hidden {
                 display: table-row !important;
@@ -82,12 +85,21 @@
 
 
         }
-        #report-table tbody tr:hover > td {
+
+        .vertical-scroll {
+            max-height: 500px;
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        #report-body tbody tr:hover > td {
             background-color: rgba(255, 255, 204, 0.7);
         }
 
-        #report-table tbody tr.highlighted > td,
-        #report-table thead tr.highlighted > th {
+        #report-body tbody tr.highlighted > td {
             background-color: #ffc;
         }
 
