@@ -17,7 +17,7 @@ class PeriodReportsController extends Controller
 
     function store(Period $period)
     {
-        if (!can('cost_owner', $period->project)) {
+        if (!can('actual_resources', $period->project)) {
             flash('You are not authorized to do this cation');
             return redirect()->back();
         }
