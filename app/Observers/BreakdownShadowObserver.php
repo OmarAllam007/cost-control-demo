@@ -18,7 +18,8 @@ class BreakdownShadowObserver
 {
     function updating(BreakDownResourceShadow $resource)
     {
-        $resource->update_cost = $resource->isDirty(['progress', 'status', 'budget_unit', 'budget_cost']);
+        $resource->update_cost = $resource->project->open_period() &&
+            $resource->isDirty(['progress', 'status', 'budget_unit', 'budget_cost']);
     }
 
     function updated(BreakDownResourceShadow $resource)

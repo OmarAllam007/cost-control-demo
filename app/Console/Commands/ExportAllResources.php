@@ -21,16 +21,14 @@ class ExportAllResources extends Command
     {
         $this->output->newLine();
 
-        $query = Resources::whereIn('id', function($q){
-            $q->from('resources')->selectRaw('min(id)')->groupBy('resource_code');
-        })->with('project')->orderByRaw('coalesce(project_id, 0)');
+        $query = Resources::with('project')->orderBy('id');
 
         $this->bar = $this->output->createProgressBar($query->count());
         $this->bar->setBarWidth(50);
 
         $this->buffer .= implode(',', array_map('csv_quote', ['APP_ID', 'Project ID', 'Project Name' ,'Code', 'Name', 'Rate', 'Unit', 'Waste', 'Reference', 'Business Partner', 'Type', 'Subtype', 'Sub Subtype', '...']));
 
-        $query->chunk(1000, function(Collection $resources) {
+        $query->chunk(2000, function(Collection $resources) {
             $resources->each(function(Resources $resource) {
                 $data = [
                     $resource->id, $resource->project_id ?: '', $resource->project->name?? '', $resource->resource_code, $resource->name,
@@ -48,6 +46,8 @@ class ExportAllResources extends Command
                         $data[] = $item;
                     }
                 }
+
+                $data[] = $resource->resource_id;
 
                 $this->buffer .= PHP_EOL . implode(',', array_map('csv_quote', $data));
                 $this->bar->advance();
