@@ -10,28 +10,28 @@
 @endsection
 
 @section('body')
-
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>Description</th>
-            <th>{{$rev1->name}}</th>
-            <th>{{$revision->name}}</th>
-            <th>Difference</th>
-            <th>Difference (%)</th>
-        </tr>
-        </thead>
-        <tbody>
+    @if ($disciplines->count())
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Description</th>
+                <th>{{$rev1->name}}</th>
+                <th>{{$revision->name}}</th>
+                <th>Difference</th>
+                <th>Difference (%)</th>
+            </tr>
+            </thead>
+            <tbody>
             @foreach($disciplines as $discipline)
                 @php
-                $diff = $thisRevision[$discipline]['cost'] - $firstRevision[$discipline]['cost'];
-                if ($diff == 0) {
-                    $diffPercent = 0;
-                } elseif ($firstRevision[$discipline]['cost']) {
-                    $diffPercent = ($diff / $firstRevision[$discipline]['cost']) * 100;
-                } else {
-                    $diffPercent = 100;
-                }
+                    $diff = $thisRevision[$discipline]['cost'] - $firstRevision[$discipline]['cost'];
+                    if ($diff == 0) {
+                        $diffPercent = 0;
+                    } elseif ($firstRevision[$discipline]['cost']) {
+                        $diffPercent = ($diff / $firstRevision[$discipline]['cost']) * 100;
+                    } else {
+                        $diffPercent = 100;
+                    }
                 @endphp
                 <tr class="{{$diff > 0? 'bg-danger' : ($diff < 0? 'bg-success' : '')}}">
                     <td>{{$discipline}}</td>
@@ -41,13 +41,13 @@
                     <td>{{number_format($diffPercent, 2)}}%</td>
                 </tr>
             @endforeach
-        </tbody>
-        <tfoot>
+            </tbody>
+            <tfoot>
             @php
-            $firstRevisionTotal = $firstRevision->sum('cost');
-            $thisRevisionTotal = $thisRevision->sum('cost');
-            $diffTotal = $thisRevisionTotal - $firstRevisionTotal;
-            $diffPercentTotal = ($diffTotal/$firstRevisionTotal) * 100;
+                $firstRevisionTotal = $firstRevision->sum('cost');
+                $thisRevisionTotal = $thisRevision->sum('cost');
+                $diffTotal = $thisRevisionTotal - $firstRevisionTotal;
+                $diffPercentTotal = $firstRevisionTotal ? ($diffTotal/$firstRevisionTotal) * 100 : 0;
             @endphp
             <tr class="{{$diffTotal > 0? 'bg-danger' : ($diffTotal < 0? 'bg-success' : '')}}">
                 <th>Total</th>
@@ -56,16 +56,20 @@
                 <th>{{number_format($diffTotal, 2)}}</th>
                 <th>{{number_format($diffPercentTotal, 2)}}%</th>
             </tr>
-        </tfoot>
-    </table>
+            </tfoot>
+        </table>
 
-    <div class="col-sm-8 col-sm-offset-2">
-        <div id="chart" style="min-height: 400px; margin-top: 30px;"></div>
-    </div>
+        <div class="col-sm-8 col-sm-offset-2">
+            <div id="chart" style="min-height: 400px; margin-top: 30px;"></div>
+        </div>
+    @else
+        <div class="alert alert-info"><i class="fa fa-info-circle"></i> No changes were made on this revision</div>
+    @endif
 
 @endsection
 
 @section('javascript')
+    @if ($disciplines->count())
     @php
         $columns = [$rev1->name => [$rev1->name], $revision->name => [$revision->name]];
         foreach ($disciplines as $discipline) {
@@ -95,8 +99,9 @@
             }
         });
     </script>
+    @endif
 @endsection
 
 @section('css')
-    <link rel="stylesheet" href="/css/c3.min.css">
+    @if($disciplines->count()) <link rel="stylesheet" href="/css/c3.min.css"> @endif
 @endsection
