@@ -6,9 +6,15 @@
     });
 
     $activities = $activities->groupBy(function($row) use ($levels) {
+        if (empty($row['newRows'][0]['resource'])) {
+            return 'unassigned';
+        }
+
         $resource = $row['newRows'][0]['resource'];
         return $levels[$resource['wbs_id']] . ' &mdash; ' . $resource['activity'];
     });
+
+    $activities = $activities->forget('unassigned');
 @endphp
 
 @if ($activities->count())
