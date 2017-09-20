@@ -74,7 +74,9 @@
         $columns = [$rev1->name => [$rev1->name], $revision->name => [$revision->name]];
         foreach ($disciplines as $discipline) {
             $columns[$rev1->name][] = $firstRevision[$discipline]['cost'];
-            $columns[$revision->name][] = $thisRevision[$discipline]['cost'];
+            if ($rev1->name != $revision->name) {
+               $columns[$revision->name][] = $thisRevision[$discipline]['cost'];
+            }
         }
         $chartColumns = collect(array_values($columns));
     @endphp
