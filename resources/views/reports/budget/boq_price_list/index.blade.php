@@ -5,7 +5,7 @@
 @section('header')
     <h2 class="">{{$project->name}} - BOQ PRICE LIST Report</h2>
     <div class="pull-right">
-        <a href="?excel" class="btn btn-info btn-sm print">
+        <a href="?excel" class="btn btn-info btn-sm">
             <i class="fa fa-cloud-download"></i> Excel
         </a>
 
