@@ -26,13 +26,15 @@
         <tr class="bg-primary">
             <th class="col-sm-8">Activity</th>
             @if ($includeCost)
-                <th class="col-sm-4">Budget Cost</th>
+                <th class="col-sm-2">Budget Cost</th>
+                <th class="col-sm-2">Weight (%)</th>
             @endif
         </tr>
         @if ($includeCost)
             <tr class="info">
                 <th>Total</th>
                 <th>{{number_format($tree->sum('cost'), 2)}}</th>
+                <th>{{number_format($tree->sum('weight'), 2)}}%</th>
             </tr>
         @endif
         </thead>
