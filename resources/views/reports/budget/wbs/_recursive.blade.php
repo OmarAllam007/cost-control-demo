@@ -13,6 +13,7 @@
     </td>
     @if ($includeCost)
     <td class="col-sm-3 {{ $wbs_level->subtree->count()? 'text-strong' : '' }}">{{ number_format($wbs_level->cost, 2) }}</td>
+    <td class="col-sm-2 {{ $wbs_level->subtree->count()? 'text-strong' : '' }}">{{ number_format($wbs_level->weight, 2) }}%</td>
     @endif
 </tr>
 

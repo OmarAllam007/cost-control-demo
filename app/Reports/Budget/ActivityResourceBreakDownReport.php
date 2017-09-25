@@ -16,6 +16,7 @@ use App\Project;
 use Carbon\Carbon;
 use function foo\func;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
@@ -37,6 +38,9 @@ class ActivityResourceBreakDownReport
     /** @var int */
     protected $row = 1;
 
+    /** @var float */
+    protected $total;
+
     function __construct(Project $project)
     {
         $this->project = $project;
@@ -46,24 +50,18 @@ class ActivityResourceBreakDownReport
 
     function run()
     {
-//            ->groupBy('wbs_id')->map(function($group) {
-//            return $group->keyBy('cost_account');
-//        });
+        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');
 
-        $key = 'activity-resource-breakdown-' . $this->project->id;
-        $this->tree = \Cache::remember($key, 60, function () {
-//            $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
-            $this->wbs_levels = collect(\DB::table('wbs_levels')
-                ->where('project_id', $this->project->id)
-                ->get(['id', 'name', 'code', 'parent_id']))->groupBy('parent_id');
+        $this->wbs_levels = collect(\DB::table('wbs_levels')
+            ->where('project_id', $this->project->id)
+            ->get(['id', 'name', 'code', 'parent_id']))->groupBy('parent_id');
 
-            $this->boqs = collect(\DB::table('boqs')
-                ->where('project_id', $this->project->id)
-                ->get(['id', 'description']))
-                ->keyBy('id');
+        $this->boqs = collect(\DB::table('boqs')
+            ->where('project_id', $this->project->id)
+            ->get(['id', 'description']))
+            ->keyBy('id');
 
-            return $this->buildTree();
-        });
+        $this->tree = $this->buildTree();
 
         return ['project' => $this->project, 'tree' => $this->tree];
     }
@@ -74,17 +72,15 @@ class ActivityResourceBreakDownReport
      */
     protected function buildTree($parent_id = 0)
     {
-        $tree = $this->wbs_levels->get($parent_id) ?: collect();
-
-        return $tree->map(function ($level) {
+        return $this->wbs_levels->get($parent_id, collect())->map(function ($level) {
             $level->activities = $this->buildActivities($level->id);
-
-//            $level->boqs = $this->boqs->get($level->id)?: collect();
 
             $level->subtree = $this->buildTree($level->id);
 
             $level->cost = $level->subtree->sum('cost') +
-                $level->activities->flatten()->sum('budget_cost');
+                $level->activities->flatten()->sum('cost');
+
+            $level->weight = $level->cost * 100 / $this->total;
 
             return $level;
         })->filter(function ($level) {
@@ -99,7 +95,16 @@ class ActivityResourceBreakDownReport
             ->get(['id', 'activity', 'cost_account', 'boq_id', 'budget_cost', 'unit_price', 'budget_unit', 'resource_name', 'resource_type', 'measure_unit']))
             ->groupBy('activity')->map(function ($group) {
                 return $group->groupBy('cost_account')->map(function (Collection $resources) {
-                    $cost_account = collect(['resources' => $resources, 'cost' => $resources->sum('budget_cost')]);
+                    $budget_cost = $resources->sum('budget_cost');
+                    $resources = $resources->map(function ($resource) {
+                        $resource->weight = $resource->budget_cost * 100 / $this->total;
+                        return $resource;
+                    });
+
+                    $cost_account = new Fluent([
+                        'resources' => $resources, 'cost' => $budget_cost, 'weight' => $budget_cost * 100 / $this->total
+                    ]);
+
                     $first = $resources->first();
                     $boq = $this->boqs->get($first->boq_id);
                     $cost_account->put('boq', $boq);
@@ -125,10 +130,10 @@ class ActivityResourceBreakDownReport
         $this->run();
 
         $sheet->row($this->row, [
-            'Activity', 'Resource Name', 'Resource Type', 'Price/Unit', 'Budget Unit', 'Unit of Measure', 'Budget Cost',
+            'Activity', 'Resource Name', 'Resource Type', 'Price/Unit', 'Budget Unit', 'Unit of Measure', 'Budget Cost', 'Weight (%)'
         ]);
 
-        $sheet->cells("A1:G1", function (CellWriter $cells) {
+        $sheet->cells("A1:H1", function (CellWriter $cells) {
             $cells->setFont(['bold' => true])->setBackground('#5182bb')->setFontColor('#ffffff');
         });
 
@@ -139,6 +144,7 @@ class ActivityResourceBreakDownReport
         $sheet->setColumnFormat(["D2:D{$this->row}" => '#,##0.00']);
         $sheet->setColumnFormat(["E2:E{$this->row}" => '#,##0.00']);
         $sheet->setColumnFormat(["G2:G{$this->row}" => '#,##0.00']);
+        $sheet->setColumnFormat(["H2:H{$this->row}" => '0.00%']);
 //        $sheet->setAutoSize(false);
         $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(60);
         $sheet->getColumnDimension('B')->setAutoSize(false)->setWidth(60);
@@ -159,13 +165,15 @@ class ActivityResourceBreakDownReport
 
         $sheet->setCellValue("A{$this->row}", $level->name);
         $sheet->setCellValue("G{$this->row}", $level->cost);
+        $sheet->setCellValue("H{$this->row}", $level->weight / 100);
 
         $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
             $cells->setTextIndent($depth * 4)->setFont(['bold' => true]);
         });
+
         if ($depth) {
             $sheet->getRowDimension($this->row)
-                ->setOutlineLevel($depth < 8? $depth : 7)
+                ->setOutlineLevel($depth < 8 ? $depth : 7)
                 ->setCollapsed(true)->setVisible(false);
         }
 
@@ -173,11 +181,12 @@ class ActivityResourceBreakDownReport
             $this->buildExcel($sheet, $sublevel, $depth + 1);
         });
 
-        $level->activities->each(function($cost_accounts, $activity) use ($sheet, $depth) {
+        $level->activities->each(function ($cost_accounts, $activity) use ($sheet, $depth) {
             ++$this->row;
 
             $sheet->setCellValue("A{$this->row}", $activity);
-            $sheet->setCellValue("G{$this->row}", $cost_accounts->flatten()->sum('budget_cost'));
+            $sheet->setCellValue("G{$this->row}", $cost_accounts->flatten()->sum('cost'));
+            $sheet->setCellValue("H{$this->row}", $cost_accounts->flatten()->sum('weight') / 100);
 
             $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
                 $cells->setTextIndent(($depth + 1) * 4)->setFont(['bold' => true]);
@@ -194,6 +203,7 @@ class ActivityResourceBreakDownReport
                     ($cost_account['boq'] ? $cost_account['boq']->description : '(BOQ not found)'));
 
                 $sheet->setCellValue("G{$this->row}", $cost_account['cost']);
+                $sheet->setCellValue("H{$this->row}", $cost_account['weight'] / 100);
 
                 $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
                     $cells->setTextIndent(($depth + 2) * 4)->setFont(['italic' => true]);
@@ -201,10 +211,11 @@ class ActivityResourceBreakDownReport
 
                 $sheet->getRowDimension($this->row)->setOutlineLevel(($depth + 2) < 8 ? $depth + 2 : 7);
 
-               $cost_account['resources']->each(function ($resource) use ($sheet, $depth) {
+                $cost_account['resources']->each(function ($resource) use ($sheet, $depth) {
                     ++$this->row;
                     $sheet->row($this->row, [
-                        '', $resource->resource_name, $resource->resource_type, $resource->unit_price, $resource->budget_unit, $resource->measure_unit, $resource->budget_cost
+                        '', $resource->resource_name, $resource->resource_type, $resource->unit_price, $resource->budget_unit, $resource->measure_unit, $resource->budget_cost,
+                        $resource->weight / 100
                     ]);
 
                     $sheet->getRowDimension($this->row)

@@ -261,6 +261,11 @@ class ReportController extends Controller
     function budgetTrend(Project $project)
     {
         $report = new BudgetTrendReport($project);
+
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
         $data = $report->run();
 
         return view('reports.budget.budget-trend.index', $data);

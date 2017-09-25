@@ -4,7 +4,10 @@
 @endif
 @section('header')
     <div class="display-flex">
-        <h2 class="flex">WBS Levels &mdash; {{$project->name}}</h2>
+        <h2 class="flex">
+            @if ($includeCost) Budget Cost by Building @else WBS Levels @endif
+            &mdash; {{$project->name}}
+        </h2>
         <div>
             <a href="?excel" class="btn btn-info btn-sm"><i class="fa fa-cloud-download"></i> Export</a>
             <a href="?print=1&paint=wbs" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Print</a>
@@ -21,15 +24,17 @@
             <table class="table table-condensed table-bordered" id="report-header">
                 <thead>
                 <tr class="bg-primary">
-                    <th class="col-sm-{{$includeCost?9:12}}">Wbs Level</th>
+                    <th class="col-sm-{{$includeCost?7:12}}">Wbs Level</th>
                     @if ($includeCost)
                         <th class="col-sm-3">Budget Cost</th>
+                        <th class="col-sm-2">Weight</th>
                     @endif
                 </tr>
                 @if ($includeCost)
                     <tr class="info">
                         <th>Total</th>
                         <th>{{number_format($wbsTree->sum('cost'), 2)}}</th>
+                        <th>{{number_format($wbsTree->sum('weight'), 2)}}%</th>
                     </tr>
                 @endif
                 </thead>

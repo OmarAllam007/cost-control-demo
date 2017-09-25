@@ -19,6 +19,9 @@ class HighPriorityMaterialsReport
     /** @var int */
     protected $row = 1;
 
+    /** @var float */
+    protected $total;
+
     public function __construct(Project $project)
     {
         $this->project = $project;
@@ -33,6 +36,8 @@ class HighPriorityMaterialsReport
             ->groupBy('resource_id')
             ->get()->keyBy('resource_id');
 
+        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');
+
         $this->tree = $resources->map(function ($resource) use ($shadows) {
             $resource->budget_unit = $shadows->get($resource->id)->budget_unit ?? 0;
             $resource->budget_cost = $shadows->get($resource->id)->budget_cost ?? 0;
@@ -40,7 +45,15 @@ class HighPriorityMaterialsReport
         })->groupBy(function ($resource) {
             return strtolower(trim($resource->top_material));
         })->map(function (Collection $group, $name) {
-            return ['name' => strtoupper($name), 'resources' => $group, 'budget_cost' => $group->sum('budget_cost')];
+            $group = $group->map(function ($resource) {
+                $resource->weight = $resource->budget_cost * 100 / $this->total;
+                return $resource;
+            });
+
+            $total = $group->sum('budget_cost');
+            $weight = $total * 100 / $this->total;
+
+            return ['name' => strtoupper($name), 'resources' => $group, 'budget_cost' => $total, 'weight' => $weight];
         })->sortBy('name');
 
         return ['project' => $this->project, 'tree' => $this->tree];
@@ -61,9 +74,9 @@ class HighPriorityMaterialsReport
     {
         $this->run();
 
-        $sheet->row($this->row, ['Resource Name', 'Resource Code', 'Budget Unit', 'Budget Cost']);
+        $sheet->row($this->row, ['Resource Name', 'Resource Code', 'Budget Unit', 'Budget Cost', 'Weight']);
 
-        $sheet->cells("A{$this->row}:D{$this->row}", function($cells) {
+        $sheet->cells("A{$this->row}:E{$this->row}", function($cells) {
             $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
         });
 
@@ -72,17 +85,19 @@ class HighPriorityMaterialsReport
             $sheet->mergeCells("A{$this->row}:C{$this->row}");
             $sheet->setCellValue("A{$this->row}", $group['name']);
             $sheet->setCellValue("D{$this->row}", $group['budget_cost']);
-            $sheet->cells("A{$this->row}:D{$this->row}", function($cells) {
+            $sheet->setCellValue("E{$this->row}", $group['weight'] / 100);
+            $sheet->cells("A{$this->row}:E{$this->row}", function($cells) {
                 $cells->setFont(['bold' => true])->setBackground('#f5964f')->setFontColor('#ffffff');
             });
 
             $group['resources']->each(function ($resource) use ($sheet) {
-                $sheet->row(++$this->row, [$resource->name, $resource->code, $resource->budget_unit, $resource->budget_cost]);
+                $sheet->row(++$this->row, [$resource->name, $resource->code, $resource->budget_unit, $resource->budget_cost, $resource->weight / 100]);
 
             });
         });
 
         $sheet->setColumnFormat(["C2:D{$this->row}" => '#,##0.00']);
+        $sheet->setColumnFormat(["E2:E{$this->row}" => '0.00%']);
 
         $sheet->getColumnDimension('A')->setWidth(80);
         $sheet->setAutoFilter();

@@ -23,10 +23,11 @@
             <th class="col-sm-3">Activity</th>
             <th class="col-sm-2">Resource Name</th>
             <th class="col-sm-2">Resource Type</th>
-            <th class="col-sm-2">Price/Unit</th>
+            <th class="col-sm-1">Price/Unit</th>
             <th class="col-sm-1">Budget Unit</th>
             <th class="col-sm-1">Unit of Measure</th>
             <th class="col-sm-1">Budget Cost</th>
+            <th class="col-sm-1">Weight (%)</th>
         </tr>
         </thead>
     </table>

@@ -8,7 +8,8 @@
             </a>
         </td>
         @if ($includeCost)
-            <td class="col-sm-4">{{number_format($division->cost, 2)}}</td>
+            <td class="col-sm-2">{{number_format($division->cost, 2)}}</td>
+            <td class="col-sm-2">{{number_format($division->weight, 2)}}%</td>
         @endif
     </tr>
 
@@ -24,6 +25,7 @@
                 <td class="level-label">{{$activity->name}}</td>
                 @if ($includeCost)
                     <td>{{number_format($activity->cost, 2)}}</td>
+                    <td>{{number_format($activity->weight, 2)}}%</td>
                 @endif
             </tr>
         @endforeach
