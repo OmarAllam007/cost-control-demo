@@ -42,7 +42,7 @@ class RevisedBoqReport
             ->where('project_id', $this->project->id)
             ->groupBy('wbs_id', 'cost_account', 'description')
             ->get())->groupBy('wbs_id')->map(function (Collection $group) {
-            return $group->groupBy('cost_account');
+            return $group->keyBy('cost_account');
         });
 
         $this->revised_boqs = collect(
@@ -53,7 +53,7 @@ class RevisedBoqReport
                 ->get())
             ->groupBy('wbs_id')
             ->map(function (Collection $group) {
-                return $group->groupBy('cost_account');
+                return $group->keyBy('cost_account');
             });
 
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
@@ -68,9 +68,9 @@ class RevisedBoqReport
         return $this->wbs_levels->get($parent, collect())->map(function ($level) {
             $level->subtree = $this->buildTree($level->id);
 
-            $level->cost_accounts = $this->original_boqs->get($level->id, collect())->flatten()->map(function ($cost_account) {
+            $level->cost_accounts = $this->original_boqs->get($level->id, collect())->map(function ($cost_account) {
                 $cost_account->revised_boq = $this->revised_boqs
-                    ->get($cost_account->wbs_id)->get($cost_account->cost_account)->first()
+                    ->get($cost_account->wbs_id)->get($cost_account->cost_account)
                     ->revised_boq ?? 1;
 
                 return $cost_account;
@@ -141,25 +141,15 @@ class RevisedBoqReport
             $this->buildSheet($sheet, $sublevel, $depth);
         });
 
-        $level->activity->each(function (Collection $items, $name) use ($sheet, $depth) {
-            $sheet->row(++$this->row, [$name, '', $items->sum('original_boq'), $items->sum('revised_boq')]);
+        $level->cost_accounts->each(function ($cost_account) use ($sheet, $depth) {
+            $sheet->row(++$this->row, [$cost_account->description, $cost_account->cost_account, $cost_account->original_boq, $cost_account->revised_boq]);
+
             $sheet->getRowDimension($this->row)
                 ->setVisible(false)->setCollapsed(true)
-                ->setOutlineLevel(min($depth, 7));
+                ->setOutlineLevel(min($depth + 1, 7));
 
             $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
                 $cells->setTextIndent(6 * $depth);
-            });
-
-            $items->each(function ($item) use ($sheet, $depth) {
-                $sheet->row(++$this->row, [$item->description, $item->cost_account, $item->original_boq, $item->revised_boq]);
-                $sheet->getRowDimension($this->row)
-                    ->setVisible(false)->setCollapsed(true)
-                    ->setOutlineLevel(min($depth + 1, 7));
-
-                $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
-                    $cells->setTextIndent(6 * ($depth + 1));
-                });
             });
         });
     }
