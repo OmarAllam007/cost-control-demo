@@ -3,7 +3,9 @@
 namespace App\Reports\Budget;
 
 use App\Project;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
@@ -14,7 +16,10 @@ class RevisedBoqReport
     protected $project;
 
     /** @var Collection */
-    protected $boqs;
+    protected $revised_boqs;
+
+    /** @var Collection */
+    protected $original_boqs;
 
     /** @var Collection */
     protected $tree;
@@ -32,12 +37,23 @@ class RevisedBoqReport
 
     function run()
     {
-        $this->boqs = collect(\DB::table('break_down_resource_shadows as sh')
-            ->selectRaw('distinct boq_wbs_id as wbs_id, sh.activity, boqs.description, sh.cost_account, boqs.price_ur * boqs.quantity as original_boq, boqs.price_ur * sh.eng_qty as revised_boq')
-            ->join('boqs', 'sh.boq_id', '=','boqs.id')
-            ->where('sh.project_id', $this->project->id)->get())
-            ->groupBy('wbs_id')->map(function(Collection $group) {
-                return $group->sortBy('activity')->groupBy('activity');
+        $this->original_boqs = collect(\DB::table('boqs')
+            ->selectRaw('wbs_id, cost_account, description, sum(price_ur * quantity) as original_boq')
+            ->where('project_id', $this->project->id)
+            ->groupBy('wbs_id', 'cost_account', 'description')
+            ->get())->groupBy('wbs_id')->map(function (Collection $group) {
+            return $group->groupBy('cost_account');
+        });
+
+        $this->revised_boqs = collect(
+            \DB::table('break_down_resource_shadows')
+                ->where('project_id', $this->project->id)
+                ->selectRaw('boq_wbs_id as wbs_id, cost_account, sum(eng_qty * boq_equivilant_rate) as revised_boq')
+                ->groupBy('boq_wbs_id', 'cost_account')
+                ->get())
+            ->groupBy('wbs_id')
+            ->map(function (Collection $group) {
+                return $group->groupBy('cost_account');
             });
 
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
@@ -49,21 +65,29 @@ class RevisedBoqReport
 
     private function buildTree($parent = 0)
     {
-        return $this->wbs_levels->get($parent, collect())->map(function($level) {
+        return $this->wbs_levels->get($parent, collect())->map(function ($level) {
             $level->subtree = $this->buildTree($level->id);
-            $level->activity = $this->boqs->get($level->id, collect());
-            $level->original_boq = $level->activity->flatten()->sum('original_boq') + $level->subtree->sum('original_boq');
-            $level->revised_boq = $level->activity->flatten()->sum('revised_boq') + $level->subtree->sum('revised_boq');
+
+            $level->cost_accounts = $this->original_boqs->get($level->id, collect())->flatten()->map(function ($cost_account) {
+                $cost_account->revised_boq = $this->revised_boqs
+                    ->get($cost_account->wbs_id)->get($cost_account->cost_account)->first()
+                    ->revised_boq ?? 1;
+
+                return $cost_account;
+            });
+
+            $level->original_boq = $level->cost_accounts->sum('original_boq') + $level->subtree->sum('original_boq');
+            $level->revised_boq = $level->cost_accounts->sum('revised_boq') + $level->subtree->sum('revised_boq');
 
             return $level;
         })->reject(function ($level) {
-            return $level->subtree->isEmpty() && $level->activity->isEmpty();
+            return $level->subtree->isEmpty() && $level->cost_accounts->isEmpty();
         });
     }
 
     function excel()
     {
-        return \Excel::create(slug($this->project->name) . '-revised_boq', function(LaravelExcelWriter $excel) {
+        return \Excel::create(slug($this->project->name) . '-revised_boq', function (LaravelExcelWriter $excel) {
             $excel->sheet('Revised BOQ', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
             });
@@ -82,7 +106,7 @@ class RevisedBoqReport
             $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
         });
 
-        $this->tree->each(function($level) use ($sheet) {
+        $this->tree->each(function ($level) use ($sheet) {
             $this->buildSheet($sheet, $level);
         });
 
@@ -107,33 +131,33 @@ class RevisedBoqReport
                 ->setVisible(false)->setCollapsed(true)
                 ->setOutlineLevel(min($depth, 7));
 
-            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+            $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
                 $cells->setTextIndent(6 * $depth);
             });
         }
 
         ++$depth;
-        $level->subtree->each(function($sublevel) use ($sheet, $depth) {
+        $level->subtree->each(function ($sublevel) use ($sheet, $depth) {
             $this->buildSheet($sheet, $sublevel, $depth);
         });
 
-        $level->activity->each(function(Collection $items, $name) use ($sheet, $depth) {
+        $level->activity->each(function (Collection $items, $name) use ($sheet, $depth) {
             $sheet->row(++$this->row, [$name, '', $items->sum('original_boq'), $items->sum('revised_boq')]);
             $sheet->getRowDimension($this->row)
                 ->setVisible(false)->setCollapsed(true)
                 ->setOutlineLevel(min($depth, 7));
 
-            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+            $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
                 $cells->setTextIndent(6 * $depth);
             });
 
-            $items->each(function($item) use ($sheet, $depth) {
+            $items->each(function ($item) use ($sheet, $depth) {
                 $sheet->row(++$this->row, [$item->description, $item->cost_account, $item->original_boq, $item->revised_boq]);
                 $sheet->getRowDimension($this->row)
                     ->setVisible(false)->setCollapsed(true)
                     ->setOutlineLevel(min($depth + 1, 7));
 
-                $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+                $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
                     $cells->setTextIndent(6 * ($depth + 1));
                 });
             });
