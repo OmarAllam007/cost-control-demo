@@ -46,12 +46,13 @@ class RevisedBoqReport
         });
 
         $this->revised_boqs = collect(
-            \DB::table('break_down_resource_shadows')
-                ->where('project_id', $this->project->id)
-                ->selectRaw('boq_wbs_id as wbs_id, cost_account, sum(eng_qty * boq_equivilant_rate) as revised_boq')
-                ->groupBy('boq_wbs_id', 'cost_account')
+            \DB::table('break_down_resource_shadows as sh')
+                ->where('sh.project_id', $this->project->id)
+                ->join('boqs as boq', 'sh.boq_id', '=', 'boq.id')
+                ->selectRaw('boq_wbs_id as wbs_level_id, sh.cost_account, AVG(eng_qty * boq.price_ur)  as revised_boq, count(DISTINCT sh.wbs_id) as rep')
+                ->groupBy('sh.boq_wbs_id', 'sh.cost_account')
                 ->get())
-            ->groupBy('wbs_id')
+            ->groupBy('wbs_level_id')
             ->map(function (Collection $group) {
                 return $group->keyBy('cost_account');
             });
@@ -69,9 +70,14 @@ class RevisedBoqReport
             $level->subtree = $this->buildTree($level->id);
 
             $level->cost_accounts = $this->original_boqs->get($level->id, collect())->map(function ($cost_account) {
-                $cost_account->revised_boq = $this->revised_boqs
-                    ->get($cost_account->wbs_id)->get($cost_account->cost_account)
-                    ->revised_boq ?? 1;
+                $revised = $cost_account->revised_boq = $this->revised_boqs
+                    ->get($cost_account->wbs_id)->get($cost_account->cost_account);
+
+                if ($revised) {
+                    $cost_account->revised_boq = $revised->revised_boq * $revised->rep;
+                } else {
+                    $cost_account->revised_boq = 0;
+                }
 
                 return $cost_account;
             });
