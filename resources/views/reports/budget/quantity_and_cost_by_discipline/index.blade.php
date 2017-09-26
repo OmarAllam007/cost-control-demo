@@ -12,7 +12,7 @@
 
         @if (!request('print'))
             <div class="btn-toolbar">
-                <a href="?excel" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i> Excel</a>
+                <a href="?excel" class="btn btn-info btn-sm"><i class="fa fa-cloud-download"></i> Export</a>
                 <a href="?print=1&paint=cost-dry-discipline" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
                 <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i> Back</a>
             </div>
@@ -36,17 +36,17 @@
         <tbody>
         @foreach($disciplines as $cost)
             <tr>
-                <td>{{$cost->type ?: 'General'}}</td>
-                <td class="text-center {{$cost->cost_diff < 0? 'text-danger' : 'text-success'}}">{{number_format($cost->cost_diff, 2) }}</td>
-                <td class="text-center {{$cost->qty_diff < 0? 'text-danger' : 'text-success'}}">{{number_format($cost->qty_diff, 2)}}</td>
+                <td>{{$cost['type'] ?: 'General'}}</td>
+                <td class="text-center {{$cost['cost_diff']< 0? 'text-danger' : 'text-success'}}">{{number_format($cost['cost_diff'], 2) }}</td>
+                <td class="text-center {{$cost['qty_diff']< 0? 'text-danger' : 'text-success'}}">{{number_format($cost['qty_diff'], 2)}}</td>
             </tr>
         @endforeach
         </tbody>
 
         <tfoot>
         @php
-            $qty_diff = $disciplines->sum('qty_diff');
             $cost_diff = $disciplines->sum('cost_diff');
+            $qty_diff = $disciplines->sum('qty_diff');
         @endphp
         <tr>
             <th><strong>Grand Total</strong></th>

@@ -2,9 +2,11 @@
 
 namespace App\Reports\Budget;
 
+use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Project;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
@@ -27,17 +29,30 @@ class QtyAndCostReport
 
     function run()
     {
-        $this->disciplines = collect(\DB::select('SELECT type, sum((budget_price - dry_price) * budget_qty) AS cost_diff, sum((budget_qty - dry_qty) * budget_price) AS qty_diff FROM (
-  SELECT concat(sh.boq_wbs_id, sh.cost_account), a.discipline AS type,
-    sum(sh.boq_equivilant_rate) AS budget_price, avg(boqs.dry_ur) AS dry_price,
-   avg(qs.budget_qty) AS budget_qty, avg(boqs.quantity) AS dry_qty
-  FROM break_down_resource_shadows sh
-    LEFT JOIN boqs ON (sh.boq_id = boqs.id)
-    LEFT JOIN std_activities a ON sh.activity_id = a.id
-    LEFT JOIN qty_surveys qs ON (sh.survey_id = qs.id)
-  WHERE sh.project_id = 35
-  GROUP BY 1, 2
-) AS data GROUP BY  type'));
+        $boqs = Boq::where('project_id', $this->project->id)->get(['id', 'type', 'quantity', 'dry_ur']);
+        $budgets = BreakDownResourceShadow::groupBy('boq_id')
+            ->selectRaw('boq_id, sum(budget_cost) as cost, AVG(budget_qty) as budget_qty, count(DISTINCT wbs_id) as wbs_count')
+            ->get()->keyBy('boq_id');
+
+        $disciplines = [];
+
+        foreach ($boqs as $boq) {
+            $type = strtoupper($boq->type);
+            if (empty($disciplines[$type])) {
+                $disciplines[$type] = ['cost_diff' => 0, 'qty_diff' => 0, 'type' => $type];
+            }
+
+            $budget = $budgets->get($boq->id);
+
+            if ($budget) {
+                $qty = $budget->budget_qty * $budget->wbs_count;
+                $price = $qty? $budget->cost / $qty : 0;
+                $disciplines[$type]['cost_diff'] += ($price - $boq->dry_ur) * $qty;
+                $disciplines[$type]['qty_diff'] += ($qty - $boq->quantity) * $price;
+            }
+        }
+
+        $this->disciplines = collect($disciplines)->sortBy('type');
 
         return ['project' => $this->project, 'disciplines' => $this->disciplines];
     }
@@ -67,7 +82,7 @@ class QtyAndCostReport
 
         $this->disciplines->each(function($cost) use ($sheet) {
             $sheet->row(++$this->row, [
-                $cost->type, $cost->cost_diff, $cost->qty_diff
+                $cost['type'], $cost['cost_diff'], $cost['qty_diff']
             ]);
         });
 
