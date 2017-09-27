@@ -243,6 +243,7 @@ class CostImportFixer
         $validationErrors = [];
         foreach ($quantities as $key => $quantity) {
             $total = $errors->get($key)['rows']->sum(6);
+            $quantity = floatval($quantity);
             if ($quantity) {
                 $unit_price = $total / $quantity;
                 if ($unit_price < 0) {
