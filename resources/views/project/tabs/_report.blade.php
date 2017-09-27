@@ -29,9 +29,9 @@
                 <a href="{{route('high_priority.report',$project)}}" target="_blank" class="btn btn-success threeD"
                    style="width:100%; margin-bottom: 2px;">High Priority Materials</a><br>
                 <a href="{{route('man_power.report',$project)}}" target="_blank" class="btn btn-success threeD"
-                   style="width:100%;margin-bottom: 2px;">Budget Number (Manpower)</a><br>
+                   style="width:100%;margin-bottom: 2px;">Labour Budget (Cost-Unit)</a><br>
                 <a href="{{route('budget_summary.report',$project)}}" target="_blank" class="btn btn-success threeD"
-                   style="width:100%;margin-bottom: 2px;">Budget Summary</a><br>
+                   style="width:100%;margin-bottom: 2px;">Standard Activity Cost</a><br>
                 <a href="{{route('activity_resource_breakdown.report',$project)}}" target="_blank"
                    class="btn btn-success threeD" style="width:100%;margin-bottom: 2px;">Activity Resource Breakdown</a><br>
                 <a href="{{route('revised_boq.report',$project)}}" target="_blank" class="btn btn-success threeD"
@@ -54,8 +54,7 @@
                    style="width:100%;margin-bottom: 2px;">Budget Cost v.s Dry Cost By Building
                 </a><br>
                 <a href="{{route('budget_cost_dry_cost_discipline.report',$project)}}" target="_blank"
-                   class="btn btn-success threeD" style="width:100%;margin-bottom: 2px;">Budget Cost v.s Dry Cost By
-                    Discipline
+                   class="btn btn-success threeD" style="width:100%;margin-bottom: 2px;">Budget Cost v.s Dry Cost By Discipline
                 </a><br>
                 <a href="{{route('qty_cost_discipline.report',$project)}}" target="_blank"
                    class="btn btn-success threeD"
