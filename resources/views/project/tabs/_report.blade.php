@@ -17,8 +17,7 @@
                    style="width:100%;margin-bottom: 2px;">PRODUCTIVITY</a><br>
                 <a href="{{route('qsReport.report',$project)}}" target="_blank" class="btn btn-success threeD"
                    style="width:100%;margin-bottom: 2px;">QS Summary</a><br>
-                <a href="#" class="btn btn-success threeD" target="" style="width:100%;margin-bottom: 2px;">REFERENCES &
-                    NOTES</a><br>
+                <a href="#" class="btn btn-success threeD" target="" style="width:100%;margin-bottom: 2px;">REFERENCES &amp; NOTES</a><br>
                 <a href="{{route('boq_price_list.report',$project)}}" target="_blank" class="btn btn-success threeD"
                    style="width:100%;margin-bottom: 2px;">BOQ PRICE LIST</a><br>
             </th>

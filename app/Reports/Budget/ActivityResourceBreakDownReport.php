@@ -107,7 +107,7 @@ class ActivityResourceBreakDownReport
 
                     $first = $resources->first();
                     $boq = $this->boqs->get($first->boq_id);
-                    $cost_account->put('boq', $boq);
+                    $cost_account->boq = $boq;
 
                     return $cost_account;
                 });
