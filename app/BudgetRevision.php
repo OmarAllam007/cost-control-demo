@@ -48,6 +48,17 @@ class BudgetRevision extends Model
         self::created(function (self $rev) {
             dispatch(new CreateRevisionForProject($rev));
         });
+
+        self::deleted(function ($revision) {
+            $tables = [
+                'revision_boqs', 'revision_breakdown_resource_shadows', 'revision_breakdown_resources',
+                'revision_breakdowns', 'revision_productivities', 'revision_qty_surveys', 'revision_resources'
+            ];
+
+            foreach ($tables as $table) {
+                \DB::table($table)->where('revision_id', $revision->id)->delete();
+            }
+        });
     }
 
     /**
@@ -84,4 +95,5 @@ class BudgetRevision extends Model
     {
         return url("/project/{$this->project_id}/revisions/{$this->id}");
     }
+
 }

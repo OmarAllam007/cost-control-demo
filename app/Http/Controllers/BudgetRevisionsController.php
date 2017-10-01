@@ -94,8 +94,18 @@ class BudgetRevisionsController extends Controller
         return redirect()->to(route('project.budget', $project));
     }
 
-    /*function destroy(BudgetRevision $revision)
+    function destroy(Project $project, BudgetRevision $revision)
     {
+        if (cannot('budget_owner', $project)) {
+            flash('You are not authorized to do this action');
+        } elseif ($revision->is_automatic) {
+            flash('Cannot delete automatic revisions');
+        } else {
+            $revision->delete();
+            flash('Revision has been deleted', 'info');
+        }
 
-    }*/
+        return redirect()->route('project.budget', $project);
+
+    }
 }

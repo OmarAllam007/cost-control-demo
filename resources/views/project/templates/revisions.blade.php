@@ -4,18 +4,18 @@
             <i class="fa fa-spinner fa-spin fa-3x"></i>
         </div>
 
-            <div class="form-group clearfix">
-                <div class="pull-right">
-                    @if ($project->revisions()->count() > 1)
-                        <a href="{{route('project.budget-trend', $project)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-line-chart"></i> Budget Trend</a>
-                    @endif
-                    @can('owner', $project)
-                        <a href="{{route('revisions.create', $project)}}" class="btn btn-primary btn-sm in-iframe" title="Add Revision">
-                            <i class="fa fa-plus"></i> Add Revision
-                        </a>
-                    @endcan
-                </div>
+        <div class="form-group clearfix">
+            <div class="pull-right">
+                @if ($project->revisions()->count() > 1)
+                    <a href="{{route('project.budget-trend', $project)}}" class="btn btn-success btn-sm" target="_blank"><i class="fa fa-line-chart"></i> Budget Trend</a>
+                @endif
+                @can('owner', $project)
+                    <a href="{{route('revisions.create', $project)}}" class="btn btn-primary btn-sm in-iframe" title="Add Revision">
+                        <i class="fa fa-plus"></i> Add Revision
+                    </a>
+                @endcan
             </div>
+        </div>
 
         <table class="table table-striped table-condensed" v-if="revisions.length">
             <thead>
@@ -32,8 +32,14 @@
                 <td v-text="revision.user"></td>
                 <td v-text="revision.created_date"></td>
                 <td>
-                    <a :href="revision.url" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Show</a>
-                    <a :href="`${revision.url}/export`" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Export</a>
+                    <form :action="`${revision.url}/delete`" method="post">
+                        <a :href="revision.url" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Show</a>
+                        <a :href="`${revision.url}/export`" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Export</a>
+                        @can('budget_owner', $project)
+                            {{csrf_field()}} {{method_field('delete')}}
+                            <button v-if="!revision.is_automatic" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                        @endcan
+                    </form>
                 </td>
             </tr>
             </tbody>
