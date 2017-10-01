@@ -208,7 +208,7 @@ Route::get('project/{project}/revisions/create', ['as' => 'revisions.create', 'u
 Route::get('project/{project}/revisions/{revision}', ['as' => 'revisions.show', 'uses' => 'BudgetRevisionsController@show']);
 Route::get('project/{project}/revisions/{revision}/export', ['as' => 'revisions.export', 'uses' => 'BudgetRevisionsController@export']);
 Route::post('project/{project}/revisions', ['as' => 'revisions.store', 'uses' => 'BudgetRevisionsController@store']);
-//Route::get('project/{project}/revisions/{revision}/edit', ['as' => 'revisions.edit', 'uses' => 'BudgetRevisionsController@edit']);
+Route::delete('project/{project}/revisions/{revision}/delete', 'BudgetRevisionsController@destroy');
 //Route::put('project/{project}/revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);
 
 Route::post('/period-report/{period}', 'PeriodReportsController@store')->name('period-report.store');
