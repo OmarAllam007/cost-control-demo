@@ -49,8 +49,8 @@ class RevisedBoqReport
             \DB::table('break_down_resource_shadows as sh')
                 ->where('sh.project_id', $this->project->id)
                 ->join('boqs as boq', 'sh.boq_id', '=', 'boq.id')
-                ->selectRaw('boq_wbs_id as wbs_level_id, sh.cost_account, AVG(eng_qty * boq.price_ur)  as revised_boq, count(DISTINCT sh.wbs_id) as rep')
-                ->groupBy('sh.boq_wbs_id', 'sh.cost_account')
+                ->selectRaw('boq_wbs_id as wbs_level_id, sh.cost_account, eng_qty, boq.price_ur, count(DISTINCT sh.wbs_id) as rep')
+                ->groupBy('sh.boq_wbs_id', 'sh.cost_account', 'eng_qty', 'boq.price_ur')
                 ->get())
             ->groupBy('wbs_level_id')
             ->map(function (Collection $group) {
@@ -71,10 +71,10 @@ class RevisedBoqReport
 
             $level->cost_accounts = $this->original_boqs->get($level->id, collect())->map(function ($cost_account) {
                 $revised = $cost_account->revised_boq = $this->revised_boqs
-                    ->get($cost_account->wbs_id)->get($cost_account->cost_account);
-
+                    ->get($cost_account->wbs_id, collect())->get($cost_account->cost_account);
+                
                 if ($revised) {
-                    $cost_account->revised_boq = $revised->revised_boq * $revised->rep;
+                    $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur * $revised->rep;
                 } else {
                     $cost_account->revised_boq = 0;
                 }

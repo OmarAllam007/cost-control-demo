@@ -23,6 +23,8 @@ use App\Reports\Budget\QsSummaryReport;
 use App\Reports\Budget\ResourceDictReport;
 use App\Reports\Budget\RevisedBoqReport;
 use App\Reports\Budget\StdActivityReport;
+use App\Reports\Budget\WbsDictionary;
+use App\Reports\Budget\WbsLabours;
 use App\Reports\Budget\WbsReport;
 use App\Resources;
 use App\ResourceType;
@@ -251,11 +253,14 @@ class ReportController extends Controller
         return view('reports.budget.revised_boq.index', $data);
     }
 
-    public function topMaterialResourcesReset(Project $project)
+    public function wbsDictionary(Project $project)
     {
-        Resources::flushEventListeners();
-        Resources::where('project_id', $project->id)->whereNotNull('top_material')->update(['top_material' => null]);
-        return redirect()->route('project.show', $project);
+        return $this->report(new WbsDictionary($project), 'reports.budget.wbs-dictionary.index');
+    }
+
+    function wbsLabours(Project $project)
+    {
+        return $this->report(new WbsLabours($project), 'reports.budget.wbs-labours.index');
     }
 
     function budgetTrend(Project $project)
@@ -271,4 +276,12 @@ class ReportController extends Controller
         return view('reports.budget.budget-trend.index', $data);
     }
 
+    protected function report($report, $view)
+    {
+        if (request()->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view($view, $report->run());
+    }
 }
