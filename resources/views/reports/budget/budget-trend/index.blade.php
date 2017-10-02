@@ -149,7 +149,7 @@
             <div id="chart" style="min-height: 300px;"></div>
         </div>
     @else
-        <div class="alert alert-info"><i class="fa fa-info circle"></i> No revision data found</div>
+        <div class="alert alert-info"><i class="fa fa-info-circle"></i> No revision data found</div>
     @endif
 @endsection
 
