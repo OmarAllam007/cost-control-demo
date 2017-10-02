@@ -91,6 +91,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('high-priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriorityMaterials']);
 
     Route::get('wbs-dictionary/{project}', 'ReportController@wbsDictionary')->name('wbs_dictionary_report');
+    Route::get('wbs-labours/{project}', 'ReportController@wbsLabours')->name('wbs_labours_report');
     //Export Project Reports
     Route::get('export_std_activity/{project}',['as'=>'budget_std_activity.export','uses'=>'ExportReportController@exportStdActivity']);
     Route::get('export_productivity/{project}',['as'=>'budget_productivity.export','uses'=>'ExportReportController@exportProductivity']);

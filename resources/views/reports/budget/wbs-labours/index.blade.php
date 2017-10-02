@@ -3,7 +3,7 @@
 @section('header')
     <div class="display-flex">
         <h2 class="flex">
-            WBS Dictionary &mdash; {{$project->name}}
+            Manday by Control Point &mdash; {{$project->name}}
         </h2>
         <div>
             <a href="?excel" class="btn btn-info btn-sm"><i class="fa fa-cloud-download"></i> Export</a>
@@ -40,7 +40,7 @@
                 <table class="table table-condensed table-bordered" id="report-body">
                     <tbody>
                     @foreach($tree as $wbs_level)
-                        @include('reports.budget.wbs-dictionary._recursive', ['wbs_level' => $wbs_level, 'tree_level' => 0])
+                        @include('reports.budget.wbs-labours._recursive', ['wbs_level' => $wbs_level, 'tree_level' => 0])
                     @endforeach
                     </tbody>
                 </table>

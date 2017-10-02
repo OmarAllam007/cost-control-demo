@@ -11,7 +11,7 @@
 
 
 @foreach($wbs_level->subtree as $child)
-    @include('reports.budget.wbs-dictionary._recursive', ['wbs_level' => $child, 'tree_level' => $tree_level +1])
+    @include('reports.budget.wbs-labours._recursive', ['wbs_level' => $child, 'tree_level' => $tree_level +1])
 @endforeach
 
 @foreach($wbs_level->resource_dict as $resource)

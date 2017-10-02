@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 
-class WbsDictionary
+class WbsLabours
 {
     /** @var Project */
     protected $project;
@@ -38,10 +38,10 @@ class WbsDictionary
     {
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
-        $this->total = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
+        $query = BreakDownResourceShadow::where('project_id', $this->project->id)->where('resource_type_id', 2);
+        $this->total = $query->sum('budget_cost');
 
-        $this->resources = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->selectRaw('wbs_id, resource_name, resource_code, sum(budget_unit) as budget_unit, avg(unit_price) as unit_price, sum(budget_cost) as cost')
+        $this->resources = $query->selectRaw('wbs_id, resource_name, resource_code, sum(budget_unit) as budget_unit, avg(unit_price) as unit_price, sum(budget_cost) as cost')
             ->groupBy(['wbs_id', 'resource_name', 'resource_code'])
             ->get()->map(function($resource) {
                 $resource->weight = $resource->cost * 100 / $this->total;
@@ -55,8 +55,8 @@ class WbsDictionary
 
     public function excel()
     {
-        \Excel::create(slug($this->project->name) . '_wbs-dictionary', function($excel) {
-            $excel->sheet('WBS Dictionary', function ($sheet) {
+        \Excel::create(slug($this->project->name) . '_manday-by-building', function($excel) {
+            $excel->sheet('MandayByBuilding', function ($sheet) {
                 $this->sheet($sheet);
             });
 

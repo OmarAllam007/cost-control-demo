@@ -24,6 +24,7 @@ use App\Reports\Budget\ResourceDictReport;
 use App\Reports\Budget\RevisedBoqReport;
 use App\Reports\Budget\StdActivityReport;
 use App\Reports\Budget\WbsDictionary;
+use App\Reports\Budget\WbsLabours;
 use App\Reports\Budget\WbsReport;
 use App\Resources;
 use App\ResourceType;
@@ -257,6 +258,11 @@ class ReportController extends Controller
         return $this->report(new WbsDictionary($project), 'reports.budget.wbs-dictionary.index');
     }
 
+    function wbsLabours(Project $project)
+    {
+        return $this->report(new WbsLabours($project), 'reports.budget.wbs-labours.index');
+    }
+
     function budgetTrend(Project $project)
     {
         $report = new BudgetTrendReport($project);
@@ -278,5 +284,4 @@ class ReportController extends Controller
 
         return view($view, $report->run());
     }
-
 }
