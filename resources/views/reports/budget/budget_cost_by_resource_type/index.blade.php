@@ -58,23 +58,26 @@
 @endsection
 
 @section('javascript')
+    @php
+    $columns = $costs->map(function ($type) { return [$type->resource_type, $type->budget_cost]; });
+    @endphp
     <script src="/js/d3.min.js"></script>
     <script src="/js/c3.min.js"></script>
     <script>
         c3.generate({
             bindto: '#bar-chart-area',
             data: {
-                columns: [{!! $costs->pluck('budget_cost')->prepend('Budget Cost') !!}],
+                columns: {!! $columns !!},
                 type: 'bar',
             },
             bar: {
                 width: 30
             },
             axis: {
-                x: {
+                /*x: {
                     type: 'category',
                     categories: {!! $costs->pluck('resource_type') !!}
-                },
+                },*/
                 y : {
                     tick: {
                         format: d3.format(",.2f")
