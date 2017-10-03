@@ -21,7 +21,7 @@
         <td class="col-sm-2">{{$resource->resource_code}}</td>
         <td class="col-sm-1">{{number_format($resource->budget_unit, 2)}}</td>
         <td class="col-sm-1">{{number_format($resource->unit_price)}}</td>
-        <td class="col-sm-1">{{number_format($resource->budget_cost)}}</td>
+        <td class="col-sm-1">{{number_format($resource->cost)}}</td>
         <td class="col-sm-1">{{number_format($resource->weight, 2)}}%</td>
     </tr>
 @endforeach

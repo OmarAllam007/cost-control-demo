@@ -21,7 +21,7 @@
         <a href="{{route('resource_dictionary.report', $project)}}" target="_blank" class="btn btn-success btn-block">RESOURCE DICITIONARY</a>
         <a href="{{route('high_priority.report', $project)}}" target="_blank" class="btn btn-success btn-block">High Priority Materials</a>
         <a href="{{route('man_power.report', $project)}}" target="_blank" class="btn btn-success btn-block">Labour Budget (Cost-Unit)</a>
-        <a href="{{route('wbs_labours_report', $project)}}" target="_blank" class="btn btn-success btn-block">Mandays by Building</a>
+        <a href="{{route('wbs_labours_report', $project)}}" target="_blank" class="btn btn-success btn-block">Manday by Control Point</a>
         <a href="{{route('budget_summary.report', $project)}}" target="_blank" class="btn btn-success btn-block">Standard Activity Cost</a>
         <a href="{{route('activity_resource_breakdown.report', $project)}}" target="_blank" class="btn btn-success btn-block">Activity Resource Breakdown</a>
         <a href="{{route('wbs_dictionary_report', $project)}}" target="_blank" class="btn btn-success btn-block">WBS Dictionary</a>
