@@ -43,6 +43,9 @@ class BudgetRevision extends Model
             }
 
             $rev->rev_num = $lastRevNum + 1;
+
+            $rev->original_contract_amount = $rev->project->project_contract_value;
+            $rev->change_order_amount = $rev->project->change_order_amount;
         });
 
         self::created(function (self $rev) {
@@ -79,6 +82,11 @@ class BudgetRevision extends Model
     {
         return $this->created_at->format('d/m/Y');
     }
+
+    /*public function getRevisedContractAmount()
+    {
+        return $this->original_contract_amount + $this->change_order_amount;
+    }*/
 
     function url()
     {

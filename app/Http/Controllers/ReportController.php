@@ -7,6 +7,7 @@ use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
 use App\Reports\Budget\HighPriorityMaterialsReport;
+use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Reports\Budget\QtyAndCostReport;
 use App\Http\Controllers\Reports\RevisedBoq;
 use App\Project;
@@ -261,6 +262,11 @@ class ReportController extends Controller
     function wbsLabours(Project $project)
     {
         return $this->report(new WbsLabours($project), 'reports.budget.wbs-labours.index');
+    }
+
+    function profitability(Project $project)
+    {
+        return $this->report(new ProfitabilityIndexReport($project), 'reports.budget.profitability.index');
     }
 
     function budgetTrend(Project $project)
