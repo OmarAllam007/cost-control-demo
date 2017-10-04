@@ -46,7 +46,10 @@
         </section>
     </section>
 
+    <h4 class="text-center">Profitability Trend</h4>
     <div id="index-trend-chart" style="min-height: 300px;"></div>
+
+    <h4 class="text-center">Budget Amount vs Contract Amount</h4>
     <div id="diff-chart" style="min-height: 300px;"></div>
 @endsection
 
