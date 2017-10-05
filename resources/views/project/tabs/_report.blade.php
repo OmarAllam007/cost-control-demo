@@ -9,6 +9,7 @@
 
     <div class="col-sm-4">
         <a href="{{route('wbs.report', $project)}}" target="_blank" class="btn btn-info btn-block">WBS (CONTROL POINT)</a>
+        <a href="{{route('project.profitability-report', $project)}}" target="_blank" class="btn btn-info btn-block">Profitability Index</a>
         <a href="{{route('stdActivity.report', $project)}}" target="_blank" class="btn btn-info btn-block">STANDARD ACTIVITY</a>
         <a href="{{route('productivity.report', $project)}}" target="_blank" class="btn btn-info btn-block">PRODUCTIVITY</a>
         <a href="{{route('qsReport.report', $project)}}" target="_blank" class="btn btn-info btn-block">QS Summary</a>
