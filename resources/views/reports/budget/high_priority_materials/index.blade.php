@@ -38,13 +38,15 @@
                     <tbody>
                     @foreach ($tree as $group)
                         <tr class="bg-info">
-                            <th colspan="3">{{$group['name']}}</th>
+                            <th colspan="3">
+                                <a href="" class="group-name" data-target="{{slug($group['name'])}}">{{$group['name']}}</a>
+                            </th>
                             <th class="text-right">{{number_format($group['budget_cost'], 2)}}</th>
                             <th>{{number_format($group['weight'], 2)}}%</th>
                         </tr>
 
                         @foreach($group['resources'] as $resource)
-                            <tr>
+                            <tr class="{{slug($group['name'])}} collapse">
                                 <td class="col-sm-4">{{$resource->name}}</td>
                                 <td class="col-sm-2">{{$resource->resource_code}}</td>
                                 <td class="col-sm-2 text-right">{{number_format($resource->budget_unit, 2)}}</td>
@@ -97,6 +99,13 @@
             bar: {
                 width: 40
             }
+        });
+
+        $('.group-name').on('click', function (e) {
+            e.preventDefault();
+
+            let target = $(this).data('target');
+            $(`.${target}`).toggleClass('in');
         });
     </script>
 @endsection
