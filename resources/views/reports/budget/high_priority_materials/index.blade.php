@@ -41,8 +41,8 @@
                             <th colspan="3">
                                 <a href="" class="group-name" data-target="{{slug($group['name'])}}">{{$group['name']}}</a>
                             </th>
-                            <th class="text-right">{{number_format($group['budget_cost'], 2)}}</th>
-                            <th>{{number_format($group['weight'], 2)}}%</th>
+                            <th class="col-sm-2 text-right">{{number_format($group['budget_cost'], 2)}}</th>
+                            <th class="col-sm-2">{{number_format($group['weight'], 2)}}%</th>
                         </tr>
 
                         @foreach($group['resources'] as $resource)
