@@ -25,7 +25,5 @@ Route::group(['middleware' => 'auth'], function () {
     require __DIR__ . '/Routes/omar.php';
 });
 
-Route::get('/info', function() {
-    phpinfo();
-});
-
+Route::get('/project/{project}/charter-data', 'ProjectCharterController@edit')->name('project.charter-data');
+Route::patch('/project/{project}/charter-data', 'ProjectCharterController@update');

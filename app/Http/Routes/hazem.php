@@ -212,7 +212,3 @@ Route::post('project/{project}/revisions', ['as' => 'revisions.store', 'uses' =>
 //Route::put('project/{project}/revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);
 
 Route::post('/period-report/{period}', 'PeriodReportsController@store')->name('period-report.store');
-
-
-Route::get('/project/{project}/charter-data', 'ProjectCharterController@edit')->name('project.charter-data');
-Route::patch('/project/{project}/charter-data', 'ProjectCharterController@update');
