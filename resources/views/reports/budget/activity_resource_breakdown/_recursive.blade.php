@@ -1,5 +1,5 @@
 <tr class="wbs-level level-{{$depth}} child-{{$level->parent_id}} {{$depth? 'hidden' : ''}}">
-    <td colspan="6" class="col-sm-10 level-label">
+    <td colspan="6" class="level-label">
         <a href="#" class="open-level" data-target="child-{{$level->id}}">
             <strong><i class="fa fa-plus-square"></i> {{$level->name}} <small>({{$level->code}})</small></strong>
         </a>
@@ -15,7 +15,7 @@
 
 @forelse($level->activities as $activity => $cost_accounts)
     <tr class="level-{{$depth + 1}} activity-level child-{{$level->id}} hidden">
-        <td class="col-sm-10 level-label" colspan="6">
+        <td class="level-label" colspan="6">
             <a href="#" class="open-level" data-target="activity-{{$level->id}}-{{slug($activity)}}">
                 <strong><i class="fa fa-plus-square"></i> {{$activity}}</strong>
             </a>
@@ -27,7 +27,7 @@
 
     @foreach($cost_accounts as $label => $cost_account)
         <tr class="level-{{$depth + 2}} cost-account-level activity-{{$level->id}}-{{slug($activity)}} hidden">
-            <td class="col-sm-10 level-label" colspan="6">
+            <td class="level-label" colspan="6">
                 <a href="#" class="open-level" data-target="resources-{{$level->id}}-{{slug($label)}}">
                     <strong>
                         <i class="fa fa-plus-square"></i>
