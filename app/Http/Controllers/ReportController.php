@@ -6,6 +6,7 @@ use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
+use App\Reports\Budget\CharterReport;
 use App\Reports\Budget\HighPriorityMaterialsReport;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Reports\Budget\QtyAndCostReport;
@@ -230,28 +231,12 @@ class ReportController extends Controller
 
     public function highPriorityMaterials(Project $project)
     {
-        $report = new HighPriorityMaterialsReport($project);
-
-        if (request()->exists('excel')) {
-            return $report->excel();
-        }
-
-        $data = $report->run();
-
-        return view('reports.budget.high_priority_materials.index', $data);
+        return $this->report(new HighPriorityMaterialsReport($project), 'reports.budget.high_priority_materials.index');
     }
 
     public function revisedBoq(Project $project)
     {
-        $report = new RevisedBoqReport($project);
-
-        if (request()->exists('excel')) {
-            return $report->excel();
-        }
-
-        $data = $report->run();
-
-        return view('reports.budget.revised_boq.index', $data);
+        return $this->report(new RevisedBoqReport($project), 'reports.budget.revised_boq.index');
     }
 
     public function wbsDictionary(Project $project)
@@ -267,6 +252,11 @@ class ReportController extends Controller
     function profitability(Project $project)
     {
         return $this->report(new ProfitabilityIndexReport($project), 'reports.budget.profitability.index');
+    }
+
+    function charter(Project $project)
+    {
+        return $this->report(new CharterReport($project), 'reports.budget.charter.index');
     }
 
     function budgetTrend(Project $project)

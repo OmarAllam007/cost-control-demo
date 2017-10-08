@@ -28,7 +28,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/breakdowns/import/{project}', ['as' => 'breakdowns.postImport', 'uses' => 'EasyUploadController@store']);
 });
 
-Route::get('/info', function() {
-    phpinfo();
-});
-
+Route::get('/project/{project}/charter-data', 'ProjectCharterController@edit')->name('project.charter-data');
+Route::patch('/project/{project}/charter-data', 'ProjectCharterController@update');
