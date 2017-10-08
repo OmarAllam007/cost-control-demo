@@ -15,7 +15,8 @@
         "barryvdh/laravel-debugbar": "^2.3",
         "predis/predis": "^1.1",
         "maatwebsite/excel": "^2.1",
-        "dompdf/dompdf": "^0.8.0"
+        "dompdf/dompdf": "^0.8.0",
+        "doctrine/dbal": "^2.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
