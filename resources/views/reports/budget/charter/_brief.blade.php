@@ -1,36 +1,21 @@
 @if (trim($project->description))
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4 class="panel-title">Project Brief</h4>
-        </div>
-
-        <div class="panel-body">
-            {!! nl2br(e($project->description)) !!}
-        </div>
-    </div>
+    <h4 class="text-center page-header">Project Brief</h4>
+    <p class="small">
+        {!! nl2br(e($project->description)) !!}
+    </p>
 @endif
 
 
 @if (trim($project->discipline_brief))
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4 class="panel-title">Discipline Brief</h4>
-        </div>
-
-        <div class="panel-body">
-            {!! nl2br(e($project->discipline_brief)) !!}
-        </div>
-    </div>
+    <h4 class="text-center page-header">Discipline Brief</h4>
+    <p class="small">
+        {!! nl2br(e($project->discipline_brief)) !!}
+    </p>
 @endif
 
 @if (trim($project->assumptions))
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4 class="panel-title">Assumptions</h4>
-        </div>
-
-        <div class="panel-body">
-            {!! nl2br(e($project->assumptions)) !!}
-        </div>
-    </div>
+    <h4 class="text-center page-header">Assumptions</h4>
+    <p class="small">
+        {!! nl2br(e($project->assumptions)) !!}
+    </p>
 @endif

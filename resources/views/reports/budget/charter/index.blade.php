@@ -32,7 +32,7 @@
     </div>
 
 
-    <h4>Project Budget Summary</h4>
+    <h4 class="text-center page-header">Project Budget Summary</h4>
     <div class="row">
         @include('reports.budget.charter._budget_by_discipline')
         @include('reports.budget.charter._budget_by_resource_type')
@@ -74,4 +74,16 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/c3.min.css">
+    <style>
+        .table > tbody > tr > td, .table > tbody > tr > th {
+            font-size: 92%;
+            line-height: 1.4;
+        }
+
+        h4.page-header {
+            margin-top: 20px; margin-bottom: 10px;
+        }
+
+
+    </style>
 @endsection
