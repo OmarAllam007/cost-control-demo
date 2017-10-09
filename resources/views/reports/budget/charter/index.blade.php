@@ -23,20 +23,20 @@
 @section('body')
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-8 col-sm-offset-2">
             @include('reports.budget.charter._basic_info')
-        </div>
-        <div class="col-sm-6">
+
             @include('reports.budget.charter._brief')
+
+            <h4 class="page-header">Project Budget Summary</h4>
+            @include('reports.budget.charter._budget_by_discipline')
+            @include('reports.budget.charter._budget_by_resource_type')
+            @include('reports.budget.charter._discipline_brief')
+            @include('reports.budget.charter._assumptions')
         </div>
     </div>
 
 
-    <h4 class="text-center page-header">Project Budget Summary</h4>
-    <div class="row">
-        @include('reports.budget.charter._budget_by_discipline')
-        @include('reports.budget.charter._budget_by_resource_type')
-    </div>
 @endsection
 
 @section('javascript')
