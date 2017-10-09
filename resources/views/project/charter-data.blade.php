@@ -32,7 +32,7 @@
 
             <div class="form-group">
                 {{Form::label('project_contract_signed_value', 'Selling cost', ['class' => 'control-label'])}}
-                {{Form::text('change_order_amount', null, ['class' => 'form-control'])}}
+                {{Form::text('project_contract_signed_value', null, ['class' => 'form-control'])}}
             </div>
 
             <div class="form-group">
