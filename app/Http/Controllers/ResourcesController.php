@@ -185,7 +185,7 @@ class ResourcesController extends Controller
     {
         if ($project_id = request('project')) {
             $project = Project::find($project_id);
-            if (\Gate::denies('resources', $project)) {
+            if (\Gate::denies('budget_owner', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
@@ -202,7 +202,7 @@ class ResourcesController extends Controller
         $project = null;
         if ($project_id = request('project')) {
             $project = Project::find($project_id);
-            if (\Gate::denies('resources', $project)) {
+            if (\Gate::denies('budget_owner', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
@@ -260,7 +260,7 @@ class ResourcesController extends Controller
         $status = \Cache::get($key);
 
         if ($status['project']) {
-            if (\Gate::denies('resources', $status['project'])) {
+            if (\Gate::denies('budget_owner', $status['project'])) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
@@ -285,7 +285,7 @@ class ResourcesController extends Controller
         $status = \Cache::get($key);
 
         if ($status['project']) {
-            if (\Gate::denies('resources', $status['project'])) {
+            if (\Gate::denies('budget_owner', $status['project'])) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
             }
@@ -326,50 +326,50 @@ class ResourcesController extends Controller
         return \Redirect::back()->withErrors($errors)->withInput($data);
     }
 
-    function override(Resources $resources, Project $project)
-    {
-        if (\Gate::denies('write', 'resources')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
-        }
-
-        $override = true;
-        $overwrote = Resources::version($project->id, $resources->id)->first();
-
-        if (!$overwrote) {
-            $overwrote = $resources;
-        }
-
-        return view('resources.override',
-            ['resource' => $overwrote, 'baseResource' => $resources, 'project' => $project, 'override' => $override]);
-    }
-
-    function postOverride(Resources $resources, Project $project, Request $request)
-    {
-        if (\Gate::denies('write', 'resources')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
-        }
-
-        $this->validate($request, $this->rules);
-        $newResource = Resources::version($project->id, $resources->id)->first();
-
-        if (!$newResource) {
-            $newResource = new Resources($request->all());
-            $newResource->resource_code = $resources->resource_code;
-            $newResource->project_id = $project->id;
-            $newResource->resource_id = $resources->id;
-            Resources::flushEventListeners();
-            $newResource->save();
-            $newResource->updateBreakdownResurces();
-        } else {
-
-            $newResource->update($request->all());
-            $newResource->updateBreakdownResurces();
-        }
-        flash('Resource has been updated successfully', 'success');
-        return redirect()->route('project.show', $project);
-    }
+//    function override(Resources $resources, Project $project)
+//    {
+//        if (\Gate::denies('write', 'resources')) {
+//            flash("You don't have access to this page");
+//            return \Redirect::to('/');
+//        }
+//
+//        $override = true;
+//        $overwrote = Resources::version($project->id, $resources->id)->first();
+//
+//        if (!$overwrote) {
+//            $overwrote = $resources;
+//        }
+//
+//        return view('resources.override',
+//            ['resource' => $overwrote, 'baseResource' => $resources, 'project' => $project, 'override' => $override]);
+//    }
+//
+//    function postOverride(Resources $resources, Project $project, Request $request)
+//    {
+//        if (\Gate::denies('write', 'resources')) {
+//            flash("You don't have access to this page");
+//            return \Redirect::to('/');
+//        }
+//
+//        $this->validate($request, $this->rules);
+//        $newResource = Resources::version($project->id, $resources->id)->first();
+//
+//        if (!$newResource) {
+//            $newResource = new Resources($request->all());
+//            $newResource->resource_code = $resources->resource_code;
+//            $newResource->project_id = $project->id;
+//            $newResource->resource_id = $resources->id;
+//            Resources::flushEventListeners();
+//            $newResource->save();
+//            $newResource->updateBreakdownResurces();
+//        } else {
+//
+//            $newResource->update($request->all());
+//            $newResource->updateBreakdownResurces();
+//        }
+//        flash('Resource has been updated successfully', 'success');
+//        return redirect()->route('project.show', $project);
+//    }
 
     function filter(Request $request)
     {
