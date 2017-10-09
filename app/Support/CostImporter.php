@@ -214,7 +214,7 @@ class CostImporter
 
             $shadows = $query->get();
 
-            if ($shadows->count() > 1) {
+            if ($shadows->count() >= 1) {
                 $row['hash'] = $hash;
                 $row['resources'] = $shadows;
                 $errors->push($row);
