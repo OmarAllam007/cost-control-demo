@@ -1,4 +1,4 @@
-<section class="panel panel-info">
+<section class="panel panel-primary">
     <div class="panel-heading">
         <h4 class="panel-title">Project Basic Information</h4>
     </div>

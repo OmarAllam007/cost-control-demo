@@ -23,7 +23,7 @@
 @section('body')
 
     <div class="row">
-        <div class="col-sm-8 col-sm-offset-2">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
             @include('reports.budget.charter._basic_info')
 
             @include('reports.budget.charter._brief')

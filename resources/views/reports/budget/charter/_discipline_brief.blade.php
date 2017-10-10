@@ -1,5 +1,5 @@
 @if (trim($project->discipline_brief))
-    <div class="panel panel-info">
+    <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">Discipline Brief</h4>
         </div>

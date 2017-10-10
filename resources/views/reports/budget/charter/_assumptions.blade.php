@@ -1,5 +1,5 @@
 @if (trim($project->assumptions))
-    <div class="panel panel-info">
+    <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">Assumptions</h4>
         </div>
