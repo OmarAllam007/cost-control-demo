@@ -8,7 +8,7 @@
     <div class="col-sm-8">
         <table class="table table-condensed table-striped">
             <thead>
-            <tr class="bg-primary">
+            <tr class="info">
                 <th class="col-sm-7">Resource Type</th>
                 <th class="col-sm-3">Budget Cost</th>
                 <th class="col-sm-2">Wt (%)</th>
@@ -24,7 +24,7 @@
             @endforeach
             </tbody>
             <tfoot>
-            <tr class="bg-primary">
+            <tr class="info">
                 <th>Grand Total</th>
                 <th>{{number_format($resource_types->sum('budget_cost'), 2)}}</th>
                 <th>100%</th>
