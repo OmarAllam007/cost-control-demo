@@ -65,10 +65,12 @@ class ExportCostShadow extends Job
             'Progress', 'Status',
             'Prev. Price/Unit', 'Prev. Quantity', 'Prev. Cost', 'Current. Price/Unit', 'Current Quantity', 'Current Cost',
             'To Date Price/Unit(Eqv)', 'To Date Quantity', 'To Date Cost', 'Allowable (EV) cost', 'Var +/-',
+            'To Date Price/Unit Var', 'To Date Qty Var',
             'Remaining Price/Unit', 'Remaining Qty', 'Remaining Cost', 'BL Allowable Cost', 'Var +/- 10',
             'Completion Price/Unit', 'Completion Qty', 'Completion Cost', 'Price/Unit Var', 'Qty Var +/-', 'Cost Var +/-',
             'Physical Unit',
 //            '(P/W) Index',
+
             'Cost Variance To Date Due to Unit Price', 'Allowable Quantity', 'Cost Variance Remaining Due to Unit Price',
             'Cost Variance Completion Due to Unit Price', 'Cost Variance Completion Due to Qty', 'Cost Variance to Date Due to Qty',
         ];
@@ -147,6 +149,8 @@ class ExportCostShadow extends Job
                     '"'.($costShadow['to_date_cost'] ?: '0').'",'.
                     '"'.($costShadow['allowable_ev_cost'] ?: '0').'",'.
                     '"'.($costShadow['allowable_var'] ?: '0').'",'.
+                    '"'.($costShadow['to_date_price_var'] ?: '0').'",'.
+                    '"'.($costShadow['to_date_unit_var'] ?: '0').'",'.
                     '"'.($costShadow['remaining_unit_price'] ?: '0').'",'.
                     '"'.($costShadow['remaining_qty'] ?: '0').'",'.
                     '"'.($costShadow['remaining_cost'] ?: '0').'",'.
