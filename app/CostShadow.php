@@ -20,7 +20,8 @@ class CostShadow extends Model
         "remaining_qty", "remaining_cost", "remaining_unit_price", "completion_qty", "completion_cost", "completion_unit_price",
         "qty_var", "cost_var", "unit_price_var", "physical_unit", "pw_index", "cost_variance_to_date_due_unit_price",
         "allowable_qty", "cost_variance_remaining_due_unit_price", "cost_variance_completion_due_unit_price",
-        "cost_variance_completion_due_qty", "cost_variance_to_date_due_qty", 'batch_id', 'doc_no', 'budget_unit_rate'
+        "cost_variance_completion_due_qty", "cost_variance_to_date_due_qty", 'batch_id', 'doc_no', 'budget_unit_rate',
+        'to_date_price_var', 'to_date_qty_var'
     ];
 
     protected $appends = ['latest_remaining_qty', 'latest_remaining_cost', 'latest_remaining_unit_price'];

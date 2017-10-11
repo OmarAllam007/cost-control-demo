@@ -116,6 +116,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     'cost_variance_completion_due_qty' => $costShadow['cost_variance_completion_due_qty'],
                     'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
                     'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
+                    'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
                     'created_at' => $now, 'updated_at' => $now,
                 ];
 

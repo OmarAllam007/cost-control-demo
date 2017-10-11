@@ -314,6 +314,10 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->calculated['allowable_qty'];
         }
 
+        if ($this->progress == 100 || strtolower($this->status) == 'closed') {
+            return $this->calculated['allowable_qty'] = $this->budget_unit;
+        }
+
         if (($this->to_date_qty < $this->budget_unit)) {
             return $this->calculated['allowable_qty'] = $this->to_date_qty;
         }
@@ -441,6 +445,16 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     function getLatestRemainingUnitPriceAttribute()
     {
         return $this->remaining_unit_price;
+    }
+
+    function getToDatePriceVarAttribute()
+    {
+        return $this->unit_price - $this->to_date_unit_price;
+    }
+
+    function getToDateQtyVarAttribute()
+    {
+        return $this->allowable_qty - $this->to_date_qty;
     }
 
     function actual_resources()
