@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Breakdown;
 use App\BreakdownTemplate;
 use App\Resources;
 use App\StdActivityResource;
@@ -11,13 +12,6 @@ class StdActivityResourceController extends Controller
 {
 
     protected $rules = ['template_id' => 'required', 'resource_id' => 'required', 'equation' => 'required'];
-
-    public function index()
-    {
-        $stdActivityResources = StdActivityResource::paginate();
-
-        return view('std-activity-resource.index', compact('stdActivityResources'));
-    }
 
     public function create()
     {
@@ -64,9 +58,19 @@ class StdActivityResourceController extends Controller
 
         $this->validate($request, $this->rules);
 
-        $resource = StdActivityResource::create($request->all());
+        $resource = new StdActivityResource($request->all());
 
-        flash('Std activity resource has been saved', 'success');
+        if ($template->project) {
+            \Session::put('template_resource', $resource);
+            $hasBreakdowns = Breakdown::whereProjectId($template->project->id)->whereTemplateId($template->id)->exists();
+            if ($hasBreakdowns) {
+                return \Redirect::route('template-resource.create', [$template->project, $template]);
+            }
+        }
+
+        $resource->save();
+
+        flash('Template resource has been saved', 'success');
 
         return \Redirect::route('breakdown-template.show', $resource->template);
     }

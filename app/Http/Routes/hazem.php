@@ -212,3 +212,9 @@ Route::delete('project/{project}/revisions/{revision}/delete', 'BudgetRevisionsC
 //Route::put('project/{project}/revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);
 
 Route::post('/period-report/{period}', 'PeriodReportsController@store')->name('period-report.store');
+
+Route::get('/template-resource/{project}/create/{breakdown_template}', 'TemplateResourceImpactController@create')->name('template-resource.create');
+Route::post('/template-resource/{project}/create/{breakdown_template}', 'TemplateResourceImpactController@store')->name('template-resource.store');
+Route::get('/template-resource/{project}/edit/{template_resource}', 'TemplateResourceImpactController@create')->name('template-resource.edit');
+Route::put('/template-resource/{project}/{template_resource}', 'TemplateResourceImpactController@update')->name('template-resource.update');
+Route::delete('/template-resource/{project}/{template_resource}', 'TemplateResourceImpactController@destroy')->name('template-resource.destroy');
