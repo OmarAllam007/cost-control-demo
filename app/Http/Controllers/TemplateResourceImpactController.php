@@ -73,7 +73,7 @@ class TemplateResourceImpactController extends Controller
         $breakdown_resource_ids = BreakdownResource::where('std_activity_resource_id', $template_resource->id)->pluck('id');
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)
             ->with(['wbs', 'breakdown_resource'])
-            ->get()->map(function($shadow) use ($new_template_resource) {
+            ->get()->map(function ($shadow) use ($new_template_resource) {
                 $new_breakdown_resource = clone $shadow->breakdown_resource;
                 $new_breakdown_resource->std_activity_resource_id = $new_template_resource->id;
                 $new_breakdown_resource->resource_id = $new_template_resource->resource_id;
@@ -102,14 +102,14 @@ class TemplateResourceImpactController extends Controller
 
         BreakdownResource::where('std_activity_resource_id', $template_resource->id)
             ->whereIn('id', $request->get('resources'))
-            ->get()->each(function($resource) use ($new_template_resource) {
+            ->get()->each(function ($resource) use ($new_template_resource) {
                 $resource->std_activity_resource_id = $new_template_resource->id;
                 $resource->resource_id = $new_template_resource->resource_id;
                 $resource->equation = $new_template_resource->equation;
                 $resource->labor_count = $new_template_resource->labor_count;
                 $resource->productivity_id = $new_template_resource->productivity_id;
 
-               $resource->save();
+                $resource->save();
             });
 
         flash('Template resource has been updated', 'success');
@@ -133,9 +133,23 @@ class TemplateResourceImpactController extends Controller
         return view('template-resource-impact.delete', compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource'));
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, Project $project, TemplateResource $template_resource)
     {
+        if (cannot('breakdown_templates', $project)) {
+            flash("You are not authorized to do this action");
+            return \Redirect::to('/');
+        }
 
+        $template_resource->delete();
+
+        BreakdownResource::where('std_activity_resource_id', $template_resource->id)
+            ->whereIn('id', $request->get('resources'))
+            ->get()->each(function ($resource) {
+                $resource->delete();
+            });
+
+        flash('Template resource has been deleted', 'success');
+        return \Redirect::route('breakdown-template.show', $template_resource->template);
     }
 
     /**
