@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
         Breakdown::observe(BreakdownObserver::class);
         BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
         Survey::observe(QuantitySurveyObserver::class);
-        StdActivityResource::observe(StandardActivityResourceObserver::class);
+//        StdActivityResource::observe(StandardActivityResourceObserver::class);
         Survey::observe(QSObserver::class);
         CostShadow::observe(CostShadowObserver::class);
 //        BreakdownVariable::observe(BreakdownVariableObserver::class);
@@ -105,7 +105,6 @@ class AppServiceProvider extends ServiceProvider
             \Cache::forget('csi-tree');
             dispatch(new CacheCsiCategoryTree());
         });
-
     }
 
     public function wbsActions()
