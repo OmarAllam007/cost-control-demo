@@ -150,7 +150,7 @@ class ExportCostShadow extends Job
                     '"'.($costShadow['allowable_ev_cost'] ?: '0').'",'.
                     '"'.($costShadow['allowable_var'] ?: '0').'",'.
                     '"'.($costShadow['to_date_price_var'] ?: '0').'",'.
-                    '"'.($costShadow['to_date_unit_var'] ?: '0').'",'.
+                    '"'.($costShadow['to_date_qty_var'] ?: '0').'",'.
                     '"'.($costShadow['remaining_unit_price'] ?: '0').'",'.
                     '"'.($costShadow['remaining_qty'] ?: '0').'",'.
                     '"'.($costShadow['remaining_cost'] ?: '0').'",'.
