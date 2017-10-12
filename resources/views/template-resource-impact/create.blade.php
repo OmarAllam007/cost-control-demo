@@ -17,25 +17,48 @@
 @endsection
 
 @section('body')
-    <table class="table table-condensed table-striped">
-        <tbody>
-        <tr>
-            <th class="col-sm-3">Project</th>
-            <td>{{$project->name}}</td>
-        </tr>
-        <tr>
-            <th>Activity</th>
-            <td>
-                {{$breakdown_template->activity->division->path}} &raquo;
-                {{$breakdown_template->activity->name}}
-            </td>
-        </tr>
-        <tr>
-            <th>Breakdown Template</th>
-            <td>{{$breakdown_template->name}}</td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-sm-6">
+            <table class="table table-condensed table-striped col-sm-6">
+
+                <tbody>
+                <tr>
+                    <th class="col-sm-3">Project</th>
+                    <td>{{$project->name}}</td>
+                </tr>
+                <tr>
+                    <th>Activity</th>
+                    <td>
+                        {{$breakdown_template->activity->division->path}} &raquo;
+                        {{$breakdown_template->activity->name}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Breakdown Template</th>
+                    <td>{{$breakdown_template->name}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <table class="table table-condensed table-striped col-sm-6">
+                <tbody>
+                <tr>
+                    <th class="col-sm-3">Resource</th>
+                    <td>{{$template_resource->resource->name}}</td>
+                </tr>
+                <tr>
+                    <th>Type</th>
+                    <td>{{$template_resource->resource->types->path}}</td>
+                </tr>
+                <tr>
+                    <th>Rate</th>
+                    <td>{{number_format($template_resource->resource->rate, 2)}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
     <form action="" method="post">

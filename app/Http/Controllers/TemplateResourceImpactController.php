@@ -19,9 +19,11 @@ class TemplateResourceImpactController extends Controller
             return \Redirect::to('/');
         }
 
+        $template_resource = session('template_resource');
+
         $breakdowns = $this->buildCreateResource($project, $breakdown_template);
 
-        return view('template-resource-impact.create', compact('project', 'breakdown_template', 'breakdowns'));
+        return view('template-resource-impact.create', compact('project', 'breakdown_template', 'breakdowns', 'template_resource'));
     }
 
     public function store(Project $project, BreakdownTemplate $breakdown_template, Request $request)
