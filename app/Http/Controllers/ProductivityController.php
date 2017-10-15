@@ -279,7 +279,10 @@ class ProductivityController extends Controller
             return \Redirect::to('/');
         }
 
-        $this->dispatch(new ExportProductivityJob($project));
+        $filename = $this->dispatch(new ExportProductivityJob($project));
+        return \Response::download($filename, slug($project->name) . '_productivity.xlsx', [
+            'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
+        ])->deleteFileAfterSend(true);
     }
 
     function wipe(WipeRequest $request)
