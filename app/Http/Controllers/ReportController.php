@@ -6,6 +6,7 @@ use App\Http\Controllers\Reports\BudgetCostByBreakDownItem;
 use App\Http\Controllers\Reports\BudgetCostByBuilding;
 use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
+use App\Reports\Budget\BudgetCheckListReport;
 use App\Reports\Budget\CharterReport;
 use App\Reports\Budget\HighPriorityMaterialsReport;
 use App\Reports\Budget\ProfitabilityIndexReport;
@@ -270,6 +271,12 @@ class ReportController extends Controller
         $data = $report->run();
 
         return view('reports.budget.budget-trend.index', $data);
+    }
+    
+    function check_list(Project $project)
+    {
+        $report = new BudgetCheckListReport($project);
+        return $report->run();
     }
 
     protected function report($report, $view)

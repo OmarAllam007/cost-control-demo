@@ -8,6 +8,7 @@
     </div>
 
     <div class="col-sm-4">
+        <a href="{{route('project.budget-checklist', $project)}}" class="btn btn-info btn-block">Budget Check List</a>
         <a href="{{route('wbs.report', $project)}}" target="_blank" class="btn btn-info btn-block">WBS (CONTROL POINT)</a>
         <a href="{{route('project.charter-report', $project)}}" target="_blank" class="btn btn-info btn-block">Project Charter</a>
         <a href="{{route('project.profitability-report', $project)}}" target="_blank" class="btn btn-info btn-block">Profitability Index</a>

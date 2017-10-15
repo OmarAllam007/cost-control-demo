@@ -108,6 +108,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('{project}/budget-trend', 'ReportController@budgetTrend')->name('project.budget-trend');
     Route::get('{project}/profitability', 'ReportController@profitability')->name('project.profitability-report');
     Route::get('{project}/charter', 'ReportController@charter')->name('project.charter-report');
+    Route::get('{project}/check-list', 'ReportController@check_list')->name('project.budget-checklist');
 });
 Route::get('/download_trend/{id}/download', 'ProductivityController@downloadTrend');
 Route::get('/download_labor_trend/{id}/download', 'ProductivityController@downloadLaborTrend');
