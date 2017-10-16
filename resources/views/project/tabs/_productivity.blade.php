@@ -1,6 +1,12 @@
 <div id="ProductivityArea" class="project-tab">
     <div class="form-group tab-actions clearfix">
         <div class="pull-right">
+            @can('productivity', $project)
+            <a href="{{route('project.modify-productivity', $project)}}" class="btn btn-primary btn-sm">
+                <i class="fa fa-pencil"></i> Modify
+            </a>
+            @endcan
+
             <a href="{{route('productivity.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
