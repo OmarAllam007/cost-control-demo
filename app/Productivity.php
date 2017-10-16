@@ -180,11 +180,13 @@ class Productivity extends Model
     {
         parent::boot();
 
-        static::created(function () {
-            \Cache::forget('csi-tree');
-            \Cache::remember('csi-tree', 7 * 24 * 60, function () {
-                return dispatch(new CacheCsiCategoryTree());
-            });
+        static::created(function ($prod) {
+            if (!$prod->project_id) {
+                \Cache::forget('csi-tree');
+                \Cache::remember('csi-tree', 7 * 24 * 60, function () {
+                    return dispatch(new CacheCsiCategoryTree());
+                });
+            }
         });
     }
 }

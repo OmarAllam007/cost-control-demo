@@ -80,16 +80,23 @@ class Project extends Model
         return $this->hasMany(Resources::class)->with('types');
     }
 
-    function getProductivitiesAttribute()
+    function productivities()
     {
-        $refs = $this->shadows()
-//            ->select('id', 'productivity_ref')
-            ->where('productivity_ref', '!=', '')->whereNotNull('productivity_ref')
-            ->pluck('productivity_id')->unique()->filter();
-
-//        dd(Productivity::whereIn('id', $refs)->with('units')->count());
-        return Productivity::whereIn('id', $refs)->with('units')->get();
+        return $this->hasMany(Productivity::class);
     }
+
+
+
+//    function getProductivitiesAttribute()
+//    {
+//        $refs = $this->shadows()
+////            ->select('id', 'productivity_ref')
+//            ->where('productivity_ref', '!=', '')->whereNotNull('productivity_ref')
+//            ->pluck('productivity_id')->unique()->filter();
+//
+////        dd(Productivity::whereIn('id', $refs)->with('units')->count());
+//        return Productivity::whereIn('id', $refs)->with('units')->get();
+//    }
 
     /*function getResourcesAttribute()
     {

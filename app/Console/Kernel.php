@@ -15,6 +15,7 @@ use App\Console\Commands\FixBreakdownVars;
 use App\Console\Commands\FixBudgetQty;
 use App\Console\Commands\FixModResources;
 use App\Console\Commands\FixProductivity;
+use App\Console\Commands\FixProjectProductivity;
 use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
 use App\Console\Commands\RecalculateCost;
@@ -44,8 +45,9 @@ class Kernel extends ConsoleKernel
 //        AddBoqDisciplineToMasterShadow::class,
 //        AddBoqToMasterSahdow::class,
 //        AddBoqAndSurveyToBreakdownShadow::class,
-        AddBoqAndSurveyToBreakdownShadowProject::class,
-        FixProductivity::class,
+//        AddBoqAndSurveyToBreakdownShadowProject::class,
+//        FixProductivity::class,
+        FixProjectProductivity::class,
         UpdateResourceTypesAndResources::class,
         CreateRevisionsForCurrentProject::class,
         CreateRevisions::class,

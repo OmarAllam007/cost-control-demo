@@ -1,20 +1,29 @@
 <productivity project="{{$project->id}}" inline-template>
     <div id="ProductivityArea">
-        <div class="form-group tab-actions clearfix">
-            <div class="pull-right">
-                <a href="{{route('productivity.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
-                    <i class="fa fa-cloud-download"></i> Export
-                </a>
+        <div class="form-group tab-actions row">
+            <div class="form-group form-group-sm col-sm-6">
+                {{Form::label('productivity_code', 'Productivity Code', ['class' => 'control-label sr-only'])}}
+                {{Form::text('productivity_code', null, ['class' => 'form-control', 'v-model' => 'code', 'placeholder' => 'Search by productivity code'])}}
+            </div>
+
+            <div class="col-sm-3 col-sm-offset-3">
+                <div class="pull-right">
+                    @can('productivity', $project)
+                        <a href="{{route('project.modify-productivity', $project)}}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil"></i> Modify
+                        </a>
+                    @endcan
+
+                    <a href="{{route('productivity.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+                        <i class="fa fa-cloud-download"></i> Export
+                    </a>
+                </div>
             </div>
         </div>
 
         <section class="filters row">
             <div class="col-sm-3">
-                <div class="form-group form-group-sm">
-                    {{Form::label('productivity_code', 'Productivity Code', ['class' => 'control-label'])}}
-                    {{Form::text('productivity_code', null /*session('filters.breakdown.' . $project->id . '.resource_code')*/,
-                   ['class' => 'form-control', 'v-model' => 'code'])}}
-                </div>
+
             </div>
         </section>
 
