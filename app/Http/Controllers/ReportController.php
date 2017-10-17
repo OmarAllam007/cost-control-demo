@@ -8,6 +8,7 @@ use App\Http\Controllers\Reports\BudgetSummeryReport;
 use App\Http\Controllers\Reports\HighPriorityMaterials;
 use App\Reports\Budget\BudgetCheckListReport;
 use App\Reports\Budget\CharterReport;
+use App\Reports\Budget\ComparisonReport;
 use App\Reports\Budget\HighPriorityMaterialsReport;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Reports\Budget\QtyAndCostReport;
@@ -35,9 +36,6 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    private $request;
-    private $project;
-
     public function getReports(Project $project)
     {
         return view('project.tabs._report', compact('project'));
@@ -277,6 +275,11 @@ class ReportController extends Controller
     {
         $report = new BudgetCheckListReport($project);
         return $report->run();
+    }
+
+    function comparison_report(Project $project)
+    {
+        return $this->report(new ComparisonReport($project), 'reports.budget.comparison.index');
     }
 
     protected function report($report, $view)
