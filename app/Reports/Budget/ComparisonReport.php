@@ -5,12 +5,17 @@ namespace App\Reports\Budget;
 use App\BreakDownResourceShadow;
 use App\Project;
 use Illuminate\Support\Fluent;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class ComparisonReport
 {
     /** @var Project */
     private $project;
+
+    /** @var int */
+    private $row = 2;
 
     function __construct(Project $project)
     {
@@ -34,7 +39,6 @@ class ComparisonReport
 
     protected function buildTree($parent = 0)
     {
-
         return $this->wbs_levels->get($parent, collect())->map(function($level) {
             $level->subtree = $this->buildTree($level->id);
 
@@ -65,14 +69,96 @@ class ComparisonReport
     function excel()
     {
         \Excel::create(slug($this->project->name) .  '-comparison_report', function(LaravelExcelWriter $excel) {
-            $sheet = \Closure::fromCallable([$this, 'sheet']);
-            $excel->sheet('Comparison Report', $sheet);
+            $excel->sheet('Comparison Report', function($sheet) {
+                $this->sheet($sheet);
+            });
             $excel->download('xlsx');
         });
     }
 
-    function sheet($sheet)
+    function sheet(LaravelExcelWorksheet $sheet)
     {
         $this->run();
+
+        $this->sheetHeader($sheet);
+
+        $this->tree->each(function($level) use ($sheet) {
+            $this->sheetRow($sheet, $level);
+        });
+
+        $sheet->setFreeze('A3');
+        $sheet->setAutoSize(false);
+        foreach (range('A', 'Q') as $c) {
+            $sheet->getColumnDimension($c)->setAutoSize(true);
+        }
+        $sheet->getColumnDimension('C')->setWidth(60)->setAutoSize(false);
+
+        $sheet->setColumnFormat([
+            "E3:Q{$this->row}" => \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2
+        ]);
+    }
+
+    private function sheetHeader(LaravelExcelWorksheet $sheet)
+    {
+        $sheet->mergeCells('A1:A2')->setCellValue('A1', 'WBS');
+        $sheet->mergeCells('B1:B2')->setCellValue('B1', 'Cost Account');
+        $sheet->mergeCells('C1:C2')->setCellValue('C1', 'Item Description');
+        $sheet->mergeCells('D1:D2')->setCellValue('D1', 'Unit');
+
+        $sheet->mergeCells('E1:G1')->setCellValue('E1', 'BOQ Price');
+        $sheet->mergeCells('H1:J1')->setCellValue('H1', 'Dry Cost');
+        $sheet->mergeCells('K1:N1')->setCellValue('K1', 'Budget Cost');
+        $sheet->mergeCells('O1:O2')->setCellValue('O1', 'Revised BOQ');
+        $sheet->mergeCells('P1:Q1')->setCellValue('P1', 'Comparison');
+
+        $sheet->setCellValue('E2', 'BOQ Price U.R.');
+        $sheet->setCellValue('F2', 'Quantity');
+        $sheet->setCellValue('G2', 'BOQ Price');
+
+        $sheet->setCellValue('H2', 'Dry U.R.');
+        $sheet->setCellValue('I2', 'Quantity');
+        $sheet->setCellValue('J2', 'Dry Cost');
+
+        $sheet->setCellValue('K2', 'Budget Qty');
+        $sheet->setCellValue('L2', 'Eng Qty');
+        $sheet->setCellValue('M2', 'Budget U.R.');
+        $sheet->setCellValue('N2', 'Budget Cost');
+
+        $sheet->setCellValue('P2', '(Budget U.R. - Dry U.R.) * Budget Qty');
+        $sheet->setCellValue('Q2', '(Budget Qty - Dry Qty) * Budget U.R.)');
+
+        $sheet->cells("A1:Q2", function(CellWriter $cells) {
+            $cells->setFont(['bold' => true])
+                ->setAlignment('center')->setValignment('center');
+        });
+    }
+
+    private function sheetRow(LaravelExcelWorksheet $sheet, $level, $depth = 0)
+    {
+        $sheet->row(++$this->row, [$level->name . " ($level->code)"]);
+
+        if ($depth) {
+            $sheet->getRowDimension($this->row)->setOutlineLevel(min($depth, 7))->setVisible(false)->setCollapsed(true);
+            $sheet->cells("A{$this->row}", function (CellWriter $cells) use ($depth) {
+                $cells->setTextIndent(6 * $depth)->setFont(['bold' => true]);
+            });
+        }
+
+        $level->subtree->each(function($sublevel) use ($sheet, $depth) {
+            $this->sheetRow($sheet, $sublevel, $depth + 1);
+        });
+
+        ++$depth;
+        $level->cost_accounts->each(function ($boq) use ($sheet, $depth) {
+            $cells = [
+                '', $boq->cost_account, $boq->description, $boq->unit->type ?? '',
+                $boq->price_ur, $boq->quantity, $boq->boq_cost,
+                $boq->dry_ur, $boq->quantity, $boq->dry_cost,
+                $boq->budget_qty, $boq->eng_qty, $boq->budget_price, $boq->budget_cost,
+                $boq->revised_boq, $boq->price_diff, $boq->qty_diff
+            ];
+            $sheet->row(++$this->row, $cells);
+            $sheet->getRowDimension($this->row)->setOutlineLevel(min($depth, 7))->setVisible(false)->setCollapsed(true);
+        });
     }
 }
