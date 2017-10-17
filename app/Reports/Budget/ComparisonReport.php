@@ -60,6 +60,12 @@ class ComparisonReport
                 return $boq;
             })->sortBy('cost_account');
 
+            $level->budget_cost = $level->subtree->sum('budget_cost') + $level->cost_accounts->sum('budget_cost');
+            $level->boq_cost = $level->subtree->sum('boq_cost') + $level->cost_accounts->sum('boq_cost');
+            $level->dry_cost = $level->subtree->sum('dry_cost') + $level->cost_accounts->sum('dry_cost');
+            $level->qty_diff = $level->subtree->sum('qty_diff') + $level->cost_accounts->sum('qty_diff');
+            $level->price_diff = $level->subtree->sum('price_diff') + $level->cost_accounts->sum('price_diff');
+
             return $level;
         })->reject(function($level) {
             return $level->subtree->isEmpty() && $level->cost_accounts->isEmpty();
@@ -105,18 +111,18 @@ class ComparisonReport
         $sheet->mergeCells('C1:C2')->setCellValue('C1', 'Item Description');
         $sheet->mergeCells('D1:D2')->setCellValue('D1', 'Unit');
 
-        $sheet->mergeCells('E1:G1')->setCellValue('E1', 'BOQ Price');
+        $sheet->mergeCells('E1:G1')->setCellValue('E1', 'Customer BOQ');
         $sheet->mergeCells('H1:J1')->setCellValue('H1', 'Dry Cost');
         $sheet->mergeCells('K1:N1')->setCellValue('K1', 'Budget Cost');
         $sheet->mergeCells('O1:O2')->setCellValue('O1', 'Revised BOQ');
         $sheet->mergeCells('P1:Q1')->setCellValue('P1', 'Comparison');
 
         $sheet->setCellValue('E2', 'BOQ Price U.R.');
-        $sheet->setCellValue('F2', 'Quantity');
-        $sheet->setCellValue('G2', 'BOQ Price');
+        $sheet->setCellValue('F2', 'Estimated Quantity');
+        $sheet->setCellValue('G2', 'Total Amount');
 
         $sheet->setCellValue('H2', 'Dry U.R.');
-        $sheet->setCellValue('I2', 'Quantity');
+        $sheet->setCellValue('I2', 'Estimated Quantity');
         $sheet->setCellValue('J2', 'Dry Cost');
 
         $sheet->setCellValue('K2', 'Budget Qty');

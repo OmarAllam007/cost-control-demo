@@ -21,39 +21,39 @@
     <table class="table table-bordered" id="report-head">
         <thead>
         <tr>
-            <th style="min-width: 150px; max-width: 150px; width: 150px;" rowspan="2">WBS</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;" rowspan="2">Cost Account</th>
-            <th style="min-width: 200px; max-width: 200px; width: 200px;" rowspan="2">Item Description</th>
-            <th style="min-width: 75px; max-width: 75px; width: 75px" rowspan="2">Unit</th>
+            <th class="text-center" style="min-width: 150px; max-width: 150px; width: 150px;" rowspan="2">WBS</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;" rowspan="2">Cost Account</th>
+            <th class="text-center" style="min-width: 200px; max-width: 200px; width: 200px;" rowspan="2">Item Description</th>
+            <th class="text-center" style="min-width: 75px; max-width: 75px; width: 75px" rowspan="2">Unit</th>
 
-            <th colspan="3">BOQ Price</th>
-            <th colspan="3">Dry Cost</th>
-            <th colspan="4">Budget Cost</th>
+            <th class="text-center" colspan="3">Client BOQ</th>
+            <th class="text-center" colspan="3">Dry Cost</th>
+            <th class="text-center" colspan="4">Budget Cost</th>
 
             <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;" rowspan="2">Revised BOQ</th>
 
-            <th colspan="2">Comparison</th>
+            <th class="text-center" colspan="2">Comparison</th>
         </tr>
         <tr>
             {{-- BOQ Price --}}
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Price U.R.</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Qty</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">BOQ Price</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Price U.R.</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Estimated Qty</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Total Amount</th>
 
             {{-- Dry Cost --}}
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Dry U.R.</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Qty</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Dry Cost</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Dry U.R.</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Qty</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Dry Cost</th>
 
             {{-- Budget Cost --}}
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Budget Qty</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Eng Qty</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Budget U.R.</th>
-            <th style="min-width: 100px; max-width: 100px; width: 100px;">Budget Cost</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Budget Qty</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Eng Qty</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Budget U.R.</th>
+            <th class="text-center" style="min-width: 100px; max-width: 100px; width: 100px;">Budget Cost</th>
             
             {{-- Comparison --}}
-            <th style="min-width: 200px; max-width: 200px; width: 200px;">(Budget U.R. - Dry U.R.) * Budget Qty</th>
-            <th style="min-width: 200px; max-width: 200px; width: 200px;">(Budget Qty - Dry Qty) * Budget U.R.</th>
+            <th class="text-center" style="min-width: 200px; max-width: 200px; width: 200px;">(Budget U.R. - Dry U.R.) * Budget Qty</th>
+            <th class="text-center" style="min-width: 200px; max-width: 200px; width: 200px;">(Budget Qty - Dry Qty) * Budget U.R.</th>
         </tr>
         </thead>
     </table>
