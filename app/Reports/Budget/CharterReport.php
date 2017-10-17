@@ -75,8 +75,9 @@ class CharterReport
     function excel()
     {
         \Excel::create(slug($this->project->name) . '-charter', function (LaravelExcelWriter $excel) {
-            $func = \Closure::fromCallable([$this, 'sheet']);
-            $excel->sheet('Project Charter', $func);
+            $excel->sheet('Project Charter', function($sheet) {
+                $this->sheet($sheet);
+            });
             $excel->download('xlsx');
         });
     }
