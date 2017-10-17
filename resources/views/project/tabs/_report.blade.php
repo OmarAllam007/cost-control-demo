@@ -17,7 +17,7 @@
         <a href="{{route('qsReport.report', $project)}}" target="_blank" class="btn btn-success btn-block">QS Summary</a>
         <a href="{{route('project.budget-trend', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Trend</a>
         <a href="#" class="btn btn-success btn-block">REFERENCES &amp; NOTES</a>
-        <a href="{{route('boq_price_list.report', $project)}}" target="_blank" class="btn btn-success btn-block">BOQ PRICE LIST</a>
+
     </div>
 
     <div class="col-sm-4">
@@ -29,6 +29,7 @@
         <a href="{{route('activity_resource_breakdown.report', $project)}}" target="_blank" class="btn btn-success btn-block">Activity Resource Breakdown</a>
         <a href="{{route('wbs_dictionary_report', $project)}}" target="_blank" class="btn btn-success btn-block">WBS Dictionary</a>
         <a href="{{route('revised_boq.report', $project)}}" target="_blank" class="btn btn-success btn-block">Revised BOQ</a>
+        <a href="{{route('boq_price_list.report', $project)}}" target="_blank" class="btn btn-success btn-block">BOQ PRICE LIST</a>
     </div>
 
     <div class="col-sm-4">
@@ -38,5 +39,7 @@
         <a href="{{route('budget_cost_dry_cost.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost By Building</a>
         <a href="{{route('budget_cost_dry_cost_discipline.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost By Discipline</a>
         <a href="{{route('qty_cost_discipline.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost QTY & Cost</a>
+        <a href="{{route('qty_cost_discipline.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost QTY & Cost</a>
+        <a href="{{route('project.comparison', $project)}}" target="_blank" class="btn btn-success btn-block">Comparison Report</a>
     </div>
 </section>
