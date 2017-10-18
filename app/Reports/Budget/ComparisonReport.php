@@ -125,13 +125,13 @@ class ComparisonReport
         $sheet->mergeCells('C1:C2')->setCellValue('C1', 'Item Description');
         $sheet->mergeCells('D1:D2')->setCellValue('D1', 'Unit');
 
-        $sheet->mergeCells('E1:G1')->setCellValue('E1', 'Customer BOQ');
+        $sheet->mergeCells('E1:G1')->setCellValue('E1', 'Client BOQ');
         $sheet->mergeCells('H1:J1')->setCellValue('H1', 'Dry Cost');
         $sheet->mergeCells('K1:N1')->setCellValue('K1', 'Budget Cost');
         $sheet->mergeCells('O1:O2')->setCellValue('O1', 'Revised BOQ');
         $sheet->mergeCells('P1:Q1')->setCellValue('P1', 'Comparison');
 
-        $sheet->setCellValue('E2', 'BOQ Price U.R.');
+        $sheet->setCellValue('E2', 'Price U.R.');
         $sheet->setCellValue('F2', 'Estimated Quantity');
         $sheet->setCellValue('G2', 'Total Amount');
 
