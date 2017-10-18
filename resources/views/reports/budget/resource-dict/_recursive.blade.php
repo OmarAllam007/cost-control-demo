@@ -1,6 +1,6 @@
 @if ($division->subtree->count() || $division->resources->count())
     <tr class="level-{{$depth}} child-{{$division->parent_id}} {{$depth? 'hidden' : ''}} text-strong">
-        <td class="col-sm-10 level-label" colspan="8">
+        <td class="level-label" colspan="8">
             <a href="#" class="open-level" data-target="child-{{$division->id}}">
                 <strong><i class="fa fa-plus-square"></i> {{$division->name}}</strong>
             </a>
