@@ -39,7 +39,6 @@
         <a href="{{route('budget_cost_dry_cost.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost By Building</a>
         <a href="{{route('budget_cost_dry_cost_discipline.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost By Discipline</a>
         <a href="{{route('qty_cost_discipline.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost QTY & Cost</a>
-        <a href="{{route('qty_cost_discipline.report', $project)}}" target="_blank" class="btn btn-success btn-block">Budget Cost v.s Dry Cost QTY & Cost</a>
         <a href="{{route('project.comparison', $project)}}" target="_blank" class="btn btn-success btn-block">Comparison Report</a>
     </div>
 </section>
