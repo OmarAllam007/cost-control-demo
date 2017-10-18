@@ -60,7 +60,7 @@ class ComparisonReport
                 return $boq;
             })->sortBy('cost_account');
 
-            $level->budget_cost = $level->subtree->sum('budget_cost') + $level->cost_accounts->sum('budget_cost');
+            $level->cost = $level->subtree->sum('cost') + $level->cost_accounts->sum('budget_cost');
             $level->boq_cost = $level->subtree->sum('boq_cost') + $level->cost_accounts->sum('boq_cost');
             $level->dry_cost = $level->subtree->sum('dry_cost') + $level->cost_accounts->sum('dry_cost');
             $level->qty_diff = $level->subtree->sum('qty_diff') + $level->cost_accounts->sum('qty_diff');
