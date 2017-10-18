@@ -21,7 +21,7 @@
     <div class="horizontal-scroll">
         <table class="table table-bordered" id="report-head">
             <thead>
-            <tr>
+            <tr class="bg-primary">
                 <th class="text-center" style="min-width: 150px; max-width: 150px; width: 150px;" rowspan="2">WBS</th>
                 <th class="text-center" style="min-width: 120px; max-width: 120px; width: 120px;" rowspan="2">Cost Account</th>
                 <th class="text-center" style="min-width: 200px; max-width: 200px; width: 200px;" rowspan="2">Item Description</th>
@@ -35,7 +35,7 @@
 
                 <th class="text-center" colspan="2">Comparison</th>
             </tr>
-            <tr>
+            <tr class="bg-primary">
                 {{-- BOQ Price --}}
                 <th class="text-center" style="min-width: 120px; max-width: 120px; width: 120px;">Price U.R.</th>
                 <th class="text-center" style="min-width: 120px; max-width: 120px; width: 120px;">Estimated Qty</th>
