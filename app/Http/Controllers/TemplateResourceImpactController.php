@@ -128,6 +128,7 @@ class TemplateResourceImpactController extends Controller
         $breakdown_resource_ids = BreakdownResource::where('std_activity_resource_id', $template_resource->id)->pluck('id');
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)
             ->with(['wbs', 'breakdown_resource'])
+            ->with('boq')
             ->get();
 
         return view('template-resource-impact.delete', compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource'));
@@ -144,6 +145,7 @@ class TemplateResourceImpactController extends Controller
 
         BreakdownResource::where('std_activity_resource_id', $template_resource->id)
             ->whereIn('id', $request->get('resources'))
+            ->with('boq')
             ->get()->each(function ($resource) {
                 $resource->delete();
             });

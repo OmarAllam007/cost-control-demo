@@ -80,6 +80,7 @@
                 <th class="text-center"><input type="checkbox" name="" id="select-all"></th>
                 <th>WBS</th>
                 <th>Cost Account</th>
+                <th>Item Description</th>
                 <th>Budget Qty</th>
                 <th>Old Budget Unit</th>
                 <th>New Budget Unit</th>
@@ -98,6 +99,7 @@
                         <abbr title="{{$resource->wbs->path}}">{{$resource->wbs->code}}</abbr>
                     </td>
                     <td>{{$resource->cost_account}}</td>
+                    <td>{{$resource->boq->description ?? ''}}</td>
                     <td>{{$resource->budget_qty}}</td>
                     <td>{{number_format($resource->budget_unit, 2)}}</td>
                     <td>{{number_format($resource->new_shadow->budget_unit, 2)}}</td>
@@ -109,7 +111,7 @@
             </tbody>
             <tfoot>
             <tr class="info">
-                <th colspan="6" class="text-right">Total</th>
+                <th colspan="7" class="text-right">Total</th>
                 <th>{{number_format($old_cost = $resources->sum('budget_cost'), 2)}}</th>
                 <th>{{number_format($new_cost = $resources->pluck('new_shadow')->sum('budget_cost'), 2)}}</th>
                 <th>{{number_format($new_cost - $old_cost, 2)}}</th>
