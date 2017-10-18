@@ -153,7 +153,7 @@
         }
 
         .horizontal-scroll .table {
-            width: auto;
+            width: 100%;
             margin-bottom: 0;
         }
 
