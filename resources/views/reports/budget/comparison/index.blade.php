@@ -73,7 +73,7 @@
                 <th style="width: 120px; min-width: 120px;  max-width: 120px;">{{number_format($tree->sum('cost', 2), 2)}}</th>
 
                 {{-- Revised BOQ --}}
-                <th style="width: 120px; min-width: 120px;  max-width: 120px;">&nbsp;</th>
+                <th style="width: 120px; min-width: 120px;  max-width: 120px;">{{number_format($tree->sum('revised_boq', 2), 2)}}</th>
 
                 {{-- Comparison --}}
                 <th style="width: 120px; min-width: 120px;  max-width: 120px;">{{number_format($tree->sum('price_diff', 2), 2)}}</th>

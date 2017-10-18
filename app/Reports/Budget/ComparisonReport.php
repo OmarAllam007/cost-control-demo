@@ -78,6 +78,7 @@ class ComparisonReport
             $level->dry_cost = $level->subtree->sum('dry_cost') + $level->cost_accounts->sum('dry_cost');
             $level->qty_diff = $level->subtree->sum('qty_diff') + $level->cost_accounts->sum('qty_diff');
             $level->price_diff = $level->subtree->sum('price_diff') + $level->cost_accounts->sum('price_diff');
+            $level->revised_boq = $level->subtree->sum('revised_boq') + $level->cost_accounts->sum('revised_boq');
 
             return $level;
         })->reject(function($level) {
@@ -105,7 +106,7 @@ class ComparisonReport
             $this->sheetRow($sheet, $level);
         });
 
-        $sheet->setFreeze('A3');
+        $sheet->setFreeze('A4');
         $sheet->setAutoSize(false);
         foreach (range('A', 'Q') as $c) {
             $sheet->getColumnDimension($c)->setAutoSize(true);
@@ -146,7 +147,13 @@ class ComparisonReport
         $sheet->setCellValue('P2', '(Budget U.R. - Dry U.R.) * Budget Qty');
         $sheet->setCellValue('Q2', '(Budget Qty - Dry Qty) * Budget U.R.)');
 
-        $sheet->cells("A1:Q2", function(CellWriter $cells) {
+        $sheet->row(++$this->row, [
+            "Total", '', '', '', '', '', $this->tree->sum('boq_cost'), '', '', $this->tree->sum('dry_cost'),
+            '', '', '', $this->tree->sum('cost'), $this->tree->sum('revised_boq'),
+            $this->tree->sum('price_diff'), $this->tree->sum('qty_diff')
+        ]);
+
+        $sheet->cells("A1:Q{$this->row}", function(CellWriter $cells) {
             $cells->setFont(['bold' => true])
                 ->setAlignment('center')->setValignment('center');
         });
@@ -154,7 +161,10 @@ class ComparisonReport
 
     private function sheetRow(LaravelExcelWorksheet $sheet, $level, $depth = 0)
     {
-        $sheet->row(++$this->row, [$level->name . " ($level->code)"]);
+        $sheet->row(++$this->row, [
+            $level->name . " ($level->code)", '', '', '', '', '', $level->boq_cost, '', '', $level->dry_cost,
+            '', '', '', $level->cost, $level->revised_boq, $level->price_diff, $level->qty_diff
+        ]);
 
         if ($depth) {
             $sheet->getRowDimension($this->row)->setOutlineLevel(min($depth, 7))->setVisible(false)->setCollapsed(true);
