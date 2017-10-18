@@ -28,9 +28,8 @@ class ComparisonReport
         $this->boqs = $this->project->boqs()->with('unit')->get()->keyBy('id')->groupBy('wbs_id');
         $this->cost_accounts = BreakDownResourceShadow::where('project_id', $this->project->id)
             ->selectRaw('boq_id, boq_wbs_id, avg(budget_qty) as budget_qty, avg(eng_qty) as eng_qty')
-            ->selectRaw('sum(budget_cost) as budget_cost, sum(budget_cost) / avg(budget_qty) as budget_unit_price')
-            ->selectRaw('count(DISTINCT wbs_id) as num_used')
-            ->groupBy('boq_id')->get()->keyBy('boq_id');
+            ->selectRaw('sum(budget_cost) as budget_cost, count(DISTINCT wbs_id) as num_used')
+            ->groupBy(['boq_id', 'boq_wbs_id'])->get()->keyBy('boq_id');
 
         $this->tree = $this->buildTree();
 
@@ -42,8 +41,10 @@ class ComparisonReport
         return $this->wbs_levels->get($parent, collect())->map(function($level) {
             $level->subtree = $this->buildTree($level->id);
 
+
             $level->cost_accounts = $this->boqs->get($level->id, collect())->map(function($boq) {
                 $cost_account = $this->cost_accounts->get($boq->id, new Fluent());
+
                 $boq->budget_qty = $cost_account->budget_qty * $cost_account->num_used;
                 $boq->eng_qty = $cost_account->eng_qty * $cost_account->num_used;
                 $boq->budget_cost = $cost_account->budget_cost;
@@ -58,7 +59,19 @@ class ComparisonReport
                 $boq->price_diff = ($boq->budget_price - $boq->dry_ur) * $boq->budget_qty;
 
                 return $boq;
-            })->sortBy('cost_account');
+            })->sortBy('cost_account')->keyBy('id');
+
+            $this->cost_accounts->where('boq_wbs_id', $level->id)->each(function($cost_account) use ($level) {
+                if (!$level->cost_accounts->has($cost_account->boq_id)) {
+                    $cost_account->budget_qty *= $cost_account->num_used;
+                    $cost_account->eng_qty *= $cost_account->num_used;
+                    $cost_account->budget_price = $cost_account->budget_qty? $cost_account->budget_cost / $cost_account->budget_qty : 0;
+                    $cost_account->qty_diff = ($cost_account->budget_qty - $cost_account->quantity) * $cost_account->budget_price;
+                    $cost_account->price_diff = ($cost_account->budget_price - $cost_account->dry_ur) * $cost_account->budget_qty;
+
+                    $level->cost_accounts->push($cost_account);
+                }
+            });
 
             $level->cost = $level->subtree->sum('cost') + $level->cost_accounts->sum('budget_cost');
             $level->boq_cost = $level->subtree->sum('boq_cost') + $level->cost_accounts->sum('boq_cost');
