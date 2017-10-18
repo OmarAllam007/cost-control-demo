@@ -70,6 +70,7 @@
                 <th class="text-center"><input type="checkbox" name="" id="select-all"></th>
                 <th>WBS</th>
                 <th>Cost Account</th>
+                <th>Item description</th>
                 <th>Budget Qty</th>
                 <th>Eng Qty</th>
                 <th>Resource Qty</th>
@@ -88,6 +89,7 @@
                         <abbr title="{{$breakdown->wbs_level->path}}">{{$breakdown->wbs_level->code}}</abbr>
                     </td>
                     <td>{{$breakdown->cost_account}}</td>
+                    <td>{{$breakdown->item_description}}</td>
                     <td>{{number_format($breakdown->new_resource->budget_qty, 2)}}</td>
                     <td>{{number_format($breakdown->new_resource->eng_qty, 2)}}</td>
                     <td>{{number_format($breakdown->new_resource->resource_qty, 2)}}</td>
@@ -99,7 +101,7 @@
             </tbody>
             <tfoot>
             <tr class="info">
-                <th colspan="8" class="text-right">Total</th>
+                <th colspan="9" class="text-right">Total</th>
                 <th>{{number_format($breakdowns->pluck('new_resource')->sum('budget_cost'), 2)}}</th>
             </tr>
             </tfoot>

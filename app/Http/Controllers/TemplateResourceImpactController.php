@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Boq;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
@@ -128,6 +129,7 @@ class TemplateResourceImpactController extends Controller
         $breakdown_resource_ids = BreakdownResource::where('std_activity_resource_id', $template_resource->id)->pluck('id');
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)
             ->with(['wbs', 'breakdown_resource'])
+            ->with('boq')
             ->get();
 
         return view('template-resource-impact.delete', compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource'));
@@ -144,6 +146,7 @@ class TemplateResourceImpactController extends Controller
 
         BreakdownResource::where('std_activity_resource_id', $template_resource->id)
             ->whereIn('id', $request->get('resources'))
+            ->with('boq')
             ->get()->each(function ($resource) {
                 $resource->delete();
             });
@@ -173,6 +176,8 @@ class TemplateResourceImpactController extends Controller
             ->where('project_id', $project->id)
             ->where('template_id', $breakdown_template->id)
             ->get()->map(function ($breakdown) use ($template_resource, $resource) {
+                $boq = Boq::costAccountOnWbs($breakdown->wbs_level, $breakdown->cost_account)->first();
+
                 $new_resource = new BreakdownResource(['breakdown_id' => $breakdown->id]);
                 $new_resource->equation = $template_resource->equation;
                 $new_resource->resource = $resource;
@@ -181,6 +186,7 @@ class TemplateResourceImpactController extends Controller
                 $new_resource->unit_price = $resource->rate;
                 $new_resource->labor_count = $template_resource->labor_count;
                 $new_resource->productivity_id = $template_resource->productivity_id;
+                $breakdown->item_description = $boq->description ?? '';
 
                 $breakdown->new_resource = $new_resource;
                 return $breakdown;

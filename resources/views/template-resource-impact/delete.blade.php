@@ -71,6 +71,7 @@
                 <th class="text-center"><input type="checkbox" name="" id="select-all"></th>
                 <th>WBS</th>
                 <th>Cost Account</th>
+                <th>Item Description</th>
                 <th>Budget Qty</th>
                 <th>Budget Unit</th>
                 <th>Budget Cost</th>
@@ -86,6 +87,7 @@
                         <abbr title="{{$resource->wbs->path}}">{{$resource->wbs->code}}</abbr>
                     </td>
                     <td>{{$resource->cost_account}}</td>
+                    <td>{{$resource->boq->description ?? ''}}</td>
                     <td>{{$resource->budget_qty}}</td>
                     <td>{{number_format($resource->budget_unit, 2)}}</td>
                     <td>{{number_format($resource->budget_cost, 2)}}</td>
@@ -94,7 +96,7 @@
             </tbody>
             <tfoot>
             <tr class="info">
-                <th colspan="5" class="text-right">Total</th>
+                <th colspan="6" class="text-right">Total</th>
                 <th>{{number_format($resources->sum('budget_cost'), 2)}}</th>
             </tr>
             </tfoot>
