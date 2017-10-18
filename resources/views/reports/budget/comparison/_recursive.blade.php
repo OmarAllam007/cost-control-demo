@@ -19,7 +19,7 @@
     <td style="width: 120px; min-width: 120px;  max-width: 120px;">{{number_format($wbs_level->cost, 2)}}</td>
 
     {{-- Revised BOQ --}}
-    <td style="width: 120px; min-width: 120px;  max-width: 120px;">&nbsp;</td>
+    <td style="width: 200px; min-width: 200px;  max-width: 200px;">{{number_format($wbs_level->revised_boq, 2)}}</td>
 
     {{-- Comparison --}}
     <td style="width: 200px; min-width: 200px;  max-width: 200px;">{{number_format($wbs_level->price_diff, 2)}}</td>

@@ -78,6 +78,7 @@ class ComparisonReport
             $level->dry_cost = $level->subtree->sum('dry_cost') + $level->cost_accounts->sum('dry_cost');
             $level->qty_diff = $level->subtree->sum('qty_diff') + $level->cost_accounts->sum('qty_diff');
             $level->price_diff = $level->subtree->sum('price_diff') + $level->cost_accounts->sum('price_diff');
+            $level->revised_boq = $level->subtree->sum('revised_boq') + $level->cost_accounts->sum('revised_boq');
 
             return $level;
         })->reject(function($level) {
