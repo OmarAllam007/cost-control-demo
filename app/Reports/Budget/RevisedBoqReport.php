@@ -54,7 +54,9 @@ class RevisedBoqReport
                 ->get())
             ->groupBy('wbs_level_id')
             ->map(function (Collection $group) {
-                return $group->keyBy('cost_account');
+                return $group->keyBy(function($boq) {
+                    return trim($boq->cost_account);
+                });
             });
 
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
@@ -71,7 +73,7 @@ class RevisedBoqReport
 
             $level->cost_accounts = $this->original_boqs->get($level->id, collect())->map(function ($cost_account) {
                 $revised = $cost_account->revised_boq = $this->revised_boqs
-                    ->get($cost_account->wbs_id, collect())->get($cost_account->cost_account);
+                    ->get($cost_account->wbs_id, collect())->get(trim($cost_account->cost_account));
                 
                 if ($revised) {
                     $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur * $revised->rep;
