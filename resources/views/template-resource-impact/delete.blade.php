@@ -64,6 +64,18 @@
     <form action="{{route('template-resource.update', [$project, $template_resource])}}" method="post">
         {{csrf_field()}}
         {{method_field('delete')}}
+
+        @if($has_actual)
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i> Some resources already have actual data
+            </div>
+        @endif
+
+        <div class="form-group">
+            <button id="select-all" type="button" class="btn btn-link"><i class="fa fa-check-square-o"></i> Select All</button> |
+            <button id="remove-all" type="button" class="btn btn-link"><i class="fa fa-times"></i> Remove All</button>
+        </div>
+
         @foreach ($resources->groupBy('wbs_id') as $group)
             <article class="panel panel-info">
                 <div class="panel-heading">
@@ -73,7 +85,7 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                     <tr class="bg-primary">
-                        <th class="text-center"><input type="checkbox" name="" id="select-all"></th>
+                        <th class="text-center"><input type="checkbox" name="" class="select-all"></th>
                         <th>WBS</th>
                         <th>Cost Account</th>
                         <th>Item Description</th>
@@ -139,10 +151,18 @@
 @section('javascript')
     <script>
         $(function () {
-            $('abbr').tooltip();
-
             const checkboxes = $('.select-breakdown');
             $('#select-all').on('change', e => {
+                e.preventDefault();
+                checkboxes.prop('checked', true);
+            });
+
+            $('#remove-all').on('change', e => {
+                e.preventDefault();
+                checkboxes.prop('checked', false);
+            });
+
+            $('.select-all').on('change', e => {
                 $(e.target).parents('article').find('.select-breakdown').prop('checked', e.target.checked);
             });
 
