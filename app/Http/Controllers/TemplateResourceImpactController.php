@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActualResources;
 use App\Boq;
 use App\Breakdown;
 use App\BreakdownResource;
@@ -84,10 +85,18 @@ class TemplateResourceImpactController extends Controller
 
                 $attributes = (new BreakdownResourceFormatter($new_breakdown_resource))->toArray();
                 $shadow->new_shadow = new BreakDownResourceShadow($attributes);
+                if ($new_template_resource->resource_id != $shadow->breakdown_resource_id) {
+                    $shadow->has_actual = ActualResources::where('breakdown_resource_id', $shadow->breakdown_resource_id)->exists();
+                } else {
+                    $shadow->has_actual = false;
+                }
                 return $shadow;
             });
 
-        return view('template-resource-impact.edit', compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource'));
+        $has_actual = $resources->pluck('has_actual')->filter()->count() > 0;
+
+        return view('template-resource-impact.edit',
+            compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource', 'has_actual'));
     }
 
     public function update(Request $request, Project $project, TemplateResource $template_resource)
@@ -130,9 +139,15 @@ class TemplateResourceImpactController extends Controller
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)
             ->with(['wbs', 'breakdown_resource'])
             ->with('boq')
-            ->get();
+            ->get()->map(function ($r) {
+                $r->has_actual = ActualResources::where('breakdown_resource_id', $r->breakdown_resource_id)->exists();
+                return $r;
+            });
 
-        return view('template-resource-impact.delete', compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource'));
+        $has_actual = $resources->pluck('has_actual')->filter()->count() > 0;
+
+        return view('template-resource-impact.delete',
+            compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource', 'has_actual'));
     }
 
     public function destroy(Request $request, Project $project, TemplateResource $template_resource)

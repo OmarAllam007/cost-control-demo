@@ -27,7 +27,7 @@ elixir(function (mix) {
     // mix.webpack('cost-dashboard/index.js', 'public/js/cost-dashboard.js')
     //     .copy('node_modules/c3/c3.min.js', 'public/css/c3.min.js')
     //     .copy('node_modules/c3/c3.min.css', 'public/css/c3.min.css')
-    //     .sass('app.scss');
+    //
     //
     //     .webpack('project-permissions.js');
     // mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
