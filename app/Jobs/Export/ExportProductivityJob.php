@@ -19,35 +19,46 @@ class ExportProductivityJob extends Job
     public function handle()
     {
         set_time_limit(600);
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Code');
-        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Category Name');
-        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Description');
-        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Crew Structure');
-        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Daily Output');
-        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'After Reduction');
-        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Reduction Factor');
-        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Unit');
-        $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Source');
+        $excel = new \PHPExcel();
+        $excel->setActiveSheetIndex(0);
+
+        $sheet = $excel->getActiveSheet();
+
+        $sheet->fromArray([
+            'Code', 'Category Name', 'Description', 'Crew Structure', 'Daily Output', 'After Reduction',
+            'Reduction Factor', 'Unit', 'Source'
+        ], '', 'A1');
+
+        $sheet->getStyle('A1:I1')->applyFromArray(['font' => ['bold' => true]]);
+
         $rowCount = 2;
         foreach ($this->project->productivities as $productivity) {
-            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $productivity->csi_code);
-            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $productivity->category->path);
-            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $productivity->description);
-            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $productivity->crew_structure);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $productivity->versionFor($this->project->id)->daily_output);
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $productivity->versionFor($this->project->id)->after_reduction);
-            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $productivity->reduction_factor);
-            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $productivity->units->type);
-            $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, $productivity->source);
+            $sheet->fromArray([
+                $productivity->csi_code, $productivity->category->path, $productivity->description,
+                $productivity->crew_structure, $productivity->daily_output,
+                $productivity->after_reduction, $productivity->reduction_factor, $productivity->units->type,
+                $productivity->source
+            ], '', "A{$rowCount}");
+
             $rowCount++;
         }
 
+        foreach (['A', 'E', 'F', 'G', 'H', 'I'] as $c) {
+            $sheet->getColumnDimension($c)->setAutoSize(true);
+        }
 
+        foreach (['B', 'C', 'D'] as $c) {
+            $sheet->getColumnDimension($c)->setWidth(50);
+        }
 
-        header('Content-Disposition: attachment; filename="' . $this->project->name . ' - Productivity.xls"');
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('php://output');
+        $sheet->getStyle("E2:G{$rowCount}")
+            ->getNumberFormat()
+            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+
+        $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $filename = storage_path("app/productivity_{$this->project->id}_" . uniqid() . '.xlsx');
+        $writer->save($filename);
+
+        return $filename;
     }
 }
