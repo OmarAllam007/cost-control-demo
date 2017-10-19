@@ -64,43 +64,50 @@
     <form action="{{route('template-resource.update', [$project, $template_resource])}}" method="post">
         {{csrf_field()}}
         {{method_field('delete')}}
+        @foreach ($resources->groupBy('wbs_id') as $group)
+            <article class="panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{$group->first()->wbs->path}} ({{$group->first()->wbs->code}})</h4>
+                </div>
 
-        <table class="table table-striped table-bordered">
-            <thead>
-            <tr class="bg-primary">
-                <th class="text-center"><input type="checkbox" name="" id="select-all"></th>
-                <th>WBS</th>
-                <th>Cost Account</th>
-                <th>Item Description</th>
-                <th>Budget Qty</th>
-                <th>Budget Unit</th>
-                <th>Budget Cost</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($resources as $resource)
-                <tr>
-                    <td class="text-center">
-                        <input value="{{$resource->breakdown_resource->id}}" class="select-breakdown" type="checkbox" name="resources[{{$resource->breakdown_resource->id}}]">
-                    </td>
-                    <td>
-                        <abbr title="{{$resource->wbs->path}}">{{$resource->wbs->code}}</abbr>
-                    </td>
-                    <td>{{$resource->cost_account}}</td>
-                    <td>{{$resource->boq->description ?? ''}}</td>
-                    <td>{{$resource->budget_qty}}</td>
-                    <td>{{number_format($resource->budget_unit, 2)}}</td>
-                    <td>{{number_format($resource->budget_cost, 2)}}</td>
-                </tr>
-            @endforeach
-            </tbody>
-            <tfoot>
-            <tr class="info">
-                <th colspan="6" class="text-right">Total</th>
-                <th>{{number_format($resources->sum('budget_cost'), 2)}}</th>
-            </tr>
-            </tfoot>
-        </table>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr class="bg-primary">
+                        <th class="text-center"><input type="checkbox" name="" id="select-all"></th>
+                        <th>WBS</th>
+                        <th>Cost Account</th>
+                        <th>Item Description</th>
+                        <th>Budget Qty</th>
+                        <th>Budget Unit</th>
+                        <th>Budget Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($group as $resource)
+                        <tr>
+                            <td class="text-center">
+                                <input value="{{$resource->breakdown_resource->id}}" class="select-breakdown" type="checkbox" name="resources[{{$resource->breakdown_resource->id}}]">
+                            </td>
+                            <td>
+                                <abbr title="{{$resource->wbs->path}}">{{$resource->wbs->code}}</abbr>
+                            </td>
+                            <td>{{$resource->cost_account}}</td>
+                            <td>{{$resource->boq->description ?? ''}}</td>
+                            <td>{{$resource->budget_qty}}</td>
+                            <td>{{number_format($resource->budget_unit, 2)}}</td>
+                            <td>{{number_format($resource->budget_cost, 2)}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                    <tfoot>
+                    <tr class="info">
+                        <th colspan="6" class="text-right">Total</th>
+                        <th>{{number_format($group->sum('budget_cost'), 2)}}</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </article>
+        @endforeach
 
         <div class="form-group">
             <button class="btn btn-primary"><i class="fa fa-check"></i> Delete Template Resource</button>
@@ -112,13 +119,15 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title text-danger"><i class="fa fa-exclamation-circle"></i> Update Breakdowns</h4>
+                        <h4 class="modal-title text-danger"><i class="fa fa-exclamation-circle"></i> Update Breakdowns
+                        </h4>
                     </div>
                     <div class="modal-body">
                         <p class="lead text-danger">Are you sure you want to continue without updating any breakdown?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="confirm-btn" class="btn btn-danger">Confirm <i class="fa fa-chevron-right"></i></button>
+                        <button type="button" id="confirm-btn" class="btn btn-danger">Confirm
+                            <i class="fa fa-chevron-right"></i></button>
                         <button type="button" class="btn btn-default"><i class="fa fa-remove"></i> Cancel</button>
                     </div>
                 </div>
@@ -134,7 +143,7 @@
 
             const checkboxes = $('.select-breakdown');
             $('#select-all').on('change', e => {
-                checkboxes.prop('checked', e.target.checked);
+                $(e.target).parents('article').find('.select-breakdown').prop('checked', e.target.checked);
             });
 
             let confirm = false;
