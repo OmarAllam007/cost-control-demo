@@ -39,7 +39,7 @@ class Productivity extends Model
 
     public static function options()
     {
-        return static::orderBy('code')->pluck('code', 'id')->prepend('Select Reference', '');
+        return static::whereNull('project_id')->orderBy('csi_code')->pluck('csi_code', 'id')->prepend('Select Reference', '');
     }
 
 

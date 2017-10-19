@@ -7,8 +7,6 @@ use Illuminate\Support\Str;
 
 class Resource extends Maker
 {
-    use CachesQueries;
-
     public function make()
     {
         $stubPath = $this->stubPath();

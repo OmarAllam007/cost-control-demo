@@ -32,17 +32,17 @@ class UpdateResourceTypesAndResources extends Command
 
         $this->typesCache = collect();
         $this->resourceTypeMap = collect();
-
-        ResourceType::unguard();
-        ResourceType::flushEventListeners();
-
-        Resources::unguard();
-        Resources::flushEventListeners();
     }
 
 
     function handle()
     {
+        ResourceType::unguard();
+        ResourceType::flushEventListeners();
+
+        Resources::unguard();
+        Resources::flushEventListeners();
+
         $this->excel = \PHPExcel_IOFactory::createReader('Excel2007')->load(storage_path('misc/resources-data.xlsx'));
 
         $this->updateRootTypes();

@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Jobs\Job;
 use App\Resources;
 use App\ResourceType;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 
@@ -14,46 +14,38 @@ class CacheResourcesTree extends Job
     /** @var Collection */
     protected $types;
 
+    /** @var Collection */
+    protected $resources;
+
     public function handle()
     {
-//        set_time_limit(60);
-        $tree = [];
-        $types = ResourceType::tree()->get();
+        return \Cache::remember('resources-tree', Carbon::parse('+1 week'), function() {
+            $this->types = ResourceType::all()->groupBy('parent_id');
+            $this->resources = Resources::with('project')->get()->groupBy('resource_type_id');
 
-        foreach ($types as $type) {
-            $treeType = $this->buildTypeTree($type);
-            $tree[] = $treeType;
-        }
+            return $this->buildTypeTree();
+        });
 
-        return $tree;
+
     }
 
-    protected function buildTypeTree(ResourceType $type)
+    protected function buildTypeTree($parent_id = 0)
     {
-        $tree = ['id' => $type->id, 'name' => $type->name, 'children' => [], 'resources' => []];
-        if ($type->children->count()) {
-            $tree['children'] = $type->children->map(function(ResourceType $child){
-                return $this->buildTypeTree($child);
+        $tree = $this->types->get($parent_id) ?: collect();
+
+        return $tree->map(function (ResourceType $type) {
+            $type->children = $this->buildTypeTree($type->id);
+
+            $type->resources = ($this->resources->get($type->id) ?: collect())->map(function($resource) {
+                if ($resource->project_id) {
+                    $resource->project_name = $resource->project->name;
+                }
+
+                return $resource->getAttributes();
             });
-        }
 
-        if ($type->resources->count()) {
-            $tree['resources'] = $type->resources->map(function(Resources $resource) {
-                 $attributes = ['id' => $resource->id,'code'=>$resource->resource_code, 'name' => $resource->name,'project_id'=>$resource->project_id];
-                 if ($resource->project && $resource->project_id) {
-                     $attributes['project_name'] = $resource->project->name;
-                 }
-
-                 if ($resource->types) {
-                     $attributes['root_type'] = $resource->types->root->name;
-                 } else{
-                     $attributes['root_type'] = '';
-                 }
-                 return $attributes;
-            });
-        }
-
-        return $tree;
+            return $type->getAttributes();
+        });
     }
 
 

@@ -12,7 +12,7 @@ class UpdateBoqsTable extends Migration
      */
     public function up()
     {
-        Schema::table('boqs', function (Blueprint $table) {
+        /*Schema::table('boqs', function (Blueprint $table) {
             $table->string('item_code');
             $table->string('cost_account');
             $table->double('kcc_qty',12,2)->nullable();
@@ -20,7 +20,7 @@ class UpdateBoqsTable extends Migration
             $table->double('materials',12,2)->nullable();
             $table->double('manpower',12,2)->nullable();
             $table->integer('project_id',12,2);
-        });
+        });*/
     }
 
     /**
@@ -30,13 +30,13 @@ class UpdateBoqsTable extends Migration
      */
     public function down()
     {
-        Schema::table('boqs', function (Blueprint $table) {
+        /*Schema::table('boqs', function (Blueprint $table) {
 //            $table->dropColumn('item_code');
 //            $table->dropColumn('cost_account');
 //            $table->dropColumn('kcc_qty');
 //            $table->dropColumn('subcon');
 //            $table->dropColumn('materials');
 //            $table->dropColumn('manpower');
-        });
+        });*/
     }
 }

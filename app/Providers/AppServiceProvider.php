@@ -23,6 +23,7 @@ use App\Observers\ProductivityObserver;
 use App\Observers\QSObserver;
 use App\Observers\QuantitySurveyObserver;
 use App\Observers\ResourcesObserver;
+use App\Observers\ResourceTypeObserver;
 use App\Observers\StandardActivityResourceObserver;
 use App\Observers\WbsObserver;
 use App\Productivity;
@@ -56,12 +57,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->csiCategoryActions();
         $this->ProductivityActions();
-        $this->ResourceTypeActions();
         $this->wbsActions();
 
         Productivity::observe(ProductivityObserver::class);
         BreakdownResource::observe(BreakDownResourceObserver::class);
         Resources::observe(ResourcesObserver::class);
+        ResourceType::observe(ResourceTypeObserver::class);
         BreakdownTemplate::observe(BreakdownTemplateObserver::class);
         Breakdown::observe(BreakdownObserver::class);
         BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
@@ -105,17 +106,7 @@ class AppServiceProvider extends ServiceProvider
             dispatch(new CacheCsiCategoryTree());
         });
     }
-    public function ResourceTypeActions()
-    {
-        ResourceType::saved(function () {
-            \Cache::forget('resources-tree');
-            dispatch(new CacheResourcesTree());
-        });
-        ResourceType::deleted(function () {
-            \Cache::forget('resources-tree');
-            dispatch(new CacheResourcesTree());
-        });
-    }
+
     public function wbsActions()
     {
 

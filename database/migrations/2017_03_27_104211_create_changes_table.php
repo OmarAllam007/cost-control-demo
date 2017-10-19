@@ -15,6 +15,7 @@ class CreateChangesTable extends Migration
         Schema::create('changes', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('change_log_id');
+            $table->unsignedInteger('model_id');
             $table->string('model');
             $table->text('original')->nullable();
             $table->text('updated')->nullable();

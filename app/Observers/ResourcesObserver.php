@@ -20,23 +20,34 @@ class ResourcesObserver
 {
     function created(Resources $resource)
     {
-        dispatch(new CacheResourcesInQueue);
+//        dispatch(new CacheResourcesInQueue);
     }
 
     function creating(Resources $resource)
     {
-        $resource->resource_code = $this->generateResourceCode($resource);
+        if (!$resource->resource_code) {
+            $resource->resource_code = $this->generateResourceCode($resource);
+        }
+
+        if ($resource->project_id && !$resource->resource_id) {
+            $attributes = $resource->getAttributes();
+            unset($attributes['project_id']);
+            $original = Resources::create($attributes);
+
+            $resource->resource_id = $original->id;
+            $resource->resource_code = $original->resource_code;
+        }
     }
 
     function updated(Resources $resource)
     {
         $resource->updateBreakdownResources();
-        dispatch(new CacheResourcesInQueue);
+//        dispatch(new CacheResourcesInQueue);
     }
 
     function deleted(Resources $resource)
     {
-        dispatch(new CacheResourcesInQueue);
+//        dispatch(new CacheResourcesInQueue);
     }
 
     public function generateResourceCode($resource)

@@ -12,11 +12,11 @@ class UpdateSurveysTable extends Migration
      */
     public function up()
     {
-        Schema::table('qty_surveys', function (Blueprint $table) {
-            $table->integer('wbs_level_id');
-            $table->integer('project_id');
+        /*Schema::table('qty_surveys', function (Blueprint $table) {
+            $table->integer('wbs_level_id')->default(0);
+            $table->integer('project_id')->default(0);
             $table->string('cost_account');
-        });
+        });*/
     }
 
     /**
@@ -26,10 +26,10 @@ class UpdateSurveysTable extends Migration
      */
     public function down()
     {
-        Schema::table('qty_surveys', function (Blueprint $table) {
+        /*Schema::table('qty_surveys', function (Blueprint $table) {
             $table->dropColumn('wbs_level_id');
             $table->dropColumn('project_id');
             $table->dropColumn('cost_account');
-        });
+        });*/
     }
 }

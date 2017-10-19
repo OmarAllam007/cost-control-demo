@@ -12,13 +12,13 @@ class AddBatchToActualResources extends Migration
      */
     public function up()
     {
-        Schema::table('actual_resources', function (Blueprint $table) {
+        /*Schema::table('actual_resources', function (Blueprint $table) {
             $table->integer('batch_id');
         });
 
         Schema::table('cost_shadows', function (Blueprint $table) {
             $table->integer('batch_id');
-        });
+        });*/
     }
 
     /**
@@ -28,12 +28,12 @@ class AddBatchToActualResources extends Migration
      */
     public function down()
     {
-        Schema::table('actual_resources', function (Blueprint $table) {
+        /*Schema::table('actual_resources', function (Blueprint $table) {
             $table->dropColumn('batch_id');
         });
 
         Schema::table('cost_shadows', function (Blueprint $table) {
             $table->dropColumn('batch_id');
-        });
+        });*/
     }
 }

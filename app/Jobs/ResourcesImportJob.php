@@ -11,26 +11,32 @@ use Illuminate\Support\Collection;
 class ResourcesImportJob extends ImportJob
 {
 
-    /**
-     * @var
-     */
+    /** @var string */
     protected $file;
 
-    /**
-     * @var Collection
-     */
+    /** @var Collection */
     protected $types;
 
+    /** @var Project */
     protected $project;
-    /**
-     * @var Collection
-     */
+
+    /** @var Collection */
     protected $partners;
+
+    /** @var int */
+    protected $project_id;
+
+    /** @var Collection */
+    protected $oldResourceNames;
+
+    /** @var Collection */
+    protected $oldResourceCodes;
 
     public function __construct($file, $project = null)
     {
         $this->file = $file;
         $this->project = $project;
+        $this->project_id = $project ? $project->id : null;
     }
 
     public function handle()
@@ -38,18 +44,15 @@ class ResourcesImportJob extends ImportJob
         $loader = new \PHPExcel_Reader_Excel2007();
         $excel = $loader->load($this->file);
         $rows = $excel->getSheet(0)->getRowIterator(2);
-        $status = ['failed' => collect(), 'success' => 0, 'dublicated' => [], 'project' => $this->project];
+        $status = ['units' => collect(), 'success' => 0, 'project' => $this->project];
 
-        if ($this->project) {
-            $oldResources = Resources::where('project_id', $this->project->id)->get();
-        } else {
-            $oldResources = Resources::whereNull('project_id')->get();
-        }
+        $this->loadOldResources();
 
-        $oldResourceCodes = $oldResources->map(function (Resources $resource) {
-            $resource->resource_code = mb_strtolower($resource->resource_code);
-            return $resource;
-        })->pluck('resource_code', 'resource_code');
+        $failed = collect();
+        $rules = [
+            'name' => 'required', 'resource_type_id' => 'required|no_resource_on_parent', 'unit' => 'required',
+            'rate' => 'required|gte:0', 'waste' => 'gte:0|lt:100'
+        ];
 
         Resources::flushEventListeners();
         foreach ($rows as $index => $row) {
@@ -60,32 +63,42 @@ class ResourcesImportJob extends ImportJob
             }
 
             $code = mb_strtolower($data[6]);
-            if (!$oldResourceCodes->has($code)) {
+            $name = str_replace(' ', '', mb_strtolower($data[7]));
+
+            if ($this->oldResourceCodes->has($code)) {
+                $data[13] = 'Duplicated Code';
+                $failed->push($data);
+            } elseif ($this->oldResourceNames->has($name)) {
+                $data[13] = 'Duplicated name';
+                $failed->push($data);
+            } else {
                 $type_id = $this->getTypeId($data);
                 $unit_id = $this->getUnit($data[9]);
 
-                $item = [
-                    'resource_type_id' => $type_id,
-                    'resource_code' => $data[6],
-                    'name' => $data[7],
-                    'rate' => floatval($data[8]),
-                    'unit' => $unit_id,
-                    'waste' => $this->getWaste($data[10]),
-                    'business_partner_id' => $this->getPartner($data[11]),
-                    'reference' => $data[12],
-                    'project_id' => $this->project->id ?? null,
-                ];
-                if ($unit_id) {
+                $item = ['resource_type_id' => $type_id, 'resource_code' => $data[6], 'name' => $data[7],
+                    'rate' => floatval($data[8]), 'unit' => $unit_id, 'waste' => $this->getWaste($data[10]),
+                    'business_partner_id' => $this->getPartner($data[11]), 'reference' => $data[12],
+                    'project_id' => $this->project_id];
+
+                if (!$unit_id) {
+                    $item['orig_unit'] = $data[9];
+                    $status['units']->push($item);
+
+                    continue;
+                }
+
+                $validator = \Validator::make($item, $rules);
+                if ($validator->passes()) {
                     Resources::create($item);
                     ++$status['success'];
                 } else {
-                    $item['orig_unit'] = $data[9];
-                    $status['failed']->push($item);
+                    $data[13] = 'Invalid data';
+                    $failed->push($data);
                 }
-            } else {
-                $status['dublicated'][] = $data[6];
             }
         }
+
+        $status['failed'] = $this->createFailedExcel($failed);
 
         dispatch(new CacheResourcesInQueue());
 
@@ -159,5 +172,49 @@ class ResourcesImportJob extends ImportJob
         });
 
         return $this->types;
+    }
+
+    protected function loadOldResources()
+    {
+        $oldResources = Resources::whereNull('project_id')->get();
+
+        $this->oldResourceCodes = $oldResources->map(function (Resources $resource) {
+            $resource->resource_code = mb_strtolower($resource->resource_code);
+            return $resource;
+        })->pluck('resource_code', 'resource_code');
+
+        $this->oldResourceNames = $oldResources->map(function (Resources $resource) {
+            $resource->encoded_name = mb_strtolower(str_replace(' ', '', $resource->name));
+            return $resource;
+        })->pluck('encoded_name', 'encoded_name');
+    }
+
+    protected function createFailedExcel(Collection $failed)
+    {
+        if ($failed->isEmpty()) {
+            return '';
+        }
+
+        $excel = new \PHPExcel();
+
+        $sheet = $excel->getSheet(0);
+
+        $sheet->setTitle('Failed resources');
+
+        $sheet->fromArray(["RESOURCE TYPE ", "RESOURCE DIVISION", "RESOURCE SUB DIVISION 1", "RESOURCE SUB DIVISION 2",
+            "RESOURCE SUB DIVISION 3", "RESOURCE SUB DIVISION 4", "RESOURCE CODE", "RESOURCE NAME", "STANDARD RATE",
+            "UNIT OF MEASURE", "MATERIAL Waste %",	"SUPPLIER/ SUBCON.", "REFERENCE", "REASON"]);
+
+        $failed->each(function($row, $counter) use ($sheet) {
+            $row_num = $counter + 2;
+            $sheet->fromArray($row, '', "A{$row_num}");
+        });
+
+        $writer = new \PHPExcel_Writer_Excel2007($excel);
+        $filename = uniqid('failed_resources_') . '.xlsx';
+        $filepath = storage_path('app/public/' . $filename);
+        $writer->save($filepath);
+
+        return '/storage/' . $filename;
     }
 }

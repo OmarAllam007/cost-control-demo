@@ -66,19 +66,19 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('resourse_dictionary/{project}', ['as' => 'resource_dictionary.report', 'uses' => 'ReportController@resourceDictionary']);
     Route::get('man_power/{project}', ['as' => 'man_power.report', 'uses' => 'ReportController@manPower']);
 
-    Route::get('budget_summery/{project}', ['as' => 'budget_summery.report', 'uses' => 'ReportController@budgetSummery']);
+    Route::get('budget-summary/{project}', ['as' => 'budget_summary.report', 'uses' => 'ReportController@budgetSummary']);
 
     Route::get('activity_resource_breakdown/{project}', ['as' => 'activity_resource_breakdown.report', 'uses' => 'ReportController@activityResourceBreakDown']);
 
-    Route::get('qs_summery_report/{project}', ['as' => 'qsReport.report', 'uses' => 'ReportController@qsSummery']);
+    Route::get('qs_summary_report/{project}', ['as' => 'qsReport.report', 'uses' => 'ReportController@qsSummary']);
 
-    Route::get('budget_cost_dry_cost/{project}', ['as' => 'budget_cost_dry_cost.report', 'uses' => 'ReportController@budgetCostVSDryCost']);
+    Route::get('budget_cost_dry_cost/{project}', ['as' => 'budget_cost_dry_cost.report', 'uses' => 'ReportController@budgetCostVSDryCostByBuilding']);
 
-    Route::get('budget_cost_vs_break_down/{project}', ['as' => 'budget_cost_vs_break_down.report', 'uses' => 'ReportController@budgetCostVSBreadDown']);
+    Route::get('budget_cost_by_resource_type/{project}', ['as' => 'budget_cost_vs_break_down.report', 'uses' => 'ReportController@budgetCostByResourceType']);
 
     Route::get('budget_cost_by_discipline/{project}', ['as' => 'budget_cost_by_discipline.report', 'uses' => 'ReportController@budgetCostDiscipline']);
 
-    Route::get('budget_cost_by_building/{project}', ['as' => 'budget_cost_by_building.report', 'uses' => 'ReportController@budgetCostForBuilding']);
+    Route::get('budget_cost_by_building/{project}', ['as' => 'budget_cost_by_building.report', 'uses' => 'ReportController@budgetCostByBuilding']);
 
     Route::get('budget_cost_dry_cost_discipline/{project}', ['as' => 'budget_cost_dry_cost_discipline.report', 'uses' => 'ReportController@budgetCostDryCostDiscipline']);
 
@@ -88,11 +88,10 @@ Route::group(['prefix' => 'project'], function () {
 
     Route::get('boq_price_list/{project}', ['as' => 'boq_price_list.report', 'uses' => 'ReportController@boqPriceList']);
 
-    Route::get('high_priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriority']);
-    Route::post('high_priority_resources/{project}', ['as' => 'generate_top_matrial_reports.report', 'uses' => 'ReportController@topMaterialResources']);
-    Route::post('high_priority_resources_reset/{project}', ['as' => 'reset_top_matrial_reports.report', 'uses' => 'ReportController@topMaterialResourcesReset']);
+    Route::get('high-priority/{project}', ['as' => 'high_priority.report', 'uses' => 'ReportController@highPriorityMaterials']);
 
-
+    Route::get('wbs-dictionary/{project}', 'ReportController@wbsDictionary')->name('wbs_dictionary_report');
+    Route::get('wbs-labours/{project}', 'ReportController@wbsLabours')->name('wbs_labours_report');
     //Export Project Reports
     Route::get('export_std_activity/{project}',['as'=>'budget_std_activity.export','uses'=>'ExportReportController@exportStdActivity']);
     Route::get('export_productivity/{project}',['as'=>'budget_productivity.export','uses'=>'ExportReportController@exportProductivity']);
@@ -106,8 +105,11 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('show_productivity_report/{project}',['as'=>'productivity-cost-show.modify','uses'=>'CostReportsController@productivityReport']);
     Route::get('show_issues/{project}',['as'=>'show_issues.report','uses'=>'CostReportsController@issuesReport']);
 
-    Route::get('{project}/budget-trend', ['as' => 'project.budget-trend', 'uses' => 'ReportController@budgetTrend']);
-
+    Route::get('{project}/budget-trend', 'ReportController@budgetTrend')->name('project.budget-trend');
+    Route::get('{project}/profitability', 'ReportController@profitability')->name('project.profitability-report');
+    Route::get('{project}/charter', 'ReportController@charter')->name('project.charter-report');
+    Route::get('{project}/check-list', 'ReportController@check_list')->name('project.budget-checklist');
+    Route::get('{project}/comparison', 'ReportController@comparison_report')->name('project.comparison');
 });
 Route::get('/download_trend/{id}/download', 'ProductivityController@downloadTrend');
 Route::get('/download_labor_trend/{id}/download', 'ProductivityController@downloadLaborTrend');

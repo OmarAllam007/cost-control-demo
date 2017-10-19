@@ -14,8 +14,11 @@ class CreateActualBatchesTable extends Migration
     {
         Schema::create('actual_batches', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('project_id')->unsigned();
+            $table->integer('period_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->string('type')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

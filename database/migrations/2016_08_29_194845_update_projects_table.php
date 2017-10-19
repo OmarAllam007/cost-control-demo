@@ -12,14 +12,14 @@ class UpdateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        /*Schema::table('projects', function (Blueprint $table) {
             $table->text('project_code')->nullable();
             $table->text('client_name')->nullable();
             $table->text('project_location')->nullable();
             $table->text('project_contract_value')->nullable();
             $table->date('project_start_date')->nullable();
             $table->text('project_duration')->nullable();
-        });
+        });*/
     }
 
     /**
@@ -29,13 +29,13 @@ class UpdateProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        /*Schema::table('projects', function (Blueprint $table) {
             $table->text('project_code')->nullable();
             $table->text('client_name')->nullable();
             $table->text('project_location')->nullable();
             $table->text('project_contract_value')->nullable();
             $table->date('project_start_date')->nullable();
             $table->text('project_duration')->nullable();
-        });
+        });*/
     }
 }

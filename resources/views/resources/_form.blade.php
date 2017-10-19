@@ -1,98 +1,91 @@
 {{ csrf_field() }}
 <div class="row">
     <div class="col-sm-8">
-        <div class="form-group {{$errors->first('resource_type_id', 'has-error')}}">
+        <article class="form-group {{$errors->first('resource_type_id', 'has-error')}}">
             {{ Form::label('resource_type', 'Resource type', ['class' => 'control-label']) }}
-            {{--{{  Form::select('resource_type_id',$resource_types,null, ['class' => 'form-control']) }}--}}
-            <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
-                <div class="hidden">
-                    {{ Form::select('resource_type_id', App\ResourceType::options(), null, ['class' => 'form-control']) }}
+            {{ Form::hidden('resource_type_id') }}
+            @php
+                $type_id = Form::getValueAttribute('resource_type_id');
+                $type = App\ResourceType::with('parent')->find($type_id);
+            @endphp
+
+            @if ($resources->project_id)
+                <input class="form-control" disabled value="{{$type->path ?? 'Type not found'}}">
+            @else
+                <div class="btn-group btn-group-sm btn-group-block">
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open btn btn-default btn-sm flex text-right">{{$type->path ?? 'Select Type'}}</a>
+                    <a class="remove-tree-input btn btn-warning btn-sm" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times-circle"></span></a>
                 </div>
-                <p>
-                    <a href="#LevelsModal" data-toggle="modal" class="tree-open">
-                        @if ($type_id = Form::getValueAttribute('resource_type_id'))
-                            @if ($type = App\ResourceType::with('parent')->find($type_id))
-                                {{$type->path ?? ''}}
-                            @else
-                                Select Type
-                            @endif
-                        @else
-                            Select Type
-                        @endif
-                    </a>
-                    <a class="remove-tree-input" data-label="Select Type" data-target="#LevelsModal"><span
-                                class="fa fa-times"></span></a>
-                </p>
-                {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
-            </div>
-
-        </div>
-
-        <div class="form-group {{$errors->first('resource_code', 'has-error')}}">
-
-            @if(!empty($edit))
-                {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-                {{ Form::text('resource_code',null, ['class' => 'form-control','readonly'=>'readonly']) }}
-            @elseif(!empty($override))
-                {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-                {{ Form::text('resource_code',$resources->code, ['class' => 'form-control','readonly'=>'readonly']) }}
+                <div class="clearfix"></div>
             @endif
+            {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
+        </article>
+
+        <article class="form-group {{$errors->first('resource_code', 'has-error')}}">
+            {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
+            {{ Form::text('resource_code',old('resource_code', $resources->resource_code), ['class' => 'form-control', 'readonly'=> !empty($edit)]) }}
+
             {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
+        </article>
 
-        </div>
-
-        <div class="form-group {{$errors->first('name', 'has-error')}}">
+        <article class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             @if(!empty($override))
-                {{ Form::text('name', $resources->name, ['class' => 'form-control']) }}
+                {{ Form::text('name', $resources->name, ['class' => 'form-control', 'readonly' => $resources->project_id]) }}
             @else
                 {{ Form::text('name', null, ['class' => 'form-control']) }}
                 {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
             @endif
-        </div>
+        </article>
 
-        <div class="form-group {{$errors->first('rate', 'has-error')}}">
+        <article class="form-group {{$errors->first('unit', 'has-error')}}">
+            {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
+            {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control', 'disabled' => $resources->project_id]) }}
+            {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
+        </article>
+
+        <article class="form-group {{$errors->first('rate', 'has-error')}}">
             {{ Form::label('rate', 'Rate', ['class' => 'control-label']) }}
             {{ Form::number('rate', null, ['class' => 'form-control','step'=>'any']) }}
             {!! $errors->first('rate', '<div class="help-block">:message</div>') !!}
-        </div>
+        </article>
 
-        <div class="form-group {{$errors->first('unit', 'has-error')}}">
-            {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
-            {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control']) }}
-            {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
-        </div>
-
-        <div class="form-group {{$errors->first('waste', 'has-error')}}">
+        <article class="form-group {{$errors->first('waste', 'has-error')}}">
             {{ Form::label('waste', 'Waste', ['class' => 'control-label']) }}
             <div class="input-group">
                 {{ Form::text('waste', null, ['class' => 'form-control']) }}
                 <span class="input-group-addon">%</span>
             </div>
             {!! $errors->first('waste', '<div class="help-block">:message</div>') !!}
-        </div>
+        </article>
 
-        <div class="form-group {{$errors->first('reference', 'has-error')}}">
+        <article class="form-group {{$errors->first('reference', 'has-error')}}">
             {{ Form::label('reference', 'Reference', ['class' => 'control-label']) }}
             {{ Form::text('reference', null, ['class' => 'form-control']) }}
             {!! $errors->first('reference', '<div class="help-block">:message</div>') !!}
-        </div>
+        </article>
 
-
-        <div class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
+        <article class="form-group {{$errors->first('business_partner_id', 'has-error')}}">
             {{ Form::label('business_partner_id', 'Business Partner', ['class' => 'control-label']) }}
             {{ Form::select('business_partner_id', App\BusinessPartner::options(), null, ['class' => 'form-control']) }}
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
-        </div>
+        </article>
+
+        @if ($resources->project_id)
+        <article class="form-group">
+            <label for="top-material" class="control-label">Top material</label>
+            <input name="top_material" value="{{old('top_material', $resources->top_material) }}" class="form-control" id="top-material">
+        </article>
+        @endif
     </div>
 
     @include('resources._codes')
 
 </div>
 
-<div class="form-group">
+<article class="form-group">
     <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
-</div>
+</article>
 
 <div id="LevelsModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.0",
         "laravel/framework": "5.2.*",
         "laravelcollective/html": "^5.2",
         "barryvdh/laravel-ide-helper": "^2.2",
@@ -13,10 +13,10 @@
         "laravel/socialite": "^2.0",
         "khill/lavacharts" : "3.0.*",
         "barryvdh/laravel-debugbar": "^2.3",
-        "predis/predis": "^1.1"
-
-
-
+        "predis/predis": "^1.1",
+        "maatwebsite/excel": "^2.1",
+        "dompdf/dompdf": "^0.8.0",
+        "doctrine/dbal": "2.5.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

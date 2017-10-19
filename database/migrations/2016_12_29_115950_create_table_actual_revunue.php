@@ -17,6 +17,10 @@ class CreateTableActualRevunue extends Migration
             $table->double('value',12,2);
             $table->string('cost_account');
             $table->integer('project_id');
+            $table->integer('wbs_id');
+            $table->integer('period_id');
+            $table->integer('quantity');
+            $table->unsignedInteger('boq_id');
             $table->timestamps();
         });
     }

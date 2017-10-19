@@ -16,7 +16,12 @@ class CreateResourcesTable extends Migration
             $table->string('unit');
             $table->double('waste',12,2)->nullable();
             $table->string('reference')->nullable();
-            $table->integer('business_partner_id')->unsigned();
+            $table->integer('business_partner_id')->unsigned()->nullable();
+            $table->string('top_material')->nullable();
+            $table->integer('project_id', false, true)->nullable();
+            $table->integer('resource_id', false, true)->nullable();
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

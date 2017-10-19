@@ -9,6 +9,7 @@ use App\Behaviors\Overridable;
 use App\Behaviors\RecordsUser;
 use App\Behaviors\Tree;
 use App\Formatters\BreakdownResourceFormatter;
+use App\Observers\ResourcesObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,8 +22,11 @@ class Resources extends Model
     protected $table = 'resources';
 
     protected $fillable = [
-        'resource_code', 'name', 'rate', 'unit', 'waste', 'business_partner_id', 'resource_type_id', 'reference', 'project_id', 'resource_id'
+        'resource_code', 'name', 'rate', 'unit', 'waste', 'business_partner_id',
+        'resource_type_id', 'reference', 'project_id', 'resource_id', 'top_material'
     ];
+
+//    protected $casts = ['top_material' => 'boolean'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -88,8 +92,8 @@ class Resources extends Model
             'type' => $this->types->name ?? '',
             'unit' => $this->units->type ?? '',
             'rate' => $this->rate,
-            'root_type' => $this->types? $this->types->root->name : '',
-            'resource_type_id' => $this->types?  $this->types->root->id : 0,
+            'root_type' => $this->types ? $this->types->root->name : '',
+            'resource_type_id' => $this->types ? $this->types->root->id : 0,
             'waste' => $this->waste,
             'resource_code' => $this->resource_code,
         ];
@@ -125,19 +129,24 @@ class Resources extends Model
     public function updateBreakdownResources()
     {
         if ($this->project_id) {
-            $breakdown_resources = BreakdownResource::whereHas('breakdown', function ($q) {
-                $q->where('project_id', $this->project_id);
-            })->where('resource_id', $this->id)->get();
-
-            /** @var BreakdownResource $breakdown_resource */
-            foreach ($breakdown_resources as $breakdown_resource) {
-                $breakdown_resource->resource_waste = $this->waste;
-                if ($breakdown_resource->isDirty()) {
-                    $breakdown_resource->update();
-                } else {
-                    $breakdown_resource->updateShadow();
-                }
-            }
+            BreakDownResourceShadow::with('breakdown_resource')
+                ->where(['project_id' => $this->project_id, 'resource_id' => $this->id])->get()
+                ->each(function ($shadow) {
+                    $shadow->breakdown_resource->updateShadow();
+                });
+//            $breakdown_resources = BreakdownResource::whereHas('breakdown', function ($q) {
+//                $q->where('project_id', $this->project_id);
+//            })->where('resource_id', $this->id)->get();
+//
+//            /** @var BreakdownResource $breakdown_resource */
+//            foreach ($breakdown_resources as $breakdown_resource) {
+//                $breakdown_resource->resource_waste = $this->waste;
+//                if ($breakdown_resource->isDirty()) {
+//                    $breakdown_resource->update();
+//                } else {
+//                    $breakdown_resource->updateShadow();
+//                }
+//            }
         }
     }
 

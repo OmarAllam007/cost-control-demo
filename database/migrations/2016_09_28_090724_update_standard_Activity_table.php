@@ -12,10 +12,10 @@ class UpdateStandardActivityTable extends Migration
      */
     public function up()
     {
-        Schema::table('std_activities', function (Blueprint $table) {
+        /*Schema::table('std_activities', function (Blueprint $table) {
             $table->dropColumn('breakdown_template_name');
             $table->string('work_package_name')->nullable();
-        });
+        });*/
     }
 
     /**
@@ -25,8 +25,8 @@ class UpdateStandardActivityTable extends Migration
      */
     public function down()
     {
-        Schema::table('std_activities', function (Blueprint $table) {
+        /*Schema::table('std_activities', function (Blueprint $table) {
             $table->dropColumn('work_package_name');
-        });
+        });*/
     }
 }

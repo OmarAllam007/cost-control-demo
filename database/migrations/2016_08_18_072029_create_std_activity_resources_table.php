@@ -15,6 +15,12 @@ class CreateStdActivityResourcesTable extends Migration
             $table->double('default_value',12,2)->nullable();
             $table->boolean('allow_override')->default(0);
             $table->integer('project_id')->unsigned()->nullable();
+            $table->double('budget_qty',12,2)->nullable();
+            $table->double('eng_qty',12,2)->nullable();
+            $table->double('resource_waste',12,2)->nullable();
+            $table->double('labor_count',12,2)->nullable();
+            $table->integer('productivity_id')->unsigned()->nullable();
+            $table->string('remarks')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

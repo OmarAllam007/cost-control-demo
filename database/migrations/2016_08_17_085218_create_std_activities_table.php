@@ -13,6 +13,7 @@ class CreateStdActivitiesTable extends Migration
             $table->string('code')->nullable();
             $table->string('name');
             $table->string('id_partial')->nullable();
+            $table->string('work_package_name')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

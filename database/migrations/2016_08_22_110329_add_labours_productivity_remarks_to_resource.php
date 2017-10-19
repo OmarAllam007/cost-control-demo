@@ -12,12 +12,12 @@ class AddLaboursProductivityRemarksToResource extends Migration
      */
     public function up()
     {
-        Schema::table('std_activity_resources', function (Blueprint $table) {
+        /*Schema::table('std_activity_resources', function (Blueprint $table) {
             $table->double('resource_waste',12,2)->nullable();
             $table->double('labor_count',12,2)->nullable();
             $table->integer('productivity_id')->unsigned()->nullable();
             $table->string('remarks')->nullable();
-        });
+        });*/
     }
 
     /**
@@ -27,11 +27,11 @@ class AddLaboursProductivityRemarksToResource extends Migration
      */
     public function down()
     {
-        Schema::table('std_activity_resources', function (Blueprint $table) {
+        /*Schema::table('std_activity_resources', function (Blueprint $table) {
             $table->dropColumn('resource_waste');
             $table->dropColumn('labor_count');
             $table->dropColumn('productivity_id');
             $table->dropColumn('remarks');
-        });
+        });*/
     }
 }

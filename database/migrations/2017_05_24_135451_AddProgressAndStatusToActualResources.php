@@ -12,10 +12,10 @@ class AddProgressAndStatusToActualResources extends Migration
      */
     public function up()
     {
-        Schema::table('actual_resources', function (Blueprint $table) {
+        /*Schema::table('actual_resources', function (Blueprint $table) {
             $table->float('progress')->nullable();
             $table->string('status')->nullable();
-        });
+        });*/
     }
 
     /**
@@ -25,9 +25,9 @@ class AddProgressAndStatusToActualResources extends Migration
      */
     public function down()
     {
-        Schema::table('actual_resources', function (Blueprint $table) {
+        /*Schema::table('actual_resources', function (Blueprint $table) {
             $table->dropColumn('progress');
             $table->dropColumn('status');
-        });
+        });*/
     }
 }

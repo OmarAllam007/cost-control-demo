@@ -1,7 +1,23 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>{{$project->name}} &mdash; Budget Trend</h2>
+    <div class="display-flex">
+        <h2 class="flex">{{$project->name}} &mdash; Budget Trend</h2>
+
+        <div class="btn-toolbar">
+            <a href="?excel" class="btn btn-info btn-sm print">
+                <i class="fa fa-cloud-download"></i> Excel
+            </a>
+
+            <a href="?print=1&paint=boq-price" target="_blank" class="btn btn-success btn-sm print">
+                <i class="fa fa-print"></i> Print
+            </a>
+
+            <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm back">
+                <i class="fa fa-chevron-left"></i> Back
+            </a>
+        </div>
+    </div>
 @endsection
 
 @section('body')
@@ -34,8 +50,9 @@
                     <tbody>
                     @foreach($data as $discipline => $disciplineData)
                         <tr>
-                            <td class="discipline" width="300"><a href=".{{slug($discipline)}}"><i
-                                            class="fa fa-plus-circle"></i> {{$discipline}}</a></td>
+                            <td class="discipline" width="300">
+                                <a href=".{{slug($discipline)}}"><i class="fa fa-plus-circle"></i> {{$discipline}}</a>
+                            </td>
                             @php
                                 $firstTotal = $disciplineTotals[$discipline][$firstRev]['cost'];
                                 $lastTotal = $disciplineTotals[$discipline][$lastRev]['cost'];
@@ -132,7 +149,7 @@
             <div id="chart" style="min-height: 300px;"></div>
         </div>
     @else
-        <div class="alert alert-info"><i class="fa fa-info circle"></i> No revision data found</div>
+        <div class="alert alert-info"><i class="fa fa-info-circle"></i> No revision data found</div>
     @endif
 @endsection
 

@@ -12,10 +12,10 @@ class UpdateProjectPermissions extends Migration
      */
     public function up()
     {
-        Schema::table('project_users', function (Blueprint $table) {
+        /*Schema::table('project_users', function (Blueprint $table) {
             $table->boolean('boq');
             $table->boolean('qty_survey');
-        });
+        });*/
     }
 
     /**
@@ -25,9 +25,9 @@ class UpdateProjectPermissions extends Migration
      */
     public function down()
     {
-        Schema::table('project_users', function (Blueprint $table) {
+        /*Schema::table('project_users', function (Blueprint $table) {
             $table->dropColumn('boq');
             $table->dropColumn('qty_survey');
-        });
+        });*/
     }
 }
