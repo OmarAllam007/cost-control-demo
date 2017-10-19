@@ -74,6 +74,12 @@
         {{csrf_field()}}
         {{method_field('patch')}}
 
+        @if($has_actual)
+            <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i> Some resources already have actual data
+            </div>
+        @endif
+
         <table class="table table-striped table-bordered">
             <thead>
             <tr class="bg-primary">
@@ -91,7 +97,7 @@
             </thead>
             <tbody>
             @foreach($resources as $resource)
-                <tr>
+                <tr class="{{$resource->has_actual? 'warning' : ''}}">
                     <td class="text-center">
                         <input value="{{$resource->breakdown_resource->id}}" class="select-breakdown" type="checkbox" name="resources[{{$resource->breakdown_resource->id}}]">
                     </td>
