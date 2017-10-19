@@ -213,6 +213,15 @@ Route::delete('project/{project}/revisions/{revision}/delete', 'BudgetRevisionsC
 
 Route::post('/period-report/{period}', 'PeriodReportsController@store')->name('period-report.store');
 
+
+Route::get('/template-resource/{project}/create/{breakdown_template}', 'TemplateResourceImpactController@create')->name('template-resource.create');
+Route::post('/template-resource/{project}/create/{breakdown_template}', 'TemplateResourceImpactController@store')->name('template-resource.store');
+Route::get('/template-resource/{project}/edit/{template_resource}', 'TemplateResourceImpactController@edit')->name('template-resource.edit');
+Route::put('/template-resource/{project}/{template_resource}', 'TemplateResourceImpactController@update')->name('template-resource.update');
+Route::patch('/template-resource/{project}/{template_resource}', 'TemplateResourceImpactController@update')->name('template-resource.update');
+Route::get('/template-resource/{project}/delete/{template_resource}', 'TemplateResourceImpactController@delete')->name('template-resource.delete');
+Route::delete('/template-resource/{project}/{template_resource}', 'TemplateResourceImpactController@destroy')->name('template-resource.destroy');
+
 Route::get('project/{project}/modify-productivity', 'ProjectProductivityController@edit')->name('project.modify-productivity');
 Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
 Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
