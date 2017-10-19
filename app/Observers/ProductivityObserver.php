@@ -18,9 +18,11 @@ class ProductivityObserver
 
     function updated(Productivity $productivity)
     {
-        BreakDownResourceShadow::where('productivity_ref', $productivity->csi_code)->where('project_id', $productivity->project_id)->get()->each(function(BreakDownResourceShadow $shadow){
-            $shadow->breakdown_resource->updateShadow();
-        });
+        BreakDownResourceShadow::where('productivity_id', $productivity->id)
+            ->where('project_id', $productivity->project_id)->get()
+            ->each(function (BreakDownResourceShadow $shadow) {
+                $shadow->breakdown_resource->updateShadow();
+            });
     }
 
 

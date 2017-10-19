@@ -212,3 +212,7 @@ Route::delete('project/{project}/revisions/{revision}/delete', 'BudgetRevisionsC
 //Route::put('project/{project}/revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);
 
 Route::post('/period-report/{period}', 'PeriodReportsController@store')->name('period-report.store');
+
+Route::get('project/{project}/modify-productivity', 'ProjectProductivityController@edit')->name('project.modify-productivity');
+Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
+Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
