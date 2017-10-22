@@ -16,6 +16,7 @@ class WbsResource extends Model
         'qty_var', 'cost_var', 'unit_price_var', 'physical_unit', 'pw_index',
         'cost_variance_to_date_due_unit_price', 'allowable_qty', 'cost_variance_remaining_due_unit_price',
         'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty', 'cost_variance_to_date_due_qty',
+        'to_date_price_var', 'to_date_qty_var',
     ];
 
     function resource()
