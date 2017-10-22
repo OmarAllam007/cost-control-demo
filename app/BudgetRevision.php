@@ -44,7 +44,7 @@ class BudgetRevision extends Model
 
             $rev->rev_num = $lastRevNum + 1;
 
-            $rev->original_contract_amount = $rev->project->project_contract_value;
+            $rev->original_contract_amount = $rev->project->project_signed_contract_value;
             $rev->change_order_amount = $rev->project->change_order_amount;
         });
 
