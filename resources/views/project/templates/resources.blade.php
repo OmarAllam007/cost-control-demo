@@ -1,51 +1,25 @@
 <resources project="{{$project->id}}" inline-template>
     <section id="ResourcesArea">
-        <div class="form-group tab-actions pull-right">
-
-            @can('resources', $project)
-                <a href="{{route('resources.create', ['project' => $project->id])}}" class="btn btn-primary btn-sm">
-                    <i class="fa fa-plus"></i> Add resource
-                </a>
-
-                <div class="btn dropdown" style="padding: 0px">
-                    <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1"
-                            data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        Importing
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li>
-                            <a href="{{ route('resources.import',['project'=>$project->id]) }} " class="btn">
-                                <i class="fa fa-cloud-upload"></i> Import
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{route('all-resources.modify',['project'=>$project->id])}}" class="btn">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                                Modify
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            @endcan
-
-            <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
-                <i class="fa fa-cloud-download"></i> Export
-            </a>
-        </div>
-        <div class="clearfix"></div>
-
         <section class="filters row">
 
-            <div class="col-sm-3">
+            <div class="col-sm-5">
                 <div class="form-group form-group-sm">
-                    {{Form::label('resource_name', 'Resource Name', ['class' => 'control-label'])}}
-                    {{Form::text('resource_name', null /*session('filters.breakdown.' . $project->id . '.resource_code')*/,
-                   ['class' => 'form-control', 'v-model' => 'resource'])}}
+                    {{Form::text('resource_name', null, ['class' => 'form-control', 'v-model' => 'resource', 'placeholder' => 'Filter by code or name'])}}
                 </div>
             </div>
+
+            @can('resources', $project)
+                <div class="col-sm-3 col-sm-offset-4">
+                    <div class="form-group tab-actions text-right">
+                        <a href="{{route('resources.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
+                            <i class="fa fa-cloud-download"></i> Export
+                        </a>
+                        <a href="{{route('all-resources.modify',['project'=>$project->id])}}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil" aria-hidden="true"></i> Modify
+                        </a>
+                    </div>
+                </div>
+            @endcan
 
             {{--<div class="col-sm-3">--}}
             {{--<div class="form-group form-group-sm">--}}
@@ -83,7 +57,7 @@
                     <td class="col-xs-2">@{{resource.root_type}}</td>
                     <td class="col-xs-1">@{{resource.rate}}</td>
                     <td class="col-xs-1">@{{resource.unit}}</td>
-                    <td class="col-xs-1">@{{resource.waste}} </td>
+                    <td class="col-xs-1">@{{resource.waste}}</td>
                     <td class="col-xs-2">
                         @can('resources', $project)
                             <a href="/resources/@{{resource.id}}/edit" class="btn btn-primary btn-sm">

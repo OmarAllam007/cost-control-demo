@@ -19,7 +19,7 @@ class ResourceRulesProvider extends ServiceProvider
         });
 
         \Validator::extend('unique_name', function ($attribute, $value) {
-            $query = Resources::query()->whereRaw("REPLACE(resource_name, ' ', '') = ?", [str_replace(' ', '', $value)]);
+            $query = Resources::query()->whereRaw("REPLACE(name, ' ', '') = ?", [str_replace(' ', '', $value)]);
 
             $resource = request()->route('resource');
             if ($resource) {
