@@ -64,7 +64,7 @@ class DataCleaning extends Command
                 }
 
                 // Collect type path so we can use in the tree later
-                $typeDef['type'][] = $cell->getValue();
+                $typeDef['type'][] = trim($cell->getValue());
             }
 
             //Remove empty values
@@ -107,6 +107,9 @@ class DataCleaning extends Command
 
     protected function buildResources()
     {
+        $time = microtime(1);
+        $this->output->note('Updating breakdown shadow');
+
         $sheet = $this->excel->getSheetByName('Resources');
 
         $bar = $this->output->createProgressBar($sheet->getHighestRow('A') - 1);
@@ -129,6 +132,8 @@ class DataCleaning extends Command
         }
 
         $bar->finish();
+
+        $this->output->note("Completed in " . round(microtime(1) - $time, 4) . "s");
     }
 
     protected function handleDeleteResource($row)
