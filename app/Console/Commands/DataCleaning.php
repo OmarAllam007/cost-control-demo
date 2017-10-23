@@ -18,10 +18,13 @@ class DataCleaning extends Command
     /** @var  Collection */
     protected $types;
 
+    /** @var Collection */
+    protected $code_serial;
+
     public function handle()
     {
-//        ini_set('memory_limit', '4G');
-        $file = storage_path('app/data-cleaning-2.xls');
+        ini_set('memory_limit', '4G');
+        $file = storage_path('app/data-cleaning-2.xlsx');
         if (!is_readable($file)) {
             $this->output->error('Cleaning file does not exist');
             return 1;
@@ -34,6 +37,10 @@ class DataCleaning extends Command
 
     protected function buildTypes()
     {
+        $this->output->block("Updating resource types", 'note');
+        $this->output->newLine();
+
+        $start = microtime(1);
         $sheet = $this->excel->getSheetByName('Structure');
 
         // Clean resource types
@@ -42,14 +49,14 @@ class DataCleaning extends Command
         // Cache basic types
         $this->types = collect();
         collect(\DB::table('resource_types')->whereParentId(0)->get())->each(function ($type) {
-            $this->types->put(strtolower($type->name), $type->id);
+            $this->types->put(strtolower($type->name), (array) $type);
         });
 
         //Iterate over sheet rows starting from row 2
         $iterator = $sheet->getRowIterator(2);
         foreach ($iterator as $row_num => $row) {
             $cells = $row->getCellIterator('A', 'G');
-            $typeDef = ['type' => [], 'discipline' => '', 'code'];
+            $typeDef = ['type' => [], 'discipline' => '', 'code' => ''];
             foreach ($cells as $column => $cell) {
                 // This column represents type discipline
                 if ($column == 'G') {
@@ -68,10 +75,16 @@ class DataCleaning extends Command
             }
 
             //Remove empty values
-            $typeDef['type'] = array_filter($typeDef['type']);
+            $typeDef['type'] = array_filter($typeDef['type'], function($type) {
+                return strlen($type);
+            });
 
             $this->buildType($typeDef);
         }
+
+        $this->output->newLine();
+        $this->output->block("Completed in: " . round(microtime(1) - $start, 4), 'note');
+        $this->output->newLine();
     }
 
     /**
@@ -81,18 +94,18 @@ class DataCleaning extends Command
     {
         $lastIndex = count($typeDef['type']) - 1;
         $path = [];
-        $type_id = 0;
+        $parent = [];
         $code_tokens = explode('.', $typeDef['code']);
         foreach ($typeDef['type'] as $idx => $typeName) {
-            $path[] = strtolower($typeName);
+            $path[] = strtolower(trim($typeName));
             $canonical = implode('.', $path);
             if ($this->types->has($canonical)) {
-                $type_id = $this->types->get($canonical);
+                $parent = $this->types->get($canonical);
             } else {
                 $type = [
                     'name' => $typeName,
                     'code' => implode('.', array_slice($code_tokens, 0, $idx + 1)),
-                    'parent_id' => $type_id,
+                    'parent_id' => $parent['id'] ?? 0,
                 ];
 
                 if ($idx == $lastIndex) {
@@ -100,7 +113,9 @@ class DataCleaning extends Command
                 }
 
                 $type_id = \DB::table('resource_types')->insertGetId($type);
-                $this->types->put($canonical, $type_id);
+                $type['id'] = $type_id;
+                $this->types->put($canonical, $type);
+                $parent = $type;
             }
         }
     }
@@ -108,13 +123,17 @@ class DataCleaning extends Command
     protected function buildResources()
     {
         $time = microtime(1);
-        $this->output->note('Updating breakdown shadow');
+        $this->output->block('Updating resources', 'note');
+
+        $this->code_serial = collect();
 
         $sheet = $this->excel->getSheetByName('Resources');
 
         $bar = $this->output->createProgressBar($sheet->getHighestRow('A') - 1);
 
         $rows = $sheet->getRowIterator(2);
+        $resources = collect();
+
         foreach ($rows as $row) {
             $cells = $row->getCellIterator('A', 'AE');
             $row = [];
@@ -122,28 +141,45 @@ class DataCleaning extends Command
                 $row[$column] = $cell->getFormattedValue();
             }
 
-            $status = trim(strtolower($row['W']));
-            if ($status == 'deleted') {
-                $this->handleDeleteResource($row);
-            } else {
-                $this->handleModifyResource($row);
-            }
-            $bar->advance();
+            $resources->put($row['A'], $row);
         }
 
+        $resources->filter(function($row) {
+            return $row['W'] == 'Deleted';
+        })->each(function($row) use ($bar) {
+            $this->handleDeleteResource($row);
+            $bar->advance();
+        });
+
+        $resources->reject(function($row) {
+            return $row['W'] == 'Deleted';
+        })->each(function($row) use ($bar) {
+            $this->handleModifyResource($row);
+            $bar->advance();
+        });
+
+        $bar->advance();
         $bar->finish();
 
-        $this->output->note("Completed in " . round(microtime(1) - $time, 4) . "s");
+        $this->output->newLine(2);
+
+        $this->output->block("Completed in " . round(microtime(1) - $time, 4) . "s", 'note');
     }
 
     protected function handleDeleteResource($row)
     {
         $id = intval($row['A']);
+
         if ($row['AE']) {
             //Todo: implement this part
-        } else {
-            \DB::table('resources')->where('id', $id)->delete();
+            \DB::table('resources')->where('resource_id', $id)->update(['resource_id' => $row['AE']]);
+            \DB::table('std_activity_resources')->where('resource_id', $id)->update(['resource_id' => $row['AE']]);
+            \DB::table('breakdown_resources')->where('resource_id', $id)->update(['resource_id' => $row['AE']]);
+            \DB::table('break_down_resource_shadows')->where('resource_id', $id)->update(['resource_id' => $row['AE']]);
+            \DB::table('master_shadows')->where('resource_id', $id)->update(['resource_id' => $row['AE']]);
         }
+
+        \DB::table('resources')->where('id', $id)->delete();
     }
 
     protected function handleModifyResource($row)
@@ -151,40 +187,52 @@ class DataCleaning extends Command
         $id = intval($row['A']);
         $name = trim($row['Y']);
 
-        $types = [];
+        $typeNames = [];
         foreach (['Z', 'AA', 'AB', 'AC', 'AD'] as $c) {
-            $type = trim($row[$c]);
-            if ($type) {
-                $types[] = strtolower($type);
+            $typeName = trim($row[$c]);
+            if (strlen($typeName)) {
+                $typeNames[] = strtolower($typeName);
             }
         }
-        $canonicalType = implode('.', $types);
+
+        $canonicalType = implode('.', $typeNames);
         if (!$this->types->has($canonicalType)) {
+            dd($row, $typeNames, $canonicalType);
             $this->output->warning("Cannot find type for resource: [$id] $name");
             return 1;
         }
 
-        $resource_type_id = $this->types->get($canonicalType);
+        $type = $this->types->get($canonicalType);
 
+        $resource_type_id = $type['id'];
+        $code_partial = $this->code_serial->get($resource_type_id, 0) + 1;
+        $this->code_serial->put($resource_type_id, $code_partial);
+
+        $resource_code = $type['code'] . '.' . sprintf('%03d', $code_partial);
+//        $discipline = $type['discipline'];
+
+        $attributes = compact('name', 'resource_type_id', 'resource_code'); //, 'discipline'
+        \DB::table('resources')->where('id', $id)->update($attributes);
 
         $related_resource_ids = collect(
             \DB::table('resources')->where('resource_id', $id)->get(['id'])
         )->pluck('id')->toArray();
 
-        \DB::table('resources')
-            ->where('id', $id)
-            ->orWhere('resource_id', $id)
-            ->update(compact('name', 'resource_type_id'));
+        if (trim($row['AE'])) {
+            $also_include = collect(explode(',', $row['AE']))->filter()->map('trim')->toArray();
+            $related_resource_ids = array_unique(array_merge($related_resource_ids, $also_include));
+        }
 
-        $resource_type = $row['Z'];
-        $resource_type_id = $this->types->get($types[0]);
-        \DB::table('break_down_resource_shadows')
-            ->whereIn('resource_id', $related_resource_ids)
-            ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id]);
+        \DB::table('resources')->whereIn('id', $related_resource_ids)->update($attributes);
 
-        \DB::table('master_shadows')
-            ->whereIn('resource_id', $related_resource_ids)
-            ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id]);
-
+//        $resource_type = $row['Z'];
+//        $resource_type_id = $this->types->get($typeNames[0])['id'];
+//        \DB::table('break_down_resource_shadows')
+//            ->whereIn('resource_id', $related_resource_ids)
+//            ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+//
+//        \DB::table('master_shadows')
+//            ->whereIn('resource_id', $related_resource_ids)
+//            ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
     }
 }
