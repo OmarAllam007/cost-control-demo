@@ -214,9 +214,9 @@ class DataCleaning extends Command
         $this->code_serial->put($resource_type_id, $code_partial);
 
         $resource_code = $type['code'] . '.' . sprintf('%03d', $code_partial);
-//        $discipline = $type['discipline'];
+        $discipline = $type['discipline'];
 
-        $attributes = compact('name', 'resource_type_id', 'resource_code'); //, 'discipline'
+        $attributes = compact('name', 'resource_type_id', 'resource_code', 'discipline');
         \DB::table('resources')->where('id', $id)->update($attributes);
 
         $related_resource_ids = collect(
@@ -230,14 +230,14 @@ class DataCleaning extends Command
 
         \DB::table('resources')->whereIn('id', $related_resource_ids)->update($attributes);
 
-//        $resource_type = $row['Z'];
-//        $resource_type_id = $this->types->get($typeNames[0])['id'];
-//        \DB::table('break_down_resource_shadows')
-//            ->whereIn('resource_id', $related_resource_ids)
-//            ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
-//
-//        \DB::table('master_shadows')
-//            ->whereIn('resource_id', $related_resource_ids)
-//            ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+        $resource_type = $row['Z'];
+        $resource_type_id = $this->types->get($typeNames[0])['id'];
+        \DB::table('break_down_resource_shadows')
+            ->whereIn('resource_id', $related_resource_ids)
+            ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+
+        \DB::table('master_shadows')
+            ->whereIn('resource_id', $related_resource_ids)
+            ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
     }
 }
