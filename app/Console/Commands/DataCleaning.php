@@ -180,6 +180,11 @@ class DataCleaning extends Command
         }
 
         \DB::table('resources')->where('id', $id)->delete();
+        \DB::table('resources')->where('resource_id', $id)->delete();
+        \DB::table('std_activity_resources')->where('resource_id', $id)->delete();
+        \DB::table('breakdown_resources')->where('resource_id', $id)->delete();
+        \DB::table('break_down_resource_shadows')->where('resource_id', $id)->delete();
+        \DB::table('master_shadows')->where('resource_id', $id)->delete();
     }
 
     protected function handleModifyResource($row)

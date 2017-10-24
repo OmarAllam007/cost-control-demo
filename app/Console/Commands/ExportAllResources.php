@@ -14,8 +14,18 @@ class ExportAllResources extends Command
     protected $description = 'Export all resources in the system';
 
     protected $buffer = '';
+
     /** @var ProgressBar */
     protected $bar;
+
+    /** @var \PHPExcel_Worksheet */
+    protected $sheet;
+
+    /** @var int */
+    protected $row = 1;
+
+    /** @var \Illuminate\Support\Collection */
+    protected $invalid_resource_types;
 
     public function handle()
     {
@@ -26,9 +36,17 @@ class ExportAllResources extends Command
         $this->bar = $this->output->createProgressBar($query->count());
         $this->bar->setBarWidth(50);
 
-        $this->buffer .= implode(',', array_map('csv_quote', ['APP_ID', 'Project ID', 'Project Name' ,'Code', 'Name', 'Rate', 'Unit', 'Waste', 'Reference', 'Business Partner', 'Type', 'Subtype', 'Sub Subtype', '...']));
+        $this->invalid_resource_types = collect(\DB::table('resources')
+            ->selectRaw('DISTINCT resource_type_id')
+            ->whereRaw("resource_type_id in (select parent_id from resource_types)")
+            ->get())->pluck('resource_type_id');
 
-        $query->chunk(2000, function(Collection $resources) {
+        $excel = new \PHPExcel();
+        $this->sheet = $excel->getSheet(0);
+
+        $this->sheet->fromArray($headers = ['APP_ID', 'Project ID', 'Project Name' ,'Code', 'Name', 'Rate', 'Unit', 'Waste', 'Reference', 'Business Partner', 'Type', 'Division 1', 'Division 2', 'Division 3', 'Division 4', 'Original Resource ID', 'Error #1', 'Error #2'], '', 'A1');
+
+        $query->chunk(5000, function(Collection $resources) {
             $resources->each(function(Resources $resource) {
                 $data = [
                     $resource->id, $resource->project_id ?: '', $resource->project->name?? '', $resource->resource_code, $resource->name,
@@ -47,16 +65,37 @@ class ExportAllResources extends Command
                     }
                 }
 
-                $data[] = $resource->resource_id;
+                $data = array_pad($data, 15, '');
 
-                $this->buffer .= PHP_EOL . implode(',', array_map('csv_quote', $data));
+                $data[] = $resource->resource_id ?? '';
+
+                if ($resource->project_id && !$resource->resource_id) {
+                    $data[] = 'Resource not in database';
+                }
+
+                if (!isset($resource->types->id) || $this->invalid_resource_types->contains($resource->types->id)) {
+                    $data[] = 'Invalid resource type';
+                }
+
+                ++$this->row;
+                foreach ($data as $idx => $val) {
+                    $column = chr(ord('A') + $idx);
+                    $this->sheet->setCellValue("$column{$this->row}", $val);
+                }
+
+//                $this->sheet->fromArray($data, 0, "A{$this->row}");
                 $this->bar->advance();
             });
         });
-
-        file_put_contents('storage/app/all_resources.csv', $this->buffer);
-
         $this->bar->finish();
+
+        $this->output->newLine(2);
+        $this->output->note('Generating Excel file');
+
+        $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $writer->save('storage/app/all_resources.xlsx');
+
         $this->output->newLine();
+
     }
 }
