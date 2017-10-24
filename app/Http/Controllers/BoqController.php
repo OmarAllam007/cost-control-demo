@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Boq;
 use App\BoqDivision;
 use App\Http\Requests\WipeRequest;
+use App\Import\Boq\BoqImport;
 use App\Jobs\BoqImportJob;
 
 use App\Jobs\Export\ExportBoqJob;
@@ -17,9 +18,6 @@ use Illuminate\Http\Request;
 
 class BoqController extends Controller
 {
-
-    protected $rules = ['project_id' => 'required', 'wbs_id' => 'required', 'cost_account' => 'required|boq_unique'];
-
     public function index()
     {
         abort(404);
@@ -29,7 +27,6 @@ class BoqController extends Controller
     }
 
     public function create(Request $request)
-
     {
         if (!$request->has('project')) {
             flash('Project not found');
@@ -46,7 +43,8 @@ class BoqController extends Controller
                 return \Redirect::route('project.index');
             }
         }
-        $wbsLevels = WbsLevel::tree()->paginate();
+
+        $wbsLevels = WbsLevel::tree()->get();
 
         return view('boq.create', compact('wbsLevels'));
     }
@@ -64,7 +62,7 @@ class BoqController extends Controller
             return \Redirect::route('project.index');
         }
         
-        $this->validate($request, $this->rules);
+        $this->validate($request, config('validation.boq'));
 
         $boq = Boq::create($request->all());
 
@@ -97,7 +95,7 @@ class BoqController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $this->validate($request, $this->rules);
+        $this->validate($request, config('validation.boq'));
         $boq->update($request->all());
 
         flash('Boq has been saved', 'success');
@@ -154,11 +152,12 @@ class BoqController extends Controller
         }
 
         $this->validate($request, [
-            'file' => 'required|file'//|mimes:xls,xlsx',
+            'file' => 'required|file|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $status = $this->dispatch(new BoqImportJob($project, $file->path()));
+        $importer = new BoqImport($project, $file);
+        $status = $importer->import();
 
         if (count($status['failed'])) {
             $key = 'boq_' . time();

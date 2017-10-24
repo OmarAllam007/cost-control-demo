@@ -22,7 +22,34 @@
 
 @section('body')
 
-    <nav class="project-nav">
+    <nav class="project-nav display-flex">
+        <div class="btn-toolbar display-flex">
+            <div class="dropdown">
+                <button class="btn btn-sm btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                    <i class="fa fa-cloud-download"></i> Export <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="{{route('boq.export', $project)}}">BOQ</a></li>
+                    <li><a href="{{route('survey.export', $project)}}">Qty Survey</a></li>
+                    <li><a href="{{route('break_down.export', $project)}}">Data sheet</a></li>
+                </ul>
+            </div>
+
+            <div class="dropdown">
+                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="{{route('boq.import', $project)}}">Import BOQ</a></li>
+                    <li><a href="{{route('survey.import', $project)}}">Import Qty Survey</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
+                    <li><a href="{{route('survey.import', $project)}}">Modify Qty Survey</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="btn-toolbar tab-nav">
         @can('budget', $project)
             <a href="#wbsArea" class="btn btn-sm btn-primary"><i class="fa fa-building-o"></i> WBS &amp; Activity</a>
             <a href="#Revisions" class="btn btn-sm btn-outline btn-primary"><i class="fa fa-sliders"></i> Revisions</a>
@@ -34,7 +61,9 @@
         @can('reports', $project)
             <a href="#ReportsArea" class="btn btn-sm btn-outline btn-success"><i class="fa fa-line-chart"></i> Reports</a>
         @endcan
+        </div>
     </nav>
+
     <div id="projectArea" class="hidden">
         @can('budget', $project)
             @include('project.tabs.wbs-area')
@@ -104,11 +133,7 @@
                 </form>
             </div>
         </div>
-
-
     @endcan
-
-
 @endsection
 
 @section('javascript')
@@ -118,7 +143,7 @@
                 $('.project-tab').hide();
                 $('#wbsArea').show();
                 $('#projectArea').removeClass('hidden');
-                $('.project-nav').on('click', 'a', function (e) {
+                $('.tab-nav').on('click', 'a', function (e) {
                     e.preventDefault();
                     var _this = $(this);
                     window.location.hash = _this.attr('href');
