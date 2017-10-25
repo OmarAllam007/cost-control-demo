@@ -159,19 +159,16 @@ class BoqController extends Controller
         $importer = new BoqImport($project, $file);
         $status = $importer->import();
 
-        if (count($status['failed'])) {
-            $key = 'boq_' . time();
-            \Cache::add($key, $status, 180);
-            flash('Could not import all items', 'warning');
-            return \Redirect::to(route('boq.fix-import', $key) . '?iframe=1');
+        flash($status['success'] . ' BOQ items have been imported', 'success');
+        if ($status['failed']) {
+            return view('boq.import-failed', compact('status', 'project'));
         }
 
-        flash($status['success'] . ' BOQ items have been imported', 'success');
 //        return redirect()->route('project.show', $project);
         return \Redirect::to('/blank?reload=boq');
     }
 
-    function fixImport($key)
+    /*function fixImport($key)
     {
         if (!\Cache::has($key)) {
             flash('Nothing to fix');
@@ -228,7 +225,7 @@ class BoqController extends Controller
 
         flash('Could not import all items');
         return \Redirect::to(route('boq.fix-import', $key) . '?iframe=1')->withErrors($errors)->withInput($request->all());
-    }
+    }*/
 
     function exportBoq(Project $project)
     {

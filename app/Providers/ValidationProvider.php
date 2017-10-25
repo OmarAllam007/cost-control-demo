@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Boq;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Validator;
 
 class ValidationProvider extends ServiceProvider
 {
@@ -30,9 +31,11 @@ class ValidationProvider extends ServiceProvider
             return $value <= $parameters[0];
         });
 
-        \Validator::extend('boq_unique', function($attribute, $value) {
+        \Validator::extend('boq_unique', function($attribute, $value, $options, Validator $validator) {
+            $data = $validator->getData();
+            $query = Boq::query()->where('wbs_id', $data['wbs_id'])->where($attribute, $value);
+
             $request = request();
-            $query = Boq::query()->where('wbs_id', request('wbs_id'))->where('cost_account', $value);
             if ($request->route()->hasParameter('boq')) {
                 $query->where('id', '!=', $request->route('boq')->id);
             }
