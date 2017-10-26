@@ -127,9 +127,9 @@ class BoqImport
             return ['id' => $unit->id, 'code' => strtolower($unit->type)];
         })->pluck('id', 'code')->merge($aliases);
 
-        $this->divisions = BoqDivision::all()->map(function ($division) {
+        /*$this->divisions = BoqDivision::all()->map(function ($division) {
             return ['code' => strtolower($division->canonical), 'id' => $division->id];
-        })->pluck('id', 'code');
+        })->pluck('id', 'code');*/
     }
 
     protected function generateFailed()

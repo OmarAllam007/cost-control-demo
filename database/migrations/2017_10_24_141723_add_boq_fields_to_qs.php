@@ -14,7 +14,7 @@ class AddBoqFieldsToQs extends Migration
     {
         Schema::table('qty_surveys', function (Blueprint $table) {
             $table->unsignedInteger('boq_id')->nullable();
-            $table->string('boq_item')->nullable();
+            $table->string('item_code')->nullable();
         });
     }
 
@@ -27,7 +27,7 @@ class AddBoqFieldsToQs extends Migration
     {
         Schema::table('qty_surveys', function (Blueprint $table) {
             $table->dropColumn('boq_id');
-            $table->dropColumn('boq_item');
+            $table->dropColumn('item_coed');
         });
     }
 }

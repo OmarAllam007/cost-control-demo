@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Boq;
+use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Validator;
 
@@ -41,6 +42,12 @@ class ValidationProvider extends ServiceProvider
             }
 
             return !$query->exists();
+        });
+
+        \Validator::extend('qs_has_boq', function($attribute, $value, $options, Validator $validator) {
+            $data = $validator->getData();
+            $wbs = WbsLevel::find($data['wbs_level_id']);
+            return Boq::whereIn('wbs_level', $wbs->getParentIds())->where('item_code', $value)->exists();
         });
         
         \Validator::replacer('gte', function ($message, $attribute, $rule, $parameters) {
