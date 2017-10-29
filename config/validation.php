@@ -15,5 +15,6 @@ return [
         'wbs_level_id' => 'required',
         'budget_qty' => 'required|gte:0',
         'eng_qty' => 'required|gte:0',
+        'unit_id' => 'required'
     ]
 ];

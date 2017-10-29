@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 29/10/17
- * Time: 8:41 AM
- */
 
 namespace App\Import\QtySurvey;
-
 
 use App\Boq;
 use App\Project;
@@ -100,14 +93,18 @@ class QtySurveyChecker
     protected function redirect()
     {
         $iframe = request('iframe')? '?iframe=1' : '';
+        $failed = '';
+        if ($this->failed->count()) {
+            $failed = $this->generateFailedExport();
+        }
+
         if ($this->boqs->count()) {
             $cacheKey = uniqid('qs-boq-map-', true);
-            \Cache::put($cacheKey, ['boqs' => $this->boqs, 'success' => $this->counter, 'project' => $this->project]);
+            \Cache::put($cacheKey, ['boqs' => $this->boqs, 'success' => $this->counter, 'project' => $this->project, 'failed' => $failed], 1440);
             return redirect(route('qty-survey.fix-boq', $cacheKey) . $iframe);
         }
 
         if ($this->failed->count()) {
-            $failed = $this->generateFailedExport();
             return view('survey.import-failed', ['success' => $this->counter, 'project' => $this->project, 'failed' => $failed]);
         }
 

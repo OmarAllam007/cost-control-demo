@@ -22,15 +22,17 @@ class QuantitySurveyObserver
         if ($qs->boq_id) {
             $boq_id = $qs->boq_id;
         } else {
-            $wbs_ids = $qs->wbs_level->getParentIds();
+            $wbs_ids = $qs->wbsLevel->getParentIds();
             $boq_id = Boq::whereIn('wbs_id', $wbs_ids)->where('item_code', $qs->item_code)->value('id');
             $qs->boq_id = $boq_id;
 
         }
 
-        $last_qs_in_boq = Survey::where('boq_id', $boq_id)->latest()->value('cost_account');
-        $token = collect(explode('.', $last_qs_in_boq))->last();
-        $qs->cost_account = $this->wbs_level->code . '.' . $qs->item_code . '.' . sprintf('%03d', intval($token) + 1);
+        if (!$qs->cost_account) {
+            $last_qs_in_boq = Survey::where('boq_id', $boq_id)->latest()->value('cost_account');
+            $token = collect(explode('.', $last_qs_in_boq))->last();
+            $qs->cost_account = $qs->wbsLevel->code . '.' . $qs->item_code . '.' . sprintf('%03d', intval($token) + 1);
+        }
     }
 
     function created(Survey $qs)

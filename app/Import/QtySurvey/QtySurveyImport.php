@@ -74,7 +74,7 @@ class QtySurveyImport
                 'description' => $data['C'],
                 'budget_qty' => $data['D'],
                 'eng_qty' => $data['E'],
-                'unit_id' => $this->units->get($data['F']),
+                'unit_id' => $this->units->get(strtolower($data['F'])),
                 'project_id' => $this->project->id
             ];
 
@@ -88,6 +88,7 @@ class QtySurveyImport
 
             $this->surveys->push(new Survey($qs));
         }
+
 
         $checker = new QtySurveyChecker($this->project, $this->surveys, $this->failed);
         return $checker->check();
