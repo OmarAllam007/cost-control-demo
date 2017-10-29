@@ -73,18 +73,18 @@ class BoqImport
             $boq = [
                 'wbs_id' => $this->wbs_levels->get(strtolower($data["A"])),
                 'item_code' => $data["B"],
-                'cost_account' => $data["A"] . '.' . $data["C"],
+                'cost_account' => $data["A"] . '.' . $data["B"],
+                'description' => $data["C"] ?: '',
                 'type' => $data["D"] ?: '',
 //                'division_id' => $this->getDivisionId($data) ?: '',
-                'description' => $data["E"] ?: '',
-                'unit_id' => $this->units->get(strtolower($data["F"])) ?: 0,
-                'quantity' => $data["G"] ?: 0,
-                'price_ur' => $data["H"] ?: 0,
-                'dry_ur' => $data["I"] ?: 0,
-                'kcc_qty' => $data["J"] ?: 0,
-                'materials' => $data["K"] ?: 0,
-                'subcon' => $data["L"] ?: 0,
-                'manpower' => $data["M"] ?: 0,
+                'unit_id' => $this->units->get(strtolower($data["E"])) ?: 0,
+                'quantity' => $data["F"] ?: 0,
+                'price_ur' => $data["G"] ?: 0,
+                'dry_ur' => $data["H"] ?: 0,
+                'kcc_qty' => $data["I"] ?: 0,
+                'materials' => $data["J"] ?: 0,
+                'subcon' => $data["K"] ?: 0,
+                'manpower' => $data["L"] ?: 0,
                 'project_id' => $this->project->id,
             ];
 
@@ -98,12 +98,14 @@ class BoqImport
                 Boq::create($boq);
                 ++$status['success'];
             } else  {
-                $data["N"] = implode(PHP_EOL, $errors);
+                $data["M"] = implode(PHP_EOL, $errors);
                 $this->failed->push($data);
             }
         }
 
-        $status['failed'] = $this->generateFailed();
+        if ($this->failed->count()) {
+            $status['failed'] = $this->generateFailed();
+        }
 
         \Cache::forget('boq-' . $this->project->id);
         \Cache::add('boq-' . $this->project->id, dispatch(new CacheBoqTree($this->project)), 7 * 24 * 60);

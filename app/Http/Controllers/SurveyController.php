@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Http\Requests\WipeRequest;
+use App\Import\QtySurvey\QtySurveyImport;
 use App\Jobs\Export\ExportSurveyJob;
 use App\Jobs\QuantitySurveyImportJob;
 use App\Project;
@@ -162,6 +163,10 @@ class SurveyController extends Controller
 
         $file = $request->file('file');
 
+        $importer = new QtySurveyImport($project, $file);
+        return $importer->import();
+
+        /*
         $status = $this->dispatch(new QuantitySurveyImportJob($project, $file->path()));
 
         if ($status['failed']->flatten()->count()) {
@@ -181,6 +186,7 @@ class SurveyController extends Controller
             flash($status['success'] . ' Quantity survey items have been imported', 'success');
             return \Redirect::to('/blank?reload=quantities');
         }
+        */
     }
 
     function dublicateQuantitySurvey($key)
