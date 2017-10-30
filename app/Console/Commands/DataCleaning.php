@@ -18,6 +18,9 @@ class DataCleaning extends Command
     /** @var  Collection */
     protected $types;
 
+    /** @var  Collection */
+    protected $units;
+
     /** @var Collection */
     protected $code_serial;
 
@@ -123,7 +126,12 @@ class DataCleaning extends Command
     protected function buildResources()
     {
         $time = microtime(1);
+
         $this->output->block('Updating resources', 'note');
+
+        $this->units = collect(\DB::table('units')->get(['id', 'type']))->map(function($unit) {
+            return ['id' => $unit->id, 'name' => strtolower($unit->type)];
+        })->pluck('id', 'name');
 
         $this->code_serial = collect();
 
@@ -134,29 +142,39 @@ class DataCleaning extends Command
         $rows = $sheet->getRowIterator(2);
         $resources = collect();
 
+
         foreach ($rows as $row) {
             $cells = $row->getCellIterator('A', 'AE');
             $row = [];
             foreach ($cells as $column => $cell) {
-                $row[$column] = $cell->getFormattedValue();
+                $row[$column] = $cell->getValue();
             }
 
             $resources->put($row['A'], $row);
         }
 
+        \DB::beginTransaction();
         $resources->filter(function($row) {
             return $row['W'] == 'Deleted';
         })->each(function($row) use ($bar) {
             $this->handleDeleteResource($row);
             $bar->advance();
         });
+        \DB::commit();
 
+        \DB::beginTransaction();
+        $counter = 0;
         $resources->reject(function($row) {
             return $row['W'] == 'Deleted';
-        })->each(function($row) use ($bar) {
+        })->each(function($row) use ($bar, $counter) {
             $this->handleModifyResource($row);
             $bar->advance();
+            if ($bar->getProgressPercent() % 2) {
+                \DB::commit();
+                \DB::beginTransaction();
+            }
         });
+        \DB::commit();
 
         $bar->advance();
         $bar->finish();
@@ -189,7 +207,7 @@ class DataCleaning extends Command
 
     protected function handleModifyResource($row)
     {
-        $id = intval($row['A']);
+        $id = intval(trim($row['A']));
         $name = trim($row['Y']);
 
         $typeNames = [];
@@ -214,10 +232,21 @@ class DataCleaning extends Command
         $this->code_serial->put($resource_type_id, $code_partial);
 
         $resource_code = $type['code'] . '.' . sprintf('%03d', $code_partial);
-        $discipline = $type['discipline'];
+        $discipline = $type['discipline'] ?? '';
 
         $attributes = compact('name', 'resource_type_id', 'resource_code', 'discipline');
-        \DB::table('resources')->where('id', $id)->update($attributes);
+        if ($id) {
+            \DB::table('resources')->where('id', $id)->update($attributes);
+        } else {
+            $attributes['rate'] = $row['F'];
+            $attributes['unit'] = $this->units->get(strtolower($row['G']));
+            if (!$attributes['unit']) {
+                return false;
+            }
+            $attributes['waste'] = floatval($row['H']);
+            $id = \DB::table('resources')->insertGetId($attributes);
+            unset($attributes['rate'], $attributes['unit'], $attributes['waste']);
+        }
 
         $related_resource_ids = collect(
             \DB::table('resources')->where('resource_id', $id)->get(['id'])
