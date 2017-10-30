@@ -101,6 +101,8 @@
                     <button class="btn btn-rounded btn-outline btn-primary" type="submit">
                         <i class="fa fa-filter"></i> Filter
                     </button>
+
+                    <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
                 </div>
             </div>
         </form>
