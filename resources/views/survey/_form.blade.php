@@ -36,8 +36,8 @@
         </div>
 
         <div class="form-group {{$errors->first('cost_account', 'has-error')}}">
-            {{Form::label('cost_account','Cost Account')}}
-            {{Form::text('cost_account',null,['class'=>'form-control'])}}
+            {{Form::label('item_code','Item Code (BOQ)')}}
+            {{Form::text('item_code',null,['class'=>'form-control'])}}
         </div>
 
         <div class="form-group {{$errors->first('category_id', 'has-error')}}">

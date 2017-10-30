@@ -50,3 +50,12 @@ function check_syntax($equation)
 
     return false;
 }
+
+function optional($object)
+{
+    if (is_object($object) && is_null($object)) {
+        return $object;
+    }
+
+    return new \Illuminate\Support\Fluent();
+}

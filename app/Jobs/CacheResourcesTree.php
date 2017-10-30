@@ -36,8 +36,8 @@ class CacheResourcesTree extends Job
         return $tree->map(function (ResourceType $type) {
             $type->children = $this->buildTypeTree($type->id);
 
-            $type->resources = ($this->resources->get($type->id) ?: collect())->map(function($resource) {
-                if ($resource->project_id) {
+            $type->resources = $this->resources->get($type->id, collect())->map(function($resource) {
+                if ($resource->project) {
                     $resource->project_name = $resource->project->name;
                 }
 
