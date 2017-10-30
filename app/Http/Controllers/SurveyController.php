@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Boq;
 use App\Category;
 use App\Http\Requests\WipeRequest;
+use App\Import\QtySurvey\QtySurveyChecker;
+use App\Import\QtySurvey\QtySurveyFixer;
 use App\Import\QtySurvey\QtySurveyImport;
 use App\Jobs\Export\ExportSurveyJob;
 use App\Jobs\QuantitySurveyImportJob;
@@ -64,32 +67,39 @@ class SurveyController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $this->validate($request, $this->rules);
-        $level = WbsLevel::find($request->wbs_level_id);
-        $level_survey = Survey::where('wbs_level_id', $level->id)->first();
-        $cost_accounts = [];
-        if ($level_survey) {
-            $cost_accounts[] = $level_survey->cost_account;
-        }
-        $parent = $level;
-        while ($parent->parent) {
-            $parent = $parent->parent;
-            $parent_survey = Survey::where('wbs_level_id', $parent->id)->first();
-            if ($parent_survey) {
-                $cost_accounts[] = $parent_survey->cost_account;
-            }
-        }
+        $newSurvey = new Survey($request->all());
+        $boq = Boq::forQs($newSurvey)->first();
+        $newSurvey->boq_id = $boq->id;
 
-        if (in_array($request->cost_account, $cost_accounts)) {
-            flash('Found dublicated cost account', 'danger');
+        $checker = new QtySurveyChecker($project, collect([$newSurvey]));
+        return $checker->check();
 
-        } else {
-            $survey = Survey::create($request->all());
-            flash('Quantity survey has been saved', 'success');
-        }
-
-
-        return \Redirect::to('/blank?reload=quantities');
+//        $this->validate($request, config('validation.qty_survey'));
+//        $level = WbsLevel::find($request->wbs_level_id);
+//        $level_survey = Survey::where('wbs_level_id', $level->id)->first();
+//        $cost_accounts = [];
+//        if ($level_survey) {
+//            $cost_accounts[] = $level_survey->cost_account;
+//        }
+//        $parent = $level;
+//        while ($parent->parent) {
+//            $parent = $parent->parent;
+//            $parent_survey = Survey::where('wbs_level_id', $parent->id)->first();
+//            if ($parent_survey) {
+//                $cost_accounts[] = $parent_survey->cost_account;
+//            }
+//        }
+//
+//        if (in_array($request->cost_account, $cost_accounts)) {
+//            flash('Found dublicated cost account', 'danger');
+//
+//        } else {
+//            $survey = Survey::create($request->all());
+//            flash('Quantity survey has been saved', 'success');
+//        }
+//
+//
+//        return \Redirect::to('/blank?reload=quantities');
     }
 
     public function show(Survey $survey)
@@ -114,7 +124,7 @@ class SurveyController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $this->validate($request, $this->rules);
+        $this->validate($request, config('validation.qty_survey'));
         $survey->syncVariables($request->get('variables'));
         $survey->update($request->all());
 

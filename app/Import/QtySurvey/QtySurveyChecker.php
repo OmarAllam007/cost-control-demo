@@ -45,7 +45,7 @@ class QtySurveyChecker
 
             $survey = $group->first();
 
-            $hasOtherSurveys = Survey::where('boq_id', $survey->boq_id)->exist();
+            $hasOtherSurveys = Survey::where('boq_id', $survey->boq_id)->exists();
             if ($hasOtherSurveys) {
                 return false;
             }

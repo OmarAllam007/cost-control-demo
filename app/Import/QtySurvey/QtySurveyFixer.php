@@ -41,7 +41,7 @@ class QtySurveyFixer
             $attributes = [
                 'boq_id' => $boq_id, 'budget_qty' => $budget_qty, 'eng_qty' => $eng_qty, 'cost_account' => $boq->cost_account,
                 'description' => $boq->description, 'unit_id' => $boq->unit_id, 'wbs_level_id' => $boq->wbs_id,
-                'project_id' => $this->project->id, 'discipline' => $boq->type
+                'project_id' => $this->project->id, 'discipline' => $boq->type, 'item_code' => $boq->item_code
             ];
 
             if ($survey) {
