@@ -255,6 +255,7 @@ class DataCleaning extends Command
         if (trim($row['AE'])) {
             $also_include = collect(explode(',', $row['AE']))->filter()->map('trim')->toArray();
             $related_resource_ids = array_unique(array_merge($related_resource_ids, $also_include));
+            $attributes['resource_id'] = $id;
         }
 
         \DB::table('resources')->whereIn('id', $related_resource_ids)->update($attributes);
