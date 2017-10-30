@@ -4,6 +4,8 @@
     @include('reports.all._standard-activity')
 @endif
 
+@section('title', 'Activity report')
+
 @section('header')
     <h2 class="">{{$project->name}} - Activity report</h2>
     <div class="pull-right btn-toolbar">
@@ -25,7 +27,7 @@
 
         <table class="table table-bordered" id="activity-header">
         <thead>
-        <tr>
+        <tr class="bg-primary">
             <th>Activity</th>
 
             <th>Base Line</th>

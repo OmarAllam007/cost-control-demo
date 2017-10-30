@@ -25,60 +25,49 @@
 
     @include('reports.cost-control.standard_activity._filters')
 
-    <table class="table table-bordered">
-        <thead>
-        <tr class="bg-primary">
-            <th class="text-center">Base Line</th>
-            <th class="text-center">Previous Cost</th>
-            <th class="text-center">Previous Allowable</th>
-            <th class="text-center">Previous Var</th>
-            <th class="text-center">To Date Cost</th>
-            <th class="text-center">Allowable (EV) Cost</th>
-            <th class="text-center">To Date Variance</th>
-            <th class="text-center">Remaining Cost</th>
-            <th class="text-center">At Completion Cost</th>
-            <th class="text-center">Cost Variance</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td class="text-center">{{number_format($currentTotals['budget_cost']??0,2) }}</td>
-            <td class="text-center">{{number_format($previousTotals['previous_cost']??0,2)}}</td>
-            <td class="text-center">{{number_format($previousTotals['previous_allowable']??0,2)}}</td>
-            <td class="text-center {{$previousTotals['previous_var'] > 0? 'text-success' : 'text-danger'}}">{{number_format($previousTotals['previous_var']??0,2)}}</td>
-            <td class="text-center">{{number_format($currentTotals['to_date_cost']?? 0,2)}}</td>
-            <td class="text-center">{{number_format($currentTotals['to_date_allowable']??0,2)}}</td>
-            <td class="text-center {{$currentTotals->to_date_var > 0? 'text-success' : 'text-danger'}}">{{number_format($currentTotals['to_date_var']??0,2)}}</td>
-            <td class="text-center">{{number_format($currentTotals['remaining']??0,2)}}</td>
-            <td class="text-center">{{number_format($currentTotals['at_completion_cost']??0,2)}}</td>
-            <td class="text-center {{$currentTotals->cost_var > 0? 'text-success' : 'text-danger'}}">{{number_format($currentTotals->cost_var??0,2)}}</td>
-        </tr>
-        </tbody>
-    </table>
-    
-    <table class="table table-bordered table-hover activity-table">
-        <thead>
-        <tr class="bg-primary">
-            <th class="col-xs-2">Activity</th>
-            <th class="col-xs-1">Budget Cost</th>
-            <th class="col-xs-1">Previous Cost</th>
-            <th class="col-xs-1">Previous Allowable</th>
-            <th class="col-xs-1">Previous Var</th>
-            <th class="col-xs-1">To Date Cost</th>
-            <th class="col-xs-1">Allowable (EV) Cost</th>
-            <th class="col-xs-1">To Date Variance</th>
-            <th class="col-xs-1">Remaining Cost</th>
-            <th class="col-xs-1">At Completion Cost</th>
-            <th class="col-xs-1">Cost Variance</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($tree->where('index', 0) as $name => $level)
-            @include('reports.cost-control.standard_activity._recursive_report')
-        @endforeach
-        </tbody>
-    </table>
-
+    <div class="horizontal-scroll">
+        <div class="scroll-head">
+        <table class="table table-bordered table-hover activity-table">
+            <thead>
+            <tr class="bg-primary">
+                <th class="col-xs-2">Activity</th>
+                <th class="col-xs-1">Budget Cost</th>
+                <th class="col-xs-1">Previous Cost</th>
+                <th class="col-xs-1">Previous Allowable</th>
+                <th class="col-xs-1">Previous Var</th>
+                <th class="col-xs-1">To Date Cost</th>
+                <th class="col-xs-1">Allowable (EV) Cost</th>
+                <th class="col-xs-1">To Date Variance</th>
+                <th class="col-xs-1">Remaining Cost</th>
+                <th class="col-xs-1">At Completion Cost</th>
+                <th class="col-xs-1">Cost Variance</th>
+            </tr>
+            <tr>
+                <th class="col-xs-2">Total</th>
+                <th class="col-xs-1">{{number_format($currentTotals['budget_cost']??0,2) }}</th>
+                <th class="col-xs-1">{{number_format($previousTotals['previous_cost']??0,2)}}</th>
+                <th class="col-xs-1">{{number_format($previousTotals['previous_allowable']??0,2)}}</th>
+                <th class="col-xs-1 {{$previousTotals['previous_var'] > 0? 'text-success' : 'text-danger'}}">{{number_format($previousTotals['previous_var']??0,2)}}</th>
+                <th class="col-xs-1">{{number_format($currentTotals['to_date_cost']?? 0,2)}}</th>
+                <th class="col-xs-1">{{number_format($currentTotals['to_date_allowable']??0,2)}}</th>
+                <th class="col-xs-1 {{$currentTotals->to_date_var > 0? 'text-success' : 'text-danger'}}">{{number_format($currentTotals['to_date_var']??0,2)}}</th>
+                <th class="col-xs-1">{{number_format($currentTotals['remaining']??0,2)}}</th>
+                <th class="col-xs-1">{{number_format($currentTotals['at_completion_cost']??0,2)}}</th>
+                <th class="col-xs-1 {{$currentTotals->cost_var > 0? 'text-success' : 'text-danger'}}">{{number_format($currentTotals->cost_var??0,2)}}</th>
+            </tr>
+            </thead>
+        </table>
+        </div>
+        <div class="vertical-scroll">
+            <table class="table table-bordered table-hover" id="activity-table">
+                <tbody>
+                @foreach($tree->where('index', 0) as $name => $level)
+                    @include('reports.cost-control.standard_activity._recursive_report')
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
 @endsection
@@ -111,15 +100,37 @@
             cursor: pointer;
         }
 
+        #activity-table {
+            border-top: none;
+        }
+
+        .table {
+            margin-bottom: 0;
+            min-width: 100%;
+        }
+
+        .horizontal-scroll {
+            overflow-x: auto;
+        }
+
+        .vertical-scroll {
+            overflow-y: auto;
+            max-height: 550px;
+        }
+
+        .scroll-head {
+            padding-right: 16px;
+        }
+
     </style>
 @endsection
 
 
 @section('javascript')
     <script>
-        $(function(){
+        $(function () {
             function closeRows(rows) {
-                rows.find('a').each(function() {
+                rows.find('a').each(function () {
                     const selector = '.' + $(this).data('target');
                     const rows = $(selector).addClass('hidden');
                     $(this).find('.fa').addClass('fa-plus-square-o').removeClass('fa-minus-square-o open');
@@ -127,7 +138,7 @@
                 });
             }
 
-            $('.open-level').click(function(e){
+            $('.open-level').click(function (e) {
                 let selector = '.' + $(this).data('target');
                 $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
                 let rows = $(selector).toggleClass('hidden');
@@ -138,7 +149,7 @@
                 return false;
             });
 
-            const rows = $('.activity-table tr').click(function() {
+            const rows = $('.activity-table tr').click(function () {
                 rows.removeClass('info');
                 $(this).addClass('info').find('a').click();
             });
