@@ -42,8 +42,15 @@
             </div>
 
             <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="cost_account">Description</label>
+                    <input type="text" class="form-control" name="description" id="description" value="{{request('description')}}">
+                </div>
+            </div>
+
+            <div class="col-sm-3">
                 <div class="checkbox">
-                    <label>
+                    <label style="margin-top: 25px;">
                         <input name="negative_to_date" type="checkbox" {{request()->exists('negative_to_date') ? 'checked' : ''}}>
                         Negative Variance To Date
                     </label>
@@ -52,17 +59,19 @@
 
             <div class="col-sm-3">
                 <div class="checkbox">
-                    <label>
+                    <label style="margin-top: 25px;">
                         <input name="negative_completion" type="checkbox" {{request()->exists('negative_completion') ? 'checked' : ''}}>
                         Negative Variance At Completion
                     </label>
                 </div>
             </div>
 
-            <div class="col-sm-6">
-                <button class="pull-right btn btn-rounded btn-outline btn-primary" type="submit">
+            <div class="col-sm-3 text-right" style="padding-top: 25px;">
+                <button class="btn btn-rounded btn-outline btn-primary" type="submit">
                     <i class="fa fa-filter"></i> Filter
                 </button>
+
+                <a href="?reset" class="btn btn-rounded btn-default btn-outline"><i class="fa fa-reset"></i> Reset</a>
             </div>
         </div>
 

@@ -136,6 +136,10 @@ class BoqReport
             $query->where('cost_account', 'like', "%$cost_account%");
         }
 
+        if ($desc = $request->get('description')) {
+            $query->where('boq', 'like', "%$desc%");
+        }
+
         if ($request->exists('negative_to_date')) {
             $query->havingRaw('to_date_var < 0');
         }
