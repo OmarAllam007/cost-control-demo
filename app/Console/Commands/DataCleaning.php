@@ -133,6 +133,16 @@ class DataCleaning extends Command
             return ['id' => $unit->id, 'name' => strtolower($unit->type)];
         })->pluck('id', 'name');
 
+        $invalid_parent = \DB::select('select * from resources where resource_id in (select id from resources where project_id is not null)');
+        foreach ($invalid_parent as $r) {
+            $db_res = \DB::table('resources')->find($r->resource_id);
+            while ($db_res->resource_id) {
+                $db_res = \DB::table('resources')->find($db_res->resource_id);
+            }
+
+            \DB::table('resources')->where('id', $r->id)->update(['resource_id' => $db_res->id]);
+        }
+
         $this->code_serial = collect();
 
         $sheet = $this->excel->getSheetByName('Resources');
@@ -235,13 +245,15 @@ class DataCleaning extends Command
         $discipline = $type['discipline'] ?? '';
 
         $attributes = compact('name', 'resource_type_id', 'resource_code', 'discipline');
+
+
         if ($id) {
             \DB::table('resources')->where('id', $id)->update($attributes);
         } else {
             $attributes['rate'] = $row['F'];
             $attributes['unit'] = $this->units->get(strtolower($row['G']));
             if (!$attributes['unit']) {
-                return false;
+                $attributes['unit'] = 2;
             }
             $attributes['waste'] = floatval($row['H']);
             $id = \DB::table('resources')->insertGetId($attributes);
@@ -253,20 +265,21 @@ class DataCleaning extends Command
         )->pluck('id')->toArray();
 
         if (trim($row['AE'])) {
-            $also_include = collect(explode(',', $row['AE']))->filter()->map('trim')->toArray();
+            $also_include = array_filter(array_map('trim', explode(',', $row['AE'])));
             $related_resource_ids = array_unique(array_merge($related_resource_ids, $also_include));
         }
 
+        $attributes['resource_id'] = $id;
         \DB::table('resources')->whereIn('id', $related_resource_ids)->update($attributes);
-
-        $resource_type = $row['Z'];
-        $resource_type_id = $this->types->get($typeNames[0])['id'];
-        \DB::table('break_down_resource_shadows')
-            ->whereIn('resource_id', $related_resource_ids)
-            ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
-
-        \DB::table('master_shadows')
-            ->whereIn('resource_id', $related_resource_ids)
-            ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+//
+//        $resource_type = $row['Z'];
+//        $resource_type_id = $this->types->get($typeNames[0])['id'];
+//        \DB::table('break_down_resource_shadows')
+//            ->whereIn('resource_id', $related_resource_ids)
+//            ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+//
+//        \DB::table('master_shadows')
+//            ->whereIn('resource_id', $related_resource_ids)
+//            ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
     }
 }
