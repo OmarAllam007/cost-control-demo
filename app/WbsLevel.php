@@ -29,7 +29,6 @@ class WbsLevel extends Model
         return self::pluck('name', 'id')->prepend('Select Level', '');
     }
 
-
     public function project()
     {
         return $this->belongsTo(Project::class);

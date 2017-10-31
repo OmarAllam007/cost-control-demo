@@ -125,11 +125,9 @@ class BoqReport
         }
 
         if ($wbs = $request->get('wbs')) {
-            $term = "%$wbs%";
-            $levels = WbsLevel::where('project_id', $this->project->id)->where(function ($q) use ($term) {
-                $q->where('code', 'like', $term)->orWhere('name', 'like', $term);
-            })->pluck('id');
-            $query->whereIn('wbs_id', $levels);
+//            $term = "%$wbs%";
+
+            $query->whereIn('wbs_id', $wbs);
         }
 
         if ($cost_account = $request->get('cost_account')) {
