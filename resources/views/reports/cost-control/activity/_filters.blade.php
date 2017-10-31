@@ -15,10 +15,7 @@
             </div>
 
             <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="wbs">WBS</label>
-                    <input type="text" class="form-control" name="wbs" id="wbs" value="{{request('wbs')}}">
-                </div>
+                @include('reports.partials.wbs-filter')
             </div>
 
             <div class="col-sm-3">
