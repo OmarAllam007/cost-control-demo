@@ -197,4 +197,4 @@
             });
         });
     </script>
-@endsection
+@append
