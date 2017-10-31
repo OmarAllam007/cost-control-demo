@@ -119,7 +119,24 @@
         }
 
         .scroll-head {
-            padding-right: 16px;
+            padding-right: 20px;
+        }
+
+        .vertical-scroll {
+            padding-right: 20px;
+            width: 1820px;
+        }
+
+        th.col-xs-1, td.col-xs-1 {
+            width: 150px;
+            min-width: 150px;
+            max-width: 150px;
+        }
+
+        th.col-xs-2, td.col-xs-2 {
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
         }
 
     </style>
