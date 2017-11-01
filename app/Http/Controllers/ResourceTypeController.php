@@ -22,7 +22,7 @@ class ResourceTypeController extends Controller
             return \Redirect::to('/');
         }
 
-        $resource_levels = ResourceType::orderBy('name')->tree()
+        $resource_levels = ResourceType::orderBy('name')->where('archived', 0)->tree()
             ->with('children.children.children.children.children')
             ->paginate();
 
