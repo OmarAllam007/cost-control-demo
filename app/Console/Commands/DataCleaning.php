@@ -47,7 +47,7 @@ class DataCleaning extends Command
         $sheet = $this->excel->getSheetByName('Structure');
 
         // Clean resource types
-        \DB::table('resource_types')->where('parent_id', '!=', 0)->delete();
+        \DB::table('resource_types')->where('parent_id', '!=', 0)->update(['archived' => 1]);
 
         // Cache basic types
         $this->types = collect();
@@ -272,14 +272,16 @@ class DataCleaning extends Command
         $attributes['resource_id'] = $id;
         \DB::table('resources')->whereIn('id', $related_resource_ids)->update($attributes);
 
-        $resource_type = $row['Z'];
-        $resource_type_id = $this->types->get($typeNames[0])['id'];
-        \DB::table('break_down_resource_shadows')
-            ->whereIn('resource_id', $related_resource_ids)
-            ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+        if (config('app.env') != 'local') {
+            $resource_type = $row['Z'];
+            $resource_type_id = $this->types->get($typeNames[0])['id'];
+            \DB::table('break_down_resource_shadows')
+                ->whereIn('resource_id', $related_resource_ids)
+                ->update(['resource_name' => $name, 'resource_type' => $resource_type, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
 
-        \DB::table('master_shadows')
-            ->whereIn('resource_id', $related_resource_ids)
-            ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+            \DB::table('master_shadows')
+                ->whereIn('resource_id', $related_resource_ids)
+                ->update(['resource_name' => $name, 'resource_type_id' => $resource_type_id, 'resource_code' => $resource_code]);
+        }
     }
 }

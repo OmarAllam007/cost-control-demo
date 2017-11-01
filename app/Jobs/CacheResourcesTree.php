@@ -20,7 +20,7 @@ class CacheResourcesTree extends Job
     public function handle()
     {
         return \Cache::remember('resources-tree', Carbon::parse('+1 week'), function() {
-            $this->types = ResourceType::all()->groupBy('parent_id');
+            $this->types = ResourceType::where('archived', 0)->get()->groupBy('parent_id');
             $this->resources = Resources::with('project')->get()->groupBy('resource_type_id');
 
             return $this->buildTypeTree();

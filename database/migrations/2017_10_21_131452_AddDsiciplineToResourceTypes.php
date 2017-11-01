@@ -13,6 +13,7 @@ class AddDsiciplineToResourceTypes extends Migration
     public function up()
     {
         Schema::table('resource_types', function (Blueprint $table) {
+            $table->boolean('archived')->nullable()->default(0);
             $table->string('discipline')->nullable();
         });
     }
@@ -25,6 +26,7 @@ class AddDsiciplineToResourceTypes extends Migration
     public function down()
     {
         Schema::table('resource_types', function (Blueprint $table) {
+            $table->boolean('archived');
             $table->dropColumn('discipline');
         });
     }
