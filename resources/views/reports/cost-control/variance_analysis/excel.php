@@ -41,38 +41,44 @@ foreach($tree as $type => $typeData){
     ++$counter;
 
     $sheet->fromArray([
-        $type, '', '', '', '', '', '', '', '', '', '', '', ''
+        $type, '', '', '', '', '',
+        $typeData['price_cost_var'], '', '', '',
+        $typeData['qty_cost_var']?: '0.00', //K
+        $typeData['cost_unit_price_var']?: '0.00', //L
+        $typeData['cost_qty_var']?: '0.00'
     ], '', "A{$counter}");
     $sheet->getCell("A{$counter}")->getStyle()->applyFromArray($bold);
 
-    foreach ($typeData as $discipline => $disciplineData) {
+    foreach ($typeData['disciplines'] as $discipline => $disciplineData) {
         ++$counter;
         $sheet->fromArray([
-            '    ' . ($discipline?: 'General'), '', '', '', '', '', '', '', '', '', '', '', ''
+            '    ' . ($discipline?: 'General'), '', '', '', '', '',
+            $disciplineData['price_cost_var'], '', '', '',
+            $disciplineData['qty_cost_var']?: '0.00', //K
+            $disciplineData['cost_unit_price_var']?: '0.00', //L
+            $disciplineData['cost_qty_var']?: '0.00'
         ], '', "A{$counter}");
         $sheet->getRowDimension($counter)->setOutlineLevel(1)->setCollapsed(true)->setVisible(false);
         $sheet->getCell("A{$counter}")->getStyle()->applyFromArray($bold);
 
-        foreach ($disciplineData as $resource) {
+        foreach ($disciplineData['resources'] as $resource) {
             ++$counter;
 
-            $price_var = $resource->budget_unit_price - $resource->to_date_unit_price;
-            $qty_var = $resource->to_date_allowable_qty - $resource->to_date_qty;
             $sheet->fromArray([
                 '        ' . $resource->resource_name, //A
                 $resource->budget_unit_price?: '0.00', //B
                 $resource->prev_unit_price?: '0.00', //C
                 $resource->curr_unit_price?: '0.00', //D
                 $resource->to_date_unit_price?: '0.00', //E
-                $price_var ?: '0.00', //F
-                ($price_var * $resource->to_date_qty) ?: '0.00', //G
+                $resource->price_var ?: '0.00', //F
+                $resource->price_cost_var ?: '0.00', //G
                 $resource->to_date_qty?: '0.00', //H
                 $resource->to_date_allowable_qty?: '0.00', //I
-                $qty_var?: '0.00', //J
-                $qty_var * $resource->budget_unit_price ?: '0.00', //K
+                $resource->qty_var?: '0.00', //J
+                $resource->qty_cost_var ?: '0.00', //K
                 $resource->cost_unit_price_var?: '0.00', //L
                 $resource->cost_qty_var?: '0.00', //M
-            ], '', "A{$counter}");
+            ], null, "A{$counter}", true);
             $sheet->getRowDimension($counter)->setOutlineLevel(2)->setCollapsed(true)->setVisible(false);
         }
     }

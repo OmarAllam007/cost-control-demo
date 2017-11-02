@@ -4,6 +4,8 @@
     @include('reports.all._standard-activity')
 @endif
 
+@section('title', 'Activity report')
+
 @section('header')
     <h2 class="">{{$project->name}} - Activity report</h2>
     <div class="pull-right btn-toolbar">
@@ -25,7 +27,7 @@
 
         <table class="table table-bordered" id="activity-header">
         <thead>
-        <tr>
+        <tr class="bg-primary">
             <th>Activity</th>
 
             <th>Base Line</th>
@@ -41,6 +43,26 @@
             <th>Remaining Cost</th>
             <th>At Completion Cost</th>
             <th>Cost Variance</th>
+        </tr>
+        <tr>
+            <th>Total</th>
+
+            <th>{{number_format($tree->where('parent', '')->sum('budget_cost'), 2)}}</th>
+
+            <th>{{number_format($tree->where('parent', '')->sum('prev_cost'), 2)}}</th>
+            <th>{{number_format($tree->where('parent', '')->sum('prev_allowable'), 2)}}</th>
+
+            <th class="{{$tree->where('parent', '')->sum('prev_cost_var') < 0? 'text-danger' : 'text-success'}}">{{number_format($tree->where('parent', '')->sum('prev_cost_var'), 2)}}</th>
+
+            <th>{{number_format($tree->where('parent', '')->sum('to_date_cost'), 2)}}</th>
+            <th>{{number_format($tree->where('parent', '')->sum('to_date_allowable'), 2)}}</th>
+
+            <th class="{{$tree->where('parent', '')->sum('to_date_var') < 0? 'text-danger' : 'text-success'}}">{{number_format($tree->where('parent', '')->sum('to_date_var'), 2)}}</th>
+
+            <th>{{number_format($tree->where('parent', '')->sum('remaining_cost'), 2)}}</th>
+            <th>{{number_format($tree->where('parent', '')->sum('completion_cost'), 2)}}</th>
+
+            <th class="{{$tree->where('parent', '')->sum('completion_var') < 0? 'text-danger' : 'text-success'}}">{{number_format($tree->where('parent', '')->sum('completion_var'), 2)}}</th>
         </tr>
         </thead>
         </table>
@@ -175,4 +197,4 @@
             });
         });
     </script>
-@endsection
+@append

@@ -41,7 +41,7 @@ class ActivityReport
     {
         $previousPeriod = $this->period->project->periods()->where('id', '<', $this->period->id)->first();
         if ($previousPeriod) {
-            $previousData = MasterShadow::previousActivityReport($this->period)->get()->groupBy('wbs_id')->map(function ($group) {
+            $previousData = MasterShadow::previousActivityReport($previousPeriod)->get()->groupBy('wbs_id')->map(function ($group) {
                 return $group->keyBy('activity');
             });
         } else {
@@ -121,11 +121,11 @@ class ActivityReport
         }
 
         if ($wbs = $request->get('wbs')) {
-            $term = "%$wbs%";
-            $levels = WbsLevel::where('project_id', $this->project->id)->where(function ($q) use ($term) {
-                $q->where('code', 'like', $term)->orWhere('name', 'like', $term);
-            })->pluck('id');
-            $query->whereIn('wbs_id', $levels);
+//            $term = "%$wbs%";
+//            $levels = WbsLevel::where('project_id', $this->project->id)->where(function ($q) use ($term) {
+//                $q->where('code', 'like', $term)->orWhere('name', 'like', $term);
+//            })->pluck('id');
+            $query->whereIn('wbs_id', $wbs);
         }
 
         if ($activity = $request->get('activity')) {
