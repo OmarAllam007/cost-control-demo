@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: omar
- * Date: 09/01/17
- * Time: 09:23 ص
- */
-
 namespace App\Http\Controllers\Reports\CostReports;
-
 
 use App\Boq;
 use App\BreakDownResourceShadow;
@@ -63,7 +55,32 @@ class VarianceAnalysisReport
         $resourceData = $this->applyFilters($query)->get();
 
         $tree = $resourceData->groupBy('resource_type')->map(function($typeGroup) {
-            return $typeGroup->groupBy('boq_discipline');
+            $disciplines = $typeGroup->groupBy('boq_discipline')->map(function($group) {
+                $resources = $group->map(function($resource) {
+                    $resource->price_var = $resource->budget_unit_price - $resource->to_date_unit_price;
+                    $resource->price_cost_var = $resource->price_var * $resource->to_date_qty;
+
+                    $resource->qty_var = $resource->to_date_allowable_qty - $resource->to_date_qty;
+                    $resource->qty_cost_var = $resource->qty_var * $resource->budget_unit_price;
+
+                    return $resource;
+                });
+
+                return [
+                    'resources' => $resources, 'price_cost_var' => $resources->sum('price_cost_var'),
+                    'qty_cost_var' => $resources->sum('qty_cost_var'),
+                    'cost_unit_price_var' => $resources->sum('cost_unit_price_var'),
+                    'cost_qty_var' => $resources->sum('cost_qty_var')
+                ];
+                //, 'to_date_variance' => $group->sum()];
+            });
+
+            return [
+                'disciplines' => $disciplines, 'price_cost_var' => $disciplines->sum('price_cost_var'),
+                'qty_cost_var' => $disciplines->sum('qty_cost_var'),
+                'cost_unit_price_var' => $disciplines->sum('cost_unit_price_var'),
+                'cost_qty_var' => $disciplines->sum('cost_qty_var')
+            ];
         });
 
         return $tree;
