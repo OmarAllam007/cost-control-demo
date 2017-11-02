@@ -1,7 +1,6 @@
 <div class="form-group">
     <label for="wbs">WBS</label>
     <a class="btn btn-default btn-block" href="#SelectWBSModal" data-toggle="modal">Select WBS</a>
-
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="SelectWBSModal">
