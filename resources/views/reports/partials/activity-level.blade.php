@@ -1,7 +1,7 @@
 <li>
     <div class="tree--item">
         <span class="tree--item--label">
-            <input type="checkbox" name="division[{{$division->id}}]" value="{{$division->id}}" {{request("division.{$division->id}")? 'checked' : ''}}>
+            <input type="checkbox" value="{{$division->id}}" {{request("division.{$division->id}")? 'checked' : ''}}>
             <strong><a href="#" class="node-label open-level">{{$division->name}} <small>({{$division->code}})</small></a></strong>
         </span>
     </div>
@@ -15,6 +15,7 @@
                             <input type="checkbox" name="activity[{{$activity->id}}]" value="{{$activity->id}}" {{request("activity.{$activity->id}")? 'checked' : ''}}>
                             {{$activity->name}} <small>({{$activity->code}})</small>
                         </span>
+                    </div>
                 </li>
             @endforeach
         </ul>

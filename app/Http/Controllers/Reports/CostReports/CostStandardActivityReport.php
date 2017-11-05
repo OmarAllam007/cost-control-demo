@@ -139,7 +139,7 @@ class CostStandardActivityReport
         $request = request();
 
         if ($activity_id = $request->get('activity')) {
-            $query->where('activity_id', $activity_id);
+            $query->whereIn('activity_id', $activity_id);
         }
 
         if ($status = strtolower($request->get('status', ''))) {

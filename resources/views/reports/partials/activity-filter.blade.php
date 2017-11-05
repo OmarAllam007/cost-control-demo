@@ -27,6 +27,7 @@
         $(function() {
             $('#SelectActivityModal').on('click', '.open-level', function(e) {
                 e.preventDefault();
+                console.log($(this).closest('li').find('> ul'));
                 $(this).closest('li').find('> ul').toggleClass('hidden')
             }).on('change', 'input:checkbox', function() {
                 $(this).closest('li').find('input:checkbox').prop('checked', this.checked);
