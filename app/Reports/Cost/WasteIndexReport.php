@@ -33,22 +33,21 @@ class WasteIndexReport
 
     function run()
     {
-        $this->types = ResourceType::where('parent_id', 3)->get()->groupBy('parent_id')->dump();
+        $this->types = ResourceType::all()->groupBy('parent_id');
 
-        $this->resources = MasterShadow::from('master_shadows as sh')->where('sh.period_id', $this->period->id)
-            ->where('sh.resource_type_id', 3)->leftJoin('resources as r', 'sh.resource_id', '=', 'r.id')
-            ->leftJoin('cost_resources as cr', function(JoinClause $q) {
-                $q->on('sh.resource_id', '=', 'cr.resource_id')->on('sh.period_id', '=', 'cr.period_id');
-            })
+        $this->resources = MasterShadow::from('master_shadows as sh')
+            ->where('sh.period_id', $this->period->id)
+            ->where('sh.resource_type_id', 3)
+            ->join('resources as r', 'sh.resource_id', '=', 'r.id')
             ->selectRaw('sh.resource_name, r.resource_type_id, sum(sh.to_date_qty) as to_date_qty')
-            ->selectRaw('sum(sh.allowable_qty) as allowable_qty, avg(cr.rate) as to_date_unit_price')
+            ->selectRaw('sum(sh.allowable_qty) as allowable_qty, avg(sh.to_date_unit_price) as to_date_unit_price')
             ->selectRaw('sum(sh.allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
-            ->selectRaw('sum(sh.allowable_ev_cost - to_date_cost) as todate_cost_var')
+            ->selectRaw('sum(sh.allowable_ev_cost - to_date_cost) as to_date_cost_var')
             ->selectRaw('sum(to_date_qty_var) as qty_var, sum(pw_index) as pw_index')
             ->groupBy(['sh.resource_name', 'r.resource_type_id'])
-            ->get()->groupBy('resource_type_id')->dump();
+            ->get()->groupBy('resource_type_id');
 
-        $this->tree = $this->buildTree()->dd();
+        $this->tree = $this->buildTree();
 
         return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree];
     }
@@ -70,8 +69,8 @@ class WasteIndexReport
             });
 
             return $type;
-//        })->reject(function ($type) {
-//            return $type->subtree->isEmpty() && $type->resources_list->isEmpty();
+        })->reject(function ($type) {
+            return $type->subtree->isEmpty() && $type->resources_list->isEmpty();
         });
     }
 

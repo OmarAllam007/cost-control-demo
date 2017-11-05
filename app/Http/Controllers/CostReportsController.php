@@ -244,7 +244,8 @@ class CostReportsController extends Controller
         }
 
         $data = $report->run();
-        return view('reports.cost-control.variance_analysis.index', $data);
+
+        return view('reports.cost-control.waste-index.index', $data);
     }
 
     public function chart(Project $project, Request $request)
