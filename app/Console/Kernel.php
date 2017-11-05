@@ -52,6 +52,7 @@ class Kernel extends ConsoleKernel
         CreateRevisionsForCurrentProject::class,
         CreateRevisions::class,
         Commands\FixProductivityForDhahran::class,
+        Commands\DataCleaning::class,
     ];
 
     /**
