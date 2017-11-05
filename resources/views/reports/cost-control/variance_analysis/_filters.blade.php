@@ -76,19 +76,17 @@
                     </div>
                 </div>
 
-                <div class="col-sm-2">
+                <div class="col-sm-12 text-right">
                     <button class="btn btn-rounded btn-outline btn-primary" type="submit">
                         <i class="fa fa-filter"></i> Filter
                     </button>
+
+                    <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
                 </div>
 
             </div>
 
-            <div class="row">
-                <div class="col-sm-6 text-right">
 
-                </div>
-            </div>
         </form>
     </div>
 </div>

@@ -63,9 +63,14 @@
             </div>
 
             <div class="col-sm-6">
-                <button class="pull-right btn btn-rounded btn-outline btn-primary" type="submit">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+                <div class="pull-right">
+                    <button class="btn btn-rounded btn-outline btn-primary" type="submit">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+
+                    <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
+                </div>
+
             </div>
         </div>
 

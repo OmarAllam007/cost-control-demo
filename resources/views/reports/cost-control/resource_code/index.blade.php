@@ -2,6 +2,9 @@
 @if(request('all'))
     @include('reports.all._standard-activity')
 @endif
+
+@section('title', 'Resource Dictionary Report')
+
 @section('header')
     <h2 class="">{{$project->name}} - Resource Dictionary Report</h2>
     <div class="pull-right btn-toolbar">
@@ -21,7 +24,7 @@
 
                 <table class="table table-bordered  resources-table">
                     <thead>
-                    <tr class="thead-top">
+                    <tr class="bg-primary thead-top">
                         <th class="resource-cell right-border" rowspan="2">Resource</th>
                         <th class="text-center right-border" colspan="3">Budget</th>
                         <th class="text-center right-border" colspan="3">Previous</th>
@@ -30,7 +33,7 @@
                         <th class="text-center right-border" colspan="3">Remaining</th>
                         <th class="text-center" colspan="6">At Completion</th>
                     </tr>
-                    <tr class="thead-bottom">
+                    <tr class="bg-primary thead-bottom">
                         {{-- Budget --}}
                     <th class="text-center number-cell" width="100">U.Price</th>
                     <th class="text-center number-cell" width="100">Qty</th>

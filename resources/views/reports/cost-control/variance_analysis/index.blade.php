@@ -4,6 +4,8 @@
     @include('reports.all._standard-activity')
 @endif
 
+@section('title', 'Variance Analysis Report');
+
 @section('header')
     <h2 class="">{{$project->name}} - Variance Analysis Report</h2>
     <div class="pull-right">
