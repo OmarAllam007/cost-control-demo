@@ -20,6 +20,7 @@ use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -231,6 +232,19 @@ class CostReportsController extends Controller
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
 
         return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources', 'boqs'));
+    }
+
+    function wasteIndexReport(Project $project, Request $request)
+    {
+        $period = Period::find($this->getPeriod($project, $request));
+        $report = new WasteIndexReport($period);
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+        return view('reports.cost-control.variance_analysis.index', $data);
     }
 
     public function chart(Project $project, Request $request)
