@@ -13,7 +13,7 @@
                     </select>
                 </div>
             </div>
-
+    
             <div class="col-sm-3">
                 @include('reports.partials.wbs-filter')
             </div>
@@ -63,7 +63,6 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div class="col-sm-6">
                 <div class="pull-right">
                     <button class="btn btn-rounded btn-outline btn-primary" type="submit">
@@ -72,14 +71,6 @@
 
                     <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
                 </div>
-=======
-            <div class="col-sm-3 text-right" style="padding-top: 25px;">
-                <button class="btn btn-rounded btn-outline btn-primary" type="submit">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
-
-                <a href="?reset" class="btn btn-rounded btn-default btn-outline"><i class="fa fa-reset"></i> Reset</a>
->>>>>>> 3114265d77ccc3f94460bdfe61e60644a0b4e84d
             </div>
         </div>
 
