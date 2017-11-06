@@ -32,6 +32,11 @@ class ResourceType extends Model
 
     }
 
+    function db_resources()
+    {
+        return $this->resources()->whereNull('project_id')->whereNull('resource_id');
+    }
+
     public function getRootAttribute()
     {
         if ($this->root) {
