@@ -1,7 +1,7 @@
 <li>
     <div class="tree--item">
         <label class="tree--item--label">
-            ß<input type="radio" class="tree-radio" name="{{isset($input)? $input : 'parent_id'}}" v-model="{{isset($input)? $input : 'parent_id'}}" value="{{$type->id}}" {{$value == $division['id']? 'checked' : ''}}>
+            ß<input type="radio" class="tree-radio" name="{{isset($input)? $input : 'parent_id'}}" v-model="{{isset($input)? $input : 'parent_id'}}" value="{{$type->id}}" {{$value == $type->id? 'checked' : ''}}>
             <a href="#resource-type-children-{{$type->id}}" class="node-label" data-toggle="collapse">{{$type->name}}</a>
         </label>
     </div>
