@@ -21,13 +21,6 @@
             {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
         </article>
 
-        <article class="form-group {{$errors->first('resource_code', 'has-error')}}">
-            {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-            {{ Form::text('resource_code',old('resource_code', $resources->resource_code), ['class' => 'form-control', 'readonly'=> !empty($edit)]) }}
-
-            {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
-        </article>
-
         <article class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             @if(!empty($override))
