@@ -20,9 +20,10 @@
 
         <div class="col-sm-2 form-group text-right" style="padding-top: 25px;">
             <button class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
+            <a href="?reset" class="btn btn-default"><i class="fa fa-refresh"></i> Reset</a>
         </div>
 
-        <div class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal fade" tabindex="-1" role="dialog" id="ResourceTypeModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -30,8 +31,11 @@
                         <h4 class="modal-title">Select Resource Type</h4>
                     </div>
                     <div class="modal-body">
-                        <ul class="list-unstyled">
-
+                        <ul class="tree list-unstyled">
+                            @php $resourceTypes = (new App\Support\ResourceTypesTree())->get()->get(3); @endphp
+                            @foreach($resourceTypes->subtree as $type)
+                                @include('reports.cost-control.waste-index._recursive_material', compact('type'))
+                            @endforeach
                         </ul>
                     </div>
                 </div>
@@ -39,3 +43,13 @@
         </div>
     </div>
 </form>
+
+@section('javascript')
+    <script>
+        $(function() {
+            $('#ResourceTypeModal').on('change', 'input', function() {
+                $(this).closest('li').find('input:checkbox').prop('checked', this.checked);
+            });
+        });
+    </script>
+@append

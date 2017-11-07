@@ -38,8 +38,8 @@
                     <th class="w-150"></th>
                     <th class="w-150">{{number_format($tree->sum('allowable_cost'), 2)}}</th>
                     <th class="w-150">{{number_format($tree->sum('to_date_cost'), 2)}}</th>
-                    <th class="w-150">{{number_format($tree->sum('to_date_cost_var'), 2)}}</th>
-                    <th class="w-150">{{number_format($total_pw_index, 2)}}%</th>
+                    <th class="w-150 {{$tree->sum('to_date_cost_var') < 0 ? 'text-danger' : ''}}">{{number_format($tree->sum('to_date_cost_var'), 2)}}</th>
+                    <th class="w-150 {{$total_pw_index < 0 ? 'text-danger' : ''}}">{{number_format($total_pw_index, 2)}}%</th>
                 </tr>
                 </thead>
             </table>
@@ -149,4 +149,4 @@
             });
         });
     </script>
-@endsection
+@append

@@ -7,8 +7,8 @@
     </td>
     <td class="w-150">{{number_format($type->allowable_cost, 2)}}</td>
     <td class="w-150">{{number_format($type->to_date_cost, 2)}}</td>
-    <td class="w-150">{{number_format($type->to_date_cost_var, 2)}}</td>
-    <td class="w-150">{{number_format($type->pw_index, 2)}}%</td>
+    <td class="w-150 {{$type->to_date_cost_var < 0? 'text-danger' : ''}}">{{number_format($type->to_date_cost_var, 2)}}</td>
+    <td class="w-150 {{$type->pw_index < 0? 'text-danger' : ''}}">{{number_format($type->pw_index, 2)}}%</td>
 </tr>
 
 @foreach($type->subtree as $subtype)
@@ -21,10 +21,10 @@
         <td class="w-150">{{number_format($resource->to_date_unit_price, 2)}}</td>
         <td class="w-150">{{number_format($resource->to_date_qty, 2)}}</td>
         <td class="w-150">{{number_format($resource->allowable_qty, 2)}}</td>
-        <td class="w-150">{{number_format($resource->qty_var, 2)}}</td>
+        <td class="w-150 {{$resource->qty_var < 0? 'text-danger' : ''}}">{{number_format($resource->qty_var, 2)}}</td>
         <td class="w-150">{{number_format($resource->allowable_cost, 2)}}</td>
         <td class="w-150">{{number_format($resource->to_date_cost, 2)}}</td>
-        <td class="w-150">{{number_format($resource->to_date_cost_var, 2)}}</td>
-        <td class="w-150">{{number_format($resource->pw_index, 2)}}%</td>
+        <td class="w-150 {{$resource->to_date_cost_var < 0? 'text-danger' : ''}}">{{number_format($resource->to_date_cost_var, 2)}}</td>
+        <td class="w-150 {{$resource->pw_index < 0? 'text-danger' : ''}}">{{number_format($resource->pw_index, 2)}}%</td>
     </tr>
 @endforeach

@@ -35,7 +35,7 @@ class WasteIndexReport
     {
         $this->types = ResourceType::all()->groupBy('parent_id');
 
-        $this->resources = MasterShadow::from('master_shadows as sh')
+        $query = MasterShadow::from('master_shadows as sh')
             ->where('sh.period_id', $this->period->id)
             ->where('sh.resource_type_id', 3)
             ->where('to_date_qty', '>', 0)
@@ -45,8 +45,11 @@ class WasteIndexReport
             ->selectRaw('sum(sh.allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(sh.allowable_ev_cost - to_date_cost) as to_date_cost_var')
             ->selectRaw('sum(to_date_qty_var) as qty_var, sum(pw_index) as pw_index')
-            ->groupBy(['sh.resource_name', 'r.resource_type_id'])
-            ->get()->groupBy('resource_type_id');
+            ->groupBy(['sh.resource_name', 'r.resource_type_id']);
+
+        $this->applyFilters($query);
+
+        $this->resources = $query->get()->groupBy('resource_type_id');
 
         $this->tree = $this->buildTree();
 
@@ -88,6 +91,25 @@ class WasteIndexReport
         })->reject(function ($type) {
             return $type->subtree->isEmpty() && $type->resources_list->isEmpty();
         });
+    }
+
+    private function applyFilters($query)
+    {
+        if ($types = request('type')) {
+            $query->whereIn('r.resource_type_id', $types);
+        }
+
+        if ($resource = request('resource')) {
+            $term = "%$resource%";
+            $query->where(function ($q) use ($term) {
+                $q->where('sh.resource_code', 'like', $term)
+                    ->orWhere('resource_name', 'like', $term);
+            });
+        }
+
+        if (request('negative')) {
+            $query->where('qty_var', '<', 0);
+        }
     }
 
     function excel()
