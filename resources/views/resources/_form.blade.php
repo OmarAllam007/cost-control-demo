@@ -13,8 +13,8 @@
                 <input class="form-control" disabled value="{{$type->path ?? 'Type not found'}}">
             @else
                 <div class="btn-group btn-group-sm btn-group-block">
-                    <a href="#LevelsModal" data-toggle="modal" class="tree-open btn btn-default btn-sm flex text-right">{{$type->path ?? 'Select Type'}}</a>
-                    <a class="remove-tree-input btn btn-warning btn-sm" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times-circle"></span></a>
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open btn btn-default flex text-right">{{$type->path ?? 'Select Type'}}</a>
+                    <a class="remove-tree-input btn btn-warning" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times-circle"></span></a>
                 </div>
                 <div class="clearfix"></div>
             @endif
