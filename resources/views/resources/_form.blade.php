@@ -13,19 +13,12 @@
                 <input class="form-control" disabled value="{{$type->path ?? 'Type not found'}}">
             @else
                 <div class="btn-group btn-group-sm btn-group-block">
-                    <a href="#LevelsModal" data-toggle="modal" class="tree-open btn btn-default btn-sm flex text-right">{{$type->path ?? 'Select Type'}}</a>
-                    <a class="remove-tree-input btn btn-warning btn-sm" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times-circle"></span></a>
+                    <a href="#LevelsModal" data-toggle="modal" class="tree-open btn btn-default flex text-right">{{$type->path ?? 'Select Type'}}</a>
+                    <a class="remove-tree-input btn btn-warning" data-label="Select Type" data-target="#LevelsModal"><span class="fa fa-times-circle"></span></a>
                 </div>
                 <div class="clearfix"></div>
             @endif
             {!! $errors->first('resource_type_id', '<div class="help-block">:message</div>') !!}
-        </article>
-
-        <article class="form-group {{$errors->first('resource_code', 'has-error')}}">
-            {{ Form::label('resource_code', 'Resource Code', ['class' => 'control-label']) }}
-            {{ Form::text('resource_code',old('resource_code', $resources->resource_code), ['class' => 'form-control', 'readonly'=> !empty($edit)]) }}
-
-            {!! $errors->first('resource_code', '<div class="help-block">:message</div>') !!}
         </article>
 
         <article class="form-group {{$errors->first('name', 'has-error')}}">
@@ -97,8 +90,8 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\ResourceType::tree()->get() as $level)
-                        @include('resources._recursive_input', ['level' => $level, 'value' => Form::getValueAttribute('resource_type_id')])
+                    @foreach($resourcesTree as $type)
+                        @include('resources._recursive_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_type_id')])
                     @endforeach
                 </ul>
             </div>

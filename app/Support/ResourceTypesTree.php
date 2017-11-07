@@ -12,7 +12,11 @@ class ResourceTypesTree
 
     function get()
     {
-        $this->resource_types = ResourceType::where('archived', 0)->with('db_resources')->get()->groupBy('parent_id');
+        $this->resource_types = ResourceType::where('archived', 0)
+            ->get()
+            ->load('db_resources')
+            ->groupBy('parent_id');
+
         return $this->tree();
     }
 
