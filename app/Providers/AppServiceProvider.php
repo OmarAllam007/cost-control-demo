@@ -48,7 +48,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \View::composer([
-            'resource-type._modal2', 'resource-type._modal', 'std-activity-resource._resources_modal', 'resources._form'
+            'resource-type._modal2', 'resource-type._modal', 'std-activity-resource._resources_modal', 'resources._form',
+            'resources._filters'
         ], 'App\Http\ViewComposers\ResourcesComposer');
 
         \View::composer('project.tabs._boq', 'App\Http\ViewComposers\BoqComposer');

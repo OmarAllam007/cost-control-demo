@@ -91,7 +91,8 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     'code' => $costShadow['code'], 'boq' => $boqDescription, 'cost_account' => $costShadow['cost_account'],
                     'eng_qty' => $costShadow['eng_qty'], 'budget_qty' => $costShadow['budget_qty'],
                     'resource_qty' => $costShadow['resource_qty'], 'waste' => $costShadow['resource_waste'],
-                    'resource_divs' => json_encode($this->getResourceDivisions($resource)), 'resource_code' => $costShadow['resource_code'],
+                    'resource_divs' => '', //json_encode($this->getResourceDivisions($resource)),
+                    'resource_code' => $costShadow['resource_code'],
                     'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material,
                     'unit_price' => $costShadow['unit_price'], 'measure_unit' => $costShadow['measure_unit'],
                     'budget_unit' => $costShadow['budget_unit'], 'budget_cost' => $costShadow['budget_cost'],
@@ -117,7 +118,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
                     'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
                     'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
-                    'created_at' => $now, 'updated_at' => $now,
+                    'created_at' => $now, 'updated_at' => $now, 'pw_index' => $costShadow['pw_index']
                 ];
 
             }
@@ -178,6 +179,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
         $divisions = [$division->name];
         while ($parent = $parent->parent) {
             $divisions[] = $parent->name;
+            dump($parent->parent);
         }
 
         return $this->cache['divisions'][$resource->id] = array_reverse($divisions);

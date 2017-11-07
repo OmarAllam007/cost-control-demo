@@ -1,7 +1,6 @@
 <div class="panel panel-default">
     <form class="panel-body" action="">
         <div class="row">
-
             <div class="col-sm-3">
                 <div class="form-group">
                     <label for="period">Period</label>
@@ -19,16 +18,7 @@
             </div>
 
             <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="activity">Activity</label>
-                    @php $activity = strtolower(request('activity')) @endphp
-                    <select name="activity" id="activity" class="form-control">
-                        <option value="">[All Activities]</option>
-                        @foreach($activities as $name)
-                            <option value="{{$name}}" {{strtolower($name) == $activity? 'selected' : ''}}>{{$name}}</option>
-                        @endforeach
-                    </select>
-                </div>
+                @include('reports.partials.activity-filter')
             </div>
 
             <div class="col-sm-3">
@@ -43,7 +33,8 @@
                     </select>
                 </div>
             </div>
-
+        </div>
+        <div class="row">
             <div class="col-sm-3">
                 <div class="checkbox">
                     <label>
@@ -62,15 +53,12 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
-                <div class="pull-right">
-                    <button class="btn btn-rounded btn-outline btn-primary" type="submit">
-                        <i class="fa fa-filter"></i> Filter
-                    </button>
+            <div class="col-sm-6 text-right">
+                <button class="btn btn-rounded btn-outline btn-primary" type="submit">
+                    <i class="fa fa-filter"></i> Filter
+                </button>
 
-                    <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
-                </div>
-
+                <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
             </div>
         </div>
 

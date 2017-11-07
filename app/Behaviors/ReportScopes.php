@@ -30,10 +30,8 @@ trait ReportScopes
 
     public function scopeVarAnalysisReport(Builder $query)
     {
-        $fields = ['resource_name', 'resource_type_id', 'boq_discipline'];
-        $query->select($fields);
         $query->selectRaw(
-            'trim(rt.name) as resource_type, avg(unit_price) as budget_unit_price,'.
+            'resource_name, resource_type_id, trim(boq_discipline) as boq_discipline, trim(rt.name) as resource_type, avg(unit_price) as budget_unit_price,'.
             '(CASE WHEN sum(prev_qty) = 0 THEN 0 ELSE sum(prev_cost) / sum(prev_qty) END) as prev_unit_price, ' .
             '(CASE WHEN sum(curr_qty) = 0 THEN 0 ELSE sum(curr_cost) / sum(curr_qty) END) AS curr_unit_price,' .
             '(CASE WHEN sum(to_date_qty) = 0 THEN 0 ELSE sum(to_date_cost) / sum(to_date_qty) END) AS to_date_unit_price,' .
@@ -43,8 +41,7 @@ trait ReportScopes
 
         $query->join('resource_types as rt', 'resource_type_id', '=', 'rt.id');
 
-        $fields[] = 'resource_type';
-        $query->groupBy($fields)->orderByRaw('4, 3, 1');
+        $query->groupBy(['resource_name', 'resource_type_id', 'boq_discipline', 'resource_type'])->orderByRaw('3, 4, 1');
         return $query;
     }
 

@@ -2,6 +2,7 @@
     <div class="tree--item">
         <label class="tree--item--label">
             <input type="radio" class="tree-radio" name="{{$input or 'resource_type_id'}}" value="{{$type->id}}" {{$value == $type->id? 'checked' : ''}}>
+            &nbsp;
             <a href="#children-{{$type->id}}" class="node-label" data-toggle="collapse">{{$type->name}}</a>
         </label>
     </div>

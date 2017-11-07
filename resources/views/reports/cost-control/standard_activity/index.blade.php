@@ -114,12 +114,30 @@
         }
 
         .vertical-scroll {
-            overflow-y: auto;
+            overflow-y: scroll;
             max-height: 550px;
+
         }
 
         .scroll-head {
-            padding-right: 16px;
+            padding-right: 20px;
+        }
+
+        .vertical-scroll {
+            padding-right: 20px;
+            width: 1820px;
+        }
+
+        th.col-xs-1, td.col-xs-1 {
+            width: 150px;
+            min-width: 150px;
+            max-width: 150px;
+        }
+
+        th.col-xs-2, td.col-xs-2 {
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
         }
 
     </style>
@@ -138,7 +156,7 @@
                 });
             }
 
-            $('.open-level').click(function (e) {
+            $('#activity-table').on('click', '.open-level',function (e) {
                 let selector = '.' + $(this).data('target');
                 $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
                 let rows = $(selector).toggleClass('hidden');
@@ -155,4 +173,4 @@
             });
         });
     </script>
-@endsection
+@append

@@ -26,13 +26,13 @@
     <div class="horizontal-scroll">
         <table class="table table-bordered  resources-table">
             <thead>
-            <tr class="bg-primary thead-top">
+            <tr class="thead-top bg-primary">
                 <th class="resource-cell right-border" rowspan="2">Resource</th>
                 <th class="text-center right-border" colspan="6">Unit Price Analysis</th>
                 <th class="text-center right-border" colspan="4">Quantity Analysis</th>
                 <th class="text-center right-border" colspan="2">Effect of Variances</th>
             </tr>
-            <tr class="bg-primary thead-bottom">
+            <tr class="thead-bottom bg-primary">
                 {{-- Unit price analysis --}}
                 <th class="number-cell">Budget Price/Unit</th>
                 <th class="number-cell">Previous Price/Unit</th>

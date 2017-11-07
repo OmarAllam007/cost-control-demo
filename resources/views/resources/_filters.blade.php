@@ -46,8 +46,8 @@
             </div>
             <div class="modal-body">
                 <ul class="list-unstyled tree">
-                    @foreach(App\ResourceType::tree()->get() as $level)
-                        @include('resources._recursive_input', ['level' => $level, 'value' => session('filters.resources.resource_type_id')])
+                    @foreach($resourcesTree as $type)
+                        @include('resources._recursive_input', ['type' => $type, 'value' => session('filters.resources.resource_type_id')])
                     @endforeach
                 </ul>
             </div>
