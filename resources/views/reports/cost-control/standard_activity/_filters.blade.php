@@ -15,29 +15,9 @@
                 </div>
 
                 <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="activity">Activity</label>
-                        <select name="activity" id="activity" class="form-control">
-                            <option value="">[All Activities]</option>
-                            @php $activity_id = request('activity') @endphp
-                            @foreach($activityNames as $id => $name)
-                                <option value="{{$id}}" {{$id == $activity_id? 'selected' : ''}}>{{$name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @include('reports.partials.activity-filter')
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="div">Division</label>
-                        <select name="div" id="div" class="form-control">
-                            <option value="">[All Divisions]</option>
-                            @php $div = request('div') @endphp
-                            @foreach($divisionNames as $id => $name)
-                                <option value="{{$id}}" {{$id == $div? 'selected' : ''}}>{{$name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+
                 <div class="col-sm-2">
                     <div class="form-group">
                         <label for="status">Status</label>
@@ -58,14 +38,14 @@
                         </label>
                     </div>
                 </div>
+                <div class="col-sm-3 text-right" style="padding-top: 25px">
+                    <button class="btn btn-rounded btn-outline btn-primary" type="submit"><i class="fa fa-filter"></i> Filter</button>
+                    <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
+                </div>
             </div>
 
 
-            <div class="pull-right">
-                <button class="btn btn-rounded btn-outline btn-primary" type="submit"><i class="fa fa-filter"></i> Filter</button>
 
-                <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
-            </div>
             <div class="clearfix"></div>
         </form>
     </div>

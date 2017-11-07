@@ -114,8 +114,9 @@
         }
 
         .vertical-scroll {
-            overflow-y: auto;
+            overflow-y: scroll;
             max-height: 550px;
+
         }
 
         .scroll-head {
@@ -155,7 +156,7 @@
                 });
             }
 
-            $('.open-level').click(function (e) {
+            $('#activity-table').on('click', '.open-level',function (e) {
                 let selector = '.' + $(this).data('target');
                 $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
                 let rows = $(selector).toggleClass('hidden');
@@ -172,4 +173,4 @@
             });
         });
     </script>
-@endsection
+@append

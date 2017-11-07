@@ -129,7 +129,7 @@ class ActivityReport
         }
 
         if ($activity = $request->get('activity')) {
-            $query->where('activity', $activity);
+            $query->whereIn('activity_id', $activity);
         }
 
         if ($request->exists('negative_to_date')) {
