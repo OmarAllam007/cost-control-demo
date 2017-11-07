@@ -13,6 +13,8 @@
 @endsection
 
 @section('body')
+    @include('reports.cost-control.waste-index._filters')
+
     <div class="horizontal-scroll">
         <section class="table-header">
             <table class="table">
