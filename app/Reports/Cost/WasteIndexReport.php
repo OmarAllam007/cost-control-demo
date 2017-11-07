@@ -7,6 +7,10 @@ use App\Period;
 use App\ResourceType;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Readers\LaravelExcelReader;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class WasteIndexReport
 {
@@ -24,6 +28,13 @@ class WasteIndexReport
 
     /** @var Collection */
     private $tree;
+
+    /** @var float */
+    private $total_pw_index = 0;
+
+    private $start = 11;
+    private $row = 11;
+
 
     public function __construct(Period $period)
     {
@@ -55,12 +66,12 @@ class WasteIndexReport
 
         $allowable_cost = $this->tree->sum('allowable_cost');
         $to_date_cost = $this->tree->sum('to_date_cost');
-        $total_pw_index = 0;
+
         if ($allowable_cost) {
-            $total_pw_index = ($allowable_cost - $to_date_cost) * 100 / $allowable_cost;
+            $this->total_pw_index = ($allowable_cost - $to_date_cost) * 100 / $allowable_cost;
         }
 
-        return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'total_pw_index' => $total_pw_index];
+        return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'total_pw_index' => $this->total_pw_index];
     }
 
     private function buildTree($parent = 3)
@@ -114,7 +125,80 @@ class WasteIndexReport
 
     function excel()
     {
+        \Excel::load(storage_path('templates/waste-index.xlsx'), function(LaravelExcelReader $excel) {
 
+            $excel->sheet(0, function($sheet) {
+                $this->sheet($sheet);
+            });
+
+            $excel->setFilename(slug($this->project->name) . '-waste_index');
+            $excel->export('xlsx');
+        });
+    }
+
+    function sheet(LaravelExcelWorksheet $sheet)
+    {
+        $this->run();
+
+        $sheet->setCellValue('A4', "Project: {$this->project->name}");
+        $sheet->setCellValue('A5', "Issue Date: " . date('d M Y'));
+        $sheet->setCellValue('A6', "Period: {$this->period->name}");
+
+
+        $sheet->setCellValue("F{$this->row}", $this->tree->sum('allowable_cost'));
+        $sheet->setCellValue("G{$this->row}", $this->tree->sum('to_date_cost'));
+        $sheet->setCellValue("H{$this->row}", $this->tree->sum('to_date_cost_var'));
+        $sheet->setCellValue("I{$this->row}", $this->total_pw_index);
+
+        $this->tree->each(function($type) use ($sheet) {
+            $this->buildExcelTypes($sheet, $type);
+        });
+    }
+
+    function buildExcelTypes(LaravelExcelWorksheet $sheet, $type, $depth = 0)
+    {
+        ++$this->row;
+
+        $sheet->row($this->row, [
+            $type->name, '', '', '', '',
+            $type->allowable_cost, $type->to_date_cost, $type->to_date_cost_var, $type->pw_index
+        ]);
+
+        $sheet->cells("A{$this->row}:I{$this->row}", function($cells) {
+            $cells->setFont(['bold' => true]);
+        });
+
+        if ($depth) {
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel(min($depth, 7))
+                ->setVisible(false)->setCollapsed(true);
+
+            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+                $cells->setTextIndent($depth * 6);
+            });
+        }
+
+        ++$depth;
+        $type->subtree->each(function($subtype) use ($sheet, $depth) {
+            $this->buildExcelTypes($sheet, $subtype, $depth);
+        });
+
+        $type->resources_list->each(function($resource) use ($sheet, $depth) {
+            ++$this->row;
+            $sheet->row($this->row, [
+                $resource->resource_name, $resource->to_date_unit_price, $resource->to_date_qty,
+                $resource->allowable_qty, $resource->to_date_qty_var,
+                $resource->allowable_cost, $resource->to_date_cost, $resource->to_date_cost_var, $resource->pw_index
+            ]);
+
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel(min($depth, 7))
+                ->setVisible(false)->setCollapsed(true);
+
+            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
+                $cells->setTextIndent($depth * 6);
+            });
+        });
     }
 
 }

@@ -20,7 +20,7 @@
 
         <div class="col-sm-2 form-group text-right" style="padding-top: 25px;">
             <button class="btn btn-primary"><i class="fa fa-filter"></i> Filter</button>
-            <a href="?reset" class="btn btn-default"><i class="fa fa-refresh"></i> Reset</a>
+            <a href="{{request()->url()}}" class="btn btn-default"><i class="fa fa-refresh"></i> Reset</a>
         </div>
 
         <div class="modal fade" tabindex="-1" role="dialog" id="ResourceTypeModal">
