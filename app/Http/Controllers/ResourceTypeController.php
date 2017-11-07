@@ -6,6 +6,7 @@ use App\Behaviors\Tree;
 use App\Http\Requests\WipeRequest;
 use App\Resources;
 use App\ResourceType;
+use App\Support\ResourceTypesTree;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -22,13 +23,10 @@ class ResourceTypeController extends Controller
             return \Redirect::to('/');
         }
 
-        $resource_levels = ResourceType::orderBy('name')->tree()
-            ->with('children.children.children.children.children')
-            ->paginate();
+        $resourceTypesTree = new ResourceTypesTree();
+        $resource_types = $resourceTypesTree->get();
 
-        $resources = Resources::lists('id', 'name')->all();
-
-        return view('resource-type.index', compact('resources', 'resource_levels','resource_types'));
+        return view('resource-type.index', compact('resource_types'));
     }
 
     public function create()
