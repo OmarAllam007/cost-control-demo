@@ -38,9 +38,10 @@ class WasteIndexReport
         $this->resources = MasterShadow::from('master_shadows as sh')
             ->where('sh.period_id', $this->period->id)
             ->where('sh.resource_type_id', 3)
+            ->where('to_date_qty', '>', 0)
             ->join('resources as r', 'sh.resource_id', '=', 'r.id')
             ->selectRaw('sh.resource_name, r.resource_type_id, sum(sh.to_date_qty) as to_date_qty')
-            ->selectRaw('sum(sh.allowable_qty) as allowable_qty, avg(sh.to_date_unit_price) as to_date_unit_price')
+            ->selectRaw('sum(sh.allowable_qty) as allowable_qty, sum(sh.to_date_cost) / sum(sh.to_date_qty) as to_date_unit_price')
             ->selectRaw('sum(sh.allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(sh.allowable_ev_cost - to_date_cost) as to_date_cost_var')
             ->selectRaw('sum(to_date_qty_var) as qty_var, sum(pw_index) as pw_index')
@@ -49,7 +50,14 @@ class WasteIndexReport
 
         $this->tree = $this->buildTree();
 
-        return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree];
+        $allowable_cost = $this->tree->sum('allowable_cost');
+        $to_date_cost = $this->tree->sum('to_date_cost');
+        $total_pw_index = 0;
+        if ($allowable_cost) {
+            $total_pw_index = ($allowable_cost - $to_date_cost) * 100 / $allowable_cost;
+        }
+
+        return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'total_pw_index' => $total_pw_index];
     }
 
     private function buildTree($parent = 3)
@@ -67,6 +75,14 @@ class WasteIndexReport
 
                 return $resource;
             });
+
+            $type->allowable_cost = $type->resources_list->sum('allowable_cost') + $type->subtree->sum('allowable_cost');
+            $type->to_date_cost = $type->resources_list->sum('to_date_cost') + $type->subtree->sum('to_date_cost');
+            $type->to_date_cost_var = $type->resources_list->sum('to_date_cost_var') + $type->subtree->sum('to_date_cost_var');
+            $type->pw_index = 0;
+            if ($type->allowable_cost) {
+                $type->pw_index = ($type->allowable_cost - $type->to_date_cost) * 100 / $type->allowable_cost;
+            }
 
             return $type;
         })->reject(function ($type) {
