@@ -20,6 +20,7 @@ use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use App\Reports\Cost\ProductivityIndexReport;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
 
@@ -247,6 +248,21 @@ class CostReportsController extends Controller
 
         return view('reports.cost-control.waste-index.index', $data);
     }
+
+    function productivityIndexReport(Project $project, Request $request)
+    {
+        $period = Period::find($this->getPeriod($project, $request));
+        $report = new ProductivityIndexReport($period);
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.cost-control.productivity-index.index', $data);
+    }
+
 
     public function chart(Project $project, Request $request)
     {

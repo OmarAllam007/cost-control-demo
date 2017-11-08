@@ -112,6 +112,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('{project}/comparison', 'ReportController@comparison_report')->name('project.comparison');
 
     Route::get('{project}/waste-index', 'CostReportsController@wasteIndexReport')->name('project.waste-index-report');
+    Route::get('{project}/productivity-index', 'CostReportsController@productivityIndexReport')->name('project.productivity-index-report');
 });
 Route::get('/download_trend/{id}/download', 'ProductivityController@downloadTrend');
 Route::get('/download_labor_trend/{id}/download', 'ProductivityController@downloadLaborTrend');
