@@ -7,10 +7,9 @@
         <h2 class="flex">{{$project->name}} &mdash; Waste Index</h2>
 
         <div class="text-right">
-
             @php $excel_url = request()->getUri() . (request()->getQueryString()? '&' : '?') . 'excel'; @endphp
             <a href="{{$excel_url}}" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Excel</a>
-            
+            <a href="{{route('cost-man-days.import', $project)}}" class="btn btn-primary btn-sm"><i class="fa fa-cloud-upload"></i> Import man days</a>
             <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-sm">
                 <i class="fa fa-chevron-left"></i> Back to Project
             </a>
