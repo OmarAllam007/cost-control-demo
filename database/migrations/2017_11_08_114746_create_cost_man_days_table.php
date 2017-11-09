@@ -14,6 +14,8 @@ class CreateCostManDaysTable extends Migration
             $table->unsignedInteger('activity_id');
             $table->float('progress');
             $table->float('actual');
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
             $table->timestamps();
         });
     }
