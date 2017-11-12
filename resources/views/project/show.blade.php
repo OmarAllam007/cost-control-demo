@@ -44,7 +44,6 @@
                     <li><a href="{{route('survey.import', $project)}}">Import Qty Survey</a></li>
                     <li class="divider"></li>
                     <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
-                    <li><a href="{{route('survey.import', $project)}}">Modify Qty Survey</a></li>
                 </ul>
             </div>
         </div>
