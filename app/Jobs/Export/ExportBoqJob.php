@@ -60,7 +60,8 @@ class ExportBoqJob extends Job
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="'.$this->project->name.'- BOQ.xlsx"');
         header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel,'Excel2007');
-        $objWriter->save('php://output');
+
+        \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007')
+            ->save('php://output');
     }
 }
