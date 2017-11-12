@@ -53,7 +53,6 @@ class QtySurveyFixer
             }
 
             $survey->save();
-
             $this->surveys->get($boq_id)->each(function ($survey) { $survey->save(); });
         }
     }

@@ -85,7 +85,7 @@
                                 <td class="col-sm-1 eng-qty" data-value="{{$survey->eng_qty}}">{{number_format($survey->eng_qty, 2)}}</td>
                                 <td class="col-sm-1">{{$survey->unit->type}}</td>
                                 <td class="col-sm-1">{{$boq->quantity}}</td>
-                                <td class="col-sm-1">{{$boq->unit->type}}</td>
+                                <td class="col-sm-1">{{$boq->unit->type ?? ''}}</td>
                             </tr>
                         @endforeach
                     @endforeach
