@@ -59,7 +59,7 @@
                             @if ($first)
                                 <td class="col-sm-2 v-top" rowspan="{{$rowspan}}">
                                     <div class="input-group">
-                                        <input type="text" class="form-control input-sm" name="budget_qty[{{$boq_id}}]">
+                                        <input type="text" class="form-control input-sm" name="budget_qty[{{$boq_id}}]" value="{{old("budget_qty.$boq_id", $group->sum('budget_qty'))}}">
                                         <span class="input-group-btn">
                                             <btn type="btn" class="btn btn-primary btn-sm sum-budget-qty">&sum;</btn>
                                         </span>
@@ -68,7 +68,7 @@
 
                                 <td class="col-sm-2 v-top" rowspan="{{$rowspan}}">
                                     <div class="input-group">
-                                        <input type="text" class="form-control input-sm" name="eng_qty[{{$boq_id}}]">
+                                        <input type="text" class="form-control input-sm" name="eng_qty[{{$boq_id}}]" value="{{old("eng_qty.$boq_id", $group->sum('eng_qty'))}}">
                                         <span class="input-group-btn">
                                             <btn type="button" class="btn btn-primary btn-sm sum-eng-qty">&sum;</btn>
                                         </span>
