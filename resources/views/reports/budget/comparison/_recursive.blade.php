@@ -1,5 +1,5 @@
 <tr class="level-{{ $depth }} child-{{ $wbs_level->parent_id }} {{ $depth ? 'hidden' : '' }}">
-    <td class="level-label text-strong" colspan="6">
+    <td class="level-label text-strong" colspan="7">
         <a href="#" class="open-level" data-target="child-{{ $wbs_level->id }}" data-open="false">
             <i class="fa fa-plus-square"></i> {{$wbs_level['name']}} &mdash; <small>({{$wbs_level['code']}})</small>
         </a>
@@ -33,7 +33,8 @@
 @foreach($wbs_level->cost_accounts as $boq)
     <tr class="level-{{$depth + 1}} child-{{$wbs_level->id}} hidden">
         <td style="width: 150px; min-width: 150px;  max-width: 150px;">&nbsp;</td>
-        <td style="width: 120px; min-width: 120px;  max-width: 120px;">{{$boq->cost_account}}</td>
+        <td style="width: 120px; min-width: 120px;  max-width: 120px;">{{$boq->item_code}}</td>
+        <td style="width: 150px; min-width: 150px;  max-width: 150px;">{{$boq->cost_account}}</td>
         <td style="width: 200px; min-width: 200px;  max-width: 200px;">{{$boq->description}}</td>
         <td style="width: 75px; min-width: 75px; max-width: 75px;">{{$boq->unit->type ?? ''}}</td>
 
