@@ -229,3 +229,6 @@ Route::get('project/{project}/failed-productivity', 'ProjectProductivityControll
 Route::get('/project/{project}/cost-man-days', 'CostManDaysController@create')->name('cost-man-days.import');
 Route::post('/project/{project}/cost-man-days', 'CostManDaysController@store')->name('cost-man-days.store');
 Route::get('/project/{project}/cost-man-days/export', 'CostManDaysController@show')->name('cost-man-days.export');
+
+Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
+Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');

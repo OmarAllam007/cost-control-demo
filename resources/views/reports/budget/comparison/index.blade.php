@@ -23,7 +23,8 @@
             <thead>
             <tr class="bg-primary">
                 <th class="text-center" style="min-width: 150px; max-width: 150px; width: 150px;" rowspan="2">WBS</th>
-                <th class="text-center" style="min-width: 120px; max-width: 120px; width: 120px;" rowspan="2">Cost Account</th>
+                <th class="text-center" style="min-width: 120px; max-width: 120px; width: 120px;" rowspan="2">Item Code</th>
+                <th class="text-center" style="min-width: 150px; max-width: 150px; width: 150px;" rowspan="2">Cost Account</th>
                 <th class="text-center" style="min-width: 200px; max-width: 200px; width: 200px;" rowspan="2">Item Description</th>
                 <th class="text-center" style="min-width: 75px; max-width: 75px; width: 75px" rowspan="2">Unit</th>
 
@@ -57,7 +58,7 @@
                 <th class="text-center" style="min-width: 200px; max-width: 200px; width: 200px;">(Budget Qty - Dry Qty) * Budget U.R.</th>
             </tr>
             <tr class="info">
-                <th class="level-label text-strong" colspan="6" style="width: 100%">Total</th>
+                <th class="level-label text-strong" colspan="7" style="width: 100%">Total</th>
 
                 <th style="width: 120px; min-width: 120px;  max-width: 120px;">{{number_format($tree->sum('boq_cost', 2), 2)}}</th>
 
@@ -142,9 +143,9 @@
         @if (!request('print'))
         .vertical-scroll {
             max-height: 500px;
-            overflow-y: auto;
-            padding-right: 20px;
-            width: 2285px;
+            overflow-y: scroll;
+            padding-right: 16px;
+            width: 2435px;
         }
 
         .horizontal-scroll {
@@ -153,7 +154,7 @@
         }
 
         .horizontal-scroll .table {
-            width: 100%;
+            min-width: 100%;
             margin-bottom: 0;
         }
 
