@@ -29,7 +29,7 @@ class QuantitySurveyObserver
         }
 
         if (!$qs->cost_account) {
-            $last_qs_in_boq = Survey::where('boq_id', $boq_id)->latest()->value('cost_account');
+            $last_qs_in_boq = Survey::where('boq_id', $boq_id)->max('cost_account');
             $token = collect(explode('.', $last_qs_in_boq))->last();
             $qs->cost_account = $qs->wbsLevel->code . '.' . $qs->item_code . '.' . sprintf('%03d', intval($token) + 1);
         }
