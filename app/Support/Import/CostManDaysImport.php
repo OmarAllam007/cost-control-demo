@@ -8,7 +8,7 @@ use App\Period;
 use App\Project;
 use Illuminate\Support\Collection;
 
-class CostManDays
+class CostManDaysImport
 {
     /** @var Project */
     protected $project;

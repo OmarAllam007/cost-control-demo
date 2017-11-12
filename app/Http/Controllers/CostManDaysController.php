@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Project;
-use App\Support\Import\CostManDays;
+use App\Support\Import\CostManDaysExport;
+use App\Support\Import\CostManDaysImport;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -41,7 +42,7 @@ class CostManDaysController extends Controller
 
         $this->validate($request, ['file' => 'required|file|mimes:xlsx']);
 
-        $importer = new CostManDays($period);
+        $importer = new CostManDaysImport($period);
         $result = $importer->import($request->file('file')->path());
 
         if ($result['failed']) {
@@ -64,5 +65,8 @@ class CostManDaysController extends Controller
             flash('Project has no open period');
             return \Redirect::route('project.cost-control', $project);
         }
+
+        $export = new CostManDaysExport($period);
+        return \Response::download($export->export())->deleteFileAfterSend(true);
     }
 }

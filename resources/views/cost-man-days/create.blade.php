@@ -5,6 +5,9 @@
         <h2 class="flex">Import man days &mdash; {{$project->name}} &mdash; {{$period->name}}</h2>
 
         <div class="text-right">
+            <a href="{{route('cost-man-days.export', $project)}}" class="btn btn-success btn-sm">
+                <i class="fa fa-cloud-download"></i> Export
+            </a>
             <a href="{{route('project.productivity-index-report', $project)}}" class="btn btn-info btn-sm">
                 <i class="fa fa-chevron-left"></i> Report
             </a>
