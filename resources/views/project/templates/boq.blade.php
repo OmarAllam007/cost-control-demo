@@ -10,39 +10,11 @@
                 <a href="/boq/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe" title="Add BOQ item">
                     <i class="fa fa-plus"></i> Add item
                 </a>
-                <div class="btn dropdown" style="padding: 0px">
-                    <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1"
-                            data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        Importing
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li>
-                            <a href="{{route('boq.import', $project->id)}}" class="btn  btn-sm in-iframe">
-                                <i class="fa fa-cloud-upload"></i> Import
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{route('boq.modify',['project'=>$project->id])}}" class="btn">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                                Modify
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
             @endcan
 
             @can('boq-divisions')
                 <a href="{{route('boq-division.index')}}" class="btn btn-primary btn-sm" target="_blank">Manage Divisions</a>
             @endcan
-
-            <a href="{{route('boq.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
-                <i class="fa fa-cloud-download"></i> Export
-            </a>
-
             @can('wipe')
                 <a href="#WipeBoqModal" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i> Delete All</a>
             @endcan

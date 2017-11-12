@@ -1,22 +1,15 @@
 <qty-survey project="{{$project->id}}" inline-template>
     <div class="qty-survey">
+        @can('qty_survey', $project)
         <div class="form-group tab-actions clearfix">
             <div class="pull-right">
-                @can('qty_survey', $project)
+
                 <a href="/survey/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe">
                     <i class="fa fa-plus"></i> Add Quantity Survey
                 </a>
-
-                <a href="{{route('survey.import', ['project' => $project->id])}}" class="btn btn-success btn-sm in-iframe">
-                    <i class="fa fa-cloud-upload"></i> Import
-                </a>
-                @endcan
-
-                <a href="{{route('survey.export', ['project' => $project->id])}}" class="btn btn-info btn-sm">
-                    <i class="fa fa-cloud-download"></i> Export
-                </a>
             </div>
         </div>
+        @endcan
 
         <div class="loader" v-show="loading">
             <i class="fa fa-spinner fa-spin fa-3x"></i>
