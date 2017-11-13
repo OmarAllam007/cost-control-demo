@@ -61,6 +61,7 @@ class ComparisonReport
                 return $boq;
             })->sortBy('cost_account')->keyBy('id');
 
+            // Append budget items that doesn't have a BOQ
             $this->cost_accounts->where('boq_wbs_id', $level->id)->each(function($cost_account) use ($level) {
                 if (!$level->cost_accounts->has($cost_account->boq_id)) {
                     $cost_account->budget_qty *= $cost_account->num_used;
