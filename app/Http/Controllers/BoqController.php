@@ -67,9 +67,6 @@ class BoqController extends Controller
         $boq = Boq::create($request->all());
 
         flash('Boq has been saved', 'success');
-        if ($request->exists('iframe')) {
-            return \Redirect::to('/blank?reload=boq');
-        }
 
         return \Redirect::route('project.show', $boq->project);
     }
