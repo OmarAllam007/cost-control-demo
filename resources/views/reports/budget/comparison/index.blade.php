@@ -143,8 +143,8 @@
         @if (!request('print'))
         .vertical-scroll {
             max-height: 500px;
-            overflow-y: auto;
-            padding-right: 20px;
+            overflow-y: scroll;
+            padding-right: 16px;
             width: 2435px;
         }
 
@@ -154,7 +154,7 @@
         }
 
         .horizontal-scroll .table {
-            width: 100%;
+            min-width: 100%;
             margin-bottom: 0;
         }
 

@@ -1,5 +1,5 @@
 <tr class="level-{{ $depth }} child-{{ $wbs_level->parent_id }} {{ $depth ? 'hidden' : '' }}">
-    <td class="level-label text-strong" colspan="7">
+    <td class="level-label text-strong" colspan="7" style="width: 935px; min-width:935px; max-width: 935px;">
         <a href="#" class="open-level" data-target="child-{{ $wbs_level->id }}" data-open="false">
             <i class="fa fa-plus-square"></i> {{$wbs_level['name']}} &mdash; <small>({{$wbs_level['code']}})</small>
         </a>
