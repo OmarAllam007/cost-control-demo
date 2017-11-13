@@ -21,84 +21,39 @@ class ExportSurveyJob extends Job
             return $level;
         });
 
-        $this->variables  = Survey::with('variables')->where('project_id',$project->id)->get()->keyBy('id')->map(function ($survey){
-           return $survey->variables;
-        });
-
-        $this->units = Unit::all()->keyBy('id')->map(function ($unit){
-            return $unit->type;
-        });
+        $this->units = Unit::all()->pluck('id', 'type');
     }
 
 
     public function handle()
     {
-        set_time_limit(600);
-        $project = $this->project;
+        $excel = new \PHPExcel();
+        $sheet = $excel->getSheet(0);
+        $counter = 2;
 
+        $sheet->fromArray([
+            'WBS Code', 'Item Code', 'Cost Account', 'Description', 'Budget Quantity', 'Engineer Quantity', 'Unit',
+            'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'
+        ], null, "A1", true);
 
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
-        $col = 0;
-        $rowCount = 2;
-        $variable_number = 1;
+        foreach ($this->project->quantities as $qs) {
+            $wbs = $this->wbs_levels->get($qs->wbs_level_id);
+            $data = [
+                $wbs->code, $qs->item_code, $qs->cost_account, $qs->description,
+                $wbs->budget_qty, $wbs->eng_qty, $this->units->get($qs->unit_id)
+            ];
 
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Cost Account');
-        $col++;
-
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'WBS-Levels');
-        $col++;
-
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'WBS-Code');
-        $col++;
-
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Description');
-        $col++;
-
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Budget Quantity');
-        $col++;
-
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Engineer Quantity');
-        $col++;
-
-        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'Unit');
-        $col++;
-
-//dd($this->project->quantities);
-
-        foreach ($this->project->quantities as $quantity) {
-
-            $cost_account = $quantity->cost_account;
-            $wbs_levels = $this->wbs_levels->get($quantity->wbs_level_id)->path;
-            $wbs_code = $this->wbs_levels->get($quantity->wbs_level_id)->code;
-            $description = $quantity->description;
-            $budget_qty = $quantity->budget_qty;
-            $eng_qty = $quantity->eng_qty;
-            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $cost_account);
-            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $wbs_levels);
-            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $wbs_code);
-            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $description);
-            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $budget_qty);
-            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $eng_qty);
-            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $this->units->get($quantity->unit_id));
-            $col++;
-            if($this->variables->get($quantity->id)->count()){
-                foreach ($this->variables->get($quantity->id) as $variable){
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1,'$V-'.$variable_number);
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $rowCount,$variable->name.' = '.$variable->value);
-                    $variable_number++;
-                    $col++;
-                }
-
+            foreach ($qs->variables as $idx => $variable){
+                $data[] = $variable->value;
             }
-            $variable_number=1;
-            $col = 6;
-            $rowCount++;
+
+            $sheet->fromArray($data, null, "A{$counter}", true);
+            $counter++;
         }
+
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.slug($project->name).'- Survey.xlsx"');
+        header('Content-Disposition: attachment;filename="'.slug($this->project->name).'- Survey.xlsx"');
         header('Cache-Control: max-age=0');
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('php://output');
+        \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save('php://output');
     }
 }

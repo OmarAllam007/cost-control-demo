@@ -9,15 +9,34 @@
 namespace App\Observers;
 
 
-use App\Breakdown;
+use App\Boq;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
-use App\Http\Controllers\Exports\QuantitySurvey;
 use App\Survey;
-use Illuminate\Database\Eloquent\Builder;
+
 
 class QuantitySurveyObserver
 {
+    function creating(Survey $qs)
+    {
+        if ($qs->boq_id) {
+            $boq_id = $qs->boq_id;
+        } else {
+            $wbs_ids = $qs->wbsLevel->getParentIds();
+            $boq_id = Boq::whereIn('wbs_id', $wbs_ids)->where('item_code', $qs->item_code)->value('id');
+            $qs->boq_id = $boq_id;
+        }
+
+        if (!$qs->cost_account) {
+            $last_qs_in_boq = \DB::table('qty_surveys')
+                ->where('boq_id', $boq_id)
+                ->where('wbs_level_id', $qs->wbs_level_id)
+                ->max('cost_account');
+            $token = collect(explode(".{$qs->item_code}.", $last_qs_in_boq))->last();
+            $qs->cost_account = $qs->wbsLevel->code . '.' . $qs->item_code . '.' . sprintf('%03d', intval($token) + 1);
+        }
+    }
+
     function created(Survey $qs)
     {
         $this->updateResources($qs);
