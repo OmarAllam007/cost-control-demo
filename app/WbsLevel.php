@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\CopyToProject;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\RecordsUser;
@@ -77,7 +78,7 @@ class WbsLevel extends Model
     public function getBudgetCostAttribute()
     {
         $children = [];
-        $children =$this->getChildrenIds();
+        $children = $this->getChildrenIds();
         $budget_cost = BreakDownResourceShadow::whereIn('wbs_id', $this->getChildrenIds())->sum('budget_cost');
         return ['budget_cost' => $budget_cost, 'children' => $children];
     }
@@ -183,9 +184,10 @@ class WbsLevel extends Model
     }
 
 
-    function getDry(){
-        $boq = Boq::where('wbs_id',$this->id)->first();
-        if(isset($boq->dry_ur)){//chenged from $boq->dry_ur to 1
+    function getDry()
+    {
+        $boq = Boq::where('wbs_id', $this->id)->first();
+        if (isset($boq->dry_ur)) {//chenged from $boq->dry_ur to 1
             return $boq->dry_ur;
         }
         return 0;
@@ -202,30 +204,5 @@ class WbsLevel extends Model
         return $parents->reverse();
     }
 
-    function copyToProject($project_id, $parent_id = 0)
-    {
-        $user_id = auth()->id() ?: 2;
-        $attributes = $this->getAttributes();
-        unset($attributes['id']);
-        $attributes['project_id'] = $project_id;
-        $attributes['parent_id'] = $parent_id;
-        $attributes['created_at'] = $attributes['updated_at'] = date('Y-m-d H:i:s');
-        $attributes['created_by'] = $attributes['updated_by'] = $user_id;
-
-        $new_wbs_id = \DB::table('wbs_levels')->insertGetId($attributes);
-
-        \DB::insert("insert into boqs(wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, created_at, updated_at, division_id, code, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, created_by, updated_by) 
-  select $new_wbs_id as wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, now() as created_at, now() as updated_at, division_id, code, item_code, cost_account, kcc_qty, subcon, materials, manpower, $project_id as project_id, $user_id, $user_id
-  from boqs where wbs_id = {$this->id}");
-
-        //TODO: add item code here
-        \DB::insert("insert into qty_surveys(cost_account, description, unit_id, budget_qty, eng_qty, deleted_at, created_at, updated_at, wbs_level_id, project_id, code, discipline, created_by, updated_by)
-    select cost_account, description, unit_id, budget_qty, eng_qty, deleted_at, now() as created_at, now() as updated_at, $new_wbs_id as wbs_level_id, $project_id as project_id, code, discipline, $user_id as created_by, $user_id as updated_by
-    from qty_surveys
-    where wbs_level_id = {$this->id}");
-
-        $this->children->each(function(WbsLevel $level) use ($project_id, $new_wbs_id) {
-            $level->copyToProject($project_id, $new_wbs_id);
-        });
-    }
+    use CopyToProject;
 }
