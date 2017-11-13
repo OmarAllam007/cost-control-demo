@@ -164,8 +164,11 @@ class BoqController extends Controller
             return view('boq.import-failed', compact('status', 'project'));
         }
 
-//        return redirect()->route('project.show', $project);
-        return \Redirect::to('/blank?reload=boq');
+        if ($request->exists('iframe')) {
+            return \Redirect::to('/blank?reload=boq');
+        }
+
+        return redirect()->route('project.show', $project);
     }
 
     /*function fixImport($key)
