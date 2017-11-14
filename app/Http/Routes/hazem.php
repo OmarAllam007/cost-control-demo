@@ -42,6 +42,8 @@ Route::group(['prefix' => 'wbs-level'], function () {
     Route::get('export/{project}', ['as' => 'wbs-level.export', 'uses' => 'WbsLevelController@exportWbsLevels']);
 
     Route::delete('wipe/{project}', ['as' => 'wbs-level.wipe', 'uses' => 'WbsLevelController@wipe']);
+    Route::get('{wbs_level}/copy-to-project', 'CopyWbsController@create');
+    Route::post('{wbs_level}/copy-to-project', 'CopyWbsController@store');
 });
 
 Route::group(['prefix' => 'resources'], function () {

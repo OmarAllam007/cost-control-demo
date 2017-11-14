@@ -102,6 +102,7 @@ return [
 
     'no_resource_on_parent' => 'Cannot add resource on a resource type with sub-types',
     'no_children_on_leaf' => 'Cannot add resource type on a type with resources',
+    'has_copy_permission' => "You don't have permission to copy to this project",
 
     'custom' => [
         'code' => [
