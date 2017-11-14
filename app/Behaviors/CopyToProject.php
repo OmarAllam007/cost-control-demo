@@ -73,7 +73,7 @@ trait CopyToProject
             $attributes = $resource->getAttributes();
             unset($attributes['id']);
             $attributes['breakdown_id'] = $new_breakdown_id;
-            $attributes['std_activity_resource_id'] = $tpl_resource_mapping->get($resource->std_activity_resource_id);
+            $attributes['std_activity_resource_id'] = $tpl_resource_mapping->get($resource->std_activity_resource_id, 0);
             $attributes['resource_id'] = $resource->resource->resource_id;
             $attributes['productivity_id'] = $resource->productivity->productivity_id ?? 0;
             $attributes['created_at'] = date('Y-m-d H:i:s');
