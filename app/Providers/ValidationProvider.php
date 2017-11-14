@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Boq;
-use App\WbsLevel;
 use App\Project;
+use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Validator;
 
