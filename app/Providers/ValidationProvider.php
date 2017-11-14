@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Boq;
+use App\Project;
 use Illuminate\Support\ServiceProvider;
 
 class ValidationProvider extends ServiceProvider
@@ -38,6 +39,13 @@ class ValidationProvider extends ServiceProvider
             }
 
             return !$query->exists();
+        });
+
+        \Validator::extend('has_copy_permission', function ($attribute, $project_id) {
+            $project = Project::find($project_id);
+            return can('wbs', $project) && can('breakdown', $project) &&
+                can('resources', $project) && can('breakdown_templates', $project) &&
+                can('productivity', $project);
         });
         
         \Validator::replacer('gte', function ($message, $attribute, $rule, $parameters) {
