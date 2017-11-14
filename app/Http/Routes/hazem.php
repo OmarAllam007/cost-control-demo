@@ -227,3 +227,6 @@ Route::delete('/template-resource/{project}/{template_resource}', 'TemplateResou
 Route::get('project/{project}/modify-productivity', 'ProjectProductivityController@edit')->name('project.modify-productivity');
 Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
 Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
+
+Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
+Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');

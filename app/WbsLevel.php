@@ -204,5 +204,16 @@ class WbsLevel extends Model
         return $parents->reverse();
     }
 
+    function getParentIds()
+    {
+        $levels[] = $this->id;
+        $parent = $this->parent;
+        while ($parent) {
+            $levels[] = $parent->id;
+            $parent = $parent->parent;
+        }
+        return $levels;
+    }
+
     use CopyToProject;
 }

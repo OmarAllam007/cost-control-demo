@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Boq;
 use App\Project;
+use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Validator;
 
 class ValidationProvider extends ServiceProvider
 {
@@ -31,14 +33,25 @@ class ValidationProvider extends ServiceProvider
             return $value <= $parameters[0];
         });
 
-        \Validator::extend('boq_unique', function($attribute, $value) {
+        \Validator::extend('boq_unique', function($attribute, $value, $options, Validator $validator) {
+            $data = $validator->getData();
+            $query = Boq::query()->where('wbs_id', $data['wbs_id'])->where($attribute, $value);
+
             $request = request();
-            $query = Boq::query()->where('wbs_id', request('wbs_id'))->where('cost_account', $value);
             if ($request->route()->hasParameter('boq')) {
                 $query->where('id', '!=', $request->route('boq')->id);
             }
 
             return !$query->exists();
+        });
+
+        \Validator::extend('qs_has_boq', function($attribute, $value, $options, Validator $validator) {
+            $data = $validator->getData();
+            $wbs = WbsLevel::find($data['wbs_level_id']);
+            if (!$wbs) {
+                return false;
+            }
+            return Boq::whereIn('wbs_id', $wbs->getParentIds())->where('item_code', $value)->exists();
         });
 
         \Validator::extend('has_copy_permission', function ($attribute, $project_id) {
@@ -47,7 +60,7 @@ class ValidationProvider extends ServiceProvider
                 can('resources', $project) && can('breakdown_templates', $project) &&
                 can('productivity', $project);
         });
-        
+
         \Validator::replacer('gte', function ($message, $attribute, $rule, $parameters) {
             return str_replace(':gte', $parameters[0], $message);
         });

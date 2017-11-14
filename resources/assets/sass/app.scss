@@ -708,3 +708,15 @@ table.collapse.in {
 .table > tfoot > tr.warning > td, .table > tfoot > tr.warning > th {
   color: #fff;
 }
+
+.project-nav .btn-toolbar {
+  margin-left: 0;
+}
+
+.btn-toolbar .dropdown {
+  margin-right: 5px;
+}
+
+table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.table > thead > tr > td.v-top, table.table > thead > tr > th.v-top {
+  vertical-align: top;
+}
