@@ -54,7 +54,6 @@ class ResourcesImportJob extends ImportJob
             'rate' => 'required|gte:0', 'waste' => 'gte:0|lt:100'
         ];
 
-        Resources::flushEventListeners();
         foreach ($rows as $index => $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -75,7 +74,7 @@ class ResourcesImportJob extends ImportJob
                 $type_id = $this->getTypeId($data);
                 $unit_id = $this->getUnit($data[9]);
 
-                $item = ['resource_type_id' => $type_id, 'resource_code' => $data[6], 'name' => $data[7],
+                $item = ['resource_type_id' => $type_id, 'name' => $data[7],
                     'rate' => floatval($data[8]), 'unit' => $unit_id, 'waste' => $this->getWaste($data[10]),
                     'business_partner_id' => $this->getPartner($data[11]), 'reference' => $data[12],
                     'project_id' => $this->project_id];
@@ -92,7 +91,7 @@ class ResourcesImportJob extends ImportJob
                     Resources::create($item);
                     ++$status['success'];
                 } else {
-                    $data[13] = 'Invalid data';
+                    $data[13] = implode("\n", $validator->errors()->all());
                     $failed->push($data);
                 }
             }
@@ -110,10 +109,11 @@ class ResourcesImportJob extends ImportJob
         $this->loadTypes();
 
         $levels = array_filter(array_slice($data, 0, 6));
+
         $type_id = 0;
         $path = [];
         foreach ($levels as $level) {
-            $path[] = mb_strtolower($level);
+            $path[] = trim(strtolower($level));
             $key = implode('/', $path);
 
             if ($this->types->has($key)) {
@@ -201,13 +201,13 @@ class ResourcesImportJob extends ImportJob
 
         $sheet->setTitle('Failed resources');
 
-        $sheet->fromArray(["RESOURCE TYPE ", "RESOURCE DIVISION", "RESOURCE SUB DIVISION 1", "RESOURCE SUB DIVISION 2",
+        $sheet->fromArray(["RESOURCE TYPE", "RESOURCE DIVISION", "RESOURCE SUB DIVISION 1", "RESOURCE SUB DIVISION 2",
             "RESOURCE SUB DIVISION 3", "RESOURCE SUB DIVISION 4", "RESOURCE CODE", "RESOURCE NAME", "STANDARD RATE",
-            "UNIT OF MEASURE", "MATERIAL Waste %",	"SUPPLIER/ SUBCON.", "REFERENCE", "REASON"]);
+            "UNIT OF MEASURE", "MATERIAL Waste %",	"SUPPLIER/ SUBCON.", "REFERENCE", "Errors"]);
 
         $failed->each(function($row, $counter) use ($sheet) {
             $row_num = $counter + 2;
-            $sheet->fromArray($row, '', "A{$row_num}");
+            $sheet->fromArray($row, '', "A{$row_num}", true);
         });
 
         $writer = new \PHPExcel_Writer_Excel2007($excel);
