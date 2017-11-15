@@ -7,7 +7,6 @@ use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
-use App\Http\Controllers\Reports\CostReports\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
 use App\Http\Controllers\Reports\CostReports\ProductivityReport;
@@ -20,7 +19,9 @@ use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use App\Reports\Cost\CostSummary;
 use App\Reports\Cost\ProductivityIndexReport;
+use App\Reports\Cost\ProjectInfo;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
 
@@ -35,15 +36,16 @@ class CostReportsController extends Controller
     {
         $period_id = $this->getPeriod($project, $request);
 
-        $projectInfo = new ProjectInformation(Period::find($period_id));
-        return $projectInfo->run();
+        $projectInfo = new ProjectInfo(Period::find($period_id));
+
+        return view('reports.cost-control.project-info.index', $projectInfo->run());
     }
 
     public function costSummary(Project $project, Request $request)
     {
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
-        $costSummary = new CostSummary($project, $period);
+        $costSummary = new CostSummary($period);
 
         $data = $costSummary->run();
 

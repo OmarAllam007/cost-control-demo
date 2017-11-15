@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Reports\CostReports;
+namespace App\Reports\Cost;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\CostConcerns;
@@ -22,15 +22,16 @@ class CostSummary
      */
     protected $period;
 
-    function __construct(Project $project, Period $period)
+    function __construct(Period $period)
     {
 
-        $this->project = $project;
         $this->period = $period;
+        $this->project = $period->project;
     }
 
     function run()
     {
+        $time = microtime(1);
         $resourceTypes = ResourceType::where('parent_id', 0)->orderBy('name')->pluck('name', 'id');
 
         $previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->latest()->first();
@@ -50,6 +51,7 @@ class CostSummary
 
         $toDateData = MasterShadow::where('period_id', $this->period->id)->selectRaw(implode(', ', $fields))->groupBy('resource_type_id')->get()->keyBy('resource_type_id');
         $project = $this->project;
+
         return compact('previousData', 'toDateData', 'project', 'resourceTypes');
     }
 }
