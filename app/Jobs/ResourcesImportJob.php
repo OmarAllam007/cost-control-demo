@@ -54,7 +54,6 @@ class ResourcesImportJob extends ImportJob
             'rate' => 'required|gte:0', 'waste' => 'gte:0|lt:100'
         ];
 
-        Resources::flushEventListeners();
         foreach ($rows as $index => $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -75,7 +74,7 @@ class ResourcesImportJob extends ImportJob
                 $type_id = $this->getTypeId($data);
                 $unit_id = $this->getUnit($data[9]);
 
-                $item = ['resource_type_id' => $type_id, 'resource_code' => $data[6], 'name' => $data[7],
+                $item = ['resource_type_id' => $type_id, 'name' => $data[7],
                     'rate' => floatval($data[8]), 'unit' => $unit_id, 'waste' => $this->getWaste($data[10]),
                     'business_partner_id' => $this->getPartner($data[11]), 'reference' => $data[12],
                     'project_id' => $this->project_id];
@@ -110,10 +109,11 @@ class ResourcesImportJob extends ImportJob
         $this->loadTypes();
 
         $levels = array_filter(array_slice($data, 0, 6));
+
         $type_id = 0;
         $path = [];
         foreach ($levels as $level) {
-            $path[] = mb_strtolower($level);
+            $path[] = trim(strtolower($level));
             $key = implode('/', $path);
 
             if ($this->types->has($key)) {
