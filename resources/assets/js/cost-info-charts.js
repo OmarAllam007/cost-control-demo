@@ -8,18 +8,22 @@ $('.chart').each((idx, item) => {
     canvas.width = item.width;
     canvas.id = item.id + '-chart';
 
-    console.log(item.dataset.labels);
-    console.log(item.dataset.datasets);
+    let data = {
+        labels: JSON.parse(item.dataset.labels),
+        datasets: JSON.parse(item.dataset.datasets),
+        maxBarThickness: 50
+    };
+
+    if (item.dataset.backgroundColors) {
+        data['backgroundColors'] = data.dataset.backgroundColors;
+    }
 
     const chart = new Chart(canvas, {
         type: item.dataset.type,
-        data: {
-            labels: JSON.parse(item.dataset.labels),
-            datasets: JSON.parse(item.dataset.datasets),
-            options: {
-                scales: {
-                    yAxes: [{ ticks: { beginAtZero:true }}]
-                }
+        data,
+        options: {
+            scales: {
+                yAxes: [{ ticks: { beginAtZero:true }}]
             }
         }
     });
