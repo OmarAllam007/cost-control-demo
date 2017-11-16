@@ -47,8 +47,8 @@ trait ChartScopes
     function scopeCpiTrendChart(Builder $query)
     {
         $query->join('periods as p', 'p.id', '=', 'master_shadows.period_id')
-            ->selectRaw('p.id as p_id, sum(allowable_ev_cost) / sum(to_date_cost) as value')
-            ->groupBy('p.id')->orderBy('p.id');
+            ->selectRaw('p.id as p_id, p.name as p_name, sum(allowable_ev_cost) / sum(to_date_cost) as value')
+            ->groupBy('p.id', 'p.name')->orderBy('p.id');
     }
 
     function scopeChartFilter(Builder $query)

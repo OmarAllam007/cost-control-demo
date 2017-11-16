@@ -1,12 +1,11 @@
 import Chart from 'chart.js';
 
 $('.chart').each((idx, item) => {
-    item.style.minHeight = '300px';
-
     const canvas = document.createElement('canvas');
-    canvas.height = 300;
+    canvas.height = item.height;
     canvas.width = item.width;
     canvas.id = item.id + '-chart';
+    item.appendChild(canvas);
 
     let data = {
         labels: JSON.parse(item.dataset.labels),
@@ -23,11 +22,13 @@ $('.chart').each((idx, item) => {
         data,
         options: {
             scales: {
-                yAxes: [{ ticks: { beginAtZero:true }}]
+                yAxes: [{ ticks: { beginAtZero:false }}],
+                xAxes: [{ ticks: { beginAtZero:false }}],
+                animation: {duration: 1500, easing: 'easeOutExpo'}
             }
         }
     });
 
-    item.appendChild(canvas);
+
 });
 

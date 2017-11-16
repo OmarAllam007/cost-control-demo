@@ -19,13 +19,45 @@
                 @include('reports.partials.cost-summary', $costSummary)
             </section>
 
-            <div class="chart"
-                 id="cpiChart"
-                 data-type="bar"
-                 data-labels="[&quot;Test 1&quot;, &quot;Test 2&quot;, &quot;Test 3&quot;]"
-                 data-datasets="[{&quot;label&quot;: &quot;Data 1&quot;, &quot;data&quot;: [1, 4, 9]}, {&quot;label&quot;: &quot;Data 2&quot;, &quot;data&quot;: [1, 8, 27]}]"
-            ></div>
+            <div class="panel .panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">CPI</div>
+                </div>
 
+                <div class="panel-body">
+                    <div class="chart"
+                         id="cpiChart"
+                         data-type="line"
+                         data-labels="{{$cpiTrend->pluck('p_name')}}"
+                         data-datasets="[{{json_encode([
+                                'label' => 'CPI', 'data' => $cpiTrend->pluck('value'),
+                                'backgroundColor' => '#F0FFF3',
+                                'borderColor' => '#8ed3d8'
+                            ])}}]"
+                         style="height: 200px"
+                    ></div>
+                </div>
+            </div>
+
+            <div class="panel .panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Waste Index</div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="chart"
+                         id="cpiChart"
+                         data-type="line"
+                         data-labels="{{$wasteIndex->pluck('p_name')}}"
+                         data-datasets="[{{json_encode([
+                                'label' => 'Waste Index', 'data' => $wasteIndex->pluck('value'),
+                                'backgroundColor' => '#F0FFF3',
+                                'borderColor' => '#8ed3d8'
+                            ])}}]"
+                         style="height: 200px"
+                    ></div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

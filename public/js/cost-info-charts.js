@@ -82,12 +82,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 $('.chart').each(function (idx, item) {
-    item.style.minHeight = '300px';
-
     var canvas = document.createElement('canvas');
-    canvas.height = 300;
+    canvas.height = item.height;
     canvas.width = item.width;
     canvas.id = item.id + '-chart';
+    item.appendChild(canvas);
 
     var data = {
         labels: JSON.parse(item.dataset.labels),
@@ -104,12 +103,12 @@ $('.chart').each(function (idx, item) {
         data: data,
         options: {
             scales: {
-                yAxes: [{ ticks: { beginAtZero: true } }]
+                yAxes: [{ ticks: { beginAtZero: false } }],
+                xAxes: [{ ticks: { beginAtZero: false } }],
+                animation: { duration: 1500, easing: 'easeOutExpo' }
             }
         }
     });
-
-    item.appendChild(canvas);
 });
 
 /***/ }),
