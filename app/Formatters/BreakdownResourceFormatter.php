@@ -28,11 +28,13 @@ class BreakdownResourceFormatter implements \JsonSerializable
     function toArray()
     {
         $qs = Survey::costAccountOnWbs($this->resource->breakdown->wbs_level, $this->resource->breakdown->cost_account)->first();
-        $boq = Boq::find($qs->boq_id);
-        if ($boq) {
-            $boq_qs = Survey::where('boq_id', $boq->id)->where('cost_account', $boq->cost_account)->first();
-        } else {
-            $boq = Boq::costAccountOnWbs($this->resource->breakdown->wbs_level, $this->resource->breakdown->cost_account)->first();
+        if ($qs) {
+            $boq = Boq::find($qs->boq_id);
+            if ($boq) {
+                $boq_qs = Survey::where('boq_id', $boq->id)->where('cost_account', $boq->cost_account)->first();
+            } else {
+                $boq = Boq::costAccountOnWbs($this->resource->breakdown->wbs_level, $this->resource->breakdown->cost_account)->first();
+            }
         }
 
         return [
