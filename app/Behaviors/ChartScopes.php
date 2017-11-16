@@ -83,4 +83,16 @@ trait ChartScopes
     {
         return $query->whereIn('boq_id', $items)->addSelect('boq')->groupBy('boq')->orderBy('boq');
     }
+
+    function scopeWasteIndexChart(Builder $query, $project)
+    {
+        $query->from('master_shadows as sh')
+            ->where('sh.project_id', $project->id)
+            ->where('sh.to_date_cost', '>', 0)
+            ->where('sh.resource_type_id', 3)
+            ->join('periods as p', 'sh.period_id', '=', 'p.id')
+            ->select(['sh.period_id'])
+            ->selectRaw('p.name as p_name, ((sum(sh.allowable_ev_cost) - sum(sh.to_date_cost)) * 100 / sum(sh.allowable_ev_cost)) as value')
+            ->groupBy('sh.period_id', 'p.name');
+    }
 }

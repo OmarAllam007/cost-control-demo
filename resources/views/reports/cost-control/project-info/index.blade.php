@@ -19,7 +19,7 @@
                 @include('reports.partials.cost-summary', $costSummary)
             </section>
 
-            <div class="panel .panel-info">
+            <div class="panel panel-info">
                 <div class="panel-heading">
                     <div class="panel-title">CPI</div>
                 </div>
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="panel .panel-info">
+            <div class="panel panel-info">
                 <div class="panel-heading">
                     <div class="panel-title">Waste Index</div>
                 </div>
