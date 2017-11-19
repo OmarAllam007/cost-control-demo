@@ -11,7 +11,7 @@
     <article class="col-xs-4">
         <dl>
             <dt>Time Extension</dt>
-            <dd>{{$period->time_extension}}</dd>
+            <dd>{{$period->time_extension ?: '0 Days'}}</dd>
         </dl>
     </article>
 
@@ -40,8 +40,8 @@
     <article class="col-xs-4">
         <dl>
             <dt>Duration (Days)</dt>
-            <dd>
-                <span>{{$period->project_duration}}</span>
+            <dd class="display-flex">
+                <span>{{$period->project_duration ?: '0 Days'}}</span>
 
                 @if ($period->project_duration > $project->project_duration)
                     <span class="text-success"><i class="fa fa-arrow-up"></i></span>

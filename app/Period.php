@@ -5,6 +5,7 @@ namespace App;
 use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\RecordsUser;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -57,5 +58,23 @@ class Period extends Model
                 static::where('project_id', $period->project_id)->update(['is_open' => false]);
             }
         });
+    }
+
+    function getChangeOrderAttribute()
+    {
+        if ($this->attributes['change_order_amount']) {
+            return $this->attributes['change_order_amount'];
+        }
+
+        return $this->project->change_order_amount;
+    }
+
+    function getPlannedFinishDateAttribute()
+    {
+        if ($this->attributes['change_order_amount']) {
+            return Carbon::parse($this->attributes['change_order_amount']);
+        }
+
+        return Carbon::parse($this->project->expected_finished_date);
     }
 }

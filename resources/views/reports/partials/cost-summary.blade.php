@@ -1,3 +1,5 @@
+<h4 class="section-header">Cost Summary</h4>
+
 <table class="table table-condensed cost-summary-table">
     <thead>
     <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">

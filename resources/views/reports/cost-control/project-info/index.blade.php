@@ -30,7 +30,6 @@
             </section>
 
             <section class="info-section" id="cost-summary">
-                <h4 class="section-header">Cost Summary</h4>
                 @include('reports.partials.cost-summary', $costSummary)
             </section>
 
@@ -77,7 +76,7 @@
         }
 
         .cost-summary-table {
-            font-size: 11px;
+            font-size: 10px;
         }
 
         dl {
@@ -91,8 +90,8 @@
             background: #64D5CA;
             padding: 5px;
             text-align: right;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            color: #333;
+            font-size: 12px;
             font-weight: 700;
             width: 40%;
         }
@@ -105,13 +104,15 @@
         }
 
         .section-header {
-            font-weight: 700;
             font-size: 14px;
             color: #fff;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            text-transform: uppercase;
             padding: 7px;
             background: #64D5CA;
             margin-bottom: 5px;
+            letter-spacing: 1.2px;
         }
 
         .info-section {
