@@ -74,6 +74,6 @@ class PeriodController extends Controller
 
     protected function doValidation(Request $request)
     {
-        $this->validate($request, ['name' => 'required', 'start_date' => 'required|date']);
+        $this->validate($request, ['name' => 'required', 'spi_index' => 'number', 'start_date' => 'required|date']);
     }
 }

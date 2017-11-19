@@ -12,6 +12,24 @@
             {!! $errors->first('start_date', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group form-group-sm {{ $errors->first('spi_index', 'has-error') }}">
+            {{ Form::label('spi_index', 'SPI Index', ['class' => 'control-label']) }}
+            {{ Form::text('spi_index', $period->spi_index ?? '', ['class' => 'form-control']) }}
+            {!! $errors->first('spi_index', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group form-group-sm {{ $errors->first('planned_progress', 'has-error') }}">
+            {{ Form::label('planned_progress', 'SPI Index', ['class' => 'control-label']) }}
+            {{ Form::text('planned_progress', $period->planned_progress ?? '', ['class' => 'form-control']) }}
+            {!! $errors->first('planned_progress', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group form-group-sm {{ $errors->first('actual_progress', 'has-error') }}">
+            {{ Form::label('actual_progress', 'SPI Index', ['class' => 'control-label']) }}
+            {{ Form::text('actual_progress', $period->actual_progress ?? '', ['class' => 'form-control']) }}
+            {!! $errors->first('actual_progress', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group form-group-sm">
             <div class="checkbox">
                 <label>
