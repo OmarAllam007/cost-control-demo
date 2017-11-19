@@ -13,6 +13,7 @@ use App\ActualRevenue;
 use App\CostManDay;
 use App\MasterShadow;
 use App\Period;
+use Carbon\Carbon;
 use Illuminate\Support\Fluent;
 
 class ProjectInfo
@@ -31,43 +32,45 @@ class ProjectInfo
 
     function run()
     {
-        $summary = new CostSummary($this->period);
-        $this->costSummary = $summary->run();
+        return \Cache::remember("project-info-{$this->period->id}", Carbon::parse('+7 days'), function() {
+            $summary = new CostSummary($this->period);
+            $this->costSummary = $summary->run();
 
-        $this->wasteIndex =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
+            $this->wasteIndex =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
                 $period->value = round(floatval($period->value), 4);
                 return $period;
             });
 
-        $this->productivityIndexTrend = $this->getProductivityIndexTrend();
+            $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
-        $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
-            ->cpiTrendChart()->get()->map(function ($item) {
-                $item->value = round($item->value, 4);
-                return $item;
-            });
+            $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
+                ->cpiTrendChart()->get()->map(function ($item) {
+                    $item->value = round($item->value, 4);
+                    return $item;
+                });
 
-        $this->spiTrend = $this->project->periods()->get(['name', 'spi_index']);
+            $this->spiTrend = $this->project->periods()->get(['name', 'spi_index']);
 
-        $cost = MasterShadow::where('period_id', $this->period->id)
-            ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
+            $cost = MasterShadow::where('period_id', $this->period->id)
+                ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
 
-        $this->actual_cost = round($cost->actual_cost, 2);
-        $this->remaining_cost = round($cost->remaining_cost, 2);
+            $this->actual_cost = round($cost->actual_cost, 2);
+            $this->remaining_cost = round($cost->remaining_cost, 2);
 
-        $this->actualRevenue = $this->getActualRevenue();
+            $this->actualRevenue = $this->getActualRevenue();
 
-        return [
-            'project' => $this->project,
-            'costSummary' => $this->costSummary,
-            'period' => $this->period,
-            'cpiTrend' => $this->cpiTrend,
-            'spiTrend' => $this->spiTrend,
-            'wasteIndex' => $this->wasteIndex,
-            'productivityIndexTrend' => $this->productivityIndexTrend,
-            'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
-            'actualRevenue' => $this->actualRevenue
-        ];
+            return [
+                'project' => $this->project,
+                'costSummary' => $this->costSummary,
+                'period' => $this->period,
+                'cpiTrend' => $this->cpiTrend,
+                'spiTrend' => $this->spiTrend,
+                'wasteIndex' => $this->wasteIndex,
+                'productivityIndexTrend' => $this->productivityIndexTrend,
+                'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
+                'actualRevenue' => $this->actualRevenue
+            ];
+        });
     }
 
     function excel()

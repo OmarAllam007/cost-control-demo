@@ -1,17 +1,20 @@
 <article class="card-group-item">
     <div class="row">
         <div class="col-sm-6">
-        <h4 class="card-group-item-heading">Cost Percentage</h4>
-            <div class="chart"
-                 id="costChart"
-                 data-type="pie"
-                 data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
-                 data-datasets="[{{ json_encode([
+            <div class="br-1">
+                <h4 class="card-group-item-heading">Cost Percentage</h4>
+                <div class="chart"
+                     id="costChart"
+                     data-type="pie"
+                     data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
+                     data-datasets="[{{ json_encode([
                                 'label' => 'Cost Percentage', 'data' => [$actual_cost, $remaining_cost],
                                 'backgroundColor' => ['#64D5CA', '#E3342F']
                             ]) }}]"
-                 style="height: 200px"></div>
-        </div>
+                     style="height: 200px"></div>
+            </div>
+            </div>
+
         <div class="col-sm-6">
             <h4 class="card-group-item-heading">Progress Percentage</h4>
             <div class="chart"

@@ -1,4 +1,4 @@
-<table class="table table-condensed">
+<table class="table table-condensed cost-summary-table">
     <thead>
     <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
         <th class="col-sm-2" rowspan="2" style="border: 2px solid black;text-align: center">Resource Type</th>
