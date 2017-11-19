@@ -25,6 +25,10 @@
                @include('reports.cost-control.project-info.contract-info')
             </section>
 
+            <section class="info-section">
+                @include('reports.cost-control.project-info.revised_contract-info')
+            </section>
+
             <section class="info-section" id="cost-summary">
                 <h4 class="section-header">Cost Summary</h4>
                 @include('reports.partials.cost-summary', $costSummary)
