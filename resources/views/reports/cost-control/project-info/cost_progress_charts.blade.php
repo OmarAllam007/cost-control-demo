@@ -1,6 +1,6 @@
 <article class="card-group-item">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-xs-6">
             <div class="br-1">
                 <h4 class="card-group-item-heading">Cost Percentage</h4>
                 <div class="chart"
@@ -15,7 +15,7 @@
             </div>
             </div>
 
-        <div class="col-sm-6">
+        <div class="col-xs-6">
             <h4 class="card-group-item-heading">Progress Percentage</h4>
             <div class="chart"
                  id="progressChart"

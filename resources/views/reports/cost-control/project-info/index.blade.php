@@ -21,49 +21,17 @@
     <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1">
 
-            <section>
-                <h4 class="section-header">Contract information</h4>
-
-                <div class="row">
-                    <dl class="col-sm-4">
-                        <dt></dt>
-                        <dd></dd>
-                    </dl>
-
-                    <dl class="col-sm-4">
-                        <dt></dt>
-                        <dd></dd>
-                    </dl>
-
-                    <dl class="col-sm-4">
-                        <dt></dt>
-                        <dd></dd>
-                    </dl>
-
-                    <dl class="col-sm-4">
-                        <dt></dt>
-                        <dd></dd>
-                    </dl>
-
-                    <dl class="col-sm-4">
-                        <dt></dt>
-                        <dd></dd>
-                    </dl>
-
-                    <dl class="col-sm-4">
-                        <dt></dt>
-                        <dd></dd>
-                    </dl>
-                </div>
+            <section class="info-section">
+               @include('reports.cost-control.project-info.contract-info')
             </section>
 
-            <section id="cost-summary">
+            <section class="info-section" id="cost-summary">
                 <h4 class="section-header">Cost Summary</h4>
                 @include('reports.partials.cost-summary', $costSummary)
             </section>
 
 
-            <section class="card-group">
+            <section class="info-section" class="card-group">
                 @include('reports.cost-control.project-info.cpi-chart')
                 @include('reports.cost-control.project-info.spi-chart')
                 @include('reports.cost-control.project-info.waste_index_chart')
@@ -106,6 +74,44 @@
 
         .cost-summary-table {
             font-size: 11px;
+        }
+
+        dl {
+            display: flex;
+            font-size: 12px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 4px 0 rgba(160, 240, 237, 0.5);
+        }
+
+        dt {
+            background: #64D5CA;
+            padding: 5px;
+            text-align: right;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            width: 40%;
+        }
+
+        dd {
+            background: #A0F0ED;
+            padding: 5px;
+            flex: 1;
+            font-weight: 700;
+        }
+
+        .section-header {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            padding: 7px;
+            background: #64D5CA;
+            margin-bottom: 5px;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
         }
     </style>
 @append
