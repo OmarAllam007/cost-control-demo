@@ -29,6 +29,10 @@
                 @include('reports.cost-control.project-info.revised_contract-info')
             </section>
 
+            <section class="info-section">
+                @include('reports.cost-control.project-info.budget-info')
+            </section>
+
             <section class="info-section" id="cost-summary">
                 @include('reports.partials.cost-summary', $costSummary)
             </section>
@@ -75,8 +79,13 @@
             border-right: 1px solid #dedede;
         }
 
-        .cost-summary-table {
+        .cost-summary-table{
             font-size: 10px;
+        }
+
+        .budget-info {
+            font-size: 12px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
         }
 
         dl {
@@ -117,6 +126,18 @@
 
         .info-section {
             margin-bottom: 25px;
+        }
+
+        .revision-0 {
+            background: #A0F0ED;
+            border-right: 1px solid #fff;
+            border-bottom: 1px solid #fff;
+
+        }
+
+        .revision-1 {
+            background: #64D5CA;
+            border-bottom: 1px solid #fff;
         }
     </style>
 @append

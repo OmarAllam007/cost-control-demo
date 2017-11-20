@@ -13,6 +13,7 @@ use App\ActualRevenue;
 use App\CostManDay;
 use App\MasterShadow;
 use App\Period;
+use App\Reports\Budget\ProfitabilityIndexReport;
 use Carbon\Carbon;
 use Illuminate\Support\Fluent;
 
@@ -68,7 +69,8 @@ class ProjectInfo
                 'wasteIndex' => $this->wasteIndex,
                 'productivityIndexTrend' => $this->productivityIndexTrend,
                 'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
-                'actualRevenue' => $this->actualRevenue
+                'actualRevenue' => $this->actualRevenue,
+                'profitability' => $this->getBudgetInfo()
             ];
         });
     }
@@ -113,5 +115,10 @@ class ProjectInfo
                     'value' => round($period->value, 2)
                 ]);
             });
+    }
+
+    private function getBudgetInfo()
+    {
+
     }
 }
