@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
-    use SoftDeletes, HasOptions, Tree, CachesQueries;
+    use SoftDeletes, HasOptions, CachesQueries;
     use HasChangeLog, RecordsUser;
 
     protected static $alias = 'Project';
@@ -256,5 +256,10 @@ class Project extends Model
     function revisions()
     {
         return $this->hasMany(BudgetRevision::class);
+    }
+
+    function getRevisedContractAmountAttribute()
+    {
+        return $this->project_contract_signed_value + $this->change_order_amount;
     }
 }

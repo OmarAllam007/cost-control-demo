@@ -41,7 +41,7 @@
                     <th class="w-150">{{number_format($tree->sum('actual_man_days'), 2)}}</th>
                     <th class="w-150 {{$tree->sum('variance') < 0 ? 'text-danger' : ''}}">{{number_format($tree->sum('variance'), 2)}}</th>
                     {{-- todo: Add average PI here --}}
-                    <th class="w-150">%</th>
+                    <th class="w-150">{{number_format($average_pi, 2)}}</th>
                 </tr>
                 </thead>
             </table>

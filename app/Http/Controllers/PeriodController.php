@@ -21,7 +21,9 @@ class PeriodController extends Controller
             return \Redirect::route('project.cost-control', $project);
         }
 
-        return view('period.create', compact('project'));
+        $period = new Period(['project_id' => $project->id]);
+        $period->project = $project;
+        return view('period.create', compact('project', 'period'));
     }
 
     function store(Request $request)
@@ -74,6 +76,6 @@ class PeriodController extends Controller
 
     protected function doValidation(Request $request)
     {
-        $this->validate($request, ['name' => 'required', 'start_date' => 'required|date']);
+        $this->validate($request, ['name' => 'required', 'spi_index' => 'number', 'start_date' => 'required|date']);
     }
 }

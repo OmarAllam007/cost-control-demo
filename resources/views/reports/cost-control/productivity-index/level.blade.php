@@ -10,7 +10,7 @@
     <td class="w-150">{{number_format($level->allowable_qty, 2)}}</td>
     <td class="w-150">{{number_format($level->actual_man_days, 2)}}</td>
     <td class="w-150 {{$level->variance < 0? 'text-danger' : ''}}">{{number_format($level->variance, 2)}}</td>
-    <td class="w-150 {{$level->pi < 0? 'text-danger' : ''}}">{{number_format($level->pi, 2)}}%</td>
+    <td class="w-150 {{$level->pi < 0? 'text-danger' : ''}}">{{number_format($level->pi, 2)}}</td>
 </tr>
 
 @foreach($level->subtree as $sublevel)
@@ -25,6 +25,6 @@
         <td class="w-150">{{number_format($activity->allowable_qty, 2)}}</td>
         <td class="w-150">{{number_format($activity->actual_man_days, 2)}}</td>
         <td class="w-150 {{$activity->variance < 0? 'text-danger' : ''}}">{{number_format($activity->variance, 2)}}</td>
-        <td class="w-150 {{$activity->pi < 0? 'text-danger' : ''}}">{{number_format($activity->pi, 2)}}%</td>
+        <td class="w-150 {{$activity->pi < 0? 'text-danger' : ''}}">{{number_format($activity->pi, 2)}}</td>
     </tr>
 @endforeach
