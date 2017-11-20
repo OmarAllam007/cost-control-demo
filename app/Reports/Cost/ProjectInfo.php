@@ -73,7 +73,7 @@ class ProjectInfo
                 'productivityIndexTrend' => $this->productivityIndexTrend,
                 'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
                 'actualRevenue' => $this->actualRevenue,
-                'profitability' => $this->getBudgetInfo()
+                'budgetInfo' => $this->getBudgetInfo()
             ];
         });
     }
@@ -122,29 +122,57 @@ class ProjectInfo
 
     private function getBudgetInfo()
     {
-        $first = BudgetRevision::where('project_id', $this->project->id)->orderBy('id', 'desc')->first();
+        $first = BudgetRevision::where('project_id', $this->project->id)->orderBy('id')->first();
         $revision0 = [];
 
         if ($first) {
             $revision0['budget_cost'] = RevisionBreakdownResourceShadow::where('revision_id', $first->id)->sum('budget_cost');
             $revision0['revised_contract_amount'] = $first->revised_contract_amount;
-
-            $revision0['general_requirements'] = BreakDownResourceShadow::where('revision_id', $first->id)
-                ->where('resource_type_id', 1)->selectRaw('sum(budget_cost) as cost')->value('cost');
-            $revision0['management_reserve'] = BreakDownResourceShadow::where('revision_id', $first->id)
-                ->where('resource_type_id', 8)->selectRaw('sum(budget_cost) as cost')->value('cost');
-
-
+            $revision0['general_requirements'] = RevisionBreakdownResourceShadow::where('revision_id', $first->id)
+                ->where('resource_type_id', 1)->sum('budget_cost');
+            $revision0['management_reserve'] = RevisionBreakdownResourceShadow::where('revision_id', $first->id)
+                ->where('resource_type_id', 8)->sum('budget_cost');;
         } else {
             $revision0['budget_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
             $revision0['revised_contract_amount'] = $this->project->revised_contract_amount;
+            $revision0['general_requirements'] = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->where('resource_type_id', 1)->sum('budget_cost');;
+            $revision0['management_reserve'] = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->where('resource_type_id', 8)->sum('budget_cost');;
         }
 
-        $revision0['profitability'] = $revision0['revised_contract_amount'] - $revision0['budget_cost'];
-        $revision0['profitability_index'] = $revision0['profitability'] * 100 /  $revision0['budget_cost'];
-        $revision0['indirect_cost'] = $revision0['general_requirements '] + $revision0['management_reserve'];
+        $revision0['profit'] = $revision0['revised_contract_amount'] - $revision0['budget_cost'];
+        $revision0['profitability_index'] = $revision0['profit'] * 100 /  $revision0['budget_cost'];
+        $revision0['indirect_cost'] = $revision0['general_requirements'] + $revision0['management_reserve'];
         $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'];
 
-        dd($revision0);
+        $latest = BudgetRevision::where('project_id', $this->project->id)
+            ->where('is_automatic', 1)->where('is_generated', 1)
+            ->latest()->first();
+
+        $revision1 = [];
+
+        if ($latest) {
+            $revision1['budget_cost'] = RevisionBreakdownResourceShadow::where('revision_id', $latest->id)->sum('budget_cost');
+            $revision1['revised_contract_amount'] = $latest->revised_contract_amount;
+            $revision1['general_requirements'] = RevisionBreakdownResourceShadow::where('revision_id', $latest->id)
+                ->where('resource_type_id', 1)->sum('budget_cost');
+            $revision1['management_reserve'] = RevisionBreakdownResourceShadow::where('revision_id', $latest->id)
+                ->where('resource_type_id', 8)->sum('budget_cost');;
+        } else {
+            $revision1['budget_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
+            $revision1['revised_contract_amount'] = $this->project->revised_contract_amount;
+            $revision1['general_requirements'] = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->where('resource_type_id', 1)->sum('budget_cost');;
+            $revision1['management_reserve'] = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->where('resource_type_id', 8)->sum('budget_cost');;
+        }
+
+        $revision1['profit'] = $revision1['revised_contract_amount'] - $revision1['budget_cost'];
+        $revision1['profitability_index'] = $revision1['profit'] * 100 /  $revision1['budget_cost'];
+        $revision1['indirect_cost'] = $revision1['general_requirements'] + $revision1['management_reserve'];
+        $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'];
+
+        return compact('revision0', 'revision1');
     }
 }

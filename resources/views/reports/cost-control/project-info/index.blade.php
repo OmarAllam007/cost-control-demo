@@ -132,12 +132,13 @@
             background: #A0F0ED;
             border-right: 1px solid #fff;
             border-bottom: 1px solid #fff;
-
+            color: #444;
         }
 
         .revision-1 {
             background: #64D5CA;
             border-bottom: 1px solid #fff;
+            color: #444;
         }
     </style>
 @append
