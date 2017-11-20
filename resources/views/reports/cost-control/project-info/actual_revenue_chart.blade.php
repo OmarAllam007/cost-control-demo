@@ -6,7 +6,7 @@
          data-type="bar"
          data-labels="{{$actualRevenue->pluck('name')}}"
          data-datasets="[{{json_encode([
-                                'label' => 'Waste Index', 'data' => $actualRevenue->pluck('value'),
+                                'label' => 'Revenue', 'data' => $actualRevenue->pluck('value'),
                                 'backgroundColor' => '#8ed3d8'
                             ])}}]"
          style="height: 200px"></div>

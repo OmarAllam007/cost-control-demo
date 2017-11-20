@@ -21,7 +21,9 @@ class PeriodController extends Controller
             return \Redirect::route('project.cost-control', $project);
         }
 
-        return view('period.create', compact('project'));
+        $period = new Period(['project_id' => $project->id]);
+        $period->project = $project;
+        return view('period.create', compact('project', 'period'));
     }
 
     function store(Request $request)

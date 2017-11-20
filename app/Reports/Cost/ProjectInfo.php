@@ -10,10 +10,13 @@ namespace App\Reports\Cost;
 
 
 use App\ActualRevenue;
+use App\BreakDownResourceShadow;
+use App\BudgetRevision;
 use App\CostManDay;
 use App\MasterShadow;
 use App\Period;
 use App\Reports\Budget\ProfitabilityIndexReport;
+use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
 use Illuminate\Support\Fluent;
 
@@ -119,6 +122,29 @@ class ProjectInfo
 
     private function getBudgetInfo()
     {
+        $first = BudgetRevision::where('project_id', $this->project->id)->orderBy('id', 'desc')->first();
+        $revision0 = [];
 
+        if ($first) {
+            $revision0['budget_cost'] = RevisionBreakdownResourceShadow::where('revision_id', $first->id)->sum('budget_cost');
+            $revision0['revised_contract_amount'] = $first->revised_contract_amount;
+
+            $revision0['general_requirements'] = BreakDownResourceShadow::where('revision_id', $first->id)
+                ->where('resource_type_id', 1)->selectRaw('sum(budget_cost) as cost')->value('cost');
+            $revision0['management_reserve'] = BreakDownResourceShadow::where('revision_id', $first->id)
+                ->where('resource_type_id', 8)->selectRaw('sum(budget_cost) as cost')->value('cost');
+
+
+        } else {
+            $revision0['budget_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
+            $revision0['revised_contract_amount'] = $this->project->revised_contract_amount;
+        }
+
+        $revision0['profitability'] = $revision0['revised_contract_amount'] - $revision0['budget_cost'];
+        $revision0['profitability_index'] = $revision0['profitability'] * 100 /  $revision0['budget_cost'];
+        $revision0['indirect_cost'] = $revision0['general_requirements '] + $revision0['management_reserve'];
+        $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'];
+
+        dd($revision0);
     }
 }
