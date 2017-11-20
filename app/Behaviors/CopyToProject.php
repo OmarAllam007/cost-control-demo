@@ -37,16 +37,11 @@ trait CopyToProject
     from qty_surveys
     where wbs_level_id = {$this->id}");
 
-        \DB::beginTransaction();
-
         $this->breakdowns()
             ->with('template', 'template.resources', 'resources', 'resources.resource', 'resources.productivity')
             ->get()->each(function ($breakdown) use ($project_id, $new_wbs_id) {
                 $this->copyBreakdown($breakdown, $project_id, $new_wbs_id);
             });
-
-        \DB::commit();
-
 
         $this->children->each(function (WbsLevel $level) use ($project_id, $new_wbs_id) {
             $level->copyToProject($project_id, $new_wbs_id);
@@ -57,6 +52,7 @@ trait CopyToProject
     {
         $user_id = auth()->id() ?: 2;
         list($new_template_id, $tpl_resource_mapping) = $this->copyTemplate($breakdown->template, $project_id);
+
         $attributes = $breakdown->getAttributes();
         unset($attributes['id']);
         $attributes['project_id'] = $project_id;
@@ -109,20 +105,17 @@ trait CopyToProject
             $new_template_id = \DB::table('breakdown_templates')->insertGetId($attributes);
         }
 
-        $old_resources = StdActivityResource::where('template_id', $template->id)
-            ->get()->keyBy(function ($resource) {
-                return $resource->resource_id . '.' . $resource->remarks;
-            });
+        $old_resources = StdActivityResource::where('template_id', $template->id)->get();
 
         $new_resources = StdActivityResource::where('template_id', $new_template_id)
             ->get()->keyBy(function ($resource) {
-                return $resource->resource_id . '.' . $resource->remarks;
+                return $resource->template_id . '.' . $resource->resource_id . '.' . $resource->productivity_id . '.' . $resource->remarks;
             });
 
         $tpl_resource_mapping = collect();
 
         $old_resources->each(function ($resource) use ($new_resources, $tpl_resource_mapping, $user_id, $project_id, $new_template_id) {
-            $hash = $resource->resource_id . '.' . $resource->remarks;
+            $hash = $resource->template_id . '.' . $resource->resource_id . '.' . $resource->productivity_id . '.' . $resource->remarks;
             if ($new_resources->has($hash)) {
                 $new_resource_id = $new_resources->get($hash)->id;
             } else {
@@ -134,6 +127,7 @@ trait CopyToProject
                 $attributes['updated_by'] = $user_id;
                 $attributes['project_id'] = $project_id;
                 $attributes['template_id'] = $new_template_id;
+
                 $new_resource_id = StdActivityResource::insertGetId($attributes);
             }
 
