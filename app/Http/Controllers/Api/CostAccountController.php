@@ -12,10 +12,10 @@ class CostAccountController extends Controller
 {
     function index(Request $request)
     {
-        $query = Boq::query();
+        $query = Survey::query();
 
         if ($request->has('term')) {
-            $query->where('cost_account', 'like', '%' . $request->get('term') . '%');
+            $query->where('qs_code', 'like', '%' . $request->get('term') . '%');
         }
 
         if ($request->has('project')) {
@@ -26,9 +26,11 @@ class CostAccountController extends Controller
             $query->where('wbs_id', $request->get('wbs_id'));
         }
 
-        return $query->orderBy('cost_account')
+        return $query->orderBy('qs_code')
             ->take(20)
-            ->pluck('cost_account');
+            ->pluck('qs_code')
+            ->filter()
+            ->unique();
     }
 
     function show(Request $request)
