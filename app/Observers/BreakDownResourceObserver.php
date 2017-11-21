@@ -88,7 +88,9 @@ class BreakDownResourceObserver
 
     function deleted(BreakdownResource $resource)
     {
-        $this->checkForResources($resource->resource);
+        if ($resource->resource) {
+            $this->checkForResources($resource->resource);
+        }
     }
 
     function checkForResources($resource)
