@@ -8,6 +8,7 @@ return [
         'cost_account' => 'required|boq_unique',
         'item_code' => 'required|boq_unique',
     ],
+
     'qty_survey' => [
         'item_code' => 'required|qs_has_boq',
         'description' => 'required',
@@ -17,5 +18,9 @@ return [
         'budget_qty' => 'required|gte:0',
         'eng_qty' => 'required|gte:0',
         'unit_id' => 'required'
+    ],
+
+    'breakdown' => [
+
     ]
 ];
