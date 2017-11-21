@@ -132,4 +132,14 @@ class ValidationProvider extends ServiceProvider
             return str_replace(':lt', $parameters[0], $message);
         });
     }
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+
+    }
 }
