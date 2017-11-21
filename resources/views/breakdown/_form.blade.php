@@ -20,10 +20,13 @@
                 <a href="#WBSModal" data-toggle="modal" id="select-parent">
                     @if(request('wbs_id'))
                         {{request('wbs_id')? \App\WbsLevel::find(request('wbs_id'))->path: 'Select WBS Level' }}
-                        {{Form::hidden('wbs_level_id',request('wbs_id'),['id'=>'WbsID'])}}
+                        {{Form::hidden('wbs_level_id',request('wbs_id'), ['id'=>'WbsID'])}}
                     @else
-                        {{Form::getValueAttribute('wbs_level_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path
-                        : 'Select WBS Level' }}
+                        {{
+                            Form::getValueAttribute('wbs_level_id')?
+                                App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path :
+                                'Select WBS Level'
+                        }}
                     @endif
                 </a>
             </p>
@@ -32,7 +35,7 @@
 
 
         <div class="form-group {{$errors->first('qs_code', 'has-errors')}}">
-            {{Form::label('qs_code', 'Cost Account', ['class' => 'control-label'])}}
+            {{Form::label('qs_code', 'Item Code (QS)', ['class' => 'control-label'])}}
             {{Form::text('qs_code', null, ['class' => 'form-control', 'id' => 'CostAccount'])}}
         </div>
 
@@ -89,7 +92,7 @@
 
         jQuery(function ($) {
             $('#CostAccount').completeList({
-                url: '/api/cost-accounts?project={{request('project')}}'
+                url: '/api/cost-accounts?project={{request('project')}}&wbs_id=' + $('#WbsID').val()
             });
         });
     </script>
