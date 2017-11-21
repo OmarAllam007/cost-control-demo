@@ -1,8 +1,12 @@
 <form action="" class="panel panel-default">
     <div class="panel-body">
+        <div class="col-sm-3 form-group">
+            {{Form::label('period', null, ['class' => 'control-label'])}}
+            {{Form::select('period', \App\Period::where('project_id',$project->id)->readyForReporting()->pluck('name','id'), Session::get('period_id_'.$project->id),  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
+        </div>
 
         <div class="col-sm-3 form-group">
-            <label for="type">Resource Type</label>
+            <label for="type">Resource Division</label>
             <a href="#ResourceTypeModal" data-toggle="modal" class="btn btn-default btn-block">Select Resource Type</a>
         </div>
 
