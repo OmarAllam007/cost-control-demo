@@ -94,6 +94,7 @@ return [
     */
     'boq_unique' => ':attribute already exists in this WBS',
     'qs_code_unique' => 'Qty survey already exists in this WBS',
+    'qs_code_found_on_wbs' => 'Qty survey does not exist in this WBS',
     'qs_has_boq' => 'No BOQ with this item code',
     'gte' => ':attribute must be greater than or equal to :gte',
     'gt' => 'Value must be greater than :gt',

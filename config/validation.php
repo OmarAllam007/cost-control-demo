@@ -21,6 +21,9 @@ return [
     ],
 
     'breakdown' => [
-
+        'wbs_level_id' => 'required',
+        'std_activity_id' => 'required',
+        'qs_code' => 'required|qs_code_found_on_wbs',
+        'template_id' => 'required',
     ]
 ];
