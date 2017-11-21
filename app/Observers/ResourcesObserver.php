@@ -25,9 +25,7 @@ class ResourcesObserver
 
     function creating(Resources $resource)
     {
-        if (!$resource->resource_code) {
-            $resource->resource_code = $this->generateResourceCode($resource);
-        }
+        $resource->resource_code = $this->generateResourceCode($resource);
 
         if ($resource->project_id && !$resource->resource_id) {
             $attributes = $resource->getAttributes();
