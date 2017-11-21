@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Waste Index')
+@section('title', 'Productivity Index')
 
 @section('header')
     <div class="display-flex">
@@ -18,7 +18,7 @@
 @endsection
 
 @section('body')
-    @include('reports.cost-control.waste-index._filters')
+    @include('reports.cost-control.productivity-index._filters')
 
     <div class="horizontal-scroll">
         <section class="table-header">
@@ -134,6 +134,9 @@
             overflow-y: scroll;
         }
 
+        .highlight {
+            background: #ffffcc !important;
+        }
     </style>
 @endsection
 
@@ -163,7 +166,7 @@
 
             const rows = $('#resourcesTable tr').click(function () {
                 rows.removeClass('highlight');
-                $(this).addClass('highlight').find('a').click();
+                $(this).addClass('highlight');
             });
         });
     </script>
