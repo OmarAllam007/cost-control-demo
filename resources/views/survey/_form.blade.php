@@ -35,9 +35,19 @@
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('cost_account', 'has-error')}}">
+        <div class="form-group {{$errors->first('item_code', 'has-error')}}">
             {{Form::label('item_code','Item Code (BOQ)')}}
             {{Form::text('item_code',null,['class'=>'form-control'])}}
+        </div>
+
+        <div class="form-group {{$errors->first('qs_code', 'has-error')}}">
+            {{Form::label('item_code','Item Code (QS)')}}
+            {{Form::text('item_code',null,['class'=>'form-control'])}}
+        </div>
+
+        <div class="form-group">
+            {{Form::label('cost_account')}}
+            {{Form::text('cost_account', null, ['class'=>'form-control', 'readonly' => true])}}
         </div>
 
         <div class="form-group {{$errors->first('category_id', 'has-error')}}">

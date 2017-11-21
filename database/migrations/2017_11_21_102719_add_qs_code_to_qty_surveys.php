@@ -9,7 +9,7 @@ class AddQsCodeToQtySurveys extends Migration
     public function up()
     {
         Schema::table('qty_surveys', function (Blueprint $table) {
-            $table->string('qs_code');
+            $table->string('qs_code')->nullable();
         });
     }
 
