@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Boq;
+use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Validator;
@@ -39,6 +40,18 @@ class ValidationProvider extends ServiceProvider
             $request = request();
             if ($request->route()->hasParameter('boq')) {
                 $query->where('id', '!=', $request->route('boq')->id);
+            }
+
+            return !$query->exists();
+        });
+
+        \Validator::extend('qs_code_unique', function($attribute, $value, $options, Validator $validator) {
+            $data = $validator->getData();
+            $query = Survey::where('wbs_id', $data['wbs_id'])->where($attribute, $value);
+
+            $request = request();
+            if ($request->route()->hasParameter('survey')) {
+                $query->where('id', '!=', $request->route('survey')->id);
             }
 
             return !$query->exists();

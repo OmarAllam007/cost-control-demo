@@ -11,6 +11,7 @@ return [
     'qty_survey' => [
         'item_code' => 'required|qs_has_boq',
         'description' => 'required',
+        'qs_code' => 'required|qs_code_unique',
         'project_id' => 'required',
         'wbs_level_id' => 'required',
         'budget_qty' => 'required|gte:0',
