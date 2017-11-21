@@ -36,14 +36,7 @@ class ProjectInfo
 
     function run()
     {
-        $key = "project-info-{$this->period->id}";
-        if (request()->exists('clear')) {
-            \Cache::forget("project-info-{$this->period->id}");
-        }
-
-        return \Cache::remember($key, Carbon::parse('+7 days'), function() {
-            return $this->getInfo();
-        });
+        return $this->getInfo();
     }
 
     function getInfo()
