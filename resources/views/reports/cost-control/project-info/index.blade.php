@@ -33,6 +33,10 @@
                 @include('reports.cost-control.project-info.budget-info')
             </section>
 
+            <section class="info-section">
+                @include('reports.cost-control.project-info.cost-info')
+            </section>
+
             <section class="info-section" id="cost-summary">
                 @include('reports.partials.cost-summary', $costSummary)
             </section>
@@ -139,6 +143,18 @@
             background: #64D5CA;
             border-bottom: 1px solid #fff;
             color: #444;
+        }
+
+        .mb-1 {
+            margin-bottom: 1px;
+        }
+
+        .no-shadow {
+            box-shadow: none;
+        }
+
+        .text-warning {
+            color: #cd7920;
         }
     </style>
 @append

@@ -36,46 +36,50 @@ class ProjectInfo
 
     function run()
     {
-        return \Cache::remember("project-info-{$this->period->id}", Carbon::parse('+7 days'), function() {
-            $summary = new CostSummary($this->period);
-            $this->costSummary = $summary->run();
+        return $this->getInfo();
+    }
 
-            $this->wasteIndex =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
-                $period->value = round(floatval($period->value), 4);
-                return $period;
+    function getInfo()
+    {
+        $summary = new CostSummary($this->period);
+        $this->costSummary = $summary->run();
+
+        $this->wasteIndex =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
+            $period->value = round(floatval($period->value), 4);
+            return $period;
+        });
+
+        $this->productivityIndexTrend = $this->getProductivityIndexTrend();
+
+        $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
+            ->cpiTrendChart()->get()->map(function ($item) {
+                $item->value = round($item->value, 4);
+                return $item;
             });
 
-            $this->productivityIndexTrend = $this->getProductivityIndexTrend();
+        $this->spiTrend = $this->project->periods()->readyForReporting()->get(['name', 'spi_index']);
 
-            $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
-                ->cpiTrendChart()->get()->map(function ($item) {
-                    $item->value = round($item->value, 4);
-                    return $item;
-                });
+        $cost = MasterShadow::where('period_id', $this->period->id)
+            ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
 
-            $this->spiTrend = $this->project->periods()->get(['name', 'spi_index']);
+        $this->actual_cost = round($cost->actual_cost, 2);
+        $this->remaining_cost = round($cost->remaining_cost, 2);
 
-            $cost = MasterShadow::where('period_id', $this->period->id)
-                ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
+        $this->actualRevenue = $this->getActualRevenue();
 
-            $this->actual_cost = round($cost->actual_cost, 2);
-            $this->remaining_cost = round($cost->remaining_cost, 2);
-
-            $this->actualRevenue = $this->getActualRevenue();
-
-            return [
-                'project' => $this->project,
-                'costSummary' => $this->costSummary,
-                'period' => $this->period,
-                'cpiTrend' => $this->cpiTrend,
-                'spiTrend' => $this->spiTrend,
-                'wasteIndex' => $this->wasteIndex,
-                'productivityIndexTrend' => $this->productivityIndexTrend,
-                'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
-                'actualRevenue' => $this->actualRevenue,
-                'budgetInfo' => $this->getBudgetInfo()
-            ];
-        });
+        return [
+            'project' => $this->project,
+            'costSummary' => $this->costSummary,
+            'period' => $this->period,
+            'cpiTrend' => $this->cpiTrend,
+            'spiTrend' => $this->spiTrend,
+            'wasteIndex' => $this->wasteIndex,
+            'productivityIndexTrend' => $this->productivityIndexTrend,
+            'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
+            'actualRevenue' => $this->actualRevenue,
+            'budgetInfo' => $this->getBudgetInfo(),
+            'costInfo' => $this->getCostInfo()
+        ];
     }
 
     function excel()
@@ -174,5 +178,26 @@ class ProjectInfo
         $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'];
 
         return compact('revision0', 'revision1');
+    }
+
+    private function getCostInfo()
+    {
+        $info = [
+            'spi' => $this->period->spi_index,
+            'actual_cost' => MasterShadow::where('period_id', $this->period->id)->sum('to_date_cost'),
+            'allowable_cost' => MasterShadow::where('period_id', $this->period->id)->sum('allowable_ev_cost'),
+        ];
+
+        $budget_cost = MasterShadow::where('period_id', $this->period->id)->sum('budget_cost');
+
+        $info['variance'] = $info['actual_cost'] - $info['allowable_cost'];
+        $info['cpi'] = $info['allowable_cost'] / $info['actual_cost'];
+        $info['cost_progress'] = $info['actual_cost'] * 100 / $budget_cost;
+        $info['waste_index'] = $this->wasteIndex->where('period_id', $this->period->id)->value ?? 0;
+        $info['time_progress'] = $this->period->actual_progress;
+        $info['productivity_index'] = $this->productivityIndexTrend->where('period_id', $this->period->id)->value ?? 0;
+        $info['actual_start_date'] = $this->project->actual_start_date;
+
+        return $info;
     }
 }

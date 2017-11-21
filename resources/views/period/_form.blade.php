@@ -61,6 +61,30 @@
             {{ Form::text('planned_finish_date', $period->project->expected_finished_date, ['class' => 'form-control']) }}
             {!! $errors->first('planned_finish_date', '<div class="help-block">:message</div>') !!}
         </div>
+
+        <div class="form-group form-group-sm {{ $errors->first('time_elapsed', 'has-error') }}">
+            {{ Form::label('time_elapsed', null, ['class' => 'control-label']) }}
+            {{ Form::text('time_elapsed', $period->project->expected_finished_date, ['class' => 'form-control']) }}
+            {!! $errors->first('time_elapsed', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group form-group-sm {{ $errors->first('time_remaining', 'has-error') }}">
+            {{ Form::label('time_remaining', null, ['class' => 'control-label']) }}
+            {{ Form::text('time_remaining', $period->project->expected_finished_date, ['class' => 'form-control']) }}
+            {!! $errors->first('time_remaining', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group form-group-sm {{ $errors->first('expected_duration', 'has-error') }}">
+            {{ Form::label('expected_duration', null, ['class' => 'control-label']) }}
+            {{ Form::text('expected_duration', $period->project->expected_finished_date, ['class' => 'form-control']) }}
+            {!! $errors->first('expected_duration', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group form-group-sm {{ $errors->first('duration_variance', 'has-error') }}">
+            {{ Form::label('duration_variance', null, ['class' => 'control-label']) }}
+            {{ Form::text('duration_variance', $period->project->expected_finished_date, ['class' => 'form-control']) }}
+            {!! $errors->first('duration_variance', '<div class="help-block">:message</div>') !!}
+        </div>
     </section>
 </div>
 
