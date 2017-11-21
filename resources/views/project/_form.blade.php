@@ -55,6 +55,12 @@
             {!! $errors->first('project_start_date', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('actual_start_date', 'has-error')}}">
+            {{ Form::label('actual_start_date', null, ['class' => 'control-label']) }}
+            {{ Form::date('actual_start_date', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('actual_start_date', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group {{$errors->first('original_finished_date', 'has-error')}}">
             {{ Form::label('original_finished_date', null, ['class' => 'control-label']) }}
             {{ Form::date('original_finished_date', null, ['class' => 'form-control','contenteditable'=>'true']) }}
