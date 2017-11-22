@@ -8,10 +8,12 @@
 
 namespace App\Behaviors;
 
+use App\Resources;
 use App\WbsLevel;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\StdActivityResource;
+use Make\Makers\Resource;
 
 trait CopyToProject
 {
@@ -70,12 +72,26 @@ trait CopyToProject
             unset($attributes['id']);
             $attributes['breakdown_id'] = $new_breakdown_id;
             $attributes['std_activity_resource_id'] = $tpl_resource_mapping->get($resource->std_activity_resource_id, 0);
-            $attributes['resource_id'] = $resource->resource->resource_id ?? $resource->resource->id;
+            $attributes['resource_id'] = $resource->resource->resource_id ?: $resource->resource->id;
             $attributes['productivity_id'] = $resource->productivity->productivity_id ?? 0;
             $attributes['created_at'] = date('Y-m-d H:i:s');
             $attributes['updated_at'] = date('Y-m-d H:i:s');
             $attributes['created_by'] = $user_id;
             $attributes['updated_by'] = $user_id;
+
+            $resource_id = $attributes['resource_id'];
+            $targetResource = Resources::where('project_id', $project_id)->where('resource_id', $resource_id)->first();
+            if (!$targetResource) {
+                $resourceAttributes = $resource->resource->getAttributes();
+                unset($resourceAttributes['id']);
+                $resourceAttributes['project_id'] = $project_id;
+                $resourceAttributes['created_at'] = date('Y-m-d H:i:s');
+                $resourceAttributes['updated_at'] = date('Y-m-d H:i:s');
+                $resourceAttributes['created_by'] = $user_id;
+                $resourceAttributes['updated_by'] = $user_id;
+
+                Resources::insertGetId($resourceAttributes);
+            }
 
             BreakdownResource::create($attributes);
         }

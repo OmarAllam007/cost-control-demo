@@ -57,6 +57,7 @@ class BreakDownResourceObserver
             Resources::flushEventListeners();
             $projectResource = Resources::create($newResource);
         }
+
         $breakdownResource->resource_id = $projectResource->id;
 
         //

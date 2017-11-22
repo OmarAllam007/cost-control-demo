@@ -27,21 +27,10 @@ class WbsComposer
             $project = Project::find($view->project_id);
         }
 
-        $wbsTree = \Cache::remember(
-            'wbs-tree-' . $project->id,
-            Carbon::parse('+7 days'),
-            function () use ($project) {
-                $this->wbs_levels = $project->wbs_levels()->get()->groupBy('parent_id');
-                return $this->buildTree();
-            }
-        );
+        $this->wbs_levels = $project->wbs_levels->groupBy('parent_id');
 
+        $wbsTree = $this->buildTree();
 
-        /*
-     \Cache::remember('wbs-tree-' . $project->id, 7 * 24 * 60, function () use ($project) {
-        return dispatch(new CacheWBSTree($project));
-    });
-         */
         $view->with(compact('wbsTree'));
     }
 

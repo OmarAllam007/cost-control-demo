@@ -27,6 +27,9 @@ class BreakdownResourceFormatter implements \JsonSerializable
 
     function toArray()
     {
+//        $budget_qty = $this->resource->breakdown->wbs_level->getBudgetQty($this->resource->breakdown->cost_account);
+//        $eng_qty = $this->resource->breakdown->wbs_level->getEngQty($this->resource->breakdown->cost_account);
+
         $qs = Survey::costAccountOnWbs($this->resource->breakdown->wbs_level, $this->resource->breakdown->cost_account)->first();
         if ($qs) {
             $boq = Boq::find($qs->boq_id);
