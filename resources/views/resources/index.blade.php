@@ -1,52 +1,44 @@
 @extends('layouts.app')
 @section('header')
-    <h2>Resources</h2>
+    <div class="display-flex">
+        <h2 class="flex">Resources</h2>
 
-    <div class="btn-toolbar pull-right">
-        @can('write', 'resources')
-            <a href="{{ route('resources.create') }} " class="btn btn-sm btn-primary">
-                <i class="fa fa-plus"></i> Add resource
+        <div class="btn-toolbar">
+            @can('write', 'resources')
+                <a href="{{ route('resources.create') }} " class="btn btn-sm btn-primary">
+                    <i class="fa fa-plus"></i> Add resource
+                </a>
+
+                <div class="dropdown pull-left" style="margin: 0 0 0 5px;">
+                    <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                        Importing
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li >
+                            <a href="{{ route('resources.import') }}"><i class="fa fa-upload"></i> Import</a>
+                        </li>
+                        <li >
+                            <a href="{{ route('resources.import-codes') }}"><i class="fa fa-upload"></i> Import Equivalent Codes</a>
+                        </li>
+                        <li>
+                            <a href="{{route('all-resources.modify')}}"><i class="fa fa-pencil" aria-hidden="true"></i> Modify</a>
+                        </li>
+                    </ul>
+                </div>
+            @endcan
+
+            <a href="{{route('all_resources.export')}}" class="btn btn-info btn-sm">
+                <i class="fa fa-cloud-download"></i> Export
             </a>
 
-            <div class="btn dropdown" style="padding: 0px">
-                <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenu1"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    Importing
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li >
-
-                        <a href="{{ route('resources.import') }}" class="btn">
-                            <p align="left"> <i class="fa fa-cloud-upload"></i> Import</p>
-                        </a>
-                    </li>
-                    <li >
-                        <a href="{{ route('resources.import-codes') }}" class="btn">
-                            <p align="left"><i class="fa fa-cloud-upload"></i> Import Equivalent Codes</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('all-resources.modify')}}" class="btn">
-                            <p align="left">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                                Modify
-                            </p>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        @endcan
-
-        <a href="{{route('all_resources.export')}}" class="btn btn-info btn-sm">
-            <i class="fa fa-cloud-download"></i> Export
-        </a>
-
-        @can('wipe')
-            <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete All</a>
-        @endcan
+            @can('wipe')
+                <a href="#WipeAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete All</a>
+            @endcan
+        </div>
     </div>
 @stop
 
