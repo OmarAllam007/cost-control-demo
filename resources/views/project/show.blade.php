@@ -40,10 +40,12 @@
                     <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="{{route('boq.import', $project)}}">Import BOQ</a></li>
-                    <li><a href="{{route('survey.import', $project)}}">Import Qty Survey</a></li>
+                    <li><a href="{{route('boq.import', $project)}}" class="in-iframe" title="Import BOQ">Import BOQ</a></li>
+                    <li><a href="{{route('survey.import', $project)}}" class="in-iframe" title="Import Quantity Survey">Import Qty Survey</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
+                    <li><a href="{{route('easy-upload', $project)}}" class="in-iframe" title="Import Breakdown">Import Breakdown</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{route('boq.modify', $project)}}" title="Modify BOQ">Modify Boq</a></li>
                 </ul>
             </div>
         </div>

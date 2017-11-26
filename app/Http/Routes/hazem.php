@@ -230,3 +230,6 @@ Route::get('project/{project}/failed-productivity', 'ProjectProductivityControll
 
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
+
+Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
+Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
