@@ -239,6 +239,8 @@ Route::get('/project/{project}/cost-man-days', 'CostManDaysController@create')->
 Route::post('/project/{project}/cost-man-days', 'CostManDaysController@store')->name('cost-man-days.store');
 Route::get('/project/{project}/cost-man-days/export', 'CostManDaysController@show')->name('cost-man-days.export');
 
+Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
+Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
