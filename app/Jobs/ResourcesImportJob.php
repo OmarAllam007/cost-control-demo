@@ -206,7 +206,7 @@ class ResourcesImportJob extends ImportJob
 
         $sheet->fromArray(["RESOURCE TYPE", "RESOURCE DIVISION", "RESOURCE SUB DIVISION 1", "RESOURCE SUB DIVISION 2",
             "RESOURCE SUB DIVISION 3", "RESOURCE SUB DIVISION 4", "RESOURCE CODE", "RESOURCE NAME", "STANDARD RATE",
-            "UNIT OF MEASURE", "MATERIAL Waste %",	"SUPPLIER/ SUBCON.", "REFERENCE", "Errors", "Resource Code"]);
+            "UNIT OF MEASURE", "MATERIAL Waste %",	"SUPPLIER/ SUBCON.", "REFERENCE", "Errors"]);
 
         $result_rows->each(function($row, $counter) use ($sheet) {
             $row_num = $counter + 2;
