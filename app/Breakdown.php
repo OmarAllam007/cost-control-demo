@@ -65,16 +65,11 @@ class Breakdown extends Model
             return $qtySurvey;
         }
 
-        $parent = $this->wbs_level;
-        while ($parent->parent) {
-            $parent = $parent->parent;
-            $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $parent->id)->first();
-            if ($qtySurvey) {
-                return $this->cached_qty_survey = $qtySurvey;
-            }
-        }
+        $parents = $this->wbs_level->getParentIds();
+        $this->cached_qty_survey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->whereIn('wbs_level_id', $parents)->first();
 
-        return null;
+
+        return $this->cached_qty_survey;
     }
 
     /*function syncResources($resources)
