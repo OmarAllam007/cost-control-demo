@@ -14,6 +14,11 @@
 @endsection
 
 @section('body')
+    @include('reports.cost-control.threshold.filters')
+
+    @if ($tree->isEmpty())
+        <div class="alert alert-info">No activities above selected threshold</div>
+    @else
     <section class="horizontal-scroll">
         <div class="table-header">
             <table class="table table-bordered table-condensed">
@@ -40,6 +45,7 @@
             </table>
         </div>
     </section>
+    @endif
 @endsection
 
 @section('css')
@@ -112,8 +118,20 @@
             overflow-x: auto;
         }
 
-        .highlight {
+        .highlight, .info.highlight, .highlight td, .highlight th {
+            background-color: #ffe !important;
+        }
 
+        .card {
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.028);
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-btn {
+            padding-top: 25px;
         }
 
         #ResourceTypeModal .modal-body {

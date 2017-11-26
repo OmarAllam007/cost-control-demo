@@ -5,6 +5,7 @@ namespace App\Reports\Cost;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 
@@ -25,6 +26,9 @@ class ThresholdReport
     /** @var Collection */
     private $tree;
 
+    /** @var int */
+    private $row = 12;
+
     function __construct(Period $period)
     {
         $this->period = $period;
@@ -36,19 +40,25 @@ class ThresholdReport
     {
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
-        $this->activities = MasterShadow::where('period_id', $this->period->id)
-        ->selectRaw('wbs_id, activity, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
-        ->selectRaw('sum(to_date_cost) - sum(allowable_ev_cost) as variance')
-        ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')
-        ->groupBy('wbs_id', 'activity')
-        ->orderBy('wbs_id', 'activity')
-        ->get()->groupBy('wbs_id');
+        $this->activities = $this->applyFilters(
+            MasterShadow::where('period_id', $this->period->id)
+                ->selectRaw('wbs_id, activity, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
+                ->selectRaw('sum(to_date_cost) - sum(allowable_ev_cost) as variance')
+                ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')
+                ->groupBy('wbs_id', 'activity')
+                ->orderBy('wbs_id', 'activity')
+        )->get()->groupBy('wbs_id');
 
         $this->tree = $this->buildTree()->reject(function ($level) {
             return ($level->subtree->isEmpty() && $level->activities->isEmpty()) || $level->variance <= 0;
         });
 
-        return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'threshold' => $this->threshold];
+        $periods = $this->project->periods()->readyForReporting()->orderBy('id', 'DESC')->pluck('name', 'id');
+
+        return [
+            'project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 
+            'threshold' => $this->threshold, 'periods' => $periods
+        ];
     }
 
     protected function buildTree($parent = 0)
@@ -87,5 +97,15 @@ class ThresholdReport
     function sheet(LaravelExcelWorksheet $sheet)
     {
         $this->run();
+    }
+
+    private function applyFilters(Builder $query)
+    {
+        $activity = request('activity', []);
+        if ($activity) {
+            $query->whereIn('activity_id', $activity);
+        }
+
+        return $query;
     }
 }
