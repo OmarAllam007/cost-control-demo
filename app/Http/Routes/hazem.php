@@ -235,3 +235,6 @@ Route::get('project/{project}/threshold', 'CostReportsController@threshold')->na
 Route::get('/project/{project}/cost-man-days', 'CostManDaysController@create')->name('cost-man-days.import');
 Route::post('/project/{project}/cost-man-days', 'CostManDaysController@store')->name('cost-man-days.store');
 Route::get('/project/{project}/cost-man-days/export', 'CostManDaysController@show')->name('cost-man-days.export');
+
+Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
+Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');

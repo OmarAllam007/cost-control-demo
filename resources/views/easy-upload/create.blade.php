@@ -21,7 +21,7 @@
 
         <div class="form-group {{$errors->first('file', 'has-error')}}">
             <label for="file" class="control-label">Upload File</label>
-            <p>Please <a href="/storage/templates/breakdown.xlsx">click here</a> to download template file</p>
+            <p>Please <a href="/files/templates/easy-upload.xlsx">click here</a> to download template file</p>
             <div class="panel panel-success dropzone">
                 <div class="panel-body drop-panel display-flex">
                     <div class="zone-wraper">
