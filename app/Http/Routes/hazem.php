@@ -226,6 +226,8 @@ Route::get('project/{project}/modify-productivity', 'ProjectProductivityControll
 Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
 Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
 
+Route::get('project/{project}/threshold', 'CostReportsController@threshold')->name('threshold-report');
+
 Route::get('/project/{project}/cost-man-days', 'CostManDaysController@create')->name('cost-man-days.import');
 Route::post('/project/{project}/cost-man-days', 'CostManDaysController@store')->name('cost-man-days.store');
 Route::get('/project/{project}/cost-man-days/export', 'CostManDaysController@show')->name('cost-man-days.export');

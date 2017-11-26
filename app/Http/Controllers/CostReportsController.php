@@ -22,6 +22,7 @@ use App\Project;
 use App\Reports\Cost\CostSummary;
 use App\Reports\Cost\ProductivityIndexReport;
 use App\Reports\Cost\ProjectInfo;
+use App\Reports\Cost\ThresholdReport;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
 
@@ -235,6 +236,20 @@ class CostReportsController extends Controller
         $periods = $project->periods()->readyForReporting()->pluck('name', 'id');
 
         return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources', 'boqs'));
+    }
+
+    function threshold(Project $project, Request $request)
+    {
+        $period = Period::find($this->getPeriod($project, $request));
+        $report = new ThresholdReport($period);
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.cost-control.threshold.index', $data);
     }
 
     function wasteIndexReport(Project $project, Request $request)
