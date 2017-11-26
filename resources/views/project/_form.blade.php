@@ -109,8 +109,11 @@
             {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
         </div>
 
-
-
+        <div class="form-group {{$errors->first('cost_threshold', 'has-error')}}">
+            {{ Form::label('cost_threshold', null, ['class' => 'control-label']) }}
+            {{ Form::text('cost_threshold', null, ['class' => 'form-control']) }}
+            {!! $errors->first('cost_threshold', '<div class="help-block">:message</div>') !!}
+        </div>
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>

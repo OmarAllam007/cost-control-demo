@@ -1,6 +1,6 @@
 <div class="form-group">
     <label for="wbs">Activity</label>
-    <a class="btn btn-default btn-block" href="#SelectActivityModal" data-toggle="modal">Select Activity</a>
+    <a class="btn btn-default btn-sm btn-block" href="#SelectActivityModal" data-toggle="modal">Select Activity</a>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="SelectActivityModal">
