@@ -92,30 +92,6 @@
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
         }
 
-        dl {
-            display: flex;
-            font-size: 12px;
-            margin-bottom: 5px;
-            box-shadow: 0 2px 4px 0 rgba(160, 240, 237, 0.5);
-        }
-
-        dt {
-            background: #64D5CA;
-            padding: 5px;
-            text-align: right;
-            color: #333;
-            font-size: 12px;
-            font-weight: 700;
-            width: 40%;
-        }
-
-        dd {
-            background: #A0F0ED;
-            padding: 5px;
-            flex: 1;
-            font-weight: 700;
-        }
-
         .section-header {
             font-size: 14px;
             color: #fff;
