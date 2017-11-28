@@ -16,7 +16,7 @@ class Breakdown extends Model
 //    use CachesQueries;
     use HasChangeLog, RecordsUser;
 
-    protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code'];
+    protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code', 'qs_id', 'boq_id', 'qs_code'];
     protected $cached_qty_survey;
 
     function resources()
@@ -62,19 +62,14 @@ class Breakdown extends Model
 
         $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $this->wbs_level_id)->first();
         if ($qtySurvey) {
-            return $qtySurvey;
+            return $this->cached_qty_survey = $qtySurvey;
         }
 
-        $parent = $this->wbs_level;
-        while ($parent->parent) {
-            $parent = $parent->parent;
-            $qtySurvey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->where('wbs_level_id', $parent->id)->first();
-            if ($qtySurvey) {
-                return $this->cached_qty_survey = $qtySurvey;
-            }
-        }
+        $parents = $this->wbs_level->getParentIds();
+        $this->cached_qty_survey = Survey::where('cost_account', $this->cost_account)->where('project_id', $this->project_id)->whereIn('wbs_level_id', $parents)->first();
 
-        return null;
+
+        return $this->cached_qty_survey;
     }
 
     /*function syncResources($resources)
