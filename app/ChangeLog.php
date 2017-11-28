@@ -14,4 +14,9 @@ class ChangeLog extends Model
     {
         return $this->hasMany(Change::class);
     }
+
+    function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
