@@ -23,8 +23,10 @@ class Boq extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-    public function scopeForQs($query, $survey)
+    public function scopeForQs($query, Survey $survey)
     {
+        $survey->wbsLevel = $survey->wbsLevel ?: $survey->wbsLevel()->first();
+
         $wbs_ids = $survey->wbsLevel->getParentIds();
         $query->whereIn('wbs_id', $wbs_ids)->where('item_code', $survey->item_code);
     }
