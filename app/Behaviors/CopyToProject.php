@@ -66,9 +66,9 @@ trait CopyToProject
         $attributes['created_by'] = $user_id;
         $attributes['updated_by'] = $user_id;
 
-        Breakdown::unguard();
-        $new_breakdown = Breakdown::create($attributes);
-        $new_breakdown_id = $new_breakdown->id;
+        $new_breakdown_id = Breakdown::insertGetId($attributes);
+        $new_breakdown = Breakdown::find($new_breakdown_id);
+
         foreach ($breakdown->variables as $variable) {
             $varAttributes = $variable->getAttributes();
             unset($varAttributes['id']);
