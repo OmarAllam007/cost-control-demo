@@ -149,6 +149,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
                 $attributes['productivity_id'] = $this->productivityMap->get($attributes['productivity_id']);
                 $attributes['boq_id'] = $this->boqMap->get($attributes['boq_id']);
                 $attributes['survey_id'] = $this->qtySurveyMap->get($attributes['survey_id']);
+                $attributes['boq_qs_id'] = $this->qtySurveyMap->get($attributes['boq_qs_id']);
                 $attributes['created_by'] = $attributes['updated_by'] = $this->user->id;
                 $attributes['created_at'] = $attributes['updated_at'] = $now;
                 unset($attributes['id']);
