@@ -23,7 +23,7 @@ class CostAccountController extends Controller
         }
 
         if ($request->has('wbs')) {
-            $query->where('wbs_id', $request->get('wbs_id'));
+            $query->where('wbs_level_id', $request->get('wbs_id'));
         }
 
         return $query->orderBy('qs_code')
