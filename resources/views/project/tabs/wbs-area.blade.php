@@ -13,15 +13,13 @@
                         <ul class="dropdown-menu">
                         @can('wbs', $project)
                             <li><a :href="'/wbs-level/create?project={{$project->id}}&wbs='+selected" data-title="Add WBS Level" class="in-iframe" title="Add Level"><i class="fa fa-fw fa-plus"></i> Add WBS</a></li>
-                                <li><a :href="'/wbs-level/' + selected + '/edit'" class="in-iframe" title="Edit WBS Level" v-show="selected"><i class="fa fa-fw fa-edit"></i> Edit WBS Level</a></li>
-                                <li><a href="#DeleteWBSModal" data-toggle="modal" title="Delete WBS Level" v-show="selected"><span class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete WBS Level</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="{{route('wbs-level.import', $project)}}" data-title="Import WBS" class="in-iframe" title="Import WBS"><i class="fa fa-fw fa-cloud-upload"></i> Import WBS Tree</a></li>
-                                <li><a href="{{route('wbs-level.export', $project)}}" data-title="Export WBS" title="export"><i class="fa fa-fw fa-cloud-download"></i> Export WBS Tree</a></li>
-                        @endcan
-
-                        @can('wipe')
-                            <li><a href="#WipeWBSModal" data-toggle="modal" title="Delete all WBS-Levels"><span class="text-danger"><i class="fa fa-fw fa-trash"></i> Wipe WBS Tree</span></a></li>
+                            <li><a :href="'/wbs-level/' + selected + '/edit'" class="in-iframe" title="Edit WBS Level" v-show="selected"><i class="fa fa-fw fa-edit"></i> Edit WBS Level</a></li>
+                            <li><a href="#DeleteWBSModal" data-toggle="modal" title="Delete WBS Level" v-show="selected"><span class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete WBS Level</span></a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{route('wbs-level.import', $project)}}" data-title="Import WBS" class="in-iframe" title="Import WBS"><i class="fa fa-fw fa-cloud-upload"></i> Import WBS Tree</a></li>
+                            <li><a href="{{route('wbs-level.export', $project)}}" data-title="Export WBS" title="export"><i class="fa fa-fw fa-cloud-download"></i> Export WBS Tree</a></li>
+                            <li class="divider"></li>
+                            <li><a :href="'/wbs-level/' + selected + '/copy-to-project'" class="in-iframe" data-title="Copy to project" title="Copy to project"><i class="fa fa-fw fa-copy"></i> Copy to Project</a></li>
                         @endcan
                         </ul>
                     </div>

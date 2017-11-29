@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Boq;
+use App\Project;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
@@ -92,6 +93,14 @@ class ValidationProvider extends ServiceProvider
             }
             return Boq::whereIn('wbs_id', $wbs->getParentIds())->where('item_code', $value)->exists();
         });
+
+        \Validator::extend('has_copy_permission', function ($attribute, $project_id) {
+            $project = Project::find($project_id);
+            return can('wbs', $project) && can('breakdown', $project) &&
+                can('resources', $project) && can('breakdown_templates', $project) &&
+                can('productivity', $project);
+        });
+
 
         \Validator::extend('qs_code_found_on_wbs', function ($attribute, $value, $options, Validator $validator) {
             $data = $validator->getData();

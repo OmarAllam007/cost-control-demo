@@ -83,18 +83,23 @@ class CreateRevisionForProject extends Job implements ShouldQueue
     //<editor-fold defaultstate=collapsed desc="Copy functions">
     protected function copyBasicModels()
     {
+        \DB::table('revision_breakdowns')->where('revision_id', $this->revision->id)->delete();
         \DB::insert("INSERT INTO revision_breakdowns(breakdown_id, revision_id, wbs_level_id, project_id, template_id, std_activity_id, cost_account, `code`, created_by, updated_by, created_at, updated_at)
                   SELECT id AS breakdown_id, {$this->revision->id} as revision_id, wbs_level_id, project_id, template_id, std_activity_id, cost_account, `code`, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM breakdowns WHERE project_id = {$this->project->id}");
 
+        \DB::table('revision_boqs')->where('revision_id', $this->revision->id)->delete();
         \DB::insert("INSERT INTO revision_boqs(boq_id, revision_id, wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, division_id, `code`, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, created_by, updated_by, created_at, updated_at) 
                   SELECT id AS boq_id, {$this->revision->id} as revision_id, wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, division_id, `code`, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM boqs WHERE project_id = {$this->project->id}");
 
+        \DB::table('revision_qty_surveys')->where('revision_id', $this->revision->id)->delete();
         \DB::insert("INSERT INTO revision_qty_surveys(revision_id, qty_survey_id, cost_account, description, unit_id, budget_qty, eng_qty, deleted_at, wbs_level_id, project_id, `code`, discipline, created_by, updated_by, created_at, updated_at) 
                   SELECT {$this->revision->id} AS revision_id, id AS qty_survey_id, cost_account, description, unit_id, budget_qty, eng_qty, deleted_at, wbs_level_id, project_id, `code`, discipline, {$this->user->id} created_by, {$this->user->id} updated_by, now() AS created_at, now() AS updated_at FROM qty_surveys WHERE project_id = {$this->project->id}");
 
+        \DB::table('revision_resources')->where('revision_id', $this->revision->id)->delete();
         \DB::insert("INSERT INTO revision_resources(original_id, revision_id, resource_type_id, resource_code, name, rate, unit, waste, reference, business_partner_id, project_id, resource_id, top_material, created_by, updated_by, created_at, updated_at)  
                   SELECT id AS original_id, {$this->revision->id} AS revision_id, resource_type_id, resource_code, name, rate, unit, waste, reference, business_partner_id, project_id, resource_id, top_material, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM resources WHERE project_id = {$this->project->id}");
 
+        \DB::table('revision_productivities')->where('revision_id', $this->revision->id)->delete();
         \DB::insert("INSERT INTO revision_productivities(original_id, revision_id, project_id, csi_code, csi_category_id, description, unit, crew_structure, crew_hours, crew_equip, daily_output, man_hours, equip_hours, reduction_factor, after_reduction, source, code, productivity_id, created_by, updated_by, created_at, updated_at)   
                   SELECT id AS original_id, {$this->revision->id} AS revision_id, project_id, csi_code, csi_category_id, description, unit, crew_structure, crew_hours, crew_equip, daily_output, man_hours, equip_hours, reduction_factor, after_reduction, source, code, productivity_id, {$this->user->id} AS created_by, {$this->user->id} AS updated_by, now() AS created_at, now() AS updated_at FROM productivities WHERE project_id = {$this->project->id}");
     }
@@ -107,6 +112,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         $this->boqMap = RevisionBoq::where('project_id', $this->project->id)->pluck('id', 'boq_id');
         $this->qtySurveyMap = RevisionQtySurvey::where('project_id', $this->project->id)->pluck('id', 'qty_survey_id');
 
+        \DB::table('revision_breakdown_resources')->where('revision_id', $this->revision->id)->delete();
         BreakdownResource::whereRaw('breakdown_id in (select id from breakdowns where project_id = ?)', [$this->project->id])->chunk(950, function (Collection $resources) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
             $newResources = $resources->map(function (BreakdownResource $r) use ($now) {
@@ -131,6 +137,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
     protected function copyShadows()
     {
         $this->breakdownResourceMap = RevisionBreakdownResource::whereRaw('breakdown_id in (select id from revision_breakdowns where project_id = ?)', [$this->project->id])->pluck('id', 'breakdown_resource_id');
+        \DB::table('revision_breakdown_resource_shadows')->where('revision_id', $this->revision->id)->delete();
         BreakDownResourceShadow::where('project_id', $this->project->id)->chunk(950, function (Collection $collection) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
             $new = $collection->map(function (BreakDownResourceShadow $r) use ($now) {
@@ -142,6 +149,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
                 $attributes['productivity_id'] = $this->productivityMap->get($attributes['productivity_id']);
                 $attributes['boq_id'] = $this->boqMap->get($attributes['boq_id']);
                 $attributes['survey_id'] = $this->qtySurveyMap->get($attributes['survey_id']);
+                $attributes['boq_qs_id'] = $this->qtySurveyMap->get($attributes['boq_qs_id']);
                 $attributes['created_by'] = $attributes['updated_by'] = $this->user->id;
                 $attributes['created_at'] = $attributes['updated_at'] = $now;
                 unset($attributes['id']);
@@ -172,11 +180,15 @@ class CreateRevisionForProject extends Job implements ShouldQueue
             return false;
         }
 
-        \Mail::send('mail.revision-created',
-            ['project' => $this->project, 'revision' => $this->revision],
-            function (Message $msg) use ($users) {
-                $msg->to($users->toArray());
-                $msg->subject("Revision {$this->revision->name} has been created for project {$this->project->name}");
-            });
+        try {
+            \Mail::send('mail.revision-created',
+                ['project' => $this->project, 'revision' => $this->revision],
+                function (Message $msg) use ($users) {
+                    $msg->to($users->toArray());
+                    $msg->subject("Revision {$this->revision->name} has been created for project {$this->project->name}");
+                });
+        } catch (\Throwable $e) {
+            \Log::warning($e->getMessage() . "\n" . $e->getTraceAsString());
+        }
     }
 }
