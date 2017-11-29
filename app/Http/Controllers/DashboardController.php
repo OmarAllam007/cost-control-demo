@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\BreakDownResourceShadow;
+use App\BudgetRevision;
 use App\Project;
+use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -21,8 +23,9 @@ class DashboardController extends Controller
 
         $contracts_info = $this->contracts_info();
         $finish_dates = $this->finish_dates();
+        $budget_info = $this->budget_info();
 
-        return view('dashboard.index', compact('contracts_info', 'finish_dates'));
+        return view('dashboard.index', compact('contracts_info', 'finish_dates', 'budget_info'));
     }
 
     private function contracts_info()
@@ -53,10 +56,40 @@ class DashboardController extends Controller
         });
     }
 
+    private function budget_info()
+    {
+        $min_revision_ids = BudgetRevision::minRevisions()->pluck('id');
+        $min_revisions = BudgetRevision::find($min_revision_ids->toArray());
+        $general_requirement =  RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
+        $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
+        $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->sum('budget_cost');
+        $revised_contracts = $min_revisions->sum('revised_contract_amount');
+        $profit = $revised_contracts - $budget_cost;
+        $revision0 = [
+            'budget_cost' => $budget_cost,
+            'direct_cost' => $budget_cost - $general_requirement - $management_reserve,
+            'indirect_cost' => $general_requirement + $management_reserve,
+            'profit' => $profit,
+            'profitability' => $profit * 100 / $revised_contracts,
+        ];
 
+        $max_revision_ids = BudgetRevision::maxRevisions()->pluck('id');
+        $max_revisions = BudgetRevision::find($max_revision_ids->toArray());
+        $general_requirement =  RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
+        $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
+        $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->sum('budget_cost');
+        $revised_contracts = $max_revisions->sum('revised_contract_amount');
+        $profit = $revised_contracts - $budget_cost;
+        $revision1 = [
+            'budget_cost' => $budget_cost,
+            'direct_cost' => $budget_cost - $general_requirement - $management_reserve,
+            'indirect_cost' => $general_requirement + $management_reserve,
+            'profit' => $profit,
+            'profitability' => $profit * 100 / $revised_contracts,
+        ];
 
-
-
+        return compact('revision0', 'revision1');
+    }
 
     function dashboard()
     {
@@ -72,5 +105,7 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('projectNames', 'projectStats', 'topActivities', 'topResources', 'resourceTypes'));
     }
+
+
 
 }

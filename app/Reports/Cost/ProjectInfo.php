@@ -135,7 +135,7 @@ class ProjectInfo
             $revision0['general_requirements'] = RevisionBreakdownResourceShadow::where('revision_id', $first->id)
                 ->where('resource_type_id', 1)->sum('budget_cost');
             $revision0['management_reserve'] = RevisionBreakdownResourceShadow::where('revision_id', $first->id)
-                ->where('resource_type_id', 8)->sum('budget_cost');;
+                ->where('resource_type_id', 8)->sum('budget_cost');
         } else {
             $revision0['budget_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
             $revision0['revised_contract_amount'] = $this->project->revised_contract_amount;
