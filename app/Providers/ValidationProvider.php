@@ -75,7 +75,7 @@ class ValidationProvider extends ServiceProvider
     {
         \Validator::extend('qs_code_unique', function ($attribute, $value, $options, Validator $validator) {
             $data = $validator->getData();
-            $query = Survey::where('wbs_id', $data['wbs_id'])->where($attribute, $value);
+            $query = Survey::where('wbs_level_id', $data['wbs_level_id'])->where($attribute, $value);
 
             $request = request();
             if ($request->route()->hasParameter('survey')) {
