@@ -31,7 +31,8 @@ class QuantitySurveyObserver
             $last_qs_in_boq = \DB::table('qty_surveys')
                 ->where('boq_id', $boq_id)
                 ->where('wbs_level_id', $qs->wbs_level_id)
-                ->max('cost_account');
+                ->orderBy('id', 'desc')->value('cost_account');
+
             $token = collect(explode(".{$qs->item_code}.", $last_qs_in_boq))->last();
             $qs->cost_account = $qs->wbsLevel->code . '.' . $qs->item_code . '.' . sprintf('%03d', intval($token) + 1);
         }
