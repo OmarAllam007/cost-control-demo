@@ -126,7 +126,7 @@ class SurveyController extends Controller
 
         $this->validate($request, config('validation.qty_survey'));
         $survey->syncVariables($request->get('variables'));
-        $survey->update($request->all());
+        $survey->update($request->except('qs_code'));
 
         flash('Quantity survey has been saved', 'success');
 
