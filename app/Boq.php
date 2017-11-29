@@ -25,9 +25,8 @@ class Boq extends Model
 
     public function scopeForQs($query, Survey $survey)
     {
-        $survey->wbsLevel = $survey->wbsLevel ?: $survey->wbsLevel()->first();
-
-        $wbs_ids = $survey->wbsLevel->getParentIds();
+        $wbsLevel = $survey->wbsLevel ?: $survey->wbsLevel()->first();
+        $wbs_ids = $wbsLevel->getParentIds();
         $query->whereIn('wbs_id', $wbs_ids)->where('item_code', $survey->item_code);
     }
 
