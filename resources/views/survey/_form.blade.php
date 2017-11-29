@@ -41,8 +41,8 @@
         </div>
 
         <div class="form-group {{$errors->first('qs_code', 'has-error')}}">
-            {{Form::label('item_code','Item Code (QS)')}}
-            {{Form::text('item_code',null,['class'=>'form-control'])}}
+            {{Form::label('qs_code','Item Code (QS)')}}
+            {{Form::text('qs_code',null,['class'=>'form-control'])}}
         </div>
 
         <div class="form-group">
