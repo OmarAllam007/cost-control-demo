@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\BreakDownResourceShadow;
 use App\BudgetRevision;
+use App\MasterShadow;
+use App\Period;
 use App\Project;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
@@ -21,11 +23,13 @@ class DashboardController extends Controller
     {
         $this->projects = Project::all();
 
-        $contracts_info = $this->contracts_info();
-        $finish_dates = $this->finish_dates();
-        $budget_info = $this->budget_info();
-
-        return view('dashboard.index', compact('contracts_info', 'finish_dates', 'budget_info'));
+        return view('dashboard.index', [
+            'projectNames' => $this->projects->pluck('name', 'id'),
+            'contracts_info' => $this->contracts_info(),
+            'finish_dates' => $this->finish_dates(),
+            'budget_info' => $this->budget_info(),
+            'cost_info' => $this->cost_info()
+        ]);
     }
 
     private function contracts_info()
@@ -45,7 +49,7 @@ class DashboardController extends Controller
 
     private function finish_dates()
     {
-        return $this->projects->filter(function($project) {
+        return $this->projects->filter(function ($project) {
             return $project->project_start_date != '0000-00-00' && $project->expected_finished_date != '0000-00-00';
         })->map(function ($project) {
             return [
@@ -60,7 +64,7 @@ class DashboardController extends Controller
     {
         $min_revision_ids = BudgetRevision::minRevisions()->pluck('id');
         $min_revisions = BudgetRevision::find($min_revision_ids->toArray());
-        $general_requirement =  RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
+        $general_requirement = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
         $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
         $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->sum('budget_cost');
         $revised_contracts = $min_revisions->sum('revised_contract_amount');
@@ -75,7 +79,7 @@ class DashboardController extends Controller
 
         $max_revision_ids = BudgetRevision::maxRevisions()->pluck('id');
         $max_revisions = BudgetRevision::find($max_revision_ids->toArray());
-        $general_requirement =  RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
+        $general_requirement = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
         $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
         $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->sum('budget_cost');
         $revised_contracts = $max_revisions->sum('revised_contract_amount');
@@ -106,6 +110,30 @@ class DashboardController extends Controller
         return view('dashboard', compact('projectNames', 'projectStats', 'topActivities', 'topResources', 'resourceTypes'));
     }
 
+    private function cost_info()
+    {
+        $last_period_ids = Period::last()->pluck('period_id');
+//        $last_periods = Period::whereIn('id', $last_period_ids);
+
+        $cpis = MasterShadow::whereIn('period_id', $last_period_ids)
+            ->selectRaw('project_id, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
+            ->groupBy('project_id')
+            ->get()->map(function ($period) {
+                $period->cpi = $period->allowable_cost / $period->to_date_cost;
+                $period->variance = $period->allowable_cost - $period->to_date_cost;
+                return $period;
+            })->sortBy('cpi');
+
+        $allowable_cost = $cpis->sum('allowable_cost');
+        $to_date_cost = $cpis->sum('to_date_cost');
+        $variance = $allowable_cost - $to_date_cost;
+        $cpi = $allowable_cost / $to_date_cost;
+
+        $highest_risk = $cpis->first();
+        $lowest_risk = $cpis->last();
+
+        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk');
+    }
 
 
 }

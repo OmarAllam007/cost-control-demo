@@ -7,19 +7,19 @@
                 <tbody>
                 <tr>
                     <th class="w-1-3">Actual Cost</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['to_date_cost'], 2)}}</td>
                 </tr>
                 <tr>
                     <th class="w-1-3">CPI</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['cpi'], 4)}}</td>
                 </tr>
                 <tr class="highlight">
                     <th class="w-1-3">Highest Risk Project</th>
-                    <td></td>
+                    <td>{{$projectNames[$cost_info['highest_risk']['project_id']]}}</td>
                 </tr>
                 <tr>
                     <th class="w-1-3">Lowest Risk Project</th>
-                    <td></td>
+                    <td>{{$projectNames[$cost_info['lowest_risk']['project_id']]}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -30,7 +30,7 @@
                 <tbody>
                 <tr>
                     <th class="w-1-3">Allowable Cost</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['allowable_cost'])}}</td>
                 </tr>
                 <tr>
                     <th class="w-1-3">Waste Index</th>
@@ -38,13 +38,12 @@
                 </tr>
                 <tr class="highlight">
                     <th class="w-1-3">Variance</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['highest_risk']->variance, 2)}}</td>
                 </tr>
                 <tr>
                     <th class="w-1-3">Variance</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['lowest_risk']->variance, 2)}}</td>
                 </tr>
-
                 </tbody>
             </table>
         </article>
@@ -54,7 +53,7 @@
                 <tbody>
                 <tr>
                     <th class="w-1-3">Variance</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['variance'], 2)}}</td>
                 </tr>
                 <tr>
                     <th class="w-1-3">SPI</th>
@@ -62,11 +61,11 @@
                 </tr>
                 <tr class="highlight">
                     <th class="w-1-3">CPI</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['highest_risk']->cpi, 4)}}</td>
                 </tr>
                 <tr>
                     <th class="w-1-3">CPI</th>
-                    <td></td>
+                    <td>{{number_format($cost_info['lowest_risk']->cpi, 4)}}</td>
                 </tr>
                 </tbody>
             </table>
