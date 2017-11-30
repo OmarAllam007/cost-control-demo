@@ -21,7 +21,7 @@ class ExportSurveyJob extends Job
             return $level;
         });
 
-        $this->units = Unit::all()->pluck('id', 'type');
+        $this->units = Unit::all()->pluck('type', 'id');
     }
 
 
@@ -32,15 +32,15 @@ class ExportSurveyJob extends Job
         $counter = 2;
 
         $sheet->fromArray([
-            'WBS Code', 'Item Code', 'Cost Account', 'Description', 'Budget Quantity', 'Engineer Quantity', 'Unit',
+            'WPS Path', 'WBS Code', 'Item Code', 'Cost Account', 'Description', 'Budget Quantity', 'Engineer Quantity', 'Unit',
             'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'
         ], null, "A1", true);
 
         foreach ($this->project->quantities as $qs) {
             $wbs = $this->wbs_levels->get($qs->wbs_level_id);
             $data = [
-                $wbs->code, $qs->item_code, $qs->cost_account, $qs->description,
-                $wbs->budget_qty, $wbs->eng_qty, $this->units->get($qs->unit_id)
+                $wbs->path, $wbs->code, $qs->item_code, $qs->cost_account, $qs->description,
+                $qs->budget_qty, $qs->eng_qty, $this->units->get($qs->unit_id)
             ];
 
             foreach ($qs->variables as $idx => $variable){
@@ -51,9 +51,9 @@ class ExportSurveyJob extends Job
             $counter++;
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.slug($this->project->name).'- Survey.xlsx"');
-        header('Cache-Control: max-age=0');
-        \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save('php://output');
+        $filename = storage_path('app/' . uniqid('qs') . '.xlsx');
+        \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
+
+        return $filename;
     }
 }

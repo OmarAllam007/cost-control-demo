@@ -17,7 +17,7 @@ class Survey extends Model
 
     protected $table = 'qty_surveys';
 
-    protected $fillable = ['unit_id', 'budget_qty', 'eng_qty', 'cost_account', 'category_id', 'description', 'wbs_level_id', 'project_id', 'code', 'item_code'];
+    protected $fillable = ['unit_id', 'budget_qty', 'eng_qty', 'cost_account', 'category_id', 'description', 'wbs_level_id', 'project_id', 'qs_code', 'item_code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -107,6 +107,11 @@ class Survey extends Model
         $query->whereIn('wbs_level_id', $wbs_parents)->where('cost_account', $cost_account);
 
         return $query;
+    }
+
+    function boq()
+    {
+        return $this->belongsTo(Boq::class);
     }
 
 }

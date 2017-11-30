@@ -57,6 +57,7 @@ class BreakDownResourceObserver
             Resources::flushEventListeners();
             $projectResource = Resources::create($newResource);
         }
+
         $breakdownResource->resource_id = $projectResource->id;
 
         //
@@ -88,7 +89,9 @@ class BreakDownResourceObserver
 
     function deleted(BreakdownResource $resource)
     {
-        $this->checkForResources($resource->resource);
+        if ($resource->resource) {
+            $this->checkForResources($resource->resource);
+        }
     }
 
     function checkForResources($resource)

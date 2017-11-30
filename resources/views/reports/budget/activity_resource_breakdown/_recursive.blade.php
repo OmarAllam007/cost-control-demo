@@ -8,12 +8,11 @@
     <td class="col-sm-1"><strong>{{number_format($level->weight, 2)}}%</strong></td>
 </tr>
 
-@forelse($level->subtree as $sublevel)
+@foreach($level->subtree as $sublevel)
     @include('reports.budget.activity_resource_breakdown._recursive', ['level' => $sublevel, 'depth' => $depth + 1])
-@empty
-@endforelse
+@endforeach
 
-@forelse($level->activities as $activity => $cost_accounts)
+@foreach($level->activities as $activity => $cost_accounts)
     <tr class="level-{{$depth + 1}} activity-level child-{{$level->id}} hidden">
         <td class="level-label" colspan="6">
             <a href="#" class="open-level" data-target="activity-{{$level->id}}-{{slug($activity)}}">
@@ -21,7 +20,7 @@
             </a>
         </td>
 
-        <td class="col-sm-1 text-right"><strong>{{number_format($cost_accounts->flatten()->sum('budget_cost'), 2)}}</strong></td>
+        <td class="col-sm-1 text-right"><strong>{{number_format($cost_accounts->flatten()->sum('cost'), 2)}}</strong></td>
         <td class="col-sm-1"><strong>{{number_format($cost_accounts->flatten()->sum('weight'), 2)}}%</strong></td>
     </tr>
 
@@ -57,5 +56,4 @@
             </tr>
         @endforeach
     @endforeach
-@empty
-@endforelse
+@endforeach

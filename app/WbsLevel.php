@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Behaviors\CachesQueries;
+use App\Behaviors\CopyToProject;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\RecordsUser;
@@ -76,7 +77,7 @@ class WbsLevel extends Model
     public function getBudgetCostAttribute()
     {
         $children = [];
-        $children =$this->getChildrenIds();
+        $children = $this->getChildrenIds();
         $budget_cost = BreakDownResourceShadow::whereIn('wbs_id', $this->getChildrenIds())->sum('budget_cost');
         return ['budget_cost' => $budget_cost, 'children' => $children];
     }
@@ -182,9 +183,10 @@ class WbsLevel extends Model
     }
 
 
-    function getDry(){
-        $boq = Boq::where('wbs_id',$this->id)->first();
-        if(isset($boq->dry_ur)){//chenged from $boq->dry_ur to 1
+    function getDry()
+    {
+        $boq = Boq::where('wbs_id', $this->id)->first();
+        if (isset($boq->dry_ur)) {//chenged from $boq->dry_ur to 1
             return $boq->dry_ur;
         }
         return 0;
@@ -211,4 +213,6 @@ class WbsLevel extends Model
         }
         return $levels;
     }
+
+    use CopyToProject;
 }

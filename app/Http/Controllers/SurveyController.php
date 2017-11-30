@@ -126,7 +126,7 @@ class SurveyController extends Controller
 
         $this->validate($request, config('validation.qty_survey'));
         $survey->syncVariables($request->get('variables'));
-        $survey->update($request->all());
+        $survey->update($request->except('qs_code'));
 
         flash('Quantity survey has been saved', 'success');
 
@@ -311,7 +311,9 @@ class SurveyController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $this->dispatch(new ExportSurveyJob($project));
+        $file = $this->dispatch(new ExportSurveyJob($project));
+
+        return \Response::download($file, slug($project->name).'-survey.xlsx')->deleteFileAfterSend(true);
     }
 
 

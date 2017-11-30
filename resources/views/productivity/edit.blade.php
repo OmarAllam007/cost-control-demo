@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>{{$project->name}} &mdash; Modify Productivity</h2>
+    <h2>
+        @if ($productivity->project)
+            {{$project->name}} &mdash;
+        @endif
+
+        Modify Productivity
+    </h2>
 @stop
 
 @section('body')
@@ -9,7 +15,7 @@
 
         {{ method_field('patch') }}
 
-        @include('productivity._form', ['override' => false])
+        @include('productivity._form', ['override' => !empty($productivity->project_id)])
 
     {{ Form::close() }}
 @stop

@@ -34,8 +34,9 @@ class QtySurveyChecker
     function check()
     {
         $this->boqs = $this->surveys->map(function($survey) {
-            $boq_id = Boq::forQs($survey)->value('id');
-            $survey->boq_id = $boq_id;
+            $boq = Boq::forQs($survey)->first();
+            $survey->boq_id = $boq->id;
+//            $survey->boq = $boq;
 
             return $survey;
         })->groupBy('boq_id')->reject(function(Collection $group)  {
@@ -50,14 +51,14 @@ class QtySurveyChecker
                 return false;
             }
 
-            if ($survey->unit != $survey->boq->id) {
+            if ($survey->unit_id != $survey->boq->unit_id) {
                 return false;
             }
 
             $survey->save();
 
             // Create equivalent QS
-            Survey::craete([
+            Survey::create([
                 'wbs_level_id' => $survey->boq->wbs_id, 'cost-account' => $survey->boq->cost_account,
                 'description' => $survey->boq->description, 'boq_id' => $survey->boq_id, 'unit_id' => $survey->unit,
                 'budget_qty' => $survey->budget_qty, 'eng_qty' => $survey->eng_qty

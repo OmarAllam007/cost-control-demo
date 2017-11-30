@@ -25,9 +25,7 @@ class ResourcesObserver
 
     function creating(Resources $resource)
     {
-        if (!$resource->resource_code) {
-            $resource->resource_code = $this->generateResourceCode($resource);
-        }
+        $resource->resource_code = $this->generateResourceCode($resource);
 
         if ($resource->project_id && !$resource->resource_id) {
             $attributes = $resource->getAttributes();
@@ -54,7 +52,7 @@ class ResourcesObserver
     {
         $lastResourceInType = Resources::where('resource_type_id', $resource->resource_type_id)
             ->whereNull('project_id')->whereNull('resource_id')
-            ->max('resource_code');
+            ->orderBy('id', 'DESC')->value('resource_code');
 
         if ($lastResourceInType) {
             $tokens = explode('.', $lastResourceInType);

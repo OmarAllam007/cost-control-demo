@@ -48,13 +48,12 @@ class ResourcesImportJob extends ImportJob
 
         $this->loadOldResources();
 
-        $failed = collect();
+        $resultRows = collect();
         $rules = [
             'name' => 'required', 'resource_type_id' => 'required|no_resource_on_parent', 'unit' => 'required',
             'rate' => 'required|gte:0', 'waste' => 'gte:0|lt:100'
         ];
 
-        Resources::flushEventListeners();
         foreach ($rows as $index => $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -67,15 +66,15 @@ class ResourcesImportJob extends ImportJob
 
             if ($this->oldResourceCodes->has($code)) {
                 $data[13] = 'Duplicated Code';
-                $failed->push($data);
+                $resultRows->push($data);
             } elseif ($this->oldResourceNames->has($name)) {
                 $data[13] = 'Duplicated name';
-                $failed->push($data);
+                $resultRows->push($data);
             } else {
                 $type_id = $this->getTypeId($data);
                 $unit_id = $this->getUnit($data[9]);
 
-                $item = ['resource_type_id' => $type_id, 'resource_code' => $data[6], 'name' => $data[7],
+                $item = ['resource_type_id' => $type_id, 'name' => $data[7],
                     'rate' => floatval($data[8]), 'unit' => $unit_id, 'waste' => $this->getWaste($data[10]),
                     'business_partner_id' => $this->getPartner($data[11]), 'reference' => $data[12],
                     'project_id' => $this->project_id];
@@ -89,16 +88,19 @@ class ResourcesImportJob extends ImportJob
 
                 $validator = \Validator::make($item, $rules);
                 if ($validator->passes()) {
-                    Resources::create($item);
+                    $resource = Resources::create($item);
+                    $data[13] = '';
+                    $data[6] = $resource->resource_code;
+                    $resultRows->push($data);
                     ++$status['success'];
                 } else {
-                    $data[13] = 'Invalid data';
-                    $failed->push($data);
+                    $data[13] = implode("\n", $validator->errors()->all());
+                    $resultRows->push($data);
                 }
             }
         }
 
-        $status['failed'] = $this->createFailedExcel($failed);
+        $status['result_file'] = $this->createResultExcel($resultRows);
 
         dispatch(new CacheResourcesInQueue());
 
@@ -110,10 +112,11 @@ class ResourcesImportJob extends ImportJob
         $this->loadTypes();
 
         $levels = array_filter(array_slice($data, 0, 6));
+
         $type_id = 0;
         $path = [];
         foreach ($levels as $level) {
-            $path[] = mb_strtolower($level);
+            $path[] = trim(strtolower($level));
             $key = implode('/', $path);
 
             if ($this->types->has($key)) {
@@ -189,9 +192,9 @@ class ResourcesImportJob extends ImportJob
         })->pluck('encoded_name', 'encoded_name');
     }
 
-    protected function createFailedExcel(Collection $failed)
+    protected function createResultExcel(Collection $result_rows)
     {
-        if ($failed->isEmpty()) {
+        if ($result_rows->isEmpty()) {
             return '';
         }
 
@@ -201,17 +204,17 @@ class ResourcesImportJob extends ImportJob
 
         $sheet->setTitle('Failed resources');
 
-        $sheet->fromArray(["RESOURCE TYPE ", "RESOURCE DIVISION", "RESOURCE SUB DIVISION 1", "RESOURCE SUB DIVISION 2",
+        $sheet->fromArray(["RESOURCE TYPE", "RESOURCE DIVISION", "RESOURCE SUB DIVISION 1", "RESOURCE SUB DIVISION 2",
             "RESOURCE SUB DIVISION 3", "RESOURCE SUB DIVISION 4", "RESOURCE CODE", "RESOURCE NAME", "STANDARD RATE",
-            "UNIT OF MEASURE", "MATERIAL Waste %",	"SUPPLIER/ SUBCON.", "REFERENCE", "REASON"]);
+            "UNIT OF MEASURE", "MATERIAL Waste %",	"SUPPLIER/ SUBCON.", "REFERENCE", "Errors"]);
 
-        $failed->each(function($row, $counter) use ($sheet) {
+        $result_rows->each(function($row, $counter) use ($sheet) {
             $row_num = $counter + 2;
-            $sheet->fromArray($row, '', "A{$row_num}");
+            $sheet->fromArray($row, '', "A{$row_num}", true);
         });
 
         $writer = new \PHPExcel_Writer_Excel2007($excel);
-        $filename = uniqid('failed_resources_') . '.xlsx';
+        $filename = uniqid('import_resources_') . '.xlsx';
         $filepath = storage_path('app/public/' . $filename);
         $writer->save($filepath);
 

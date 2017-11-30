@@ -227,8 +227,8 @@ class ResourcesController extends Controller
             return redirect()->route('resources.fix-import', $key);
         }
 
-        if ($status['failed']) {
-            return view('resources.import-failed', compact('status'));
+        if ($status['result_file']) {
+            return view('resources.import-result', compact('status'));
         }
 
 //        if ($status['failed']->count()) {

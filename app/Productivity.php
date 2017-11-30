@@ -120,7 +120,7 @@ class Productivity extends Model
                 $is_labour = stristr($type, '02.LABORS');
 
                 if ($is_labour) {//if(array_search($key,$crew) !== false){
-                    $man_numbers[] = $man_number * 10;
+                    $man_numbers[] = floatval($man_number) * 10;
                 }
             }
         }
