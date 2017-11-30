@@ -15,7 +15,7 @@ class CostAccountController extends Controller
         $query = Survey::query();
 
         if ($request->has('term')) {
-            $query->where('qs_code', 'like', '%' . $request->get('term') . '%');
+            $query->where('cost_account', 'like', '%' . $request->get('term') . '%');
         }
 
         if ($request->has('project')) {
@@ -26,9 +26,9 @@ class CostAccountController extends Controller
             $query->where('wbs_level_id', $request->get('wbs_id'));
         }
 
-        return $query->orderBy('qs_code')
+        return $query->orderBy('cost_account')
             ->take(20)
-            ->pluck('qs_code')
+            ->pluck('cost_account')
             ->filter()
             ->unique();
     }
