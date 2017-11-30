@@ -109,4 +109,9 @@ class Survey extends Model
         return $query;
     }
 
+    function boq()
+    {
+        return $this->belongsTo(Boq::class);
+    }
+
 }
