@@ -110,7 +110,7 @@ class ValidationProvider extends ServiceProvider
                 return false;
             }
 
-            return Survey::whereIn('wbs_level_id', $wbs->getParentIds())->where('qs_code', $value)->exists();
+            return Survey::whereIn('wbs_level_id', $wbs->getParentIds())->where('cost_account', $value)->exists();
         });
     }
 

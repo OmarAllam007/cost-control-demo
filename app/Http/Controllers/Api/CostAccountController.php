@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Boq;
 use App\Survey;
+use App\WbsLevel;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -15,7 +16,7 @@ class CostAccountController extends Controller
         $query = Survey::query();
 
         if ($request->has('term')) {
-            $query->where('qs_code', 'like', '%' . $request->get('term') . '%');
+            $query->where('cost_account', 'like', '%' . $request->get('term') . '%');
         }
 
         if ($request->has('project')) {
@@ -23,12 +24,16 @@ class CostAccountController extends Controller
         }
 
         if ($request->has('wbs')) {
-            $query->where('wbs_level_id', $request->get('wbs_id'));
+            $wbs = WbsLevel::find($request->get('wbs'));
+            if ($wbs) {
+                $parent_ids = $wbs->getParentIds();
+                $query->where('wbs_level_id', $parent_ids);
+            }
         }
 
-        return $query->orderBy('qs_code')
+        return $query->orderBy('cost_account')
             ->take(20)
-            ->pluck('qs_code')
+            ->pluck('cost_account')
             ->filter()
             ->unique();
     }

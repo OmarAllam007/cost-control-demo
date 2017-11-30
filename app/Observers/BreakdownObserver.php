@@ -23,12 +23,12 @@ class BreakdownObserver
     {
         /** @var WbsLevel $wbs */
         $wbs = WbsLevel::find($breakdown->wbs_level_id);
-        $qty_survey = Survey::where('qs_code', $breakdown->qs_code)
+        $qty_survey = Survey::where('cost_account', $breakdown->cost_account)
             ->whereIn('wbs_level_id', $wbs->getParentIds())
             ->orderBy('wbs_level_id', 'DESC')
             ->first();
 
-        $breakdown->cost_account = $qty_survey->cost_account;
+//        $breakdown->cost_account = $qty_survey->cost_account;
         $breakdown->qs_id = $qty_survey->id;
         $breakdown->boq_id = $qty_survey->boq_id;
     }
