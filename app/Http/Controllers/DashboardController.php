@@ -4,32 +4,51 @@ namespace App\Http\Controllers;
 
 use App\BreakDownResourceShadow;
 use App\BudgetRevision;
+use App\Http\Requests;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use App\ResourceType;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 class DashboardController extends Controller
 {
     /** @var Collection */
     private $projects;
 
+    /** @var Collection */
+    private $last_period_ids;
+
     function index()
     {
         $this->projects = Project::all();
+        $this->last_period_ids = Period::last()->pluck('period_id');
 
-        return view('dashboard.index', [
+        if (request()->exists('clear')) {
+            \Cache::forget('dashboard-data');
+        }
+
+        $data = \Cache::remember('dashboard-data', Carbon::parse('+1 day'), function () {
+            return $this->getData();
+        });
+
+        return view('dashboard.index', $data);
+    }
+
+    private function getData()
+    {
+        return [
             'projectNames' => $this->projects->pluck('name', 'id'),
             'contracts_info' => $this->contracts_info(),
             'finish_dates' => $this->finish_dates(),
             'budget_info' => $this->budget_info(),
-            'cost_info' => $this->cost_info()
-        ]);
+            'cost_info' => $this->cost_info(),
+            'cost_smmary' => $this->cost_summary()
+        ];
     }
 
     private function contracts_info()
@@ -112,10 +131,10 @@ class DashboardController extends Controller
 
     private function cost_info()
     {
-        $last_period_ids = Period::last()->pluck('period_id');
-//        $last_periods = Period::whereIn('id', $last_period_ids);
+        
+//        $last_periods = Period::whereIn('id', $this->last_period_ids);
 
-        $cpis = MasterShadow::whereIn('period_id', $last_period_ids)
+        $cpis = MasterShadow::whereIn('period_id', $this->last_period_ids)
             ->selectRaw('project_id, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->groupBy('project_id')
             ->get()->map(function ($period) {
@@ -135,5 +154,30 @@ class DashboardController extends Controller
         return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk');
     }
 
+    private function cost_summary()
+    {
+        $resourceTypes = ResourceType::parents()->pluck('name', 'id');
+
+        $previousSummary = MasterShadow::whereIn('period_id', $this->last_period_ids)
+            ->selectRaw('resource_type_id, sum(to_date_cost) as previous_cost, sum(allowable_ev_cost) as previous_allowable')
+            ->selectRaw('sum(allowable_var) as previous_var')
+            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get();
+
+        return MasterShadow::whereIn('period_id', $this->last_period_ids)
+            ->selectRaw('resource_type_id, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
+            ->selectRaw('sum(allowable_ev_cost) as to_date_allowable, sum(allowable_var) as to_date_var')
+            ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
+            ->selectRaw('sum(cost_var) as completion_var')
+            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get()
+            ->map(function($type) use ($previousSummary, $resourceTypes) {
+                $previous = $previousSummary->get($type->resource_type_id, new Fluent());
+                $type->previous_cost = $previous->previous_cost ?: 0;
+                $type->previous_allowable = $previous->previous_allowable ?: 0;
+                $type->previous_var = $previous->previous_var ?: 0;
+                $type->resource_type = $resourceTypes->get($type->resource_type_id);
+
+                return $type;
+            });
+    }
 
 }
