@@ -12040,6 +12040,7 @@ table.table > thead > tr > th.v-top {
 
 .card .table {
   margin-bottom: 0;
+  font-size: 80%;
 }
 
 .card .table .highlight td,
@@ -12052,6 +12053,11 @@ table.table > thead > tr > th.v-top {
   border: none;
   background: transparent;
   background-color: transparent;
+}
+
+.card .table .bg-primary td,
+.card .table .bg-primary th {
+  background-color: #3097D1;
 }
 
 dl {
@@ -12098,6 +12104,12 @@ dd {
   width: 9%;
   min-width: 9%;
   max-width: 9%;
+}
+
+.w-30p {
+  width: 30%;
+  min-width: 30%;
+  max-width: 30%;
 }
 
 .w-2-3 {

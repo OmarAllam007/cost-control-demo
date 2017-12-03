@@ -24,15 +24,7 @@
             @include('dashboard.budget_data')
             @include('dashboard.actual_data')
 
-
-
-            <section class="card">
-                <h3 class="card-title">Cost Summary</h3>
-
-                <div class="card-body">
-
-                </div>
-            </section>
+            @include('dashboard.cost_summary')
 
             <section class="card">
                 <h3 class="card-title">CPI Trend Analysis</h3>

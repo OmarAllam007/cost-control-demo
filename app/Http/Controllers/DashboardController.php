@@ -47,7 +47,7 @@ class DashboardController extends Controller
             'finish_dates' => $this->finish_dates(),
             'budget_info' => $this->budget_info(),
             'cost_info' => $this->cost_info(),
-            'cost_smmary' => $this->cost_summary()
+            'cost_summary' => $this->cost_summary()
         ];
     }
 
@@ -158,10 +158,17 @@ class DashboardController extends Controller
     {
         $resourceTypes = ResourceType::parents()->pluck('name', 'id');
 
-        $previousSummary = MasterShadow::whereIn('period_id', $this->last_period_ids)
+        $budgetSummary = BreakDownResourceShadow::selectRaw('resource_type_id, sum(budget_cost) as budget_cost')
+            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get()->keyBy('resource_type_id');
+
+        $previous_period_ids = Period::whereIn('id', $this->last_period_ids)->get()->map(function ($period) {
+            return Period::readyForReporting()->where('project_id', $period->project_id)->where('id', '<', $period->id)->value('id');
+        })->filter();
+
+        $previousSummary = MasterShadow::whereIn('period_id', $previous_period_ids)
             ->selectRaw('resource_type_id, sum(to_date_cost) as previous_cost, sum(allowable_ev_cost) as previous_allowable')
             ->selectRaw('sum(allowable_var) as previous_var')
-            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get();
+            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get()->keyBy('resource_type_id');
 
         return MasterShadow::whereIn('period_id', $this->last_period_ids)
             ->selectRaw('resource_type_id, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
@@ -169,8 +176,9 @@ class DashboardController extends Controller
             ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
             ->selectRaw('sum(cost_var) as completion_var')
             ->groupBy('resource_type_id')->orderBy('resource_type_id')->get()
-            ->map(function($type) use ($previousSummary, $resourceTypes) {
+            ->map(function($type) use ($previousSummary, $budgetSummary, $resourceTypes) {
                 $previous = $previousSummary->get($type->resource_type_id, new Fluent());
+                $type->budget_cost = $budgetSummary->get($type->resource_type_id, new Fluent)->budget_cost ?: 0;
                 $type->previous_cost = $previous->previous_cost ?: 0;
                 $type->previous_allowable = $previous->previous_allowable ?: 0;
                 $type->previous_var = $previous->previous_var ?: 0;

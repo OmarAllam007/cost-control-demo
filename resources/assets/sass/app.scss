@@ -587,6 +587,7 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
   .table {
     margin-bottom: 0;
+    font-size: 80%;
 
     .highlight td, .highlight th {
       background-color: #ffc;
@@ -596,6 +597,10 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
         background: transparent;
         background-color: transparent;
       }
+    }
+
+    .bg-primary td, .bg-primary th {
+      background-color: $brand-primary;
     }
   }
 }
@@ -639,6 +644,12 @@ dd {
   width: 9%;
   min-width: 9%;
   max-width: 9%;
+}
+
+.w-30p {
+  width: 30%;
+  min-width: 30%;
+  max-width: 30%;
 }
 
 .w-2-3 {
