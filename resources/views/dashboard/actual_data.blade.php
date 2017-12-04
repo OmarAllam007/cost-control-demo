@@ -19,7 +19,7 @@
                 <td class="w-2-3">{{number_format($cost_info['cpi'], 4)}}</td>
                 <td class="separator"></td>
                 <th class="w-1-3">Waste Index</th>
-                <td class="w-2-3"></td>                
+                <td class="w-2-3">{{number_format($cost_info['pw_index'], 2)}}%</td>
                 <td class="separator"></td>
                 <th class="w-1-3">SPI</th>
                 <td class="w-2-3"></td>

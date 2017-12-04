@@ -80,7 +80,19 @@
                         <h3 class="card-title">Cost Percentage</h3>
 
                         <div class="card-body">
-
+                            <div class="chart"
+                                id="costChart"
+                                data-type="pie"
+                                data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
+                                data-datasets="[{{ json_encode([
+                                    'label' => 'Cost Percentage', 
+                                    'data' => [
+                                        round($cost_percentage_chart['actual_cost'], 2), 
+                                        round($cost_percentage_chart['remaining_cost'], 2)
+                                    ],
+                                    'backgroundColor' => ['#64D5CA', '#E3342F']
+                                ]) }}]"
+                                style="height: 200px"></div>
                         </div>
                     </section>
                 </div>

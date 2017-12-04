@@ -47,7 +47,8 @@ class DashboardController extends Controller
             'finish_dates' => $this->finish_dates(),
             'budget_info' => $this->budget_info(),
             'cost_info' => $this->cost_info(),
-            'cost_summary' => $this->cost_summary()
+            'cost_summary' => $this->cost_summary(),
+            'cost_percentage_chart' => $this->cost_percentage()
         ];
     }
 
@@ -97,7 +98,7 @@ class DashboardController extends Controller
         ];
 
         $max_revision_ids = BudgetRevision::maxRevisions()->pluck('id');
-        $max_revisions = BudgetRevision::find($max_revision_ids->toArray());
+        $max_revisions = BudgetRevision::find($max_revision_ids->toArray())->dd();
         $general_requirement = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
         $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
         $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->sum('budget_cost');
@@ -147,11 +148,15 @@ class DashboardController extends Controller
         $to_date_cost = $cpis->sum('to_date_cost');
         $variance = $allowable_cost - $to_date_cost;
         $cpi = $allowable_cost / $to_date_cost;
+        $pw_index = 0;
+        if ($allowable_cost) {
+            $pw_index = ($allowable_cost - $to_date_cost) * 100 / $allowable_cost;
+        }
 
         $highest_risk = $cpis->first();
         $lowest_risk = $cpis->last();
 
-        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk');
+        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index');
     }
 
     private function cost_summary()
@@ -186,6 +191,14 @@ class DashboardController extends Controller
 
                 return $type;
             });
+    }
+
+    private function cost_percentage()
+    {
+        return MasterShadow::whereIn('period_id', $this->last_period_ids)
+            ->selectRaw('sum(to_date_cost) as actual_cost')
+            ->selectRaw('sum(remaining_cost) as remaining_cost')
+            ->first()->toArray();
     }
 
 }
