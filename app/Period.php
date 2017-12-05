@@ -77,4 +77,9 @@ class Period extends Model
 
         return Carbon::parse($this->project->expected_finished_date);
     }
+
+    public function scopeLast(Builder $query)
+    {
+        return $query->readyForReporting()->select('project_id')->selectRaw('max(id) as period_id')->groupBy('project_id');
+    }
 }

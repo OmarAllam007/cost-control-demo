@@ -25,6 +25,10 @@
             <div class="form-group">
                 <a href="/project/{{$project->id}}/issue-files" target="_blank" class="hvr-float-shadow btn btn-primary btn-block" >Issues</a>
             </div>
+
+            <div class="form-group">
+                <a href="{{route('threshold-report', $project)}}" target="_blank" class="hvr-float-shadow btn btn-primary btn-block" >Threshold Report</a>
+            </div>
         </div>
 
         <div class="col-xs-6">

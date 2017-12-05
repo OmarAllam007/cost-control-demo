@@ -5,6 +5,7 @@ namespace App;
 use App\Behaviors\RecordsUser;
 use App\Jobs\CreateRevisionForProject;
 use App\Revision\RevisionBreakdownResourceShadow;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -81,7 +82,7 @@ class BudgetRevision extends Model
             return 'System';
         }
 
-        return $this->created_by_user->name;
+        return $this->created_by_user->name ?? '';
     }
 
     protected function getUrlAttribute()
@@ -91,7 +92,7 @@ class BudgetRevision extends Model
 
     protected function getCreatedDateAttribute()
     {
-        return $this->created_at->format('d/m/Y');
+        return $this->created_at->format('d/m/Y') ?? '';
     }
 
     /*public function getRevisedContractAmount()
@@ -104,4 +105,13 @@ class BudgetRevision extends Model
         return url("/project/{$this->project_id}/revisions/{$this->id}");
     }
 
+    function scopeMinRevisions(Builder $query)
+    {
+        return $query->select('project_id')->selectRaw('min(id) as id')->groupBy('project_id');
+    }
+
+    function scopeMaxRevisions(Builder $query)
+    {
+        return $query->select('project_id')->selectRaw('max(id) as id')->groupBy('project_id');
+    }
 }
