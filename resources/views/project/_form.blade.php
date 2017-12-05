@@ -111,7 +111,11 @@
 
         <div class="form-group {{$errors->first('cost_threshold', 'has-error')}}">
             {{ Form::label('cost_threshold', null, ['class' => 'control-label']) }}
-            {{ Form::text('cost_threshold', null, ['class' => 'form-control']) }}
+            <div class="input-group">
+                {{ Form::text('cost_threshold', null, ['class' => 'form-control']) }}
+                <span class="input-group-addon">%</span>
+            </div>
+
             {!! $errors->first('cost_threshold', '<div class="help-block">:message</div>') !!}
         </div>
 
