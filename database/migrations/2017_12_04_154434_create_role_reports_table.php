@@ -16,6 +16,8 @@ class CreateRoleReportsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('role_id');
             $table->unsignedInteger('report_id');
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
             $table->timestamps();
         });
     }

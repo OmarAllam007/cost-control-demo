@@ -10,6 +10,7 @@ class CreateReportsTable extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('description')->nullable();
             $table->string('type');
             $table->string('class_name');
             $table->timestamps();

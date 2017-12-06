@@ -31,7 +31,7 @@ class RolesController extends Controller
         $this->validate($request, ['name' => 'required', 'reports' => 'required']);
 
         $role = Role::create($request->only('name', 'description'));
-        $role->reports()->sync($request->input('reports'));
+        $role->addReports($request->input('reports'));
 
         flash('Role has been saved');
         return \Redirect::route('roles.index');
@@ -49,7 +49,7 @@ class RolesController extends Controller
         $this->validate($request, ['name' => 'required', 'reports' => 'required']);
 
         $role->update($request->only('name', 'description'));
-        $role->reports()->sync($request->input('reports'));
+        $role->updateReports($request->input('reports'));
 
         flash('Role has been saved');
         return \Redirect::route('roles.index');
@@ -57,6 +57,10 @@ class RolesController extends Controller
 
     function delete(Role $role)
     {
+        $role->delete();
 
+        flash('Role has been deleted');
+
+        return \Redirect::route('role.index');
     }
 }

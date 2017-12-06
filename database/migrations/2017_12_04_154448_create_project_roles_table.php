@@ -13,6 +13,8 @@ class CreateProjectRolesTable extends Migration
             $table->unsignedInteger('role_id');
             $table->string('name');
             $table->string('email');
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
             $table->timestamps();
         });
     }
