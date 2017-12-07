@@ -15,30 +15,12 @@ class Role extends Model
 
     function reports()
     {
-        return $this->belongsToMany(Report::class);
+        return $this->belongsToMany(Report::class, 'role_reports');
     }
 
-    public function addReports($reports)
+    function hasReport($id)
     {
-        $result = collect();
-        foreach ($reports as $report_id) {
-            $result->push($this->reports()->create(compact('report_id')));
-        }
-
-        return $result;
-    }
-
-    public function updateReports($reports)
-    {
-        $result = collect();
-
-        foreach ($reports as $report_id) {
-            $result->push($this->reports()->firstOrCreate(compact('report_id')));
-        }
-
-        $this->reports()->whereNotIn('id', $result->pluck('id'))->delete();
-
-        return $result;
+        return $this->reports->pluck('pivot.report_id', 'pivot.report_id')->has($id);
     }
 
     protected static function boot()

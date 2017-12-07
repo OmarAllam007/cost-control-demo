@@ -231,4 +231,4 @@ Route::get('project/{project}/failed-productivity', 'ProjectProductivityControll
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
-Route::resource('roles', 'RolesController');
+Route::resource('roles', 'RolesController', ['parameters' => 'singular']);

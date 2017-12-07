@@ -3,7 +3,11 @@
 @section('title', 'Communication Plan')
 
 @section('header')
-    <h2>Communication Plan</h2>
+    <div class="display-flex">
+        <h2 class="flex">Communication Plan</h2>
+
+        <a href="{{route('roles.create')}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Role</a>
+    </div>
 @endsection
 
 @section('body')
@@ -11,8 +15,8 @@
     <table class="table table-condensed table-striped" id="rolesTable">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Actions</th>
+            <th class="col-sm-8">Name</th>
+            <th class="col-sm-4">Actions</th>
         </tr>
         </thead>
 
