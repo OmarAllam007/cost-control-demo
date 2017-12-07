@@ -257,4 +257,9 @@ class Project extends Model
     {
         return $this->hasMany(BudgetRevision::class);
     }
+
+    function roles()
+    {
+        return $this->hasMany(ProjectRole::class);
+    }
 }

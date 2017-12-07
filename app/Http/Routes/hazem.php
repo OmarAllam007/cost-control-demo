@@ -232,3 +232,5 @@ Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('q
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
 Route::resource('roles', 'RolesController', ['parameters' => 'singular']);
+Route::get('project/{project}/roles', 'ProjectRolesController@edit')->name('project.roles');
+Route::put('project/{project}/roles', 'ProjectRolesController@update');
