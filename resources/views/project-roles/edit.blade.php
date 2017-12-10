@@ -17,22 +17,22 @@
         {{method_field('put')}}
         {{csrf_field()}}
 
-        <roles :roles="{{$roles}}" inline-template>
+        <roles :roles="{{$roles}}" :errors="{{json_encode($errors->toArray())}}" inline-template>
             <section class="col-sm-9 col-md-6">
-                <role v-for="(key,role) in roles" inline-template :key="key" :role="role">
+                <role v-for="(key,role) in roles" inline-template :key="key" :role="role" :errors="errors">
                     <article class="panel panel-default">
                         <div class="panel-heading display-flex">
                             <label class="flex">
-                                <input type="checkbox" :name="`roles[${key}][role_id]`" v-model="enabled" :value="role.role_id">
+                                <input type="checkbox" :name="`roles[${role.id}][role_id]`" v-model="enabled" :value="role.id">
                                 @{{ role.name }}
                             </label>
 
-                            <a v-if="enabled" href="#" class="btn btn-sm btn-primary" @click.prevent="addUser"><i class="fa fa-plus"></i> Add User</a>
+                            <a :disabled="!enabled" href="#" class="btn btn-sm btn-primary" @click.prevent="addUser" tabindex="-1"><i class="fa fa-plus"></i> Add User</a>
                         </div>
 
                         
-                        <users inline-template :role_key="key" :users="users">
-                            <table class="table table-condensed table-striped" v-if="users.length">
+                        <users inline-template :role_id="role.id" :users="users" :errors="errors">
+                            <table class="table table-condensed table-striped" v-show="users.length">
                                 <thead>
                                 <tr>
                                     <th>Name</th>
@@ -41,7 +41,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <tr is="user" v-for="(user_key, user) in users" :user_key="user_key" :user_data="user" :role_key="role_key"></tr>
+                                    <tr is="user" v-for="(user_key, user) in users" :user_key="user_key" :user_data="user" :role_id="role_id" :errors="errors"></tr>
                                 </tbody>
                             </table>
                         </users>
@@ -49,6 +49,11 @@
                 </role>
             </section>
         </roles>
+
+
+        <div class="col-sm-12 form-group">
+            <button class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
+        </div>
     </form>
 @endsection
 

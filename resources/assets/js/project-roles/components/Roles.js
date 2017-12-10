@@ -1,7 +1,7 @@
 import Role from './Role';
 
 export default {
-    props: ['roles'],
+    props: ['roles', 'errors'],
 
     components: {
         Role

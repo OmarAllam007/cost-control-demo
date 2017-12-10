@@ -10342,7 +10342,7 @@ module.exports = Vue;
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['roles'],
+    props: ['roles', 'errors'],
 
     components: {
         Role: __WEBPACK_IMPORTED_MODULE_0__Role__["a" /* default */]
@@ -10357,14 +10357,18 @@ module.exports = Vue;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Users__ = __webpack_require__(5);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['key', 'role'],
+    props: ['key', 'role', 'errors'],
     data: function data() {
         var users = [];
-        if (this.role.users) {
+        if (this.role.users && this.role.users.length) {
             users = this.role.users;
         }
-        return { enabled: false, users: users };
+
+        var enabled = this.role.enabled;
+
+        return { enabled: enabled, users: users };
     },
+
 
     methods: {
         addUser: function addUser() {
@@ -10372,9 +10376,19 @@ module.exports = Vue;
         }
     },
 
+    watch: {
+        enabled: function enabled() {
+            if (this.enabled && (!this.role.users || !this.role.users.length)) {
+                this.addUser();
+            }
+        }
+    },
+
     events: {
         dropUser: function dropUser(key) {
-            this.users.splice(key, 1);
+            if (this.users && this.users.length > 1) {
+                this.users.splice(key, 1);
+            }
         }
     },
 
@@ -10392,7 +10406,7 @@ module.exports = Vue;
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['role_key', 'users'],
+    props: ['role_id', 'users', 'errors'],
 
     components: {
         User: __WEBPACK_IMPORTED_MODULE_0__User__["a" /* default */]
@@ -10411,11 +10425,11 @@ module.exports = Vue;
 
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
-    template: '\n        <tr>\n            <td><input class="form-control input-sm" type="text" :name="name_input" v-model="user.name"></td>\n            <td><input class="form-control input-sm" type="email" :name="email_input" v-model="user.email"></td>\n            <td class="text-right"><a href="#" class="btn btn-danger btn-sm" @click.prevent="dropUser"><i class="fa fa-remove"></i></a></td>\n        </tr>\n    ',
-    props: ['role_key', 'user_key', 'user_data'],
+    template: '\n        <tr>\n            <td :class="{\'has-error\': name_error}">\n                <input class="form-control input-sm" type="text" :name="name_input" v-model="user.name">\n                <input type="hidden" name="id_input" v-model="user.id">\n            </td>\n            <td :class="{\'has-error\': email_error}"><input class="form-control input-sm" type="email" :name="email_input" v-model="user.email"></td>\n            <td class="text-center"><a href="#" class="btn btn-danger btn-sm" @click.prevent="dropUser"><i class="fa fa-remove"></i></a></td>\n        </tr>\n    ',
+    props: ['role_id', 'user_key', 'user_data', 'errors'],
 
     data: function data() {
-        return { user: { name: this.user_data.name, email: this.user_data.email } };
+        return { user: { id: this.user_data.id || 0, name: this.user_data.name, email: this.user_data.email } };
     },
 
 
@@ -10427,10 +10441,18 @@ module.exports = Vue;
 
     computed: {
         name_input: function name_input() {
-            return 'roles[' + this.role_key + '][users][' + this.user_key + '][name]';
+            return 'roles[' + this.role_id + '][users][' + this.user_key + '][name]';
         },
         email_input: function email_input() {
-            return 'roles[' + this.role_key + '][users][' + this.user_key + '][email]';
+            return 'roles[' + this.role_id + '][users][' + this.user_key + '][email]';
+        },
+        name_error: function name_error() {
+            var key = 'roles.' + this.role_id + '.users.' + this.user_key + '.name';
+            return this.errors.hasOwnProperty(key);
+        },
+        email_error: function email_error() {
+            var key = 'roles.' + this.role_id + '.users.' + this.user_key + '.email';
+            return this.errors.hasOwnProperty(key);
         }
     }
 });

@@ -1,7 +1,7 @@
 import User from './User';
 
 export default  {
-    props: ['role_key', 'users'],
+    props: ['role_id', 'users', 'errors'],
 
     components: {
         User

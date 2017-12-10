@@ -7,8 +7,6 @@ use App\ProjectRole;
 use App\Role;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-
 class ProjectRolesController extends Controller
 {
     function edit(Project $project)
@@ -18,7 +16,18 @@ class ProjectRolesController extends Controller
             return \Redirect::route('project.show', $project);
         }
 
-        $roles = Role::with('reports')->get();
+        $roles = Role::all()->map(function($role) use ($project) {
+            $role->users = old("roles.{$role->id}.users");
+            if (!$role->users) {
+                $role->users = ProjectRole::where('project_id', $project->id)->where('role_id', $role->id)->get();
+            }
+
+            $role->enabled = count($role->users);
+
+            return $role;
+        });
+
+
 
         return view('project-roles.edit', compact('project','roles'));
     }
@@ -26,7 +35,7 @@ class ProjectRolesController extends Controller
     function update(Project $project, Request $request)
     {
         if (!can('budget_owner', $project) && !can('cost_owner', $project)) {
-            flash('You are not authotized to do this action');
+            flash('You are not authorized to do this action');
             return \Redirect::route('project.show', $project);
         }
 
@@ -34,6 +43,8 @@ class ProjectRolesController extends Controller
 
         ProjectRole::updateRoles($project, $request->get('roles'));
 
-        return \Redirect::to($request->get('back', route('project.show', $project)));
+        flash('Project communication plan has been saved', 'success');
+
+        return \Redirect::route('project.roles', $project);
     }
 }
