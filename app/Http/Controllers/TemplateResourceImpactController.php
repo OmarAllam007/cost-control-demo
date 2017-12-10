@@ -161,7 +161,6 @@ class TemplateResourceImpactController extends Controller
 
         BreakdownResource::where('std_activity_resource_id', $template_resource->id)
             ->whereIn('id', $request->get('resources'))
-            ->with('boq')
             ->get()->each(function ($resource) {
                 $resource->delete();
             });
