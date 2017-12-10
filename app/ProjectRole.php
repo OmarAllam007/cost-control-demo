@@ -12,6 +12,11 @@ class ProjectRole extends Model
 
     protected $fillable = ['role_id', 'project_id', 'name', 'email'];
 
+    function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public static function updateRoles(Project $project, $input)
     {
         $roles = collect();

@@ -234,3 +234,11 @@ Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 Route::resource('roles', 'RolesController', ['parameters' => 'singular']);
 Route::get('project/{project}/roles', 'ProjectRolesController@edit')->name('project.roles');
 Route::put('project/{project}/roles', 'ProjectRolesController@update');
+
+
+Route::get('/project/{project}/communication/budget', 'BudgetCommunicationController@create')->name('communication.budget');
+Route::post('/project/{project}/communication/budget', 'BudgetCommunicationController@store');
+
+
+Route::get('/project/{project}/communication/cost', 'CostCommunicationController@create')->name('communication.cost');
+Route::post('/project/{project}/communication/cost', 'CostCommunicationController@store');

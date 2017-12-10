@@ -4,6 +4,12 @@
             <a href="{{route('break_down.printall',$project)}}?print=1&all=1" target="_blank" class="btn btn-primary">
                 <i class="fa fa-print"></i> Print All
             </a>
+
+            @can('budget_owner', $project)
+                <a href="{{route('communication.budget', $project)}}" class="btn btn-primary in-iframe">
+                    <i class="fa fa-send"></i> Send Reports
+                </a>
+            @endcan
         </div>
     </div>
 
