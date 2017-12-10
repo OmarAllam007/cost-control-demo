@@ -49,6 +49,7 @@ class BreakdownController extends Controller
      */
     public function store(BreakdownRequest $request)
     {
+        $this->validate($request, config('validation.breakdown'));
 
         $breakdown = Breakdown::create($request->all());
         $breakdown->syncVariables($request->get('variables'));

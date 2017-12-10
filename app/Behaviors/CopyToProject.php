@@ -8,6 +8,7 @@
 
 namespace App\Behaviors;
 
+use App\BreakdownVariable;
 use App\Resources;
 use App\WbsLevel;
 use App\Breakdown;
@@ -66,6 +67,21 @@ trait CopyToProject
         $attributes['updated_by'] = $user_id;
 
         $new_breakdown_id = Breakdown::insertGetId($attributes);
+        $new_breakdown = Breakdown::find($new_breakdown_id);
+
+        foreach ($breakdown->variables as $variable) {
+            $varAttributes = $variable->getAttributes();
+            unset($varAttributes['id']);
+            $varAttributes['breakdown_id'] = $new_breakdown_id;
+            $varAttributes['qty_survey_id'] = $new_breakdown->qty_survey->id ?? 0;
+            $varAttributes['created_at'] = date('Y-m-d H:i:s');
+            $varAttributes['updated_at'] = date('Y-m-d H:i:s');
+            $varAttributes['created_by'] = $user_id;
+            $varAttributes['updated_by'] = $user_id;
+
+            BreakdownVariable::insert($varAttributes);
+        }
+
         BreakdownResource::unguard();
         foreach ($breakdown->resources as $resource) {
             $attributes = $resource->getAttributes();
