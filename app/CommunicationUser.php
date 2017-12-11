@@ -8,6 +8,8 @@ class CommunicationUser extends Model
 {
     protected $fillable = ['user_id'];
 
+    protected $dates = ['created_at', 'updated_at', 'sent_at'];
+
     function schedule()
     {
         return $this->belongsTo(CommunicationSchedule::class, 'schedule_id');
@@ -25,6 +27,6 @@ class CommunicationUser extends Model
 
     function scopeNotSent($query)
     {
-        return $query->whereNull('sent_at');
+        $query->whereNull('sent_at');
     }
 }

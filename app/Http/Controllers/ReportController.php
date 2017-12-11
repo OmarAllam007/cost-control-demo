@@ -80,12 +80,12 @@ class ReportController extends Controller
     public function stdActivityReport(Project $project)
     {
         $report = new StdActivityReport($project, false);
-        $data = $report->run();
 
         if (request()->exists('excel')) {
             return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.budget.std-activity.index', $data);
     }
 

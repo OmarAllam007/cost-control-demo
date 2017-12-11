@@ -19,8 +19,7 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
     public $schedule;
 
-    /** @var Collection */
-    private $sheets;
+    private $type = 'budget';
 
     public function __construct(CommunicationSchedule $schedule)
     {
@@ -33,18 +32,20 @@ class SendCommunicationPlan extends Job implements ShouldQueue
             return false;
         }
 
-        $users = $this->schedule->users()->notSent()->with('report')->get();
-        $this->sheets = $this->buildReports($users);
+        $this->type = snake_case(strtolower($this->schedule->type));
+
+        $users = $this->schedule->users()->notSent()->with('reports')->get();
 
         $users->each(function ($user) {
-            \Mail::send("mail.communication-plan.{$this->schedule->type}", ['user' => $user], function (Message $msg) use ($user) {
+            \Mail::send("mail.communication-plan.{$this->type}", ['user' => $user, 'project' => $this->schedule->project], function (Message $msg) use ($user) {
                 $attachment = $this->buildReports($user);
-                $msg->to($user->email);
+                $msg->to($user->user->email);
                 $msg->subject("[KPS {$this->schedule->type}] " . $this->schedule->project->name);
-                $msg->attach($attachment['full'], ['as' => $this->schedule->project->name . '_' . $this->schedule->type . '_reports.xlsx']);
+                $msg->attach($attachment['full'], ['as' => slug($this->schedule->project->name) . '_' . $this->type . '_reports.xlsx']);
             });
 
-            $user->send_at = Carbon::now();
+            $user->sent_at = Carbon::now();
+            $user->save();
         });
 
         $this->schedule->sent_at = Carbon::now();
@@ -53,17 +54,20 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
     private function buildReports($user)
     {
-        $report_ids = $user->reports()->notSent()->pluck('report_id')->unique();
-        $reports = Report::find($report_ids);
+
+        $report_ids = $user->reports()->pluck('report_id')->unique();
+        $reports = Report::find($report_ids->toArray());
 
         return \Excel::create('kps_reports', function(LaravelExcelWriter $writer) use ($reports) {
             foreach ($reports as $r) {
                 $class_name = $r->class_name;
                 $report = new $class_name($this->schedule->project);
-                $writer->sheet(function(LaravelExcelWorksheet $sheet) use ($report) {
+                $writer->sheet($r->name, function(LaravelExcelWorksheet $sheet) use ($report) {
                     return $report->sheet($sheet);
                 });
             }
+
+            $writer->setActiveSheetIndex(0);
         })->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
     }
 }
