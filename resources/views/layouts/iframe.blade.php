@@ -12,6 +12,12 @@
 <body id="iframe">
 
 <div class="container-fluid">
+    @if (!\Request::has('reload'))
+        @if (session()->has('flash-message'))
+            @include("partials/alert/" . session('flash-type'), ['message' => session('flash-message')])
+        @endif
+    @endif
+
     @yield('body')
 </div>
 

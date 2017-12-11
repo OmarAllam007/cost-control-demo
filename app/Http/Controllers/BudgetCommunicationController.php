@@ -52,6 +52,10 @@ class BudgetCommunicationController extends Controller
 
         flash('Sending reports has been scheduled', 'info');
 
+        if ($request->exists('iframe')) {
+            return redirect('/blank');
+        }
+
         return redirect()->route('project.budget', $project);
     }
 }

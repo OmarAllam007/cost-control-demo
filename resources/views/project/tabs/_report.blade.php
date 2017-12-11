@@ -6,7 +6,7 @@
             </a>
 
             @can('budget_owner', $project)
-                <a href="{{route('communication.budget', $project)}}" class="btn btn-primary in-iframe">
+                <a href="{{route('communication.budget', $project)}}" class="btn btn-primary in-iframe" title="Send Reports">
                     <i class="fa fa-send"></i> Send Reports
                 </a>
             @endcan

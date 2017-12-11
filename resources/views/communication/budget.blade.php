@@ -16,7 +16,7 @@
         {{csrf_field()}}
 
         @foreach($project_roles as $role_id => $group)
-            <article class="col-md-9 col-sm-9">
+            <article class="col-md-9 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <label>
