@@ -18,6 +18,11 @@ class Role extends Model
         return $this->belongsToMany(Report::class, 'role_reports');
     }
 
+    function budget_reports()
+    {
+        return $this->reports()->where('type', 'budget');
+    }
+
     function hasReport($id)
     {
         return $this->reports->pluck('pivot.report_id', 'pivot.report_id')->has($id);

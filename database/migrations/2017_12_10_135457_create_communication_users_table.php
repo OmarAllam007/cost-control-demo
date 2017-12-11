@@ -11,6 +11,7 @@ class CreateCommunicationUsersTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('schedule_id');
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('role_id');
             $table->dateTime('sent_at')->nullable();
             $table->timestamps();
         });
