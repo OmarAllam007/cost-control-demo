@@ -4,8 +4,8 @@
 
 @section('header')
     <div class="display-flex">
-        <h2 class="flex">Send Budget Reports &mdash; {{$project->name}}</h2>
-        <a href="{{route('project.budget', $project)}}" class="btn btn-default btn-small">
+        <h2 class="flex">Send Cost Control Reports &mdash; {{$project->name}}</h2>
+        <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-small">
             <i class="fa fa-chevron-left"></i> Back
         </a>
     </div>
@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-sm-6">
                             <h4>Reports</h4>
-                            @foreach($roles[$role_id]->budget_reports as $report)
+                            @foreach($roles[$role_id]->reports as $report)
                                 <article class="checkbox">
                                     <label>
                                         <input type="hidden" name="schedule[{{$role_id}}][users][{{$report->id}}]" value="0">
