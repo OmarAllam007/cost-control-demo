@@ -55,7 +55,8 @@ class UsersController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        flash('User has been deleted', true);
+        
+        flash('User has been deleted', 'info');
         return \Redirect::route('users.index');
     }
 }
