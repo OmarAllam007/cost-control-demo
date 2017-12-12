@@ -29,7 +29,7 @@ class HighPriorityMaterialsReport
 
     public function run()
     {
-        $resources = $this->project->resources()->whereNotNull('top_material')->orderBy('name')->get();
+        $resources = $this->project->resources()->whereRaw("coalesce(top_material) != ''")->orderBy('name')->get();
 
         $shadows = BreakDownResourceShadow::whereIn('resource_id', $resources->pluck('id')->unique())
             ->selectRaw('resource_id, sum(budget_unit) as budget_unit, sum(budget_cost) as budget_cost')
@@ -43,7 +43,7 @@ class HighPriorityMaterialsReport
             $resource->budget_cost = $shadows->get($resource->id)->budget_cost ?? 0;
             return $resource;
         })->groupBy(function ($resource) {
-            return strtolower(trim($resource->top_material));
+            return strtolower($resource->top_material);
         })->map(function (Collection $group, $name) {
             $group = $group->map(function ($resource) {
                 $resource->weight = $resource->budget_cost * 100 / $this->total;
@@ -56,7 +56,7 @@ class HighPriorityMaterialsReport
             return ['name' => strtoupper($name), 'resources' => $group, 'budget_cost' => $total, 'weight' => $weight];
         })->sortBy('name');
 
-        return ['project' => $this->project, 'tree' => $this->tree];
+        return ['project' => $this->project, 'tree' => $this->tree, 'total' => $this->total];
     }
 
     public function excel()
