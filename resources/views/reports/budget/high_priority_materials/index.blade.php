@@ -20,6 +20,27 @@
 
 @section('body')
 
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr class="bg-primary">
+            <th class="col-sm-4">Project Total Cost</th>
+
+            <th class="col-sm-2">High Priority Material Cost</th>
+            <th class="col-sm-2">High Priority Material Weight (%)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="col-sm-4">{{number_format($total, 2)}}</td>
+            <td class="col-sm-4">{{number_format($tree->sum('budget_cost'), 2)}}</td>
+            <td class="col-sm-4">{{number_format($tree->sum('weight'), 2)}}</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <p>&nbsp;</p>
+
     <div class="row">
         <section class="report-table col-sm-12">
             <table class="table table-bordered table-hover">
