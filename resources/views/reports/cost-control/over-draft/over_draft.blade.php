@@ -9,8 +9,10 @@
             {{--<a href="?print=1&paint=std-activity" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print"></i>--}}
             {{--Print</a>--}}
             @can('actual_resources', $project)
-            <a href="/project/{{$project->id}}/actual-revenue" class="btn btn-primary btn-sm"><i class="fa fa-cloud-upload"></i> Import Actual Revenue</a>
+                <a href="/project/{{$project->id}}/actual-revenue" class="btn btn-primary btn-sm"><i class="fa fa-cloud-upload"></i> Import Actual Revenue</a>
             @endcan
+
+            <a href="?excel" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i> Excel</a>
 
             <a href="{{route('project.show', $project)}}#report" class="btn btn-default btn-sm">
                 <i class="fa fa-chevron-left"></i> Back

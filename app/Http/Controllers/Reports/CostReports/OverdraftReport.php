@@ -14,6 +14,10 @@ use App\Project;
 use App\WbsLevel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Classes\PHPExcel;
+use Maatwebsite\Excel\Readers\LaravelExcelReader;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class OverdraftReport
 {
@@ -32,6 +36,10 @@ class OverdraftReport
 
     /** @var Fluent */
     private $totals;
+
+
+    /** @var int */
+    private $row = 10;
 
     public function __construct(Period $period)
     {
@@ -56,13 +64,13 @@ class OverdraftReport
             'var_upv' => $this->tree->sum('var_upv'),
         ]);
 
-        return view('reports.cost-control.over-draft.over_draft', [
+        return [
             'tree' => $this->tree,
             'period' => $this->period,
             'project' => $this->project,
             'periods' => $periods,
             'totals' => $this->totals
-        ]);
+        ];
     }
 
     protected function buildTree($parent = 0)
@@ -85,6 +93,76 @@ class OverdraftReport
             return $level;
         })->reject(function($level) {
             return $level->subtree->isEmpty() && $level->boqs->isEmpty();
+        });
+    }
+
+    function excel()
+    {
+        $excel = \PHPExcel_IOFactory::load(storage_path('templates/overdraft.xlsx'));
+
+        $this->sheet($excel->getSheet(0));
+
+        $filename = storage_path('app/' . uniqid('overdraft_') . '.xlsx');
+        \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
+
+        return \Response::download($filename,
+            slug($this->project->name) . '_' . slug($this->period->name) . '_overdraft.xlsx'
+        )->deleteFileAfterSend(true);
+    }
+
+    function sheet(\PHPExcel_Worksheet $sheet)
+    {
+        $this->run();
+
+        $sheet->setCellValue('A4', 'Project: ' . $this->project->name);
+        $sheet->setCellValue('A5', 'Period: ' . $this->period->name);
+        $sheet->setCellValue('A6', 'Issue Date: ' . date('d/m/Y'));
+
+        $this->tree->each(function($level) use ($sheet) {
+            $this->buildExcelTree($sheet, $level);
+        });
+
+        return $sheet;
+    }
+
+    function buildExcelTree(\PHPExcel_Worksheet $sheet, $level, $depth = 0)
+    {
+        ++$this->row;
+        $sheet->setCellValue("A{$this->row}", $level->name);
+        $sheet->setCellValue("G{$this->row}", $level->physical_revenue);
+        $sheet->setCellValue("H{$this->row}", $level->physical_revenue_upv);
+        $sheet->setCellValue("I{$this->row}", $level->actual_revenue);
+        $sheet->setCellValue("J{$this->row}", $level->var);
+        $sheet->setCellValue("K{$this->row}", $level->var_upv);
+
+
+        $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent($depth);
+        if ($depth) {
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel(min($depth, 7))
+                ->setCollapsed(true)->setVisible(false);
+        }
+
+        ++$depth;
+
+        $level->subtree->each(function($sublevel) use ($sheet, $depth) {
+            $this->buildExcelTree($sheet, $sublevel, $depth);
+        });
+
+        $level->boqs->each(function($boq) use ($sheet, $depth) {
+            ++$this->row;
+
+            $sheet->fromArray([
+                $boq->description, $boq->boq_quantity, $boq->boq_unit_price,
+                $boq->physical_unit, $boq->physical_unit_upv, $boq->physical_revenue,
+                $boq->physical_revenue_upv, $boq->actual_revenue,
+                $boq->var, $boq->var_upv,
+            ], null, "A{$this->row}", true);
+
+            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent($depth);
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel(min($depth, 7))
+                ->setCollapsed(true)->setVisible(false);
         });
     }
 }
