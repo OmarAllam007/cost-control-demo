@@ -12,9 +12,9 @@
         </div>
 
         <div class="form-group form-group-sm col-sm-2">
-            <label for="thresholdValue">Threshold</label>
+            <label for="thresholdPercent">Threshold Percentage</label>
             <div class="input-group">
-                <input type="number" name="threshold" id="thresholdValue" class="form-control" value="{{ $threshold }}" step="0.1">
+                <input type="number" name="threshold" id="thresholdPercent" class="form-control" value="{{ $threshold }}" step="0.1">
                 <span class="input-group-addon">%</span>
             </div>
         </div>
@@ -23,7 +23,12 @@
                 @include('reports.partials.activity-filter')
         </div>
 
-        <div class="form-group filter-btn text-right col-sm-4">
+        <div class="form-group form-group-sm col-sm-2">
+            <label for="thresholdValue">Threshold Value</label>
+            <input type="number" name="threshold_value" id="thresholdValue" class="form-control" value="{{ $threshold_value }}">
+        </div>
+
+        <div class="form-group filter-btn text-right col-sm-2">
             <button class="btn btn-sm btn-primary"><i class="fa fa-filter"></i> Filter</button>
         </div>
 
