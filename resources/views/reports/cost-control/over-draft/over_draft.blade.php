@@ -22,7 +22,7 @@
 @section('body')
 
     <div class="horizontal-scroll">
-        <table class="table table-bordered table-striped table-hover" id="reportHead">
+        <table class="table table-bordered table-striped" id="reportHead">
             <thead>
             <tr>
                 <th class="boq-cell">BOQ Description</th>
@@ -36,15 +36,27 @@
                 <th class="price-cell">Variance </th>
                 <th class="price-cell">Variance Excl. Unit Price Var</th>
             </tr>
+            <tr class="info">
+                <th class="boq-cell">Total</th>
+                <th class="price-cell"></th>
+                <th class="price-cell"></th>
+                <th class="price-cell"></th>
+                <th class="price-cell"></th>
+                <td class="price-cell">{{number_format($totals->physical_revenue, 2)}}</td>
+                <td class="price-cell">{{number_format($totals->physical_revenue_upv, 2)}}</td>
+                <td class="price-cell">{{number_format($totals->actual_revenue, 2)}}</td>
+                <td class="price-cell {{$totals->var < 0? 'text-danger' : 'text-success'}}">{{number_format($totals->var, 2)}}</td>
+                <td class="price-cell {{$totals->var_upv < 0? 'text-danger' : 'text-success'}}">{{number_format($totals->var_upv, 2)}}</td>
+            </tr>
             </thead>
         </table>
         <div class="vertical-scroll">
-            <table class="table table-bordered table-striped table-hover" id="reportData">
-                <thead>
-                @foreach($tree->where('parent', '') as $level)
+            <table class="table table-bordered table-striped" id="reportData">
+                <tbody>
+                @foreach($tree as $level)
                     @include('reports.cost-control.over-draft._level')
                 @endforeach
-                </thead>
+                </tbody>
             </table>
         </div>
     </div>
@@ -113,6 +125,13 @@
             min-width: 200px;
             max-width: 200px;
         }
+
+        #reportData.table > tbody > tr.highlight > td,
+        #reportData.table > tbody > tr.success.highlight > td,
+        #reportData.table > tbody > tr:hover > td,
+        #reportData.table > tbody > tr.success:hover > td {
+            background-color: #ffc;
+        }
     </style>
 @endsection
 
@@ -141,11 +160,11 @@
                 }
                 return false;
             }).on('click', 'tr', function() {
-                if ($(this).hasClass('bg-primary')) {
-                    $(this).removeClass('bg-primary')
+                if ($(this).hasClass('highlight')) {
+                    $(this).removeClass('highlight')
                 } else {
-                    reportData.find('tr').removeClass('bg-primary');
-                    $(this).addClass('bg-primary')
+                    reportData.find('tr').removeClass('highlight');
+                    $(this).addClass('highlight')
                 }
             });
         });
