@@ -79,8 +79,27 @@ function renderLevel($tree, PHPExcel_Worksheet $sheet, $parent, $counter, $outli
                     $activity['completion_var'] ?: '0.00',
                 ], '', "A{$counter}");
 
-                $sheet->getRowDimension($counter)->setOutlineLevel($outlineLevel + 1)->setVisible(false)->setCollapsed(true);
+                $sheet->getRowDimension($counter)->setOutlineLevel(min($outlineLevel + 1, 7))->setVisible(false)->setCollapsed(true);
                 ++$counter;
+
+                foreach ($activity['resources'] as $resource) {
+                    $sheet->fromArray($arr = [
+                        str_repeat('    ', $outlineLevel + 2) . $resource->resource_name,
+                        $resource['budget_cost'] ?: '0.00',
+                        $resource['prev_cost'] ?: '0.00',
+                        $resource['prev_allowable'] ?: '0.00',
+                        $resource['prev_cost_var'] ?: '0.00',
+                        $resource['to_date_cost'] ?: '0.00',
+                        $resource['to_date_allowable'] ?: '0.00',
+                        $resource['to_date_var'] ?: '0.00',
+                        $resource['remaining_cost'] ?: '0.00',
+                        $resource['completion_cost'] ?: '0.00',
+                        $resource['completion_var'] ?: '0.00',
+                    ], '', "A{$counter}");
+
+                    $sheet->getRowDimension($counter)->setOutlineLevel(min($outlineLevel + 2, 7))->setVisible(false)->setCollapsed(true);
+                    ++$counter;
+                }
             }
         }
     }
