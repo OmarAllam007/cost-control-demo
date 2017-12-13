@@ -23,6 +23,11 @@ class Role extends Model
         return $this->reports()->where('type', 'budget');
     }
 
+    function cost_reports()
+    {
+        return $this->reports()->where('type', 'Cost Control');
+    }
+
     function hasReport($id)
     {
         return $this->reports->pluck('pivot.report_id', 'pivot.report_id')->has($id);

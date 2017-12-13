@@ -28,7 +28,7 @@
 
                 <div class="panel-body collapse">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <h4>Users</h4>
                             @foreach($group as $project_role)
                                 <article class="checkbox">
@@ -42,15 +42,29 @@
                                 </article>
                             @endforeach
                         </div>
-                        <div class="col-sm-6">
-                            <h4>Reports</h4>
-                            @foreach($roles[$role_id]->reports as $report)
+                        <div class="col-sm-4">
+                            <h4>Cost Reports</h4>
+                            @foreach($roles[$role_id]->cost_reports as $report)
                                 <article class="checkbox">
                                     <label>
                                         <input type="hidden" name="schedule[{{$role_id}}][users][{{$report->id}}]" value="0">
                                         <input type="checkbox" value="{{$report->id}}"
                                                name="schedule[{{$role_id}}][reports][{{$report->id}}]"
                                                {{old("schedule.{$role_id}.reports.{$report->id}", 1)? 'checked' : ''}}>
+                                        {{$report->name}}
+                                    </label>
+                                </article>
+                            @endforeach
+                        </div>
+                        <div class="col-sm-4">
+                            <h4>Budget Reports</h4>
+                            @foreach($roles[$role_id]->budget_reports as $report)
+                                <article class="checkbox">
+                                    <label>
+                                        <input type="hidden" name="schedule[{{$role_id}}][users][{{$report->id}}]" value="0">
+                                        <input type="checkbox" value="{{$report->id}}"
+                                               name="schedule[{{$role_id}}][reports][{{$report->id}}]"
+                                                {{old("schedule.{$role_id}.reports.{$report->id}", 1)? 'checked' : ''}}>
                                         {{$report->name}}
                                     </label>
                                 </article>
