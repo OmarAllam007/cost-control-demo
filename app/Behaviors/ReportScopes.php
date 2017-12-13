@@ -48,24 +48,24 @@ trait ReportScopes
     function scopePreviousActivityReport(Builder $query, Period $period)
     {
         $query->forPeriod($period);
-        $fields = ['wbs_id', 'activity'];
+        $fields = ['wbs_id', 'activity', 'resource_name'];
         $query->groupBy($fields);
         $query->select($fields)->selectRaw(
             'sum(to_date_cost) prev_cost, sum(allowable_ev_cost) prev_allowable, sum(allowable_var) prev_cost_var'
         );
-        $query->orderBy('activity');
+        $query->orderBy('resource_name', 'activity');
     }
 
     function scopeCurrentActivityReport(Builder $query, Period $period)
     {
         $query->forPeriod($period);
-        $fields = ['wbs_id', 'activity'];
+        $fields = ['wbs_id', 'activity', 'resource_name'];
         $query->groupBy($fields);
         $query->select($fields)->selectRaw(
             'sum(budget_cost) as budget_cost, sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_ev_cost) to_date_allowable,'.
             'sum(allowable_var) as to_date_var, sum(remaining_cost) remaining_cost, sum(completion_cost) completion_cost, sum(cost_var) completion_var'
-        );
-        $query->orderBy('activity');
+        )->where('to_date_cost', '>', 0);
+        $query->orderBy('resource_name', 'activity');
     }
 
     function scopeBoqReport(Builder $query, Period $period)
