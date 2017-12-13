@@ -36,6 +36,7 @@ class ThresholdReport
         $this->period = $period;
         $this->project = $period->project;
         $this->threshold = request('threshold', $this->project->cost_threshold);
+        $this->threshold_value = request('value', 0);
     }
 
     function run()
@@ -59,7 +60,7 @@ class ThresholdReport
 
         return [
             'project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 
-            'threshold' => $this->threshold, 'periods' => $periods
+            'threshold' => $this->threshold, 'periods' => $periods, 'threshold_value' => $this->threshold_value,
         ];
     }
 
@@ -78,11 +79,11 @@ class ThresholdReport
             }
             
             $level->activities = $level->activities->reject(function($activity) {
-                return $activity->increase < $this->threshold;
+                return $activity->increase < $this->threshold || $activity->variance < $this->threshold_value;
             });
 
             $level->subtree = $level->subtree->reject(function ($level) {
-                return ($level->subtree->isEmpty() && $level->activities->isEmpty()) || $level->variance <= 0;
+                return ($level->subtree->isEmpty() && $level->activities->isEmpty()) || $level->variance < $this->threshold_value;
             });
 
             return $level;
