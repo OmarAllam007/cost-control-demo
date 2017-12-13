@@ -41,7 +41,8 @@ class Project extends Model
         'direct_cost_material',
         'indirect_cost_general',
         'total_budget_cost',
-        'cost_owner_id'
+        'cost_owner_id',
+        'cost_threshold'
     ];
 
     protected $dates = ['created_at', 'updated_at'];

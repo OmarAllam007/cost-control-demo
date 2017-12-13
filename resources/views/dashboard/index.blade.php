@@ -7,54 +7,7 @@
 @section('body')
     <div class="row">
         <div class="col-sm-12">
-            <section class="card">
-                <h3 class="card-title">Contracts Information</h3>
-
-                <div class="card-body row">
-                    <div class="col-sm-4">
-                        <dl>
-                            <dt>Contracts Value</dt>
-                            <dd>{{number_format($contracts_info['contracts_total'], 2)}}</dd>
-                        </dl>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <dl>
-                            <dt>Change Orders Value</dt>
-                            <dd>{{number_format($contracts_info['change_orders'], 2)}}</dd>
-                        </dl>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <dl>
-                            <dt>Revised Contracts Value</dt>
-                            <dd>{{number_format($contracts_info['revised'], 2)}}</dd>
-                        </dl>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <dl>
-                            <dt>Profit</dt>
-                            <dd>{{number_format($contracts_info['profit'], 2)}}</dd>
-                        </dl>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <dl>
-                            <dt>Profitability</dt>
-                            <dd>{{number_format($contracts_info['profitability'], 2)}}%</dd>
-                        </dl>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <dl>
-                            <dt>Expected Finish Date</dt>
-                            <dd>{{$contracts_info['finish_date']->format('d M Y') ?? ''}}</dd>
-                        </dl>
-                    </div>
-                </div>
-
-            </section>
+            @include('dashboard.project-info')
 
             {{--
             <section class="card">
@@ -71,15 +24,7 @@
             @include('dashboard.budget_data')
             @include('dashboard.actual_data')
 
-
-
-            <section class="card">
-                <h3 class="card-title">Cost Summary</h3>
-
-                <div class="card-body">
-
-                </div>
-            </section>
+            @include('dashboard.cost_summary')
 
             <section class="card">
                 <h3 class="card-title">CPI Trend Analysis</h3>
@@ -135,7 +80,19 @@
                         <h3 class="card-title">Cost Percentage</h3>
 
                         <div class="card-body">
-
+                            <div class="chart"
+                                id="costChart"
+                                data-type="pie"
+                                data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
+                                data-datasets="[{{ json_encode([
+                                    'label' => 'Cost Percentage', 
+                                    'data' => [
+                                        round($cost_percentage_chart['actual_cost'], 2), 
+                                        round($cost_percentage_chart['remaining_cost'], 2)
+                                    ],
+                                    'backgroundColor' => ['#64D5CA', '#E3342F']
+                                ]) }}]"
+                                style="height: 200px"></div>
                         </div>
                     </section>
                 </div>
