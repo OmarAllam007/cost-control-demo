@@ -21,8 +21,9 @@ class CostCommunicationController extends Controller
 
         $project_roles = ProjectRole::where('project_id', $project->id)->with('role', 'role.reports')->get()->groupBy('role_id');
         $roles = Role::all()->keyBy('id');
+        $periods = $project->periods()->readyForReporting()->get();
 
-        return view('communication.cost-control', compact('project', 'project_roles', 'roles'));
+        return view('communication.cost-control', compact('project', 'project_roles', 'roles', 'periods'));
     }
 
     function store(Project $project, Request $request)
@@ -32,7 +33,7 @@ class CostCommunicationController extends Controller
             return redirect()->route('project.cost-control', $project);
         }
 
-        $schedule = CommunicationSchedule::create(['project_id' => $project->id, 'type' => 'Cost Control']);
+        $schedule = CommunicationSchedule::create(['project_id' => $project->id, 'period_id' => $request->period_id, 'type' => 'Cost Control']);
         foreach ($request->schedule as $role_id => $data) {
             if ($data['enabled']) {
                 $user_ids = array_filter($data['users']);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommunicationSchedule extends Model
 {
-    protected $fillable = ['project_id', 'type'];
+    protected $fillable = ['project_id', 'type', 'period_id', 'revision_id'];
 
     function users()
     {
@@ -21,5 +21,10 @@ class CommunicationSchedule extends Model
     function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    function period()
+    {
+        return $this->belongsTo(Period::class);
     }
 }

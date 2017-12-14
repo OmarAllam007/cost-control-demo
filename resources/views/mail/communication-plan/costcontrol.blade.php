@@ -4,7 +4,7 @@
     <p>Dear {{$user->name}},</p>
     <p></p>
 
-    <p>Please find attached budget reports for {{$project->name}}</p>
+    <p>Please find attached cost control reports for {{$project->name}} &mdash; {{$period->name}}</p>
 
     <p>&nbsp;</p>
     <p>&nbsp;</p>

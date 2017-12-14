@@ -36,12 +36,20 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
         $users = $this->schedule->users()->notSent()->with('reports')->get();
 
+        \Log::info($this->schedule->period);
+
         $users->each(function ($user) {
-            \Mail::send("mail.communication-plan.{$this->type}", ['user' => $user, 'project' => $this->schedule->project], function (Message $msg) use ($user) {
+            \Mail::send("mail.communication-plan.{$this->type}", [
+                'user' => $user,
+                'project' => $this->schedule->project,
+                'period' => $this->schedule->period
+            ], function (Message $msg) use ($user) {
                 $attachment = $this->buildReports($user);
                 $msg->to($user->user->email);
                 $msg->subject("[KPS {$this->schedule->type}] " . $this->schedule->project->name);
-                $msg->attach($attachment['full'], ['as' => slug($this->schedule->project->name) . '_' . $this->type . '_reports.xlsx']);
+                $msg->attach($attachment['full'], [
+                    'as' => slug($this->schedule->project->name) . '_' . $this->type . '_reports.xlsx'
+                ]);
             });
 
             $user->sent_at = Carbon::now();
@@ -61,7 +69,11 @@ class SendCommunicationPlan extends Job implements ShouldQueue
         return \Excel::create('kps_reports', function(LaravelExcelWriter $writer) use ($reports) {
             foreach ($reports as $r) {
                 $class_name = $r->class_name;
-                $report = new $class_name($this->schedule->project);
+                if ($this->schedule->type == 'Budget') {
+                    $report = new $class_name($this->schedule->project);
+                } else {
+                    $report = new $class_name($this->schedule->project, $this->schedule->period);
+                }
                 $writer->sheet($r->name, function(LaravelExcelWorksheet $sheet) use ($report) {
                     return $report->sheet($sheet);
                 });

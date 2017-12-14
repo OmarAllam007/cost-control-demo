@@ -15,6 +15,15 @@
     <form action="" method="post" class="row">
         {{csrf_field()}}
 
+        <div class="form-group col-sm-6 col-md-4">
+            <label for="periodSelect" class="control-label"></label>
+            <select name="period_id" id="periodSelect" class="form-control">
+                @foreach($periods as $period)
+                    <option value="{{$period->id}}">{{$period->name}}</option>
+                @endforeach
+            </select>
+        </div>
+
         @foreach($project_roles as $role_id => $group)
             <article class="col-md-9 col-sm-12">
             <div class="panel panel-default">
@@ -47,7 +56,7 @@
                             @foreach($roles[$role_id]->cost_reports as $report)
                                 <article class="checkbox">
                                     <label>
-                                        <input type="hidden" name="schedule[{{$role_id}}][users][{{$report->id}}]" value="0">
+                                        <input type="hidden" name="schedule[{{$role_id}}][reports][{{$report->id}}]" value="0">
                                         <input type="checkbox" value="{{$report->id}}"
                                                name="schedule[{{$role_id}}][reports][{{$report->id}}]"
                                                {{old("schedule.{$role_id}.reports.{$report->id}", 1)? 'checked' : ''}}>
@@ -61,7 +70,7 @@
                             @foreach($roles[$role_id]->budget_reports as $report)
                                 <article class="checkbox">
                                     <label>
-                                        <input type="hidden" name="schedule[{{$role_id}}][users][{{$report->id}}]" value="0">
+                                        <input type="hidden" name="schedule[{{$role_id}}][reports][{{$report->id}}]" value="0">
                                         <input type="checkbox" value="{{$report->id}}"
                                                name="schedule[{{$role_id}}][reports][{{$report->id}}]"
                                                 {{old("schedule.{$role_id}.reports.{$report->id}", 1)? 'checked' : ''}}>

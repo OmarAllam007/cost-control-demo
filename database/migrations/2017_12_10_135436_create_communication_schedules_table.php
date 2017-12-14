@@ -16,6 +16,8 @@ class CreateCommunicationSchedulesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('project_id');
             $table->string('type');
+            $table->unsignedInteger('period_id')->nullable();
+            $table->unsignedInteger('revision_id')->nullable();
             $table->dateTime('sent_at')->nullable();
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');
