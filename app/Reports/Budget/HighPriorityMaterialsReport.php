@@ -43,7 +43,7 @@ class HighPriorityMaterialsReport
             $resource->budget_cost = $shadows->get($resource->id)->budget_cost ?? 0;
             return $resource;
         })->groupBy(function ($resource) {
-            return strtolower($resource->top_material);
+            return strtolower(trim($resource->top_material));
         })->map(function (Collection $group, $name) {
             $group = $group->map(function ($resource) {
                 $resource->weight = $resource->budget_cost * 100 / $this->total;
