@@ -10,6 +10,8 @@ use App\MasterShadow;
 use App\Period;
 use App\Project;
 use App\ResourceType;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Readers\LaravelExcelReader;
 
 class CostSummary
 {
@@ -17,15 +19,16 @@ class CostSummary
      * @var Project
      */
     protected $project;
+
     /**
      * @var Period
      */
     protected $period;
 
-    function __construct(Project $project, Period $period)
+    function __construct(Period $period)
     {
 
-        $this->project = $project;
+        $this->project = $period->project;
         $this->period = $period;
     }
 
@@ -50,6 +53,19 @@ class CostSummary
 
         $toDateData = MasterShadow::where('period_id', $this->period->id)->selectRaw(implode(', ', $fields))->groupBy('resource_type_id')->get()->keyBy('resource_type_id');
         $project = $this->project;
+
         return compact('previousData', 'toDateData', 'project', 'resourceTypes');
+    }
+
+    function excel()
+    {
+        \Excel::load(storage_path('templates/cost-summary.xlsx'), function (LaravelExcelReader $reader) {
+            $activeSheet = $reader->getSheet(0);
+        });
+    }
+
+    function sheet(LaravelExcelWorksheet $sheet)
+    {
+        $data = $this->run();
     }
 }

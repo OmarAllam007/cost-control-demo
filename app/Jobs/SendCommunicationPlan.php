@@ -72,8 +72,9 @@ class SendCommunicationPlan extends Job implements ShouldQueue
                 if ($this->schedule->type == 'Budget') {
                     $report = new $class_name($this->schedule->project);
                 } else {
-                    $report = new $class_name($this->schedule->project, $this->schedule->period);
+                    $report = new $class_name($this->schedule->period);
                 }
+
                 $writer->sheet($r->name, function(LaravelExcelWorksheet $sheet) use ($report) {
                     return $report->sheet($sheet);
                 });

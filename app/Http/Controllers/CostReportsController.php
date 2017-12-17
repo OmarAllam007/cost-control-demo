@@ -41,7 +41,7 @@ class CostReportsController extends Controller
     {
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
-        $costSummary = new CostSummary($project, $period);
+        $costSummary = new CostSummary($period);
 
         $data = $costSummary->run();
 
