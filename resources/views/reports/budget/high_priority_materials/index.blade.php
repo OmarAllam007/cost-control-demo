@@ -59,9 +59,10 @@
                     <tbody>
                     @foreach ($tree as $group)
                         <tr class="bg-info">
-                            <th colspan="3">
+                            <th colspan="2">
                                 <a href="" class="group-name" data-target="{{slug($group['name'])}}">{{$group['name']}}</a>
                             </th>
+                            <th class="col-sm-2 text-right">{{number_format($group['budget_unit'], 2)}}</th>
                             <th class="col-sm-2 text-right">{{number_format($group['budget_cost'], 2)}}</th>
                             <th class="col-sm-2">{{number_format($group['weight'], 2)}}%</th>
                         </tr>

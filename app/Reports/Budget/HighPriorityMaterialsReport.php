@@ -43,7 +43,7 @@ class HighPriorityMaterialsReport
             $resource->budget_cost = $shadows->get($resource->id)->budget_cost ?? 0;
             return $resource;
         })->groupBy(function ($resource) {
-            return strtolower($resource->top_material);
+            return strtolower(trim($resource->top_material));
         })->map(function (Collection $group, $name) {
             $group = $group->map(function ($resource) {
                 $resource->weight = $resource->budget_cost * 100 / $this->total;
@@ -51,9 +51,14 @@ class HighPriorityMaterialsReport
             });
 
             $total = $group->sum('budget_cost');
+            $budget_unit = $group->sum('budget_unit');
             $weight = $total * 100 / $this->total;
 
-            return ['name' => strtoupper($name), 'resources' => $group, 'budget_cost' => $total, 'weight' => $weight];
+            return [
+                'name' => strtoupper($name), 'resources' => $group,
+                'budget_cost' => $total,
+                'budget_unit' => $budget_unit, 'weight' => $weight
+            ];
         })->sortBy('name');
 
         return ['project' => $this->project, 'tree' => $this->tree, 'total' => $this->total];
@@ -82,8 +87,9 @@ class HighPriorityMaterialsReport
 
         $this->tree->each(function ($group) use ($sheet){
             ++$this->row;
-            $sheet->mergeCells("A{$this->row}:C{$this->row}");
+            $sheet->mergeCells("A{$this->row}:B{$this->row}");
             $sheet->setCellValue("A{$this->row}", $group['name']);
+            $sheet->setCellValue("C{$this->row}", $group['budget_unit']);
             $sheet->setCellValue("D{$this->row}", $group['budget_cost']);
             $sheet->setCellValue("E{$this->row}", $group['weight'] / 100);
             $sheet->cells("A{$this->row}:E{$this->row}", function($cells) {
