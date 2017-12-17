@@ -127,8 +127,13 @@ class CostReportsController extends Controller
     public function overdraftReport(Project $project, Request $request)
     {
         $period_id = $this->getPeriod($project, $request);
-        $draft = new OverdraftReport(Period::find($period_id));
-        return $draft->run();
+        $report = new OverdraftReport(Period::find($period_id));
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.cost-control.over-draft.over_draft', $report->run());
     }
 
     public function activityReport(Project $project, Request $request)
