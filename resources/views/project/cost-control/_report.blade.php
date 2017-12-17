@@ -1,4 +1,9 @@
 <section id="CostControlReports" class="project-tab">
+
+    <div class="form-group clearfix">
+        <a class="btn btn-primary pull-right" href="{{route('communication.cost', $project)}}"><i class="fa fa-send"></i> Send Reports</a>
+    </div>
+
     <table class="table table-condensed table-striped table-fixed text-center">
         <thead>
 
