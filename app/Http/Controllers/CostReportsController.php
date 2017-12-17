@@ -41,14 +41,13 @@ class CostReportsController extends Controller
     {
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
-        $costSummary = new CostSummary($period);
-
-        $data = $costSummary->run();
+        $report = new CostSummary($period);
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.cost-summary.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-cost-summary.xlsx');
+            return $report->excel();
         }
+
+        $data = $report->run();
 
         return view('reports.cost-control.cost-summary.index', $data);
     }

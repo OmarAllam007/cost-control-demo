@@ -44,10 +44,15 @@ class SendCommunicationPlan extends Job implements ShouldQueue
                 'project' => $this->schedule->project,
                 'period' => $this->schedule->period
             ], function (Message $msg) use ($user) {
-                $attachment = $this->buildReports($user);
+                if ($this->type == 'budget') {
+                    $attachment = $this->buildBudgetReports($user);
+                } else {
+                    $attachment = $this->buildCostReports($user);
+                }
+
                 $msg->to($user->user->email);
                 $msg->subject("[KPS {$this->schedule->type}] " . $this->schedule->project->name);
-                $msg->attach($attachment['full'], [
+                $msg->attach($attachment, [
                     'as' => slug($this->schedule->project->name) . '_' . $this->type . '_reports.xlsx'
                 ]);
             });
@@ -60,20 +65,16 @@ class SendCommunicationPlan extends Job implements ShouldQueue
         $this->schedule->save();
     }
 
-    private function buildReports($user)
+    private function buildBudgetReports($user)
     {
-
         $report_ids = $user->reports()->pluck('report_id')->unique();
         $reports = Report::find($report_ids->toArray());
 
-        return \Excel::create('kps_reports', function(LaravelExcelWriter $writer) use ($reports) {
+        $info = \Excel::create('kps_reports', function(LaravelExcelWriter $writer) use ($reports) {
             foreach ($reports as $r) {
                 $class_name = $r->class_name;
-                if ($this->schedule->type == 'Budget') {
-                    $report = new $class_name($this->schedule->project);
-                } else {
-                    $report = new $class_name($this->schedule->period);
-                }
+
+                $report = new $class_name($this->schedule->project);
 
                 $writer->sheet($r->name, function(LaravelExcelWorksheet $sheet) use ($report) {
                     return $report->sheet($sheet);
@@ -82,5 +83,28 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
             $writer->setActiveSheetIndex(0);
         })->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
+
+        return $info['full'];
+    }
+
+    private function buildCostReports($user)
+    {
+        $report_ids = $user->reports()->pluck('report_id')->unique();
+        $reports = Report::find($report_ids->toArray());
+
+        $excel = new \PHPExcel();
+        $excel->removeSheetByIndex(0);
+
+        foreach ($reports as $index => $r) {
+            $class_name = $r->class_name;
+
+            $report = new $class_name($this->schedule->project);
+
+            $excel->addSheet($report->sheet(), $index);
+        }
+
+        $filename = storage_path('app/costcontrol-reports-' . uniqid() . '.xlsx');
+        \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
+        return $filename;
     }
 }
