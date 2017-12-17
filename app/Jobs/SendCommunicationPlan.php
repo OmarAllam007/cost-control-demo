@@ -36,19 +36,13 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
         $users = $this->schedule->users()->notSent()->with('reports')->get();
 
-        \Log::info($this->schedule->period);
-
         $users->each(function ($user) {
             \Mail::send("mail.communication-plan.{$this->type}", [
                 'user' => $user,
                 'project' => $this->schedule->project,
                 'period' => $this->schedule->period
             ], function (Message $msg) use ($user) {
-                if ($this->type == 'budget') {
-                    $attachment = $this->buildBudgetReports($user);
-                } else {
-                    $attachment = $this->buildCostReports($user);
-                }
+                $attachment = $this->buildReports($user);
 
                 $msg->to($user->user->email);
                 $msg->subject("[KPS {$this->schedule->type}] " . $this->schedule->project->name);
@@ -65,7 +59,7 @@ class SendCommunicationPlan extends Job implements ShouldQueue
         $this->schedule->save();
     }
 
-    private function buildBudgetReports($user)
+    private function buildReports($user)
     {
         $report_ids = $user->reports()->pluck('report_id')->unique();
         $reports = Report::find($report_ids->toArray());
@@ -74,37 +68,22 @@ class SendCommunicationPlan extends Job implements ShouldQueue
             foreach ($reports as $r) {
                 $class_name = $r->class_name;
 
-                $report = new $class_name($this->schedule->project);
+                if ($r->type == 'Budget') {
+                    $report = new $class_name($this->schedule->project);
+                    $writer->sheet($r->name, function(LaravelExcelWorksheet $sheet) use ($report, $r) {
+                        $report->sheet($sheet);
+                    });
+                } else {
+                    $report = new $class_name($this->schedule->period);
+                    $writer->excel->addExternalSheet($report->sheet());
+                }
 
-                $writer->sheet($r->name, function(LaravelExcelWorksheet $sheet) use ($report) {
-                    return $report->sheet($sheet);
-                });
             }
 
             $writer->setActiveSheetIndex(0);
+            $writer->excel->setIncludeCharts(true);
         })->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
 
         return $info['full'];
-    }
-
-    private function buildCostReports($user)
-    {
-        $report_ids = $user->reports()->pluck('report_id')->unique();
-        $reports = Report::find($report_ids->toArray());
-
-        $excel = new \PHPExcel();
-        $excel->removeSheetByIndex(0);
-
-        foreach ($reports as $index => $r) {
-            $class_name = $r->class_name;
-
-            $report = new $class_name($this->schedule->project);
-
-            $excel->addSheet($report->sheet(), $index);
-        }
-
-        $filename = storage_path('app/costcontrol-reports-' . uniqid() . '.xlsx');
-        \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
-        return $filename;
     }
 }
