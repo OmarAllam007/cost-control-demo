@@ -7,6 +7,7 @@ use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
+use App\Reports\Cost\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
 use App\Http\Controllers\Reports\CostReports\ProductivityReport;
