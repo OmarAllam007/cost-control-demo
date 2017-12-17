@@ -25,5 +25,12 @@ return [
         'std_activity_id' => 'required',
         'cost_account' => 'required|qs_code_found_on_wbs',
         'template_id' => 'required',
+    ],
+
+    'project_roles' => [
+        'roles.*.role_id' => 'required',
+        'roles.*.users' => 'required',
+        'roles.*.users.*.name' => 'required',
+        'roles.*.users.*.email' => 'required|email',
     ]
 ];

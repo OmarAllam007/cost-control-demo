@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2>Unit</h2>
+    <h2>Users</h2>
     <div class="btn-toolbar pull-right">
         <a href="{{ route('users.create') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add user</a>
     </div>

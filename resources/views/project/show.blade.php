@@ -8,10 +8,13 @@
             <a href="{{ route('project.edit', $project)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
 
             @can('budget_owner', $project)
-                <a href="{{route('project.charter-data', $project)}}" class="btn btn-sm btn-info">Edit charter data</a>
+                <a href="{{route('project.charter-data', $project)}}" class="btn btn-sm btn-info">
+                    <i class="fa fa-file"></i> Edit charter data
+                </a>
+                <a href="{{route('project.roles', $project)}}?back={{route('project.budget', $project, false)}}" class="btn btn-sm btn-info">
+                    <i class="fa fa-send"></i> Communication Plan
+                </a>
             @endcan
-
-            <a href="#DeleteProjectModal" class="btn btn-sm btn-warning" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete </a>
         @endcan
 
         <a href="{{ route('project.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>

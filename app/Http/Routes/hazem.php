@@ -227,7 +227,6 @@ Route::get('project/{project}/modify-productivity', 'ProjectProductivityControll
 Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
 Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
 
-
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 Route::get('project/{project}/threshold', 'CostReportsController@threshold')->name('threshold-report');
@@ -238,3 +237,15 @@ Route::get('/project/{project}/cost-man-days/export', 'CostManDaysController@sho
 
 Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
 Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
+
+Route::resource('roles', 'RolesController', ['parameters' => 'singular']);
+Route::get('project/{project}/roles', 'ProjectRolesController@edit')->name('project.roles');
+Route::put('project/{project}/roles', 'ProjectRolesController@update');
+
+
+Route::get('/project/{project}/communication/budget', 'BudgetCommunicationController@create')->name('communication.budget');
+Route::post('/project/{project}/communication/budget', 'BudgetCommunicationController@store');
+
+
+Route::get('/project/{project}/communication/cost', 'CostCommunicationController@create')->name('communication.cost');
+Route::post('/project/{project}/communication/cost', 'CostCommunicationController@store');
