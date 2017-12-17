@@ -10,12 +10,9 @@ use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
 use App\Reports\Cost\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
-use App\Http\Controllers\Reports\CostReports\ProductivityReport;
-use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
-use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
@@ -25,10 +22,7 @@ use App\Reports\Cost\ProjectInfo;
 use App\Reports\Cost\ThresholdReport;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class CostReportsController extends Controller
 {
