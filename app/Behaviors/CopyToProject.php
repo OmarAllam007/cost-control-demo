@@ -122,7 +122,7 @@ trait CopyToProject
     {
         $target = \DB::table('breakdown_templates')
             ->where('project_id', $project_id)
-            ->where('parent_template_id', $template['template_id'])
+            ->where('parent_template_id', $template['parent_template_id'])
             ->first();
 
         $user_id = auth()->id() ?: 2;
