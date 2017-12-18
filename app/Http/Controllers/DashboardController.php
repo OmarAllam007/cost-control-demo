@@ -173,10 +173,11 @@ class DashboardController extends Controller
 
     private function cost_percentage()
     {
-        return MasterShadow::whereIn('period_id', $this->last_period_ids)
-            ->selectRaw('sum(to_date_cost) as actual_cost')
-            ->selectRaw('sum(remaining_cost) as remaining_cost')
-            ->first()->toArray();
+        $to_date_cost = $this->cost_summary->sum('to_date_cost');
+        $remaining_cost = $this->cost_summary->sum('remaining_cost');
+        $sum = $to_date_cost + $remaining_cost;
+
+        return collect([$to_date_cost * 100 / $sum, $remaining_cost * 100 / $sum]);
     }
 
 }

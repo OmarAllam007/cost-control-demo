@@ -86,10 +86,7 @@
                                 data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                                 data-datasets="[{{ json_encode([
                                     'label' => 'Cost Percentage', 
-                                    'data' => [
-                                        round($cost_summary->sum('to_date_cost'), 2),
-                                        round($cost_summary->sum('remaining_cost'), 2)
-                                    ],
+                                    'data' => $cost_percentage_chart,
                                     'backgroundColor' => ['#64D5CA', '#E3342F']
                                 ]) }}]"
                                 style="height: 200px"></div>
