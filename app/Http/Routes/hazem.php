@@ -237,4 +237,4 @@ Route::get('/project/{project}/cost-man-days/export', 'CostManDaysController@sho
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
-Route::resource('global-periods', 'GlobalPeriodsController');
+Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);
