@@ -83,7 +83,11 @@ trait CopyToProject
         }
 
         BreakdownResource::unguard();
-        foreach ($breakdown->resources as $resource) {
+        $breakdown_resources = $breakdown->resources()
+            ->whereRaw("id in (select breakdown_resource_id from break_down_resource_shadows where breakdown_id = {$breakdown->id})")
+            ->get();
+
+        foreach ($breakdown_resources as $resource) {
             $attributes = $resource->getAttributes();
             unset($attributes['id']);
             $attributes['breakdown_id'] = $new_breakdown_id;
