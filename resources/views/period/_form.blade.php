@@ -1,6 +1,12 @@
 <div class="row">
     <section class="col-sm-6">
         <h4>Financial Period</h4>
+        <div class="form-group form-group-sm {{ $errors->first('global_period_id', 'has-error') }}">
+            {{ Form::label('global_period_id', null, ['class' => 'control-label']) }}
+            {{ Form::select('global_period_id', $globalPeriods, null, ['class' => 'form-control', 'placeholder' => '-- Select Period --']) }}
+            {!! $errors->first('global_period_id', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group form-group-sm {{ $errors->first('name', 'has-error') }}">
             {{ Form::label('name', null, ['class' => 'control-label']) }}
             {{ Form::text('name', null, ['class' => 'form-control']) }}
