@@ -9,7 +9,7 @@
 
 @section('body')
 
-    @if ($globalPeriods->count())
+    @if ($globalPeriods->total())
     <table class="table table-condensed table-striped">
         <thead>
         <tr>
@@ -20,8 +20,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            @foreach ($periods as $period)
+        @foreach ($globalPeriods as $period)
+            <tr>
             <td>{{$period->name}}</td>
             <td>{{$period->start_date->format('d M Y')}}</td>
             <td>{{$period->end_date->format('d M Y')}}</td>
@@ -30,19 +30,27 @@
                     {{csrf_field()}}
                     {{method_field('delete')}}
 
-                    <a href="{{route('global-periods.delete', $period)}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                    <a href="{{route('global-periods.edit', $period)}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
                     @if (!$period->hasProjectPeriods())
                         <button class="btn btn-danger btn-sm btn-delete"><i class="fa fa-trash"></i> Delete</button>
                     @endif
                 </form>
             </td>
-            @endforeach
         </tr>
+        @endforeach
         </tbody>
     </table>
     @else
         <div class="alert alert-info"><i class="fa fa-info-circle"></i> No periods found</div>
     @endif
+@endsection
 
-
+@section('javascript')
+    <script>
+        $(function() {
+            $('form').on('submit', function() {
+                return confirm('Are you sure you want to delete this period. It will not be deleted if used in projects.');
+            });
+        })
+    </script>
 @endsection

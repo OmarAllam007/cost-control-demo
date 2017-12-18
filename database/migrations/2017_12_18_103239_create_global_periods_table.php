@@ -15,8 +15,8 @@ class CreateGlobalPeriodsTable extends Migration
         Schema::create('global_periods', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('start_date');
-            $table->string('end_date')->nullable();
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
             $table->float('spi_index')->default(0)->nullable();
             $table->timestamps();
         });

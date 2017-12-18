@@ -42,32 +42,32 @@ class GlobalPeriodsController extends Controller
         //
     }
 
-    public function edit(GlobalPeriod $globalPeriod)
+    public function edit(GlobalPeriod $global_period)
     {
-        return view('global-periods.create');
+        return view('global-periods.edit', compact('global_period'));
     }
 
-    public function update(Request $request, GlobalPeriod $globalPeriod)
+    public function update(Request $request, GlobalPeriod $global_period)
     {
         $this->validate($request, config('validation.global_period', []));
 
-        $globalPeriod->update($request->all());
+        $global_period->update($request->all());
 
         flash('Period has been updated', 'success');
 
         return \Redirect::route('global-periods.index');
     }
 
-    public function destroy(GlobalPeriod $globalPeriod)
+    public function destroy(GlobalPeriod $global_period)
     {
 
-        if (!$globalPeriod->hasProjectPeriods()) {
-            $globalPeriod->delete();
+        if (!$global_period->hasProjectPeriods()) {
+            $global_period->delete();
             flash("Period has been deleted", 'info');
         } else {
             flash("Period is already used in projects.", 'warning');
         }
 
-        return \Redirect::route('global-reports.index');
+        return \Redirect::route('global-periods.index');
     }
 }
