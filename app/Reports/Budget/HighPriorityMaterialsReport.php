@@ -29,7 +29,7 @@ class HighPriorityMaterialsReport
 
     public function run()
     {
-        $resources = $this->project->resources()->whereNotNull('top_material')->orderBy('name')->get();
+        $resources = $this->project->resources()->whereRaw("coalesce(top_material) != ''")->orderBy('name')->get();
 
         $shadows = BreakDownResourceShadow::whereIn('resource_id', $resources->pluck('id')->unique())
             ->selectRaw('resource_id, sum(budget_unit) as budget_unit, sum(budget_cost) as budget_cost')
@@ -51,12 +51,17 @@ class HighPriorityMaterialsReport
             });
 
             $total = $group->sum('budget_cost');
+            $budget_unit = $group->sum('budget_unit');
             $weight = $total * 100 / $this->total;
 
-            return ['name' => strtoupper($name), 'resources' => $group, 'budget_cost' => $total, 'weight' => $weight];
+            return [
+                'name' => strtoupper($name), 'resources' => $group,
+                'budget_cost' => $total,
+                'budget_unit' => $budget_unit, 'weight' => $weight
+            ];
         })->sortBy('name');
 
-        return ['project' => $this->project, 'tree' => $this->tree];
+        return ['project' => $this->project, 'tree' => $this->tree, 'total' => $this->total];
     }
 
     public function excel()
@@ -82,8 +87,9 @@ class HighPriorityMaterialsReport
 
         $this->tree->each(function ($group) use ($sheet){
             ++$this->row;
-            $sheet->mergeCells("A{$this->row}:C{$this->row}");
+            $sheet->mergeCells("A{$this->row}:B{$this->row}");
             $sheet->setCellValue("A{$this->row}", $group['name']);
+            $sheet->setCellValue("C{$this->row}", $group['budget_unit']);
             $sheet->setCellValue("D{$this->row}", $group['budget_cost']);
             $sheet->setCellValue("E{$this->row}", $group['weight'] / 100);
             $sheet->cells("A{$this->row}:E{$this->row}", function($cells) {
