@@ -23,6 +23,9 @@ class DashboardController extends Controller
     /** @var Collection */
     private $last_period_ids;
 
+    /** @var Collection */
+    private $cost_summary;
+
     function index()
     {
         $this->projects = Project::all();
@@ -46,8 +49,8 @@ class DashboardController extends Controller
             'contracts_info' => $this->contracts_info(),
             'finish_dates' => $this->finish_dates(),
             'budget_info' => $this->budget_info(),
-            'cost_info' => $this->cost_info(),
             'cost_summary' => $this->cost_summary(),
+            'cost_info' => $this->cost_info(),
             'cost_percentage_chart' => $this->cost_percentage()
         ];
     }
@@ -135,10 +138,7 @@ class DashboardController extends Controller
         
 //        $last_periods = Period::whereIn('id', $this->last_period_ids);
 
-        $cpis = MasterShadow::whereIn('period_id', $this->last_period_ids)
-            ->selectRaw('project_id, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
-            ->groupBy('project_id')
-            ->get()->map(function ($period) {
+        $cpis = $this->cost_summary->map(function ($period) {
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
                 $period->variance = $period->allowable_cost - $period->to_date_cost;
                 return $period;
@@ -161,7 +161,7 @@ class DashboardController extends Controller
 
     private function cost_summary()
     {
-        return MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
+        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
             ->whereIn('period_id', $this->last_period_ids)
             ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(allowable_ev_cost) as to_date_allowable, sum(allowable_var) as to_date_var')
