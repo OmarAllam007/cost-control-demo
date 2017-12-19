@@ -35,12 +35,12 @@
         <tfoot>
             <tr class="info">
                 <th>Total</th>
-                <th>{{number_format($cost_summary->sum('budget_cost')) }}</th>
-                <th>{{number_format($cost_summary->sum('to_date_allowable')) }}</th>
-                <th>{{number_format($cost_summary->sum('to_date_cost')) }}</th>
+                <th>{{number_format($cost_summary->sum('budget_cost'), 2) }}</th>
+                <th>{{number_format($cost_summary->sum('to_date_allowable'), 2) }}</th>
+                <th>{{number_format($cost_summary->sum('to_date_cost'), 2) }}</th>
                 <td class="{{$cost_summary->sum('to_date_var') > 0? 'text-success' : 'text-danger'}}">{{number_format($cost_summary->sum('to_date_var'), 2)}}</td>
-                <th>{{number_format($cost_summary->sum('remaining_cost')) }}</th>
-                <th>{{number_format($cost_summary->sum('completion_cost')) }}</th>
+                <th>{{number_format($cost_summary->sum('remaining_cost'), 2) }}</th>
+                <th>{{number_format($cost_summary->sum('completion_cost'), 2) }}</th>
                 <td class="{{$cost_summary->sum('completion_var') > 0? 'text-success' : 'text-danger'}}">{{number_format($cost_summary->sum('completion_var'), 2)}}</td>
             </tr>
         </tfoot>
