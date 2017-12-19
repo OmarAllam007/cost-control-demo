@@ -53,7 +53,10 @@ class ProductivityIndexReport
 
         $this->tree = $this->buildTree();
 
-        $this->average_pi = $this->tree->sum('allowable_qty') / $this->tree->sum('actual_man_days');
+        $total_man_days = $this->tree->sum('actual_man_days');
+        if ($total_man_days) {
+            $this->average_pi = $this->tree->sum('allowable_qty') / $total_man_days;
+        }
 
         return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'average_pi' => $this->average_pi];
     }

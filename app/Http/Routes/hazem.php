@@ -227,8 +227,6 @@ Route::get('project/{project}/modify-productivity', 'ProjectProductivityControll
 Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
 Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
 
-Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
-Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 Route::get('project/{project}/threshold', 'CostReportsController@threshold')->name('threshold-report');
 
 Route::get('/project/{project}/cost-man-days', 'CostManDaysController@create')->name('cost-man-days.import');
@@ -249,3 +247,4 @@ Route::post('/project/{project}/communication/budget', 'BudgetCommunicationContr
 
 Route::get('/project/{project}/communication/cost', 'CostCommunicationController@create')->name('communication.cost');
 Route::post('/project/{project}/communication/cost', 'CostCommunicationController@store');
+Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);

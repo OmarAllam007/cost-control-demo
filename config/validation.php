@@ -32,5 +32,11 @@ return [
         'roles.*.users' => 'required',
         'roles.*.users.*.name' => 'required',
         'roles.*.users.*.email' => 'required|email',
+    ],
+
+    'global_period' => [
+        'name' => 'required',
+        'start_date' => 'date|before:end_date',
+        'end_date' => 'date|after:start_date'
     ]
 ];
