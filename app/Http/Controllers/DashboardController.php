@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActualRevenue;
 use App\BreakDownResourceShadow;
 use App\BudgetRevision;
 use App\GlobalPeriod;
@@ -61,6 +62,7 @@ class DashboardController extends Controller
             'spi_trend' => $this->spi_trend(),
             'waste_index_trend' => $this->waste_index_trend(),
             'pi_trend' => $this->productivity_index_trend(),
+            'actual_revenue_trend' => $this->actual_revenue_trend()
         ];
     }
 
@@ -144,9 +146,6 @@ class DashboardController extends Controller
 
     private function cost_info()
     {
-
-//        $last_periods = Period::whereIn('id', $this->last_period_ids);
-
         $cpis = $this->cost_summary->map(function ($period) {
             $period->cpi = $period->allowable_cost / $period->to_date_cost;
             $period->variance = $period->allowable_cost - $period->to_date_cost;
@@ -165,7 +164,15 @@ class DashboardController extends Controller
         $highest_risk = $cpis->first();
         $lowest_risk = $cpis->last();
 
-        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index');
+        $total_budget = $this->cost_summary->sum('budget_cost');
+        $to_date = $this->cost_summary->sum('to_date_cost');
+
+        $cost_progress = $to_date * 100 / $total_budget;
+        $actual_progress = GlobalPeriod::whereRaw('coalesce(actual_progress, 0) > 0')->latest('id')->value('actual_progress'); 
+
+        $progress = [$cost_progress, $actual_progress];
+
+        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index', 'progress');
     }
 
     private function cost_summary()
@@ -262,6 +269,23 @@ class DashboardController extends Controller
 
                 return $period;
             })->pluck('pi', 'name');
+    }
+
+    function actual_revenue_trend()
+    {
+        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
+        $global_period_ids = $periods->pluck('id');
+        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+
+        return ActualRevenue::from('actual_revenue as r')
+            ->join('periods as p', 'r.period_id', '=', 'p.id')
+            ->whereIn('period_id', $period_ids)
+            ->selectRaw('p.global_period_id, sum(value) as value')
+            ->groupBy('p.global_period_id')->get(['value', 'global_period_id'])
+            ->map(function($period) use ($periods) {
+                $period->name = $periods->get($period->global_period_id)->name;
+                return $period;
+            })->pluck('value', 'name');
     }
 
 }
