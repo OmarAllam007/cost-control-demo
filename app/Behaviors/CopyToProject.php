@@ -83,7 +83,11 @@ trait CopyToProject
         }
 
         BreakdownResource::unguard();
-        foreach ($breakdown->resources as $resource) {
+        $breakdown_resources = $breakdown->resources()
+            ->whereRaw("id in (select breakdown_resource_id from break_down_resource_shadows where breakdown_id = {$breakdown->id})")
+            ->get();
+
+        foreach ($breakdown_resources as $resource) {
             $attributes = $resource->getAttributes();
             unset($attributes['id']);
             $attributes['breakdown_id'] = $new_breakdown_id;
@@ -118,7 +122,7 @@ trait CopyToProject
     {
         $target = \DB::table('breakdown_templates')
             ->where('project_id', $project_id)
-            ->where('parent_template_id', $template['template_id'])
+            ->where('parent_template_id', $template['parent_template_id'])
             ->first();
 
         $user_id = auth()->id() ?: 2;
