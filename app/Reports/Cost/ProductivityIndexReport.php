@@ -27,6 +27,9 @@ class ProductivityIndexReport
     /** @var Collection */
     protected $wbs_levels;
 
+    /** @var Collection */
+    protected $activities;
+
     public function __construct(Period $period)
     {
         $this->period = $period;
@@ -38,7 +41,7 @@ class ProductivityIndexReport
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
         $this->activities = MasterShadow::where('period_id', $this->period->id)
-            ->where('resource_type_id', 2)->where('to_date_cost', '>', 0)
+            ->where('resource_type_id', 2)->where('to_date_qty', '>', 0)
             ->selectRaw("wbs_id, activity_id, activity, sum(budget_unit) as budget_unit, avg(progress) as progress")
             ->selectRaw("sum(allowable_qty) as allowable_qty")
             ->groupBy(['wbs_id', 'activity_id', 'activity'])

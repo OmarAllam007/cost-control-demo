@@ -180,7 +180,7 @@ class DashboardController extends Controller
         return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
             ->whereIn('period_id', $this->last_period_ids)
             ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
-            ->selectRaw('sum(allowable_ev_cost) as to_date_allowable, sum(allowable_var) as to_date_var')
+            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(allowable_var) as to_date_var')
             ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
             ->selectRaw('sum(cost_var) as completion_var')
             ->groupBy('sh.project_id', 'p.name')->orderBy('p.name')->get();

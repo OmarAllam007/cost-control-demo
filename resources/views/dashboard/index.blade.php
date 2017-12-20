@@ -94,31 +94,6 @@
                 </div>
             </section>
 
-            {{--<section class="card">
-                <h3 class="card-title">Labour Trend Analysis (Man/Month)</h3>
-
-                <div class="card-body">
-
-                </div>
-            </section>--}}
-
-            <section class="card">
-                <h3 class="card-title">Actual Revenue</h3>
-
-                <div class="card-body">
-                    <div class="chart"
-                         id="revenueTrendChart"
-                         data-type="line"
-                         data-labels="{{$actual_revenue_trend->keys()}}"
-                         data-datasets="[{{ json_encode([
-                                    'label' => 'Productivity Index',
-                                    'data' => $actual_revenue_trend->values(),
-                                    'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
-                                ]) }}]"
-                         style="height: 150px"></div>
-                </div>
-            </section>
-
             <div class="row">
                 <div class="col-sm-6">
                     <section class="card">
@@ -163,7 +138,16 @@
                 <h3 class="card-title">Actual Revenue</h3>
 
                 <div class="card-body">
-
+                    <div class="chart"
+                         id="revenueTrendChart"
+                         data-type="line"
+                         data-labels="{{$actual_revenue_trend->keys()}}"
+                         data-datasets="[{{ json_encode([
+                                    'label' => 'Productivity Index',
+                                    'data' => $actual_revenue_trend->values(),
+                                    'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
+                                ]) }}]"
+                         style="height: 150px"></div>
                 </div>
             </section>
         </div>
