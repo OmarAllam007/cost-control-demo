@@ -20,6 +20,27 @@
 
 @section('body')
 
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr class="bg-primary">
+            <th class="col-sm-4">Project Total Cost</th>
+
+            <th class="col-sm-2">High Priority Material Cost</th>
+            <th class="col-sm-2">High Priority Material Weight (%)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="col-sm-4">{{number_format($total, 2)}}</td>
+            <td class="col-sm-4">{{number_format($tree->sum('budget_cost'), 2)}}</td>
+            <td class="col-sm-4">{{number_format($tree->sum('weight'), 2)}}</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <p>&nbsp;</p>
+
     <div class="row">
         <section class="report-table col-sm-12">
             <table class="table table-bordered table-hover">
@@ -38,9 +59,10 @@
                     <tbody>
                     @foreach ($tree as $group)
                         <tr class="bg-info">
-                            <th colspan="3">
+                            <th colspan="2">
                                 <a href="" class="group-name" data-target="{{slug($group['name'])}}">{{$group['name']}}</a>
                             </th>
+                            <th class="col-sm-2 text-right">{{number_format($group['budget_unit'], 2)}}</th>
                             <th class="col-sm-2 text-right">{{number_format($group['budget_cost'], 2)}}</th>
                             <th class="col-sm-2">{{number_format($group['weight'], 2)}}%</th>
                         </tr>

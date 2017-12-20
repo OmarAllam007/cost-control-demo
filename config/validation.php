@@ -25,5 +25,13 @@ return [
         'std_activity_id' => 'required',
         'cost_account' => 'required|qs_code_found_on_wbs',
         'template_id' => 'required',
+    ],
+
+    'global_period' => [
+        'name' => 'required',
+        'start_date' => 'date|before:end_date',
+        'end_date' => 'date|after:start_date',
+        'spi_index' => 'numeric',
+        'actual_progress' => 'numeric'
     ]
 ];

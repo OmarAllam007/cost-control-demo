@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ActualRevenue;
 use App\BreakDownResourceShadow;
 use App\BudgetRevision;
+use App\GlobalPeriod;
 use App\Http\Requests;
 use App\MasterShadow;
 use App\Period;
@@ -11,6 +13,7 @@ use App\Project;
 use App\ResourceType;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
@@ -22,6 +25,12 @@ class DashboardController extends Controller
 
     /** @var Collection */
     private $last_period_ids;
+
+    /** @var Collection */
+    private $cost_summary;
+
+    /** @var Collection */
+    private $cpi_trend;
 
     function index()
     {
@@ -46,9 +55,14 @@ class DashboardController extends Controller
             'contracts_info' => $this->contracts_info(),
             'finish_dates' => $this->finish_dates(),
             'budget_info' => $this->budget_info(),
-            'cost_info' => $this->cost_info(),
             'cost_summary' => $this->cost_summary(),
-            'cost_percentage_chart' => $this->cost_percentage()
+            'cost_info' => $this->cost_info(),
+            'cost_percentage_chart' => $this->cost_percentage(),
+            'cpi_trend' => $this->cpi_trend(),
+            'spi_trend' => $this->spi_trend(),
+            'waste_index_trend' => $this->waste_index_trend(),
+            'pi_trend' => $this->productivity_index_trend(),
+            'actual_revenue_trend' => $this->actual_revenue_trend()
         ];
     }
 
@@ -98,7 +112,7 @@ class DashboardController extends Controller
         ];
 
         $max_revision_ids = BudgetRevision::maxRevisions()->pluck('id');
-        $max_revisions = BudgetRevision::find($max_revision_ids->toArray())->dd();
+        $max_revisions = BudgetRevision::find($max_revision_ids->toArray());
         $general_requirement = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
         $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
         $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->sum('budget_cost');
@@ -132,17 +146,11 @@ class DashboardController extends Controller
 
     private function cost_info()
     {
-        
-//        $last_periods = Period::whereIn('id', $this->last_period_ids);
-
-        $cpis = MasterShadow::whereIn('period_id', $this->last_period_ids)
-            ->selectRaw('project_id, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
-            ->groupBy('project_id')
-            ->get()->map(function ($period) {
-                $period->cpi = $period->allowable_cost / $period->to_date_cost;
-                $period->variance = $period->allowable_cost - $period->to_date_cost;
-                return $period;
-            })->sortBy('cpi');
+        $cpis = $this->cost_summary->map(function ($period) {
+            $period->cpi = $period->allowable_cost / $period->to_date_cost;
+            $period->variance = $period->allowable_cost - $period->to_date_cost;
+            return $period;
+        })->sortBy('cpi');
 
         $allowable_cost = $cpis->sum('allowable_cost');
         $to_date_cost = $cpis->sum('to_date_cost');
@@ -156,49 +164,128 @@ class DashboardController extends Controller
         $highest_risk = $cpis->first();
         $lowest_risk = $cpis->last();
 
-        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index');
+        $total_budget = $this->cost_summary->sum('budget_cost');
+        $to_date = $this->cost_summary->sum('to_date_cost');
+
+        $cost_progress = $to_date * 100 / $total_budget;
+        $actual_progress = GlobalPeriod::whereRaw('coalesce(actual_progress, 0) > 0')->latest('id')->value('actual_progress'); 
+
+        $progress = [$cost_progress, $actual_progress];
+
+        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index', 'progress');
     }
 
     private function cost_summary()
     {
-        $resourceTypes = ResourceType::parents()->pluck('name', 'id');
-
-        $budgetSummary = BreakDownResourceShadow::selectRaw('resource_type_id, sum(budget_cost) as budget_cost')
-            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get()->keyBy('resource_type_id');
-
-        $previous_period_ids = Period::whereIn('id', $this->last_period_ids)->get()->map(function ($period) {
-            return Period::readyForReporting()->where('project_id', $period->project_id)->where('id', '<', $period->id)->value('id');
-        })->filter();
-
-        $previousSummary = MasterShadow::whereIn('period_id', $previous_period_ids)
-            ->selectRaw('resource_type_id, sum(to_date_cost) as previous_cost, sum(allowable_ev_cost) as previous_allowable')
-            ->selectRaw('sum(allowable_var) as previous_var')
-            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get()->keyBy('resource_type_id');
-
-        return MasterShadow::whereIn('period_id', $this->last_period_ids)
-            ->selectRaw('resource_type_id, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
+        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
+            ->whereIn('period_id', $this->last_period_ids)
+            ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(allowable_ev_cost) as to_date_allowable, sum(allowable_var) as to_date_var')
             ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
             ->selectRaw('sum(cost_var) as completion_var')
-            ->groupBy('resource_type_id')->orderBy('resource_type_id')->get()
-            ->map(function($type) use ($previousSummary, $budgetSummary, $resourceTypes) {
-                $previous = $previousSummary->get($type->resource_type_id, new Fluent());
-                $type->budget_cost = $budgetSummary->get($type->resource_type_id, new Fluent)->budget_cost ?: 0;
-                $type->previous_cost = $previous->previous_cost ?: 0;
-                $type->previous_allowable = $previous->previous_allowable ?: 0;
-                $type->previous_var = $previous->previous_var ?: 0;
-                $type->resource_type = $resourceTypes->get($type->resource_type_id);
+            ->groupBy('sh.project_id', 'p.name')->orderBy('p.name')->get();
 
-                return $type;
-            });
     }
 
     private function cost_percentage()
     {
-        return MasterShadow::whereIn('period_id', $this->last_period_ids)
-            ->selectRaw('sum(to_date_cost) as actual_cost')
-            ->selectRaw('sum(remaining_cost) as remaining_cost')
-            ->first()->toArray();
+        $to_date_cost = $this->cost_summary->sum('to_date_cost');
+        $remaining_cost = $this->cost_summary->sum('remaining_cost');
+        $sum = $to_date_cost + $remaining_cost;
+
+        return collect([$to_date_cost * 100 / $sum, $remaining_cost * 100 / $sum]);
+    }
+
+    private function cpi_trend()
+    {
+        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
+        $global_period_ids = $periods->pluck('id');
+        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+
+        return $this->cpi_trend = MasterShadow::from('master_shadows as sh')
+            ->selectRaw('p.global_period_id, sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')
+            ->join('periods as p', 'sh.period_id', '=', 'p.id')
+            ->whereIn('sh.period_id', $period_ids)
+            ->groupBy('p.global_period_id')
+            ->get()->map(function ($period) use ($periods) {
+                $period->cpi_index = round($period->allowable_cost / $period->to_date_cost, 2);
+                $period->name = $periods->get($period->global_period_id)->name;
+                return $period;
+            });
+    }
+
+    function spi_trend()
+    {
+        return GlobalPeriod::latest()->take(12)->pluck('spi_index', 'name');
+    }
+
+    function waste_index_trend()
+    {
+        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
+        $global_period_ids = $periods->pluck('id');
+        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+
+        return MasterShadow::from('master_shadows as sh')
+            ->selectRaw('p.global_period_id, sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')
+            ->join('periods as p', 'sh.period_id', '=', 'p.id')
+            ->whereIn('sh.period_id', $period_ids)
+            ->where('resource_type_id', 3)
+            ->groupBy('p.global_period_id')
+            ->orderBy('p.global_period_id')
+            ->get()->map(function ($period) use ($periods) {
+                $period->waste_index = 0;
+                if ($period->allowable_cost) {
+                    $period->waste_index = round(($period->allowable_cost - $period->to_date_cost) * 100 / $period->allowable_cost, 2);
+                }
+
+                $period->name = $periods->get($period->global_period_id)->name;
+                return $period;
+            })->pluck('waste_index', 'name');
+    }
+
+    function productivity_index_trend()
+    {
+        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
+        $global_period_ids = $periods->pluck('id');
+        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+
+        return MasterShadow::from('master_shadows as sh')
+            ->join('periods as p', 'sh.period_id', '=', 'p.id')
+            ->join('cost_man_days as md', function(JoinClause $on) {
+                $on->where('sh.period_id', '=', 'md.period-id')
+                    ->where('sh.wbs_id', '=', 'md.wbs_id')
+                    ->where('sh.activity_id', '=', 'md.activity_id');
+            })
+            ->selectRaw("p.global_period_id, sum(budget_unit) as budget_unit, sum(allowable_qty) as allowable_qty, sum(actual) as actual")
+            ->where('sh.resource_type_id', 2)->where('to_date_cost', '>', 0)
+            ->where('sh.period_id', $period_ids)
+            ->groupBy('p.global_period_id')
+            ->get()->map(function ($period) use ($periods) {
+                $period->name = $periods->get($period->global_period_id)->name;
+                $period->pi = 0;
+                if ($period->actual) {
+                    $period->pi = $period->allowable_qty / $period->actual;
+                }
+
+                return $period;
+            })->pluck('pi', 'name');
+    }
+
+    function actual_revenue_trend()
+    {
+        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
+        $global_period_ids = $periods->pluck('id');
+        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+
+        return ActualRevenue::from('actual_revenue as r')
+            ->join('periods as p', 'r.period_id', '=', 'p.id')
+            ->whereIn('period_id', $period_ids)
+            ->selectRaw('p.global_period_id, sum(value) as value')
+            ->groupBy('p.global_period_id')->get(['value', 'global_period_id'])
+            ->map(function($period) use ($periods) {
+                $period->name = $periods->get($period->global_period_id)->name;
+                return $period;
+            })->pluck('value', 'name');
     }
 
 }

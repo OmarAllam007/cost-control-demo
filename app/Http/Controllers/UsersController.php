@@ -8,6 +8,11 @@ use App\User;
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
     public function index()
     {
         $users = User::orderBy('name')->paginate(25);
@@ -50,7 +55,8 @@ class UsersController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        flash('User has been deleted', true);
+        
+        flash('User has been deleted', 'info');
         return \Redirect::route('users.index');
     }
 }

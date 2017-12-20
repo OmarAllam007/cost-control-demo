@@ -30,7 +30,16 @@
                 <h3 class="card-title">CPI Trend Analysis</h3>
 
                 <div class="card-body">
-
+                    <div class="chart"
+                         id="cpiTrendChart"
+                         data-type="line"
+                         data-labels="{{$cpi_trend->pluck('name')}}"
+                         data-datasets="[{{ json_encode([
+                                    'label' => 'CPI Index',
+                                    'data' => $cpi_trend->pluck('cpi_index'),
+                                    'backgroundColor' => ['rgba(160, 240, 240, 0.3)']
+                                ]) }}]"
+                         style="height: 150px"></div>
                 </div>
             </section>
 
@@ -38,7 +47,16 @@
                 <h3 class="card-title">SPI Trend Analysis</h3>
 
                 <div class="card-body">
-
+                    <div class="chart"
+                         id="spiTrendChart"
+                         data-type="line"
+                         data-labels="{{$spi_trend->keys()}}"
+                         data-datasets="[{{ json_encode([
+                                    'label' => 'SPI Index',
+                                    'data' => $spi_trend->values(),
+                                    'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
+                                ]) }}]"
+                         style="height: 150px"></div>
                 </div>
             </section>
 
@@ -46,7 +64,16 @@
                 <h3 class="card-title">Waste Index Trend Analysis</h3>
 
                 <div class="card-body">
-
+                    <div class="chart"
+                         id="wasteIndexTrendChart"
+                         data-type="line"
+                         data-labels="{{$waste_index_trend->keys()}}"
+                         data-datasets="[{{ json_encode([
+                                    'label' => 'Waste Index',
+                                    'data' => $waste_index_trend->values(),
+                                    'backgroundColor' => ['rgba(160, 240, 240, 0.3)']
+                                ]) }}]"
+                         style="height: 150px"></div>
                 </div>
             </section>
 
@@ -54,23 +81,41 @@
                 <h3 class="card-title">Productivity Index Trend Analysis</h3>
 
                 <div class="card-body">
-
+                    <div class="chart"
+                         id="prodIndexTrendChart"
+                         data-type="line"
+                         data-labels="{{$pi_trend->keys()}}"
+                         data-datasets="[{{ json_encode([
+                                    'label' => 'Productivity Index',
+                                    'data' => $pi_trend->values(),
+                                    'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
+                                ]) }}]"
+                         style="height: 150px"></div>
                 </div>
             </section>
 
-            <section class="card">
+            {{--<section class="card">
                 <h3 class="card-title">Labour Trend Analysis (Man/Month)</h3>
 
                 <div class="card-body">
 
                 </div>
-            </section>
+            </section>--}}
 
             <section class="card">
                 <h3 class="card-title">Actual Revenue</h3>
 
                 <div class="card-body">
-
+                    <div class="chart"
+                         id="revenueTrendChart"
+                         data-type="line"
+                         data-labels="{{$actual_revenue_trend->keys()}}"
+                         data-datasets="[{{ json_encode([
+                                    'label' => 'Productivity Index',
+                                    'data' => $actual_revenue_trend->values(),
+                                    'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
+                                ]) }}]"
+                         style="height: 150px"></div>
                 </div>
             </section>
 
@@ -86,10 +131,7 @@
                                 data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                                 data-datasets="[{{ json_encode([
                                     'label' => 'Cost Percentage', 
-                                    'data' => [
-                                        round($cost_percentage_chart['actual_cost'], 2), 
-                                        round($cost_percentage_chart['remaining_cost'], 2)
-                                    ],
+                                    'data' => $cost_percentage_chart,
                                     'backgroundColor' => ['#64D5CA', '#E3342F']
                                 ]) }}]"
                                 style="height: 200px"></div>
@@ -102,7 +144,16 @@
                         <h3 class="card-title">Progress Percentage</h3>
 
                         <div class="card-body">
-
+                        
+                            <div class="chart"
+                                id="costChart"
+                                data-type="horizontalBar"
+                                data-labels="{{json_encode(['Cost Progress', 'Actual Progress'])}}"
+                                data-datasets="[{{ json_encode([
+                                    'label' => 'Progress', 
+                                    'data' => $cost_info['progress'],
+                                    'backgroundColor' => ['#64D5CA', '#E3342F']
+                                ]) }}]" style="height: 200px"></div>
                         </div>
                     </section>
                 </div>

@@ -28,14 +28,12 @@
         <div class="form-group">
             <div class="checkbox">
                 <label>
+                    {{Form::hidden('is_admin', 0)}}
                     {{Form::checkbox('is_admin')}}
                     Administrator
                 </label>
             </div>
         </div>
-
-
-
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Save</button>

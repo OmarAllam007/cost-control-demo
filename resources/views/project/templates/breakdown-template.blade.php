@@ -1,36 +1,37 @@
 <breakdown-template project="{{$project->id}}" inline-template>
     <section id="BreakdownTemplateArea">
-        @can('breakdown_templates',$project)
-            <div class="form-group tab-actions clearfix">
-                <div class="pull-right">
-                    @can('owner', $project)
-                        <a href="{{route('breakdown-template.create', ['project' => $project])}}"
-                           class="btn btn-primary btn-sm in-iframe" title="Add Template">
-                            <i class="fa fa-plus"></i> Add Breakdown Template
-                        </a>
-                    @endcan
 
-                    <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
-                       class="btn btn-success btn-sm in-iframe" title="Import Template">
-                        <i class="fa fa-level-down" aria-hidden="true"></i>
-                        Import Template
-                    </a>
-                </div>
-            </div>
-        @endcan
 
         <section class="filters row">
             <div class="col-sm-3">
                 <div class="form-group form-group-sm">
-                    {{Form::label('template_name', 'Template Name', ['class' => 'control-label'])}}
                     {{Form::text('template_name', null /*session('filters.breakdown.' . $project->id . '.resource_code')*/,
-                   ['class' => 'form-control', 'v-model' => 'template'])}}
+                        ['class' => 'form-control', 'v-model' => 'template', 'placeholder' => 'Search by code or name'])}}
                 </div>
             </div>
+
+            @can('breakdown_templates', $project)
+                <div class="form-group tab-actions clearfix">
+                    <div class="pull-right">
+                        @can('owner', $project)
+                            <a href="{{route('breakdown-template.create', ['project' => $project])}}"
+                               class="btn btn-primary btn-sm in-iframe" title="Add Template">
+                                <i class="fa fa-plus"></i> Add Breakdown Template
+                            </a>
+                        @endcan
+
+                        <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
+                           class="btn btn-success btn-sm in-iframe" title="Import Template">
+                            <i class="fa fa-level-down" aria-hidden="true"></i>
+                            Import Template
+                        </a>
+                    </div>
+                </div>
+            @endcan
         </section>
 
         @if ($project->templates->count())
-            <table class="table table-condensed table-striped table-fixed">
+            <table class="table table-condensed table-striped table-fixed" v-show="filterd_templates.length">
                 <thead>
                 <tr>
                     <th class="col-xs-2">Code</th>
@@ -62,6 +63,10 @@
                 {{--@endforeach--}}
                 </tbody>
             </table>
+
+            <div class="alert alert-info" v-show="!filterd_templates.length">
+                <i class="fa fa-info-circle"></i> No templates found
+            </div>
         @endif
     </section>
 

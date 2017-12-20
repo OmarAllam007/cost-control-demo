@@ -1,4 +1,7 @@
 import Chart from 'chart.js';
+window.number_format = function(num) {
+    return parseFloat(parseFloat(num).toFixed(2)).toLocaleString();
+};
 
 document.querySelectorAll('.chart').forEach((item) => {
     const canvas = document.createElement('canvas');
@@ -23,7 +26,7 @@ document.querySelectorAll('.chart').forEach((item) => {
         options = {
             scales: {
                 yAxes: [{ ticks: { beginAtZero:true }}],
-                    xAxes: [{ ticks: { beginAtZero:true }}],
+                    xAxes: [{ ticks: { beginAtZero:false }}],
                     animation: {duration: 1500, easing: 'easeOutExpo'}
             }
         }
