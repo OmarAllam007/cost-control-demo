@@ -258,7 +258,7 @@ class DashboardController extends Controller
             })
             ->selectRaw("p.global_period_id, sum(budget_unit) as budget_unit, sum(allowable_qty) as allowable_qty, sum(actual) as actual")
             ->where('sh.resource_type_id', 2)->where('to_date_cost', '>', 0)
-            ->where('sh.period_id', $period_ids)
+            ->whereIn('sh.period_id', $period_ids)
             ->groupBy('p.global_period_id')
             ->get()->map(function ($period) use ($periods) {
                 $period->name = $periods->get($period->global_period_id)->name;
