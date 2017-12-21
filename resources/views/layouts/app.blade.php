@@ -76,7 +76,7 @@
 
                     @if (Auth::user()->is_admin)
                         <li><a href="{{route('users.index')}}">Users</a></li>
-                        <li><a href="{{route('global-period.index')}}">Periods</a></li>
+                        <li><a href="{{route('global-periods.index')}}">Periods</a></li>
                     @endif
 
                 </ul>
