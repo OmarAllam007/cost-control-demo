@@ -120,52 +120,33 @@ trait CopyToProject
 
     private function copyTemplate($template, $project_id)
     {
-        $target = \DB::table('breakdown_templates')
-            ->where('project_id', $project_id)
-            ->where('parent_template_id', $template['parent_template_id'])
-            ->first();
-
         $user_id = auth()->id() ?: 2;
 
-        if ($target) {
-            $new_template_id = $target->id;
-        } else {
-            $attributes = $template->getAttributes();
+        $attributes = $template->getAttributes();
+        unset($attributes['id']);
+        $attributes['created_at'] = date('Y-m-d H:i:s');
+        $attributes['updated_at'] = date('Y-m-d H:i:s');
+        $attributes['created_by'] = $user_id;
+        $attributes['updated_by'] = $user_id;
+        $attributes['project_id'] = $project_id;
+
+        $new_template_id = \DB::table('breakdown_templates')->insertGetId($attributes);
+
+        $old_resources = StdActivityResource::where('template_id', $template->id)->get();
+
+        $tpl_resource_mapping = collect();
+
+        $old_resources->each(function ($resource) use ($tpl_resource_mapping, $user_id, $project_id, $new_template_id) {
+            $attributes = $resource->getAttributes();
             unset($attributes['id']);
             $attributes['created_at'] = date('Y-m-d H:i:s');
             $attributes['updated_at'] = date('Y-m-d H:i:s');
             $attributes['created_by'] = $user_id;
             $attributes['updated_by'] = $user_id;
             $attributes['project_id'] = $project_id;
+            $attributes['template_id'] = $new_template_id;
 
-            $new_template_id = \DB::table('breakdown_templates')->insertGetId($attributes);
-        }
-
-        $old_resources = StdActivityResource::where('template_id', $template->id)->get();
-
-        $new_resources = StdActivityResource::where('template_id', $new_template_id)
-            ->get()->keyBy(function ($resource) {
-                return $resource->template_id . '.' . $resource->resource_id . '.' . $resource->productivity_id . '.' . $resource->remarks;
-            });
-
-        $tpl_resource_mapping = collect();
-
-        $old_resources->each(function ($resource) use ($new_resources, $tpl_resource_mapping, $user_id, $project_id, $new_template_id) {
-            $hash = $resource->template_id . '.' . $resource->resource_id . '.' . $resource->productivity_id . '.' . $resource->remarks;
-            if ($new_resources->has($hash)) {
-                $new_resource_id = $new_resources->get($hash)->id;
-            } else {
-                $attributes = $resource->getAttributes();
-                unset($attributes['id']);
-                $attributes['created_at'] = date('Y-m-d H:i:s');
-                $attributes['updated_at'] = date('Y-m-d H:i:s');
-                $attributes['created_by'] = $user_id;
-                $attributes['updated_by'] = $user_id;
-                $attributes['project_id'] = $project_id;
-                $attributes['template_id'] = $new_template_id;
-
-                $new_resource_id = StdActivityResource::insertGetId($attributes);
-            }
+            $new_resource_id = StdActivityResource::insertGetId($attributes);
 
             $tpl_resource_mapping->put($resource->id, $new_resource_id);
         });
