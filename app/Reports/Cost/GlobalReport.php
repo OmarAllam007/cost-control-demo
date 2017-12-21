@@ -27,6 +27,9 @@ class GlobalReport
     protected $cpi_trend;
 
     /** @var Collection */
+    protected $waste_index_trend = null;
+
+    /** @var Collection */
     private $projects;
 
     /** @var Collection */
@@ -143,10 +146,7 @@ class GlobalReport
         $to_date_cost = $cpis->sum('to_date_cost');
         $variance = $allowable_cost - $to_date_cost;
         $cpi = $allowable_cost / $to_date_cost;
-        $pw_index = 0;
-        if ($allowable_cost) {
-            $pw_index = ($allowable_cost - $to_date_cost) * 100 / $allowable_cost;
-        }
+        $pw_index = $this->waste_index_trend()->last();
 
         $highest_risk = $cpis->first();
         $lowest_risk = $cpis->last();
@@ -154,8 +154,8 @@ class GlobalReport
         $total_budget = $this->cost_summary->sum('budget_cost');
         $to_date = $this->cost_summary->sum('to_date_cost');
 
-        $cost_progress = $to_date * 100 / $total_budget;
-        $actual_progress = GlobalPeriod::whereRaw('coalesce(actual_progress, 0) > 0')->latest('id')->value('actual_progress');
+        $cost_progress = round($to_date * 100 / $total_budget, 2);
+        $actual_progress = round(GlobalPeriod::whereRaw('coalesce(actual_progress, 0) > 0')->latest('id')->value('actual_progress'), 2);
 
         $progress = [$cost_progress, $actual_progress];
 
@@ -180,7 +180,7 @@ class GlobalReport
         $remaining_cost = $this->cost_summary->sum('remaining_cost');
         $sum = $to_date_cost + $remaining_cost;
 
-        return collect([$to_date_cost * 100 / $sum, $remaining_cost * 100 / $sum]);
+        return collect([round($to_date_cost * 100 / $sum, 2), round($remaining_cost * 100 / $sum, 2)]);
     }
 
     private function cpi_trend()
@@ -208,12 +208,17 @@ class GlobalReport
 
     function waste_index_trend()
     {
+        if ($this->waste_index_trend !== null) {
+            return $this->waste_index_trend;
+        }
+
         $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
         $global_period_ids = $periods->pluck('id');
         $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
 
-        return MasterShadow::from('master_shadows as sh')
-            ->selectRaw('p.global_period_id, sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')
+        return $this->waste_index_trend = MasterShadow::from('master_shadows as sh')
+            ->select('p.global_period_id')
+            ->selectRaw('sum((sh.allowable_qty - sh.to_date_qty) * sh.to_date_unit_price) as variance, sum(sh.allowable_ev_cost) as allowable_cost')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->whereIn('sh.period_id', $period_ids)
             ->where('resource_type_id', 3)
@@ -222,7 +227,7 @@ class GlobalReport
             ->get()->map(function ($period) use ($periods) {
                 $period->waste_index = 0;
                 if ($period->allowable_cost) {
-                    $period->waste_index = round(($period->allowable_cost - $period->to_date_cost) * 100 / $period->allowable_cost, 2);
+                    $period->waste_index = round($period->variance * 100 / $period->allowable_cost, 4);
                 }
 
                 $period->name = $periods->get($period->global_period_id)->name;
