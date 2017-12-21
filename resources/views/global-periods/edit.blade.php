@@ -9,7 +9,7 @@
 
 @section('body')
 
-    {{Form::model($global_period, ['route' => ['global-periods.edit', $global_period]])}}
+    {{ Form::model($global_period, ['route' => ['global-periods.update', $global_period], 'method' => 'patch']) }}
 
     @include('global-periods.form')
 

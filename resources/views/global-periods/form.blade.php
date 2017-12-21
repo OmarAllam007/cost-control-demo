@@ -32,6 +32,16 @@
                     {{Form::number('spi_index', null, ['class' => 'form-control', 'step' => '0.1'])}}
                     {!! $errors->first('spi_index', '<div class="help-block">:message</div>') !!}
                 </article>
+
+                <article class="form-group {{$errors->first('actual_progress', 'has-error')}}">
+                    {{Form::label('actual_progress', null, ['class' => 'control-label'])}}
+                    <div class="input-group">
+                        {{Form::number('actual_progress', null, ['class' => 'form-control', 'step' => '1'])}}
+                        <span class="input-group-addon">%</span>
+                    </div>
+                    
+                    {!! $errors->first('actual_progress', '<div class="help-block">:message</div>') !!}
+                </article>
             </article>
         </section>
 
