@@ -45,7 +45,7 @@ class ProjectInfo
         $this->costSummary = $summary->run();
 
         $this->wasteIndex =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
-            $period->value = round(floatval($period->value), 4);
+            $period->value = round(floatval($period->variance / $period->allowable_cost), 4);
             return $period;
         });
 
@@ -190,7 +190,7 @@ class ProjectInfo
 
         $budget_cost = MasterShadow::where('period_id', $this->period->id)->sum('budget_cost');
 
-        $info['variance'] = $info['actual_cost'] - $info['allowable_cost'];
+        $info['variance'] = $info['allowable_cost'] - $info['actual_cost'];
         $info['cpi'] = $info['allowable_cost'] / $info['actual_cost'];
         $info['cost_progress'] = $info['actual_cost'] * 100 / $budget_cost;
         $info['waste_index'] = $this->wasteIndex->where('period_id', $this->period->id)->value ?? 0;

@@ -12,7 +12,10 @@
         </dl>
         <dl>
             <dt>Variance</dt>
-            <dd>{{number_format($costInfo['variance'], 2)}}</dd>
+            <dd class="display-flex">
+                <span class="flex">{{number_format($costInfo['variance'], 2)}}</span>
+                <span class="{{$costInfo['variance'] > 0 ? 'text-success' : 'text-warning'}}"><i class="fa fa-circle"></i></span>
+            </dd>
         </dl>
 
         <dl>
