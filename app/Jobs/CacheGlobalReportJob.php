@@ -2,10 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Jobs\Job;
 use App\Reports\Cost\GlobalReport;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CacheGlobalReportJob extends Job implements ShouldQueue
