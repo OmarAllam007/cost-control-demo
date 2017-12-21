@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class WasteIndexReport
 {
+    protected $total_varaince;
     /** @var Period */
     private $period;
 
@@ -65,13 +66,13 @@ class WasteIndexReport
         $this->tree = $this->buildTree();
 
         $allowable_cost = $this->tree->sum('allowable_cost');
-        $to_date_cost = $this->tree->sum('to_date_cost');
+        $this->total_varaince = $this->tree->sum('variance');
 
         if ($allowable_cost) {
-            $this->total_pw_index = ($allowable_cost - $to_date_cost) * 100 / $allowable_cost;
+            $this->total_pw_index = $this->total_varaince / $allowable_cost;
         }
 
-        return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'total_pw_index' => $this->total_pw_index];
+        return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'total_pw_index' => $this->total_pw_index, 'total_variance' => $this->total_varaince];
     }
 
     private function buildTree($parent = 3)
@@ -82,7 +83,9 @@ class WasteIndexReport
             $type->resources_list = $this->resources->get($type->id, collect())->map(function($resource) {
                 if (!$resource->pw_index && $resource->allowable_cost) {
                     // Some report builds doesn't have a PW Index field generated
-                    $resource->pw_index = ($resource->allowable_cost - $resource->to_date_cost) * 100 / $resource->allowable_cost;
+//                    $resource->pw_index = ($resource->allowable_cost - $resource->to_date_cost) * 100 / $resource->allowable_cost;
+                    $resource->variance = ($resource->allowable_qty - $resource->to_date_qty) * $resource->to_date_unit_price;
+                    $resource->pw_index = $resource->variance * 100 / $resource->allowable_cost;
                 } else {
                     $resource->pw_index = 0;
                 }
@@ -91,11 +94,10 @@ class WasteIndexReport
             });
 
             $type->allowable_cost = $type->resources_list->sum('allowable_cost') + $type->subtree->sum('allowable_cost');
-            $type->to_date_cost = $type->resources_list->sum('to_date_cost') + $type->subtree->sum('to_date_cost');
-            $type->to_date_cost_var = $type->resources_list->sum('to_date_cost_var') + $type->subtree->sum('to_date_cost_var');
+            $type->variance = $type->resources_list->sum('variance') + $type->subtree->sum('variance');
             $type->pw_index = 0;
             if ($type->allowable_cost) {
-                $type->pw_index = ($type->allowable_cost - $type->to_date_cost) * 100 / $type->allowable_cost;
+                $type->pw_index = $type->variance * 100 / $type->allowable_cost;
             }
 
             return $type;

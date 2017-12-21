@@ -31,20 +31,16 @@
                     <th class="w-150">To date Quantity</th>
                     <th class="w-150">Allowable QTY</th>
                     <th class="w-150">Quantity +/-</th>
-                    <th class="w-150">Material Allowable Cost</th>
-                    <th class="w-150">Material Actual Cost</th>
-                    <th class="w-150">Cost Variance - (waste)</th>
+                    <th class="w-150">Cost Variance - (Waste)</th>
                     <th class="w-150">Waste Percentage %</th>
                 </tr>
-                <tr class="bg-primary">
+                <tr class="{{$total_variance > 0? 'success' : 'warning'}}">
                     <th class="w-400">Total</th>
                     <th class="w-150"></th>
                     <th class="w-150"></th>
                     <th class="w-150"></th>
                     <th class="w-150"></th>
-                    <th class="w-150">{{number_format($tree->sum('allowable_cost'), 2)}}</th>
-                    <th class="w-150">{{number_format($tree->sum('to_date_cost'), 2)}}</th>
-                    <th class="w-150 {{$tree->sum('to_date_cost_var') < 0 ? 'text-danger' : ''}}">{{number_format($tree->sum('to_date_cost_var'), 2)}}</th>
+                    <th class="w-150 {{$total_variance < 0 ? 'text-danger' : ''}}">{{number_format($total_variance, 2)}}</th>
                     <th class="w-150 {{$total_pw_index < 0 ? 'text-danger' : ''}}">{{number_format($total_pw_index, 2)}}%</th>
                 </tr>
                 </thead>
@@ -113,7 +109,7 @@
 
         .vertical-scroll {
             max-height: 500px;
-            width: 1620px;
+            width: 1320px;
             overflow-y: scroll;
         }
 
