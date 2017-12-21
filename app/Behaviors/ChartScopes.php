@@ -92,7 +92,7 @@ trait ChartScopes
             ->where('sh.resource_type_id', 3)
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->select(['sh.period_id'])
-            ->selectRaw('p.name as p_name, ((sum(sh.allowable_ev_cost) - sum(sh.to_date_cost)) * 100 / sum(sh.allowable_ev_cost)) as value')
+            ->selectRaw('p.name as p_name, sum((sh.allowable_qty - sh.to_date_qty) * sh.to_date_unit_price) as variance, sum(sh.allowable_ev_cost) as allowable_cost')
             ->groupBy('sh.period_id', 'p.name');
     }
 }
