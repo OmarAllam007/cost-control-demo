@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Resources from './_resources';
 import Productivity from './_productivity';
 
+console.log('Working');
+
 var App = new Vue({
     el: '#BreakdownResourceForm',
     data: {
