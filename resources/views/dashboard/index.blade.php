@@ -94,22 +94,6 @@
                 </div>
             </section>
 
-            {{--<section class="card">
-                <h3 class="card-title">Labour Trend Analysis (Man/Month)</h3>
-
-                <div class="card-body">
-
-                </div>
-            </section>--}}
-
-            <section class="card">
-                <h3 class="card-title">Actual Revenue</h3>
-
-                <div class="card-body">
-
-                </div>
-            </section>
-
             <div class="row">
                 <div class="col-sm-6">
                     <section class="card">
@@ -135,7 +119,16 @@
                         <h3 class="card-title">Progress Percentage</h3>
 
                         <div class="card-body">
-
+                        
+                            <div class="chart"
+                                id="costChart"
+                                data-type="horizontalBar"
+                                data-labels="{{json_encode(['Cost Progress', 'Actual Progress'])}}"
+                                data-datasets="[{{ json_encode([
+                                    'label' => 'Progress', 
+                                    'data' => $cost_info['progress'],
+                                    'backgroundColor' => ['#64D5CA', '#E3342F']
+                                ]) }}]" style="height: 200px"></div>
                         </div>
                     </section>
                 </div>
@@ -145,7 +138,16 @@
                 <h3 class="card-title">Actual Revenue</h3>
 
                 <div class="card-body">
-
+                    <div class="chart"
+                         id="revenueTrendChart"
+                         data-type="line"
+                         data-labels="{{$actual_revenue_trend->keys()}}"
+                         data-datasets="[{{ json_encode([
+                                    'label' => 'Productivity Index',
+                                    'data' => $actual_revenue_trend->values(),
+                                    'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
+                                ]) }}]"
+                         style="height: 150px"></div>
                 </div>
             </section>
         </div>

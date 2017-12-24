@@ -19,6 +19,7 @@ use App\Observers\BreakdownTemplateObserver;
 use App\Observers\BreakdownVariableObserver;
 use App\Observers\BreakdownVariablesObserver;
 use App\Observers\CostShadowObserver;
+use App\Observers\GlobalReportObserver;
 use App\Observers\ProductivityObserver;
 use App\Observers\QSObserver;
 use App\Observers\QuantitySurveyObserver;
@@ -60,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
         $this->ProductivityActions();
         $this->wbsActions();
 
+        Project::observe(GlobalReportObserver::class);
         Productivity::observe(ProductivityObserver::class);
         BreakdownResource::observe(BreakDownResourceObserver::class);
         Resources::observe(ResourcesObserver::class);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GlobalPeriod extends Model
 {
-    protected $fillable = ['name', 'start_date', 'end_date', 'spi'];
+    protected $fillable = ['name', 'start_date', 'end_date', 'spi', 'actual_progress'];
     protected $dates = ['start_date', 'end_date', 'created_at', 'updated_at'];
     protected $has_project_periods = null;
 

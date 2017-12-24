@@ -37,6 +37,7 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 @if (Auth::check())
                 <ul class="nav navbar-nav">
+                    <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ url('/project') }}">Projects</a></li>
 
                     @can('read', 'std-activity')
@@ -77,6 +78,7 @@
                     @if (Auth::user()->is_admin)
                         <li><a href="{{route('roles.index')}}">Communication Plan</a></li>
                         <li><a href="{{route('users.index')}}">Users</a></li>
+                        <li><a href="{{route('global-periods.index')}}">Periods</a></li>
                     @endif
 
                 </ul>
