@@ -720,3 +720,37 @@ table.collapse.in {
 table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.table > thead > tr > td.v-top, table.table > thead > tr > th.v-top {
   vertical-align: top;
 }
+
+.breakdown-resource {
+  padding: 10px;
+  font-size: 12px;
+
+  &:hover, &:nth-child(odd):hover, &.active {
+    background-color: #ffc;
+  }
+
+  .tag {
+    color: #9e9e9e;
+    font-size: 90%;
+  }
+
+  &:nth-child(odd) {
+    background-color: $body-bg;
+  }
+
+  .actions .btn {
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+
+.display-flex-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.vertical-scroll-pane {
+  max-height: 500px;
+  overflow-y: auto;
+}

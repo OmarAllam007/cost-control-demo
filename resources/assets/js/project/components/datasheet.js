@@ -1,5 +1,6 @@
 import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
+import BreakdownResource from './breakdown-resource';
 import Pagination from './server-pagination';
 
 export default {
@@ -111,6 +112,6 @@ export default {
     },
 
     components: {
-        DeleteActivityModal, DeleteResourceModal, Pagination
+        BreakdownResource, DeleteActivityModal, DeleteResourceModal, Pagination
     }
 }
