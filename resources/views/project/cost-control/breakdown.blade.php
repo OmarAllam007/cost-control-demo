@@ -8,16 +8,16 @@
 
             <section class="form-group btn-toolbar pull-right">
                 @can('actual_resources', $project)
-                    <button type="button" class="btn btn-primary btn-sm" v-show="rollup.length" @click="rollup">
+                    <a :href="rollup_url" type="button" class="btn btn-primary btn-sm in-iframe" v-show="rollup.length > 1" @click="doRollup">
                         <i class="fa fa-compress"></i> Rollup
-                    </button>
+                    </a>
                 @endcan
 
                 <div class="btn-group">
                     <button type="button"
                             :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}"
                             @click ="perspective = 'cost'">
-                    <i class="fa fa-cube"></i> Current Only
+                        <i class="fa fa-cube"></i> Current Only
                     </button>
                     <button type="button"
                             :class="{'btn btn-sm': true, 'btn-info': perspective == 'budget', 'btn-default': perspective != 'budget'}"

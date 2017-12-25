@@ -34,6 +34,13 @@ export default {
             return url + urlTokens.join('&');
         },
 
+        rollup_url() {
+            let url = '/rollup/create/' + this.project + '/' + this.rollup_wbs + '/' + this.rollup_activity;
+            return url + '?' + this.rollup.map(id => {
+                return `resource[]=${id}`;
+            }).join('&');
+        },
+
         show_breakdowns() {
             return Object.keys(this.breakdowns).length > 0;
         }
@@ -69,13 +76,13 @@ export default {
             this.loading = true;
             $.ajax({
                 url: '/api/cost/delete-wbs/' + this.wbs_id, method: 'delete', dataType: 'json',
-                data: { _method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
+                data: {_method: 'delete', _token: document.querySelector('[name=csrf-token]').content}
             }).success(response => {
                 this.loading = false;
                 $('#DeleteWbsDataModal').modal('hide');
                 this.$broadcast('reloadPage');
                 this.$dispatch('request_alert', {
-                    type: response.ok? 'info' : 'error', message: response.message
+                    type: response.ok ? 'info' : 'error', message: response.message
                 });
             }).error(() => {
                 this.loading = false;
@@ -87,7 +94,7 @@ export default {
             });
         },
 
-        rollup() {
+        doRollup() {
 
         }
     },
@@ -108,7 +115,6 @@ export default {
         },
 
         pageChanged(data) {
-            console.log(data);
             this.breakdowns = _.groupBy(data, 'activity');
             // this.breakdowns = data;
             this.loading = false;

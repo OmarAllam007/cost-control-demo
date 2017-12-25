@@ -11,7 +11,11 @@ class RollupController extends Controller
 {
     function create(Project $project, WbsLevel $wbsLevel, StdActivity $stdActivity)
     {
-        dd(compact('project', 'wbsLevel', 'stdActivity'));
+        if (cannot('actual_resources', $project)) {
+            return ["ok" => false, 'message' => 'You are not authorized to do this action'];
+        }
+
+
     }
 
     function store(Project $project, WbsLevel $wbsLevel, StdActivity $stdActivity, Request $request)
