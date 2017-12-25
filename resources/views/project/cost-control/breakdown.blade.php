@@ -7,6 +7,10 @@
             </div>
 
             <section class="form-group btn-toolbar pull-right">
+                @can('actual_resources', $project)
+                    <button class="btn btn-primary btn-sm" v-show="rollup.length"><i class="fa fa-compress"></i> Rollup</button>
+                @endcan
+
                 <div class="btn-group">
                     <button type="button"
                             :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}"
@@ -16,7 +20,7 @@
                     <button type="button"
                             :class="{'btn btn-sm': true, 'btn-info': perspective == 'budget', 'btn-default': perspective != 'budget'}"
                             @click="perspective = 'budget'">
-                    <i class="fa fa-cubes"></i> All Resources
+                        <i class="fa fa-cubes"></i> All Resources
                     </button>
                 </div>
 
@@ -25,6 +29,8 @@
                         <i class="fa fa-remove"></i> Delete current
                     </a>
                 @endcan
+
+
             </section>
             <div class="clearfix"></div>
 
@@ -93,58 +99,71 @@
                                     </div>
 
                                     <div class="display-flex">
-                                        <span class="flex"><span class="tag">Budget Unit</span> @{{resource.budget_unit}}</span>
-                                        <span class="flex"><span class="tag">Unit Price</span> @{{resource.unit_price}}</span>
-                                        <span class="flex"><span class="tag">Budget Cost</span> @{{resource.budget_cost}}</span>
+                                        <span class="flex"><span class="tag">Budget Unit</span> @{{resource.budget_unit|number_format}}</span>
+                                        <span class="flex"><span class="tag">Unit Price</span> @{{resource.unit_price|number_format}}</span>
+                                        <span class="flex"><span class="tag">Budget Cost</span> @{{resource.budget_cost|number_format}}</span>
                                     </div>
 
                                     <div class="display-flex">
-                                        <span class="flex"><span class="tag">Budget Qty</span> @{{resource.resource_qty}}</span>
-                                        <span class="flex"><span class="tag">Eng Qty</span> @{{resource.resource_qty}}</span>
-                                        <span class="flex"><span class="tag">Resource Qty</span> @{{resource.resource_qty}}</span>
+                                        <span class="flex"><span class="tag">Budget Qty</span> @{{resource.resource_qty|number_format}}</span>
+                                        <span class="flex"><span class="tag">Eng Qty</span> @{{resource.resource_qty|number_format}}</span>
+                                        <span class="flex"><span class="tag">Resource Qty</span> @{{resource.resource_qty|number_format}}</span>
                                     </div>
 
                                     <div class="display-flex">
-                                        <span class="flex"><span class="tag">To Date Qty</span> @{{resource.to_date_qty}}</span>
-                                        <span class="flex"><span class="tag">To Date Unit Price</span> @{{resource.to_date_unit_price}}</span>
-                                        <span class="flex"><span class="tag">To Date Cost</span> @{{resource.to_date_cost}}</span>
+                                        <span class="flex"><span class="tag">To Date Qty</span> @{{resource.to_date_qty|number_format}}</span>
+                                        <span class="flex"><span class="tag">To Date Unit Price</span> @{{resource.to_date_unit_price|number_format}}</span>
+                                        <span class="flex"><span class="tag">To Date Cost</span> @{{resource.to_date_cost|number_format}}</span>
                                     </div>
 
                                     <div class="display-flex">
-                                        <span class="flex"><span class="tag">Status</span> @{{resource.status}}</span>
-                                        <span class="flex"><span class="tag">Progress</span> @{{resource.progress}}%</span>
-                                        <span class="flex">&nbsp;</span>
+                                        <span class="flex"><span class="tag">Allowable Cost</span> @{{resource.allowable_ev_cost|number_format}}</span>
+                                        <span class="flex"><span class="tag">Status</span> @{{resource.status || "Not Started" }}</span>
+                                        <span class="flex"><span class="tag">Progress</span> @{{resource.progress|number_format}}%</span>
                                     </div>
                                 </div>
                                 <section class="extended" v-show="expanded">
                                     <div class="display-flex">
-                                        <span class="flex"><span class="tag">Current Qty</span> @{{resource.current_qty}}</span>
-                                        <span class="flex"><span class="tag">Current Unit Price</span> @{{resource.current_unit_price}}</span>
-                                        <span class="flex"><span class="tag">Current Cost</span> @{{resource.current_cost}}</span>
+                                        <span class="flex"><span class="tag">Current Qty</span> @{{resource.current_qty|number_format}}</span>
+                                        <span class="flex"><span class="tag">Current Unit Price</span> @{{resource.current_unit_price|number_format}}</span>
+                                        <span class="flex"><span class="tag">Current Cost</span> @{{resource.current_cost|number_format}}</span>
                                     </div>
 
                                     <div class="display-flex">
-                                        <span class="flex"><span class="tag">Remaining Qty</span> @{{resource.remaining_qty}}</span>
-                                        <span class="flex"><span class="tag">Remaining Unit Price</span> @{{resource.remaining_unit_price}}</span>
-                                        <span class="flex"><span class="tag">Remaining Cost</span> @{{resource.remaining_cost}}</span>
+                                        <span class="flex"><span class="tag">Remaining Qty</span> @{{resource.remaining_qty|number_format}}</span>
+                                        <span class="flex"><span class="tag">Remaining Unit Price</span> @{{resource.remaining_unit_price|number_format}}</span>
+                                        <span class="flex"><span class="tag">Remaining Cost</span> @{{resource.remaining_cost|number_format}}</span>
                                     </div>
 
                                     <div class="display-flex">
-                                        <span class="flex"><span class="tag">At Completion Qty</span> @{{resource.at_completion_qty}}</span>
-                                        <span class="flex"><span class="tag">At Completion Unit Price</span> @{{resource.at_completion_unit_price}}</span>
-                                        <span class="flex"><span class="tag">At Completion Cost</span> @{{resource.at_completion_cost}}</span>
+                                        <span class="flex"><span class="tag">At Completion Qty</span> @{{resource.at_completion_qty|number_format}}</span>
+                                        <span class="flex"><span class="tag">At Completion Unit Price</span> @{{resource.at_completion_unit_price|number_format}}</span>
+                                        <span class="flex"><span class="tag">At Completion Cost</span> @{{resource.at_completion_cost|number_format}}</span>
                                     </div>
                                 </section>
                             </section>
 
                             <section class="actions">
-                                @can('manual_edit', $project)
-                                    <a class="btn btn-xs btn-primary in-iframe" :href="'/cost/' + resource.breakdown_resource_id + '/pseudo-edit'" title="Edit Resource Data"><i class="fa fa-fw fa-edit"></i></a>
-                                @endcan
-                                @can('delete_resources', $project)
-                                    <a class="btn btn-xs btn-warning" href="#" @click.prevent="deleteResource(resource)" title="Delete resource data"><i class="fa fa-fw fa-trash"></i></a>
-                                    <a class="btn btn-xs btn-danger" href="#" @click.prevent="deleteActivity(resource)" title="Delete activity data"><i class="fa fa-fw fa-remove"></i></a>
-                                @endcan
+                                <button type="button" @click="add_to_rollup" class="btn btn-xs" :class="[is_rolled_up? 'btn-success' : 'btn-info']" title="Add to rollup">
+                                    <i :class="['fa fa-fw', is_rolled_up? 'fa-check' : 'fa-plus']"></i>
+                                </button>
+
+                                <div class="dropdown">
+                                    <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="Menu">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        @can('manual_edit', $project)
+                                            <li><a class="in-iframe" :href="'/cost/' + resource.breakdown_resource_id + '/pseudo-edit'" title="Edit Resource Data"><i class="fa fa-fw fa-edit"></i> Edit Resource</a></li>
+                                        @endcan
+                                        @can('delete_resources', $project)
+                                            <li><a href="#" @click.prevent="deleteResource(resource)" title="Delete resource data"><i class="fa fa-fw fa-trash"></i> Delete Resource Data</a></li>
+                                            <li><a href="#" @click.prevent="deleteActivity(resource)" title="Delete activity data"><span class="text-danger"><i class="fa fa-fw fa-remove"></i> Delete Activity Data</span></a></li>
+                                        @endcan
+                                    </ul>
+                                </div>
+
                                 <button title="More Information" class="btn btn-sm btn-xs btn-default" @click="expanded = !expanded">
                                     <i :class="{'fa fa-fw': true, 'fa-angle-down': !expanded, 'fa-angle-up': expanded}"></i>
                                 </button>

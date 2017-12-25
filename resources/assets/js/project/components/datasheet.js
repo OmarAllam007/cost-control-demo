@@ -14,7 +14,7 @@ export default {
             breakdowns: [],
             loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
-            perspective, count: 0, first: 0, last: 99
+            perspective, count: 0, first: 0, last: 99, rollup: []
         };
     },
 
@@ -101,6 +101,17 @@ export default {
 
         reload_breakdowns() {
             this.loadBreakdowns();
+        },
+
+        add_to_rollup(resource_id) {
+            if (this.rollup.indexOf(resource_id) < 0) {
+                this.rollup.push(resource_id);
+            }
+        },
+
+        remove_from_rollup(resource_id) {
+            const index = this.rollup.indexOf(resource_id);
+            this.rollup.splice(index, 1);
         }
     },
 
@@ -113,5 +124,11 @@ export default {
 
     components: {
         BreakdownResource, DeleteActivityModal, DeleteResourceModal, Pagination
+    },
+
+    filters: {
+        number_format(val) {
+            return parseFloat(val.toFixed(2)).toLocaleString();
+        }
     }
 }
