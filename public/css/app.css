@@ -11397,6 +11397,8 @@ table.collapse.in {
   -webkit-box-pack: justify;
   justify-content: space-between;
   align-content: center;
+  -webkit-box-align: center;
+  align-items: center;
 }
 
 .flex {
@@ -11467,6 +11469,16 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 .vertical-scroll-pane {
   max-height: 500px;
   overflow-y: auto;
+}
+
+.breakdown-activity-header {
+  padding: 5px 10px;
+  background: #3097D1;
+  color: #e5e5e5;
+}
+
+.breakdown-activity-header h5 {
+  margin: 0;
 }
 
 /*# sourceMappingURL=app.css.map */

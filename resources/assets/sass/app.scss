@@ -690,6 +690,7 @@ table.collapse.in {
   display: flex;
   justify-content: space-between;
   align-content: center;
+  align-items: center;
 }
 
 .flex {
@@ -753,4 +754,15 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 .vertical-scroll-pane {
   max-height: 500px;
   overflow-y: auto;
+}
+
+
+.breakdown-activity-header {
+  padding: 5px 10px;
+  background: $brand-primary;
+  color: #e5e5e5;
+
+  h5 {
+    margin: 0;
+  }
 }

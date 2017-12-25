@@ -2,6 +2,7 @@ import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
 import BreakdownResource from './breakdown-resource';
 import Pagination from './server-pagination';
+import _ from 'lodash';
 
 export default {
 
@@ -31,6 +32,10 @@ export default {
                 }
             });
             return url + urlTokens.join('&');
+        },
+
+        show_breakdowns() {
+            return Object.keys(this.breakdowns).length > 0;
         }
     },
     //</editor-fold>
@@ -99,7 +104,9 @@ export default {
         },
 
         pageChanged(data) {
-            this.breakdowns = data;
+            console.log(data);
+            this.breakdowns = _.groupBy(data, 'activity');
+            // this.breakdowns = data;
             this.loading = false;
         },
 
@@ -121,6 +128,11 @@ export default {
         remove_from_rollup(resource) {
             const index = this.rollup.indexOf(resource.breakdown_resource_id);
             this.rollup.splice(index, 1);
+
+            if (this.rollup.length === 0) {
+                this.rollup_wbs = false;
+                this.rollup_activity = false;
+            }
         }
     },
 

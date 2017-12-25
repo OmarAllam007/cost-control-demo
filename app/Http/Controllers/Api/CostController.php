@@ -15,22 +15,23 @@ use App\WbsLevel;
 use App\WbsResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
-        set_time_limit(180);
+//        set_time_limit(180);
 
         $period = $wbs_level->project->open_period();
 
         $perspective = $request->get('perspective');
 
         if ($perspective == 'budget') {
-            $query = BreakDownResourceShadow::joinCost($wbs_level, $period)->with('actual_resources');
+            $query = BreakDownResourceShadow::joinCost($wbs_level, $period)->with('actual_resources')->orderBy('activity');
         } else {
-            $query = CostShadow::joinShadow($wbs_level, $period);
+            $query = CostShadow::joinShadow($wbs_level, $period)->orderBy('activity');
         }
 
         if ($activity_id = $request->get('activity')) {
@@ -51,6 +52,7 @@ class CostController extends Controller
             });
         }
 
+        /** @var LengthAwarePaginator $rows */
         $rows = $query->paginate(100);
         if ($perspective == 'budget') {
             $rows->each(function (BreakDownResourceShadow $resource) {
