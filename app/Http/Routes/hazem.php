@@ -230,3 +230,6 @@ Route::get('project/{project}/failed-productivity', 'ProjectProductivityControll
 
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
+
+Route::get('/rollup/create/{project}/{wbsLevel}/{stdActivity}', 'RollupController@create')->name('rollup.create');
+Route::get('/rollup/store/{project}/{wbsLevel}/{stdActivity}', 'RollupController@store')->name('rollup.store');

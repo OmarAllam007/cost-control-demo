@@ -8,7 +8,9 @@
 
             <section class="form-group btn-toolbar pull-right">
                 @can('actual_resources', $project)
-                    <button class="btn btn-primary btn-sm" v-show="rollup.length"><i class="fa fa-compress"></i> Rollup</button>
+                    <button type="button" class="btn btn-primary btn-sm" v-show="rollup.length" @click="rollup">
+                        <i class="fa fa-compress"></i> Rollup
+                    </button>
                 @endcan
 
                 <div class="btn-group">
