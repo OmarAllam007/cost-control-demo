@@ -82,7 +82,12 @@
 
             <section v-if="breakdowns.length">
                 <div class="vertical-scroll-pane">
-                    <breakdown-resource inline-template v-for="resource in breakdowns" :resource="resource">
+                    <breakdown-resource inline-template
+                                        v-for="resource in breakdowns"
+                                        :resource="resource"
+                                        :rollup_activity="rollup_activity"
+                                        :rollup_wbs="rollup_wbs">
+
                         <article class="breakdown-resource display-flex ">
                             <section class="information flex">
                                 <div class="basic-info flex">
@@ -144,7 +149,10 @@
                             </section>
 
                             <section class="actions">
-                                <button type="button" @click="add_to_rollup" class="btn btn-xs" :class="[is_rolled_up? 'btn-success' : 'btn-info']" title="Add to rollup">
+                                <button type="button"
+                                        @click="add_to_rollup" class="btn btn-xs"
+                                        :class="is_rolled_up? 'btn-success' : 'btn-info'"
+                                        title="Add to rollup" :disabled="!can_be_rolled_up">
                                     <i :class="['fa fa-fw', is_rolled_up? 'fa-check' : 'fa-plus']"></i>
                                 </button>
 

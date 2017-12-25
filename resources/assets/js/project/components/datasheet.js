@@ -14,7 +14,8 @@ export default {
             breakdowns: [],
             loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
-            perspective, count: 0, first: 0, last: 99, rollup: []
+            perspective, count: 0, first: 0, last: 99,
+            rollup: [], rollup_activity: false, rollup_wbs: false
         };
     },
 
@@ -87,6 +88,9 @@ export default {
             if (this.wbs_id != params.selection) {
                 this.loading = true;
                 this.wbs_id = params.selection;
+                this.rollup = [];
+                this.rollup_wbs = false;
+                this.rollup_activity = false;
             }
         },
 
@@ -103,14 +107,19 @@ export default {
             this.loadBreakdowns();
         },
 
-        add_to_rollup(resource_id) {
-            if (this.rollup.indexOf(resource_id) < 0) {
-                this.rollup.push(resource_id);
+        add_to_rollup(resource) {
+            if (!this.rollup.length) {
+                this.rollup_wbs = resource.wbs_id;
+                this.rollup_activity = resource.activity_id;
+            }
+
+            if (this.rollup.indexOf(resource.breakdown_resource_id) < 0) {
+                this.rollup.push(resource.breakdown_resource_id);
             }
         },
 
-        remove_from_rollup(resource_id) {
-            const index = this.rollup.indexOf(resource_id);
+        remove_from_rollup(resource) {
+            const index = this.rollup.indexOf(resource.breakdown_resource_id);
             this.rollup.splice(index, 1);
         }
     },
