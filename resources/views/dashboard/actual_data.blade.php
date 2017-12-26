@@ -45,7 +45,7 @@
 
                 </td>
             </tr>
-            <tr class="highlight">
+            <tr class="high-risk-project">
                 <th class="w-1-3">Highest Risk</th>
                 <td class="w-2-3">{{$projectNames[$cost_info['highest_risk']['project_id']]}}</td>
                 <td class="separator"></td>
@@ -65,7 +65,7 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr class="low-risk-project">
                 <th class="w-1-3">Lowest Risk</th>
                 <td class="w-2-3">{{$projectNames[$cost_info['lowest_risk']['project_id']]}}</td>
                 <td class="separator"></td>
