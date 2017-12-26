@@ -68,10 +68,6 @@ class ThresholdReport
             $level->subtree = $this->buildTree($level->id);
             $level->activities = $this->activities->get($level->id, collect());
 
-            $level->to_date_cost = $level->subtree->sum('to_date_cost') + $level->activities->sum('to_date_cost');
-            $level->allowable_cost = $level->subtree->sum('allowable_cost') + $level->activities->sum('allowable_cost');
-            $level->variance = $level->allowable_cost - $level->to_date_cost;
-
             // We need to make all comparisons in positive values
             $level->compare_variance = $level->to_date_cost - $level->allowable_cost;
             $level->increase = 0;
@@ -83,6 +79,10 @@ class ThresholdReport
                 $activity->compare_variance = - $activity->variance;
                 return $activity->increase < $this->threshold || $activity->compare_variance < $this->threshold_value;
             });
+
+            $level->to_date_cost = $level->subtree->sum('to_date_cost') + $level->activities->sum('to_date_cost');
+            $level->allowable_cost = $level->subtree->sum('allowable_cost') + $level->activities->sum('allowable_cost');
+            $level->variance = $level->allowable_cost - $level->to_date_cost;
 
             return $level;
         })->reject(function ($level) {
