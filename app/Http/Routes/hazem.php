@@ -232,4 +232,4 @@ Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('q
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
 Route::get('/rollup/create/{project}/{wbsLevel}/{stdActivity}', 'RollupController@create')->name('rollup.create');
-Route::get('/rollup/store/{key}', 'RollupController@store')->name('rollup.store');
+Route::post('/rollup/store/{key}', 'RollupController@store')->name('rollup.store');

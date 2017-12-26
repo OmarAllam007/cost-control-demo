@@ -13,9 +13,11 @@
 @section('body')
     <div class="row mb-20">
         <form action="{{ route('rollup.store', $key) . (request()->exists('iframe')? '?iframe=1' : '') }}" class="col-sm-6 br-1">
+            {{csrf_field()}}
+
             <div class="form-group {{$errors->first('code', 'has-error')}}">
                 <label for="resourceCode" class="control-label">Code</label>
-                <input type="text" name="code" id="resourceCode" class="form-control" value="{{old('code', $code)}}">
+                <input type="text" name="code" id="resourceCode" class="form-control" value="{{old('code', $code)}}" autofocus>
                 {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
             </div>
 
@@ -82,6 +84,7 @@
         <table class="table table-condensed table-striped table-hover table-bordered">
             <thead>
             <tr>
+                <th>Cost Account</th>
                 <th>Code</th>
                 <th>Name</th>
                 <th>Type</th>
@@ -95,6 +98,7 @@
             <tbody>
             @foreach($resources as $resource)
                 <tr>
+                    <th>{{$resource->cost_account}}</th>
                     <th>{{$resource->resource_code}}</th>
                     <th>{{$resource->resource_name}}</th>
                     <th>{{$resource->resource_type}}</th>

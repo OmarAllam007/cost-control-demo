@@ -6,7 +6,9 @@ use App\BreakDownResourceShadow;
 use App\Project;
 use App\ResourceType;
 use App\StdActivity;
+use App\Support\Rollup;
 use App\WbsLevel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -29,19 +31,19 @@ class RollupController extends Controller
 
         $key = uniqid('', true);
         $data = compact('project', 'wbsLevel', 'stdActivity', 'resources', 'key');
-        \Cache::put($key, $data);
 
         $budget_cost = $resources->sum('budget_cost');
         $actual_cost = $resources->sum('to_date_cost');
-
-        $data['code'] = $resources->first()->code . '.01';
-        $data['name'] = $stdActivity->name . ' rollup';
-        $data['type'] = '';
         $progress = 0;
         if ($budget_cost) {
             $progress = round($actual_cost * 100/$budget_cost, 2);
         }
         $data['progress'] = $progress;
+        \Cache::put($key, $data, Carbon::tomorrow());
+
+        $data['code'] = $resources->first()->code . '.01';
+        $data['name'] = $stdActivity->name . ' rollup';
+        $data['type'] = '';
         $data['resourceTypes'] = ResourceType::where('parent_id', 0)->pluck('name', 'id');
 
         return view('rollup.create', $data);
@@ -49,7 +51,34 @@ class RollupController extends Controller
 
     function store($key, Request $request)
     {
+        $data = \Cache::get($key);
+        if (!$data) {
+            flash('No data found');
+            if ($request->exists('iframe')) {
+                return \Redirect::to('/blank');
+            }
+            return \Redirect::route('projects.index');
+        }
 
+        $project = $data['project'];
+        if (cannot('actual_resources', $project)) {
+            flash('You are not authorized to do this action');
+            return \Redirect::route('project.cost-control', $project);
+        }
+
+        $this->validate($request, [
+            'code' => 'required', 'name' => 'required', 'resource_type' => 'required',
+            'budget_qty' => 'required|numeric|gte:0', 'progress' => 'required|numeric|gte:0'
+        ]);
+
+        $rollup = new Rollup($key, $request->only('code', 'name', 'qty', 'type', 'progress'));
+        $rollup->handle();
+
+        flash('Resources has been rolled up', 'success');
+        if ($request->exists('iframe')) {
+            return \Redirect::to('/blank?reload=breakdowns');
+        }
+        return \Redirect::route('project.cost-control', $project);
     }
 
     private function validateResources(Collection $resources, $project, $wbsLevel, $stdActivity)
