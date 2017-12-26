@@ -45,6 +45,7 @@ class ThresholdReport
 
         $this->activities = $this->applyFilters(
             MasterShadow::where('period_id', $this->period->id)
+                ->where('to_date_qty', '>', 0)
                 ->selectRaw('wbs_id, activity, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
                 ->selectRaw('sum(allowable_ev_cost) - sum(to_date_cost) as variance')
                 ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')
@@ -66,23 +67,32 @@ class ThresholdReport
     {
         return $this->wbs_levels->get($parent, collect())->map(function($level) {
             $level->subtree = $this->buildTree($level->id);
-            $level->activities = $this->activities->get($level->id, collect());
+
+            $level->activities = $this->activities->get($level->id, collect())->filter(function($activity) {
+                $activity->compare_variance = - $activity->variance;
+                if ($this->threshold >= 0) {
+                    $threshold = $activity->increase > $this->threshold;
+                } else {
+                    $threshold = $activity->increase < $this->threshold;
+                }
+
+                if ($this->threshold_value >= 0) {
+                    $threshold_value = abs($activity->variance) > abs($this->threshold_value);
+                } else {
+                    $threshold_value = $activity->variance > abs($this->threshold_value);
+                }
+
+                return $threshold && $threshold_value;
+            });
 
             $level->to_date_cost = $level->subtree->sum('to_date_cost') + $level->activities->sum('to_date_cost');
             $level->allowable_cost = $level->subtree->sum('allowable_cost') + $level->activities->sum('allowable_cost');
             $level->variance = $level->allowable_cost - $level->to_date_cost;
-
-            // We need to make all comparisons in positive values
             $level->compare_variance = $level->to_date_cost - $level->allowable_cost;
             $level->increase = 0;
             if ($level->allowable_cost) {
                 $level->increase = $level->compare_variance * 100 / $level->allowable_cost;
             }
-
-            $level->activities = $level->activities->reject(function($activity) {
-                $activity->compare_variance = - $activity->variance;
-                return $activity->increase < $this->threshold || $activity->compare_variance < $this->threshold_value;
-            });
 
             return $level;
         })->reject(function ($level) {
