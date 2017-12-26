@@ -157,3 +157,23 @@
 @section('javascript')
     <script src="/js/cost-info-charts.js"></script>
 @endsection
+
+@section('css')
+    <style>
+        .card .table > tbody > tr.low-risk-project > th, .card .table > tbody > tr.low-risk-project > td {
+            background-color: #dfd;
+        }
+
+        .card .table > tbody > tr.high-risk-project > th, .card .table > tbody > tr.high-risk-project > td {
+            background-color: #fdd;
+        }
+
+        .card .table > tbody > tr.low-risk-project > th.separator, .card .table > tbody > tr.low-risk-project > td.separator {
+            background-color: transparent;
+        }
+
+        .card .table > tbody > tr.high-risk-project > th.separator, .card .table > tbody > tr.high-risk-project > td.separator {
+            background-color: transparent;
+        }
+    </style>
+@endsection
