@@ -8,7 +8,7 @@
 
             <section class="form-group btn-toolbar pull-right">
                 @can('actual_resources', $project)
-                    <a :href="rollup_url" type="button" class="btn btn-primary btn-sm in-iframe" v-show="rollup.length > 1" @click="doRollup">
+                    <a :href="rollup_url" type="button" class="btn btn-primary btn-sm in-iframe" title="Rollup Resources" v-show="rollup.length > 1" @click="doRollup">
                         <i class="fa fa-compress"></i> Rollup
                     </a>
                 @endcan
