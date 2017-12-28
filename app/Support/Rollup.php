@@ -101,15 +101,21 @@ class Rollup
 
         BreakDownResourceShadow::unguard();
         BreakDownResourceShadow::flushEventListeners();
+        $budget_cost = $this->resources->sum('budget_cost');
+        $qty = $this->input['qty'];
+
+        $unit_price = 0;
+        if ($qty) {
+            $unit_price = $budget_cost / $qty;
+        }
         $this->rollUpShadow = BreakDownResourceShadow::create([
             'project_id' => $this->project->id, 'wbs_id' => $this->wbsLevel->id,
             'activity_id' => $this->stdActivity->id, 'activity' => $this->name,
             'breakdown_id' => $this->rollupBreakdown->id, 'breakdown_resource_id' => $this->rollupBreakdownResource->id,
             'resource_id' => 0, 'template' => 'Rollup', 'template_id' => 0, 'resource_waste' => 0, 'cost_account' => '',
             'resource_code' => $this->input['code'], 'resource_name' => $this->input['name'], 'resource_type_id' => $this->input['type'],
-            'budget_unit' => $this->input['qty'], 'budget_cost' => $this->resources->sum('budget_cost'),
-            'resource_qty' => $this->input['qty'],
-            'measure_unit' => 'LM', 'unit_id' => 3, 'unit_price' => 0, 'remarks' => 'Rollup',
+            'budget_unit' => $qty, 'budget_cost' => $budget_cost, 'resource_qty' => $qty,
+            'measure_unit' => 'LM', 'unit_id' => 3, 'unit_price' => $unit_price, 'remarks' => $this->input['remarks'],
             'code' => $code, 'progress' => $this['progress'], 'status' => $status,
             'show_in_budget' => false, 'show_in_cost' => true, 'is_rolled_up' => true
         ]);
