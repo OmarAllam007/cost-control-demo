@@ -53,9 +53,5 @@ function check_syntax($equation)
 
 function optional($object)
 {
-    if (is_object($object) && is_null($object)) {
-        return $object;
-    }
-
-    return new \Illuminate\Support\Fluent();
+    return new \App\Support\Optional($object);
 }

@@ -179,11 +179,7 @@ trait CostAttributes
 
         $conditions = ['project_id' => $this->project_id];
 
-        $resource = Resources::find($this->resource_id);
-
-        if (!$resource->rate) {
-            return $this->calculated['remaining_unit_price'] = 0;
-        }
+        $resource = optional(Resources::find($this->resource_id));
 
         if ($resource->isMaterial()) {
             // For material we calculate over resource in all activities
@@ -215,8 +211,8 @@ trait CostAttributes
                 $remainingUnitPrice = $todate->unit_price;
             } else {
                 // If the resource didn't start use budget unit rate
-                $budgetResource = Resources::find($this->resource_id);
-                $remainingUnitPrice = $budgetResource->rate;
+//                $budgetResource = optional(Resources::find($this->resource_id));
+                $remainingUnitPrice = $this->rate;
             }
         }
         

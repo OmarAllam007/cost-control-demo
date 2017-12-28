@@ -11,8 +11,9 @@
 @endsection
 
 @section('body')
+    {{dump($errors->all())}}
     <div class="row mb-20">
-        <form action="{{ route('rollup.store', $key) . (request()->exists('iframe')? '?iframe=1' : '') }}" class="col-sm-6 br-1">
+        <form action="{{ route('rollup.store', $key) . (request()->exists('iframe')? '?iframe=1' : '') }}" method="post" class="col-sm-6 br-1">
             {{csrf_field()}}
 
             <div class="form-group {{$errors->first('code', 'has-error')}}">

@@ -110,13 +110,13 @@ class Rollup
         }
         $this->rollUpShadow = BreakDownResourceShadow::create([
             'project_id' => $this->project->id, 'wbs_id' => $this->wbsLevel->id,
-            'activity_id' => $this->stdActivity->id, 'activity' => $this->name,
+            'activity_id' => $this->stdActivity->id, 'activity' => $this->stdActivity->name,
             'breakdown_id' => $this->rollupBreakdown->id, 'breakdown_resource_id' => $this->rollupBreakdownResource->id,
             'resource_id' => 0, 'template' => 'Rollup', 'template_id' => 0, 'resource_waste' => 0, 'cost_account' => '',
             'resource_code' => $this->input['code'], 'resource_name' => $this->input['name'], 'resource_type_id' => $this->input['type'],
             'budget_unit' => $qty, 'budget_cost' => $budget_cost, 'resource_qty' => $qty,
             'measure_unit' => 'LM', 'unit_id' => 3, 'unit_price' => $unit_price, 'remarks' => $this->input['remarks'],
-            'code' => $code, 'progress' => $this['progress'], 'status' => $status,
+            'code' => $code, 'progress' => $this->input['progress'], 'status' => $status,
             'show_in_budget' => false, 'show_in_cost' => true, 'is_rolled_up' => true
         ]);
     }
@@ -141,9 +141,18 @@ class Rollup
 
         $original_data = $old->pluck('original_data');
 
-        $to_date_cost = $old->sum('to_date_cost');
-        $to_date_qty = $old->sum('to_date_qty');
-        $to_date_unit_price = $to_date_cost / $to_date_qty;
+        $to_date_cost = $old->sum('cost');
+
+        $budget_cost = $this->resources->sum('budget_cost');
+        $to_date_qty = 0;
+        if ($budget_cost) {
+            $to_date_qty = ($to_date_cost / $budget_cost) * $this->input['qty'];
+        }
+
+        $to_date_unit_price = 0;
+        if ($to_date_qty != 0) {
+            $to_date_unit_price = $to_date_cost / $to_date_qty;
+        }
 
         ActualResources::unguard();
         ActualResources::flushEventListeners();
@@ -161,13 +170,17 @@ class Rollup
             'original_data' => $original_data,
         ]);
 
-        $shadow = $this->rollUpShadow->fresh();
-        $shadow->appendFields();
-        CostShadow::create($shadow->toArray());
-
         $old->each(function ($resource) {
             $resource->delete();
         });
+
+        $shadow = $this->rollUpShadow->fresh();
+        $shadow->appendFields();
+
+        $costShadow = new CostShadow();
+        $attributes = collect($shadow->toArray());
+        $costShadow->fill($attributes->only($costShadow->getFillable())->toArray());
+        $costShadow->save();
 
         CostShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)
             ->get()->each(function ($resource) {
@@ -180,9 +193,9 @@ class Rollup
         if ($this->input['progress'] == 0) {
             return $status = 'Not Started';
         } elseif ($this->input['progress'] == 100) {
-            return $status = 'In Progress';
+            return $status = 'Closed';
         }
 
-        return $status = 'Closed';
+        return $status = 'In Progress';
     }
 }

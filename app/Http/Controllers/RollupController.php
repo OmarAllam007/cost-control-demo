@@ -67,8 +67,8 @@ class RollupController extends Controller
         }
 
         $this->validate($request, [
-            'code' => 'required', 'name' => 'required', 'resource_type' => 'required',
-            'budget_qty' => 'required|numeric|gte:0', 'progress' => 'required|numeric|gte:0'
+            'code' => 'required', 'name' => 'required', 'type' => 'required',
+            'qty' => 'required|numeric|gte:0', 'progress' => 'required|numeric|gte:0'
         ]);
 
         $rollup = new Rollup($key, $request->only('code', 'name', 'qty', 'type', 'progress'));
