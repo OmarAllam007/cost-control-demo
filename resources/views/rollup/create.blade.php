@@ -11,7 +11,6 @@
 @endsection
 
 @section('body')
-    {{dump($errors->all())}}
     <div class="row mb-20">
         <form action="{{ route('rollup.store', $key) . (request()->exists('iframe')? '?iframe=1' : '') }}" method="post" class="col-sm-6 br-1">
             {{csrf_field()}}
@@ -61,18 +60,18 @@
 
         <div class="col-sm-6">
             <dl>
-                <dd>Project</dd>
-                <dt>{{$project->name}}</dt>
+                <dt>Project</dt>
+                <dd>{{$project->name}}</dd>
             </dl>
 
             <dl>
-                <dd>WBS</dd>
-                <dt>{{$wbsLevel->path}} ({{$wbsLevel->code}})</dt>
+                <dt>WBS</dt>
+                <dd>{{$wbsLevel->path}} ({{$wbsLevel->code}})</dd>
             </dl>
 
             <dl>
-                <dd>Activity</dd>
-                <dt>{{$stdActivity->name}}</dt>
+                <dt>Activity</dt>
+                <dd>{{$stdActivity->name}}</dd>
             </dl>
         </div>
     </div>
