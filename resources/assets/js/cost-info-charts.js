@@ -1,4 +1,5 @@
 import Chart from 'chart.js';
+
 window.number_format = function(num) {
     return parseFloat(parseFloat(num).toFixed(2)).toLocaleString();
 };

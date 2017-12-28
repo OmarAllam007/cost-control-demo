@@ -13,6 +13,8 @@ var elixir = require('laravel-elixir');
 
 elixir(function (mix) {
     mix.sass('app.scss');
+    mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
+
     mix.webpack('cost-info-charts.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.copy('node_modules/c3/c3.min.js', 'public/js/c3.min.js');

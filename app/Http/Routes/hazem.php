@@ -248,3 +248,5 @@ Route::post('/project/{project}/communication/budget', 'BudgetCommunicationContr
 Route::get('/project/{project}/communication/cost', 'CostCommunicationController@create')->name('communication.cost');
 Route::post('/project/{project}/communication/cost', 'CostCommunicationController@store');
 Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);
+Route::get('/rollup/create/{project}/{wbsLevel}/{stdActivity}', 'RollupController@create')->name('rollup.create');
+Route::post('/rollup/store/{key}', 'RollupController@store')->name('rollup.store');
