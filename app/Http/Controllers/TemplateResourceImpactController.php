@@ -118,6 +118,7 @@ class TemplateResourceImpactController extends Controller
                 $resource->equation = $new_template_resource->equation;
                 $resource->labor_count = $new_template_resource->labor_count;
                 $resource->productivity_id = $new_template_resource->productivity_id;
+                $resource->remarks = $new_template_resource->remarks;
 
                 $resource->save();
             });
