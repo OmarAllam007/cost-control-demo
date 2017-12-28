@@ -98,8 +98,8 @@
                                 <tr class="{{slug($activity)}} hidden">
                                     <td class="resource" width="300">{{$resource}}</td>
                                     @php
-                                        $firstTotal = $resourceData[$firstRev]['cost'];
-                                        $lastTotal = $resourceData[$lastRev]['cost'];
+                                        $firstTotal = $resourceData[$firstRev]['cost'] ?? 0;
+                                        $lastTotal = $resourceData[$lastRev]['cost'] ?? 0;
                                         $diff = $lastTotal - $firstTotal;
 
                                         if (!$diff) {
@@ -113,6 +113,7 @@
                                     @foreach($revisions as $rev_id => $rev_name)
                                         <td width="150">{{number_format($resourceData[$rev_id]['cost'] ?? 0, 2)}}</td>
                                     @endforeach
+
                                     <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</td>
                                     <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}%</td>
                                 </tr>
@@ -125,9 +126,10 @@
                     <tr>
                         <th>Total</th>
                         @foreach($revisions as $rev_id => $rev_name)
-                            <th>{{number_format($totals[$rev_id], 2)}}</th>
+                            <th>{{number_format($totals[$rev_id] ?? 0, 2)}}</th>
                         @endforeach
                         @php
+
                             $diff = $totals[$lastRev] - $totals[$firstRev];
                             if (!$diff) {
                                 $diffPercent = 0;
