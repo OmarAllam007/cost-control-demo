@@ -40,15 +40,21 @@ class ActualResourceObserver
 
     protected function updateShadow(ActualResources $resource)
     {
-        $trans = WbsResource::joinShadow()
-            ->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
-            ->where('period_id', $resource->period_id)
-            ->first();
-
         $conditions = [
             'breakdown_resource_id' => $resource->breakdown_resource_id,
             'period_id' => $resource->period_id,
         ];
+
+        $budgetShadow = BreakDownResourceShadow::whereBreakdownResourceId($resource->breakdown_resource_id)->first();
+        $budgetShadow->appendFields();
+
+        CostShadow::updateOrCreate($conditions, $budgetShadow->toArray());
+
+        /*$trans = WbsResource::joinShadow()
+            ->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
+            ->where('period_id', $resource->period_id)
+            ->first();
+
 
         if ($trans) {
             $attributes = $trans->toArray();
@@ -61,6 +67,6 @@ class ActualResourceObserver
             CostShadow::where($conditions)->get()->each(function ($resource) {
                 $resource->delete();
             });
-        }
+        }*/
     }
 }
