@@ -46,9 +46,16 @@ class ActualResourceObserver
         ];
 
         $budgetShadow = BreakDownResourceShadow::whereBreakdownResourceId($resource->breakdown_resource_id)->first();
+        $budgetShadow->ignore_cost = true;
         $budgetShadow->appendFields();
 
-        CostShadow::updateOrCreate($conditions, $budgetShadow->toArray());
+        if ($budgetShadow->curr_qty) {
+            CostShadow::updateOrCreate($conditions, $budgetShadow->toArray());
+        } else {
+            CostShadow::where('breakdown_resource_id', $resource->breakdown_resource_id)->delete();
+        }
+
+
 
         /*$trans = WbsResource::joinShadow()
             ->where('wbs_resources.breakdown_resource_id', $resource->breakdown_resource_id)
