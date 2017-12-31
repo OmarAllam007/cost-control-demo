@@ -80,7 +80,7 @@ class ExportCostShadow extends Job
         if ($this->perspective == 'budget') {
             $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
             if (!$query->exists()) {
-                $query = BreakDownResourceShadow::where('project_id', $this->project->id);
+                $query = BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1);
             }
         } else {
             $query = CostShadow::joinShadow(null, $period);

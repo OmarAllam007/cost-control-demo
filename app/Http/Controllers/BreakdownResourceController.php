@@ -132,7 +132,8 @@ class BreakdownResourceController extends Controller
             $variables = $breakdown->variables->pluck('value', 'display_order');
             $newBreakdown->syncVariables($variables);
 
-            foreach ($breakdown->resources as $resource) {
+            $breakdownResources = $breakdown->resources()->where('show_in_budget', 1)->get();
+            foreach ($breakdownResources as $resource) {
                 $resourceData = $resource->getAttributes();
                 if ($newBreakdown->qty_survey) {
                     $resourceData['budget_qty'] = $newBreakdown->qty_survey->budget_qty;
@@ -147,7 +148,7 @@ class BreakdownResourceController extends Controller
         }
 
         if ($request->ajax()) {
-            $breakdowns = BreakDownResourceShadow::where('wbs_id', $target_wbs->id)->get();
+            $breakdowns = BreakDownResourceShadow::where('wbs_id', $target_wbs->id)->where('show_in_budget', 1)->get();
             return ['ok' => true, 'breakdowns' => $breakdowns];
         }
 
@@ -156,7 +157,6 @@ class BreakdownResourceController extends Controller
 
     function deleteAllBreakdowns(Project $project)
     {
-
         BreakdownResource::whereIn('breakdown_id', $project->breakdowns()->pluck('id'))->delete();
         BreakDownResourceShadow::where('project_id', $project->id)->delete();
         return redirect()->back();

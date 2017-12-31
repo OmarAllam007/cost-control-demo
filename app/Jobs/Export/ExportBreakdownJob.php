@@ -35,7 +35,7 @@ class ExportBreakdownJob extends Job
         $fh = fopen($filename, 'w');
         fwrite($fh, $line);
 
-        $shadows = $this->project->shadows()->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function ($shadows) use ($fh) {
+        $shadows = $this->project->shadows()->where('show_in_budget', 1)->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function ($shadows) use ($fh) {
             foreach ($shadows as $breakdown_resource) {
                 $discpline = $breakdown_resource->std_activity->discipline;
                 $division = $breakdown_resource->std_activity->division;
