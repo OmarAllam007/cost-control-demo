@@ -45,7 +45,9 @@ export default {
                         message: response.message
                     });
                 }
-            }).error(() => {});
+            }).error(() => {
+                this.loading = false;
+            });
         },
 
         wipeAll() {
