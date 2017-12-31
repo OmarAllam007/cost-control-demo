@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
+
 function flash($message, $type = 'danger')
 {
     Session::flash('flash-message', $message);
@@ -54,4 +57,40 @@ function check_syntax($equation)
 function optional($object)
 {
     return new \App\Support\Optional($object);
+}
+
+if (! function_exists('report')) {
+    /**
+     * Report an exception.
+     *
+     * @param  \Exception  $exception
+     * @return void
+     */
+    function report($exception)
+    {
+        if ($exception instanceof Throwable &&
+            ! $exception instanceof Exception) {
+            $exception = new FatalThrowableError($exception);
+        }
+        app(ExceptionHandler::class)->report($exception);
+    }
+}
+
+if (! function_exists('rescue')) {
+    /**
+     * Catch a potential exception and return a default value.
+     *
+     * @param  callable  $callback
+     * @param  mixed  $rescue
+     * @return mixed
+     */
+    function rescue(callable $callback, $rescue = null)
+    {
+        try {
+            return $callback();
+        } catch (Throwable $e) {
+            report($e);
+            return value($rescue);
+        }
+    }
 }
