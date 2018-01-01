@@ -4,7 +4,10 @@
     <h3>{{$project->name}} &mdash; {{$revision->name}}</h3>
 
     <div class="pull-right">
-        <a href="{{$revision->url()}}/export" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Export Datasheet</a>
+        @can('budget_owner', $revision->project)
+        <a href="{{$revision->url()}}/edit" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
+        @endcan
+        <a href="{{$revision->url()}}/export" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Export Breakdown</a>
         <a href="{{route('project.budget', $project)}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
     </div>
 @endsection

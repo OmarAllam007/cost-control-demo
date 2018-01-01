@@ -11,8 +11,20 @@
             <input class="form-control" id="rev-num" name="rev_num" value="{{$revision->rev_num}}" readonly>
         </div>
 
+        @if ($revision->exists())
+            <div class="form-group">
+                <label for="original_contract_amount" class="control-label">Original Contract Amount</label>
+                <input class="form-control" id="original_contract_amount" name="rev_num" value="{{$revision->original_contract_amount}}">
+            </div>
+
+            <div class="form-group">
+                <label for="change_order_amount" class="control-label">Change Order Amount</label>
+                <input class="form-control" id="change_order_amount" name="rev_num" value="{{$revision->change_order_amount}}">
+            </div>
+        @endif
+
         <div class="form-group">
-            <button class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
+            <button class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
         </div>
     </div>
 </div>
