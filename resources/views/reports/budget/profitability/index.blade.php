@@ -14,9 +14,10 @@
 @endsection
 
 @section('body')
-    <section class="flex-tables">
-        <table class="table table-condensed table-bordered" id="report-header">
-            <thead>
+    <section class="clearfix">
+        <section class="pull-left">
+            <table class="table table-condensed table-bordered" id="report-header">
+                <thead>
                 <tr class="bg-primary"><th>&nbsp;</th></tr>
                 <tr><th>Total Project Budget</th></tr>
                 <tr><th>Original Contract Amount</th></tr>
@@ -25,8 +26,10 @@
                 <tr><th>Profitability</th></tr>
                 <tr><th>Profitability Index</th></tr>
                 <tr><th>Variance</th></tr>
-            </thead>
-        </table>
+                </thead>
+            </table>
+        </section>
+
         <section class="horizontal-scroll display-flex">
 
             @foreach($revisions as $revision)
@@ -37,8 +40,8 @@
                         <tr><td>{{number_format($revision->original_contract_amount, 2)}}</td></tr>
                         <tr><td>{{number_format($revision->change_order_amount, 2)}}</td></tr>
                         <tr><td>{{number_format($revision->revised_contract_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->profitability, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->profitability_index, 2)}}</td></tr>
+                        <tr><td class="{{$revision->profitability > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability, 2)}}</td></tr>
+                        <tr><td class="{{$revision->profitability_index > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability_index, 2)}}%</td></tr>
                         <tr><td>{{number_format($revision->variance, 2)}}</td></tr>
                     </tbody>
                 </table>
@@ -109,10 +112,6 @@
 @section('css')
     <link rel="stylesheet" href="/css/c3.min.css">
     <style>
-        .flex-tables {
-            display: flex;
-        }
-
         .horizontal-scroll{
             overflow-x: auto;
             min-width: 300px;
@@ -125,13 +124,13 @@
             flex: 1;
         }
 
-        .flex-tables .table tr td, .flex-tables .table tr th {
+        .table tr td, .table tr th {
             min-height: 35px;
             max-height: 35px;
             height: 35px;
         }
 
-        .flex-tables .table tr td {
+        table#report-header.table > thead > tr > th {
             text-align: right;
         }
 
