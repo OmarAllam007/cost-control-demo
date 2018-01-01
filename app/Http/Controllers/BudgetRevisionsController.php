@@ -77,7 +77,7 @@ class BudgetRevisionsController extends Controller
         return view('revisions.edit', compact('revision', 'project'));
     }
 
-    function update(Request $request, BudgetRevision $revision)
+    function update(Request $request, $project, BudgetRevision $revision)
     {
         $project = $revision->project;
 
@@ -88,9 +88,9 @@ class BudgetRevisionsController extends Controller
 
         $this->validate($request, ['name' => 'required']);
 
-        $revision->update($request->only('name'));
+        $revision->update($request->only('name', 'change_order_amount', 'original_contract_amount'));
 
-        flash('Revision has been updated');
+        flash('Revision has been updated', 'success');
         return redirect()->to(route('project.budget', $project));
     }
 
