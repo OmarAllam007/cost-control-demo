@@ -39,7 +39,7 @@ class ProfitabilityIndexReport
                 ->prepend($first)
                 ->map(function($revision) use ($first) {
                     $revision->budget_cost = RevisionBreakdownResourceShadow::where('revision_id', $revision->id)->sum('budget_cost');
-                    $revision->profitability = $revision->budget_cost - $revision->revised_contract_amount;
+                    $revision->profitability = $revision->revised_contract_amount - $revision->budget_cost;
                     $revision->profitability_index = $revision->profitability * 100/  $revision->budget_cost;
                     $revision->variance = $revision->profitability_index - $first->profitability_index;
                     return $revision;

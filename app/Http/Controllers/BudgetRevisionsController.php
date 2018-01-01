@@ -66,10 +66,10 @@ class BudgetRevisionsController extends Controller
         return \Response::download($file)->deleteFileAfterSend(true);
     }
 
-    function edit(BudgetRevision $revision)
+    function edit(Project $project, BudgetRevision $revision)
     {
         $project = $revision->project;
-        if (cannot('modify', $project)) {
+        if (cannot('budget_owner', $project)) {
             flash('You are not authorized to do this action');
             return redirect()->route('project.budget', $project);
         }
