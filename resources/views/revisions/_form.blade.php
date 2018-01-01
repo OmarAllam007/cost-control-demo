@@ -14,12 +14,12 @@
         @if ($revision->exists())
             <div class="form-group">
                 <label for="original_contract_amount" class="control-label">Original Contract Amount</label>
-                <input class="form-control" id="original_contract_amount" name="rev_num" value="{{$revision->original_contract_amount}}">
+                <input class="form-control" id="original_contract_amount" name="original_contract_amount" value="{{$revision->original_contract_amount}}">
             </div>
 
             <div class="form-group">
                 <label for="change_order_amount" class="control-label">Change Order Amount</label>
-                <input class="form-control" id="change_order_amount" name="rev_num" value="{{$revision->change_order_amount}}">
+                <input class="form-control" id="change_order_amount" name="change_order_amount" value="{{$revision->change_order_amount}}">
             </div>
         @endif
 
