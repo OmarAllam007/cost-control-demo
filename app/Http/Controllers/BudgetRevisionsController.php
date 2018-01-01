@@ -88,7 +88,6 @@ class BudgetRevisionsController extends Controller
 
         $this->validate($request, ['name' => 'required']);
 
-        dd($request->only('name', 'change_order_amount', 'original_contract_amount'));
         $revision->update($request->only('name', 'change_order_amount', 'original_contract_amount'));
 
         flash('Revision has been updated', 'success');
