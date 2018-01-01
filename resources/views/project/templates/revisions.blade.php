@@ -33,6 +33,7 @@
                 <td v-text="revision.created_date"></td>
                 <td>
                     <form :action="`${revision.url}/delete`" method="post">
+                        <a :href="`${revision.url}/edit`" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
                         <a :href="revision.url" target="_blank" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Show</a>
                         <a :href="`${revision.url}/export`" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Export</a>
                         @can('budget_owner', $project)
