@@ -62,7 +62,7 @@
                 </tr>
                 <tr>
                     <th>New Equation</th>
-                    <td><code>{{$new_template_resource->equation}}</code></td>
+                    <td><code>{{$template_resource->equation}}</code></td>
                 </tr>
                 </tbody>
             </table>
