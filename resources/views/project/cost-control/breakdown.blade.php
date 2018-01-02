@@ -151,9 +151,9 @@
                                         </div>
 
                                         <div class="display-flex">
-                                            <span class="flex"><span class="tag">At Completion Qty</span> @{{resource.at_completion_qty|number_format}}</span>
-                                            <span class="flex"><span class="tag">At Completion Unit Price</span> @{{resource.at_completion_unit_price|number_format}}</span>
-                                            <span class="flex"><span class="tag">At Completion Cost</span> @{{resource.at_completion_cost|number_format}}</span>
+                                            <span class="flex"><span class="tag">At Completion Qty</span> @{{resource.completion_qty|number_format}}</span>
+                                            <span class="flex"><span class="tag">At Completion Unit Price</span> @{{resource.completion_unit_price|number_format}}</span>
+                                            <span class="flex"><span class="tag">At Completion Cost</span> @{{resource.completion_cost|number_format}}</span>
                                         </div>
                                     </section>
                                 </section>
