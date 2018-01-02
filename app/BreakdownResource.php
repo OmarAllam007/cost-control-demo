@@ -167,6 +167,7 @@ class BreakdownResource extends Model
         }
 
         $resourceQty = $this->resource_qty;
+
         if ($this->productivity) {
             $reductionFactor = $this->project_productivity->after_reduction;
             if (!$reductionFactor) {
