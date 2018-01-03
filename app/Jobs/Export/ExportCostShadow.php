@@ -49,6 +49,7 @@ class ExportCostShadow extends Job
             $period = $this->project->open_period();
         }
         $this->period = $period;
+        $this->buffer = "\xEF\xBB\xBF";
     }
 
 
@@ -75,7 +76,7 @@ class ExportCostShadow extends Job
             'Cost Variance Completion Due to Unit Price', 'Cost Variance Completion Due to Qty', 'Cost Variance to Date Due to Qty',
         ];
 
-        $this->buffer = implode(',', array_map('csv_quote', $headers));
+        $this->buffer .= implode(',', array_map('csv_quote', $headers));
 
         if ($this->perspective == 'budget') {
             $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
