@@ -6,7 +6,7 @@ use App\ResourceType;
 
 class ResourcesFilter extends AbstractFilter
 {
-    protected $fields = ['unit', 'name' => 'like', 'resource_type_id','resource_code'];
+    protected $fields = ['unit', 'name' => 'like', 'resource_type_id', 'resource_code' => 'like'];
 
     function resource_type_id($id)
     {
