@@ -54,8 +54,8 @@
                                 <a href=".{{slug($discipline)}}"><i class="fa fa-plus-circle"></i> {{$discipline}}</a>
                             </td>
                             @php
-                                $firstTotal = $disciplineTotals[$discipline][$firstRev]['cost'];
-                                $lastTotal = $disciplineTotals[$discipline][$lastRev]['cost'];
+                                $firstTotal = $disciplineTotals[$discipline][$firstRev]['cost'] ?? 0;
+                                $lastTotal = $disciplineTotals[$discipline][$lastRev]['cost'] ??    0;
                                 $diff = $lastTotal - $firstTotal;
 
                                 if (!$diff) {
@@ -67,7 +67,7 @@
                                 }
                             @endphp
                             @foreach($revisions as $rev_id => $rev_name)
-                                <td width="150">{{number_format($disciplineTotals[$discipline][$rev_id]['cost'], 2)}}</td>
+                                <td width="150">{{number_format($disciplineTotals[$discipline][$rev_id]['cost'] ?? 0, 2)}}</td>
                             @endforeach
                             <td width="150"class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</td>
                             <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}%</td>

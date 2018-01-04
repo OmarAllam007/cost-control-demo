@@ -30,7 +30,7 @@
                     $diff = ($thisRevision[$discipline]['cost'] ?? 0) - ($firstRevision[$discipline]['cost'] ?? 0);
                     if ($diff == 0) {
                         $diffPercent = 0;
-                    } elseif (isset($firstRevision[$discipline]['cost'])) {
+                    } elseif (!empty($firstRevision[$discipline]['cost'])) {
                         $diffPercent = ($diff / $firstRevision[$discipline]['cost']) * 100;
                     } else {
                         $diffPercent = 100;
