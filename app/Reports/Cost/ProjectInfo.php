@@ -36,7 +36,14 @@ class ProjectInfo
 
     function run()
     {
-        return $this->getInfo();
+        $key = "project-info-{$this->project->id}-{$this->period->id}";
+        if (request()->exists('clear')) {
+            \Cache::forget($key);
+        }
+
+        return \Cache::remember($key, Carbon::now()->addDay(), function() {
+            return $this->getInfo();
+        });
     }
 
     function getInfo()
@@ -71,6 +78,7 @@ class ProjectInfo
             'project' => $this->project,
             'costSummary' => $this->costSummary,
             'period' => $this->period,
+            'periods' => Period::where(['project_id' => $this->project->id])->readyForReporting()->get(),
             'cpiTrend' => $this->cpiTrend,
             'spiTrend' => $this->spiTrend,
             'wasteIndex' => $this->wasteIndex,
