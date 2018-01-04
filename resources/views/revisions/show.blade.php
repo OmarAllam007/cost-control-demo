@@ -27,10 +27,10 @@
             <tbody>
             @foreach($disciplines as $discipline)
                 @php
-                    $diff = $thisRevision[$discipline]['cost'] - $firstRevision[$discipline]['cost'];
+                    $diff = ($thisRevision[$discipline]['cost'] ?? 0) - ($firstRevision[$discipline]['cost'] ?? 0);
                     if ($diff == 0) {
                         $diffPercent = 0;
-                    } elseif ($firstRevision[$discipline]['cost']) {
+                    } elseif (isset($firstRevision[$discipline]['cost'])) {
                         $diffPercent = ($diff / $firstRevision[$discipline]['cost']) * 100;
                     } else {
                         $diffPercent = 100;
@@ -38,8 +38,8 @@
                 @endphp
                 <tr class="{{$diff > 0? 'bg-danger' : ($diff < 0? 'bg-success' : '')}}">
                     <td>{{$discipline}}</td>
-                    <td>{{number_format($firstRevision[$discipline]['cost'], 2)}}</td>
-                    <td>{{number_format($thisRevision[$discipline]['cost'], 2)}}</td>
+                    <td>{{number_format($firstRevision[$discipline]['cost'] ?? 0, 2)}}</td>
+                    <td>{{number_format($thisRevision[$discipline]['cost'] ?? 0, 2)}}</td>
                     <td>{{number_format($diff, 2)}}</td>
                     <td>{{number_format($diffPercent, 2)}}%</td>
                 </tr>
