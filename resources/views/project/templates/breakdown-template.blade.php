@@ -1,7 +1,5 @@
 <breakdown-template project="{{$project->id}}" inline-template>
     <section id="BreakdownTemplateArea">
-
-
         <section class="filters row">
             <div class="col-sm-3">
                 <div class="form-group form-group-sm">
@@ -11,7 +9,7 @@
             </div>
 
             @can('breakdown_templates', $project)
-                <div class="form-group tab-actions clearfix">
+                <div class="col-sm-9 form-group tab-actions clearfix">
                     <div class="pull-right">
                         @can('owner', $project)
                             <a href="{{route('breakdown-template.create', ['project' => $project])}}"
@@ -30,8 +28,8 @@
             @endcan
         </section>
 
-        @if ($project->templates->count())
-            <table class="table table-condensed table-striped table-fixed" v-show="filterd_templates.length">
+
+            <table v-if="count" class="table table-condensed table-striped table-fixed" v-show="filterd_templates.length">
                 <thead>
                 <tr>
                     <th class="col-xs-2">Code</th>
@@ -64,10 +62,12 @@
                 </tbody>
             </table>
 
-            <div class="alert alert-info" v-show="!filterd_templates.length">
+            <div v-else class="alert alert-info" v-show="!filterd_templates.length">
                 <i class="fa fa-info-circle"></i> No templates found
             </div>
-        @endif
+
+            <pagination :total="templates.length" :per-page="100"></pagination>
+
     </section>
 
 </breakdown-template>
