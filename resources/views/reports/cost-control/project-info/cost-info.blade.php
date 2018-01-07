@@ -1,4 +1,3 @@
-{{dump($costInfo)}}
 <h4 class="section-header">Actual Data</h4>
 
 <div class="row">

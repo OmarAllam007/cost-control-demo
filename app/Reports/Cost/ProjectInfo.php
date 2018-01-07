@@ -73,8 +73,10 @@ class ProjectInfo
         $cost = MasterShadow::where('period_id', $this->period->id)
             ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
 
-        $this->actual_cost = round($cost->actual_cost, 2);
-        $this->remaining_cost = round($cost->remaining_cost, 2);
+        $completion_cost = $cost->actual_cost + $cost->remaining_cost;
+
+        $this->actual_cost_percentage = round($cost->actual_cost * 100/ $completion_cost, 2);
+        $this->remaining_cost_percentage = round($cost->remaining_cost * 100/ $completion_cost, 2);
 
         $this->actualRevenue = $this->getActualRevenue();
 
@@ -88,7 +90,10 @@ class ProjectInfo
             'wasteIndex' => $this->wasteIndex,
             'wasteIndexTrend' => $this->wasteIndexTrend,
             'productivityIndexTrend' => $this->productivityIndexTrend,
-            'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
+            'actual_cost' => $cost->actual_cost,
+            'actual_cost_percentage' => $this->actual_cost_percentage,
+            'remaining_cost' => $cost->remaining_cost,
+            'remaining_cost_percentage' => $this->remaining_cost_percentage,
             'actualRevenue' => $this->actualRevenue,
             'budgetInfo' => $this->getBudgetInfo(),
             'costInfo' => $this->getCostInfo()
