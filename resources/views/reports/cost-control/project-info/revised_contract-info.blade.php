@@ -4,7 +4,7 @@
     <article class="col-xs-4">
         <dl>
             <dt>Change Order Value</dt>
-            <dd>{{number_format($period->change_order_value, 2)}}</dd>
+            <dd>{{number_format($period->change_order_amount, 2)}}</dd>
         </dl>
     </article>
 
@@ -18,7 +18,7 @@
     <article class="col-xs-4">
         <dl>
             <dt>Planned Start Date</dt>
-            <dd>{{\Carbon\Carbon::parse($project->project_start_date)->format('d M Y')}}</dd>
+            <dd>{{ \Carbon\Carbon::parse($project->project_start_date)->format('d M Y') }}</dd>
         </dl>
     </article>
 
@@ -55,7 +55,7 @@
     <article class="col-xs-4">
         <dl>
             <dt>Planned Finish Date</dt>
-            <dd>{{\Carbon\Carbon::parse($period->planned_finish_date)->format('d M Y')}}</dd>
+            <dd>{{$period->planned_finish_date->format('d M Y')}}</dd>
         </dl>
     </article>
 </div>
