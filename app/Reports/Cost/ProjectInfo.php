@@ -51,10 +51,14 @@ class ProjectInfo
         $summary = new CostSummary($this->period);
         $this->costSummary = $summary->run();
 
-        $this->wasteIndex =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
+        $this->wasteIndexTrend =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
             $period->value = round(floatval($period->variance / $period->allowable_cost), 4);
             return $period;
-        });
+        })->keyBy('period_id');
+
+
+
+        $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id)->value;
 
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
@@ -82,6 +86,7 @@ class ProjectInfo
             'cpiTrend' => $this->cpiTrend,
             'spiTrend' => $this->spiTrend,
             'wasteIndex' => $this->wasteIndex,
+            'wasteIndexTrend' => $this->wasteIndexTrend,
             'productivityIndexTrend' => $this->productivityIndexTrend,
             'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
             'actualRevenue' => $this->actualRevenue,
