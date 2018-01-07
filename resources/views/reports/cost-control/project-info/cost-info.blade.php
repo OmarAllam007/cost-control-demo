@@ -30,7 +30,7 @@
         </dl>
 
         <dl>
-            <dt>%age Progress (Cost)</dt>
+            <dt>Actual Cost %</dt>
             <dd>{{number_format($costInfo['cost_progress'], 2)}}%</dd>
         </dl>
     </article>
