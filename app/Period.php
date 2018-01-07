@@ -20,7 +20,12 @@ class Period extends Model
 
     const NONE = 0;
 
-    protected $fillable = ['name', 'start_date', 'is_open', 'status'];
+    protected $fillable = [
+        'name', 'start_date', 'is_open', 'status', 'global_period_id',
+        'planned_cost', 'earned_value', 'actual_invoice_amount', 'planned_progress', 'planned_finish_date',
+        'spi_index', 'actual_progress', 'change_order_amount',
+        'time_extension', 'time_elapsed', 'time_remaining', 'expected_duration', 'duration_variance',
+    ];
 
     protected $dates = ['created_at', 'update_at', 'start_date'];
 
@@ -60,7 +65,7 @@ class Period extends Model
         });
     }
 
-    function getChangeOrderAttribute()
+    function getChangeOrderAmountAttribute()
     {
         if ($this->attributes['change_order_amount']) {
             return $this->attributes['change_order_amount'];
@@ -71,11 +76,16 @@ class Period extends Model
 
     function getPlannedFinishDateAttribute()
     {
-        if ($this->attributes['change_order_amount']) {
-            return Carbon::parse($this->attributes['change_order_amount']);
+        if ($this->attributes['planned_finish_date']) {
+            return Carbon::parse($this->attributes['planned_finish_date']);
         }
 
         return Carbon::parse($this->project->expected_finished_date);
+    }
+
+    function getContractValueAttribute()
+    {
+        return $this->change_order_amount + $this->project->project_contract_signed_value;
     }
 
     public function scopeLast(Builder $query)

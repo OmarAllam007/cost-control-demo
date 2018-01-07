@@ -20,6 +20,23 @@
 @section('body')
     <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1">
+            <form action="" method="get" class="row">
+                <div class="form-group col-sm-4">
+                    <select name="period" id="" class="form-control" title="Select reporting period">
+                        <option value="">-- Select Period --</option>
+                        @foreach($periods as $p)
+                            <option value="{{$p->id}}" {{$p->id == $period->id? 'selected' : ''}}>{{$p->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group col-sm-2">
+                    <button class="button btn btn-primary"><i class="fa fa-check"></i> Update</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
 
             <section class="info-section">
                @include('reports.cost-control.project-info.contract-info')

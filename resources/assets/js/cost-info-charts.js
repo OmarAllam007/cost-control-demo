@@ -1,8 +1,18 @@
 import Chart from 'chart.js';
 
+require('chartjs-plugin-datalabels');
+
+
 window.number_format = function(num) {
     return parseFloat(parseFloat(num).toFixed(2)).toLocaleString();
 };
+
+Chart.defaults.global.plugins.datalabels.align = 'center';
+Chart.defaults.global.plugins.datalabels.anchor = 'center';
+Chart.defaults.global.plugins.datalabels.formatter = window.number_format;
+Chart.defaults.global.plugins.datalabels.color = '#fff';
+Chart.defaults.global.plugins.datalabels.backgroundColor = '#8ed3d8';
+Chart.defaults.global.plugins.datalabels.font.weight = '700';
 
 document.querySelectorAll('.chart').forEach((item) => {
     const canvas = document.createElement('canvas');
