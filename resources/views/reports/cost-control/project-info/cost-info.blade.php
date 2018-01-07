@@ -1,3 +1,4 @@
+{{dump($costInfo)}}
 <h4 class="section-header">Actual Data</h4>
 
 <div class="row">
@@ -53,6 +54,11 @@
             <dt>Duration Var (Days)</dt>
             <dd><span class="{{$period->duration_variance < 0 ?'':'text-danger'}}">{{$period->duration_variance}}</span></dd>
         </dl>
+
+        <dl>
+            <dt>%age Progress (Time)</dt>
+            <dd>{{$period->actual_progress}}%</dd>
+        </dl>
     </article>
 
     <article class="col-xs-4">
@@ -71,8 +77,8 @@
         </dl>
 
         <dl>
-            <dt>%age Progress (Time)</dt>
-            <dd>{{$period->actual_progress}}%</dd>
+            <dt>Waste Index</dt>
+            <dd>{{number_format($costInfo['waste_index'] * 100, 2)}}%</dd>
         </dl>
 
         <dl>

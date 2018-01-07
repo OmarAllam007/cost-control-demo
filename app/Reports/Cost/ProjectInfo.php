@@ -206,7 +206,7 @@ class ProjectInfo
         $info['variance'] = $info['allowable_cost'] - $info['actual_cost'];
         $info['cpi'] = $info['allowable_cost'] / $info['actual_cost'];
         $info['cost_progress'] = $info['actual_cost'] * 100 / $budget_cost;
-        $info['waste_index'] = $this->wasteIndex->where('period_id', $this->period->id)->value ?? 0;
+        $info['waste_index'] = $this->wasteIndexTrend->keyBy('period_id')->get($this->period->id)->value ?? 0;
         $info['time_progress'] = $this->period->actual_progress;
         $info['productivity_index'] = $this->productivityIndexTrend->where('period_id', $this->period->id)->value ?? 0;
         $info['actual_start_date'] = $this->project->actual_start_date;
