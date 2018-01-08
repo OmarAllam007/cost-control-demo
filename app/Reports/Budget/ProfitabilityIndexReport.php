@@ -31,10 +31,12 @@ class ProfitabilityIndexReport
 
     function run()
     {
-        $first = BudgetRevision::where('project_id', $this->project->id)->orderBy('id', 'desc')->first();
+        $first = BudgetRevision::where('project_id', $this->project->id)->orderBy('id')->first();
         if ($first) {
             $this->revisions = BudgetRevision::where('project_id', $this->project->id)
-                ->where('is_automatic', true)->orderBy('id')
+//                ->where('is_automatic', true)
+                ->where('id', '<>', $first->id)
+                ->orderBy('id')
                 ->get()
                 ->prepend($first)
                 ->map(function($revision) use ($first) {

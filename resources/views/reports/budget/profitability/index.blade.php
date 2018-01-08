@@ -31,21 +31,24 @@
         </section>
 
         <section class="horizontal-scroll display-flex">
-
-            @foreach($revisions as $revision)
-                <table class="table table-condensed table-bordered" id="report-body">
-                    <tbody>
-                        <tr class="bg-primary"><th class="text-center">{{$revision->name}}</th></tr>
-                        <tr><td>{{number_format($revision->budget_cost, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->original_contract_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->change_order_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->revised_contract_amount, 2)}}</td></tr>
-                        <tr><td class="{{$revision->profitability > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability, 2)}}</td></tr>
-                        <tr><td class="{{$revision->profitability_index > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability_index, 2)}}%</td></tr>
-                        <tr><td>{{number_format($revision->variance, 2)}}</td></tr>
-                    </tbody>
-                </table>
-            @endforeach
+            <div class="scroll-area" style="width: {{$revisions->count() * 300}}px">
+                @foreach($revisions as $revision)
+                    <article class="pull-left revision-info">
+                        <table class="table table-condensed table-bordered">
+                            <tbody>
+                            <tr class="bg-primary"><th class="text-center">{{$revision->name}}</th></tr>
+                            <tr><td>{{number_format($revision->budget_cost, 2)}}</td></tr>
+                            <tr><td>{{number_format($revision->original_contract_amount, 2)}}</td></tr>
+                            <tr><td>{{number_format($revision->change_order_amount, 2)}}</td></tr>
+                            <tr><td>{{number_format($revision->revised_contract_amount, 2)}}</td></tr>
+                            <tr><td class="{{$revision->profitability > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability, 2)}}</td></tr>
+                            <tr><td class="{{$revision->profitability_index > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability_index, 2)}}%</td></tr>
+                            <tr><td>{{number_format($revision->variance, 2)}}%</td></tr>
+                            </tbody>
+                        </table>
+                    </article>
+                @endforeach
+            </div>
         </section>
     </section>
 
@@ -112,16 +115,17 @@
 @section('css')
     <link rel="stylesheet" href="/css/c3.min.css">
     <style>
-        .horizontal-scroll{
+        .horizontal-scroll {
             overflow-x: auto;
             min-width: 300px;
         }
 
-        .flex-tables .table {
-            margin-left: 0;
-            width: auto;
-            min-width: 250px;
-            flex: 1;
+        .revision-info {
+            width: 300px;
+        }
+
+        #report-header {
+            width: 300px;
         }
 
         .table tr td, .table tr th {
