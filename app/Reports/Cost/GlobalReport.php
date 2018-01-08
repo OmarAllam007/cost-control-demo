@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 20/12/17
- * Time: 4:17 PM
- */
 
 namespace App\Reports\Cost;
-
 
 use App\ActualRevenue;
 use App\BreakDownResourceShadow;
@@ -35,10 +28,23 @@ class GlobalReport
     /** @var Collection */
     private $last_period_ids;
 
+    /** @var GlobalPeriod */
+    private $period;
+
+    /** @var Collection */
+    private $periods;
+
+    function __construct(GlobalPeriod $period)
+    {
+        $this->period = $period;
+    }
+
     function run()
     {
         $this->projects = Project::all();
-        $this->last_period_ids = Period::last()->pluck('period_id');
+
+        $this->last_period_ids = Period::readyForReporting()->where('global_period_id', $this->period->id)->pluck('id');
+        $this->periods = Period::find($this->last_period_ids->toArray());
 
         return [
             'projectNames' => $this->projects->pluck('name', 'id'),
@@ -59,7 +65,8 @@ class GlobalReport
     private function contracts_info()
     {
         $contracts_total = $this->projects->sum('project_contract_signed_value');
-        $change_orders = $this->projects->sum('change_order_amount');
+        $change_orders = $this->periods->sum('change_order_amount');
+
         $revised = $contracts_total + $change_orders;
         $budget_total = BreakDownResourceShadow::sum('budget_cost');
 
