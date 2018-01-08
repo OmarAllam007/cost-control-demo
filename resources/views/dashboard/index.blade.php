@@ -128,7 +128,7 @@
                             <div class="chart"
                                 id="costChart"
                                 data-type="horizontalBar"
-                                data-labels="{{json_encode(['Cost Progress', 'Actual Progress'])}}"
+                                data-labels="{{json_encode(['Actual', 'Planned'])}}"
                                 data-datasets="[{{ json_encode([
                                     'label' => 'Progress', 
                                     'data' => $cost_info['progress'],

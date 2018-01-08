@@ -161,10 +161,10 @@ class GlobalReport
         $total_budget = $this->cost_summary->sum('budget_cost');
         $to_date = $this->cost_summary->sum('to_date_cost');
 
-        $cost_progress = round($to_date * 100 / $total_budget, 2);
-        $actual_progress = round(GlobalPeriod::whereRaw('coalesce(actual_progress, 0) > 0')->latest('id')->value('actual_progress'), 2);
+        $actual_progress = round($to_date * 100 / $total_budget, 2);
+        $planned_progress = round($this->period->planned_progress ?: 0, 2);
 
-        $progress = [$cost_progress, $actual_progress];
+        $progress = [$actual_progress, $planned_progress];
 
         return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index', 'progress');
     }
