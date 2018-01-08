@@ -51,7 +51,7 @@ class ProfitabilityIndexReport
             $revision->original_contract_amount = $this->project->project_contract_signed_value;
             $revision->change_order_amount = $this->project->change_order_amount;
             $revision->revised_contract_amount = $revision->change_order_amount + $revision->original_contract_amount;
-            $revision->profitability = $revision->revised_contract_amount - $revision->budget_cost;
+            $revision->profitability = $revision->budget_cost - $revision->revised_contract_amount;
             $revision->profitability_index = $revision->profitability * 100/  $revision->budget_cost;
 
             $this->revisions->push($revision);

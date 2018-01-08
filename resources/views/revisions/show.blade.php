@@ -4,7 +4,10 @@
     <h3>{{$project->name}} &mdash; {{$revision->name}}</h3>
 
     <div class="pull-right">
-        <a href="{{$revision->url()}}/export" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Export Datasheet</a>
+        @can('budget_owner', $revision->project)
+        <a href="{{$revision->url()}}/edit" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
+        @endcan
+        <a href="{{$revision->url()}}/export" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Export Breakdown</a>
         <a href="{{route('project.budget', $project)}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
     </div>
 @endsection
@@ -24,10 +27,10 @@
             <tbody>
             @foreach($disciplines as $discipline)
                 @php
-                    $diff = $thisRevision[$discipline]['cost'] - $firstRevision[$discipline]['cost'];
+                    $diff = ($thisRevision[$discipline]['cost'] ?? 0) - ($firstRevision[$discipline]['cost'] ?? 0);
                     if ($diff == 0) {
                         $diffPercent = 0;
-                    } elseif ($firstRevision[$discipline]['cost']) {
+                    } elseif (!empty($firstRevision[$discipline]['cost'])) {
                         $diffPercent = ($diff / $firstRevision[$discipline]['cost']) * 100;
                     } else {
                         $diffPercent = 100;
@@ -35,8 +38,8 @@
                 @endphp
                 <tr class="{{$diff > 0? 'bg-danger' : ($diff < 0? 'bg-success' : '')}}">
                     <td>{{$discipline}}</td>
-                    <td>{{number_format($firstRevision[$discipline]['cost'], 2)}}</td>
-                    <td>{{number_format($thisRevision[$discipline]['cost'], 2)}}</td>
+                    <td>{{number_format($firstRevision[$discipline]['cost'] ?? 0, 2)}}</td>
+                    <td>{{number_format($thisRevision[$discipline]['cost'] ?? 0, 2)}}</td>
                     <td>{{number_format($diff, 2)}}</td>
                     <td>{{number_format($diffPercent, 2)}}%</td>
                 </tr>
@@ -73,9 +76,9 @@
     @php
         $columns = [$rev1->name => [$rev1->name], $revision->name => [$revision->name]];
         foreach ($disciplines as $discipline) {
-            $columns[$rev1->name][] = $firstRevision[$discipline]['cost'];
+            $columns[$rev1->name][] = ($firstRevision[$discipline]['cost'] ?? 0);
             if ($rev1->name != $revision->name) {
-               $columns[$revision->name][] = $thisRevision[$discipline]['cost'];
+               $columns[$revision->name][] = ($thisRevision[$discipline]['cost'] ?? 0);
             }
         }
         $chartColumns = collect(array_values($columns));

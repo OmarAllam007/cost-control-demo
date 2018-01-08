@@ -345,8 +345,7 @@ class CostImporter
         $this->activityCodes = collect();
 
         BreakDownResourceShadow::where('project_id', $this->batch->project_id)
-            ->get(['id', 'breakdown_resource_id', 'code'])
-            ->each(function ($activity) {
+            ->selectRaw('DISTINCT code')->get()->each(function ($activity) {
                 $code = trim(strtolower($activity->code));
                 $this->activityCodes->put($code, $code);
             });

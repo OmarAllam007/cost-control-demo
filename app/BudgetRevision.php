@@ -19,7 +19,7 @@ class BudgetRevision extends Model
 
     protected $appends = ['url', 'user', 'created_date'];
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'original_contract_amount', 'change_order_amount',];
 
     function project()
     {

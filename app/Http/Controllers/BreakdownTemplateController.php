@@ -42,7 +42,16 @@ class BreakdownTemplateController extends Controller
         }
 
 //        $wbsTree = WbsLevel::tree()->get();
-        return view('breakdown-template.create');
+        $templates = [];
+        if (request('import') && $project_id) {
+            $projectTemplates = \App\BreakdownTemplate::where(compact('project_id'))
+                ->whereNotNull('parent_template_id')->pluck('parent_template_id','parent_template_id');
+
+            $templates = \App\BreakdownTemplate::orderBy('name')
+                ->whereNull('project_id')->whereNotIn('id', $projectTemplates)->pluck('name', 'id');
+        }
+
+        return view('breakdown-template.create', compact('templates'));
     }
 
     public function store(Request $request)
