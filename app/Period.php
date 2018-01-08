@@ -80,12 +80,21 @@ class Period extends Model
             return Carbon::parse($this->attributes['planned_finish_date']);
         }
 
-        return Carbon::parse($this->project->expected_finished_date);
+        return Carbon::parse($this->project->original_finished_date);
     }
 
     function getContractValueAttribute()
     {
         return $this->change_order_amount + $this->project->project_contract_signed_value;
+    }
+
+    function getExpectedDurationAttribute()
+    {
+        if ($this->attributes['expected_duration']) {
+            return $this->attributes['expected_duration'];
+        }
+
+        return $this->project->project_duration;
     }
 
     public function scopeLast(Builder $query)

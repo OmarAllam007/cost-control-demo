@@ -148,7 +148,7 @@
                          data-type="line"
                          data-labels="{{$actual_revenue_trend->keys()}}"
                          data-datasets="[{{ json_encode([
-                                    'label' => 'Productivity Index',
+                                    'label' => 'Actual Revenue',
                                     'data' => $actual_revenue_trend->values(),
                                     'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
                                 ]) }}]"

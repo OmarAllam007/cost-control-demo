@@ -75,7 +75,7 @@
         <article class="form-group form-group-sm {{ $errors->first('planned_finish_date', 'has-error') }}">
             {{ Form::label('planned_finish_date', null, ['class' => 'control-label col-sm-3']) }}
             <div class="col-sm-9">
-                {{ Form::text('planned_finish_date', $period->project->expected_finished_date, ['class' => 'form-control']) }}
+                {{ Form::date('planned_finish_date', Carbon\Carbon::parse($period->project->expected_finished_date)->format('Y-m-d'), ['class' => 'form-control to-calendar']) }}
                 {!! $errors->first('planned_finish_date', '<div class="help-block">:message</div>') !!}
             </div>
         </article>
@@ -131,6 +131,14 @@
             </div>
         </div>
 
+        <div class="form-group form-group-sm {{ $errors->first('time_remaining', 'has-error') }}">
+            {{ Form::label('time_remaining', null, ['class' => 'control-label col-sm-3']) }}
+            <div class="col-sm-9">
+                {{ Form::text('time_remaining', null, ['class' => 'form-control']) }}
+                {!! $errors->first('time_remaining', '<div class="help-block">:message</div>') !!}
+            </div>
+        </div>
+
         <div class="form-group form-group-sm {{ $errors->first('expected_duration', 'has-error') }}">
             {{ Form::label('expected_duration', null, ['class' => 'control-label col-sm-3']) }}
             <div class="col-sm-9">
@@ -146,6 +154,14 @@
                 {!! $errors->first('duration_variance', '<div class="help-block">:message</div>') !!}
             </div>
         </div>
+
+        <article class="form-group form-group-sm {{ $errors->first('forecast_finish_date', 'has-error') }}">
+            {{ Form::label('forecast_finish_date', null, ['class' => 'control-label col-sm-3']) }}
+            <div class="col-sm-9">
+                {{ Form::date('forecast_finish_date', $period->forecast_finish_date? \Carbon\Carbon::parse($period->forecast_finish_date)->format('Y-m-d') : '', ['class' => 'form-control to-calendar']) }}
+                {!! $errors->first('forecast_finish_date', '<div class="help-block">:message</div>') !!}
+            </div>
+        </article>
 
         <hr>
 
