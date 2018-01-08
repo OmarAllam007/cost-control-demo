@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 20/12/17
- * Time: 4:17 PM
- */
 
 namespace App\Reports\Cost;
-
 
 use App\ActualRevenue;
 use App\BreakDownResourceShadow;
@@ -20,6 +13,7 @@ use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 class GlobalReport
 {
@@ -35,10 +29,23 @@ class GlobalReport
     /** @var Collection */
     private $last_period_ids;
 
+    /** @var GlobalPeriod */
+    private $period;
+
+    /** @var Collection */
+    private $periods;
+
+    function __construct(GlobalPeriod $period)
+    {
+        $this->period = $period;
+    }
+
     function run()
     {
         $this->projects = Project::all();
-        $this->last_period_ids = Period::last()->pluck('period_id');
+
+        $this->last_period_ids = Period::readyForReporting()->where('global_period_id', $this->period->id)->pluck('id');
+        $this->periods = Period::find($this->last_period_ids->toArray());
 
         return [
             'projectNames' => $this->projects->pluck('name', 'id'),
@@ -59,7 +66,8 @@ class GlobalReport
     private function contracts_info()
     {
         $contracts_total = $this->projects->sum('project_contract_signed_value');
-        $change_orders = $this->projects->sum('change_order_amount');
+        $change_orders = $this->periods->sum('change_order_amount');
+
         $revised = $contracts_total + $change_orders;
         $budget_total = BreakDownResourceShadow::sum('budget_cost');
 
@@ -67,7 +75,21 @@ class GlobalReport
         $profitability = $profit * 100 / $contracts_total;
         $finish_date = Carbon::parse($this->projects->max('expected_finished_date'));
 
-        return compact('contracts_total', 'change_orders', 'revised', 'profit', 'profitability', 'finish_date');
+        $schedules = $this->periods->map(function ($period) {
+            $schedule = new Fluent();
+            $schedule->project_name = $period->project->name;
+            $schedule->planned_start = Carbon::parse($period->project->project_start_date)->format('d M Y');
+            $schedule->original_duration = $period->project->project_duration;
+            $schedule->planned_finish = Carbon::parse($period->planned_finish_date)->format('d M Y');
+            $schedule->actual_start = Carbon::parse($period->project->actual_start_date)->format('d M Y');
+            $schedule->expected_duration = $period->expected_duration;
+            $schedule->forecast_finish = $period->forecast_finish_date? Carbon::parse($period->forecast_finish_date)->format('d M Y') : '';
+            $schedule->delay_variance = $period->duration_variance;
+
+            return $schedule;
+        })->sortBy('project_name');
+
+        return compact('contracts_total', 'change_orders', 'revised', 'profit', 'profitability', 'finish_date', 'schedules');
     }
 
 
@@ -154,10 +176,10 @@ class GlobalReport
         $total_budget = $this->cost_summary->sum('budget_cost');
         $to_date = $this->cost_summary->sum('to_date_cost');
 
-        $cost_progress = round($to_date * 100 / $total_budget, 2);
-        $actual_progress = round(GlobalPeriod::whereRaw('coalesce(actual_progress, 0) > 0')->latest('id')->value('actual_progress'), 2);
+        $actual_progress = round($to_date * 100 / $total_budget, 2);
+        $planned_progress = round($this->period->planned_progress ?: 0, 2);
 
-        $progress = [$cost_progress, $actual_progress];
+        $progress = [$actual_progress, $planned_progress];
 
         return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index', 'progress');
     }

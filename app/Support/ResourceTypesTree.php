@@ -12,6 +12,7 @@ class ResourceTypesTree
 
     private $current_type;
 
+    /** @return Collection */
     function get()
     {
         $this->resource_types = ResourceType::where('archived', 0)

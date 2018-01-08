@@ -7,6 +7,11 @@
 @section('body')
     <div class="row">
         <div class="col-sm-12">
+
+            @include('dashboard.filters')
+
+
+
             @include('dashboard.project-info')
 
             {{--
@@ -27,7 +32,7 @@
             @include('dashboard.cost_summary')
 
             <section class="card">
-                <h3 class="card-title">CPI Trend Analysis</h3>
+                <h3 class="card-title light-blue">CPI Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -44,7 +49,7 @@
             </section>
 
             <section class="card">
-                <h3 class="card-title">SPI Trend Analysis</h3>
+                <h3 class="card-title light-blue">SPI Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -61,7 +66,7 @@
             </section>
 
             <section class="card">
-                <h3 class="card-title">Waste Index Trend Analysis</h3>
+                <h3 class="card-title brown">Waste Index Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -78,7 +83,7 @@
             </section>
 
             <section class="card">
-                <h3 class="card-title">Productivity Index Trend Analysis</h3>
+                <h3 class="card-title brown">Productivity Index Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -97,7 +102,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <section class="card">
-                        <h3 class="card-title">Cost Percentage</h3>
+                        <h3 class="card-title dark">Cost Percentage</h3>
 
                         <div class="card-body">
                             <div class="chart"
@@ -116,14 +121,14 @@
 
                 <div class="col-sm-6">
                     <section class="card">
-                        <h3 class="card-title">Progress Percentage</h3>
+                        <h3 class="card-title dark">Progress Percentage</h3>
 
                         <div class="card-body">
                         
                             <div class="chart"
                                 id="costChart"
                                 data-type="horizontalBar"
-                                data-labels="{{json_encode(['Cost Progress', 'Actual Progress'])}}"
+                                data-labels="{{json_encode(['Actual', 'Planned'])}}"
                                 data-datasets="[{{ json_encode([
                                     'label' => 'Progress', 
                                     'data' => $cost_info['progress'],
@@ -135,7 +140,7 @@
             </div>
 
             <section class="card">
-                <h3 class="card-title">Actual Revenue</h3>
+                <h3 class="card-title purple">Actual Revenue</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -143,7 +148,7 @@
                          data-type="line"
                          data-labels="{{$actual_revenue_trend->keys()}}"
                          data-datasets="[{{ json_encode([
-                                    'label' => 'Productivity Index',
+                                    'label' => 'Actual Revenue',
                                     'data' => $actual_revenue_trend->values(),
                                     'backgroundColor' => ['rgba(100, 213, 202, 0.3)']
                                 ]) }}]"

@@ -2,36 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\ActualRevenue;
-use App\BreakDownResourceShadow;
-use App\BudgetRevision;
 use App\GlobalPeriod;
-use App\Http\Requests;
-use App\MasterShadow;
 use App\Period;
-use App\Project;
 use App\Reports\Cost\GlobalReport;
-use App\ResourceType;
-use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Fluent;
 
 class DashboardController extends Controller
 {
-    function index()
+    /** @var Collection */
+    private $globalPeriods;
+
+    function index(Request $request)
     {
-        if (request()->exists('clear')) {
-            \Cache::forget('global-report');
+        $this->globalPeriods = $this->getGlobalPeriods();
+
+        $period = $this->getPeriod($request);
+
+        $key = 'global-report-' . $period->id;
+
+        if ($request->exists('clear')) {
+            \Cache::forget($key);
         }
 
-        $data = \Cache::remember('global-report', Carbon::tomorrow(), function () {
-            $report = new GlobalReport();
+        $data = \Cache::remember($key, Carbon::tomorrow(), function () use ($period) {
+            $report = new GlobalReport($period);
             return $report->run();
         });
 
+        $data['globalPeriods'] = $this->globalPeriods;
+        $data['reportPeriod'] = $period;
+
         return view('dashboard.index', $data);
+    }
+
+    private function getPeriod(Request $request)
+    {
+        $period = null;
+
+        if ($period_id = $request->get('period')) {
+            $period = GlobalPeriod::find($period_id);
+        }
+
+        if (!$period) {
+            $period = $this->globalPeriods->last();
+        }
+
+        return $period;
+    }
+
+    private function getGlobalPeriods()
+    {
+        return GlobalPeriod::orderBy('start_date', 'DESC')->get()->reject(function($period) {
+            return Period::where('global_period_id', $period->id)->where('status', '!=', Period::GENERATED)->exists();
+        });
     }
 }

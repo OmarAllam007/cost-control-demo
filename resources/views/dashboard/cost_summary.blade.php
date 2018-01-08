@@ -1,5 +1,5 @@
 <section class="card">
-    <h3 class="card-title">Cost Summary</h3>
+    <h3 class="card-title purple">Cost Summary</h3>
 
     <div class="card-body">
         <table class="table table-bordered table-condensed dashboaad-cost-summary">
@@ -21,7 +21,7 @@
                 <td>{{ $project->project_name }}</td>
                 <td>{{number_format($project->budget_cost, 2)}}</td>
 
-                <td>{{number_format($project->to_date_allowable, 2)}}</td>
+                <td>{{number_format($project->allowable_cost, 2)}}</td>
                 <td>{{number_format($project->to_date_cost, 2)}}</td>
                 <td class="{{$project->to_date_var > 0? 'text-success' : 'text-danger'}}">{{number_format($project->to_date_var, 2)}}</td>
 

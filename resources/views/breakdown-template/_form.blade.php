@@ -2,12 +2,16 @@
     <div class="col-md-6">
 
         @if (request('project') && request('import'))
-            {{Form::label('project_id', 'Project', ['class' => 'control-label'])}}
-            <p><em>{{\App\Project::find(request('project'))->name}}</em></p>
-            {{Form::hidden('project_id', request('project'))}}
+            <div class="form-group">
+                {{Form::label('project_id', 'Project', ['class' => 'control-label'])}}
+                <p><em>{{\App\Project::find(request('project'))->name}}</em></p>
+                {{Form::hidden('project_id', request('project'))}}
+            </div>
+
             <div class="form-group {{$errors->first('parent_template_id', 'has-error')}}">
-                {{Form::label('parent_template_id', 'Template Name', ['class' => 'control-label']) }}
-                {{Form::select('parent_template_id[]', \App\BreakdownTemplate::orderBy('name')->whereNull('project_id')->pluck('name', 'id'),null,['class'=>'form-control dropdown-templates','multiple'=>true])}}
+                {{ Form::label('parent_template_id', 'Template Name', ['class' => 'control-label']) }}
+                <input type="search" class="form-control" placeholder="Search by template name" id="searchTerm" autofocus="">
+                {{ Form::select('parent_template_id[]', $templates, null,['class'=>'form-control dropdown-templates','multiple'=>true, 'id' => 'templateList']) }}
                 {!! $errors->first('parent_template_id', '<div class="help-block">:message</div>') !!}
             </div>
 
@@ -43,8 +47,26 @@
 <div class="form-group">
     <button class="btn btn-success" id="createTemplate"><i class="fa fa-check"></i> Submit</button>
 </div>
+
 @section('javascript')
     <script src="{{asset('/js/tree-select.js')}}"></script>
+    <script>
+        $(function() {
+            const options = $('#templateList').find('option');
+            $('#searchTerm').on('keyup', function(e) {
+                const val = this.value.toLowerCase();
 
+                if (val) {
+                    options.show();
+                    options.filter(function() {
+                        const txt = $(this).text().toLowerCase();
+                        return txt.indexOf(val);
+                    }).hide();
+                } else {
+                    options.show();
+                }
+            });
+        });
+    </script>
 @stop
 <breakdown project="{{request('project')}}"></breakdown>
