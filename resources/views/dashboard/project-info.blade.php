@@ -1,5 +1,5 @@
 <section class="card">
-    <h3 class="card-title">Contracts Information</h3>
+    <h3 class="card-title cyan">Contracts Information</h3>
 
     <div class="card-body row">
         <div class="col-sm-4">

@@ -1,5 +1,5 @@
 <section class="card">
-    <h3 class="card-title">Actual Data</h3>
+    <h3 class="card-title orange">Actual Data</h3>
 
     <div class="card-body">
     <table class="table table-bordered table-condensed">

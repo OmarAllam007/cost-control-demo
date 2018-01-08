@@ -32,7 +32,7 @@
             @include('dashboard.cost_summary')
 
             <section class="card">
-                <h3 class="card-title">CPI Trend Analysis</h3>
+                <h3 class="card-title light-blue">CPI Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -49,7 +49,7 @@
             </section>
 
             <section class="card">
-                <h3 class="card-title">SPI Trend Analysis</h3>
+                <h3 class="card-title light-blue">SPI Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -66,7 +66,7 @@
             </section>
 
             <section class="card">
-                <h3 class="card-title">Waste Index Trend Analysis</h3>
+                <h3 class="card-title brown">Waste Index Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -83,7 +83,7 @@
             </section>
 
             <section class="card">
-                <h3 class="card-title">Productivity Index Trend Analysis</h3>
+                <h3 class="card-title brown">Productivity Index Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -102,7 +102,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <section class="card">
-                        <h3 class="card-title">Cost Percentage</h3>
+                        <h3 class="card-title dark">Cost Percentage</h3>
 
                         <div class="card-body">
                             <div class="chart"
@@ -121,7 +121,7 @@
 
                 <div class="col-sm-6">
                     <section class="card">
-                        <h3 class="card-title">Progress Percentage</h3>
+                        <h3 class="card-title dark">Progress Percentage</h3>
 
                         <div class="card-body">
                         
@@ -140,7 +140,7 @@
             </div>
 
             <section class="card">
-                <h3 class="card-title">Actual Revenue</h3>
+                <h3 class="card-title purple">Actual Revenue</h3>
 
                 <div class="card-body">
                     <div class="chart"
