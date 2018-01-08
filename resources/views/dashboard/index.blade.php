@@ -7,6 +7,11 @@
 @section('body')
     <div class="row">
         <div class="col-sm-12">
+
+            @include('dashboard.filters')
+
+
+
             @include('dashboard.project-info')
 
             {{--

@@ -11,14 +11,15 @@
   },
   "devDependencies": {
     "bootstrap-sass-noprint": "^3.3.7",
-    "font-awesome": "^4.7.0",
+    "c3": "^0.4.18",
+    "chart.js": "^2.7.1",
+    "chartjs-plugin-datalabels": "^0.1.0",
     "cross-env": "^5.1",
+    "font-awesome": "^4.7.0",
     "jquery": "^3.1.0",
     "laravel-mix": "^1.6",
     "lodash": "^4.17.4",
     "vue": "^1.0.28-csp",
-    "vue-resource": "^0.9.3",
-    "c3": "^0.4.18",
-    "chart.js": "^2.7.1"
+    "vue-resource": "^0.9.3"
   }
 }

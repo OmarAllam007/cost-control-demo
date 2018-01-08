@@ -36,7 +36,14 @@ class ProjectInfo
 
     function run()
     {
-        return $this->getInfo();
+        $key = "project-info-{$this->project->id}-{$this->period->id}";
+        if (request()->exists('clear')) {
+            \Cache::forget($key);
+        }
+
+        return \Cache::remember($key, Carbon::now()->addDay(), function() {
+            return $this->getInfo();
+        });
     }
 
     function getInfo()
@@ -44,10 +51,14 @@ class ProjectInfo
         $summary = new CostSummary($this->period);
         $this->costSummary = $summary->run();
 
-        $this->wasteIndex =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
+        $this->wasteIndexTrend =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
             $period->value = round(floatval($period->variance / $period->allowable_cost), 4);
             return $period;
-        });
+        })->keyBy('period_id');
+
+
+
+        $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id)->value;
 
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
@@ -62,8 +73,10 @@ class ProjectInfo
         $cost = MasterShadow::where('period_id', $this->period->id)
             ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
 
-        $this->actual_cost = round($cost->actual_cost, 2);
-        $this->remaining_cost = round($cost->remaining_cost, 2);
+        $completion_cost = $cost->actual_cost + $cost->remaining_cost;
+
+        $this->actual_cost_percentage = round($cost->actual_cost * 100/ $completion_cost, 2);
+        $this->remaining_cost_percentage = round($cost->remaining_cost * 100/ $completion_cost, 2);
 
         $this->actualRevenue = $this->getActualRevenue();
 
@@ -71,11 +84,16 @@ class ProjectInfo
             'project' => $this->project,
             'costSummary' => $this->costSummary,
             'period' => $this->period,
+            'periods' => Period::where(['project_id' => $this->project->id])->readyForReporting()->get(),
             'cpiTrend' => $this->cpiTrend,
             'spiTrend' => $this->spiTrend,
             'wasteIndex' => $this->wasteIndex,
+            'wasteIndexTrend' => $this->wasteIndexTrend,
             'productivityIndexTrend' => $this->productivityIndexTrend,
-            'actual_cost' => $this->actual_cost, 'remaining_cost' => $this->remaining_cost,
+            'actual_cost' => $cost->actual_cost,
+            'actual_cost_percentage' => $this->actual_cost_percentage,
+            'remaining_cost' => $cost->remaining_cost,
+            'remaining_cost_percentage' => $this->remaining_cost_percentage,
             'actualRevenue' => $this->actualRevenue,
             'budgetInfo' => $this->getBudgetInfo(),
             'costInfo' => $this->getCostInfo()
@@ -193,7 +211,7 @@ class ProjectInfo
         $info['variance'] = $info['allowable_cost'] - $info['actual_cost'];
         $info['cpi'] = $info['allowable_cost'] / $info['actual_cost'];
         $info['cost_progress'] = $info['actual_cost'] * 100 / $budget_cost;
-        $info['waste_index'] = $this->wasteIndex->where('period_id', $this->period->id)->value ?? 0;
+        $info['waste_index'] = $this->wasteIndexTrend->keyBy('period_id')->get($this->period->id)->value ?? 0;
         $info['time_progress'] = $this->period->actual_progress;
         $info['productivity_index'] = $this->productivityIndexTrend->where('period_id', $this->period->id)->value ?? 0;
         $info['actual_start_date'] = $this->project->actual_start_date;

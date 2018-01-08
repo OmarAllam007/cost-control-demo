@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 125);
+/******/ 	return __webpack_require__(__webpack_require__.s = 126);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -4572,7 +4572,7 @@ module.exports = {
 "use strict";
 
 
-var color = __webpack_require__(7);
+var color = __webpack_require__(8);
 var helpers = __webpack_require__(1);
 
 function interpolate(start, view, model, ease) {
@@ -5262,6 +5262,90 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/**
+ * @namespace Chart
+ */
+var Chart = __webpack_require__(128)();
+
+Chart.helpers = __webpack_require__(1);
+
+// @todo dispatch these helpers into appropriated helpers/helpers.* file and write unit tests!
+__webpack_require__(132)(Chart);
+
+Chart.defaults = __webpack_require__(2);
+Chart.Element = __webpack_require__(3);
+Chart.elements = __webpack_require__(4);
+Chart.Interaction = __webpack_require__(9);
+Chart.platform = __webpack_require__(10);
+
+__webpack_require__(143)(Chart);
+__webpack_require__(144)(Chart);
+__webpack_require__(145)(Chart);
+__webpack_require__(146)(Chart);
+__webpack_require__(147)(Chart);
+__webpack_require__(148)(Chart);
+__webpack_require__(149)(Chart);
+__webpack_require__(150)(Chart);
+
+__webpack_require__(151)(Chart);
+__webpack_require__(152)(Chart);
+__webpack_require__(153)(Chart);
+__webpack_require__(154)(Chart);
+__webpack_require__(155)(Chart);
+__webpack_require__(156)(Chart);
+
+// Controllers must be loaded after elements
+// See Chart.core.datasetController.dataElementType
+__webpack_require__(159)(Chart);
+__webpack_require__(160)(Chart);
+__webpack_require__(161)(Chart);
+__webpack_require__(162)(Chart);
+__webpack_require__(163)(Chart);
+__webpack_require__(164)(Chart);
+__webpack_require__(165)(Chart);
+
+__webpack_require__(166)(Chart);
+__webpack_require__(167)(Chart);
+__webpack_require__(168)(Chart);
+__webpack_require__(169)(Chart);
+__webpack_require__(170)(Chart);
+__webpack_require__(171)(Chart);
+__webpack_require__(172)(Chart);
+
+// Loading built-it plugins
+var plugins = [];
+
+plugins.push(
+	__webpack_require__(173)(Chart),
+	__webpack_require__(174)(Chart),
+	__webpack_require__(175)(Chart)
+);
+
+Chart.plugins.register(plugins);
+
+Chart.platform.initialize();
+
+module.exports = Chart;
+if (typeof window !== 'undefined') {
+	window.Chart = Chart;
+}
+
+// DEPRECATIONS
+
+/**
+ * Provided for backward compatibility, use Chart.helpers.canvas instead.
+ * @namespace Chart.canvasHelpers
+ * @deprecated since version 2.6.0
+ * @todo remove at version 3
+ * @private
+ */
+Chart.canvasHelpers = Chart.helpers.canvas;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* MIT license */
 var convert = __webpack_require__(133);
 var string = __webpack_require__(135);
@@ -5750,7 +5834,7 @@ module.exports = Color;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6087,7 +6171,7 @@ module.exports = {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6168,7 +6252,7 @@ module.exports = helpers.extend({
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6246,7 +6330,7 @@ return af;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6393,7 +6477,7 @@ return ar;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6457,7 +6541,7 @@ return arDz;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6521,7 +6605,7 @@ return arKw;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6652,7 +6736,7 @@ return arLy;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6717,7 +6801,7 @@ return arMa;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6827,7 +6911,7 @@ return arSa;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -6891,7 +6975,7 @@ return arTn;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7001,7 +7085,7 @@ return az;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7140,7 +7224,7 @@ return be;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7235,7 +7319,7 @@ return bg;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7359,7 +7443,7 @@ return bn;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7483,7 +7567,7 @@ return bo;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7596,7 +7680,7 @@ return br;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7744,7 +7828,7 @@ return bs;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -7837,7 +7921,7 @@ return ca;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8014,7 +8098,7 @@ return cs;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8082,7 +8166,7 @@ return cv;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8168,7 +8252,7 @@ return cy;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8233,7 +8317,7 @@ return da;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8316,7 +8400,7 @@ return de;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8400,7 +8484,7 @@ return deAt;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8483,7 +8567,7 @@ return deCh;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8588,7 +8672,7 @@ return dv;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8693,7 +8777,7 @@ return el;
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8765,7 +8849,7 @@ return enAu;
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8833,7 +8917,7 @@ return enCa;
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8905,7 +8989,7 @@ return enGb;
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -8977,7 +9061,7 @@ return enIe;
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9049,7 +9133,7 @@ return enNz;
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9127,7 +9211,7 @@ return eo;
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9215,7 +9299,7 @@ return es;
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9302,7 +9386,7 @@ return esDo;
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9387,7 +9471,7 @@ return et;
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9458,7 +9542,7 @@ return eu;
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9570,7 +9654,7 @@ return fa;
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9682,7 +9766,7 @@ return fi;
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9747,7 +9831,7 @@ return fo;
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9835,7 +9919,7 @@ return fr;
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9914,7 +9998,7 @@ return frCa;
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -9997,7 +10081,7 @@ return frCh;
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10077,7 +10161,7 @@ return fy;
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10158,7 +10242,7 @@ return gd;
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10240,7 +10324,7 @@ return gl;
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10367,7 +10451,7 @@ return gomLatn;
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10471,7 +10555,7 @@ return he;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10600,7 +10684,7 @@ return hi;
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10750,7 +10834,7 @@ return hr;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10864,7 +10948,7 @@ return hu;
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -10964,7 +11048,7 @@ return hyAm;
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11052,7 +11136,7 @@ return id;
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11184,7 +11268,7 @@ return is;
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11259,7 +11343,7 @@ return it;
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11344,7 +11428,7 @@ return ja;
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11432,7 +11516,7 @@ return jv;
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11526,7 +11610,7 @@ return ka;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11618,7 +11702,7 @@ return kk;
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11681,7 +11765,7 @@ return km;
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11812,7 +11896,7 @@ return kn;
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11886,7 +11970,7 @@ return ko;
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -11979,7 +12063,7 @@ return ky;
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12121,7 +12205,7 @@ return lb;
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12196,7 +12280,7 @@ return lo;
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12318,7 +12402,7 @@ return lt;
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12420,7 +12504,7 @@ return lv;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12536,7 +12620,7 @@ return me;
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12605,7 +12689,7 @@ return mi;
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12700,7 +12784,7 @@ return mk;
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12786,7 +12870,7 @@ return ml;
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -12950,7 +13034,7 @@ return mr;
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13037,7 +13121,7 @@ return ms;
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13125,7 +13209,7 @@ return msMy;
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13226,7 +13310,7 @@ return my;
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13294,7 +13378,7 @@ return nb;
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13422,7 +13506,7 @@ return ne;
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13515,7 +13599,7 @@ return nl;
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13608,7 +13692,7 @@ return nlBe;
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13673,7 +13757,7 @@ return nn;
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13802,7 +13886,7 @@ return paIn;
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13914,7 +13998,7 @@ return pl;
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -13984,7 +14068,7 @@ return pt;
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14050,7 +14134,7 @@ return ptBr;
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14130,7 +14214,7 @@ return ro;
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14318,7 +14402,7 @@ return ru;
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14421,7 +14505,7 @@ return sd;
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14487,7 +14571,7 @@ return se;
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14563,7 +14647,7 @@ return si;
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14718,7 +14802,7 @@ return sk;
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14885,7 +14969,7 @@ return sl;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -14960,7 +15044,7 @@ return sq;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15075,7 +15159,7 @@ return sr;
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15190,7 +15274,7 @@ return srCyrl;
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15284,7 +15368,7 @@ return ss;
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15358,7 +15442,7 @@ return sv;
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15422,7 +15506,7 @@ return sw;
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15557,7 +15641,7 @@ return ta;
 
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15651,7 +15735,7 @@ return te;
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15724,7 +15808,7 @@ return tet;
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15796,7 +15880,7 @@ return th;
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15863,7 +15947,7 @@ return tlPh;
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15988,7 +16072,7 @@ return tlh;
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16083,7 +16167,7 @@ return tr;
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16179,7 +16263,7 @@ return tzl;
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16242,7 +16326,7 @@ return tzm;
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16305,7 +16389,7 @@ return tzmLatn;
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16461,7 +16545,7 @@ return uk;
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16565,7 +16649,7 @@ return ur;
 
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16628,7 +16712,7 @@ return uz;
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16691,7 +16775,7 @@ return uzLatn;
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16775,7 +16859,7 @@ return vi;
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16848,7 +16932,7 @@ return xPseudo;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16913,7 +16997,7 @@ return yo;
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17029,7 +17113,7 @@ return zhCn;
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17139,7 +17223,7 @@ return zhHk;
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17248,25 +17332,35 @@ return zhTw;
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(126);
-module.exports = __webpack_require__(176);
+__webpack_require__(127);
+module.exports = __webpack_require__(177);
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_chart_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_chart_js__);
+
+
+__webpack_require__(176);
 
 window.number_format = function (num) {
     return parseFloat(parseFloat(num).toFixed(2)).toLocaleString();
 };
+
+__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.align = 'center';
+__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.anchor = 'center';
+__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.formatter = window.number_format;
+__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.color = '#fff';
+__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.backgroundColor = '#8ed3d8';
+__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.font.weight = '700';
 
 document.querySelectorAll('.chart').forEach(function (item) {
     var canvas = document.createElement('canvas');
@@ -17301,90 +17395,6 @@ document.querySelectorAll('.chart').forEach(function (item) {
         type: item.dataset.type, data: data, options: options
     });
 });
-
-/***/ }),
-/* 127 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @namespace Chart
- */
-var Chart = __webpack_require__(128)();
-
-Chart.helpers = __webpack_require__(1);
-
-// @todo dispatch these helpers into appropriated helpers/helpers.* file and write unit tests!
-__webpack_require__(132)(Chart);
-
-Chart.defaults = __webpack_require__(2);
-Chart.Element = __webpack_require__(3);
-Chart.elements = __webpack_require__(4);
-Chart.Interaction = __webpack_require__(8);
-Chart.platform = __webpack_require__(9);
-
-__webpack_require__(143)(Chart);
-__webpack_require__(144)(Chart);
-__webpack_require__(145)(Chart);
-__webpack_require__(146)(Chart);
-__webpack_require__(147)(Chart);
-__webpack_require__(148)(Chart);
-__webpack_require__(149)(Chart);
-__webpack_require__(150)(Chart);
-
-__webpack_require__(151)(Chart);
-__webpack_require__(152)(Chart);
-__webpack_require__(153)(Chart);
-__webpack_require__(154)(Chart);
-__webpack_require__(155)(Chart);
-__webpack_require__(156)(Chart);
-
-// Controllers must be loaded after elements
-// See Chart.core.datasetController.dataElementType
-__webpack_require__(159)(Chart);
-__webpack_require__(160)(Chart);
-__webpack_require__(161)(Chart);
-__webpack_require__(162)(Chart);
-__webpack_require__(163)(Chart);
-__webpack_require__(164)(Chart);
-__webpack_require__(165)(Chart);
-
-__webpack_require__(166)(Chart);
-__webpack_require__(167)(Chart);
-__webpack_require__(168)(Chart);
-__webpack_require__(169)(Chart);
-__webpack_require__(170)(Chart);
-__webpack_require__(171)(Chart);
-__webpack_require__(172)(Chart);
-
-// Loading built-it plugins
-var plugins = [];
-
-plugins.push(
-	__webpack_require__(173)(Chart),
-	__webpack_require__(174)(Chart),
-	__webpack_require__(175)(Chart)
-);
-
-Chart.plugins.register(plugins);
-
-Chart.platform.initialize();
-
-module.exports = Chart;
-if (typeof window !== 'undefined') {
-	window.Chart = Chart;
-}
-
-// DEPRECATIONS
-
-/**
- * Provided for backward compatibility, use Chart.helpers.canvas instead.
- * @namespace Chart.canvasHelpers
- * @deprecated since version 2.6.0
- * @todo remove at version 3
- * @private
- */
-Chart.canvasHelpers = Chart.helpers.canvas;
-
 
 /***/ }),
 /* 128 */
@@ -18032,7 +18042,7 @@ module.exports = {
 /* global document: false */
 
 
-var color = __webpack_require__(7);
+var color = __webpack_require__(8);
 var defaults = __webpack_require__(2);
 var helpers = __webpack_require__(1);
 
@@ -21444,8 +21454,8 @@ module.exports = function(Chart) {
 
 var defaults = __webpack_require__(2);
 var helpers = __webpack_require__(1);
-var Interaction = __webpack_require__(8);
-var platform = __webpack_require__(9);
+var Interaction = __webpack_require__(9);
+var platform = __webpack_require__(10);
 
 module.exports = function(Chart) {
 	var plugins = Chart.plugins;
@@ -27119,236 +27129,236 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 10,
-	"./af.js": 10,
-	"./ar": 11,
-	"./ar-dz": 12,
-	"./ar-dz.js": 12,
-	"./ar-kw": 13,
-	"./ar-kw.js": 13,
-	"./ar-ly": 14,
-	"./ar-ly.js": 14,
-	"./ar-ma": 15,
-	"./ar-ma.js": 15,
-	"./ar-sa": 16,
-	"./ar-sa.js": 16,
-	"./ar-tn": 17,
-	"./ar-tn.js": 17,
-	"./ar.js": 11,
-	"./az": 18,
-	"./az.js": 18,
-	"./be": 19,
-	"./be.js": 19,
-	"./bg": 20,
-	"./bg.js": 20,
-	"./bn": 21,
-	"./bn.js": 21,
-	"./bo": 22,
-	"./bo.js": 22,
-	"./br": 23,
-	"./br.js": 23,
-	"./bs": 24,
-	"./bs.js": 24,
-	"./ca": 25,
-	"./ca.js": 25,
-	"./cs": 26,
-	"./cs.js": 26,
-	"./cv": 27,
-	"./cv.js": 27,
-	"./cy": 28,
-	"./cy.js": 28,
-	"./da": 29,
-	"./da.js": 29,
-	"./de": 30,
-	"./de-at": 31,
-	"./de-at.js": 31,
-	"./de-ch": 32,
-	"./de-ch.js": 32,
-	"./de.js": 30,
-	"./dv": 33,
-	"./dv.js": 33,
-	"./el": 34,
-	"./el.js": 34,
-	"./en-au": 35,
-	"./en-au.js": 35,
-	"./en-ca": 36,
-	"./en-ca.js": 36,
-	"./en-gb": 37,
-	"./en-gb.js": 37,
-	"./en-ie": 38,
-	"./en-ie.js": 38,
-	"./en-nz": 39,
-	"./en-nz.js": 39,
-	"./eo": 40,
-	"./eo.js": 40,
-	"./es": 41,
-	"./es-do": 42,
-	"./es-do.js": 42,
-	"./es.js": 41,
-	"./et": 43,
-	"./et.js": 43,
-	"./eu": 44,
-	"./eu.js": 44,
-	"./fa": 45,
-	"./fa.js": 45,
-	"./fi": 46,
-	"./fi.js": 46,
-	"./fo": 47,
-	"./fo.js": 47,
-	"./fr": 48,
-	"./fr-ca": 49,
-	"./fr-ca.js": 49,
-	"./fr-ch": 50,
-	"./fr-ch.js": 50,
-	"./fr.js": 48,
-	"./fy": 51,
-	"./fy.js": 51,
-	"./gd": 52,
-	"./gd.js": 52,
-	"./gl": 53,
-	"./gl.js": 53,
-	"./gom-latn": 54,
-	"./gom-latn.js": 54,
-	"./he": 55,
-	"./he.js": 55,
-	"./hi": 56,
-	"./hi.js": 56,
-	"./hr": 57,
-	"./hr.js": 57,
-	"./hu": 58,
-	"./hu.js": 58,
-	"./hy-am": 59,
-	"./hy-am.js": 59,
-	"./id": 60,
-	"./id.js": 60,
-	"./is": 61,
-	"./is.js": 61,
-	"./it": 62,
-	"./it.js": 62,
-	"./ja": 63,
-	"./ja.js": 63,
-	"./jv": 64,
-	"./jv.js": 64,
-	"./ka": 65,
-	"./ka.js": 65,
-	"./kk": 66,
-	"./kk.js": 66,
-	"./km": 67,
-	"./km.js": 67,
-	"./kn": 68,
-	"./kn.js": 68,
-	"./ko": 69,
-	"./ko.js": 69,
-	"./ky": 70,
-	"./ky.js": 70,
-	"./lb": 71,
-	"./lb.js": 71,
-	"./lo": 72,
-	"./lo.js": 72,
-	"./lt": 73,
-	"./lt.js": 73,
-	"./lv": 74,
-	"./lv.js": 74,
-	"./me": 75,
-	"./me.js": 75,
-	"./mi": 76,
-	"./mi.js": 76,
-	"./mk": 77,
-	"./mk.js": 77,
-	"./ml": 78,
-	"./ml.js": 78,
-	"./mr": 79,
-	"./mr.js": 79,
-	"./ms": 80,
-	"./ms-my": 81,
-	"./ms-my.js": 81,
-	"./ms.js": 80,
-	"./my": 82,
-	"./my.js": 82,
-	"./nb": 83,
-	"./nb.js": 83,
-	"./ne": 84,
-	"./ne.js": 84,
-	"./nl": 85,
-	"./nl-be": 86,
-	"./nl-be.js": 86,
-	"./nl.js": 85,
-	"./nn": 87,
-	"./nn.js": 87,
-	"./pa-in": 88,
-	"./pa-in.js": 88,
-	"./pl": 89,
-	"./pl.js": 89,
-	"./pt": 90,
-	"./pt-br": 91,
-	"./pt-br.js": 91,
-	"./pt.js": 90,
-	"./ro": 92,
-	"./ro.js": 92,
-	"./ru": 93,
-	"./ru.js": 93,
-	"./sd": 94,
-	"./sd.js": 94,
-	"./se": 95,
-	"./se.js": 95,
-	"./si": 96,
-	"./si.js": 96,
-	"./sk": 97,
-	"./sk.js": 97,
-	"./sl": 98,
-	"./sl.js": 98,
-	"./sq": 99,
-	"./sq.js": 99,
-	"./sr": 100,
-	"./sr-cyrl": 101,
-	"./sr-cyrl.js": 101,
-	"./sr.js": 100,
-	"./ss": 102,
-	"./ss.js": 102,
-	"./sv": 103,
-	"./sv.js": 103,
-	"./sw": 104,
-	"./sw.js": 104,
-	"./ta": 105,
-	"./ta.js": 105,
-	"./te": 106,
-	"./te.js": 106,
-	"./tet": 107,
-	"./tet.js": 107,
-	"./th": 108,
-	"./th.js": 108,
-	"./tl-ph": 109,
-	"./tl-ph.js": 109,
-	"./tlh": 110,
-	"./tlh.js": 110,
-	"./tr": 111,
-	"./tr.js": 111,
-	"./tzl": 112,
-	"./tzl.js": 112,
-	"./tzm": 113,
-	"./tzm-latn": 114,
-	"./tzm-latn.js": 114,
-	"./tzm.js": 113,
-	"./uk": 115,
-	"./uk.js": 115,
-	"./ur": 116,
-	"./ur.js": 116,
-	"./uz": 117,
-	"./uz-latn": 118,
-	"./uz-latn.js": 118,
-	"./uz.js": 117,
-	"./vi": 119,
-	"./vi.js": 119,
-	"./x-pseudo": 120,
-	"./x-pseudo.js": 120,
-	"./yo": 121,
-	"./yo.js": 121,
-	"./zh-cn": 122,
-	"./zh-cn.js": 122,
-	"./zh-hk": 123,
-	"./zh-hk.js": 123,
-	"./zh-tw": 124,
-	"./zh-tw.js": 124
+	"./af": 11,
+	"./af.js": 11,
+	"./ar": 12,
+	"./ar-dz": 13,
+	"./ar-dz.js": 13,
+	"./ar-kw": 14,
+	"./ar-kw.js": 14,
+	"./ar-ly": 15,
+	"./ar-ly.js": 15,
+	"./ar-ma": 16,
+	"./ar-ma.js": 16,
+	"./ar-sa": 17,
+	"./ar-sa.js": 17,
+	"./ar-tn": 18,
+	"./ar-tn.js": 18,
+	"./ar.js": 12,
+	"./az": 19,
+	"./az.js": 19,
+	"./be": 20,
+	"./be.js": 20,
+	"./bg": 21,
+	"./bg.js": 21,
+	"./bn": 22,
+	"./bn.js": 22,
+	"./bo": 23,
+	"./bo.js": 23,
+	"./br": 24,
+	"./br.js": 24,
+	"./bs": 25,
+	"./bs.js": 25,
+	"./ca": 26,
+	"./ca.js": 26,
+	"./cs": 27,
+	"./cs.js": 27,
+	"./cv": 28,
+	"./cv.js": 28,
+	"./cy": 29,
+	"./cy.js": 29,
+	"./da": 30,
+	"./da.js": 30,
+	"./de": 31,
+	"./de-at": 32,
+	"./de-at.js": 32,
+	"./de-ch": 33,
+	"./de-ch.js": 33,
+	"./de.js": 31,
+	"./dv": 34,
+	"./dv.js": 34,
+	"./el": 35,
+	"./el.js": 35,
+	"./en-au": 36,
+	"./en-au.js": 36,
+	"./en-ca": 37,
+	"./en-ca.js": 37,
+	"./en-gb": 38,
+	"./en-gb.js": 38,
+	"./en-ie": 39,
+	"./en-ie.js": 39,
+	"./en-nz": 40,
+	"./en-nz.js": 40,
+	"./eo": 41,
+	"./eo.js": 41,
+	"./es": 42,
+	"./es-do": 43,
+	"./es-do.js": 43,
+	"./es.js": 42,
+	"./et": 44,
+	"./et.js": 44,
+	"./eu": 45,
+	"./eu.js": 45,
+	"./fa": 46,
+	"./fa.js": 46,
+	"./fi": 47,
+	"./fi.js": 47,
+	"./fo": 48,
+	"./fo.js": 48,
+	"./fr": 49,
+	"./fr-ca": 50,
+	"./fr-ca.js": 50,
+	"./fr-ch": 51,
+	"./fr-ch.js": 51,
+	"./fr.js": 49,
+	"./fy": 52,
+	"./fy.js": 52,
+	"./gd": 53,
+	"./gd.js": 53,
+	"./gl": 54,
+	"./gl.js": 54,
+	"./gom-latn": 55,
+	"./gom-latn.js": 55,
+	"./he": 56,
+	"./he.js": 56,
+	"./hi": 57,
+	"./hi.js": 57,
+	"./hr": 58,
+	"./hr.js": 58,
+	"./hu": 59,
+	"./hu.js": 59,
+	"./hy-am": 60,
+	"./hy-am.js": 60,
+	"./id": 61,
+	"./id.js": 61,
+	"./is": 62,
+	"./is.js": 62,
+	"./it": 63,
+	"./it.js": 63,
+	"./ja": 64,
+	"./ja.js": 64,
+	"./jv": 65,
+	"./jv.js": 65,
+	"./ka": 66,
+	"./ka.js": 66,
+	"./kk": 67,
+	"./kk.js": 67,
+	"./km": 68,
+	"./km.js": 68,
+	"./kn": 69,
+	"./kn.js": 69,
+	"./ko": 70,
+	"./ko.js": 70,
+	"./ky": 71,
+	"./ky.js": 71,
+	"./lb": 72,
+	"./lb.js": 72,
+	"./lo": 73,
+	"./lo.js": 73,
+	"./lt": 74,
+	"./lt.js": 74,
+	"./lv": 75,
+	"./lv.js": 75,
+	"./me": 76,
+	"./me.js": 76,
+	"./mi": 77,
+	"./mi.js": 77,
+	"./mk": 78,
+	"./mk.js": 78,
+	"./ml": 79,
+	"./ml.js": 79,
+	"./mr": 80,
+	"./mr.js": 80,
+	"./ms": 81,
+	"./ms-my": 82,
+	"./ms-my.js": 82,
+	"./ms.js": 81,
+	"./my": 83,
+	"./my.js": 83,
+	"./nb": 84,
+	"./nb.js": 84,
+	"./ne": 85,
+	"./ne.js": 85,
+	"./nl": 86,
+	"./nl-be": 87,
+	"./nl-be.js": 87,
+	"./nl.js": 86,
+	"./nn": 88,
+	"./nn.js": 88,
+	"./pa-in": 89,
+	"./pa-in.js": 89,
+	"./pl": 90,
+	"./pl.js": 90,
+	"./pt": 91,
+	"./pt-br": 92,
+	"./pt-br.js": 92,
+	"./pt.js": 91,
+	"./ro": 93,
+	"./ro.js": 93,
+	"./ru": 94,
+	"./ru.js": 94,
+	"./sd": 95,
+	"./sd.js": 95,
+	"./se": 96,
+	"./se.js": 96,
+	"./si": 97,
+	"./si.js": 97,
+	"./sk": 98,
+	"./sk.js": 98,
+	"./sl": 99,
+	"./sl.js": 99,
+	"./sq": 100,
+	"./sq.js": 100,
+	"./sr": 101,
+	"./sr-cyrl": 102,
+	"./sr-cyrl.js": 102,
+	"./sr.js": 101,
+	"./ss": 103,
+	"./ss.js": 103,
+	"./sv": 104,
+	"./sv.js": 104,
+	"./sw": 105,
+	"./sw.js": 105,
+	"./ta": 106,
+	"./ta.js": 106,
+	"./te": 107,
+	"./te.js": 107,
+	"./tet": 108,
+	"./tet.js": 108,
+	"./th": 109,
+	"./th.js": 109,
+	"./tl-ph": 110,
+	"./tl-ph.js": 110,
+	"./tlh": 111,
+	"./tlh.js": 111,
+	"./tr": 112,
+	"./tr.js": 112,
+	"./tzl": 113,
+	"./tzl.js": 113,
+	"./tzm": 114,
+	"./tzm-latn": 115,
+	"./tzm-latn.js": 115,
+	"./tzm.js": 114,
+	"./uk": 116,
+	"./uk.js": 116,
+	"./ur": 117,
+	"./ur.js": 117,
+	"./uz": 118,
+	"./uz-latn": 119,
+	"./uz-latn.js": 119,
+	"./uz.js": 118,
+	"./vi": 120,
+	"./vi.js": 120,
+	"./x-pseudo": 121,
+	"./x-pseudo.js": 121,
+	"./yo": 122,
+	"./yo.js": 122,
+	"./zh-cn": 123,
+	"./zh-cn.js": 123,
+	"./zh-hk": 124,
+	"./zh-hk.js": 124,
+	"./zh-tw": 125,
+	"./zh-tw.js": 125
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -30356,6 +30366,645 @@ module.exports = function(Chart) {
 
 /***/ }),
 /* 176 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*!
+ * chartjs-plugin-datalabels
+ * http://chartjs.org/
+ * Version: 0.1.0
+ *
+ * Copyright 2017 Chart.js Contributors
+ * Released under the MIT license
+ * https://github.com/chartjs/chartjs-plugin-datalabels/blob/master/LICENSE.md
+ */
+(function (global, factory) {
+	 true ? factory(__webpack_require__(7)) :
+	typeof define === 'function' && define.amd ? define(['chart.js'], factory) :
+	(factory(global.Chart));
+}(this, (function (Chart) { 'use strict';
+
+Chart = Chart && Chart.hasOwnProperty('default') ? Chart['default'] : Chart;
+
+/**
+ * @module Options
+ */
+
+var helpers$1 = Chart.helpers;
+
+var defaults = {
+	/**
+	 * The label box alignment relative to `anchor` ('start'|'center'|'end')
+	 * @member {String|Array|Function}
+	 * @default 'center'
+	 */
+	align: 'center',
+
+	/**
+	 * The label box alignment relative to the element ('start'|'center'|'end')
+	 * @member {String|Array|Function}
+	 * @default 'center'
+	 */
+	anchor: 'center',
+
+	/**
+	 * The color used to draw the background of the surrounding frame.
+	 * @member {String|Array|Function|null}
+	 * @default null (no background)
+	 */
+	backgroundColor: null,
+
+	/**
+	 * The color used to draw the border of the surrounding frame.
+	 * @member {String|Array|Function|null}
+	 * @default null (no border)
+	 */
+	borderColor: null,
+
+	/**
+	 * The border radius used to add rounded corners to the surrounding frame.
+	 * @member {Number|Array|Function}
+	 * @default 0 (not rounded)
+	 */
+	borderRadius: 0,
+
+	/**
+	 * The border width of the surrounding frame.
+	 * @member {Number|Array|Function}
+	 * @default 0 (no border)
+	 */
+	borderWidth: 0,
+
+	/**
+	 * The color used to draw the label text.
+	 * @member {String|Array|Function}
+	 * @default undefined (use Chart.defaults.global.defaultFontColor)
+	 */
+	color: undefined,
+
+	/**
+	 * Whether to display labels global (boolean) or per data (function)
+	 * @member {Boolean|Array|Function}
+	 * @default true
+	 */
+	display: true,
+
+	/**
+	 * The font options used to draw the label text.
+	 * @member {Object|Array|Function}
+	 * @prop {Boolean} font.family - defaults to Chart.defaults.global.defaultFontFamily
+	 * @prop {Boolean} font.size - defaults to Chart.defaults.global.defaultFontSize
+	 * @prop {Boolean} font.style - defaults to Chart.defaults.global.defaultFontStyle
+	 * @prop {Boolean} font.weight - defaults to 'normal'
+	 * @default Chart.defaults.global.defaultFont.*
+	 */
+	font: {
+		family: undefined,
+		size: undefined,
+		style: undefined,
+		weight: null
+	},
+
+	/**
+	 * The line height (in pixel) to use for multi-lines labels.
+	 * @member {Number|Array|Function|undefined}
+	 * @default 1.2
+	 */
+	lineHeight: 1.2,
+
+	/**
+	 * The distance (in pixels) to pull the label away from the anchor point, the direction
+	 * being determined by the `align` value (only applicable if `align` is `start` or `end`).
+	 * @member {Number|Array|Function}
+	 * @default 4
+	 */
+	offset: 4,
+
+	/**
+	 * The padding (in pixels) to apply between the text and the surrounding frame.
+	 * @member {Number|Object|Array|Function}
+	 * @prop {Number} padding.top - Space above the text.
+	 * @prop {Number} padding.right - Space on the right of the text.
+	 * @prop {Number} padding.bottom - Space below the text.
+	 * @prop {Number} padding.left - Space on the left of the text.
+	 * @default 4 (all values)
+	 */
+	padding: {
+		top: 4,
+		right: 4,
+		bottom: 4,
+		left: 4
+	},
+
+	/**
+	 * Rotation of the label relative to its center.
+	 * @member {Number|Array|Function}
+	 * @default 0
+	 */
+	rotation: 0,
+
+	/**
+	 * Text alignment for multi-lines labels ('left'|'right'|'start'|'center'|'end').
+	 * @member {String|Array|Function}
+	 * @default 'start'
+	 */
+	textAlign: 'start',
+
+	/**
+	 * Allows to customize the label text by transforming input data.
+	 * @member {Function|null}
+	 * @prop {*} value - The data value
+	 * @prop {Object} context - The function unique argument:
+	 * @prop {Chart} context.chart - The current chart
+	 * @prop {Number} context.dataIndex - Index of the current data
+	 * @prop {Object} context.dataset - The current dataset
+	 * @prop {Number} context.datasetIndex - Index of the current dataset
+	 * @default data[index]
+	 */
+	formatter: function(value) {
+		var label = value;
+		var keys, klen, k;
+
+		if (helpers$1.isObject(value)) {
+			if (!helpers$1.isNullOrUndef(value.label)) {
+				label = value.label;
+			} else if (!helpers$1.isNullOrUndef(value.r)) {
+				label = value.r;
+			} else {
+				label = '';
+				keys = Object.keys(value);
+				for (k = 0, klen = keys.length; k < klen; ++k) {
+					label += (k !== 0 ? ', ' : '') + keys[k] + ': ' + value[keys[k]];
+				}
+			}
+		}
+		return '' + label;
+	}
+};
+
+function orient(point, origin) {
+	var x0 = origin.x;
+	var y0 = origin.y;
+
+	if (x0 === null) {
+		return {x: 0, y: -1};
+	}
+	if (y0 === null) {
+		return {x: 1, y: 0};
+	}
+
+	var dx = point.x - x0;
+	var dy = point.y - y0;
+	var ln = Math.sqrt(dx * dx + dy * dy);
+	return {
+		x: ln ? dx / ln : 0,
+		y: ln ? dy / ln : -1
+	};
+}
+
+var positioners = {
+	arc: function(vm, anchor) {
+		var angle = (vm.startAngle + vm.endAngle) / 2;
+		var vx = Math.cos(angle);
+		var vy = Math.sin(angle);
+		var r0 = vm.innerRadius;
+		var r1 = vm.outerRadius;
+		var d;
+
+		if (anchor === 'start') {
+			d = r0;
+		} else if (anchor === 'end') {
+			d = r1;
+		} else {
+			d = (r0 + r1) / 2;
+		}
+
+		return {
+			x: vm.x + vx * d,
+			y: vm.y + vy * d,
+			vx: vx,
+			vy: vy
+		};
+	},
+
+	point: function(vm, anchor, origin) {
+		var v = orient(vm, origin);
+		var r = vm.radius;
+		var d = 0;
+
+		if (anchor === 'start') {
+			d = -r;
+		} else if (anchor === 'end') {
+			d = r;
+		}
+
+		return {
+			x: vm.x + v.x * d,
+			y: vm.y + v.y * d,
+			vx: v.x,
+			vy: v.y
+		};
+	},
+
+	rect: function(vm, anchor, origin) {
+		var horizontal = vm.horizontal;
+		var size = Math.abs(vm.base - (horizontal ? vm.x : vm.y));
+		var x = horizontal ? Math.min(vm.x, vm.base) : vm.x;
+		var y = horizontal ? vm.y : Math.min(vm.y, vm.base);
+		var v = orient(vm, origin);
+
+		if (anchor === 'center') {
+			if (horizontal) {
+				x += size / 2;
+			} else {
+				y += size / 2;
+			}
+		} else if (anchor === 'start' && !horizontal) {
+			y += size;
+		} else if (anchor === 'end' && horizontal) {
+			x += size;
+		}
+
+		return {
+			x: x,
+			y: y,
+			vx: v.x,
+			vy: v.y
+		};
+	},
+
+	fallback: function(vm, anchor, origin) {
+		var v = orient(vm, origin);
+		return {
+			x: vm.x,
+			y: vm.y,
+			vx: v.x,
+			vy: v.y
+		};
+	}
+};
+
+/**
+ * @see https://github.com/chartjs/Chart.js/issues/4176
+ */
+
+Chart.defaults.global.plugins.datalabels = defaults;
+
+var helpers = Chart.helpers;
+var MODEL_KEY = '$datalabels';
+
+// @todo move this in Chart.helpers.toTextLines
+function toTextLines(inputs) {
+	var lines = [];
+	var input;
+
+	inputs = [].concat(inputs);
+	while (inputs.length) {
+		input = inputs.pop();
+		if (typeof input === 'string') {
+			lines.unshift.apply(lines, input.split('\n'));
+		} else if (Array.isArray(input)) {
+			inputs.push.apply(inputs, input);
+		} else if (!helpers.isNullOrUndef(inputs)) {
+			lines.unshift('' + input);
+		}
+	}
+
+	return lines;
+}
+
+// @todo move this method in Chart.helpers.canvas.toFont (deprecates helpers.fontString)
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/font
+function toFontString(font) {
+	if (!font || helpers.isNullOrUndef(font.size) || helpers.isNullOrUndef(font.family)) {
+		return null;
+	}
+
+	return (font.style ? font.style + ' ' : '')
+		+ (font.weight ? font.weight + ' ' : '')
+		+ font.size + 'px '
+		+ font.family;
+}
+
+// @todo move this in Chart.helpers.canvas.textSize
+// @todo cache calls of measureText if font doesn't change?!
+function textSize(ctx, lines, font) {
+	var items = [].concat(lines);
+	var ilen = items.length;
+	var prev = ctx.font;
+	var width = 0;
+	var i;
+
+	ctx.font = font.string;
+
+	for (i = 0; i < ilen; ++i) {
+		width = Math.max(ctx.measureText(items[i]).width, width);
+	}
+
+	ctx.font = prev;
+
+	return {
+		height: ilen * font.lineHeight,
+		width: width
+	};
+}
+
+// @todo move this method in Chart.helpers.options.toFont
+function parseFont(value) {
+	var global = Chart.defaults.global;
+	var size = helpers.valueOrDefault(value.size, global.defaultFontSize);
+	var font = {
+		family: helpers.valueOrDefault(value.family, global.defaultFontFamily),
+		lineHeight: helpers.options.toLineHeight(value.lineHeight, size),
+		size: size,
+		style: helpers.valueOrDefault(value.style, global.defaultFontStyle),
+		weight: helpers.valueOrDefault(value.weight, null),
+		string: ''
+	};
+
+	font.string = toFontString(font);
+	return font;
+}
+
+function coordinates(el, model) {
+	var point = model.positioner(el._view, model.anchor, model.origin);
+
+	if (model.align === 'center') {
+		// if aligned center, we don't want to offset the center point
+		return {x: point.x, y: point.y};
+	}
+
+	var padding = model.padding;
+	var rotation = model.rotation;
+	var th = model.size.height;
+	var tw = model.size.width;
+	var vx = point.vx;
+	var vy = point.vy;
+	var dx = 0;
+	var dy = 0;
+
+	if (model.align === 'start') {
+		vx = -vx;
+		vy = -vy;
+	}
+
+	// take in account the label rotation
+	dx += Math.abs(tw / 2 * Math.cos(rotation)) + Math.abs(th / 2 * Math.sin(rotation));
+	dy += Math.abs(tw / 2 * Math.sin(rotation)) + Math.abs(th / 2 * Math.cos(rotation));
+
+	// ... and padding
+	dx += vx > 0 ? padding.right : padding.left;
+	dy += vy > 0 ? padding.bottom : padding.top;
+
+	// ... and borders
+	dx += model.borderWidth || 0;
+	dy += model.borderWidth || 0;
+
+	// ... and explicit offset
+	dx += model.offset;
+	dy += model.offset;
+
+	return {
+		x: point.x + dx * vx,
+		y: point.y + dy * vy
+	};
+}
+
+function boundingRects(size, padding) {
+	var th = size.height;
+	var tw = size.width;
+	var tx = -tw / 2;
+	var ty = -th / 2;
+
+	return {
+		frame: {
+			x: tx - padding.left,
+			y: ty - padding.top,
+			w: tw + padding.width,
+			h: th + padding.height,
+		},
+		text: {
+			x: tx,
+			y: ty,
+			w: tw,
+			h: th
+		}
+	};
+}
+
+function drawFrame(ctx, rect, model) {
+	var bgColor = model.backgroundColor;
+	var borderColor = model.borderColor;
+	var borderWidth = model.borderWidth;
+
+	if (!bgColor && (!borderColor || !borderWidth)) {
+		return;
+	}
+
+	ctx.beginPath();
+
+	helpers.canvas.roundedRect(
+		ctx,
+		Math.round(rect.x) - borderWidth / 2,
+		Math.round(rect.y) - borderWidth / 2,
+		Math.round(rect.w) + borderWidth,
+		Math.round(rect.h) + borderWidth,
+		model.borderRadius);
+
+	ctx.closePath();
+
+	if (bgColor) {
+		ctx.fillStyle = bgColor;
+		ctx.fill();
+	}
+
+	if (borderColor && borderWidth) {
+		ctx.strokeStyle = borderColor;
+		ctx.lineWidth = borderWidth;
+		ctx.lineJoin = 'miter';
+		ctx.stroke();
+	}
+}
+
+function drawText(ctx, lines, rect, model) {
+	var align = model.textAlign;
+	var font = model.font;
+	var lh = font.lineHeight;
+	var color = model.color;
+	var ilen = lines.length;
+	var x, y, i;
+
+	if (!ilen || !color) {
+		return;
+	}
+
+	x = rect.x;
+	y = rect.y + lh / 2;
+
+	if (align === 'center') {
+		x += rect.w / 2;
+	} else if (align === 'end' || align === 'right') {
+		x += rect.w;
+	}
+
+	ctx.font = model.font.string;
+	ctx.fillStyle = color;
+	ctx.textAlign = align;
+	ctx.textBaseline = 'middle';
+
+	for (i = 0; i < ilen; ++i) {
+		ctx.fillText(
+			lines[i],
+			Math.round(x),
+			Math.round(y),
+			Math.round(rect.w));
+
+		y += lh;
+	}
+}
+
+function getPositioner(el) {
+	if (el instanceof Chart.elements.Arc) {
+		return positioners.arc;
+	}
+	if (el instanceof Chart.elements.Point) {
+		return positioners.point;
+	}
+	if (el instanceof Chart.elements.Rectangle) {
+		return positioners.rect;
+	}
+	return positioners.fallback;
+}
+
+function getScaleOrigin(el) {
+	var horizontal = el._model.horizontal;
+	var scale = el._scale || (horizontal && el._xScale) || el._yScale;
+
+	if (!scale) {
+		return null;
+	}
+
+	if (scale.xCenter !== undefined && scale.yCenter !== undefined) {
+		return {x: scale.xCenter, y: scale.yCenter};
+	}
+
+	var pixel = scale.getBasePixel();
+	return horizontal ?
+		{x: pixel, y: null} :
+		{x: null, y: pixel};
+}
+
+function modelize(el, index, ctx, config, context) {
+	var resolve = Chart.helpers.options.resolve;
+	if (!resolve([config.display, true], context, index)) {
+		return null;
+	}
+
+	var value = context.dataset.data[index];
+	var label = helpers.valueOrDefault(helpers.callback(config.formatter, [value, context]), value);
+	var lines = helpers.isNullOrUndef(label) ? [] : toTextLines(label);
+	if (!lines.length) {
+		return null;
+	}
+
+	var font = parseFont(resolve([config.font, {}], context, index));
+	var model = {
+		align: resolve([config.align, 'center'], context, index),
+		anchor: resolve([config.anchor, 'center'], context, index),
+		backgroundColor: resolve([config.backgroundColor, null], context, index),
+		borderColor: resolve([config.borderColor, null], context, index),
+		borderRadius: resolve([config.borderRadius, 0], context, index),
+		borderWidth: resolve([config.borderWidth, 0], context, index),
+		color: resolve([config.color, Chart.defaults.global.defaultFontColor], context, index),
+		font: font,
+		lines: lines,
+		offset: resolve([config.offset, 0], context, index),
+		padding: helpers.options.toPadding(resolve([config.padding, 0], context, index)),
+		rotation: resolve([config.rotation, 0], context, index) * (Math.PI / 180),
+		textAlign: resolve([config.textAlign, 'start'], context, index),
+		origin: getScaleOrigin(el),
+		positioner: getPositioner(el),
+		size: textSize(ctx, lines, font)
+	};
+
+	return model;
+}
+
+function configure(dataset, options) {
+	var override = dataset.datalabels;
+	var config = {};
+
+	if (override === false) {
+		return null;
+	}
+	if (override === true) {
+		override = {};
+	}
+
+	return helpers.merge(config, [options, override]);
+}
+
+Chart.plugins.register({
+	id: 'datalabels',
+
+	afterDatasetUpdate: function(chart, args, options) {
+		var dataset = chart.data.datasets[args.index];
+		var config = configure(dataset, options);
+		var display = config && config.display;
+		var elements = args.meta.data || [];
+		var ilen = elements.length;
+		var ctx = chart.ctx;
+		var i, el;
+
+		ctx.save();
+
+		for (i = 0; i < ilen; ++i) {
+			el = elements[i];
+			el[MODEL_KEY] = display && el && !el.hidden ?
+				modelize(el, i, ctx, config, {
+					chart: chart,
+					dataIndex: i,
+					dataset: dataset,
+					datasetIndex: args.index
+				}) :
+				null;
+		}
+
+		ctx.restore();
+	},
+
+	afterDatasetDraw: function(chart, args) {
+		var elements = args.meta.data || [];
+		var ilen = elements.length;
+		var ctx = chart.ctx;
+		var i, el, model, center, rects;
+
+		for (i = 0; i < ilen; ++i) {
+			el = elements[i];
+			model = el[MODEL_KEY];
+			if (!model) {
+				continue;
+			}
+
+			center = coordinates(el, model);
+			rects = boundingRects(model.size, model.padding);
+
+			ctx.save();
+			ctx.translate(Math.round(center.x), Math.round(center.y));
+			ctx.rotate(model.rotation);
+
+			drawFrame(ctx, rects.frame, model);
+			drawText(ctx, model.lines, rects.text, model);
+
+			ctx.restore();
+		}
+	}
+});
+
+})));
+
+
+/***/ }),
+/* 177 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
