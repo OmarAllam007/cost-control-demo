@@ -17,7 +17,7 @@
                     <section>
                         <ul class="list-unstyled tree">
                             @foreach($resourcesTree as $type)
-                                {{--@include('resources._recursive_resource_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_id')])--}}
+                                @include('resources._recursive_resource_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_id')])
                             @endforeach
                         </ul>
                     </section>
