@@ -52,7 +52,7 @@ class ActualResourceObserver
         if ($budgetShadow->curr_qty) {
             CostShadow::updateOrCreate($conditions, $budgetShadow->toArray());
         } else {
-            CostShadow::where('breakdown_resource_id', $resource->breakdown_resource_id)->delete();
+            CostShadow::where($conditions)->delete();
         }
 
 
