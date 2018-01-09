@@ -190,8 +190,8 @@ class CostImportFixer
             }
             unset($resource->cost);
             $resource->update($data);
-            $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
-            $log = ['resource' => $resource, 'remaining_qty' => $cost->remaining_qty, 'to_date_qty' => $cost->to_date_qty];
+//            $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
+            $log = ['resource' => $resource, 'remaining_qty' => $resource->remaining_qty, 'to_date_qty' => $resource->to_date_qty];
             $progressLog->push($log);
         }
 
