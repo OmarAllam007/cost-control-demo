@@ -309,7 +309,7 @@ class CostImporter
         $errors = BreakDownResourceShadow::with('cost')
             ->whereIn('breakdown_resource_id', $breakdown_resource_ids)->get()
             ->filter(function ($resource) {
-                if ($resource->cost()->first()->to_date_qty > $resource->budget_unit) {
+                if ($resource->qty_to_date > $resource->budget_unit) {
                     return true;
                 }
 
