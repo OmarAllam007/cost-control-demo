@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\ActivityDivision;
 use App\CsiCategory;
 use App\Filter\ProductivityFilter;
-use App\Http\Controllers\Reports\Export\ExportProductivityReport;
 use App\Http\Requests\WipeRequest;
 use App\Jobs\CacheCsiCategoryTree;
 use App\Jobs\Export\ExportProductivityJob;
@@ -19,7 +18,6 @@ use App\TrendUploadTable;
 use App\Unit;
 use App\UnitAlias;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductivityController extends Controller
 {
@@ -81,31 +79,54 @@ class ProductivityController extends Controller
 
     public function edit(Productivity $productivity)
     {
-        if (\Gate::denies('write', 'productivity')) {
+        if ($productivity->project_id) {
+            if (cannot( 'productivity', $productivity->project)) {
+                flash("You don't have access to this page");
+                return \Redirect::route('project.budget', $productivity->project);
+            }
+        } elseif (cannot('write', 'productivity')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
-        $csi_category = CsiCategory::lists('name', 'id')->all();
-        $units_drop = Unit::lists('type', 'id')->all();
+
+        $csi_category = CsiCategory::pluck('name', 'id');
+        $units_drop = Unit::pluck('type', 'id');
         $edit = true;
+
         return view('productivity.edit', compact('productivity', 'units_drop', 'csi_category', 'edit'));
     }
 
 
     public function update(Productivity $productivity, Request $request)
     {
-        if (\Gate::denies('write', 'productivity')) {
+        if ($productivity->project_id) {
+            if (cannot( 'productivity', $productivity->project)) {
+                flash("You don't have access to this page");
+                return \Redirect::route('project.budget', $productivity->project);
+            }
+        } elseif (cannot('write', 'productivity')) {
             flash("You don't have access to this page");
             return \Redirect::to('/');
         }
 
         $this->validate($request, $this->rules);
-        $productivity->after_reduction = ($request->reduction_factor * $request->daily_output) + $request->daily_output;
 
-        $productivity->update($request->all());
+        $data = $request->all();
+        if ($productivity->project_id) {
+            $data = $request->only('reduction_factor');
+        }
+
+        $productivity->update($data);
         flash('Productivity has been saved', 'success');
 
+        if ($request->exists('iframe')) {
+            return redirect('/blank?reload=productivity');
+        }
+
+        if ($productivity->project_id) {
+            return \Redirect::route('project.budget', $productivity->project_id);
+        }
         return \Redirect::route('productivity.index');
     }
 

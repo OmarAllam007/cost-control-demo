@@ -16,9 +16,15 @@ use App\Productivity;
 class ProductivityObserver
 {
 
+    function updating(Productivity $productivity)
+    {
+        $productivity->after_reduction = ($productivity->reduction_factor * $productivity->daily_output) + $productivity->daily_output;
+    }
+
     function updated(Productivity $productivity)
     {
         BreakDownResourceShadow::where('productivity_id', $productivity->id)
+            ->select(['id', 'breakdown_resource_id'])
             ->where('project_id', $productivity->project_id)->get()
             ->each(function (BreakDownResourceShadow $shadow) {
                 $shadow->breakdown_resource->updateShadow();
