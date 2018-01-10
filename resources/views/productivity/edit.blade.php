@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(request()->exists('iframe') ? 'layouts.iframe' : 'layouts.app')
 
 @section('header')
     <h2>
@@ -11,7 +11,7 @@
 @stop
 
 @section('body')
-    {{ Form::model($productivity, ['route' => ['productivity.update', $productivity]]) }}
+    {{ Form::model($productivity, ['url' => route('productivity.update', $productivity) . (request()->exists('iframe')? '?iframe' : '')]) }}
 
         {{ method_field('patch') }}
 
@@ -19,3 +19,17 @@
 
     {{ Form::close() }}
 @stop
+
+@section('javascript')
+    {{--@if (request()->exists('iframe'))--}}
+    <script>
+        $(function() {
+            $('form').on('submit', function() {
+                const btn = $(this).find('.btn');
+                btn.prop('disabled', true);
+                btn.find('i').toggleClass('fa-check fa-spinner fa-spin');
+            });
+        });
+    </script>
+    {{--@endif--}}
+@append

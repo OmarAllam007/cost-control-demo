@@ -47,11 +47,13 @@
                     <td class="col-xs-2">@{{productivity.code}}</td>
                     <td class="col-xs-2">@{{productivity.description|nl2br}}</td>
                     <td class="col-xs-2" >@{{{productivity.crew_structure|nl2br}}} </td>
-                    <td class="col-xs-2">@{{productivity.after_reduction}}</td>
+                    <td class="col-xs-2">@{{productivity.after_reduction|number_format}}</td>
                     <td class="col-xs-2">@{{productivity.unit}}</td>
                     <td class="col-xs-2">
                         @can('productivity', $project)
-                            <a href="/productivity/override/@{{productivity.id}}/{{$project->id}}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Override</a>
+                            <a href="/productivity/@{{productivity.id}}/edit" class="btn btn-primary btn-sm in-iframe" title="Edit Productivity">
+                                <i class="fa fa-pencil"></i> Edit
+                            </a>
                         @endcan
                     </td>
                 </tr>

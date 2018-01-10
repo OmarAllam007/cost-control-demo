@@ -35,10 +35,21 @@ export default{
     filters: {
         nl2br: function(value){
             return value.replace(/\r\n|\n|\r/g, '<br>')
+        },
+
+        number_format: function(value) {
+            return parseFloat(value.toFixed(2)).toLocaleString();
         }
     },
 
     watch: {},
+
+    events: {
+        reload_productivity() {
+            this.loadProductivity();
+        },
+    },
+
     ready(){
         this.loadProductivity();
     }
