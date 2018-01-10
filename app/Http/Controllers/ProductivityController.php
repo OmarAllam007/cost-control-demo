@@ -80,6 +80,7 @@ class ProductivityController extends Controller
     public function edit(Productivity $productivity)
     {
         if ($productivity->project_id) {
+
             if (cannot( 'productivity', $productivity->project)) {
                 flash("You don't have access to this page");
                 return \Redirect::route('project.budget', $productivity->project);
