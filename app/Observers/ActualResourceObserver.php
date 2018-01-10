@@ -50,7 +50,9 @@ class ActualResourceObserver
         $budgetShadow->appendFields();
 
         if ($budgetShadow->curr_qty) {
-            CostShadow::updateOrCreate($conditions, $budgetShadow->toArray());
+            $attributes = $budgetShadow->toArray();
+            $attributes['period_id'] = $resource->period_id;
+            CostShadow::updateOrCreate($conditions, $attributes);
         } else {
             CostShadow::where($conditions)->delete();
         }

@@ -45,7 +45,7 @@
                         <td>{{$resource->resource_name}}</td>
                         <td>{{$resource->remarks}}</td>
                         <td>{{number_format($resource->budget_unit, 2)}}</td>
-                        <td>{{number_format($resource->cost->to_date_qty, 2)}}</td>
+                        <td>{{number_format($resource->to_date_qty, 2)}}</td>
                         <td>
                             <div class="input-group">
                                 {{
