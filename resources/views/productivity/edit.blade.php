@@ -3,7 +3,7 @@
 @section('header')
     <h2>
         @if ($productivity->project)
-            {{$project->name}} &mdash;
+            {{$productivity->name}} &mdash;
         @endif
 
         Modify Productivity
