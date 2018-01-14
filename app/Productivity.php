@@ -189,4 +189,9 @@ class Productivity extends Model
             }
         });
     }
+
+    function getDescriptorAttribute()
+    {
+        return $this->description . " ({$this->csi_code})";
+    }
 }

@@ -18,7 +18,7 @@ class ChangelogController extends Controller
             $date = Carbon::now();
         }
 
-        $logs = ChangeLog::forProjectOnDate($project, $date)->paginate();
+        $logs = ChangeLog::forProjectOnDate($project, $date)->paginate(25);
 
         return view('changelog.show', compact('project', 'logs', 'date'));
     }

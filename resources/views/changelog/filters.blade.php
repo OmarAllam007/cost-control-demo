@@ -11,7 +11,7 @@
     </section>
 
     <div class="col-sm-6 col-md-4 col-md-offset-4">
-        <div class="text-right pagination-">
+        <div class="text-right pagination-top">
             {{$logs->appends('date', $date->format('Y-m-d'))->links()}}
         </div>
     </div>

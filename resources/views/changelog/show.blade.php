@@ -26,7 +26,7 @@
 
                             <strong class="text-primary">{{$log->base_model_name}}:</strong>
                             @if ($log->first_change->subject)
-                                <small class="text-danger">{{$log->first_change->subject->descriptor ?? ''}}</small>
+                                <small class="text-danger">{{$log->first_change->descriptor}}</small>
                             @else
 
                             @endif
@@ -40,7 +40,7 @@
                             @if ($change->hasChangedFields())
                                 <header>
                                     <strong>{{$change->simple_model_name}}</strong>:
-                                    <small class="text-danger">{{$change->subject->descriptor ?? ''}}</small>
+                                    <small class="text-danger">{{$change->descriptor}}</small>
                                 </header>
                                 <ul>
                                     @if ($change->original)
@@ -69,4 +69,12 @@
     @else
         <div class="alert alert-info"><i class="fa fa-info-circle"></i> No logs found</div>
     @endif
+@endsection
+
+@section('css')
+    <style>
+        .pagination-top .pagination {
+            margin-top: 0; margin-bottom: 0;
+        }
+    </style>
 @endsection

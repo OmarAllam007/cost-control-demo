@@ -5,11 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Change
+ * @property-read array original_data
+ */
 class Change extends Model
 {
     const MODEL_ALIASES = [
         'break_down_resource_shadow' => 'Breakdown Resource',
         'breakdown_resource' => 'Breakdown Resource',
+        'survey' => 'Qty Survey',
+        'boq' => 'BOQ',
+        'std_activity_resource' => 'Template resource'
     ];
 
     protected $fillable = ['model', 'original', 'updated', 'model_id'];
@@ -41,5 +48,14 @@ class Change extends Model
     function getOriginalDataAttribute()
     {
         return $this->getAttribute('original');
+    }
+
+    function getDescriptorAttribute()
+    {
+        if (isset($this->original_data['descriptor'])) {
+            return $this->original_data['descriptor'];
+        }
+
+        return $this->subject->descriptor;
     }
 }

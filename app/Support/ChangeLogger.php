@@ -70,7 +70,7 @@ class ChangeLogger
             'model' => get_class($model),
             'original' => $original,
             'updated' => $updated,
-            'model_id' => $model->id ?: 0,
+            'model_id' => $model->id,
         ]);
     }
 

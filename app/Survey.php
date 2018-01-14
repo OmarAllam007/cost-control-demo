@@ -120,7 +120,7 @@ class Survey extends Model
 
     function getDescriptorAttribute()
     {
-        return $this->wbsLevel->path . ' / ' . $this->description . "($this->cost_account)";
+        return $this->wbsLevel->path . ' / ' . $this->description . " ($this->cost_account)";
     }
 
 }
