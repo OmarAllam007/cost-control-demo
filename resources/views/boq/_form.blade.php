@@ -25,7 +25,9 @@
                         {{App\WbsLevel::with('parent')->find($wbs_id)->path}}
                         {{Form::hidden('wbs_id', $wbs_id)}}
                     @else
-                        {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
+                        @php $wbs_id = Form::getValueAttribute('wbs_id') @endphp
+                        {{$wbs_id? App\WbsLevel::with('parent')->find($wbs_id)->path : 'Select Wbs Level' }}
+                        {{Form::hidden('wbs_id', $wbs_id)}}
                     @endif
                 </a>
                 <a class="remove-tree-input text-danger" data-label="Select Wbs Level" data-target="#LevelsModal"><span
