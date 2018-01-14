@@ -9,6 +9,9 @@
 
             @can('budget_owner', $project)
                 <a href="{{route('project.charter-data', $project)}}" class="btn btn-sm btn-info">Edit charter data</a>
+                <a href="{{route('project.changelog', $project)}}" class="btn btn-sm btn-primary">
+                    <i class="fa fa-history"></i> History
+                </a>
             @endcan
 
             <a href="#DeleteProjectModal" class="btn btn-sm btn-warning" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete </a>

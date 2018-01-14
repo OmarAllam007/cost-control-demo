@@ -9,7 +9,16 @@ use App\Formatters\BreakdownResourceFormatter;
 use App\Http\Controllers\Caching\ResourcesCache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
+/**
+ * @property String description
+ * @property String cost_account
+ * @property Collection variables
+ * @property int parent_id
+ * @property Survey parent
+ * @property WbsLevel wbsLevel
+ */
 class Survey extends Model
 {
     use CachesQueries;
@@ -112,6 +121,11 @@ class Survey extends Model
     function boq()
     {
         return $this->belongsTo(Boq::class);
+    }
+
+    function getDescriptorAttribute()
+    {
+        return $this->wbsLevel->path . ' / ' . $this->description . " ($this->cost_account)";
     }
 
 }

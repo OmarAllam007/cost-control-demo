@@ -59,3 +59,12 @@ function optional($object)
 
     return new \Illuminate\Support\Fluent();
 }
+
+function translate_method($method)
+{
+    static $methods = [
+        'POST' => 'created', 'PATCH' => 'updated', 'DELETE' => 'deleted'
+    ];
+
+    return $methods[$method] ?? 'updated';
+}
