@@ -39,8 +39,11 @@ class ResourcesObserver
 
     function updated(Resources $resource)
     {
-        $resource->updateBreakdownResources();
-//        dispatch(new CacheResourcesInQueue);
+        if($resource->project_id) {
+            $resource->updateBreakdownResources();
+        } else {
+            $this->updateResources($resource);
+        }
     }
 
     function deleted(Resources $resource)
@@ -63,6 +66,34 @@ class ResourcesObserver
         }
 
         return $resource->types->code . '.001';
+    }
+
+    /**
+     * @param Resources $resource
+     */
+    private function updateResources(Resources $resource)
+    {
+        $project_ids = Project::pluck('id');
+
+        $resource_ids = \DB::table('resources')->where('resource_id', $resource->id)
+            ->whereIn('project_id', $project_ids)->pluck('id');
+
+        \DB::table('resources')->whereIn('id', $resource_ids)
+            ->update([
+                'name' => $resource->name,
+                'resource_type_id' => $resource->resource_type_id,
+                'resource_code' => $resource->resource_code]);
+
+        $root_type = $resource->types->root->name;
+        $root_id = $resource->types->root->id;
+
+        \DB::table('break_down_resource_shadows')->whereIn('resource_id', $resource_ids)
+            ->update([
+                'resource_name' => $resource->name,
+                'resource_code' => $resource->resource_code,
+                'resource_type_id' => $root_id,
+                'resource_type' => $root_type
+            ]);
     }
 
 }
