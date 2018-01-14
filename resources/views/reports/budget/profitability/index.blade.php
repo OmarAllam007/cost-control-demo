@@ -14,9 +14,10 @@
 @endsection
 
 @section('body')
-    <section class="flex-tables">
-        <table class="table table-condensed table-bordered" id="report-header">
-            <thead>
+    <section class="clearfix">
+        <section class="pull-left">
+            <table class="table table-condensed table-bordered" id="report-header">
+                <thead>
                 <tr class="bg-primary"><th>&nbsp;</th></tr>
                 <tr><th>Total Project Budget</th></tr>
                 <tr><th>Original Contract Amount</th></tr>
@@ -25,24 +26,29 @@
                 <tr><th>Profitability</th></tr>
                 <tr><th>Profitability Index</th></tr>
                 <tr><th>Variance</th></tr>
-            </thead>
-        </table>
-        <section class="horizontal-scroll display-flex">
+                </thead>
+            </table>
+        </section>
 
-            @foreach($revisions as $revision)
-                <table class="table table-condensed table-bordered" id="report-body">
-                    <tbody>
-                        <tr class="bg-primary"><th class="text-center">{{$revision->name}}</th></tr>
-                        <tr><td>{{number_format($revision->budget_cost, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->original_contract_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->change_order_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->revised_contract_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->profitability, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->profitability_index, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->variance, 2)}}</td></tr>
-                    </tbody>
-                </table>
-            @endforeach
+        <section class="horizontal-scroll display-flex">
+            <div class="scroll-area" style="width: {{$revisions->count() * 300}}px">
+                @foreach($revisions as $revision)
+                    <article class="pull-left revision-info">
+                        <table class="table table-condensed table-bordered">
+                            <tbody>
+                            <tr class="bg-primary"><th class="text-center">{{$revision->name}}</th></tr>
+                            <tr><td>{{number_format($revision->budget_cost, 2)}}</td></tr>
+                            <tr><td>{{number_format($revision->original_contract_amount, 2)}}</td></tr>
+                            <tr><td>{{number_format($revision->change_order_amount, 2)}}</td></tr>
+                            <tr><td>{{number_format($revision->revised_contract_amount, 2)}}</td></tr>
+                            <tr><td class="{{$revision->profitability > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability, 2)}}</td></tr>
+                            <tr><td class="{{$revision->profitability_index > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability_index, 2)}}%</td></tr>
+                            <tr><td>{{number_format($revision->variance, 2)}}%</td></tr>
+                            </tbody>
+                        </table>
+                    </article>
+                @endforeach
+            </div>
         </section>
     </section>
 
@@ -109,29 +115,26 @@
 @section('css')
     <link rel="stylesheet" href="/css/c3.min.css">
     <style>
-        .flex-tables {
-            display: flex;
-        }
-
-        .horizontal-scroll{
+        .horizontal-scroll {
             overflow-x: auto;
             min-width: 300px;
         }
 
-        .flex-tables .table {
-            margin-left: 0;
-            width: auto;
-            min-width: 250px;
-            flex: 1;
+        .revision-info {
+            width: 300px;
         }
 
-        .flex-tables .table tr td, .flex-tables .table tr th {
+        #report-header {
+            width: 300px;
+        }
+
+        .table tr td, .table tr th {
             min-height: 35px;
             max-height: 35px;
             height: 35px;
         }
 
-        .flex-tables .table tr td {
+        table#report-header.table > thead > tr > th {
             text-align: right;
         }
 

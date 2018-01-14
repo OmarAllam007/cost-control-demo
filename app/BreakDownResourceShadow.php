@@ -35,6 +35,8 @@ class BreakDownResourceShadow extends Model
 
     public $update_cost = false;
 
+    public $ignore_cost = false;
+
     function scopeByRawData(Builder $query, $row)
     {
         return $query->where('code', trim($row[0]))
@@ -138,8 +140,10 @@ class BreakDownResourceShadow extends Model
             return $this->attributes['curr_qty'];
         }
 
-        if (isset($this->cost->curr_qty) && $this->cost->period_id == $period_id) {
-            return $this->cost->curr_qty;
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->curr_qty) && $this->cost->period_id == $period_id) {
+                return $this->cost->curr_qty;
+            }
         }
 
         if (isset($this->calculated['curr_qty'])) {
@@ -156,8 +160,11 @@ class BreakDownResourceShadow extends Model
         if (!empty($this->attributes['curr_cost'])) {
             return $this->attributes['curr_cost'];
         }
-        if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
-            return $this->cost->curr_cost;
+
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
+                return $this->cost->curr_cost;
+            }
         }
 
         if (isset($this->calculated['curr_cost'])) {
@@ -174,8 +181,10 @@ class BreakDownResourceShadow extends Model
             return $this->attributes['curr_unit_price'];
         }
 
-        if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-            return $this->cost->curr_unit_price;
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
+                return $this->cost->curr_unit_price;
+            }
         }
 
         if ($this->curr_qty) {
@@ -192,8 +201,10 @@ class BreakDownResourceShadow extends Model
             return $this->attributes['prev_qty'];
         }
 
-        if (isset($this->cost->prev_qty) && $this->cost->period_id == $period_id) {
-            return $this->cost->prev_qty;
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->prev_qty) && $this->cost->period_id == $period_id) {
+                return $this->cost->prev_qty;
+            }
         }
 
         if (isset($this->calculated['prev_qty'])) {
@@ -213,8 +224,10 @@ class BreakDownResourceShadow extends Model
         }
 
         $period_id = $this->getCalculationPeriod()->id;
-        if (isset($this->cost->prev_cost) && $this->cost->period_id == $period_id) {
-            return $this->cost->prev_cost;
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->prev_cost) && $this->cost->period_id == $period_id) {
+                return $this->cost->prev_cost;
+            }
         }
 
         if (isset($this->calculated['prev_cost'])) {
@@ -232,8 +245,10 @@ class BreakDownResourceShadow extends Model
             return $this->attributes['prev_unit_price'];
         }
 
-        if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-            return $this->cost->prev_unit_price;
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
+                return $this->cost->prev_unit_price;
+            }
         }
 
         if ($this->prev_qty) {

@@ -167,6 +167,7 @@ class BreakdownResource extends Model
         }
 
         $resourceQty = $this->resource_qty;
+
         if ($this->productivity) {
             $reductionFactor = $this->project_productivity->after_reduction;
             if (!$reductionFactor) {
@@ -176,7 +177,7 @@ class BreakdownResource extends Model
             $result = $resourceQty * $this->labor_count / $reductionFactor;
             return $result > 0.25 ? round($result + 0.05, 1) : 0.25;
         } else {
-            return $resourceQty * (1 + ($this->resource_waste / 100));
+            return $resourceQty * (1 + ($this->resource->waste / 100));
         }
     }
 

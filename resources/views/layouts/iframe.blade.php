@@ -18,7 +18,6 @@
 <script src="{{asset('/js/bootstrap.js')}}"></script>
 @yield('javascript')
 
-
 @if (\Request::has('reload'))
     <script>
         if (window.parent != window) {

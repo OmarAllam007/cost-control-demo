@@ -36,7 +36,7 @@ class QtySurveyChecker
         $this->boqs = $this->surveys->map(function($survey) {
             $boq = Boq::forQs($survey)->first();
             $survey->boq_id = $boq->id;
-            $survey->boq = $boq;
+//            $survey->boq = $boq;
 
             return $survey;
         })->groupBy('boq_id')->reject(function(Collection $group)  {

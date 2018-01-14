@@ -61,7 +61,7 @@
     </div>
 
 
-    <form action="{{route('template-resource.update', [$project, $template_resource])}}" method="post">
+    <form action="{{route('template-resource.destroy', [$project, $template_resource])}}" method="post">
         {{csrf_field()}}
         {{method_field('delete')}}
 
@@ -152,12 +152,12 @@
     <script>
         $(function () {
             const checkboxes = $('.select-breakdown');
-            $('#select-all').on('change', e => {
+            $('#select-all').on('click', e => {
                 e.preventDefault();
                 checkboxes.prop('checked', true);
             });
 
-            $('#remove-all').on('change', e => {
+            $('#remove-all').on('click', e => {
                 e.preventDefault();
                 checkboxes.prop('checked', false);
             });
