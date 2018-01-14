@@ -47,7 +47,7 @@
                             @foreach($roles[$role_id]->budget_reports as $report)
                                 <article class="checkbox">
                                     <label>
-                                        <input type="hidden" name="schedule[{{$role_id}}][users][{{$report->id}}]" value="0">
+                                        <input type="hidden" name="schedule[{{$role_id}}][reports][{{$report->id}}]" value="0">
                                         <input type="checkbox" value="{{$report->id}}"
                                                name="schedule[{{$role_id}}][reports][{{$report->id}}]"
                                                {{old("schedule.{$role_id}.reports.{$report->id}", 1)? 'checked' : ''}}>
