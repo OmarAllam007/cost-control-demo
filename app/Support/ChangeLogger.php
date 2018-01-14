@@ -59,11 +59,13 @@ class ChangeLogger
             $updated = [];
         } else if ($model->wasRecentlyCreated) {
             $updated = $model->getAttributes();
+            $original['descriptor'] = $model->descriptor;
         } else {
             $updated = $model->getDirty();
             foreach ($updated as $field => $value) {
                 $original[$field] = $model->getOriginal($field, '');
             }
+            $original['descriptor'] = $model->descriptor;
         }
 
         $this->changeRequest->changes()->create([

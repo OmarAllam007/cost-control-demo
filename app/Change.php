@@ -56,6 +56,6 @@ class Change extends Model
             return $this->original_data['descriptor'];
         }
 
-        return $this->subject->descriptor;
+        return $this->subject->descriptor ?? '';
     }
 }

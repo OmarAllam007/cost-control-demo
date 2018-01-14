@@ -42,6 +42,7 @@
                                     <strong>{{$change->simple_model_name}}</strong>:
                                     <small class="text-danger">{{$change->descriptor}}</small>
                                 </header>
+
                                 <ul>
                                     @if ($change->original)
                                         @foreach($change->original as $field => $value)
@@ -75,6 +76,10 @@
     <style>
         .pagination-top .pagination {
             margin-top: 0; margin-bottom: 0;
+        }
+
+        .form-group.flex {
+            margin-right: 1em;
         }
     </style>
 @endsection

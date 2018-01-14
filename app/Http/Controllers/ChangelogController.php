@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\ChangeLog;
 use App\Project;
+use App\ProjectUser;
+use App\User;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class ChangelogController extends Controller
@@ -18,8 +21,12 @@ class ChangelogController extends Controller
             $date = Carbon::now();
         }
 
-        $logs = ChangeLog::forProjectOnDate($project, $date)->paginate(25);
+        $user_id = request('user');
 
-        return view('changelog.show', compact('project', 'logs', 'date'));
+        $logs = ChangeLog::forProjectOnDate($project, $date, $user_id)->paginate(25);
+
+        $project_users = $project->getUsers();
+
+        return view('changelog.show', compact('project', 'logs', 'date', 'project_users', 'user_id'));
     }
 }
