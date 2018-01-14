@@ -110,8 +110,11 @@ class StdActivityResource extends Model
 //                    ->update($formatter->toArray());
             }
         }
+    }
 
-
+    function getDescriptorAttribute()
+    {
+        return $this->template->name . ' / ' . $this->resource->name . " ({$this->resource->resource_code})";
     }
 
 }

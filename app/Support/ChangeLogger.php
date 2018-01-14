@@ -48,14 +48,19 @@ class ChangeLogger
         }
     }
 
-    function record(Model $model)
+    function record(Model $model, $delete = false)
     {
         $this->initiateRequest();
 
-        $updated = $model->getDirty();
         $original = [];
-
-        if ($model->exists) {
+        if ($delete) {
+            $original = $model->getAttributes();
+            $original['descriptor'] = $model->descriptor;
+            $updated = [];
+        } else if ($model->wasRecentlyCreated) {
+            $updated = $model->getAttributes();
+        } else {
+            $updated = $model->getDirty();
             foreach ($updated as $field => $value) {
                 $original[$field] = $model->getOriginal($field, '');
             }
@@ -65,7 +70,7 @@ class ChangeLogger
             'model' => get_class($model),
             'original' => $original,
             'updated' => $updated,
-            'model_id' => $model->id ?: 0,
+            'model_id' => $model->id,
         ]);
     }
 

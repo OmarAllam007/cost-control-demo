@@ -16,6 +16,8 @@ class BreakDownResourceObserver
     function creating(BreakdownResource $resource)
     {
         $resource->code = $resource->breakdown->wbs_level->code . $resource->breakdown->std_activity->id_partial;
+        $resource->project_id = $resource->breakdown->project_id;
+        $resource->wbs_id = $resource->breakdown->wbs_level_id;
     }
 
     function created(BreakdownResource $resource)

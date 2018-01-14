@@ -94,3 +94,12 @@ if (! function_exists('rescue')) {
         }
     }
 }
+
+function translate_method($method)
+{
+    static $methods = [
+        'POST' => 'created', 'PATCH' => 'updated', 'DELETE' => 'deleted'
+    ];
+
+    return $methods[$method] ?? 'updated';
+}

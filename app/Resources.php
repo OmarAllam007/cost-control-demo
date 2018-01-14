@@ -213,4 +213,8 @@ class Resources extends Model
         return strpos(strtolower($this->types->root->name), 'material') !== false;
     }
 
+    function getDescriptorAttribute()
+    {
+        return $this->name . " ($this->resource_code)";
+    }
 }

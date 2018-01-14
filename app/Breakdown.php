@@ -152,6 +152,12 @@ class Breakdown extends Model
         if (isset($boq->dry_ur)) {
             return $boq->dry_ur;
         }
+
         return 0;
+    }
+
+    function getDescriptorAttribute()
+    {
+        return $this->wbs_level->path . ' / ' . $this->std_activity->name;
     }
 }

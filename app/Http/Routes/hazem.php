@@ -242,6 +242,7 @@ Route::get('project/{project}/roles', 'ProjectRolesController@edit')->name('proj
 Route::put('project/{project}/roles', 'ProjectRolesController@update');
 
 
+Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
 Route::get('/project/{project}/communication/budget', 'BudgetCommunicationController@create')->name('communication.budget');
 Route::post('/project/{project}/communication/budget', 'BudgetCommunicationController@store');
 
