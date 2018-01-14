@@ -22,7 +22,7 @@ class ChangeLog extends Model
         return $this->belongsTo(User::class);
     }
 
-    function scopeForProjectOnDate(Builder $query, Project $project, Carbon $date)
+    function scopeForProjectOnDate(Builder $query, Project $project, Carbon $date, $user = '')
     {
         $start = $date->startOfDay()->format('Y-m-d H:i:s');
         $end = $date->endOfDay()->format('Y-m-d H:i:s');;
@@ -31,6 +31,10 @@ class ChangeLog extends Model
               select change_log_id from changes where model = 'App\\\\BreakDownResourceShadow' and model_id in (
                 select id from break_down_resource_shadows where project_id = {$project->id}
               ) and created_at >= '$start' and created_at <= '$end')");
+
+        if ($user) {
+            $query->where('user_id', $user);
+        }
 
         return $query->with('changes');
     }

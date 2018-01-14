@@ -268,4 +268,21 @@ class Project extends Model
     {
         return $this->hasMany(ProjectRole::class);
     }
+
+    public function getUsers()
+    {
+        /** @var Collection $project_users */
+        $project_users = User::whereIn('id', ProjectUser::where('project_id', $this->id)->pluck('user_id'))
+            ->get();
+
+        if ($this->owner) {
+            $project_users->push($this->owner);
+        }
+
+        if ($this->cost_owner) {
+            $project_users->push($this->owner);
+        }
+
+        return $project_users->sortBy('name');
+    }
 }
