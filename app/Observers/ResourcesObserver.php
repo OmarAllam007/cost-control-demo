@@ -52,7 +52,7 @@ class ResourcesObserver
     {
         $lastResourceInType = Resources::where('resource_type_id', $resource->resource_type_id)
             ->whereNull('project_id')->whereNull('resource_id')
-            ->max('resource_code');
+            ->orderBy('id', 'DESC')->value('resource_code');
 
         if ($lastResourceInType) {
             $tokens = explode('.', $lastResourceInType);
