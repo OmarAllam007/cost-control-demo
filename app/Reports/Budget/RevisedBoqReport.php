@@ -46,13 +46,16 @@ class RevisedBoqReport
         });
 
         $this->revised_boqs = collect(
-            \DB::table('break_down_resource_shadows as sh')
-                ->where('sh.project_id', $this->project->id)
-                ->join('boqs as boq', 'sh.boq_id', '=', 'boq.id')
-                ->selectRaw('boq_wbs_id as wbs_level_id, sh.cost_account, eng_qty, boq.price_ur, count(DISTINCT sh.wbs_id) as rep')
-                ->groupBy('sh.boq_wbs_id', 'sh.cost_account', 'eng_qty', 'boq.price_ur')
+            \DB::table('qty_surveys as qs')
+                ->where('qs.project_id', $this->project->id)
+                ->join('boqs as boq', function (JoinClause $on) {
+                    $on->on('qs.boq_id', '=', 'boq.id');
+                    $on->on('qs.cost_account', '=', 'boq.cost_account');
+                })
+                ->selectRaw('boq.wbs_id as boq_wbs_id, boq.cost_account, eng_qty, boq.price_ur, count(DISTINCT qs.wbs_level_id)')
+                ->groupBy('boq.wbs_id', 'boq.cost_account', 'eng_qty', 'boq.price_ur')
                 ->get())
-            ->groupBy('wbs_level_id')
+            ->groupBy('boq_wbs_id')
             ->map(function (Collection $group) {
                 return $group->keyBy(function($boq) {
                     return trim($boq->cost_account);
@@ -76,13 +79,17 @@ class RevisedBoqReport
                     ->get($cost_account->wbs_id, collect())->get(trim($cost_account->cost_account));
                 
                 if ($revised) {
-                    $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur * $revised->rep;
+                    $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur; // * $revised->rep;
                 } else {
                     $cost_account->revised_boq = 0;
                 }
 
                 return $cost_account;
+            })->reject(function($cost_account) {
+                return $cost_account->revised_boq == 0 && $cost_account->original_boq == 0;
             });
+
+
 
             $level->original_boq = $level->cost_accounts->sum('original_boq') + $level->subtree->sum('original_boq');
             $level->revised_boq = $level->cost_accounts->sum('revised_boq') + $level->subtree->sum('revised_boq');
