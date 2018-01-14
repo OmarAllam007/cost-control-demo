@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Change extends Model
 {
     const MODEL_ALIASES = [
-        'break_down_resource_shadow' => 'Breakdown Resource'
+        'break_down_resource_shadow' => 'Breakdown Resource',
+        'breakdown_resource' => 'Breakdown Resource',
     ];
 
     protected $fillable = ['model', 'original', 'updated', 'model_id'];
@@ -22,9 +23,6 @@ class Change extends Model
     function hasChangedFields()
     {
 //        dd(array_filter($this->updated), array_filter($this->original_data));
-        if ($this->simple_model_name == 'BreakdownResource') {
-            return false;
-        }
         return array_filter($this->updated) || array_filter($this->original_data);
     }
 

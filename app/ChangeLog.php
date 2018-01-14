@@ -37,6 +37,15 @@ class ChangeLog extends Model
 
     function getBaseModelNameAttribute()
     {
-        return $this->changes()->first()->simple_model_name;
+        return $this->first_change->simple_model_name;
+    }
+
+    function getFirstChangeAttribute()
+    {
+        if ($this->cached_first_change) {
+            return $this->cached_first_change;
+        }
+
+        return $this->changes()->first();
     }
 }

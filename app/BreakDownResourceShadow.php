@@ -287,4 +287,9 @@ class BreakDownResourceShadow extends Model
 
         return floatval($this->progress);
     }
+
+    function getDescriptorAttribute()
+    {
+        return $this->wbs->path . ' / ' . $this->activity . ' / ' . $this->resource_name;
+    }
 }

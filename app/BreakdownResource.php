@@ -276,4 +276,9 @@ class BreakdownResource extends Model
         $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $this->id]);
         $shadow->update($formatter->toArray());
     }
+
+    function getDescriptorAttribute()
+    {
+        return $this->shadow->descriptor;
+    }
 }

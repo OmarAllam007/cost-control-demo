@@ -9,4 +9,10 @@
             </span>
         </article>
     </section>
+
+    <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <div class="text-right pagination-">
+            {{$logs->appends('date', $date->format('Y-m-d'))->links()}}
+        </div>
+    </div>
 </form>
