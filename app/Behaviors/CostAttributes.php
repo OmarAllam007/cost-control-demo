@@ -201,22 +201,23 @@ trait CostAttributes
         // Find current data for the resource
         $current = ActualResources::where($conditions)
             ->where('period_id', $this->getCalculationPeriod()->id)
-            ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+            ->selectRaw('sum(cost)/sum(qty) as unit_price')->value('unit_price');
 
-        if ($current->unit_price !== null) {
-            $remainingUnitPrice = $current->unit_price;
+        if ($current !== null) {
+            $remainingUnitPrice = $current;
         } else {
             // If no current data, find to date data for the resource
             $todate = ActualResources::where($conditions)
                 ->where('period_id', '<=', $this->getCalculationPeriod()->id)
-                ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+                ->selectRaw('sum(cost)/sum(qty) as unit_price')->value('unit_price');
 
-            if ($todate->unit_price !== null) {
-                $remainingUnitPrice = $todate->unit_price;
+
+            if ($todate !== null) {
+                $remainingUnitPrice = $todate;
             } else {
                 // If the resource didn't start use budget unit rate
-                $budgetResource = Resources::find($this->resource_id);
-                $remainingUnitPrice = $budgetResource->rate;
+//                $budgetResource = Resources::find($this->resource_id);
+                $remainingUnitPrice = $this->unit_price;
             }
         }
         
