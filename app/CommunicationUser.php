@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommunicationUser extends Model
 {
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id', 'role_id'];
 
     protected $dates = ['created_at', 'updated_at', 'sent_at'];
 
