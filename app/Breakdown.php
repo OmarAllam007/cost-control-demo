@@ -72,6 +72,19 @@ class Breakdown extends Model
         return $this->cached_qty_survey;
     }
 
+    function getBoqAttribute()
+    {
+        if (!$this->cached_boq) {
+            $this->cached_boq = Boq::where('cost_account', $this->cost_account)->where('wbs_level_id', $this->wbs_level_id)->first();
+            if (!$this->cached_boq) {
+                $parents = $this->wbs_level->getParentIds();
+                $this->cached_boq = Survey::where('cost_account', $this->cost_account)->whereIn('wbs_level_id', $parents)->first();
+            }
+        }
+
+        return $this->cached_boq;
+    }
+
     /*function syncResources($resources)
     {
         foreach ($resources as $res) {

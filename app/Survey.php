@@ -21,12 +21,12 @@ use Illuminate\Support\Collection;
  */
 class Survey extends Model
 {
-    use CachesQueries;
+//    use CachesQueries;
     use HasChangeLog, RecordsUser;
 
     protected $table = 'qty_surveys';
 
-    protected $fillable = ['unit_id', 'budget_qty', 'eng_qty', 'cost_account', 'category_id', 'description', 'wbs_level_id', 'project_id', 'qs_code', 'item_code'];
+    protected $fillable = ['unit_id', 'budget_qty', 'eng_qty', 'cost_account', 'category_id', 'description', 'wbs_level_id', 'project_id', 'qs_code', 'item_code', 'boq_id', 'discipline'];
 
     protected $dates = ['created_at', 'updated_at'];
 
