@@ -30,8 +30,8 @@ trait CopyToProject
 
         $new_wbs_id = \DB::table('wbs_levels')->insertGetId($attributes);
 
-        \DB::insert("insert into boqs(wbs_id, item_code, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, created_at, updated_at, division_id, code, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, created_by, updated_by) 
-  select $new_wbs_id as wbs_id, item_code, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, now() as created_at, now() as updated_at, division_id, code, item_code, cost_account, kcc_qty, subcon, materials, manpower, $project_id as project_id, $user_id, $user_id
+        \DB::insert("insert into boqs(wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, created_at, updated_at, division_id, code, item_code, cost_account, kcc_qty, subcon, materials, manpower, project_id, created_by, updated_by) 
+  select $new_wbs_id as wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, now() as created_at, now() as updated_at, division_id, code, item_code, cost_account, kcc_qty, subcon, materials, manpower, $project_id as project_id, $user_id, $user_id
   from boqs where wbs_id = {$this->id}");
 
         \DB::insert("insert into qty_surveys(cost_account, item_code, description, unit_id, budget_qty, eng_qty, deleted_at, created_at, updated_at, wbs_level_id, project_id, code, discipline, created_by, updated_by)
