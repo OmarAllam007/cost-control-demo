@@ -78,10 +78,6 @@ class RevisedBoqReport
                 $revised = $cost_account->revised_boq = $this->revised_boqs
                     ->get($cost_account->wbs_id, collect())->get(trim($cost_account->cost_account));
 
-                if ($cost_account->cost_account == '3.02.02') {
-//                    dd($cost_account);
-                }
-
                 if ($revised) {
                     $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur;
                 } else {
