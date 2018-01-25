@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Export;
 
+use App\ActualResources;
 use App\Boq;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
@@ -84,7 +85,12 @@ class ExportCostShadow extends Job
                 $query = BreakDownResourceShadow::where('project_id', $this->project->id);
             }
         } else {
-            $query = CostShadow::joinShadow(null, $period);
+            $subquery = ActualResources::where('project_id', $this->project->id)
+                ->where('period_id', $this->period->id)->select('breakdown_resource_id');
+
+            $query = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->whereRaw('breakdown_resource_id in (' . $subquery->toSql() . ')')
+                ->mergeBindings($subquery->getQuery());
         }
 
         /** @var $query Builder */
