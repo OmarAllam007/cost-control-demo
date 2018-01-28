@@ -14,6 +14,8 @@ class CreateBreakdownResourcesTable extends Migration
     {
         Schema::create('breakdown_resources', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('project_id');
+            $table->integer('wbs_id');
             $table->integer('breakdown_id');
             $table->integer('std_activity_resource_id');
             $table->double('budget_qty',12,2);

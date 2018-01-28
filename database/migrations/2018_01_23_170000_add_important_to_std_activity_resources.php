@@ -14,6 +14,8 @@ class AddImportantToStdActivityResources extends Migration
     
     public function down()
     {
-        $table->dropColumn('important');
+        Schema::table('std_activity_resources', function (Blueprint $table) {
+            $table->dropColumn('important');
+        });
     }
 }
