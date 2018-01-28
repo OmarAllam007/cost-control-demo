@@ -80,8 +80,12 @@ class RevisedBoqReport
 
                 if ($revised) {
                     $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur;
+                    $cost_account->budget_qty = $revised->eng_qty;
+                    $cost_account->price_ur = $revised->price_ur;
                 } else {
                     $cost_account->revised_boq = 0;
+                    $cost_account->budget_qty = 0;
+                    $cost_account->price_ur = 0;
                 }
 
                 return $cost_account;

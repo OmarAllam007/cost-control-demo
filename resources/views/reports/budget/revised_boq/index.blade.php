@@ -20,14 +20,17 @@
     <table class="table table-condensed table-bordered" id="report-head">
         <thead>
         <tr class="bg-primary">
-            <th class="col-sm-5">Description</th>
-            <th class="col-sm-3">Cost Account</th>
+            <th class="col-sm-4">Description</th>
+            <th class="col-sm-2">Cost Account</th>
+            <th class="col-sm-1">Price U.R</th>
             <th class="col-sm-2">Original Boq</th>
+            <th class="col-sm-1">Budget Qty</th>
             <th class="col-sm-2">Revised BOQ</th>
         </tr>
         <tr class="info">
-            <th colspan="2" class="text-right">Total</th>
+            <th colspan="3" class="text-right">Total</th>
             <th class="col-sm-2">{{number_format($tree->sum('original_boq'), 2)}}</th>
+            <th class="col-sm-1">&nbsp;</th>
             <th class="col-sm-2">{{number_format($tree->sum('revised_boq'), 2)}}</th>
         </tr>
         </thead>
