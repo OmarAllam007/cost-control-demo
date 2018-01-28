@@ -98,6 +98,10 @@ Route::group(['prefix' => 'survey'], function () {
 });
 
 Route::group(['prefix' => 'breakdown-template'], function () {
+    Route::get('export', 'BreakdownTemplateExportModifyController@index')->name('breakdown-template.export');
+    Route::get('modify', 'BreakdownTemplateExportModifyController@edit')->name('breakdown-template.modify');
+    Route::put('modify', 'BreakdownTemplateExportModifyController@update');
+
     Route::post('filters', ['as' => 'breakdown-template.filters', 'uses' => 'BreakdownTemplateController@filters']);
 
     Route::get('import', ['as' => 'breakdown-template.import', 'uses' => 'BreakdownTemplateController@import']);
