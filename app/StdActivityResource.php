@@ -15,11 +15,15 @@ class StdActivityResource extends Model
     use SoftDeletes, CachesQueries;
     use HasChangeLog, RecordsUser;
 
-    protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks', 'code'];
+    protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks', 'code', 'important'];
 
     protected $dates = ['created_at', 'updated_at'];
 
     public $old_equation;
+
+    protected $casts = [
+        'boolean' => ['important']
+    ];
 
     public function template()
     {
