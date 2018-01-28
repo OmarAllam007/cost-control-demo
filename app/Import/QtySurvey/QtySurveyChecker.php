@@ -59,10 +59,14 @@ class QtySurveyChecker
 
             // Create equivalent QS
             Survey::create([
-                'wbs_level_id' => $survey->boq->wbs_id, 'cost-account' => $survey->boq->cost_account,
+                'project_id' => $survey->project_id, 'wbs_level_id' => $survey->boq->wbs_id, 'cost_account' => $survey->boq->cost_account,
                 'description' => $survey->boq->description, 'boq_id' => $survey->boq_id, 'unit_id' => $survey->unit,
-                'budget_qty' => $survey->budget_qty, 'eng_qty' => $survey->eng_qty
+                'budget_qty' => $survey->budget_qty, 'eng_qty' => $survey->eng_qty, 'item_code' => $survey->boq->item_code,
+                'qs_code' => ''
             ]);
+
+
+            ++$this->counter;
 
             return true;
         });
@@ -109,7 +113,7 @@ class QtySurveyChecker
             return view('survey.import-failed', ['success' => $this->counter, 'project' => $this->project, 'failed' => $failed]);
         }
 
-        flash("{$this->counter} Qty survey items have been imported");
+        flash("{$this->counter} Qty survey items have been imported", 'info');
         if ($iframe) {
             return \Redirect::to('/blank?reload=quantities');
         }
