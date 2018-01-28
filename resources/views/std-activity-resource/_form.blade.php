@@ -59,6 +59,12 @@
             {!! $errors->first('remarks', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group checkbox">
+            <label>
+                {{Form::checkbox('important', 1)}} Mark resource as important
+            </label>
+        </div>
+
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>
