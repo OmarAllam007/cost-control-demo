@@ -26,7 +26,7 @@
             $('#wbs-tree').on('click', '.open-level', function(e) {
                 e.preventDefault();
 
-                const target = $(this).attr('href');
+                const target = $(this).attr( 'href');
                 $(target).toggleClass('in');
             });
         });
