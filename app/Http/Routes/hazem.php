@@ -237,3 +237,8 @@ Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('q
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
 Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
+
+Route::get('project/{project}/rollup', 'Rollup\RollupController@create')->name('project.rollup');
+Route::post('project/{project}/rollup', 'Rollup\RollupController@store');
+Route::get('project/{project}/rollup/edit', 'Rollup\RollupController@edit')->name('project.rollup.edit');
+Route::patch('project/{project}/rollup', 'Rollup\RollupController@update')->name('project.rollup.update');
