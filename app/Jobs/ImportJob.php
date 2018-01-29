@@ -27,7 +27,7 @@ class ImportJob extends Job
         /** @var \PHPExcel_Cell $cell */
         /** @var \PHPExcel_Worksheet_CellIterator $cells */
         foreach ($cells as $cell) {
-            $data[] = $cell->getFormattedValue()?: $cell->getValue()?: '';
+            $data[] = $cell->getValue();
         }
         return array_map('trim', $data);
     }
