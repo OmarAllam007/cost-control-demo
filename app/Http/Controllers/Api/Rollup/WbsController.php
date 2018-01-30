@@ -14,6 +14,9 @@ class WbsController extends Controller
     {
         $this->authorize('cost_owner', $wbsLevel->project);
 
-        return BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)->pluck('activity', 'activity_id');
+        $activities = BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
+            ->selectRaw('DISTINCT activity, activity_id, code')->get();
+
+        return $activities;
     }
 }

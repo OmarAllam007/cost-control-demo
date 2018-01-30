@@ -11,24 +11,16 @@
 @endsection
 
 @section('body')
-    <form action="" method="post">
-        <ul class="wbs-tree list-unstyled" id="wbs-tree">
-            @foreach($wbsTree as $level)
-                @include('rollup.wbs-recursive', ['level' => $level, 'depth' => 0])
-            @endforeach
-        </ul>
+    <form action="" method="post" id="CreateRollupForm">
+        <wbs-tree :initial="{{$wbsTree}}" inline-template>
+            <ul class="wbs-tree list-unstyled" id="wbs-tree">
+                <wbs-level :initial="level" v-for="level in levels" depth="0"></wbs-level>
+            </ul>
+        </wbs-tree>
+
     </form>
 @endsection
 
 @section('javascript')
-    <script>
-        jQuery(function($) {
-            $('#wbs-tree').on('click', '.open-level', function(e) {
-                e.preventDefault();
-
-                const target = $(this).attr( 'href');
-                $(target).toggleClass('in');
-            });
-        });
-    </script>
+    <script src="/js/rollup/create.js"></script>
 @endsection

@@ -1,5 +1,5 @@
 var elixir = require('laravel-elixir');
-
+require('laravel-elixir-vue');
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
@@ -13,6 +13,7 @@ var elixir = require('laravel-elixir');
 
 elixir(function (mix) {
     mix.sass('app.scss');
+    mix.webpack('rollup/create.js', 'public/js/rollup/create.js');
     // mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.copy('node_modules/c3/c3.min.js', 'public/js/c3.min.js');
