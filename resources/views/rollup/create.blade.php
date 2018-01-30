@@ -7,6 +7,10 @@
         <h2 class="flex">
             {{$project->name}} &mdash; Resource Rollup
         </h2>
+
+        <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-sm">
+            <i class="fa fa-chevron-left"></i> Back to project
+        </a>
     </div>
 @endsection
 
@@ -18,6 +22,9 @@
             </ul>
         </wbs-tree>
 
+        <div class="form-group">
+            <button class="btn btn-primary">Next <i class="fa fa-chevron-right"></i></button>
+        </div>
     </form>
 @endsection
 

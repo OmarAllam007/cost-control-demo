@@ -12,11 +12,11 @@
 
         <ul v-if="level.children.length" :class="{'collapse' : this.depth, 'in': show_children}">
             <wbs-level :initial="sublevel" v-for="sublevel in level.children" :depth="depth + 1" :name="sublevel.id"></wbs-level>
-            <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>
 
-        <ul  v-if="activities.length" :class="{'collapse' : true, 'in': show_children}">
+        <ul :class="{'collapse' : true, 'in': show_children}">
             <activity v-for="activity in activities" :initial="activity" :depth="depth + 1"></activity>
+            <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>
     </li>
 </template>

@@ -8,13 +8,15 @@
             </a>
         </div>
 
-        <ul  v-if="cost_accounts.length" :class="{'collapse' : true, 'in': show_children}">
+        <ul :class="{'collapse' : true, 'in': show_children}">
             <li v-for="cost_account in cost_accounts">
                 <label>
                     <input type="checkbox" :value="cost_account.id" :name="`cost_account[${cost_account.id}]`">
-                    {{cost_account.description}} <small>({{cost_account.code}})</small>
+                    {{cost_account.code}} &mdash; <small>{{cost_account.description}}</small>
                 </label>
             </li>
+
+            <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>
     </li>
 </template>
