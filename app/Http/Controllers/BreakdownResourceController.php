@@ -71,7 +71,7 @@ class BreakdownResourceController extends Controller
         $breakdown_resource->breakdown->fill($request->only(['cost_account', 'wbs_level_id']));
         $breakdown_resource->breakdown->save();
 
-        $breakdown_resource->fill($request->only('labor_count', 'productivity_id', 'resource_id', 'equation'));
+        $breakdown_resource->fill($request->only('labor_count', 'productivity_id', 'resource_id', 'equation', 'important'));
         $breakdown_resource->save();
 
         $breakdown_resource->breakdown->resources->each(function(BreakdownResource $resource){

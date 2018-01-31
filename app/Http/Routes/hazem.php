@@ -98,6 +98,10 @@ Route::group(['prefix' => 'survey'], function () {
 });
 
 Route::group(['prefix' => 'breakdown-template'], function () {
+    Route::get('export', 'BreakdownTemplateExportModifyController@index')->name('breakdown-template.export');
+    Route::get('modify', 'BreakdownTemplateExportModifyController@edit')->name('breakdown-template.modify');
+    Route::put('modify', 'BreakdownTemplateExportModifyController@update');
+
     Route::post('filters', ['as' => 'breakdown-template.filters', 'uses' => 'BreakdownTemplateController@filters']);
 
     Route::get('import', ['as' => 'breakdown-template.import', 'uses' => 'BreakdownTemplateController@import']);
@@ -228,6 +232,9 @@ Route::get('project/{project}/modify-productivity', 'ProjectProductivityControll
 Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
 Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
 
+Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
+Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
+
 Route::get('project/{project}/threshold', 'CostReportsController@threshold')->name('threshold-report');
 
 Route::get('/project/{project}/cost-man-days', 'CostManDaysController@create')->name('cost-man-days.import');
@@ -241,7 +248,6 @@ Route::resource('roles', 'RolesController', ['parameters' => 'singular']);
 Route::get('project/{project}/roles', 'ProjectRolesController@edit')->name('project.roles');
 Route::put('project/{project}/roles', 'ProjectRolesController@update');
 
-
 Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
 Route::get('/project/{project}/communication/budget', 'BudgetCommunicationController@create')->name('communication.budget');
 Route::post('/project/{project}/communication/budget', 'BudgetCommunicationController@store');
@@ -252,3 +258,12 @@ Route::post('/project/{project}/communication/cost', 'CostCommunicationControlle
 Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);
 Route::get('/rollup/create/{project}/{wbsLevel}/{stdActivity}', 'RollupController@create')->name('rollup.create');
 Route::post('/rollup/store/{key}', 'RollupController@store')->name('rollup.store');
+
+Route::get('project/{project}/rollup', 'Rollup\RollupController@create')->name('project.rollup');
+Route::post('project/{project}/rollup', 'Rollup\RollupController@store');
+Route::get('project/{project}/rollup/edit', 'Rollup\RollupController@edit')->name('project.rollup.edit');
+Route::patch('project/{project}/rollup', 'Rollup\RollupController@update')->name('project.rollup.update');
+Route::group(['prefix' => '/api/rollup/'], function () {
+    Route::get('wbs/{wbsLevel}', 'Api\Rollup\WbsController@show');
+    Route::get('activities/{wbsLevel}/{activity_id}', 'Api\Rollup\ActivityController@show');
+});

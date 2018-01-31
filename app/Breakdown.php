@@ -17,6 +17,9 @@ class Breakdown extends Model
     use HasChangeLog, RecordsUser;
 
     protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code', 'qs_id', 'boq_id', 'qs_code'];
+
+    protected $dates = ['created_at', 'updated_at', 'rolled_up_at'];
+
     protected $cached_qty_survey;
 
     function resources()

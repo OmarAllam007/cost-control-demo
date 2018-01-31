@@ -10,9 +10,17 @@
                 <i class="fa fa-plus"></i> Add template
             </a>
 
-            <a href="{{route('breakdown-template.import')}}" class="btn btn-sm btn-success">
-                <i class="fa fa-cloud-upload"></i> Import
-            </a>
+            <div class="dropdown" style="display: inline-block;">
+                <a href="#" data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">Import / Export <span class="caret"></span></a>
+
+                <ul class="dropdown-menu">
+                    <li><a href="{{route('breakdown-template.export')}}"><i class="fa fa-cloud-download"></i> Export</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{route('breakdown-template.import')}}"><i class="fa fa-cloud-upload"></i> Import</a></li>
+                    <li><a href="{{route('breakdown-template.modify')}}"><i class="fa fa-cloud-upload"></i> Modify</a></li>
+                </ul>
+            </div>
+
             @can('wipe')
                 <a href="#DeleteAlert" data-toggle="modal" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete
                     All</a>
