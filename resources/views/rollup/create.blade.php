@@ -16,6 +16,8 @@
 
 @section('body')
     <form action="" method="post" id="CreateRollupForm">
+        {{csrf_field()}}
+
         <wbs-tree :initial="{{$wbsTree}}" inline-template>
             <ul class="wbs-tree list-unstyled" id="wbs-tree">
                 <wbs-level :initial="level" v-for="level in levels" depth="0"></wbs-level>

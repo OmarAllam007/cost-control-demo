@@ -9,8 +9,8 @@ class AddRollupToBreakdownResourceShadows extends Migration
     public function up()
     {
         Schema::table('break_down_resource_shadows', function (Blueprint $table) {
-            $table->boolean('show_in_budget')->nullable()->default(0);
-            $table->boolean('show_in_cost')->nullable()->default(0);
+            $table->boolean('show_in_budget')->nullable()->default(1);
+            $table->boolean('show_in_cost')->nullable()->default(1);
             $table->dateTime('rolled_up_at')->nullable();
             $table->boolean('is_rollup')->nullable()->default(0);
             $table->unsignedInteger('rollup_resource_id')->nullable();

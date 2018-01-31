@@ -33,6 +33,8 @@ class BreakDownResourceShadow extends Model
         'progress', 'status', 'boq_id', 'boq_wbs_id'
     ];
 
+    protected $casts = ['boolean' => ['show_in_cost', 'show_in_budget']];
+
     public $update_cost = false;
 
     public $ignore_cost = false;
@@ -306,5 +308,15 @@ class BreakDownResourceShadow extends Model
     function getDescriptorAttribute()
     {
         return $this->wbs->path . ' / ' . $this->activity . ' / ' . $this->resource_name;
+    }
+
+    function scopeCostOnly($query)
+    {
+        $query->where('show_in_cost', true);
+    }
+
+    function scopeBudgetOnly($query)
+    {
+        $query->where('show_in_budget', true);
     }
 }

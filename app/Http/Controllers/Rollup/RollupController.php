@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rollup;
 
 use App\Http\Controllers\Controller;
 use App\Project;
+use App\Rollup\Actions\BreakdownRollup;
 use Illuminate\Http\Request;
 
 class RollupController extends Controller
@@ -20,10 +21,11 @@ class RollupController extends Controller
     {
         $this->authorize('cost_owner', $project);
 
-        $rollup = new BreakdownRollup($project, $request->get('cost_accounts', []));
+        $rollup = new BreakdownRollup($project, $request->get('cost_account', []));
         $status = $rollup->handle();
 
-        return \Redirect::route('rollup.edit', $project);
+        flash("$status Cost accounts have been rolled up", 'success');
+        return \Redirect::route('project.rollup.edit', $project);
     }
 
     function edit(Project $project)
@@ -40,6 +42,6 @@ class RollupController extends Controller
         $rollup = new ImportantResourcesRollup($project, $request->get('cost_accounts', []));
         $status = $rollup->handle();
 
-        return \Redirect::route('rollup.edit', $project);
+        return \Redirect::route('project.cost-control', $project);
     }
 }
