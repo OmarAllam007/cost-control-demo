@@ -47,14 +47,16 @@ class ExportBreakdownTemplates
             $this->sheet->fromArray([
                 $template->id,  // A
                 $resource->id,  // B
-                $template->name, // C
-                $resource->resource->resource_code, // D
-                $resource->resource->name, // E
-                $resource->productivity->csi_code ?? '',  // F
-                $resource->labor_count, // G
-                $resource->remarks, // H
-                $resource->equation, // I
-                $resource->important ? '*' : null // J
+                $template->activity->code, // C
+                $template->activity->name, // D
+                $template->name, // E
+                $resource->resource->resource_code, // F
+                $resource->resource->name, // G
+                $resource->productivity->csi_code ?? '',  // H
+                $resource->labor_count, // I
+                $resource->remarks, // J
+                $resource->equation, // K
+                $resource->important ? '*' : null // L
             ], null, "A{$this->counter}", true);
 
             ++$this->counter;
@@ -68,14 +70,16 @@ class ExportBreakdownTemplates
         $this->sheet->fromArray([
             'Template App Code', // A
             'Resource App Code',  // B
-            'Template Name',  // C
-            'Resource Code', // D
-            'Resource Name',  // E
-            'Productivity Ref', // F
-            'Labours Count',  // G
-            'Remarks', // H
-            'Equation', // I
-            'Important?' // J
+            'Std Activity Code',  // C
+            'Std Activity Name',  // D
+            'Template Name',  // D
+            'Resource Code', // E
+            'Resource Name',  // F
+            'Productivity Ref', // G
+            'Labours Count',  // H
+            'Remarks', // I
+            'Equation', // J
+            'Important?' // K
         ], null, "A{$this->counter}");
         ++$this->counter;
     }
