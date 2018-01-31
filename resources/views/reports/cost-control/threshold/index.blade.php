@@ -6,9 +6,10 @@
     <div class="display-flex">
         <h2 class="flex">{{ $project->name }} &mdash; Cost threshold report</h2>
         <div class="text-right">
-            <a href="?excel" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Excel</a>
-            <a href="?print" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
-            <a href="?print" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back to project</a>
+            @php $query = http_build_query(request()->all()) @endphp
+            <a href="?excel&{{$query}}" class="btn btn-sm btn-success"><i class="fa fa-cloud-download"></i> Excel</a>
+            <a href="?print&{{$query}}" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</a>
+            <a href="{{route('project.cost-control', $project)}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back to project</a>
         </div>
     </div>
 @endsection
