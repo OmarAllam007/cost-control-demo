@@ -16,6 +16,23 @@
                                class="btn btn-primary btn-sm in-iframe" title="Add Template">
                                 <i class="fa fa-plus"></i> Add Breakdown Template
                             </a>
+
+                            <div class="dropdown" style="display: inline-block">
+                                <a href="#" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">Import/Export <span class="caret"></span></a>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{route('breakdown-template.export')}}?project={{$project->id}}">
+                                            <i class="fa fa-cloud-download"></i> Export
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('breakdown-template.modify')}}?project={{$project->id}}">
+                                            <i class="fa fa-cloud-upload"></i> Import
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         @endcan
 
                         <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
