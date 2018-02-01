@@ -274,7 +274,9 @@ body#iframe {
   max-height: 500px;
   overflow: auto;
 
-
+  .table {
+    margin-left: 21px;
+  }
 
   li {
     list-style-type: none;

@@ -10,13 +10,18 @@ use App\Http\Controllers\Controller;
 
 class CostAccountController extends Controller
 {
-    function show(WbsLevel $wbsLevel, $activity_id, $cost_account)
+    function show(WbsLevel $wbsLevel, $breakdown_id)
     {
         $this->authorize('cost_owner', $wbsLevel->project);
 
         return BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
-            ->where('activity_id', $activity_id)
-            ->where('cost_account', $cost_account)
-            ->pluck('cost_account', 'breakdown_id');
+            ->where('breakdown_id', $breakdown_id)
+            ->where('is_rollup', false)->whereNull('rolled_up_at')
+            ->selectRaw('breakdown_resource_id as id, resource_code as code, resource_name as name, remarks')
+            ->selectRaw('budget_unit, important')
+            ->get()->map(function($resource) {
+                $resource->selected = false;
+                return $resource;
+            });
     }
 }

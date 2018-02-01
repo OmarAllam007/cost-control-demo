@@ -10949,6 +10949,10 @@ body#iframe .container-fluid {
   overflow: auto;
 }
 
+.wbs-tree .table {
+  margin-left: 21px;
+}
+
 .wbs-tree li {
   list-style-type: none;
   position: relative;
