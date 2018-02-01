@@ -47,14 +47,15 @@ class ExportBreakdownTemplates
             $this->sheet->fromArray([
                 $template->id,  // A
                 $resource->id,  // B
-                $template->name, // C
-                $resource->resource->resource_code, // D
-                $resource->resource->name, // E
-                $resource->productivity->csi_code ?? '',  // F
-                $resource->labor_count, // G
-                $resource->remarks, // H
-                $resource->equation, // I
-                $resource->important ? '*' : null // J
+                $template->code, // C
+                $template->name, // D
+                $resource->resource->resource_code, // E
+                $resource->resource->name, // F
+                $resource->productivity->csi_code ?? '',  // G
+                $resource->labor_count, // H
+                $resource->remarks, // I
+                $resource->equation, // J
+                $resource->important ? '*' : null // K
             ], null, "A{$this->counter}", true);
 
             ++$this->counter;
