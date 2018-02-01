@@ -49,14 +49,15 @@ class ExportBreakdownTemplates
                 $resource->id,  // B
                 $template->activity->code, // C
                 $template->activity->name, // D
-                $template->name, // E
-                $resource->resource->resource_code, // F
-                $resource->resource->name, // G
-                $resource->productivity->csi_code ?? '',  // H
-                $resource->labor_count, // I
-                $resource->remarks, // J
-                $resource->equation, // K
-                $resource->important ? '*' : null // L
+                $template->code, // E
+                $template->name, // F
+                $resource->resource->resource_code, // G
+                $resource->resource->name, // H
+                $resource->productivity->csi_code ?? '',  // I
+                $resource->labor_count, // J
+                $resource->remarks, // K
+                $resource->equation, // L
+                $resource->important ? '*' : null // M
             ], null, "A{$this->counter}", true);
 
             ++$this->counter;
@@ -72,14 +73,15 @@ class ExportBreakdownTemplates
             'Resource App Code',  // B
             'Std Activity Code',  // C
             'Std Activity Name',  // D
-            'Template Name',  // D
-            'Resource Code', // E
-            'Resource Name',  // F
-            'Productivity Ref', // G
-            'Labours Count',  // H
-            'Remarks', // I
-            'Equation', // J
-            'Important?' // K
+            'Template Code', // E
+            'Template Name',  // F
+            'Resource Code', // G
+            'Resource Name',  // H
+            'Productivity Ref', // I
+            'Labours Count',  // J
+            'Remarks', // K
+            'Equation', // L
+            'Important?' // M
         ], null, "A{$this->counter}");
         ++$this->counter;
     }

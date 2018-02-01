@@ -66,7 +66,7 @@ class BreakdownTemplateImporter
             $this->templates->put($template->id, $template);
 
             if (!$template) {
-                $data['K'] = "Template not found";
+                $data['N'] = "Template not found";
                 $this->failed->push($data);
                 return false;
             }
@@ -78,23 +78,23 @@ class BreakdownTemplateImporter
 
         $resource = StdActivityResource::find($data['B']);
         if (!$resource) {
-            $data['K'] = "Resource not found";
+            $data['N'] = "Resource not found";
             $this->failed->push($data);
             return false;
         }
 
         $attributes = [
-            'resource_id' => $this->getResource($data['D']),
-            'productivity_id' => $this->getProductivity($data['F']),
-            'labor_count' => $data['G'],
-            'remarks' => $data['H'],
-            'equation' => $data['I'],
-            'important' => !empty(trim($data['J']))
+            'resource_id' => $this->getResource($data['G']),
+            'productivity_id' => $this->getProductivity($data['I']),
+            'labor_count' => $data['J'],
+            'remarks' => $data['K'],
+            'equation' => $data['L'],
+            'important' => !empty(trim($data['M']))
         ];
 
         $validator = validator($attributes, $this->rules, $this->messages);
         if ($validator->fails()) {
-            $data['K'] = collect($validator->messages()->all())->implode("\n");
+            $data['N'] = collect($validator->messages()->all())->implode("\n");
             $this->failed->push($data);
             return false;
         }
@@ -105,15 +105,15 @@ class BreakdownTemplateImporter
 
     private function updateTemplate($template, $data)
     {
-        $code = strtolower($data['C']);
-        $name = strtolower($data['D']);
+        $code = strtolower($data['E']);
+        $name = strtolower($data['F']);
 
         if (strtolower($template->code) !== $code) {
-            $template->code = $data['C'];
+            $template->code = $data['E'];
         }
 
         if (strtolower($template->name) !== $name) {
-            $template->name = $data['D'];
+            $template->name = $data['F'];
         }
 
         $template->save();
