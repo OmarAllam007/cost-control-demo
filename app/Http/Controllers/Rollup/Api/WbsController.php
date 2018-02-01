@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Rollup;
+namespace App\Http\Controllers\Rollup\Api;
 
 use App\BreakDownResourceShadow;
 use App\WbsLevel;
@@ -15,6 +15,7 @@ class WbsController extends Controller
         $this->authorize('cost_owner', $wbsLevel->project);
 
         $activities = BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
+            ->where('is_rollup', false)->whereNull('rolled_up_at')
             ->selectRaw('DISTINCT activity, activity_id, code')->get();
 
         return $activities;

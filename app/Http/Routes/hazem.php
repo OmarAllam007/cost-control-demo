@@ -242,7 +242,8 @@ Route::get('project/{project}/rollup', 'Rollup\RollupController@create')->name('
 Route::post('project/{project}/rollup', 'Rollup\RollupController@store');
 Route::get('project/{project}/rollup/edit', 'Rollup\RollupController@edit')->name('project.rollup.edit');
 Route::patch('project/{project}/rollup', 'Rollup\RollupController@update')->name('project.rollup.update');
+
 Route::group(['prefix' => '/api/rollup/'], function () {
-    Route::get('wbs/{wbsLevel}', 'Api\Rollup\WbsController@show');
-    Route::get('activities/{wbsLevel}/{activity_id}', 'Api\Rollup\ActivityController@show');
+    Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');
+    Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
 });

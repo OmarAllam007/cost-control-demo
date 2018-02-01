@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Rollup;
+namespace App\Http\Controllers\Rollup\Api;
 
 use App\BreakDownResourceShadow;
 use App\WbsLevel;

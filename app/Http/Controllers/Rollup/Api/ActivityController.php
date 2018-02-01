@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Rollup;
+namespace App\Http\Controllers\Rollup\Api;
 
 use App\BreakDownResourceShadow;
 use App\Survey;
@@ -18,6 +18,7 @@ class ActivityController extends Controller
         $cost_accounts = BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
             ->where('activity_id', $activity_id)
             ->selectRaw('distinct cost_account as code, breakdown_id as id')
+            ->where('is_rollup', false)->whereNull('rolled_up_at')
             ->get();
 
         $qty_survies = Survey::whereIn('wbs_level_id', $wbsLevel->getParentIds())
