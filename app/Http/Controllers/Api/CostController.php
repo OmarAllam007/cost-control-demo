@@ -30,7 +30,7 @@ class CostController extends Controller
         if ($perspective == 'budget') {
             $query = BreakDownResourceShadow::costOnly()->joinCost($wbs_level, $period)->with('actual_resources');
         } else {
-            $query = CostShadow::joinShadow($wbs_level, $period);
+            $query = BreakDownResourceShadow::currentOnly($period)->joinCost($wbs_level, $period)->with('actual_resources');
         }
 
         if ($activity_id = $request->get('activity')) {

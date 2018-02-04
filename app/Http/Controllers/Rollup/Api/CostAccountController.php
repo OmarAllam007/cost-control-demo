@@ -7,6 +7,7 @@ use App\WbsLevel;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class CostAccountController extends Controller
 {

@@ -319,4 +319,9 @@ class BreakDownResourceShadow extends Model
     {
         $query->where('show_in_budget', true);
     }
+
+    function scopeCurrentOnly($query, $period)
+    {
+        return $query->whereRaw("budget.breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = {$period->id})");
+    }
 }
