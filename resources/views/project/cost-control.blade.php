@@ -14,6 +14,12 @@
             </ul>
         </div>
 
+        @can('cost_owner', $project)
+            <a href="#RollupModal" class="btn btn-sm btn-info btn-outline" data-toggle="modal">
+                <i class="fa fa-compress"></i> Rollup
+            </a>
+        @endcan
+
         @if (can('activity_mapping', $project) || can('resource_mapping', $project) || ($project->is_cost_ready && can('actual_resources', $project)))
             <div class="btn-group">
                 <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -104,6 +110,9 @@
 
     @include('project.templates.iframe-modal')
 
+    @can('cost_owner', $project)
+        @include('project.cost-control.rollup-modal')
+    @endcan
 @stop
 
 @section('javascript')

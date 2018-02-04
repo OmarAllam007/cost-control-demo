@@ -9,12 +9,7 @@
         </div>
 
         <ul :class="{'collapse' : true, 'in': show_children}">
-            <li v-for="cost_account in cost_accounts">
-                <label>
-                    <input type="checkbox" :value="cost_account.id" :name="`cost_account[${cost_account.id}]`">
-                    {{cost_account.code}} &mdash; <small>{{cost_account.description}}</small>
-                </label>
-            </li>
+            <cost-account v-for="cost_account in cost_accounts" :initial="cost_account"></cost-account>
 
             <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>

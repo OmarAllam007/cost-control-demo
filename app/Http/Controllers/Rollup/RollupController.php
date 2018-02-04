@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Rollup;
 use App\Http\Controllers\Controller;
 use App\Project;
 use App\Rollup\Actions\BreakdownRollup;
+use App\Rollup\Actions\ImportantResourcesRollup;
 use Illuminate\Http\Request;
 
 class RollupController extends Controller
@@ -39,8 +40,10 @@ class RollupController extends Controller
     {
         $this->authorize('cost_owner', $project);
 
-        $rollup = new ImportantResourcesRollup($project, $request->get('cost_accounts', []));
+        $rollup = new ImportantResourcesRollup($project, $request->get('resources', []));
         $status = $rollup->handle();
+
+        flash("{$status['resources']} Resources in {$status['cost_accounts']} cost accounts have been rolled up", 'success');
 
         return \Redirect::route('project.cost-control', $project);
     }

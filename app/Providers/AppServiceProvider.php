@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
 
         \View::composer([
             'project.show', 'project.tabs._wbs','wbs-level._modal',
-            'wbs-level.report', 'project.cost-control.wbs', 'rollup.create'
+            'wbs-level.report', 'project.cost-control.wbs', 'rollup.create', 'rollup.edit',
         ], 'App\Http\ViewComposers\WbsComposer');
 
         \View::composer('csi-category.index', 'App\Http\ViewComposers\CsiCategoryComposer');

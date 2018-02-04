@@ -14,11 +14,12 @@ require('laravel-elixir-vue');
 elixir(function (mix) {
     mix.sass('app.scss');
     mix.webpack('rollup/create.js', 'public/js/rollup/create.js');
+    mix.webpack('rollup/edit.js', 'public/js/rollup/edit.js');
     // mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.copy('node_modules/c3/c3.min.js', 'public/js/c3.min.js');
     // mix.copy('node_modules/d3/d3.min.js', 'public/js/d3.min.js');
-    // mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
+    mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
     // mix.scripts([
     //     'breakdown/load-templates.js',
     //     'breakdown/load-resources.js',

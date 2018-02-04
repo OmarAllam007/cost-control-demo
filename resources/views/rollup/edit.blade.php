@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Cost Account Rollup')
+@section('title', 'Resources Rollup')
 
 @section('header')
     <div class="display-flex">
         <h2 class="flex">
-            {{$project->name}} &mdash; Cost Account Rollup
+            {{$project->name}} &mdash; Resource Rollup
         </h2>
 
         <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-sm">
@@ -15,8 +15,9 @@
 @endsection
 
 @section('body')
-    <form action="" method="post" id="CreateRollupForm">
+    <form action="{{route('project.rollup.update', $project)}}" method="post" id="EditRollupForm">
         {{csrf_field()}}
+        {{method_field('patch')}}
 
         <wbs-tree :initial="{{$wbsTree}}" inline-template>
             <ul class="wbs-tree list-unstyled" id="wbs-tree">
@@ -31,5 +32,5 @@
 @endsection
 
 @section('javascript')
-    <script src="/js/rollup/create.js"></script>
+    <script src="/js/rollup/edit.js"></script>
 @endsection

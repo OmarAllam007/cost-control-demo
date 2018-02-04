@@ -22,8 +22,6 @@
 </template>
 
 <script>
-    import Activity from './activity.vue';
-
     export default {
         name: 'wbs-level',
 
@@ -56,10 +54,6 @@
                     });
                 }
             }
-        },
-
-        components: {
-            Activity
         }
     }
 

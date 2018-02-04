@@ -258,12 +258,15 @@ Route::post('/project/{project}/communication/cost', 'CostCommunicationControlle
 Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);
 Route::get('/rollup/create/{project}/{wbsLevel}/{stdActivity}', 'RollupController@create')->name('rollup.create');
 Route::post('/rollup/store/{key}', 'RollupController@store')->name('rollup.store');
+Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
 
 Route::get('project/{project}/rollup', 'Rollup\RollupController@create')->name('project.rollup');
 Route::post('project/{project}/rollup', 'Rollup\RollupController@store');
 Route::get('project/{project}/rollup/edit', 'Rollup\RollupController@edit')->name('project.rollup.edit');
 Route::patch('project/{project}/rollup', 'Rollup\RollupController@update')->name('project.rollup.update');
+
 Route::group(['prefix' => '/api/rollup/'], function () {
-    Route::get('wbs/{wbsLevel}', 'Api\Rollup\WbsController@show');
-    Route::get('activities/{wbsLevel}/{activity_id}', 'Api\Rollup\ActivityController@show');
+    Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');
+    Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
+    Route::get('cost-account/{wbsLevel}/{breakdown_id}', 'Rollup\Api\CostAccountController@show');
 });
