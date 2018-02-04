@@ -116,7 +116,15 @@ class BreakdownTemplateImporter
             $template->name = $data['F'];
         }
 
+        $update = $template->isDirty();
+
         $template->save();
+
+        if ($update) {
+            \DB::table('breakdown_templates')
+                ->where('parent_template_id', $template->id)
+                ->update(['code' => $template->code, 'name' => $template->name]);
+        }
     }
 
     private function getResource($code)
