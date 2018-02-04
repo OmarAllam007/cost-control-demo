@@ -5,11 +5,7 @@ namespace App\Support;
 use App\ActivityMap;
 use App\ActualBatch;
 use App\BreakDownResourceShadow;
-use App\CostShadow;
 use App\ResourceCode;
-use App\WbsResource;
-use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class CostImportFixer
@@ -220,8 +216,8 @@ class CostImportFixer
             }
 
             $resource->save();
-            $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
-            $log = ['resource' => $resource, 'remaining_qty' => $cost->remaining_qty, 'to_date_qty' => $cost->to_date_qty];
+//            $cost = BreakDownResourceShadow::where('breakdown_resource_id', $id)->first();
+            $log = ['resource' => $resource, 'remaining_qty' => $resource->remaining_qty, 'to_date_qty' => $resource->to_date_qty];
             unset($resource->cost, $resource->imported_cost);
             $statusLog->push($log);
         }
