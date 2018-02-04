@@ -70,7 +70,7 @@ class TemplateResourceImpactController extends Controller
             return \Redirect::to('/');
         }
 
-        $template_resource = session('template_resource');
+        $new_template_resource = session('template_resource');
 
         $resource = Resources::where('project_id', $project->id)
             ->where('resource_id', $template_resource->resource_id)
@@ -104,7 +104,7 @@ class TemplateResourceImpactController extends Controller
         $has_actual = $resources->pluck('has_actual')->filter()->count() > 0;
 
         return view('template-resource-impact.edit',
-            compact('project', 'breakdown_template', 'resources', 'template_resource', 'template_resource', 'has_actual'));
+            compact('project', 'breakdown_template', 'resources', 'template_resource', 'new_template_resource', 'has_actual'));
     }
 
     public function update(Request $request, Project $project, TemplateResource $template_resource)
