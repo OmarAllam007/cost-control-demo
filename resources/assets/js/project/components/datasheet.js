@@ -1,6 +1,8 @@
 import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
+import BreakdownResource from './breakdown-resource';
 import Pagination from './server-pagination';
+import _ from 'lodash';
 
 export default {
 
@@ -13,7 +15,8 @@ export default {
             breakdowns: [],
             loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
-            perspective, count: 0, first: 0, last: 99
+            perspective, count: 0, first: 0, last: 99,
+            rollup: [], rollup_activity: false, rollup_wbs: false
         };
     },
 
@@ -29,6 +32,17 @@ export default {
                 }
             });
             return url + urlTokens.join('&');
+        },
+
+        rollup_url() {
+            let url = '/rollup/create/' + this.project + '/' + this.rollup_wbs + '/' + this.rollup_activity;
+            return url + '?' + this.rollup.map(id => {
+                return `resource[]=${id}`;
+            }).join('&');
+        },
+
+        show_breakdowns() {
+            return Object.keys(this.breakdowns).length > 0;
         }
     },
     //</editor-fold>
@@ -62,13 +76,13 @@ export default {
             this.loading = true;
             $.ajax({
                 url: '/api/cost/delete-wbs/' + this.wbs_id, method: 'delete', dataType: 'json',
-                data: { _method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
+                data: {_method: 'delete', _token: document.querySelector('[name=csrf-token]').content}
             }).success(response => {
                 this.loading = false;
                 $('#DeleteWbsDataModal').modal('hide');
                 this.$broadcast('reloadPage');
                 this.$dispatch('request_alert', {
-                    type: response.ok? 'info' : 'error', message: response.message
+                    type: response.ok ? 'info' : 'error', message: response.message
                 });
             }).error(() => {
                 this.loading = false;
@@ -78,6 +92,10 @@ export default {
                 });
 
             });
+        },
+
+        doRollup() {
+
         }
     },
 
@@ -86,6 +104,9 @@ export default {
             if (this.wbs_id != params.selection) {
                 this.loading = true;
                 this.wbs_id = params.selection;
+                this.rollup = [];
+                this.rollup_wbs = false;
+                this.rollup_activity = false;
             }
         },
 
@@ -94,12 +115,34 @@ export default {
         },
 
         pageChanged(data) {
-            this.breakdowns = data;
+            this.breakdowns = _.groupBy(data, 'activity');
+            // this.breakdowns = data;
             this.loading = false;
         },
 
         reload_breakdowns() {
             this.loadBreakdowns();
+        },
+
+        add_to_rollup(resource) {
+            if (!this.rollup.length) {
+                this.rollup_wbs = resource.wbs_id;
+                this.rollup_activity = resource.activity_id;
+            }
+
+            if (this.rollup.indexOf(resource.breakdown_resource_id) < 0) {
+                this.rollup.push(resource.breakdown_resource_id);
+            }
+        },
+
+        remove_from_rollup(resource) {
+            const index = this.rollup.indexOf(resource.breakdown_resource_id);
+            this.rollup.splice(index, 1);
+
+            if (this.rollup.length === 0) {
+                this.rollup_wbs = false;
+                this.rollup_activity = false;
+            }
         }
     },
 
@@ -111,6 +154,12 @@ export default {
     },
 
     components: {
-        DeleteActivityModal, DeleteResourceModal, Pagination
+        BreakdownResource, DeleteActivityModal, DeleteResourceModal, Pagination
+    },
+
+    filters: {
+        number_format(val) {
+            return parseFloat(val.toFixed(2)).toLocaleString();
+        }
     }
 }

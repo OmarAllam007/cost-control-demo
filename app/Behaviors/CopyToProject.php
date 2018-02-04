@@ -83,7 +83,7 @@ trait CopyToProject
 
         BreakdownResource::unguard();
         $breakdown_resources = $breakdown->resources()
-            ->whereRaw("id in (select breakdown_resource_id from break_down_resource_shadows where breakdown_id = {$breakdown->id})")
+            ->whereRaw("id in (select breakdown_resource_id from break_down_resource_shadows where breakdown_id = {$breakdown->id} and show_in_budget = 1)")
             ->get();
 
         foreach ($breakdown_resources as $resource) {

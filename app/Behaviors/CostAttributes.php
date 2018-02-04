@@ -96,7 +96,7 @@ trait CostAttributes
         }
 
         $activity = StdActivity::find($this->activity_id);
-        if ($activity->isGeneral()) {
+        if ($activity->isGeneral() || $this->is_rolled_up) {
             return $this->calculated['allowable_ev_cost'] = $this->progress_value * $this->budget_cost;
         }
 
@@ -168,6 +168,10 @@ trait CostAttributes
             return $this->calculated['remaining_cost'];
         }
 
+        if ($this->is_rolled_up) {
+            return $this->calculated['remaining_cost'] = $this->completion_cost - $this->to_date_cost;
+        }
+
         return $this->calculated['remaining_cost'] = $this->remaining_unit_price * $this->remaining_qty;
     }
 
@@ -179,11 +183,7 @@ trait CostAttributes
 
         $conditions = ['project_id' => $this->project_id];
 
-        $resource = Resources::find($this->resource_id);
-
-        if (!$resource->rate) {
-            return $this->calculated['remaining_unit_price'] = 0;
-        }
+        $resource = optional(Resources::find($this->resource_id));
 
         if ($resource->isMaterial()) {
             // For material we calculate over resource in all activities
@@ -228,6 +228,14 @@ trait CostAttributes
     {
         if (isset($this->calculated['completion_cost'])) {
             return $this->calculated['completion_cost'];
+        }
+
+        if ($this->is_rolled_up) {
+            if ($this->allowable_ev_cost && $this->to_date_cost) {
+                return $this->calculated['completion_cost'] = $this->budget_cost  / ($this->allowable_ev_cost / $this->to_date_cost);
+            }
+
+            return $this->calculated['completion_cost'] = $this->budget_cost;
         }
 
         return $this->calculated['completion_cost'] = $this->latest_remaining_cost + $this->to_date_cost;

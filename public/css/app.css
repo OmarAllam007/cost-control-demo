@@ -11401,6 +11401,8 @@ table.collapse.in {
   -webkit-box-pack: justify;
   justify-content: space-between;
   align-content: center;
+  -webkit-box-align: center;
+  align-items: center;
 }
 
 .flex {
@@ -11431,6 +11433,56 @@ table.collapse.in {
 
 table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.table > thead > tr > td.v-top, table.table > thead > tr > th.v-top {
   vertical-align: top;
+}
+
+.breakdown-resource {
+  padding: 10px;
+  font-size: 12px;
+}
+
+.breakdown-resource:hover, .breakdown-resource:nth-child(odd):hover, .breakdown-resource.active {
+  background-color: #ffc;
+}
+
+.breakdown-resource .tag {
+  color: #9e9e9e;
+  font-size: 90%;
+}
+
+.breakdown-resource:nth-child(odd) {
+  background-color: #f5f8fa;
+}
+
+.breakdown-resource .actions .btn {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.display-flex-c {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.vertical-scroll-pane {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.breakdown-activity-header {
+  padding: 5px 10px;
+  background: #3097D1;
+  color: #e5e5e5;
+}
+
+.breakdown-activity-header h5 {
+  margin: 0;
 }
 
 .file-container {
