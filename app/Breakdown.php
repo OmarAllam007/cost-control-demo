@@ -27,6 +27,16 @@ class Breakdown extends Model
         return $this->hasMany(BreakdownResource::class, 'breakdown_id');
     }
 
+    function rollable_resources()
+    {
+        return $this->resources()->where('important', '<>', 1)->where('is_rollup', '<>', 1)->whereNull('rolled_up_at');
+    }
+
+    function rolled_resources()
+    {
+        return $this->resources()->whereNotNull('rolled_up_at');
+    }
+
     function shadows()
     {
         return $this->hasMany(BreakDownResourceShadow::class, 'breakdown_id');
