@@ -12,11 +12,9 @@ export default {
         let perspective = window.localStorage.cost_perspective;
 
         return {
-            breakdowns: [],
-            loading: false,
+            breakdowns: [], loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
-            perspective, count: 0, first: 0, last: 99,
-            rollup: [], rollup_activity: false, rollup_wbs: false
+            perspective, count: 0, first: 0, last: 99
         };
     },
 
@@ -32,13 +30,6 @@ export default {
                 }
             });
             return url + urlTokens.join('&');
-        },
-
-        rollup_url() {
-            let url = '/rollup/create/' + this.project + '/' + this.rollup_wbs + '/' + this.rollup_activity;
-            return url + '?' + this.rollup.map(id => {
-                return `resource[]=${id}`;
-            }).join('&');
         },
 
         show_breakdowns() {
@@ -92,10 +83,6 @@ export default {
                 });
 
             });
-        },
-
-        doRollup() {
-
         }
     },
 
@@ -104,9 +91,6 @@ export default {
             if (this.wbs_id != params.selection) {
                 this.loading = true;
                 this.wbs_id = params.selection;
-                this.rollup = [];
-                this.rollup_wbs = false;
-                this.rollup_activity = false;
             }
         },
 
@@ -122,27 +106,6 @@ export default {
 
         reload_breakdowns() {
             this.loadBreakdowns();
-        },
-
-        add_to_rollup(resource) {
-            if (!this.rollup.length) {
-                this.rollup_wbs = resource.wbs_id;
-                this.rollup_activity = resource.activity_id;
-            }
-
-            if (this.rollup.indexOf(resource.breakdown_resource_id) < 0) {
-                this.rollup.push(resource.breakdown_resource_id);
-            }
-        },
-
-        remove_from_rollup(resource) {
-            const index = this.rollup.indexOf(resource.breakdown_resource_id);
-            this.rollup.splice(index, 1);
-
-            if (this.rollup.length === 0) {
-                this.rollup_wbs = false;
-                this.rollup_activity = false;
-            }
         }
     },
 

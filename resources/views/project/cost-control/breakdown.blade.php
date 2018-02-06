@@ -7,12 +7,6 @@
             </div>
 
             <section class="form-group btn-toolbar pull-right">
-                @can('actual_resources', $project)
-                    <a :href="rollup_url" type="button" class="btn btn-primary btn-sm in-iframe" title="Rollup Resources" v-show="rollup.length > 1" @click="doRollup">
-                        <i class="fa fa-compress"></i> Rollup
-                    </a>
-                @endcan
-
                 <div class="btn-group">
                     <button type="button"
                             :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}"
@@ -159,13 +153,6 @@
                                 </section>
 
                                 <section class="actions">
-                                    <button type="button"
-                                            @click="add_to_rollup" class="btn btn-xs"
-                                            :class="is_rolled_up? 'btn-success' : 'btn-info'"
-                                            title="Add to rollup" :disabled="!can_be_rolled_up">
-                                        <i :class="['fa fa-fw', is_rolled_up? 'fa-check' : 'fa-plus']"></i>
-                                    </button>
-
                                     <div class="dropdown">
                                         <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="Menu">
                                             <i class="fa fa-bars"></i>
