@@ -56,7 +56,7 @@
 
     @include('project.templates.iframe-modal')
 
-    @can('cost_owner', $project)
+    @can('actual_resources', $project)
         @include('project.cost-control.rollup-modal')
     @endcan
 @stop

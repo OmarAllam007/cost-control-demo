@@ -245,6 +245,7 @@ Route::patch('project/{project}/rollup', 'Rollup\RollupController@update')->name
 
 Route::post('project/{project}/rollup-level-2a', 'Rollup\CostAccountRollupController@store')->name('project.rollup.level-2a');
 Route::post('project/{project}/rollup-level-2b', 'Rollup\ImportantResourcesRollupController@store')->name('project.rollup.level-2b');
+Route::post('project/{project}/rollup-level-3', 'Rollup\ActivityRollupController@store')->name('project.rollup.level-3');
 
 Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');

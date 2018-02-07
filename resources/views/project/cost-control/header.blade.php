@@ -12,7 +12,7 @@
         </ul>
     </div>
 
-    @can('cost_owner', $project)
+    @can('actual_resources', $project)
         <a href="#RollupModal" class="btn btn-sm btn-info btn-outline" data-toggle="modal">
             <i class="fa fa-compress"></i> Rollup
         </a>

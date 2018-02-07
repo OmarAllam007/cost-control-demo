@@ -35,7 +35,7 @@
                 <article>
                     <h4>Level 3 &mdash; Activity</h4>
                     <p>Rollup all budget resources on activity level</p>
-                    <form action="{{route('project.rollup.level-2a', $project)}}" method="post" class="btn-toolbar">
+                    <form action="{{route('project.rollup.level-3', $project)}}" method="post" class="btn-toolbar">
                         {{csrf_field()}}
                         <button type="submit" class="btn btn-warning btn-sm" href="">Whole project</button>
                     </form>
