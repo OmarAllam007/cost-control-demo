@@ -9,6 +9,7 @@
 namespace App\Behaviors;
 
 use App\BreakdownVariable;
+use App\Productivity;
 use App\Resources;
 use App\WbsLevel;
 use App\Breakdown;
@@ -111,6 +112,22 @@ trait CopyToProject
                 $resourceAttributes['updated_by'] = $user_id;
 
                 Resources::insertGetId($resourceAttributes);
+            }
+
+            if ($attributes['productivity_id']) {
+                $productivity_id = $attributes['productivity_id'];
+                $targetProductivity = Productivity::where('project_id', $project_id)->where('productivity_id', $productivity_id)->first();
+                if (!$targetProductivity) {
+                    $productivityAttributes = $resource->productivity->getAttributes();
+                    unset($productivityAttributes['id']);
+                    $productivityAttributes['project_id'] = $project_id;
+                    $productivityAttributes['created_at'] = date('Y-m-d H:i:s');
+                    $productivityAttributes['updated_at'] = date('Y-m-d H:i:s');
+                    $productivityAttributes['created_by'] = $user_id;
+                    $productivityAttributes['updated_by'] = $user_id;
+
+                    Productivity::insertGetId($productivityAttributes);
+                }
             }
 
             BreakdownResource::create($attributes);
