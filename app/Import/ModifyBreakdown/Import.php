@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 11/2/18
- * Time: 12:40 PM
- */
-
 namespace App\Import\ModifyBreakdown;
-
 
 use App\BreakdownResource;
 use App\Productivity;
@@ -92,12 +84,12 @@ class Import
 
         $attributes = [];
 
-        $resource_code = strtolower($row['F']);
+        $resource_code = strtolower($row['G']);
         if ($resource_code != strtolower($breakdownResource->shadow->resource_code)) {
             $attributes['resource_id'] = $this->resources->get($resource_code)->id ?? 0;
         }
 
-        $productivity_code = strtolower($row['G']);
+        $productivity_code = strtolower($row['H']);
         if ($productivity_code) {
             if (strtolower($breakdownResource->shadow->productivity_ref) != $productivity_code) {
                 $attributes['productivity_id'] = $this->productivities->get($productivity_code)->id ?? 0;
@@ -106,13 +98,13 @@ class Import
             $attributes['productivity_id'] = null;
         }
 
-        $attributes['labor_count'] = $row['H'] ?: 0;
-        $attributes['equation']= $row['I'] ?: 0;
-        $attributes['remarks']= $row['J'];
-        $attributes['important']= !empty($row['K']);
+        $attributes['labor_count'] = $row['I'] ?: 0;
+        $attributes['equation']= $row['J'] ?: 0;
+        $attributes['remarks']= $row['K'];
+        $attributes['important']= !empty($row['L']);
         $validator = \Validator::make($attributes, config('validation.breakdown_resource'));
         if ($validator->fails()) {
-            $row['L'] = implode("\n", $validator->messages()->all());
+            $row['M'] = implode("\n", $validator->messages()->all());
             $this->failed->push($row);
             return false;
         }
@@ -159,7 +151,7 @@ class Import
     private function setStyles($sheet)
     {
         $counter = $this->failed->count() + 1;
-        $sheet->getStyle('A1:L1')->applyFromArray([
+        $sheet->getStyle('A1:M1')->applyFromArray([
             'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
             'fill' => [
                 'type' => 'solid',
@@ -178,19 +170,19 @@ class Import
         for ($row = 2; $row <= $counter; ++$row) {
             $color = $row % 2 ? 'BCDEFA' : 'EFF8FF';
 
-            $sheet->getStyle("B$row:L$row")->applyFromArray([
+            $sheet->getStyle("B$row:M$row")->applyFromArray([
                 'fill' => ['type' => 'solid', 'startcolor' => ['rgb' => $color]]
             ]);
         }
 
         $sheet->freezePane('A2');
-        foreach (range('A', 'L') as $c) {
-            if ($c != 'E') {
+        foreach (range('A', 'M') as $c) {
+            if ($c != 'F') {
                 $sheet->getColumnDimension($c)->setAutoSize(true);
             }
         }
 
-        $sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(50);
-        $sheet->setAutoFilter("A1:L{$counter}");
+        $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(50);
+        $sheet->setAutoFilter("A1:M{$counter}");
     }
 }

@@ -49,7 +49,7 @@
                         You can export project breakdowns for modify
                         <a href="{{route('project.breakdown.export', $project)}}">from here</a>
                     </li>
-                    <li><i class="fa fa-fw fa-angle-right"></i> Changes in WBS code, activity code, activity and resource name will have no effect</li>
+                    <li><i class="fa fa-fw fa-angle-right"></i> Changes in WBS code, activity code, activity cost account, and resource name will have no effect</li>
                     <li class="text-danger"><strong><i class="fa fa-fw fa-warning"></i> Please do not change APP_ID. Changes in this field is dangerous</strong></li>
                 </ul>
             </div>

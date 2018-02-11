@@ -21,7 +21,7 @@ class Export
         $excel = new \PHPExcel();
         $sheet = $excel->getActiveSheet();
         $headers = [
-            'App ID', 'WBS Code', 'Activity Code', 'Activity', 'Resource Name', 'Resource Code',
+            'App ID', 'WBS Code', 'Activity Code', 'Activity', 'Cost Account', 'Resource Name', 'Resource Code',
             'Productivity Ref', 'Labour Count', 'Equation', 'Remarks', 'Important'
         ];
 
@@ -33,17 +33,18 @@ class Export
                     ++$this->counter;
 
                     $row = [
-                        $shadow->breakdown_resource_id,
-                        $shadow->wbs->code,
-                        $shadow->code,
-                        $shadow->activity,
-                        $shadow->resource_name,
-                        $shadow->resource_code,
-                        $shadow->productivity_ref,
-                        $shadow->labors_count,
-                        $shadow->breakdown_resource->equation,
-                        $shadow->remarks,
-                        $shadow->important? '*' : ''
+                        $shadow->breakdown_resource_id, // A
+                        $shadow->wbs->code,             // B
+                        $shadow->code,                  // C
+                        $shadow->activity,              // D
+                        $shadow->cost_account,          // E
+                        $shadow->resource_name,         // F
+                        $shadow->resource_code,         // G
+                        $shadow->productivity_ref,      // H
+                        $shadow->labors_count,          // I
+                        $shadow->breakdown_resource->equation, // J
+                        $shadow->remarks,                      // K
+                        $shadow->important? '*' : ''           // L
                     ];
 
                     $sheet->fromArray($row, '', "A{$this->counter}", true);
@@ -62,7 +63,7 @@ class Export
      */
     private function setStyles($sheet)
     {
-        $sheet->getStyle('A1:K1')->applyFromArray([
+        $sheet->getStyle('A1:L1')->applyFromArray([
             'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
             'fill' => [
                 'type' => 'solid',
@@ -81,19 +82,19 @@ class Export
         for ($row = 2; $row <= $this->counter; ++$row) {
             $color = $row % 2? 'BCDEFA' : 'EFF8FF';
 
-            $sheet->getStyle("B$row:K$row")->applyFromArray([
+            $sheet->getStyle("B$row:L$row")->applyFromArray([
                 'fill' => ['type' => 'solid', 'startcolor' => ['rgb' => $color]]
             ]);
         }
 
         $sheet->freezePane('A2');
-        foreach (range('A', 'K') as $c) {
-            if ($c != 'E') {
+        foreach (range('A', 'L') as $c) {
+            if ($c != 'F') {
                 $sheet->getColumnDimension($c)->setAutoSize(true);
             }
         }
 
-        $sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(50);
-        $sheet->setAutoFilter("A1:K{$this->counter}");
+        $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(50);
+        $sheet->setAutoFilter("A1:L{$this->counter}");
     }
 }
