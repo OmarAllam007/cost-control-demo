@@ -253,3 +253,7 @@ Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
     Route::get('cost-account/{wbsLevel}/{breakdown_id}', 'Rollup\Api\CostAccountController@show');
 });
+
+Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
+Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
+Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');

@@ -34,7 +34,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="{{route('boq.export', $project)}}">BOQ</a></li>
                     <li><a href="{{route('survey.export', $project)}}">Qty Survey</a></li>
-                    <li><a href="{{route('break_down.export', $project)}}">Data sheet</a></li>
+                    <li><a href="{{route('break_down.export', $project)}}">Breakdown</a></li>
                 </ul>
             </div>
 
@@ -47,6 +47,8 @@
                     <li><a href="{{route('survey.import', $project)}}">Import Qty Survey</a></li>
                     <li class="divider"></li>
                     <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{route('project.breakdown.import', $project)}}">Modify Breakdown</a></li>
                 </ul>
             </div>
         </div>
