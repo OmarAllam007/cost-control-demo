@@ -83,6 +83,35 @@ export default {
                 });
 
             });
+        },
+
+        doRollup(activity) {
+            const codes = this.breakdowns[activity].reduce((unique, r) => {
+                if (!unique.includes(r.code)) {
+                    unique.push(r.code);
+                }
+
+                return unique;
+            }, []);
+
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+
+            this.loading = true;
+            $.ajax({
+                url: `/project/${this.project}/activity-rollup`,
+                data: { codes, _token },
+                dataType: 'json',
+                method: 'put'
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            })
+        },
+
+        slug(str) {
+            return str.trim().replace(/[\s\W]+/g, '-').toLowerCase();
         }
     },
 

@@ -9,7 +9,7 @@ use App\Project;
 
 class ActivityRollupController extends Controller
 {
-    function store(Project $project, Request $request)
+    function store(Project $project)
     {
         $this->authorize('actual_resources', $project);
 
@@ -22,12 +22,17 @@ class ActivityRollupController extends Controller
         return \Redirect::route('project.cost-control', $project);
     }
 
-    function update(Project $project, $code, Request $request)
+    function update(Project $project, Request $request)
     {
         $this->authorize('actual_resources', $project);
 
-        (new ActivityRollup($project, [$code]))->handle();
+        $count = (new ActivityRollup($project, $request->input('codes', [])))->handle();
 
-        return \Redirect::route('project.cost-control', $project);
+        if ($request->wantsJson()) {
+            return ['ok' => true, 'count' => $count];
+        }
+
+        flash("$count activities have been rolled up", 'success');
+        return redirect()->route('project.cost-control', $project);
     }
 }

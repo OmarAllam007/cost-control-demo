@@ -58,11 +58,13 @@
                         {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
                         <div class="btn-group btn-group-sm btn-group-block">
                             <a href="#ResourceTypeModal" data-toggle="modal"
-                               class="tree-open btn btn-default btn-block">{{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>
-                            <a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning"
-                            data-target="
-                        #ResourceTypeModal" data-label="Select Resource Type"><span
-                                    class="fa fa-times-circle"></span></a>
+                               class="tree-open btn btn-default btn-block">Select Resource Type</a>
+
+                            <a href="#" @click="resource_type = ''"
+                                class="remove-tree-input btn btn-warning"
+                                data-target="#ResourceTypeModal" data-label="Select Resource Type">
+                                <span class="fa fa-times-circle"></span>
+                            </a>
                         </div>
 
                     </div>
@@ -77,22 +79,24 @@
             </section>
 
             <section v-if="show_breakdowns">
-                <div class="vertical-scroll-pane">
+                <div class="    vertical-scroll-pane">
                     <section class="activity-section" v-for="(activity, resources) in breakdowns">
 
                         <header class="display-flex breakdown-activity-header">
-                            <h5 class="flex">@{{ activity }}</h5>
+                            <h5 class="flex"><a data-toggle="collapse" :href="'#' + slug(activity)">@{{ activity }}</a></h5>
 
-                            <button class="btn btn-default btn-sm"><i class="fa fa-compress"></i> Rollup</button>
+                            <button class="btn btn-default btn-sm" @click="doRollup(activity)">
+                                <i class="fa fa-compress"></i> Rollup
+                            </button>
                         </header>
 
+                        <div :id="'#' + slug(activity)">
                         <breakdown-resource inline-template
                                             v-for="resource in resources"
-                                            :resource="resource"
-                                            :rollup_activity="rollup_activity"
-                                            :rollup_wbs="rollup_wbs">
+                                            :activity="activity"
+                                            :resource="resource">
 
-                            <article class="breakdown-resource display-flex ">
+                            <article class="breakdown-resource display-flex">
                                 <section class="information flex">
                                     <div class="basic-info flex">
                                         <div class="display-flex">
@@ -176,6 +180,7 @@
 
                             </article>
                         </breakdown-resource>
+                        </div>
                     </section>
 
                 </div>
