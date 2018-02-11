@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Import\ModifyBreakdown\Export;
+use App\Import\ModifyBreakdown\Import;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -30,6 +31,15 @@ class ModifyBreakdownController extends Controller
 
         $this->validate($request, ['file' => 'required|mimes:xlsx,xls,csv']);
 
-//        $importer =
+        $importer = new Import($project, $request->file('file')->path());
+        $status = $importer->handle();
+
+        flash("{$status['success']} records have been imported", 'success');
+
+        if ($status['failed']) {
+            return view('modify-breakdown.failed', compact('project', 'status'));
+        }
+
+        return \Redirect::route('project.budget', $project);
     }
 }
