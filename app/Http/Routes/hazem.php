@@ -265,8 +265,17 @@ Route::post('project/{project}/rollup', 'Rollup\RollupController@store');
 Route::get('project/{project}/rollup/edit', 'Rollup\RollupController@edit')->name('project.rollup.edit');
 Route::patch('project/{project}/rollup', 'Rollup\RollupController@update')->name('project.rollup.update');
 
+Route::post('project/{project}/rollup-level-2a', 'Rollup\CostAccountRollupController@store')->name('project.rollup.level-2a');
+Route::post('project/{project}/rollup-level-2b', 'Rollup\ImportantResourcesRollupController@store')->name('project.rollup.level-2b');
+Route::post('project/{project}/rollup-level-3', 'Rollup\ActivityRollupController@store')->name('project.rollup.level-3');
+Route::put('project/{project}/activity-rollup', 'Rollup\ActivityRollupController@update');
+
 Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');
     Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
     Route::get('cost-account/{wbsLevel}/{breakdown_id}', 'Rollup\Api\CostAccountController@show');
 });
+
+Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
+Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
+Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');

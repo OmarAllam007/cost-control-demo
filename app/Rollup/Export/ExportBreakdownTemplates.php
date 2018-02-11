@@ -18,7 +18,7 @@ class ExportBreakdownTemplates
         $this->setHeaders();
     }
 
-    function handle(Project $project = null)
+    function handle()
     {
         $query = BreakdownTemplate::query()->with('resources.resource')->with('resources.productivity');
 

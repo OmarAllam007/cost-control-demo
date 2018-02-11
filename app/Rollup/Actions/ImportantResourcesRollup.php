@@ -37,11 +37,21 @@ class ImportantResourcesRollup
 
     function handle()
     {
-        $cost_accounts = Breakdown::where('project_id', $this->project->id)
-            ->find($this->data->keys()->toArray())->each(function ($breakdown) {
-                $this->rollupBreakdown($breakdown);
-            })->count();
+        $this->data->chunk(500)->each(function($data) {
+            Breakdown::where('project_id', $this->project->id)
+                ->whereRaw("id in (select breakdown_id from break_down_resource_shadows where project_id = {$this->project->id})")
+                // Do not select already rolled up cost accounts
+                ->whereNull('rolled_up_at')
+                // Do not select cost accounts with rolled resources
+                ->doesntHave('rolled_resources')
+                ->whereIn('id', $data->keys())
+                ->get()
+                ->each(function ($breakdown) {
+                    $this->rollupBreakdown($breakdown);
+                });
+        });
 
+        $cost_accounts = $this->data->count();
         $resources = $this->data->flatten()->count();
 
         return compact('resources', 'cost_accounts');

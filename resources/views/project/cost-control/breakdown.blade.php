@@ -7,12 +7,6 @@
             </div>
 
             <section class="form-group btn-toolbar pull-right">
-                @can('actual_resources', $project)
-                    <a :href="rollup_url" type="button" class="btn btn-primary btn-sm in-iframe" title="Rollup Resources" v-show="rollup.length > 1" @click="doRollup">
-                        <i class="fa fa-compress"></i> Rollup
-                    </a>
-                @endcan
-
                 <div class="btn-group">
                     <button type="button"
                             :class="{'btn btn-sm': true, 'btn-info': perspective != 'budget', 'btn-default': perspective == 'budget'}"
@@ -64,11 +58,13 @@
                         {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
                         <div class="btn-group btn-group-sm btn-group-block">
                             <a href="#ResourceTypeModal" data-toggle="modal"
-                               class="tree-open btn btn-default btn-block">{{session('filters.breakdown.'.$project->id.'.resource_type')? App\ResourceType::with('parent')->find(session('filters.breakdown.'.$project->id.'.resource_type'))->path : 'Select Resource Type' }}</a>
-                            <a href="#" @click="resource_type = ''" class="remove-tree-input btn btn-warning"
-                            data-target="
-                        #ResourceTypeModal" data-label="Select Resource Type"><span
-                                    class="fa fa-times-circle"></span></a>
+                               class="tree-open btn btn-default btn-block">Select Resource Type</a>
+
+                            <a href="#" @click="resource_type = ''"
+                                class="remove-tree-input btn btn-warning"
+                                data-target="#ResourceTypeModal" data-label="Select Resource Type">
+                                <span class="fa fa-times-circle"></span>
+                            </a>
                         </div>
 
                     </div>
@@ -83,22 +79,24 @@
             </section>
 
             <section v-if="show_breakdowns">
-                <div class="vertical-scroll-pane">
+                <div class="    vertical-scroll-pane">
                     <section class="activity-section" v-for="(activity, resources) in breakdowns">
 
                         <header class="display-flex breakdown-activity-header">
-                            <h5 class="flex">@{{ activity }}</h5>
+                            <h5 class="flex"><a data-toggle="collapse" :href="'#' + slug(activity)">@{{ activity }}</a></h5>
 
-                            <button class="btn btn-default btn-sm"><i class="fa fa-compress"></i> Rollup</button>
+                            <button class="btn btn-default btn-sm" @click="doRollup(activity)">
+                                <i class="fa fa-compress"></i> Rollup
+                            </button>
                         </header>
 
+                        <div :id="'#' + slug(activity)">
                         <breakdown-resource inline-template
                                             v-for="resource in resources"
-                                            :resource="resource"
-                                            :rollup_activity="rollup_activity"
-                                            :rollup_wbs="rollup_wbs">
+                                            :activity="activity"
+                                            :resource="resource">
 
-                            <article class="breakdown-resource display-flex ">
+                            <article class="breakdown-resource display-flex">
                                 <section class="information flex">
                                     <div class="basic-info flex">
                                         <div class="display-flex">
@@ -159,13 +157,6 @@
                                 </section>
 
                                 <section class="actions">
-                                    <button type="button"
-                                            @click="add_to_rollup" class="btn btn-xs"
-                                            :class="is_rolled_up? 'btn-success' : 'btn-info'"
-                                            title="Add to rollup" :disabled="!can_be_rolled_up">
-                                        <i :class="['fa fa-fw', is_rolled_up? 'fa-check' : 'fa-plus']"></i>
-                                    </button>
-
                                     <div class="dropdown">
                                         <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="Menu">
                                             <i class="fa fa-bars"></i>
@@ -189,6 +180,7 @@
 
                             </article>
                         </breakdown-resource>
+                        </div>
                     </section>
 
                 </div>
