@@ -237,3 +237,7 @@ Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('q
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
 Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
+
+Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
+Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
+Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
