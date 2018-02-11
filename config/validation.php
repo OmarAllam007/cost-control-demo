@@ -25,5 +25,11 @@ return [
         'std_activity_id' => 'required',
         'cost_account' => 'required|qs_code_found_on_wbs',
         'template_id' => 'required',
+    ],
+
+    'breakdown_resource' => [
+        'resource_id' => 'exists:resources,id',
+        'productivity_id' => 'sometimes|exists:productivities,id',
+        'equation' => 'valid_equation'
     ]
 ];

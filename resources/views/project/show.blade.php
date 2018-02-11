@@ -47,8 +47,10 @@
                     <li><a href="{{route('survey.import', $project)}}">Import Qty Survey</a></li>
                     <li class="divider"></li>
                     <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
+                    @can('budget_woner', $project)
                     <li class="divider"></li>
                     <li><a href="{{route('project.breakdown.import', $project)}}">Modify Breakdown</a></li>
+                    @endcan
                 </ul>
             </div>
         </div>
