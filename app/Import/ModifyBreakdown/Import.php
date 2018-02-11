@@ -61,13 +61,13 @@ class Import
             ->with('shadow')->find($this->rows->pluck('A')->toArray())->keyBy('id');
 
         $this->resources = Resources::whereNull('project_id')
-            ->whereIn('resource_code', $this->rows->pluck('F')->unique())
+            ->whereIn('resource_code', $this->rows->pluck('G')->unique())
             ->get()->keyBy(function ($resource) {
                 return strtolower($resource->resource_code);
             });
 
         $this->productivities = Productivity::whereNull('project_id')
-            ->whereIn('csi_code', $this->rows->pluck('G')->unique())
+            ->whereIn('csi_code', $this->rows->pluck('H')->unique())
             ->get()->keyBy(function ($productivity) {
                 return strtolower($productivity->csi_code);
             });
