@@ -17,7 +17,7 @@ class ActualBatchesController extends Controller
 
     function download(ActualBatch $actual_batch)
     {
-        return \Response::download($actual_batch->file)->deleteFileAfterSend(true);
+        return \Response::download($actual_batch->file);
     }
 
     function excel(ActualBatch $actual_batch)

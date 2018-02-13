@@ -56,6 +56,11 @@ class BreakDownResourceShadow extends Model
         return $this->belongsTo(Project::class);
     }
 
+    function qty_survey()
+    {
+        return $this->belongsTo(Survey::class, 'survey_id');
+    }
+
     function std_activity()
     {
         return $this->belongsTo(StdActivity::class, 'activity_id');
