@@ -6,7 +6,7 @@ use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
-use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
+use App\Reports\Cost\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
@@ -80,14 +80,15 @@ class CostReportsController extends Controller
         $chosen_period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($chosen_period_id);
 
-        $standard_activity = new CostStandardActivityReport($project, $period);
-        $data = $standard_activity->run();
+        $report = new CostStandardActivityReport($project, $period);
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-std-activity.xlsx');
+            return $report->excel();
+//            $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-std-activity.xlsx');
         }
 
+        $data = $report->run();
         return view('reports.cost-control.standard_activity.index', $data);
     }
 
