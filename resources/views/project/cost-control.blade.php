@@ -15,6 +15,11 @@
         @endif
     @endcan
 
+    @include('project.templates.iframe-modal')
+    @can('actual_resources', $project)
+        @include('project.cost-control.rollup-modal')
+    @endcan
+
     <div id="projectArea" class="hidden">
         <nav id="project-nav" class="project-nav btn-toolbar pull-right">
             <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
@@ -53,12 +58,6 @@
             @include('project.cost-control._report')
         @endcan
     </div>
-
-    @include('project.templates.iframe-modal')
-
-    @can('actual_resources', $project)
-        @include('project.cost-control.rollup-modal')
-    @endcan
 @stop
 
 @section('javascript')
