@@ -329,4 +329,14 @@ class BreakDownResourceShadow extends Model
     {
         return $query->whereRaw("breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = {$period->id})");
     }
+
+    function rollupResource()
+    {
+        return $this->belongsTo(BreakDownResourceShadow::class);
+    }
+
+    function isActivityRollup()
+    {
+        return $this->is_rollup && $this->resource_code == $this->code;
+    }
 }
