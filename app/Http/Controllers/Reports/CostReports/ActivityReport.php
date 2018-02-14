@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Reports\Cost;
+namespace App\Http\Controllers\Reports\CostReports;
 
 use App\MasterShadow;
 use App\Period;

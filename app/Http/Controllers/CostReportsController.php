@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Boq;
 use App\BreakDownResourceShadow;
+use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
-use App\Reports\Cost\ActivityReport;
-use App\Reports\Cost\CostStandardActivityReport;
+use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
@@ -15,16 +15,12 @@ use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
-//use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class CostReportsController extends Controller
 {
