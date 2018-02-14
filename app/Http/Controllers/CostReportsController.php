@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Boq;
 use App\BreakDownResourceShadow;
-use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
+use App\Reports\Cost\ActivityReport;
 use App\Reports\Cost\CostStandardActivityReport;
 use App\Http\Controllers\Reports\CostReports\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
@@ -15,7 +15,7 @@ use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
-use App\Http\Controllers\Reports\CostReports\StandardActivity;
+//use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
@@ -139,16 +139,16 @@ class CostReportsController extends Controller
     public function activityReport(Project $project, Request $request)
     {
         $period = Period::find($this->getPeriod($project, $request));
-
         $report = new ActivityReport($period);
 
-        $data = $report->run();
-
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.activity.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-activity.xlsx');
+            return $report->excel();
+
+//            $filename = view('reports.cost-control.activity.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-activity.xlsx');
         }
 
+        $data = $report->run();
         return view('reports.cost-control.activity.index', $data);
     }
 

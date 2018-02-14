@@ -172,12 +172,12 @@ class CostStandardActivityReport
 
         $excel->removeSheetByIndex(0);
         $excel->addExternalSheet($this->sheet());
-        $filename = storage_path('app/cost-summary-' . uniqid() . '.xlsx');
+        $filename = storage_path('app/std_activity-' . uniqid() . '.xlsx');
         $writer = new \PHPExcel_Writer_Excel2007($excel);
         $writer->setIncludeCharts(true);
         $writer->save($filename);
 
-        $name = slug($this->project->name) . '_' . slug($this->period->name) . '_cost-summary.xlsx';
+        $name = slug($this->project->name) . '_' . slug($this->period->name) . '_standard_activity.xlsx';
         return \Response::download($filename, $name)->deleteFileAfterSend(true);
     }
 
