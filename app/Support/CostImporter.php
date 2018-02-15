@@ -69,15 +69,6 @@ class CostImporter
        $parser = new PhysicalQtyParser($this->batch, $this->rows);
        $errors = $parser->handle();
 
-       if ($errors['invalid']->count()) {
-           $costIssues = new CostIssuesLog($this->batch);
-           $costIssues->recordInvalid($errors['invalid']);
-
-           $errors['invalid']->each(function($row) {
-               $this->rows->forget($row['hash']);
-           });
-       }
-
        $this->cache();
 
        if ($errors['resources']->count()) {
@@ -277,7 +268,6 @@ class CostImporter
 
     function checkProgress()
     {
-        dd($this->actual_resources->count());
         if ($this->actual_resources->count()) {
             $breakdown_resource_ids = $this->actual_resources->pluck('breakdown_resource_id');
         } else {

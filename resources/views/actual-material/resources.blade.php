@@ -18,6 +18,7 @@
                 <tr>
                     <th>Budget Resource Code</th>
                     <th>Budget Resource Name</th>
+                    <th>Budget Unit</th>
                     <th>Budget U.O.M</th>
                     <th>Store Resource Code</th>
                     <th>Store Resource Name</th>
@@ -35,13 +36,15 @@
                     @php
                         $hash = $resource['hash'];
                         $row_span = count($resource['rows']);
+                        $counter = 0;
                     @endphp
 
-                    @foreach($resource['rows'] as $counter => $store_resource)
+                    @foreach($resource['rows'] as $store_resource)
                         <tr class="resource-{{$hash}} {{$resource['resource']->is_rollup? 'info' : ''}}">
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_code}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_name}}</td>
+                                <td rowspan="{{$row_span}}">{{$resource['resource']->budget_unit}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->measure_unit}}</td>
                             @endif
                             <td>{{$store_resource[7]}}</td>

@@ -99,7 +99,7 @@ class CostImportFixer
             $newResource[5] = $newResource[6] / $qty;
             $newResource[8] = $rows->pluck(8)->unique()->implode(', ');
 
-            $resource = $errors[$key]['resource'];
+            $resource = $newResource['resource'] = $errors[$key]['resource'];
 
             $this->rows->put($hash, $newResource);
             $resourcesLog->push(compact('resource', 'rows', 'newResource'));
