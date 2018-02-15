@@ -13,17 +13,26 @@
 @endsection
 
 @section('body')
-    @if ($disciplines->count())
-        <table class="table table-bordered table-striped">
+        <table class="table table-condensed table-bordered table-striped">
             <thead>
             <tr>
                 <th>Description</th>
-                <th>{{$rev1->name}}</th>
-                <th>{{$revision->name}}</th>
-                <th>Difference</th>
-                <th>Difference (%)</th>
+                <th class="text-right">{{$rev1->name}}</th>
+                <th class="text-right">{{$revision->name}}</th>
+                <th class="text-right">Difference</th>
+                <th class="text-right">Difference (%)</th>
+            </tr>
+
+            <tr class="{{$diffTotal > 0? 'bg-danger' : ($diffTotal < 0? 'bg-success' : '')}}">
+                <th class="text-right">Total</th>
+                <th class="text-right">{{number_format($firstRevisionTotal, 2)}}</th>
+                <th class="text-right">{{number_format($thisRevisionTotal, 2)}}</th>
+                <th class="text-right">{{number_format($diffTotal, 2)}}</th>
+                <th class="text-right">{{number_format($diffPercentTotal, 2)}}%</th>
             </tr>
             </thead>
+
+            @if ($disciplines->count())
             <tbody>
             @foreach($disciplines as $discipline)
                 @php
@@ -38,36 +47,20 @@
                 @endphp
                 <tr class="{{$diff > 0? 'bg-danger' : ($diff < 0? 'bg-success' : '')}}">
                     <td>{{$discipline}}</td>
-                    <td>{{number_format($firstRevision[$discipline]['cost'] ?? 0, 2)}}</td>
-                    <td>{{number_format($thisRevision[$discipline]['cost'] ?? 0, 2)}}</td>
-                    <td>{{number_format($diff, 2)}}</td>
-                    <td>{{number_format($diffPercent, 2)}}%</td>
+                    <td class="text-right">{{number_format($firstRevision[$discipline]['cost'] ?? 0, 2)}}</td>
+                    <td class="text-right">{{number_format($thisRevision[$discipline]['cost'] ?? 0, 2)}}</td>
+                    <td class="text-right">{{number_format($diff, 2)}}</td>
+                    <td class="text-right">{{number_format($diffPercent, 2)}}%</td>
                 </tr>
             @endforeach
             </tbody>
-            <tfoot>
-            @php
-                $firstRevisionTotal = $firstRevision->sum('cost');
-                $thisRevisionTotal = $thisRevision->sum('cost');
-                $diffTotal = $thisRevisionTotal - $firstRevisionTotal;
-                $diffPercentTotal = $firstRevisionTotal ? ($diffTotal/$firstRevisionTotal) * 100 : 0;
-            @endphp
-            <tr class="{{$diffTotal > 0? 'bg-danger' : ($diffTotal < 0? 'bg-success' : '')}}">
-                <th>Total</th>
-                <th>{{number_format($firstRevisionTotal, 2)}}</th>
-                <th>{{number_format($thisRevisionTotal, 2)}}</th>
-                <th>{{number_format($diffTotal, 2)}}</th>
-                <th>{{number_format($diffPercentTotal, 2)}}%</th>
-            </tr>
-            </tfoot>
+            @endif
         </table>
 
         <div class="col-sm-8 col-sm-offset-2">
             <div id="chart" style="min-height: 400px; margin-top: 30px;"></div>
         </div>
-    @else
-        <div class="alert alert-info"><i class="fa fa-info-circle"></i> No changes were made on this revision</div>
-    @endif
+
 
 @endsection
 
