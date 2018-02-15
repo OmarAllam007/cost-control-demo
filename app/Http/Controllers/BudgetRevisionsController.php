@@ -57,7 +57,15 @@ class BudgetRevisionsController extends Controller
         $thisRevision = $revision->statsByDiscipline();
         $disciplines = $thisRevision->keys();
 
-        return view('revisions.show', compact('project', 'revision', 'firstRevision', 'thisRevision', 'rev1', 'disciplines'));
+        $firstRevisionTotal = $rev1->total();
+        $thisRevisionTotal = $revision->total();
+        $diffTotal = $thisRevisionTotal - $firstRevisionTotal;
+        $diffPercentTotal = $firstRevisionTotal ? ($diffTotal/$firstRevisionTotal) * 100 : 0;
+
+        return view('revisions.show', compact(
+            'project', 'revision', 'firstRevision', 'thisRevision', 'rev1', 'disciplines',
+            'firstRevisionTotal', 'thisRevisionTotal', 'diffTotal', 'diffPercentTotal'
+        ));
     }
 
     function export(Project $project, BudgetRevision $revision) {

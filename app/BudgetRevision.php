@@ -104,4 +104,9 @@ class BudgetRevision extends Model
         return url("/project/{$this->project_id}/revisions/{$this->id}");
     }
 
+    function total()
+    {
+        return RevisionBreakdownResourceShadow::where('revision_id', $this->id)->sum('budget_cost');
+    }
+
 }
