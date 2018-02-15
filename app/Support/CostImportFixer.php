@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\ActivityMap;
 use App\ActualBatch;
+use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
 use Illuminate\Support\Collection;
@@ -99,7 +100,10 @@ class CostImportFixer
             $newResource[5] = $newResource[6] / $qty;
             $newResource[8] = $rows->pluck(8)->unique()->implode(', ');
 
-            $resource = $newResource['resource'] = $errors[$key]['resource'];
+            $resource = $errors[$key]['resource'];
+            if ($resource->is_rollup || ($resource->rollup_resource_id && $resource->important)) {
+                $newResource['resource'] = $resource;
+            }
 
             $this->rows->put($hash, $newResource);
             $resourcesLog->push(compact('resource', 'rows', 'newResource'));
@@ -186,6 +190,10 @@ class CostImportFixer
             }
             unset($resource->cost);
             $resource->update($data);
+            $resource->actual_resources()
+                ->orderBy('id', 'desc')->first()
+                ->update(['progress' => $resource->progress, 'status' => $resource->status]);
+
 //            $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
             $log = ['resource' => $resource, 'remaining_qty' => $resource->remaining_qty, 'to_date_qty' => $resource->to_date_qty];
             $progressLog->push($log);
@@ -215,7 +223,13 @@ class CostImportFixer
                 $resource->status = 'Closed';
             }
 
+            /** @var BreakDownResourceShadow $resource */
             $resource->save();
+
+            $resource->actual_resources()
+                ->orderBy('id', 'desc')->first()
+                ->update(['progress' => $resource->progress, 'status' => $resource->status]);
+
 //            $cost = BreakDownResourceShadow::where('breakdown_resource_id', $id)->first();
             $log = ['resource' => $resource, 'remaining_qty' => $resource->remaining_qty, 'to_date_qty' => $resource->to_date_qty];
             unset($resource->cost, $resource->imported_cost);
