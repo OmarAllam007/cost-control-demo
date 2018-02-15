@@ -65,92 +65,25 @@ class CostImporter
      */
     public function checkPhysicalQty()
     {
-        $errors = collect();
+       $parser = new PhysicalQtyParser($this->batch, $this->rows);
+       $errors = $parser->handle();
 
-        $resourcesLog = collect();
+       if ($errors['invalid']->count()) {
+           $costIssues = new CostIssuesLog($this->batch);
+           $costIssues->recordInvalid($errors['invalid']);
 
-        $invalid = collect();
+           $errors['invalid']->each(function($row) {
+               $this->rows->forget($row['hash']);
+           });
+       }
 
-        foreach ($this->rows as $hash => $row) {
+       $this->cache();
 
-            $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+       if ($errors['resources']->count()) {
+           return ['error' => 'physical_qty', 'errors' => $errors['resources'], 'batch' => $this->batch];
+       }
 
-
-            $query = BreakDownResourceShadow::where('code', $activityCode);
-
-            $resource_code = trim(strtolower($row[7]));
-            if ($this->resourcesMap->has($resource_code)) {
-                $resourceIds = $this->resourcesMap->get($resource_code);
-                $query->whereIn('resource_id', $resourceIds);
-                if (!empty($row[9])) {
-                    $query->where('cost_account', $row[9]);
-                }
-            } elseif($this->rolledUpResources->has($resource_code)) {
-                $query->where('resource_code', $resource_code);
-            } else {
-                $this->rows->forget($hash);
-                $invalid->push($row);
-                continue;
-            }
-
-            $shadowResource = $query->first();
-            if (!$shadowResource) {
-                $this->rows->forget($hash);
-                $invalid->push($row);
-                continue;
-            }
-
-            if (!$resourcesLog->has($shadowResource->id)) {
-                $resourcesLog->put($shadowResource->id, collect(['resource' => $shadowResource, 'rows' => collect()]));
-            }
-            $row['hash'] = $hash;
-            $resourcesLog->get($shadowResource->id)->get('rows')->push($row);
-        }
-
-        $this->loadUnits();
-        $counter = 0;
-        foreach ($resourcesLog as $id => $record) {
-            $record['resource_id'] = $id;
-            foreach ($record['rows']->groupBy(9) as $rows) {
-                $hash = sha1($counter . json_encode($rows));
-                if ($rows->count() > 1) {
-                    $count = $rows->pluck(7)->unique()->count();
-                    if ($count > 1) {
-                        $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
-                        continue;
-                    }
-
-                    foreach ($rows as $row) {
-                        $unit_id = $this->unitsMap->get($row[3]);
-                        if ($record['resource']->unit_id != $unit_id) {
-                            $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
-                            break;
-                        }
-                    }
-                } else {
-                    $row = $rows->first();
-                    $unit_id = $this->unitsMap->get(trim(strtolower($row[3])));
-                    if ($record['resource']->unit_id != $unit_id) {
-                        $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
-                    }
-                }
-
-                ++$counter;
-            }
-        }
-
-        $this->cache();
-
-        if ($invalid->count()) {
-            $costIssues = new CostIssuesLog($this->batch);
-            $costIssues->recordInvalid($invalid);
-        }
-
-        if ($errors->count()) {
-            return ['error' => 'physical_qty', 'errors' => $errors, 'batch' => $this->batch];
-        }
-
-        return $this->checkClosed();
+       return $this->checkClosed();
     }
 
     /**
@@ -399,7 +332,7 @@ class CostImporter
     protected function loadResourceCodes()
     {
         $this->rolledUpResources = BreakDownResourceShadow::where('project_id', $this->batch->project_id)
-            ->where('is_rolled_up', 1)->get()->reduce(function (Collection $mapping, $resource) {
+            ->where('is_rollup', 1)->get()->reduce(function (Collection $mapping, $resource) {
                 $code = strtolower($resource->resource_code);
                 $mapping->put($code, $code);
                 return $mapping;
@@ -487,5 +420,24 @@ class CostImporter
 
         $newRows = $newRows->keyBy('hash');
         return $this->rows = $newRows;
+    }
+
+    private function getResources($row)
+    {
+        $store_activity = trim(strtolower($row[0]));
+        $budget_activity = $this->activityCodes->get($store_activity);
+
+        $store_resource = trim(strtolower($row[7]));
+        $budget_resources = $this->resourcesMap->get($store_resource);
+
+        $resources = BreakDownResourceShadow::whereProjectId($this->batch->project_id)
+            ->whereCode($budget_activity)
+            ->whereIn('resource_code', $budget_resources)->get();
+
+        if (!$resources) {
+            return false;
+        }
+
+
     }
 }

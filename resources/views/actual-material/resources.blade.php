@@ -38,7 +38,7 @@
                     @endphp
 
                     @foreach($resource['rows'] as $counter => $store_resource)
-                        <tr class="resource-{{$hash}}">
+                        <tr class="resource-{{$hash}} {{$resource['resource']->is_rollup? 'info' : ''}}">
                             @if ($counter == 0)
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_code}}</td>
                                 <td rowspan="{{$row_span}}">{{$resource['resource']->resource_name}}</td>

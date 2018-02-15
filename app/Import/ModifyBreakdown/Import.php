@@ -57,7 +57,7 @@ class Import
 
     private function handleRows()
     {
-        $this->breakdownResources = BreakdownResource::where('project_id', $this->project->id)
+        $this->breakdownResources = BreakdownResource::budgetOnly()->where('project_id', $this->project->id)
             ->with('shadow')->find($this->rows->pluck('A')->toArray())->keyBy('id');
 
         $this->resources = Resources::whereNull('project_id')
