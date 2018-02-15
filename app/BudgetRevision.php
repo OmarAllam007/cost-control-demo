@@ -114,4 +114,9 @@ class BudgetRevision extends Model
     {
         return $query->select('project_id')->selectRaw('max(id) as id')->groupBy('project_id');
     }
+    function total()
+    {
+        return RevisionBreakdownResourceShadow::where('revision_id', $this->id)->sum('budget_cost');
+    }
+
 }
