@@ -15,7 +15,8 @@ class ActualResources extends Model
 
     protected $fillable = [
         'project_id', 'wbs_level_id', 'breakdown_resource_id', 'period_id', 'original_code',
-        'qty', 'unit_price', 'cost', 'unit_id', 'action_date', 'resource_id', 'batch_id', 'doc_no', 'original_data'
+        'qty', 'unit_price', 'cost', 'unit_id', 'action_date', 'resource_id', 'batch_id', 'doc_no', 'original_data',
+        'progress', 'status'
     ];
 
     protected $casts = ['original_data' => 'array'];

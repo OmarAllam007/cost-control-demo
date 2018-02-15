@@ -58,6 +58,15 @@ class PhysicalQtyParser
             $this->handlePhysicalQty($row);
         }
 
+        if ($this->errors['invalid']->count()) {
+            $costIssues = new CostIssuesLog($this->batch);
+            $costIssues->recordInvalid($this->errors['invalid']);
+
+            $this->errors['invalid']->each(function($row) {
+               $this->rows->forget($row['hash']);
+           });
+        }
+
         $this->errors['resources'] = $this->physicalMapping->filter(function (Collection $group) {
             if ($group->get('rows')->count() > 1) {
                 return true;
@@ -71,7 +80,7 @@ class PhysicalQtyParser
             }
 
             return $this->checkUnitOfMeasure($resource, $row);
-        });
+        })->keyBy('hash');
 
         return $this->errors;
     }
@@ -160,7 +169,7 @@ class PhysicalQtyParser
             if (!$this->physicalMapping->has($breakdown_resource_id)) {
                 $this->physicalMapping
                     ->put($breakdown_resource_id, collect([
-                        'resource' => $resource->rollupResource, 'rows' => collect(), 'hash' => uniqid()
+                        'resource' => $resource->rollupResource, 'rows' => collect(), 'hash' => $resource->rollupResource->id
                     ]));
             }
 
@@ -171,7 +180,7 @@ class PhysicalQtyParser
             $breakdown_resource_id = $resource->breakdown_resource_id;
             if (!$this->physicalMapping->has($breakdown_resource_id)) {
                 $this->physicalMapping->put($breakdown_resource_id, collect([
-                    'resource' => $resource, 'rows' => collect(), 'hash' => uniqid()
+                    'resource' => $resource, 'rows' => collect(), 'hash' => $resource->id
                 ]));
             }
 

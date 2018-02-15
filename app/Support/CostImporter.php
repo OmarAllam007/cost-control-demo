@@ -6,6 +6,7 @@ use App\ActivityMap;
 use App\ActualBatch;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
+use App\ImportantActualResource;
 use App\Jobs\UpdateResourceDictJob;
 use App\ResourceCode;
 use App\Resources;
@@ -67,15 +68,6 @@ class CostImporter
     {
        $parser = new PhysicalQtyParser($this->batch, $this->rows);
        $errors = $parser->handle();
-
-       if ($errors['invalid']->count()) {
-           $costIssues = new CostIssuesLog($this->batch);
-           $costIssues->recordInvalid($errors['invalid']);
-
-           $errors['invalid']->each(function($row) {
-               $this->rows->forget($row['hash']);
-           });
-       }
 
        $this->cache();
 
@@ -243,16 +235,22 @@ class CostImporter
                 continue;
             }
 
-            $actual_resource = ActualResources::create([
+            $attributes = [
                 'project_id' => $project_id, 'period_id' => $period_id, 'wbs_level_id' => $resource->wbs_id, 'batch_id' => $batch_id,
                 'breakdown_resource_id' => $resource->breakdown_resource_id, 'original_code' => $row[7], 'qty' => $row[4], 'unit_price' => $row[5], 'cost' => $row[6],
                 'unit_id' => $resource->unit_id, 'resource_id' => $resource->resource_id, 'doc_no' => $row[8] ?? '', 'original_data' => json_encode($row),
                 'action_date' => $row[1]
-            ]);
+            ];
 
-            $resource_dict->push($resource->resource_id);
+            if ($resource->is_rollup || !$resource->rolled_up_at) {
+                $this->actual_resources->push(ActualResources::create($attributes));
+            } else {
+                ImportantActualResource::create($attributes);
+            }
 
-            $this->actual_resources->push($actual_resource);
+            if (!$resource->is_rollup) {
+                $resource_dict->push($resource->resource_id);
+            }
         }
 
         dispatch(new UpdateResourceDictJob($this->batch->project, $resource_dict));
