@@ -71,7 +71,7 @@ class PhysicalQtyParser
             }
 
             return $this->checkUnitOfMeasure($resource, $row);
-        });
+        })->keyBy('hash');
 
         return $this->errors;
     }
@@ -160,7 +160,7 @@ class PhysicalQtyParser
             if (!$this->physicalMapping->has($breakdown_resource_id)) {
                 $this->physicalMapping
                     ->put($breakdown_resource_id, collect([
-                        'resource' => $resource->rollupResource, 'rows' => collect(), 'hash' => uniqid()
+                        'resource' => $resource->rollupResource, 'rows' => collect(), 'hash' => $resource->rollupResource->id
                     ]));
             }
 
@@ -171,7 +171,7 @@ class PhysicalQtyParser
             $breakdown_resource_id = $resource->breakdown_resource_id;
             if (!$this->physicalMapping->has($breakdown_resource_id)) {
                 $this->physicalMapping->put($breakdown_resource_id, collect([
-                    'resource' => $resource, 'rows' => collect(), 'hash' => uniqid()
+                    'resource' => $resource, 'rows' => collect(), 'hash' => $resource->id
                 ]));
             }
 
