@@ -1,5 +1,5 @@
 <section class="card">
-    <h3 class="card-title blue">Budget Data</h3>
+    <h3 class="card-title dark-cyan">Budget Data</h3>
 
     <div class="card-body display-flex">
         <article class="flex mr-10">

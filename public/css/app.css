@@ -12056,6 +12056,11 @@ table.table > thead > tr > th.v-top {
   color: #f5f5f5;
 }
 
+.card .card-title.dark-cyan {
+  background-color: #179fc0;
+  color: #f5f5f5;
+}
+
 .card .card-body {
   padding: 10px;
 }
@@ -12103,9 +12108,9 @@ dl {
 }
 
 dt {
-  background: #64D5CA;
+  background: #E0F8FF;
   padding: 5px;
-  text-align: right;
+  text-align: left;
   color: #444;
   font-size: 12px;
   width: 40%;
@@ -12152,6 +12157,10 @@ dd {
 
 .card .table tr.bg-cyan th {
   background-color: #4DC0B5;
-  color: #f5f5f5;
+  color: black;
+}
+
+section.sm-card {
+  height: 250px;
 }
 
