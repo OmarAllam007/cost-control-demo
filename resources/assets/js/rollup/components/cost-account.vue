@@ -1,25 +1,21 @@
 <template>
-    <li>
-        <label>
-            <input type="checkbox" :value="cost_account.id" :name="`cost_account[${cost_account.id}]`">
-            {{cost_account.code}} &mdash; <small>{{cost_account.description}}</small>
-        </label>
-
         <table class="table table-condensed table-bordered table-hover table-striped">
             <thead>
             <tr>
-                <th>&nbsp;</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Budget Unit</th>
-                <th>Unit of Measure</th>
-                <th>Budget Cost</th>
-                <th>To date Qty</th>
-                <th>To date Cost</th>
+                <th><i class="fa fa-asterisk"></i></th>
+                <th class="col-sm-2">Code</th>
+                <th class="col-sm-4">Name</th>
+                <th class="col-sm-1">Budget Unit</th>
+                <th class="col-sm-1">Unit of Measure</th>
+                <th class="col-sm-1">Budget Cost</th>
+                <th class="col-sm-1">To date Qty</th>
+                <th class="col-sm-1">To date Cost</th>
             </tr>
 
-            <tr>
-                <th>&nbsp;</th>
+            <tr class="info">
+                <th>
+                    <input type="checkbox" :value="cost_account.id" :name="`cost_account[${cost_account.id}]`">
+                </th>
                 <th v-text="cost_account.code"></th>
                 <th v-text="cost_account.description"></th>
                 <th><input class="form-control input-sm" type="number" :value="1" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Qty"></th>
@@ -29,12 +25,12 @@
                     </select>
                 </th>
                 <th v-text="total_budget_cost"></th>
-                <th><input class="form-control input-sm" type="number" value="1" :name="`to_date_qty[${cost_account.id}]`" placeholder="To date Qty"></th>
+                <th><input class="form-control input-sm" type="number" :value="0" :name="`to_date_qty[${cost_account.id}]`" placeholder="To date Qty"></th>
                 <th v-text="total_to_date_cost"></th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="resource in cost_account.resources">
+            <tr v-for="resource in cost_account.resources" :class="resource.important? 'highlight' : ''">
                 <td><i class="fa fa-asterisk" v-if="resource.important"></i></td>
                 <td v-text="resource.code"></td>
                 <td v-text="resource.name"></td>
@@ -46,7 +42,6 @@
             </tr>
             </tbody>
         </table>
-    </li>
 </template>
 
 <script>
