@@ -51,7 +51,7 @@ trait CostAttributes
             return $this->attributes['to_date_qty'];
         }
 
-        return $this->curr_qty + $this->prev_qty;
+        return ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty') ?: 0;
     }
 
     function getToDateCostAttribute()
@@ -60,7 +60,7 @@ trait CostAttributes
             return $this->attributes['to_date_cost'];
         }
 
-        return $this->curr_cost + $this->prev_cost;
+        return ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('cost') ?: 0;
     }
 
     function getToDateUnitPriceAttribute()
