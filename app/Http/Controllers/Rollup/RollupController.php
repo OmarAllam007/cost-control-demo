@@ -40,7 +40,10 @@ class RollupController extends Controller
     {
         $this->authorize('cost_owner', $project);
 
-        $rollup = new ImportantResourcesRollup($project, $request->get('resources', []));
+        $rollup = new ImportantResourcesRollup($project,
+            $request->get('resources', []),
+            $request->only('budget_unit', 'measure_unit', 'to_date_qty'));
+
         $status = $rollup->handle();
 
         flash("{$status['resources']} Resources in {$status['cost_accounts']} cost accounts have been rolled up", 'success');

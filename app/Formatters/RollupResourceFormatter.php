@@ -24,6 +24,7 @@ class RollupResourceFormatter implements Jsonable
     function toArray()
     {
         return [
+            'id' => $this->resource->breakdown_resource_id,
             'code' => $this->resource->resource_code,
             'name' => $this->resource->resource_name,
             'budget_unit' => $this->resource->budget_unit,
@@ -32,6 +33,7 @@ class RollupResourceFormatter implements Jsonable
             'to_date_cost' => $this->resource->to_date_cost,
             'to_date_qty' => $this->resource->to_date_qty,
             'important' => $this->resource->important,
+            'selected' => false,
         ];
     }
 
