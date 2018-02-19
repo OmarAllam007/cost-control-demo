@@ -13,7 +13,7 @@
             </tr>
 
             <tr class="info">
-                <th>
+                <th class="text-center">
                     <input type="checkbox" :value="cost_account.id" :name="`cost_account[${cost_account.id}]`">
                 </th>
                 <th v-text="cost_account.code"></th>
@@ -22,6 +22,7 @@
                 <th>
                     <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`">
                         <option value="">Select Unit</option>
+                        <option v-for="unit in units" :value="unit.id" v-text="unit.type"></option>
                     </select>
                 </th>
                 <th v-text="total_budget_cost"></th>
@@ -31,7 +32,7 @@
             </thead>
             <tbody>
             <tr v-for="resource in cost_account.resources" :class="resource.important? 'highlight' : ''">
-                <td><i class="fa fa-asterisk" v-if="resource.important"></i></td>
+                <td class="text-center"><i class="fa fa-asterisk" v-if="resource.important"></i></td>
                 <td v-text="resource.code"></td>
                 <td v-text="resource.name"></td>
                 <td>{{resource.budget_unit|number_format}}</td>
@@ -49,7 +50,7 @@
         props: ['initial'],
 
         data() {
-            return { cost_account: this.initial };
+            return { cost_account: this.initial, units: window.units };
         },
 
         computed: {
