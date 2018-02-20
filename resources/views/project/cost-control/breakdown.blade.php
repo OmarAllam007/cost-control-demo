@@ -94,7 +94,8 @@
                         <breakdown-resource inline-template
                                             v-for="resource in resources"
                                             :activity="activity"
-                                            :resource="resource">
+                                            :resource="resource"
+                                            :class="resource.is_rollup? 'highlight' : '' ">
 
                             <article class="breakdown-resource display-flex">
                                 <section class="information flex">
@@ -157,9 +158,10 @@
                                 </section>
 
                                 <section class="actions">
+                                    <button v-if="resource.important" class="btn btn-xs btn-danger" disabled><i class="fa fa-asterisk fa-fw"></i></button>
                                     <div class="dropdown">
                                         <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" title="Menu">
-                                            <i class="fa fa-bars"></i>
+                                            <i class="fa fa-bars fa-fw"></i>
                                         </a>
 
                                         <ul class="dropdown-menu dropdown-menu-right">
@@ -173,7 +175,7 @@
                                         </ul>
                                     </div>
 
-                                    <button title="More Information" class="btn btn-sm btn-xs btn-default" @click="expanded = !expanded">
+                                    <button title="More Information" class="btn btn-xs btn-default" @click="expanded = !expanded">
                                         <i :class="{'fa fa-fw': true, 'fa-angle-down': !expanded, 'fa-angle-up': expanded}"></i>
                                     </button>
                                 </section>
