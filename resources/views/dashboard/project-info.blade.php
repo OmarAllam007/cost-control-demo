@@ -1,5 +1,5 @@
-<section class="card">
-    <h3 class="card-title cyan">Contracts Information</h3>
+<section class="card info-section">
+    <h3 class="card-title dark-cyan">Contracts Information</h3>
 
     <section class="card-body">
         <div class="row">
@@ -27,14 +27,14 @@
 
             <div class="col-sm-4">
                 <dl>
-                    <dt>Profit</dt>
+                    <dt>Initial Profit</dt>
                     <dd>{{number_format($contracts_info['profit'], 2)}}</dd>
                 </dl>
             </div>
 
             <div class="col-sm-4">
                 <dl>
-                    <dt>Profitability</dt>
+                    <dt>Initial Profitability</dt>
                     <dd>{{number_format($contracts_info['profitability'], 2)}}%</dd>
                 </dl>
             </div>
@@ -49,10 +49,10 @@
 
 
 
-        <h5>Project Schedule</h5>
+        <h5 style="text-decoration: underline">Project Schedule</h5>
         <table class="table table-condensed table-bordered">
             <thead>
-            <tr class="bg-cyan">
+            <tr class="bg-primary">
                 <th>Project</th>
                 <th>Planned Start (PS)</th>
                 <th>Original Duration (Days)</th>

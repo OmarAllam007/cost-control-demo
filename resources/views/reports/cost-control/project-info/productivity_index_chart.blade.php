@@ -8,8 +8,8 @@
              data-labels="{{$productivityIndexTrend->pluck('name')}}"
              data-datasets="[{{json_encode([
                                 'label' => 'Productivity Index', 'data' => $productivityIndexTrend->pluck('value'),
-                                'backgroundColor' => 'rgba(240, 255, 243, 0.6)',
-                                'borderColor' => '#8ed3d8'
+                                  'backgroundColor' => '#9ddcec',
+                                'borderColor' => '#169ec0'
                             ])}}]"
              style="height: 200px"></div>
     </div>

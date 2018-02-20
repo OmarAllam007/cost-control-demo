@@ -1,5 +1,5 @@
-<section class="card">
-    <h3 class="card-title purple">Cost Summary</h3>
+<section class="card info-section">
+    <h3 class="card-title dark-cyan">Cost Summary</h3>
 
     <div class="card-body">
         <table class="table table-bordered table-condensed dashboaad-cost-summary">
