@@ -10909,10 +10909,6 @@ body#iframe .container-fluid {
   overflow: auto;
 }
 
-.wbs-tree .table {
-  margin-left: 21px;
-}
-
 .wbs-tree li {
   list-style-type: none;
   position: relative;
@@ -11437,6 +11433,14 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
 .file-container .file-name {
   font-weight: 700;
+}
+
+.highlight {
+  background: #ffc;
+}
+
+.table-striped > tbody > tr.highlight > td {
+  background-color: #ffc;
 }
 
 /*# sourceMappingURL=app.css.map */

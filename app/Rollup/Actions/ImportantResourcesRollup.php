@@ -6,10 +6,12 @@ use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Project;
+use App\Unit;
 use Illuminate\Support\Collection;
 
 class ImportantResourcesRollup
 {
+    //<editor-fold defaultstate="collapsed" desc="Variable definitions">
     /** @var Project */
     private $project;
 
@@ -22,18 +24,26 @@ class ImportantResourcesRollup
     private $rollup_resource;
     private $rollup_shadow;
 
-    function __construct(Project $project, $data = [])
+    /** @var array */
+    private $extra;
+
+    /** @var Collection */
+    private $unit_cache;
+
+    function __construct(Project $project, $data = [], $extra = [])
     {
         $this->project = $project;
         $this->data = collect($data);
-
         $this->now = date('Y-m-d H:i:s');
         $this->user_id = auth()->id() ?? 0;
+        $this->extra = $extra;
+        $this->unit_cache = Unit::pluck('type', 'id');
 
         Breakdown::flushEventListeners();
         BreakdownResource::flushEventListeners();
         BreakDownResourceShadow::flushEventListeners();
     }
+    //</editor-fold>
 
     function handle()
     {
@@ -78,19 +88,23 @@ class ImportantResourcesRollup
     {
         $this->createRollupResource($breakdown);
 
-        $total_cost = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->sum('budget_cost');
+        $total_cost = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->sum('budget_cost') ?: 0;
+        $budget_unit = $this->extra['budget_unit'][$breakdown->id] ?? 1;
+        $unit_id = $this->extra['measure_unit'][$breakdown->id] ?? 3;
+        $measure_unit = $this->unit_cache->get($unit_id);
+        $unit_price = $total_cost / $budget_unit;
 
         return $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $breakdown->cost_account, 'resource_type_id' => 3,
             'resource_name' => $breakdown->qty_survey->description, 'resource_type' => '03.MATERIAL',
             'activity_id' => $breakdown->std_activity_id, 'activity' => $breakdown->std_activity->name,
-            'eng_qty' => 1, 'budget_qty' => 1, 'resource_qty' => 1, 'budget_unit' => 1,
-            'resource_waste' => 0, 'unit_price' => $total_cost, 'budget_cost' => $total_cost,
-            'measure_unit' => 'LM', 'unit_id' => 3, 'template' => 'Cost Account Rollup',
+            'eng_qty' => $budget_unit, 'budget_qty' => $budget_unit, 'resource_qty' => $budget_unit, 'budget_unit' => $budget_unit,
+            'resource_waste' => 0, 'unit_price' => $unit_price, 'budget_cost' => $total_cost,
+            'measure_unit' => $measure_unit, 'unit_id' => $unit_id, 'template' => 'Semi-activity rollup',
             'breakdown_id' => $breakdown->id, 'wbs_id' => $breakdown->wbs_level_id,
             'project_id' => $breakdown->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
-            'remarks' => 'Cost account rollup', 'productivity_ref' => '', 'productivity_output' => 0,
+            'remarks' => 'Semi-activity rollup', 'productivity_ref' => '', 'productivity_output' => 0,
             'labors_count' => 0, 'boq_equivilant_rate' => 1, 'productivity_id' => 0,
             'code' => $this->rollup_resource->code, 'resource_id' => 0,
             'boq_id' => $breakdown->qty_survey->boq->id ?? 0, 'survey_id' => $breakdown->qty_survey->id ?? 0,
@@ -103,11 +117,12 @@ class ImportantResourcesRollup
     private function createRollupResource($breakdown)
     {
         $code = $breakdown->resources()->first()->code;
+        $budget_unit = $this->extra['budget_unit'][$breakdown->id] ?? 1;
 
         return $this->rollup_resource  = BreakdownResource::forceCreate([
             'breakdown_id' => $breakdown->id, 'resource_id' => 0, 'std_activity_resource_id' => 0,
-            'productivity_id' => 0, 'budget_qty' => 1, 'eng_qty' => 1, 'remarks' => 'Resources rollup',
-            'resource_qty' => 1, 'equation' => 1, 'labor_count' => 0, 'wbs_id' => $breakdown->wbs_level_id,
+            'productivity_id' => 0, 'budget_qty' => $budget_unit, 'eng_qty' => $budget_unit, 'remarks' => 'Semi-activity rollup',
+            'resource_qty' => $budget_unit, 'equation' => $budget_unit, 'labor_count' => 0, 'wbs_id' => $breakdown->wbs_level_id,
             'project_id' => $breakdown->project_id, 'code' => $code, 'is_rollup' => true,
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
             'created_by' => $this->user_id, 'created_at' => $this->now

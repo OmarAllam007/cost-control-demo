@@ -274,10 +274,6 @@ body#iframe {
   max-height: 500px;
   overflow: auto;
 
-  .table {
-    margin-left: 21px;
-  }
-
   li {
     list-style-type: none;
     position: relative;
@@ -796,4 +792,12 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
 .file-container .file-name {
   font-weight: 700;
+}
+
+.highlight {
+  background: #ffc;
+}
+
+.table-striped > tbody > tr.highlight > td {
+  background-color: #ffc;
 }

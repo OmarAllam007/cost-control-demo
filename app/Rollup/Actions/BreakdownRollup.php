@@ -7,10 +7,13 @@ use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Project;
+use App\Unit;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class BreakdownRollup
 {
+    //<editor-fold defaultstate="collapsed" desc="Variables definitions">
     /** @var Project */
     private $project;
 
@@ -29,17 +32,26 @@ class BreakdownRollup
     /** @var int */
     private $user_id;
 
-    public function __construct(Project $project, $cost_accounts = [])
+    /** @var Collection */
+    private $unit_cache;
+
+    /** @var array */
+    private $extra;
+
+    public function __construct(Project $project, $cost_accounts = [], $extra = [])
     {
         $this->project = $project;
         $this->cost_accounts = $cost_accounts;
+        $this->extra = $extra;
         $this->user_id = auth()->id() ?: 2;
-
         $this->now = Carbon::now()->format('Y-m-d H:i:s');
+        $this->unit_cache = Unit::pluck('type', 'id');
+
         Breakdown::flushEventListeners();
         BreakdownResource::flushEventListeners();
         BreakDownResourceShadow::flushEventListeners();
     }
+    //</editor-fold>
 
     function handle()
     {
@@ -78,11 +90,14 @@ class BreakdownRollup
     private function createRollupResource($breakdown)
     {
         $code = $breakdown->resources()->first()->code;
+        $budget_unit = $this->extra['budget_unit'][$breakdown->id] ?? 0;
 
         return $this->rollup_resource  = BreakdownResource::forceCreate([
             'breakdown_id' => $breakdown->id, 'resource_id' => 0, 'std_activity_resource_id' => 0,
-            'productivity_id' => 0, 'budget_qty' => 1, 'eng_qty' => 1, 'remarks' => 'Cost account rollup',
-            'resource_qty' => 1, 'equation' => 1, 'labor_count' => 0, 'wbs_id' => $breakdown->wbs_level_id,
+            'productivity_id' => 0, 'budget_qty' => $budget_unit, 'eng_qty' => $budget_unit,
+            'remarks' => 'Cost account rollup',
+            'resource_qty' => $budget_unit, 'equation' => $budget_unit,
+            'labor_count' => 0, 'wbs_id' => $breakdown->wbs_level_id,
             'project_id' => $breakdown->project_id, 'code' => $code, 'is_rollup' => true,
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
             'created_by' => $this->user_id, 'created_at' => $this->now
@@ -94,15 +109,19 @@ class BreakdownRollup
         $this->createRollupResource($breakdown);
 
         $total_cost = $breakdown->resources->pluck('shadow')->sum('budget_cost');
+        $budget_unit = $this->extra['budget_unit'][$breakdown->id] ?? 1;
+        $unit_id = $this->extra['measure_unit'][$breakdown->id] ?? 3;
+        $measure_unit = $this->unit_cache->get($unit_id);
+        $unit_price = $total_cost / $budget_unit;
 
         return $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $breakdown->cost_account, 'resource_type_id' => 4,
             'resource_name' => $breakdown->qty_survey->description, 'resource_type' => '04.Subcontractors',
             'activity_id' => $breakdown->std_activity_id, 'activity' => $breakdown->std_activity->name,
-            'eng_qty' => 1, 'budget_qty' => 1, 'resource_qty' => 1, 'budget_unit' => 1,
-            'resource_waste' => 0, 'unit_price' => $total_cost, 'budget_cost' => $total_cost,
-            'measure_unit' => 'LM', 'unit_id' => 3, 'template' => 'Cost Account Rollup',
+            'eng_qty' => $budget_unit, 'budget_qty' => $budget_unit, 'resource_qty' => $budget_unit, 'budget_unit' => $budget_unit,
+            'resource_waste' => 0, 'unit_price' => $unit_price, 'budget_cost' => $total_cost,
+            'measure_unit' => $measure_unit, 'unit_id' => $unit_id, 'template' => 'Cost Account Rollup',
             'breakdown_id' => $breakdown->id, 'wbs_id' => $breakdown->wbs_level_id,
             'project_id' => $breakdown->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
             'remarks' => 'Cost account rollup', 'productivity_ref' => '', 'productivity_output' => 0,

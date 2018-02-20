@@ -32,5 +32,9 @@
 @endsection
 
 @section('javascript')
+    <script>
+        window.units = {!! \App\Unit::select('id', 'type')->orderBy('type')->get() !!};
+    </script>
+
     <script src="/js/rollup/edit.js"></script>
 @endsection
