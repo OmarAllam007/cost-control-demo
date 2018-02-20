@@ -1,9 +1,9 @@
-<section class="card sm-card">
-    <h3 class="card-title dark-cyan">Actual Data</h3>
+<section class="card-group-item">
+    <h3 class="card-title dark-cyan card-group-item-heading">Actual Data</h3>
 
     <div class="card-body">
-    <table class="table table-bordered table-condensed">
-        <tbody>
+        <table class="table table-bordered table-condensed">
+            <tbody>
             <tr>
                 <th class="w-1-3">Actual Cost</th>
                 <td class="w-2-3">{{number_format($cost_info['to_date_cost'], 2)}}</td>
@@ -15,6 +15,7 @@
                 <td class="w-2-3 {{$cost_info['variance']>0? 'text-success' : 'text-danger'}}">
                     {{number_format($cost_info['variance'], 2)}}
                 </td>
+
             </tr>
             <tr>
                 <th class="w-1-3">CPI</th>
@@ -29,7 +30,7 @@
                     </div>
                 </td>
                 <td class="separator"></td>
-                <th class="w-1-3">Waste Index</th>
+                <th class="w-1-3">Material Consumption Index</th>
                 <td class="w-2-3">{{number_format($cost_info['pw_index'], 2)}}%</td>
                 <td class="separator"></td>
                 <th class="w-1-3">SPI</th>
@@ -44,10 +45,27 @@
                     </div>
 
                 </td>
+
+            </tr>
+            <tr>
+                <th class="w-1-3">EAC Profitability</th>
+                <td class="w-2-3">
+                    <div class="display-flex">
+
+                    </div>
+                </td>
+                <td class="separator"></td>
+                <th class="w-1-3">EAC Profit Amount</th>
+                <td class="w-2-3">
+                    <div class="display-flex">
+
+                    </div>
+                </td>
+
             </tr>
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
     </div>
 
 </section>

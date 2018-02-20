@@ -1,4 +1,4 @@
-<section class="card">
+<section class="card info-section">
     <h3 class="card-title dark-cyan">Contracts Information</h3>
 
     <section class="card-body">
@@ -27,14 +27,14 @@
 
             <div class="col-sm-4">
                 <dl>
-                    <dt>Profit</dt>
+                    <dt>Initial Profit</dt>
                     <dd>{{number_format($contracts_info['profit'], 2)}}</dd>
                 </dl>
             </div>
 
             <div class="col-sm-4">
                 <dl>
-                    <dt>Profitability</dt>
+                    <dt>Initial Profitability</dt>
                     <dd>{{number_format($contracts_info['profitability'], 2)}}%</dd>
                 </dl>
             </div>

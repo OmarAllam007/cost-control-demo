@@ -7,8 +7,8 @@
          data-labels="{{$spiTrend->pluck('name')}}"
          data-datasets="[{{ json_encode([
                                 'label' => 'SPI', 'data' => $spiTrend->pluck('spi_index'),
-                                'backgroundColor' => 'rgba(240, 255, 243, 0.6)',
-                                'borderColor' => '#8ed3d8'
+                                 'backgroundColor' => '#E0F8FF',
+                                'borderColor' => '#169ec0'
                             ]) }}]"
          style="height: 200px"></div>
 </div>

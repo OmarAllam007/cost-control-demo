@@ -32,7 +32,7 @@ table.table > thead > tr > th {
 ul.tree {
   .tree--child {
     margin-left: 15px;
-    
+
     ul.list-unstyled {
       margin-left: 0;
     }
@@ -40,35 +40,35 @@ ul.tree {
   ul {
     margin-left: 15px;
   }
-  
+
   .tree--item {
     display: block;
     background: #F7F7F7;
     margin-bottom: 5px;
     @extend .clearfix;
     position: relative;
-    
+
     .tree--item--label {
       display: block;
       padding: 7px;
     }
-    
+
     .tree--item--actions {
       position: absolute;
       right: 7px;
       top: 7px;
     }
   }
-  
+
 }
 
 .container-row {
   overflow-x: auto;
-  
+
   .table {
     width: auto;
   }
-  
+
   td .form-control {
     width: 150px;
   }
@@ -109,12 +109,12 @@ ul.tree {
   padding-right: 20px;
   padding-left: 20px;
   border-radius: 20px;
-  
+
 }
 
 .btn-primary.btn-outline {
   color: $brand-primary;
-  
+
   &:focus, &:hover, &.active {
     color: $btn-primary-color;
   }
@@ -122,7 +122,7 @@ ul.tree {
 
 .btn-info.btn-outline {
   color: $brand-info;
-  
+
   &:focus, &:hover, &.active {
     color: $btn-info-color;
   }
@@ -130,7 +130,7 @@ ul.tree {
 
 .btn-success.btn-outline {
   color: $brand-success;
-  
+
   &:focus, &:hover, &.active {
     color: $btn-success-color;
   }
@@ -138,7 +138,7 @@ ul.tree {
 
 .btn-warning.btn-outline {
   color: $brand-warning;
-  
+
   &:focus, &:hover, &.active {
     color: $btn-warning-color;
   }
@@ -146,7 +146,7 @@ ul.tree {
 
 .btn-danger.btn-outline {
   color: $brand-danger;
-  
+
   &:focus, &:hover, &.active {
     color: $btn-danger-color;
   }
@@ -154,7 +154,7 @@ ul.tree {
 
 .btn-violet.btn-outline {
   color: $btn-violet-bg;
-  
+
   &:focus, &:hover, &.active {
     color: #fff;
   }
@@ -202,7 +202,7 @@ a, .btn, a:focus, btn:focus {
 
 .table-breakdown {
   margin-bottom: 0;
-  
+
   tbody {
     max-height: 450px;
     overflow-y: auto;
@@ -212,15 +212,15 @@ a, .btn, a:focus, btn:focus {
 
 .filter-form {
   margin-bottom: 20px;
-  
+
   .btn {
     margin-top: 25px;
   }
-  
+
   .btn-group-block .btn {
     margin-top: 0;
   }
-  
+
   .form-group-sm p {
     margin: 5px 0 5px;
   }
@@ -238,7 +238,7 @@ a, .btn, a:focus, btn:focus {
   float: none;
   cursor: pointer;
   width: 100%;
-  
+
   &:hover {
     text-decoration: none;
     color: #262626;
@@ -248,7 +248,7 @@ a, .btn, a:focus, btn:focus {
 
 body#iframe {
   background-color: #fff;
-  
+
   .container-fluid {
     margin-top: 15px;
     margin-bottom: 15px;
@@ -273,53 +273,52 @@ body#iframe {
   padding-left: 0;
   max-height: 500px;
   overflow: auto;
-  
-  
-  
+
   li {
     list-style-type: none;
     position: relative;
-    
+
     .wbs-item:hover {
       background-color: #f5f5f5;
       color: $text-color;
     }
-    
+
     .wbs-item.active {
       background-color: $brand-primary;
       color: #fff;
-      
+
       a {
         color: #fff;
       }
-      
+
       a:hover {
         text-decoration: none;
       }
     }
-    
+
     .wbs-item {
       display: block;
       padding: 5px 5px 5px 21px;
     }
   }
-  
+
   ul {
     padding-left: 10px;
     margin-left: 10px;
     border-left: 1px dotted #ccc;
   }
-  
+
   .wbs-icon {
     position: absolute;
     top: 5px;
     left: 5px;
   }
-  
+
   a:hover {
     text-decoration: none;
   }
 }
+
 .wbs-panel .panel-title {
   margin-top: 7px;
   margin-bottom: 7px;
@@ -330,7 +329,7 @@ body#iframe {
     padding-top: 20px;
     position: relative;
   }
-  
+
   .loader {
     height: 100%;
     position: absolute;
@@ -357,19 +356,19 @@ body#iframe {
 }
 
 .bg-violet {
-  background:  $btn-violet-bg;
+  background: $btn-violet-bg;
   color: #fff;
 }
 
 .btn-group-block {
   display: flex;
-  
+
   .btn {
     white-space: initial;
     display: flex;
     align-items: center;
   }
-  
+
   .btn:first-child {
     flex: 1;
   }
@@ -384,7 +383,7 @@ body#iframe {
   line-height: 30px;
 }
 
-select[multiple].dropdown-templates{
+select[multiple].dropdown-templates {
   height: 300px;
 }
 
@@ -392,11 +391,11 @@ select[multiple].dropdown-templates{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   h4 {
     flex: 1
   }
-  
+
   .form-control {
     width: 200px;
   }
@@ -406,62 +405,70 @@ table.collapse.in {
   display: table;
 }
 
-.padding{
+.padding {
   padding-right: 300px;
 }
-.cell-borders{
-  border:1px solid lightgray;
+
+.cell-borders {
+  border: 1px solid lightgray;
 }
-.firstGroup{
+
+.firstGroup {
   background: #a9eee6;
   color: #000;
 }
-.secondGroup{
+
+.secondGroup {
   background: #f9a1bc;
   color: black;
 }
 
-.thirdGroup{
+.thirdGroup {
   background: #a6e1ec;
   color: black;
 }
-.names{
+
+.names {
   background: #cebce3;
-  color:black;
+  color: black;
 }
-.blackBorder{
+
+.blackBorder {
   border: 2px solid black;
 }
 
-.wbsLevelOne{
+.wbsLevelOne {
   background-color: #1B3C59 !important;
   color: white;
   font-weight: bold;
   padding: 10px;
 }
 
-.boqLevelOne{
+.boqLevelOne {
   background-color: #34495E;
   color: white;
   text-decoration: none;
   font-weight: bold;
   padding: 5px;
 }
-.boqLevelOne > div > a{
+
+.boqLevelOne > div > a {
   background-color: #34495E;
   color: white;
   text-decoration: none;
   font-weight: bold;
   padding: 5px;
 }
-.boqLevelTwo{
+
+.boqLevelTwo {
   background-color: #75C3C5;
   color: black;
   text-decoration: none;
   font-weight: bold;
   padding: 5px;
 }
-.boqLevelTwo  > div > a{
+
+.boqLevelTwo > div > a {
   background-color: #75c3c5;
   color: black;
   text-decoration: none;
@@ -469,28 +476,31 @@ table.collapse.in {
   padding: 5px;
 }
 
-.boqLevelThree{
+.boqLevelThree {
   background-color: #AACFD0;
   color: black;
   text-decoration: none;
   font-weight: bold;
   padding: 5px;
 }
-.boqLevelThree  > div > a{
+
+.boqLevelThree > div > a {
   background-color: #AACFD0;
   color: black;
   text-decoration: none;
   font-weight: bold;
   padding: 5px;
 }
-.boqLevelFour{
+
+.boqLevelFour {
   background-color: #c3eaeb !important;
   color: black !important;
   text-decoration: none;
   font-weight: bold;
   padding: 5px;
 }
-.boqLevelFour  > div > a{
+
+.boqLevelFour > div > a {
   background-color: #c3eaeb;
   color: black !important;
   text-decoration: none;
@@ -505,16 +515,20 @@ table.collapse.in {
 
 .chart-container {
   position: relative;
-  
+
   .loading {
     position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     background: rgba(255, 255, 255, 0.7);
-    display: flex; justify-content: center;
+    display: flex;
+    justify-content: center;
     align-items: center;
     z-index: 99;
   }
-  
+
   .chart {
     min-height: 320px;
     width: 100%;
@@ -559,10 +573,10 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 }
 
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.16), 0 0 2px 0 rgba(0,0,0,0.08);
+  box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
   background-color: $body-bg;
   margin-bottom: 15px;
-  
+
   .card-title {
     margin: 0;
     padding: 10px;
@@ -603,19 +617,20 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
       background-color: #2F365F;
       color: #f5f5f5;
     }
-    &.dark-cyan{
+    &.dark-cyan {
       background-color: #179fc0;
       color: #f5f5f5;
     }
   }
-  
+
   .card-body {
     padding: 10px;
+    background-color: white;
   }
-  
+
   .table td, .table th {
     background-color: #fff;
-    
+
     &.separator {
       border: none;
       background-color: transparent;
@@ -645,7 +660,7 @@ dl {
   display: flex;
   font-size: 12px;
   margin-bottom: 5px;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 dt {
@@ -699,6 +714,43 @@ dd {
   color: black;
 }
 
-section.sm-card{
-    height: 250px;
+section.sm-card {
+  height: 250px;
+}
+
+table.budget-info{
+  font-size: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+table.budget-info > thead > tr > th {
+  font-size: 12px;
+  background-color:  #A0F0ED !important;
+}
+
+table.budget-info > tbody > tr > th,
+table.budget-info > thead > tr > th:first-child{
+  font-size: 12px;
+  background-color:  #E0F8FF !important;
+}
+
+.card-group-item{
+  height: 330px;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 5px;
+}
+
+.card-group-item-heading {
+  color: #70818a;
+  font-size: 12pt;
+  font-weight: 700;
+  text-decoration: underline;
+}
+dl.dl-margin{
+  margin-top: 20px;
+}
+
+.row-height{
+  height: 37px;
 }

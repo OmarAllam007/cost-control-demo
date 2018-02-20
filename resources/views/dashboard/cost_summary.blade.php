@@ -1,4 +1,4 @@
-<section class="card">
+<section class="card info-section">
     <h3 class="card-title dark-cyan">Cost Summary</h3>
 
     <div class="card-body">

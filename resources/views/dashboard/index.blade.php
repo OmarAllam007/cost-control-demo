@@ -17,8 +17,8 @@
         <div class="col-md-6">
             @include('dashboard.actual_data')
 
-            <section class="card sm-card">
-                <h3 class="card-title dark-cyan">Waste Index Trend Analysis</h3>
+            <section class="card-group-item">
+                <h3 class="card-title dark-cyan card-group-item-heading">Waste Index Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -34,8 +34,8 @@
                 </div>
             </section>
 
-            <section class="card sm-card">
-                <h3 class="card-title dark-cyan">SPI Trend Analysis</h3>
+            <section class="card-group-item">
+                <h3 class="card-title dark-cyan card-group-item-heading" >SPI Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -54,8 +54,8 @@
         </div>
 
         <div class="col-md-6">
-            <section class="card sm-card">
-                <h3 class="card-title dark-cyan">Actual Revenue</h3>
+            <section class="card-group-item">
+                <h3 class="card-title dark-cyan card-group-item-heading">Revenue Statement</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -70,8 +70,8 @@
                          style="height: 150px"></div>
                 </div>
             </section>
-            <section class="card sm-card">
-                <h3 class="card-title dark-cyan">Productivity Index Trend Analysis</h3>
+            <section class="card-group-item">
+                <h3 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -86,8 +86,8 @@
                          style="height: 150px"></div>
                 </div>
             </section>
-            <section class="card sm-card">
-                <h3 class="card-title dark-cyan">CPI Trend Analysis</h3>
+            <section class="card-group-item">
+                <h3 class="card-title dark-cyan card-group-item-heading">CPI Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -102,14 +102,12 @@
                          style="height: 150px"></div>
                 </div>
             </section>
-
-
         </div>
 
 
             <div class="col-sm-6">
-                <section class="card sm-card">
-                    <h3 class="card-title dark-cyan">Cost Percentage</h3>
+                <section class="card-group-item">
+                    <h3 class="card-title dark-cyan card-group-item-heading">Cost Percentage</h3>
 
                     <div class="card-body">
                         <div class="chart"
@@ -127,8 +125,8 @@
             </div>
 
             <div class="col-sm-6">
-                <section class="card sm-card">
-                    <h3 class="card-title dark-cyan">Progress Percentage</h3>
+                <section class="card-group-item">
+                    <h3 class="card-title dark-cyan card-group-item-heading">Progress Percentage</h3>
 
                     <div class="card-body">
                         <div class="chart"

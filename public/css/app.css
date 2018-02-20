@@ -12008,8 +12008,8 @@ table.table > thead > tr > th.v-top {
 }
 
 .card {
-  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.08);
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.08);
+  -webkit-box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.08);
   background-color: #f5f8fa;
   margin-bottom: 15px;
 }
@@ -12063,6 +12063,7 @@ table.table > thead > tr > th.v-top {
 
 .card .card-body {
   padding: 10px;
+  background-color: white;
 }
 
 .card .table td,
@@ -12162,5 +12163,46 @@ dd {
 
 section.sm-card {
   height: 250px;
+}
+
+table.budget-info {
+  font-size: 15px;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+table.budget-info > thead > tr > th {
+  font-size: 12px;
+  background-color: #A0F0ED !important;
+}
+
+table.budget-info > tbody > tr > th,
+table.budget-info > thead > tr > th:first-child {
+  font-size: 12px;
+  background-color: #E0F8FF !important;
+}
+
+.card-group-item {
+  height: 330px;
+  padding: 10px;
+  margin-bottom: 15px;
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 5px;
+}
+
+.card-group-item-heading {
+  color: #70818a;
+  font-size: 12pt;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+dl.dl-margin {
+  margin-top: 20px;
+}
+
+.row-height {
+  height: 37px;
 }
 

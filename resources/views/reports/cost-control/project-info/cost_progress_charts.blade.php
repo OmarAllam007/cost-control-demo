@@ -9,7 +9,7 @@
                      data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                      data-datasets="[{{ json_encode([
                                 'label' => 'Cost Percentage', 'data' => [$actual_cost_percentage, $remaining_cost_percentage],
-                                'backgroundColor' => ['#64D5CA', '#E3342F']
+                                'backgroundColor' => ['#169ec0','#9ddcec' ]
                             ]) }}]"
                      style="height: 200px"></div>
             </div>
@@ -23,7 +23,7 @@
                  data-labels="{{json_encode(['Actual Progress', 'Planned Progress'])}}"
                  data-datasets="[{{ json_encode([
                                 'label' => 'Progress Percentage', 'data' => [$period->actual_progress, $period->planned_progress],
-                                'backgroundColor' => ['#64D5CA', '#6CB2EB']
+                                 'backgroundColor' => ['#9ddcec', '#169ec0']
                             ]) }}]"
                  style="height: 200px"></div>
         </div>
