@@ -11364,10 +11364,11 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 .breakdown-resource {
   padding: 10px;
   font-size: 12px;
+  border-bottom: 1px solid #b8d0e0;
 }
 
-.breakdown-resource:hover, .breakdown-resource:nth-child(odd):hover, .breakdown-resource.active {
-  background-color: #ffc;
+.breakdown-resource:hover, .breakdown-resource:nth-child(odd):hover, .breakdown-resource.active, .breakdown-resource.highlight:hover {
+  background-color: #fefef0;
 }
 
 .breakdown-resource .tag {
@@ -11377,6 +11378,11 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
 .breakdown-resource:nth-child(odd) {
   background-color: #f5f8fa;
+}
+
+.breakdown-resource.highlight {
+  background-color: #ffc;
+  border-bottom: 1px solid #f4ed25;
 }
 
 .breakdown-resource .actions .btn {
@@ -11435,12 +11441,8 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   font-weight: 700;
 }
 
-.highlight {
+.highlight, .table-striped > tbody > tr.highlight > td {
   background: #ffc;
-}
-
-.table-striped > tbody > tr.highlight > td {
-  background-color: #ffc;
 }
 
 /*# sourceMappingURL=app.css.map */

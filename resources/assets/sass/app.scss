@@ -723,10 +723,13 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 .breakdown-resource {
   padding: 10px;
   font-size: 12px;
+  border-bottom: 1px solid #b8d0e0;
 
-  &:hover, &:nth-child(odd):hover, &.active {
-    background-color: #ffc;
+
+  &:hover, &:nth-child(odd):hover, &.active, &.highlight:hover {
+    background-color: #fefef0;
   }
+
 
   .tag {
     color: #9e9e9e;
@@ -735,6 +738,11 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
   &:nth-child(odd) {
     background-color: $body-bg;
+  }
+
+  &.highlight {
+    background-color: #ffc;
+    border-bottom: 1px solid #f4ed25;
   }
 
   .actions .btn {
@@ -794,10 +802,6 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   font-weight: 700;
 }
 
-.highlight {
+.highlight, .table-striped > tbody > tr.highlight > td {
   background: #ffc;
-}
-
-.table-striped > tbody > tr.highlight > td {
-  background-color: #ffc;
 }

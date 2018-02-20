@@ -2,9 +2,11 @@
 
 namespace App\Rollup\Actions;
 
+use App\ActualResources;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\CostShadow;
 use App\Project;
 use App\Unit;
 use Illuminate\Support\Collection;
@@ -94,7 +96,7 @@ class ImportantResourcesRollup
         $measure_unit = $this->unit_cache->get($unit_id);
         $unit_price = $total_cost / $budget_unit;
 
-        return $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
+        $resource = $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $breakdown->cost_account, 'resource_type_id' => 3,
             'resource_name' => $breakdown->qty_survey->description, 'resource_type' => '03.MATERIAL',
@@ -112,6 +114,19 @@ class ImportantResourcesRollup
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true
         ]);
+
+        $period = $this->project->open_period();
+        if (!$period) {
+            ActualResources::whereIn('breakdown_resource_id', $resource_ids)->where('period_id', $period->id)->delete();
+            CostShadow::whereIn('breakdown_resource_id', $resource_ids)->where('period_id', $period->id)->delete();
+
+            ActualResources::forceCreate([
+                'project_id' => $this->project->id, 'wbs_level_id' => $resource->wbs_id,
+                'breakdown_resource_id' => $this->rollup_resource->id,
+            ]);
+        }
+
+        return $resource;
     }
 
     private function createRollupResource($breakdown)
