@@ -45,7 +45,7 @@ class TemplateResourceImpactController extends Controller
         Breakdown::with('wbs_level')
             ->where('project_id', $project->id)
             ->where('template_id', $breakdown_template->id)
-            ->whereIn('id', array_keys($request->get('breakdown')))
+            ->whereIn('id', array_keys($request->get('breakdown', [])))
             ->get()->each(function (Breakdown $breakdown) use ($resource) {
                 $budget_qty = $breakdown->wbs_level->getBudgetQty($breakdown->cost_account);
                 $eng_qty = $breakdown->wbs_level->getEngQty($breakdown->cost_account);
