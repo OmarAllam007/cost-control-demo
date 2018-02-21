@@ -167,7 +167,7 @@ class GlobalReport
         $allowable_cost = $cpis->sum('allowable_cost');
         $to_date_cost = $cpis->sum('to_date_cost');
         $variance = $allowable_cost - $to_date_cost;
-        $cpi = $allowable_cost / $to_date_cost;
+        $cpi = $allowable_cost / 1;
         $pw_index = $this->waste_index_trend()->last();
 
         $highest_risk = $cpis->first();
@@ -176,7 +176,7 @@ class GlobalReport
         $total_budget = $this->cost_summary->sum('budget_cost');
         $to_date = $this->cost_summary->sum('to_date_cost');
 
-        $actual_progress = round($to_date * 100 / $total_budget, 2);
+        $actual_progress = round($to_date * 100 / 1, 2);
         $planned_progress = round($this->period->planned_progress ?: 0, 2);
 
         $progress = [$actual_progress, $planned_progress];
@@ -202,7 +202,7 @@ class GlobalReport
         $remaining_cost = $this->cost_summary->sum('remaining_cost');
         $sum = $to_date_cost + $remaining_cost;
 
-        return collect([round($to_date_cost * 100 / $sum, 2), round($remaining_cost * 100 / $sum, 2)]);
+        return collect([round($to_date_cost * 100 / 1, 2), round($remaining_cost * 100 / 1, 2)]);
     }
 
     private function cpi_trend()
