@@ -1,13 +1,12 @@
 <?php
 
-
-use App\Http\Controllers\Reports\CostReports\ActivityReport;
-use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
-use App\Http\Controllers\Reports\CostReports\CostSummary;
 use App\Report;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Reports\Budget\StdActivityReport;
 use App\Reports\Budget\WbsReport;
+use App\Reports\Cost\ActivityReport;
+use App\Reports\Cost\CostStandardActivityReport;
+use App\Reports\Cost\CostSummary;
 use Illuminate\Database\Seeder;
 
 class ReportsSeeder extends Seeder
