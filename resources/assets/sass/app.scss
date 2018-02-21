@@ -4,6 +4,10 @@
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
 
 #main-panel {
+  margin-top: -50px;
+  border-top: none;
+  border-radius: 0;
+
   > .panel-heading {
     h1, h2, h3, h4 {
       float: left;
