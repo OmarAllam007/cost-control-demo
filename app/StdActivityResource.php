@@ -15,11 +15,15 @@ class StdActivityResource extends Model
     use SoftDeletes, CachesQueries;
     use HasChangeLog, RecordsUser;
 
-    protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks', 'code'];
+    protected $fillable = ['template_id', 'resource_id', 'equation', 'budget_qty', 'eng_qty', 'allow_override', 'project_id', 'labor_count', 'productivity_id', 'remarks', 'code', 'important'];
 
     protected $dates = ['created_at', 'updated_at'];
 
     public $old_equation;
+
+    protected $casts = [
+        'boolean' => ['important']
+    ];
 
     public function template()
     {
@@ -99,15 +103,15 @@ class StdActivityResource extends Model
             })->where('std_activity_resource_id', $this->id)->get();
 
             foreach ($breakdown_resources as $breakdown_resource) {
+                $breakdown_resource->important = $this->important;
+
                 if (!$breakdown_resource->equation || $breakdown_resource->equation == $this->old_equation) {
                     $breakdown_resource->equation = $this->equation;
                 }
+
                 $breakdown_resource->remarks = $this->remarks;
                 $breakdown_resource->productivity_id = $this->productivity ? $this->productivity_id : '';
                 $breakdown_resource->update();
-//                $formatter = new BreakdownResourceFormatter($breakdown_resource);
-//                BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)
-//                    ->update($formatter->toArray());
             }
         }
     }

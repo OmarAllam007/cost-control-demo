@@ -41,35 +41,6 @@
     {{ Form::close() }}
 @stop
 
-@section('css')
-    <style>
-        .file-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 150px;
-            flex-direction: column;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .file-container input {
-            position: absolute;
-            display: block;
-            width: 100%;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-container .file-name {
-            font-weight: 700;
-        }
-    </style>
-@endsection
-
 @section('javascript')
     <script>
         $(function() {

@@ -720,3 +720,28 @@ table.collapse.in {
 table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.table > thead > tr > td.v-top, table.table > thead > tr > th.v-top {
   vertical-align: top;
 }
+
+.file-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+}
+
+.file-container input {
+  position: absolute;
+  display: block;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-container .file-name {
+  font-weight: 700;
+}

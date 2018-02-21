@@ -8,6 +8,8 @@ use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Validator;
+use PhpParser\Error;
+use PhpParser\ParserFactory;
 
 class ValidationProvider extends ServiceProvider
 {
@@ -24,7 +26,10 @@ class ValidationProvider extends ServiceProvider
 
         $this->qsValidators();
 
+        $this->breakdownResources();
+
         $this->replacers();
+
     }
 
     /**
@@ -130,6 +135,20 @@ class ValidationProvider extends ServiceProvider
 
         \Validator::replacer('lt', function ($message, $attribute, $rule, $parameters) {
             return str_replace(':lt', $parameters[0], $message);
+        });
+    }
+
+    private function breakdownResources()
+    {
+        \Validator::extend('valid_equation', function ($_, $value) {
+            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+            try {
+                $code = '<?php $qty = ' . $value . ';';
+                $parser->parse($code);
+                return true;
+            } catch (Error $e) {
+                return false;
+            }
         });
     }
 }
