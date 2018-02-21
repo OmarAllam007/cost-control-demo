@@ -18,7 +18,7 @@ class ExportBreakdownTemplates
         $this->setHeaders();
     }
 
-    function handle(Project $project = null)
+    function handle()
     {
         $query = BreakdownTemplate::query()->with('resources.resource')->with('resources.productivity');
 
@@ -29,13 +29,13 @@ class ExportBreakdownTemplates
         }
 
         $templates = $query->get();
-    
+
         $templates->each(function ($template) {
             $this->addTemplate($template);
         });
-        
+
         $this->setFormats();
-        
+
         $filename = $this->getName();
         \PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007')->save($filename);
         return $filename;
@@ -47,15 +47,17 @@ class ExportBreakdownTemplates
             $this->sheet->fromArray([
                 $template->id,  // A
                 $resource->id,  // B
-                $template->code, // C
-                $template->name, // D
-                $resource->resource->resource_code, // E
-                $resource->resource->name, // F
-                $resource->productivity->csi_code ?? '',  // G
-                $resource->labor_count, // H
-                $resource->remarks, // I
-                $resource->equation, // J
-                $resource->important ? '*' : null // K
+                $template->activity->code, // C
+                $template->activity->name, // D
+                $template->code, // E
+                $template->name, // F
+                $resource->resource->resource_code, // G
+                $resource->resource->name, // H
+                $resource->productivity->csi_code ?? '',  // I
+                $resource->labor_count, // J
+                $resource->remarks, // K
+                $resource->equation, // L
+                $resource->important ? '*' : null // M
             ], null, "A{$this->counter}", true);
 
             ++$this->counter;
@@ -69,28 +71,31 @@ class ExportBreakdownTemplates
         $this->sheet->fromArray([
             'Template App Code', // A
             'Resource App Code',  // B
-            'Template Name',  // C
-            'Resource Code', // D
-            'Resource Name',  // E
-            'Productivity Ref', // F
-            'Labours Count',  // G
-            'Remarks', // H
-            'Equation', // I
-            'Important?' // J
+            'Std Activity Code',  // C
+            'Std Activity Name',  // D
+            'Template Code', // E
+            'Template Name',  // F
+            'Resource Code', // G
+            'Resource Name',  // H
+            'Productivity Ref', // I
+            'Labours Count',  // J
+            'Remarks', // K
+            'Equation', // L
+            'Important?' // M
         ], null, "A{$this->counter}");
         ++$this->counter;
     }
 
     private function setFormats()
     {
-        
+
     }
 
     private function getName()
     {
         if ($this->project) {
             return storage_path('app/breakdown_templates-' . str_slug($this->project->name) . '.xlsx');
-        } 
+        }
 
         return storage_path('app/breakdown_templates.xlsx');
     }
