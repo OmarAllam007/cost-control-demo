@@ -2,7 +2,7 @@
         <table class="table table-condensed table-bordered table-hover table-striped">
             <thead>
             <tr>
-                <th><i class="fa fa-asterisk"></i></th>
+                <th class="text-center"><i class="fa fa-asterisk"></i></th>
                 <th class="col-sm-2">Code</th>
                 <th class="col-sm-4">Name</th>
                 <th class="col-sm-1">Budget Qty</th>
