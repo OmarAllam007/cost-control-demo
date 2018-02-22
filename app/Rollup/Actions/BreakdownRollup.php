@@ -3,6 +3,7 @@
 namespace App\Rollup\Actions;
 
 
+use App\ActualResources;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
@@ -114,7 +115,7 @@ class BreakdownRollup
         $measure_unit = $this->unit_cache->get($unit_id);
         $unit_price = $total_cost / $budget_unit;
 
-        return $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
+        $shadow = $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $breakdown->cost_account, 'resource_type_id' => 4,
             'resource_name' => $breakdown->qty_survey->description, 'resource_type' => '04.Subcontractors',
@@ -130,7 +131,38 @@ class BreakdownRollup
             'boq_id' => $breakdown->qty_survey->boq->id ?? 0, 'survey_id' => $breakdown->qty_survey->id ?? 0,
             'boq_wbs_id' => $breakdown->qty_survey->boq->wbs_id ?? 0, 'survey_wbs_id' => $breakdown->qty_survey->wbs_level_id ?? 0,
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
-            'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true
+            'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true, 'cost_account' => $breakdown->cost_account
         ]);
+
+        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $breakdown->resources()->pluck('id'))->get();
+
+        $period = $this->project->open_period();
+        if (!$period) {
+            // If no open period select the last period in the project to apply 
+            $period = $this->project->periods()->latest('id')->first();
+
+            // If there is no period at all in the project then ignore to date values as it is pointless
+            if (!$period) {
+                return $shadow;
+            }
+        }
+
+        $to_date_cost = $actual_resources->sum('cost');
+        $to_date_qty = $this->extra['to_date_qty'][$breakdown->id] ?? 0;
+        $to_date_unit_price = 0;
+
+        if ($to_date_qty) {
+            $to_date_unit_price = $to_date_cost / $to_date_qty;
+        }
+
+        ActualResources::forceCreate([
+            'project_id' => $this->project->id, 'wbs_id' => $shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
+            'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
+            'unit_id' => $shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $shadow->resource_id,
+            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id
+        ]);
+
+        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
+        return $shadow;
     }
 }

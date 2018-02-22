@@ -2,7 +2,7 @@
     <table class="table table-bordered table-condensed table-hover table-striped">
         <thead>
         <tr @click="checkAll">
-            <td><input type="checkbox" v-model="check_all"></td>
+            <td class="text-center"><input type="checkbox" v-model="check_all"></td>
             <td>Resource Code</td>
             <td>Resource Name</td>
             <td>Remarks</td>
@@ -13,12 +13,12 @@
             <td>To Date Cost</td>
         </tr>
         <tr class="info">
-            <th>&nbsp;</th>
+            <th class="text-center">&nbsp;</th>
             <th v-text="cost_account.code"></th>
             <th v-text="cost_account.description"></th>
             <th></th>
             <th>
-                <input type="number" class="form-control input-sm" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Unit" value="1">
+                <input type="number" class="form-control input-sm" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Unit" value="budget_qty">
             </th>
             <th>
                 <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`">
@@ -33,7 +33,7 @@
         </thead>
         <tbody>
         <tr v-for="resource in cost_account.resources" :class="resource.important? 'danger' : ''" @click="resource.selected = !resource.selected">
-            <td>
+            <td class="text-center">
                 <input type="checkbox" :name="get_input_name(resource)"
                        :value="resource.id"
                        v-model="resource.selected"
@@ -72,6 +72,14 @@
 
             total_to_date_cost() {
                 return 0;
+            },
+
+            budget_qty() {
+                if (this.cost_account.resources.length) {
+                    return this.cost_account.resources[0].budget_qty;
+                }
+
+                return 1;
             }
         },
 

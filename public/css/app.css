@@ -10602,6 +10602,12 @@ button.close {
   clip: auto;
 }
 
+#main-panel {
+  margin-top: -50px;
+  border-top: none;
+  border-radius: 0;
+}
+
 #main-panel > .panel-heading h1, #main-panel > .panel-heading h2, #main-panel > .panel-heading h3, #main-panel > .panel-heading h4 {
   float: left;
   font-size: 20px;
