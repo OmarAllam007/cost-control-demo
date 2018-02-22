@@ -18,7 +18,7 @@
                 </th>
                 <th v-text="cost_account.code"></th>
                 <th v-text="cost_account.description"></th>
-                <th><input class="form-control input-sm" type="number" :value="budget_qty" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Qty"></th>
+                <th><input class="form-control input-sm" type="text" :value="budget_qty" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Qty"></th>
                 <th>
                     <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`">
                         <option value="">Select Unit</option>
@@ -26,7 +26,7 @@
                     </select>
                 </th>
                 <th v-text="total_budget_cost"></th>
-                <th><input class="form-control input-sm" type="number" :value="0" :name="`to_date_qty[${cost_account.id}]`" placeholder="To date Qty"></th>
+                <th><input class="form-control input-sm" type="text" :value="0" :name="`to_date_qty[${cost_account.id}]`" placeholder="To date Qty"></th>
                 <th v-text="total_to_date_cost"></th>
             </tr>
             </thead>

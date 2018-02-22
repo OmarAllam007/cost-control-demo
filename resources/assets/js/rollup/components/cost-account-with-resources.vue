@@ -18,7 +18,7 @@
             <th v-text="cost_account.description"></th>
             <th></th>
             <th>
-                <input type="number" class="form-control input-sm" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Unit" value="budget_qty">
+                <input type="text" class="form-control input-sm" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Qty" :value="budget_qty">
             </th>
             <th>
                 <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`">
@@ -26,9 +26,9 @@
                     <option v-for="unit in units" :value="unit.id" v-text="unit.type"></option>
                 </select>
             </th>
-            <th>{{total_budget_cost|number_format}}</th>
-            <th><input type="number" class="form-control input-sm" :name="`to_date_qty[${cost_account.id}]`" placeholder="Budget Unit" value="1"></th>
-            <th>{{total_to_date_cost|number_format}}</th>
+            <th>{{total_budget_cost}}</th>
+            <th><input type="text" class="form-control input-sm" :name="`to_date_qty[${cost_account.id}]`" placeholder="Budget Unit" value="1"></th>
+            <th>{{total_to_date_cost}}</th>
         </tr>
         </thead>
         <tbody>
@@ -42,7 +42,7 @@
             <td v-text="resource.code"></td>
             <td v-text="resource.name"></td>
             <td v-text="resource.remarks"></td>
-            <td>{{resource.budget_unit | number_format}}</td>
+            <td>{{resource.budget_qty | number_format}}</td>
             <td>{{resource.measure_unit}}</td>
             <td>{{resource.budget_cost | number_format}}</td>
             <td>{{resource.to_date_qty|number_format}}</td>
@@ -67,11 +67,22 @@
 
         computed: {
             total_budget_cost() {
-                return 0;
+                let total = 0;
+
+                this.cost_account.resources.forEach(function(resource) {
+                    total += resource.budget_cost;
+                });
+
+                return parseFloat(total.toFixed(2)).toLocaleString();
             },
 
             total_to_date_cost() {
-                return 0;
+                let total = 0;
+                this.cost_account.resources.forEach(function(resource) {
+                    total += resource.to_date_cost;
+                });
+
+                return parseFloat(total.toFixed(2)).toLocaleString();
             },
 
             budget_qty() {
@@ -121,6 +132,9 @@
 
         filters: {
             number_format(val) {
+                if (!val) {
+                    val = 0;
+                }
                 return parseFloat(val.toFixed(2)).toLocaleString();
             }
         }

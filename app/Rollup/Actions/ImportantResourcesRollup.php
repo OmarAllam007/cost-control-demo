@@ -98,7 +98,7 @@ class ImportantResourcesRollup
 
         $cost_account_suffix = '01';
         $latest_cost_account = BreakDownResourceShadow::where('breakdown_id', $breakdown->id)
-            ->where('is_rollup', true)->max('cost_account');
+            ->where('is_rollup', true)->max('resource_code');
 
         if ($latest_cost_account) {
             $last_dot = strrpos($latest_cost_account, '.') + 1;
@@ -147,7 +147,7 @@ class ImportantResourcesRollup
         }
 
         ActualResources::forceCreate([
-            'project_id' => $this->project->id, 'wbs_id' => $shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
+            'project_id' => $this->project->id, 'wbs_level_id' => $shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
             'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
             'unit_id' => $shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $shadow->resource_id,
             'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id
