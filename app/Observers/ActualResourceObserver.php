@@ -18,7 +18,7 @@ class ActualResourceObserver
 {
     function saved(ActualResources $resource)
     {
-        $this->updateShadow($resource);
+//        $this->updateShadow($resource);
     }
 
     function deleted(ActualResources $resource)
@@ -29,7 +29,7 @@ class ActualResourceObserver
         $latest = ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
             ->where('period_id', '<', $resource->period_id)->latest()->first();
 
-        $this->updateShadow($resource);
+//        $this->updateShadow($resource);
 
         if ($latest) {
             $budget->update(['progress' => $latest->progress, 'status' => $latest->status]);

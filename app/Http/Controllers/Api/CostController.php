@@ -55,11 +55,9 @@ class CostController extends Controller
 
         /** @var LengthAwarePaginator $rows */
         $rows = $query->paginate(100);
-        if ($perspective == 'budget') {
-            $rows->each(function (BreakDownResourceShadow $resource) {
-                $resource->appendFields();
-            });
-        }
+        $rows->each(function (BreakDownResourceShadow $resource) {
+            $resource->appendFields();
+        });
 
         return $rows;
     }
