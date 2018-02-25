@@ -18,16 +18,18 @@
             <th v-text="cost_account.description"></th>
             <th></th>
             <th>
-                <input type="text" class="form-control input-sm" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Qty" :value="budget_qty">
+                <input type="text" class="form-control input-sm" :name="`budget_unit[${cost_account.id}]`" placeholder="Budget Qty" :value="budget_qty" :required="selected">
             </th>
             <th>
-                <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`">
+                <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`" :required="selected">
                     <option value="">Select Unit</option>
                     <option v-for="unit in units" :value="unit.id" v-text="unit.type"></option>
                 </select>
             </th>
             <th>{{total_budget_cost}}</th>
-            <th><input type="text" class="form-control input-sm" :name="`to_date_qty[${cost_account.id}]`" placeholder="Budget Unit" value="1"></th>
+            <th>
+                <input type="text" class="form-control input-sm" :name="`to_date_qty[${cost_account.id}]`" placeholder="Budget Unit" value="1" :required="selected">
+            </th>
             <th>{{total_to_date_cost}}</th>
         </tr>
         </thead>
@@ -91,6 +93,14 @@
                 }
 
                 return 1;
+            },
+
+            selected() {
+                for (let res in this.cost_account.resources) {
+                    if (this.cost_account.resources[res].selected) {
+                        return true;
+                    }
+                }
             }
         },
 
