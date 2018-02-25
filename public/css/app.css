@@ -12061,6 +12061,12 @@ table.table > thead > tr > th.v-top {
   color: #f5f5f5;
 }
 
+.card .card-title.dark-green {
+  background-color: #E2EFD9;
+  color: black;
+  text-decoration: underline;
+}
+
 .card .card-body {
   padding: 10px;
   background-color: white;
@@ -12109,16 +12115,17 @@ dl {
 }
 
 dt {
-  background: #E0F8FF;
+  background: #fbe4d5;
   padding: 5px;
   text-align: left;
   color: #444;
   font-size: 12px;
   width: 40%;
+  border-right: 2px solid gray;
 }
 
 dd {
-  background: #A0F0ED;
+  background: #fff;
   padding: 5px;
   -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -12148,6 +12155,8 @@ dd {
   width: 30%;
   min-width: 30%;
   max-width: 30%;
+  background-color: #fbe4d5 !important;
+  border-right: 2px solid gray !important;
 }
 
 .w-2-3 {
@@ -12173,22 +12182,26 @@ table.budget-info {
 
 table.budget-info > thead > tr > th {
   font-size: 12px;
-  background-color: #A0F0ED !important;
+  background-color: rgba(201, 214, 192, 0.6) !important;
+}
+
+table.budget-info > tbody > tr > td {
+  font-size: 12px;
 }
 
 table.budget-info > tbody > tr > th,
 table.budget-info > thead > tr > th:first-child {
   font-size: 12px;
-  background-color: #E0F8FF !important;
+  background-color: #fbe4d5 !important;
 }
 
 .card-group-item {
-  height: 330px;
   padding: 10px;
   margin-bottom: 15px;
   -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
   border-radius: 5px;
+  border: 1px solid black;
 }
 
 .card-group-item-heading {
@@ -12204,5 +12217,28 @@ dl.dl-margin {
 
 .row-height {
   height: 37px;
+}
+
+.actual-data-cell {
+  background-color: #fbe4d5;
+  border: 1px solid black;
+}
+
+.cost-summary-group {
+  text-align: center;
+  background-color: #002060 !important;
+  color: white;
+}
+
+.cost-summary-header {
+  text-align: center;
+  background-color: #D9E1F2 !important;
+  color: black;
+}
+
+.cost-summary-side {
+  background-color: #D9E1F2 !important;
+  color: black;
+  font-size: 12px;
 }
 

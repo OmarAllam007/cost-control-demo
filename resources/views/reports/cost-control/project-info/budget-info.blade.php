@@ -1,4 +1,4 @@
-<h4 class="card-title section-header dark-cyan">Budget Information</h4>
+<h3 class="card-title dark-green">Budget Information</h3>
 <section class="card-body">
     <table class="table table-striped  budget-info">
         <thead>

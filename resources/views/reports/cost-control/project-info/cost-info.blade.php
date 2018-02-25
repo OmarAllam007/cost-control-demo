@@ -1,4 +1,4 @@
-<h4 class="card-title section-header dark-cyan">Actual Data</h4>
+<h3 class="card-title dark-green">Actual Data</h3>
 <section class="card-body">
 
     <div class="row">

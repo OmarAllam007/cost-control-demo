@@ -21,7 +21,7 @@
         <div class="form-group form-group-sm {{ $errors->first('start_date', 'has-error') }}">
             {{ Form::label('start_date', null, ['class' => 'control-label col-sm-3']) }}
             <div class="col-sm-9">
-                {{ Form::date('start_date', old('start_date', $period->start_date->format('Y-m-d')), ['class' => 'form-control to-calendar']) }}
+                {{ Form::date('start_date', old('start_date', $period->start_date ?$period->start_date->format('Y-m-d'):''), ['class' => 'form-control to-calendar']) }}
                 {!! $errors->first('start_date', '<div class="help-block">:message</div>') !!}
             </div>
         </div>
