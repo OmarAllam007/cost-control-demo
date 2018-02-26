@@ -19,15 +19,9 @@
             {!! $errors->first('client_name', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('project_location', 'has-error')}}">
-            {{ Form::label('project_location', null, ['class' => 'control-label']) }}
-            {{ Form::text('project_location', null, ['class' => 'form-control']) }}
-            {!! $errors->first('project_location', '<div class="help-block">:message</div>') !!}
-        </div>
-
         <div class="form-group {{$errors->first('owner_id', 'has-error')}}">
             {{ Form::label('owner_id', 'Owner', ['class' => 'control-label']) }}
-            {{ Form::select('owner_id', App\User::options(), old('owner_id', $project->owner_id ?: Auth::user()->id), ['class' => 'form-control']) }}
+            {{ Form::select('owner_id', App\User::options(), null, ['class' => 'form-control']) }}
             {!! $errors->first('owner_id', '<div class="help-block">:message</div>') !!}
         </div>
 

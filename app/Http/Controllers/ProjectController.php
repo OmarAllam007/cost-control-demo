@@ -10,7 +10,10 @@ use \Auth;
 
 class ProjectController extends Controller
 {
-    protected $rules = ['name' => 'required'];
+    protected $rules = [
+        'name' => 'required', 'client_name' => 'required',
+        'owner_id' => 'required', 'cost_owner_id' => 'required'
+    ];
 
     public function index()
     {
@@ -25,6 +28,7 @@ class ProjectController extends Controller
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
+
         return view('project.create');
     }
 
@@ -46,12 +50,11 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        if (\Gate::denies('budget', $project) && \Gate::denies('reports', $project)) {
+        if (cannot('budget', $project) && cannot('reports', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
 
-        set_time_limit(1800);
         return view('project.show', compact('project', 'divisions'));
     }
 
@@ -73,7 +76,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
-        if (\Gate::denies('modify', $project)) {
+        if (cannot('modify', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
@@ -83,8 +86,7 @@ class ProjectController extends Controller
 
     public function update(Project $project, Request $request)
     {
-
-        if (\Gate::denies('modify', $project)) {
+        if (cannot('modify', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
@@ -101,7 +103,7 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        if (\Gate::denies('modify', $project)) {
+        if (cannot('modify', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
