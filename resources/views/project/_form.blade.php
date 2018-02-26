@@ -31,6 +31,12 @@
             {!! $errors->first('cost_owner_id', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('cost_threshold', 'has-error')}}">
+            {{ Form::label('cost_threshold', 'Cost Threshold', ['class' => 'control-label']) }}
+            {{ Form::number('cost_threshold', null, ['class' => 'form-control', 'min' => 0, 'max' => 100]) }}
+            {!! $errors->first('cost_threshold', '<div class="help-block">:message</div>') !!}
+        </div>
+
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
         </div>

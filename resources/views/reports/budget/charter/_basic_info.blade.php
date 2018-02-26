@@ -76,11 +76,6 @@
         </tr>
 
         <tr>
-            <th>Tender Total Cost</th>
-            <td>{{number_format($project->tender_total_cost, 2)}}</td>
-        </tr>
-
-        <tr>
             <th>Tender Risk and Escalation</th>
             <td>{{number_format($project->tender_risk, 2)}}</td>
         </tr>
@@ -88,6 +83,11 @@
         <tr>
             <th>Tender Initial Profit</th>
             <td>{{number_format($project->tender_initial_profit, 2)}}</td>
+        </tr>
+
+        <tr>
+            <th>Tender Total Cost</th>
+            <td>{{number_format($project->tender_total_cost, 2)}}</td>
         </tr>
 
         <tr>
@@ -130,7 +130,7 @@
 
         <tr>
             <th>Planned Profitability Index</th>
-            <td>{{number_format($project->planned_profit_amount, 2)}}%</td>
+            <td>{{number_format($project->planned_profitability, 2)}}%</td>
         </tr>
         </tbody>
     </table>
