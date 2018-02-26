@@ -75,7 +75,7 @@
         <article class="form-group form-group-sm {{ $errors->first('planned_finish_date', 'has-error') }}">
             {{ Form::label('planned_finish_date', null, ['class' => 'control-label col-sm-3']) }}
             <div class="col-sm-9">
-                {{ Form::date('planned_finish_date', Carbon\Carbon::parse($period->project->expected_finished_date)->format('Y-m-d'), ['class' => 'form-control to-calendar']) }}
+                {{ Form::date('planned_finish_date', Carbon\Carbon::parse($period->project->expected_finish_date)->format('Y-m-d'), ['class' => 'form-control to-calendar']) }}
                 {!! $errors->first('planned_finish_date', '<div class="help-block">:message</div>') !!}
             </div>
         </article>
@@ -142,7 +142,7 @@
         <div class="form-group form-group-sm {{ $errors->first('expected_duration', 'has-error') }}">
             {{ Form::label('expected_duration', null, ['class' => 'control-label col-sm-3']) }}
             <div class="col-sm-9">
-                {{ Form::text('expected_duration', $period->project->expected_finished_date, ['class' => 'form-control']) }}
+                {{ Form::text('expected_duration', $period->project->expected_finish_date, ['class' => 'form-control']) }}
                 {!! $errors->first('expected_duration', '<div class="help-block">:message</div>') !!}
             </div>
         </div>

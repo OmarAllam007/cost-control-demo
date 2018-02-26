@@ -39,7 +39,7 @@
         <article class="col-xs-4">
             <dl>
                 <dt>Planned Finish Date</dt>
-                <dd>{{\Carbon\Carbon::parse($project->expected_finished_date)->format('d M Y')}}</dd>
+                <dd>{{\Carbon\Carbon::parse($project->expected_finish_date)->format('d M Y')}}</dd>
             </dl>
         </article>
     </div>

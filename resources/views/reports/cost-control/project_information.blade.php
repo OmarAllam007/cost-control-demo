@@ -44,12 +44,12 @@
                 <td>{{$project->project_code}}</td>
                 <td>{{$project->name}}</td>
                 <td>{{$project->project_start_date}}</td>
-                <td>{{$project->original_finished_date}}</td>
+                <td>{{$project->original_finish_date}}</td>
                 <td>@if($project->project_start_date!=0) {{(strtotime(date("Y-m-d"))-strtotime($project->project_start_date))/86400}} @else
                         0 @endif Day/s
                 </td>
-                <td>{{$project->expected_finished_date}}</td>
-                <td>@if($project->expected_finished_date!=0) {{(strtotime($project->expected_finished_date)-strtotime(date("Y-m-d")))/86400 }} @else
+                <td>{{$project->expected_finish_date}}</td>
+                <td>@if($project->expected_finish_date!=0) {{(strtotime($project->expected_finish_date)-strtotime(date("Y-m-d")))/86400 }} @else
                         0 @endif Day/s
                 </td>
             </tr>

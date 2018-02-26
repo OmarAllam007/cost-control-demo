@@ -140,7 +140,7 @@ class CharterReport
         $sheet->setCellValue('A8', 'Project Plan Start Sate');
         $sheet->setCellValue('C8', $this->project->project_start_date);
         $sheet->setCellValue('A9', 'Project Plan Finish Date');
-        $sheet->setCellValue('C9', $this->project->expected_finished_date);
+        $sheet->setCellValue('C9', $this->project->expected_finish_date);
         $sheet->setCellValue('A10', 'Contract Type');
         $sheet->setCellValue('C10', $this->project->contract_type);
         $sheet->setCellValue('A11', 'Project Selling Cost');

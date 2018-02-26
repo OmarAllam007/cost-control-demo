@@ -73,7 +73,7 @@ class GlobalReport
 
         $profit = $budget_total - $contracts_total - $change_orders;
         $profitability = $profit * 100 / $contracts_total;
-        $finish_date = Carbon::parse($this->projects->max('expected_finished_date'));
+        $finish_date = Carbon::parse($this->projects->max('expected_finish_date'));
 
         $schedules = $this->periods->map(function ($period) {
             $schedule = new Fluent();
@@ -96,12 +96,12 @@ class GlobalReport
     private function finish_dates()
     {
         return $this->projects->filter(function ($project) {
-            return $project->project_start_date != '0000-00-00' && $project->expected_finished_date != '0000-00-00';
+            return $project->project_start_date != '0000-00-00' && $project->expected_finish_date != '0000-00-00';
         })->map(function ($project) {
             return [
                 'title' => $project->project_code,
                 'start_date' => Carbon::parse($project->project_start_date)->format('d M Y'),
-                'finish_date' => Carbon::parse($project->expected_finished_date)->format('d M Y'),
+                'finish_date' => Carbon::parse($project->expected_finish_date)->format('d M Y'),
             ];
         });
     }
