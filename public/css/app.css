@@ -12206,3 +12206,11 @@ dl.dl-margin {
   height: 37px;
 }
 
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.br-1 {
+  border-right: 1px solid #e5e5e5;
+}
+
