@@ -4,7 +4,7 @@
         <div class="form-group tab-actions clearfix">
             <div class="pull-right">
 
-                <a href="/survey/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe">
+                <a href="/survey/create?project={{$project->id}}&&wbs_id=@{{wbs_id}}" class="btn btn-primary btn-sm in-iframe" title="Add Quantity Survey">
                     <i class="fa fa-plus"></i> Add Quantity Survey
                 </a>
             </div>
