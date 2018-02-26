@@ -47,7 +47,6 @@ class CostSummary
             $previousData = MasterShadow::where('period_id', '=', $previousPeriod->id)
                 ->selectRaw(" (CASE WHEN resource_type_id IN (1,8) THEN 'Indirect' ELSE 'Direct' END) AS 'Type', sum(to_date_cost) as previous_cost, sum(allowable_ev_cost) as previous_allowable, sum(allowable_var) as previous_var")
                 ->groupBy('Type')->get()->keyBy('Type');
-            $previousData = $this->prevDate($previousData);
 
           } else {
             $previousData = collect();

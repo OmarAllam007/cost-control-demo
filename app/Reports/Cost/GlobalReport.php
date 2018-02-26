@@ -83,7 +83,7 @@ class GlobalReport
             $schedule->planned_finish = Carbon::parse($period->planned_finish_date)->format('d M Y');
             $schedule->actual_start = Carbon::parse($period->project->actual_start_date)->format('d M Y');
             $schedule->expected_duration = $period->expected_duration;
-            $schedule->forecast_finish = $period->forecast_finish_date? Carbon::parse($period->forecast_finish_date)->format('d M Y') : '';
+            $schedule->forecast_finish = $period->forecast_finish_date ? Carbon::parse($period->forecast_finish_date)->format('d M Y') : '';
             $schedule->delay_variance = $period->duration_variance;
 
             return $schedule;
@@ -186,13 +186,22 @@ class GlobalReport
 
     private function cost_summary()
     {
-        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
-            ->whereIn('period_id', $this->last_period_ids)
-            ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
-            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(allowable_var) as to_date_var')
-            ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
-            ->selectRaw('sum(cost_var) as completion_var')
-            ->groupBy('sh.project_id', 'p.name')->orderBy('p.name')->get();
+        $fields = [
+            "(CASE WHEN resource_type_id IN (1,8) THEN 'Indirect' ELSE 'Direct' END) AS 'Type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as ev',
+            'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
+            'sum(cost_var) as completion_cost_var'
+        ];
+
+         return $this->cost_summary =  MasterShadow::whereIn('period_id', $this->last_period_ids)->selectRaw(implode(', ', $fields))
+            ->groupBy('Type')->get()->keyBy('Type');
+//
+//        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
+//            ->whereIn('period_id', $this->last_period_ids)
+//            ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
+//            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(allowable_var) as to_date_var')
+//            ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
+//            ->selectRaw('sum(cost_var) as completion_var')
+//            ->groupBy('sh.project_id', 'p.name')->orderBy('p.name')->get();
 
     }
 
@@ -265,7 +274,7 @@ class GlobalReport
 
         return MasterShadow::from('master_shadows as sh')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
-            ->join('cost_man_days as md', function(JoinClause $on) {
+            ->join('cost_man_days as md', function (JoinClause $on) {
                 $on->where('sh.period_id', '=', 'md.period-id')
                     ->where('sh.wbs_id', '=', 'md.wbs_id')
                     ->where('sh.activity_id', '=', 'md.activity_id');
@@ -296,7 +305,7 @@ class GlobalReport
             ->whereIn('period_id', $period_ids)
             ->selectRaw('p.global_period_id, sum(value) as value')
             ->groupBy('p.global_period_id')->get(['value', 'global_period_id'])
-            ->map(function($period) use ($periods) {
+            ->map(function ($period) use ($periods) {
                 $period->name = $periods->get($period->global_period_id)->name;
                 return $period;
             })->pluck('value', 'name');

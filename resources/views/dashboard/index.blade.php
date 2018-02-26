@@ -5,8 +5,8 @@
 @endsection
 
 @section('body')
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row col-md-10 col-md-offset-1">
+        <div class="col-sm-12 col-md-offset-3">
             @include('dashboard.filters')
         </div>
         <div class="col-md-12">

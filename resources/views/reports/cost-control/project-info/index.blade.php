@@ -20,8 +20,8 @@
 @endsection
 
 @section('body')
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row col-md-10 col-md-offset-1">
+        <div class="col-sm-12  col-md-offset-3">
             <form action="" method="get" class="row">
                 <div class="form-group col-sm-4">
                     <select name="period" id="" class="form-control" title="Select reporting period">
@@ -63,7 +63,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row col-md-10 col-md-offset-1">
         <section class="info-section">
             <div class="col-md-12">
                 @include('reports.cost-control.project-info.cpi-chart')

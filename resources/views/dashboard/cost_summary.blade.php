@@ -5,7 +5,7 @@
         <table class="table table-bordered table-condensed dashboaad-cost-summary">
         <thead>
             <tr class="bg-primary">
-                <th>Project</th>
+                <th></th>
                 <th>Budget</th>
                 <th>Allowable (EV) Cost</th>
                 <th>To Date Cost</th>
@@ -16,9 +16,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($cost_summary as $project)
+            @foreach($cost_summary as $key=>$project)
             <tr>
-                <td>{{ $project->project_name }}</td>
+                <td>{{ $key }}</td>
                 <td>{{number_format($project->budget_cost, 2)}}</td>
 
                 <td>{{number_format($project->allowable_cost, 2)}}</td>
