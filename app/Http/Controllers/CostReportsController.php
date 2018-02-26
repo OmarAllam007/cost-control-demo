@@ -34,10 +34,11 @@ class CostReportsController extends Controller
 {
 
     public function projectInformation(Project $project, Request $request)
+
     {
         $period_id = $this->getPeriod($project, $request);
 
-        $projectInfo = new ProjectInfo(Period::find($period_id));
+        $projectInfo = new ProjectInfo($period_id);
 
         return view('reports.cost-control.project-info.index', $projectInfo->run());
     }

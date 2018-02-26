@@ -1,5 +1,5 @@
 <div class="card-group-item">
-    <h4 class="card-group-item-heading">Productivity Index</h4>
+    <h3 class="card-group-item-heading">Productivity Index</h3>
 
     <div class="panel-body">
         <div class="chart"

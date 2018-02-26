@@ -36,12 +36,13 @@ class ProjectInfo
 
     function run()
     {
+
         $key = "project-info-{$this->project->id}-{$this->period->id}";
         if (request()->exists('clear')) {
             \Cache::forget($key);
         }
 
-        return \Cache::remember($key, Carbon::now()->addDay(), function() {
+        return \Cache::remember($key, Carbon::now()->addDay(), function () {
             return $this->getInfo();
         });
     }
@@ -50,13 +51,10 @@ class ProjectInfo
     {
         $summary = new CostSummary($this->period);
         $this->costSummary = $summary->run();
-
-        $this->wasteIndexTrend =  $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function($period) {
+        $this->wasteIndexTrend = $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function ($period) {
             $period->value = round(floatval($period->variance / $period->allowable_cost), 4);
             return $period;
         })->keyBy('period_id');
-
-
 
         $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id)->value;
 
@@ -75,8 +73,8 @@ class ProjectInfo
 
         $completion_cost = $cost->actual_cost + $cost->remaining_cost;
 
-        $this->actual_cost_percentage = round($cost->actual_cost * 100/ $completion_cost, 2);
-        $this->remaining_cost_percentage = round($cost->remaining_cost * 100/ $completion_cost, 2);
+        $this->actual_cost_percentage = round($cost->actual_cost * 100 / $completion_cost, 2);
+        $this->remaining_cost_percentage = round($cost->remaining_cost * 100 / $completion_cost, 2);
 
         $this->actualRevenue = $this->getActualRevenue();
 
@@ -116,7 +114,7 @@ class ProjectInfo
             ->selectRaw('period_id, sum(actual) as actual')
             ->groupBy('period_id')->get()->keyBy('period_id');
 
-        return $allowable_qty->map(function($period) use ($cost_man_days, $periods) {
+        return $allowable_qty->map(function ($period) use ($cost_man_days, $periods) {
             $actual = $cost_man_days->get($period->period_id)->actual ?? 0;
             $value = 0;
             if ($actual) {
@@ -134,7 +132,7 @@ class ProjectInfo
         $periods = $this->project->periods->pluck('name', 'id');
         return ActualRevenue::where('project_id', $this->project->id)
             ->selectRaw('period_id, sum(value) as value')
-            ->groupBy('period_id')->get()->map(function($period) use ($periods) {
+            ->groupBy('period_id')->get()->map(function ($period) use ($periods) {
                 return new Fluent([
                     'name' => $periods->get($period->period_id, ''),
                     'value' => round($period->value, 2)
@@ -164,7 +162,7 @@ class ProjectInfo
         }
 
         $revision0['profit'] = $revision0['revised_contract_amount'] - $revision0['budget_cost'];
-        $revision0['profitability_index'] = $revision0['profit'] * 100 /  $revision0['budget_cost'];
+        $revision0['profitability_index'] = $revision0['profit'] * 100 / $revision0['budget_cost'];
         $revision0['indirect_cost'] = $revision0['general_requirements'] + $revision0['management_reserve'];
         $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'];
 
@@ -191,7 +189,7 @@ class ProjectInfo
         }
 
         $revision1['profit'] = $revision1['revised_contract_amount'] - $revision1['budget_cost'];
-        $revision1['profitability_index'] = $revision1['profit'] * 100 /  $revision1['budget_cost'];
+        $revision1['profitability_index'] = $revision1['profit'] * 100 / $revision1['budget_cost'];
         $revision1['indirect_cost'] = $revision1['general_requirements'] + $revision1['management_reserve'];
         $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'];
 

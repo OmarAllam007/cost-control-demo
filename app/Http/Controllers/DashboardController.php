@@ -26,6 +26,7 @@ class DashboardController extends Controller
             \Cache::forget($key);
         }
 
+
         $data = \Cache::remember($key, Carbon::tomorrow(), function () use ($period) {
             $report = new GlobalReport($period);
             return $report->run();

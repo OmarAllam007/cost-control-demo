@@ -1,8 +1,8 @@
 <article class="card-group-item">
-    <h4 class="card-group-item-heading">Revenue Statement</h4>
+    <h3 class="card-group-item-heading">Revenue Statement</h3>
 
     <div class="row">
-    <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+    <div class="col-md-12">
         <div class="chart"
              id="wasteIndexChart"
              data-type="horizontalBar"
@@ -10,7 +10,8 @@
              data-datasets="[{{json_encode([
                                 'label' => 'Revenue Statement',
                                 'data' => [$period->planned_cost, $period->earned_value, $period->actual_invoice_amount],
-                                'backgroundColor' => ['#169ec0', '#E0F8FF', "#A0F0ED"],
+                                'backgroundColor' => ['#ED7D31', '#E0F8FF', "#A0F0ED"],
+                                   'borderColor' => '#5B9BD5',
                                 'datalabels' => ['align' => 'center']
                             ])}}]"
              style="height: 200px"></div>

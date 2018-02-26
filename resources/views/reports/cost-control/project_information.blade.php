@@ -14,7 +14,7 @@
 
 @section('body')
 
-    <div class="row" style="margin-bottom: 10px;">
+    <div class="row col-md-10 col-md-offset-1" style="margin-bottom: 10px;">
         <form action="{{route('cost_control.info',$project)}}" class="form-inline col col-md-8" method="get">
             {{Form::select('period', $periods, session('period_id_'.$project->id), ['class'=>'form-control padding'])}}
             <button class="btn btn-primary btn-rounded"><i class="fa fa-check"></i> Submit</button>
