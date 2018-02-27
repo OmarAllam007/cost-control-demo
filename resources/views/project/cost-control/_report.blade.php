@@ -3,11 +3,11 @@
 
         <div class="col-xs-6">
             <div class="form-group">
-                <a href="{{route('cost_control.info',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary btn-block">Project Information</a>
+                <a href="{{route('cost_control.info',$project)}}" target="_blank" class="hvr-float-shadow btn btn-primary btn-block">Project Dashboard</a>
             </div>
 
             <div class="form-group">
-                <a href="/project/{{$project->id}}/dashboard" target="_blank" class="hvr-float-shadow btn btn-primary btn-block" >Dashboard</a>
+                <a href="/project/{{$project->id}}/dashboard" target="_blank" class="hvr-float-shadow btn btn-primary btn-block">Graphical Report</a>
             </div>
 
             <div class="form-group">
