@@ -34,27 +34,22 @@ class ProfitabilityIndexReport
         $first = BudgetRevision::where('project_id', $this->project->id)->orderBy('id')->first();
         if ($first) {
             $this->revisions = BudgetRevision::where('project_id', $this->project->id)
-//                ->where('is_automatic', true)
                 ->where('id', '<>', $first->id)
                 ->orderBy('id')
                 ->get()
                 ->prepend($first)
                 ->map(function($revision) use ($first) {
-                    $revision->budget_cost = RevisionBreakdownResourceShadow::where('revision_id', $revision->id)->sum('budget_cost');
-                    $revision->profitability = $revision->revised_contract_amount - $revision->budget_cost;
-                    $revision->profitability_index = $revision->profitability * 100/  $revision->budget_cost;
-                    $revision->variance = $revision->profitability_index - $first->profitability_index;
+                    $revision->variance = $revision->planned_profitability_index - $first->planned_profitability_index;
                     return $revision;
                 });
         } else {
             $revision = new Fluent();
             $revision->name = 'Rev.00';
-            $revision->budget_cost = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
-            $revision->original_contract_amount = $this->project->project_contract_signed_value;
-            $revision->change_order_amount = $this->project->change_order_amount;
-            $revision->revised_contract_amount = $revision->change_order_amount + $revision->original_contract_amount;
-            $revision->profitability = $revision->budget_cost - $revision->revised_contract_amount;
-            $revision->profitability_index = $revision->profitability * 100/  $revision->budget_cost;
+            $revision->project = $this->project;
+            $revision->budget_cost = $this->project->budget_cost;
+            $revision->eac_contract_amount = $this->project->eac_contact_amount;
+            $revision->planned_profit_amount = $this->project->planned_profit_amount;
+            $revision->planned_profitability_index = $this->project->planned_profitability;
 
             $this->revisions->push($revision);
         }
@@ -78,16 +73,29 @@ class ProfitabilityIndexReport
         $this->run();
 
         $rows = [];
-        $rows['names'] = $this->revisions->pluck('name')->prepend('');
-        $rows['budget_costs'] = $this->revisions->pluck('budget_cost')->prepend('Budget Cost');
-        $rows['contract_values'] = $this->revisions->pluck('original_contract_amount')->prepend('Original Contract Amount');
-        $rows['change_order_values'] =  $this->revisions->pluck('change_order_amount')->prepend('Changer Order Amount');
-        $rows['revised_values'] =  $this->revisions->pluck('revised_contract_amount')->prepend('Total Revised Contract Amount');
-        $rows['profitability'] =  $this->revisions->pluck('profitability')->prepend('Profitability');
-        $rows['profitability_indices'] =  $this->revisions->map(function($rev) {
-            return $rev->profitability_index / 100;
-        })->prepend('Profitability Index');
-        $rows['variances'] =  $this->revisions->pluck('variance')->prepend('Variance');
+      /*
+       Original Signed Contract Value
+EAC Contract Amount
+Total Budget Cost
+Planned Profit Amount
+Planned Profitability Index
+Variance
+       */
+
+        $count = $this->revisions->count();
+        $contract_value = $this->project->project_contract_signed_value;
+
+        $rows[1] = $this->revisions->pluck('name')->prepend('Item');
+        $rows[2] = collect(array_fill(0, $count, $contract_value))->prepend('Original Signed Contract Value');
+        $rows[3] = $this->revisions->pluck('eac_contract_amount')->prepend('EAC Contract Amount');
+        $rows[4] = $this->revisions->pluck('budget_cost')->prepend('Total Budget Cost');
+        $rows[5] =  $this->revisions->pluck('planned_profit_amount')->prepend('Planned Profit Amount');
+        $rows[6] =  $this->revisions->map(function($rev) {
+            return $rev->planned_profitability_index / 100;
+        })->prepend('Planned Profitability Index');
+        $rows[7] =  $this->revisions->map(function($rev) {
+            return $rev->variance / 100;
+        })->prepend('Variance');
 
         foreach ($rows as $row) {
             $sheet->row($this->row, $row->toArray());
@@ -97,7 +105,7 @@ class ProfitabilityIndexReport
         $count = $this->revisions->count() ?: 1;
         $l = chr(ord('A') + $count);
 
-        $sheet->cells("A2:A8", function($cells) {
+        $sheet->cells("A2:A7", function($cells) {
             $cells->setFont(['bold' => true]);
         });
 
@@ -106,10 +114,10 @@ class ProfitabilityIndexReport
         });
 
         $sheet->setColumnFormat([
-            "B2:{$l}7" => '#,##0.00_-', "B7:{$l}8" => '0.00%'
+            "B2:{$l}5" => '#,##0.00_-', "B6:{$l}7" => '0.00%'
         ]);
 
-        foreach (range(1, 8) as $i) {
+        foreach (range(1, 7) as $i) {
             $sheet->getRowDimension($i)->setRowHeight(30);
             $sheet->cells("A{$i}:{$l}{$i}", function ($cells) {
                 $cells->setBorder('medium', 'medium', 'medium', 'medium');
@@ -118,12 +126,12 @@ class ProfitabilityIndexReport
 
         foreach (range('A', $l) as $c) {
             $sheet->getColumnDimension($c)->setWidth(40);
-            $sheet->cells("{$c}1:{$c}8", function ($cells) {
+            $sheet->cells("{$c}1:{$c}7", function ($cells) {
                 $cells->setBorder('medium', 'medium', 'medium', 'medium');
             });
         }
 
-        $sheet->cells("A1:{$l}8", function(CellWriter $cells) {
+        $sheet->cells("A1:{$l}7", function(CellWriter $cells) {
             $cells->setValignment('center');
         });
 

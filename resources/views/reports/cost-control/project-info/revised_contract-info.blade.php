@@ -1,4 +1,4 @@
-<h4 class="card-title section-header dark-cyan">Revised Contract information</h4>
+<h3 class="card-title  dark-green">Revised Contract information</h3>
 <section class="card-body">
     <div class="row">
         <article class="col-xs-4">

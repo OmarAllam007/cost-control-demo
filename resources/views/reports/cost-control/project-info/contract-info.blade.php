@@ -1,4 +1,4 @@
-<h4 class="card-title section-header dark-cyan">Contract information</h4>
+<h3 class="card-title dark-green">Contract information</h3>
 <section class="card-body">
     <div class="row">
         <article class="col-xs-4">
@@ -39,7 +39,7 @@
         <article class="col-xs-4">
             <dl>
                 <dt>Planned Finish Date</dt>
-                <dd>{{\Carbon\Carbon::parse($project->expected_finished_date)->format('d M Y')}}</dd>
+                <dd>{{\Carbon\Carbon::parse($project->expected_finish_date)->format('d M Y')}}</dd>
             </dl>
         </article>
     </div>

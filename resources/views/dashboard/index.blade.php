@@ -5,8 +5,8 @@
 @endsection
 
 @section('body')
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row col-md-10 col-md-offset-1">
+        <div class="col-sm-12 col-md-offset-3">
             @include('dashboard.filters')
         </div>
         <div class="col-md-12">
@@ -14,11 +14,11 @@
             @include('dashboard.budget_data')
             @include('dashboard.cost_summary')
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             @include('dashboard.actual_data')
 
-            <section class="card-group-item">
-                <h3 class="card-title dark-cyan card-group-item-heading">Waste Index Trend Analysis</h3>
+            <section class="card-group-item chart-style">
+                <h3 class="card-title card-group-item-heading">Waste Index Trend Analysis</h3>
 
                 <div class="card-body">
                     <div class="chart"
@@ -28,7 +28,8 @@
                          data-datasets="[{{ json_encode([
                                     'label' => 'Waste Index',
                                     'data' => $waste_index_trend->values(),
-                                    'backgroundColor' => ['rgba(160, 240, 240, 0.3)']
+                                    'backgroundColor' => ['rgba(160, 240, 240, 0.3)'],
+                                    'fillColor'=> ['rgba(220,220,220,0.5)']
                                 ]) }}]"
                          style="height: 150px"></div>
                 </div>
@@ -53,7 +54,7 @@
 
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-12">
             <section class="card-group-item">
                 <h3 class="card-title dark-cyan card-group-item-heading">Revenue Statement</h3>
 
@@ -105,7 +106,7 @@
         </div>
 
 
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <section class="card-group-item">
                     <h3 class="card-title dark-cyan card-group-item-heading">Cost Percentage</h3>
 
@@ -124,7 +125,7 @@
                 </section>
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <section class="card-group-item">
                     <h3 class="card-title dark-cyan card-group-item-heading">Progress Percentage</h3>
 

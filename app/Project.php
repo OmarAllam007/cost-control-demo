@@ -6,7 +6,7 @@ use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\RecordsUser;
-use App\Behaviors\Tree;
+use App\Behaviors\CharterData;
 use App\Support\DuplicateProject;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     use SoftDeletes, HasOptions, CachesQueries;
-    use HasChangeLog, RecordsUser;
+    use HasChangeLog, RecordsUser, CharterData;
 
     protected static $alias = 'Project';
     protected $ids = [];
@@ -33,13 +33,15 @@ class Project extends Model
         'project_duration',
         'description',
         'owner_id',
-        'original_finished_date',
-        'expected_finished_date',
+        'original_finish_date',
+        'expected_finish_date',
         'project_contract_signed_value',
         'project_contract_budget_value',
         'change_order_amount',
-        'direct_cost_material',
-        'indirect_cost_general',
+        'tender_direct_cost',
+        'tender_indirect_cost',
+        'tender_risk',
+        'tender_initial_profit',
         'total_budget_cost',
         'cost_owner_id',
         'cost_threshold'

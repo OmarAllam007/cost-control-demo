@@ -21,13 +21,18 @@ class Period extends Model
     const NONE = 0;
 
     protected $fillable = [
-        'name', 'start_date', 'is_open', 'status', 'global_period_id',
+        'start_date', 'is_open', 'status', 'global_period_id',
         'planned_cost', 'earned_value', 'actual_invoice_amount', 'planned_progress', 'planned_finish_date',
         'spi_index', 'actual_progress', 'change_order_amount',
         'time_extension', 'time_elapsed', 'time_remaining', 'expected_duration', 'duration_variance',
     ];
 
     protected $dates = ['created_at', 'update_at', 'start_date'];
+
+    function global_period()
+    {
+        return $this->belongsTo(GlobalPeriod::class);
+    }
 
     function project()
     {
@@ -43,7 +48,6 @@ class Period extends Model
 
     function scopeReadyForReporting(Builder $query)
     {
-//        return $query->where('is_open', false)->orderBy('id', 'desc');
         return $query->where('status', self::GENERATED)->orderBy('id', 'desc');
     }
 
@@ -62,6 +66,8 @@ class Period extends Model
             if ($period->is_open) {
                 static::where('project_id', $period->project_id)->update(['is_open' => false]);
             }
+
+            $period->name = $period->global_period->name;
         });
     }
 
@@ -80,7 +86,7 @@ class Period extends Model
             return Carbon::parse($this->attributes['planned_finish_date']);
         }
 
-        return Carbon::parse($this->project->original_finished_date);
+        return Carbon::parse($this->project->original_finish_date);
     }
 
     function getContractValueAttribute()
@@ -100,5 +106,23 @@ class Period extends Model
     public function scopeLast(Builder $query)
     {
         return $query->readyForReporting()->select('project_id')->selectRaw('max(id) as period_id')->groupBy('project_id');
+    }
+
+    function getStartDateAttribute()
+    {
+        if ($this->global_period) {
+            return $this->global_period->start_date;
+        }
+
+        return Carbon::parse($this->attributes['start_date']);
+    }
+
+    function getEndDateAttribute()
+    {
+        if ($this->global_period) {
+            return $this->global_period->end_date;
+        }
+
+        return Carbon::parse($this->attributes['end_date']);
     }
 }
