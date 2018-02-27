@@ -4,9 +4,11 @@ namespace App;
 
 use App\Behaviors\RecordsUser;
 use App\Jobs\CreateRevisionForProject;
+use App\Revision\RevisionBoq;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -19,7 +21,9 @@ class BudgetRevision extends Model
 
     protected $appends = ['url', 'user', 'created_date'];
 
-    protected $fillable = ['original_contract_amount', 'change_order_amount', 'global_period_id'];
+    protected $chached_eac_value;
+
+    protected $fillable = ['global_period_id'];
 
     function project()
     {
@@ -115,5 +119,44 @@ class BudgetRevision extends Model
     function scopeMaxRevisions(Builder $query)
     {
         return $query->select('project_id')->selectRaw('max(id) as id')->groupBy('project_id');
+    }
+
+    function getBudgetCostAttribute()
+    {
+        if (isset($this->cached_budget_cost)) {
+            return $this->cached_budget_cost;
+        }
+        return $this->cached_budget_cost = RevisionBreakdownResourceShadow::where('revision_id', $this->id)->sum('budget_cost');
+    }
+
+    function getEacContractAmountAttribute()
+    {
+        if (!is_null($this->chached_eac_value)) {
+            return $this->chached_eac_value;
+        }
+
+        return $this->chached_eac_value = \DB::table('revision_boqs as boq')->where('boq.project_id', $this->project_id)
+            ->where('boq.revision_id', $this->id)
+            ->join('revision_qty_surveys as qs', function(JoinClause $on){
+//                $on->on('boq.id', '=', 'qs.boq_id');
+                $on->on('boq.wbs_id', '=', 'qs.wbs_level_id');
+                $on->on('boq.cost_account', '=', 'qs.cost_account');
+            })
+            ->selectRaw('sum(boq.price_ur * qs.eng_qty) as revised_boq')
+            ->value('revised_boq');
+    }
+
+    function getPlannedProfitAmountAttribute()
+    {
+        return $this->eac_contract_amount - $this->budget_cost;
+    }
+
+    function getPlannedProfitabilityIndexAttribute()
+    {
+        if (!$this->eac_contract_amount) {
+            return 0;
+        }
+
+        return $this->planned_profit_amount * 100 / $this->eac_contract_amount;
     }
 }

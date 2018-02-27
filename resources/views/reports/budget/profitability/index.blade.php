@@ -18,13 +18,12 @@
         <section class="pull-left">
             <table class="table table-condensed table-bordered" id="report-header">
                 <thead>
-                <tr class="bg-primary"><th>&nbsp;</th></tr>
-                <tr><th>Total Project Budget</th></tr>
-                <tr><th>Original Contract Amount</th></tr>
-                <tr><th>Changer Order Amount</th></tr>
-                <tr><th>Total Revised Contract Amount</th></tr>
-                <tr><th>Profitability</th></tr>
-                <tr><th>Profitability Index</th></tr>
+                <tr class="bg-primary"><th>Item</th></tr>
+                <tr><th>Original Signed Contract Value</th></tr>
+                <tr><th>EAC Contract Amount</th></tr>
+                <tr><th>Total Budget Cost</th></tr>
+                <tr><th>Planned Profit Amount</th></tr>
+                <tr><th>Planned Profitability Index</th></tr>
                 <tr><th>Variance</th></tr>
                 </thead>
             </table>
@@ -33,15 +32,14 @@
         <section class="horizontal-scroll display-flex">
 
             @foreach($revisions as $revision)
-                <table class="table table-condensed table-bordered" id="report-body">
+                <table class="table table-condensed table-bordered report-body">
                     <tbody>
                         <tr class="bg-primary"><th class="text-center">{{$revision->name}}</th></tr>
+                        <tr><td>{{number_format($revision->project->project_contract_signed_value, 2)}}</td></tr>
+                        <tr><td>{{number_format($revision->eac_contract_amount, 2)}}</td></tr>
                         <tr><td>{{number_format($revision->budget_cost, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->original_contract_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->change_order_amount, 2)}}</td></tr>
-                        <tr><td>{{number_format($revision->revised_contract_amount, 2)}}</td></tr>
-                        <tr><td class="{{$revision->profitability > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability, 2)}}</td></tr>
-                        <tr><td class="{{$revision->profitability_index > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->profitability_index, 2)}}%</td></tr>
+                        <tr><td>{{number_format($revision->planned_profit_amount, 2)}}</td></tr>
+                        <tr><td class="{{$revision->planned_profitability_index > 0? 'text-success' : 'text-danger'}}">{{number_format($revision->planned_profitability_index, 2)}}%</td></tr>
                         <tr><td>{{number_format($revision->variance, 2)}}</td></tr>
                     </tbody>
                 </table>
@@ -65,7 +63,7 @@
                 bindto : '#index-trend-chart',
                 data: {
                     type: 'line',
-                    columns: [{!! $revisions->pluck('profitability_index')->prepend('Profitability Index') !!}]
+                    columns: [{!! $revisions->pluck('planned_profitability_index')->prepend('Profitability Index') !!}]
                 },
                 axis: {
                     x: {
@@ -89,7 +87,7 @@
                 data: {
                     type: 'bar',
                     columns: [
-                        {!! $revisions->pluck('revised_contract_amount')->prepend('Revised Contract Amount') !!},
+                        {!! $revisions->pluck('eac_contract_amount')->prepend('EAC Contract Amount') !!},
                         {!! $revisions->pluck('budget_cost')->prepend('Project Budget') !!}
                     ]
                 },
@@ -115,13 +113,12 @@
         .horizontal-scroll{
             overflow-x: auto;
             min-width: 300px;
+            justify-content: flex-start;
+            margin-bottom: 20px;
         }
 
-        .flex-tables .table {
-            margin-left: 0;
-            width: auto;
-            min-width: 250px;
-            flex: 1;
+        .table {
+            margin-bottom: 0;
         }
 
         .table tr td, .table tr th {
@@ -134,11 +131,15 @@
             text-align: right;
         }
 
-        #report-body tbody tr:hover > td {
+        .report-body {
+            width: 300px;
+        }
+
+        .report-body tbody tr:hover > td {
             background-color: rgba(255, 255, 204, 0.7);
         }
 
-        #report-body tbody tr.highlighted > td {
+        .report-body tbody tr.highlighted > td {
             background-color: #ffc;
         }
     </style>
