@@ -83,8 +83,7 @@ class PeriodController extends Controller
     {
         $this->validate($request, [
             'global_period_id' => 'required|exists:global_periods,id',
-            'name' => 'required', 'spi_index' => 'numeric',
-            'start_date' => 'required|date'
+            'spi_index' => 'numeric'
         ]);
     }
 }
