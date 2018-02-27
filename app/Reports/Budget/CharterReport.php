@@ -106,10 +106,12 @@ class CharterReport
         $this->addAssumptions($sheet);
 
         $sheet->setAutoSize(false);
-        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(30);
+        $sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(30);
         $sheet->getColumnDimension('F')->setAutoSize(true);
         $sheet->getColumnDimension('G')->setAutoSize(true);
-        $sheet->setBorder("A1:G{$this->row}", 'thin');
+        $sheet->setBorder("A1:G{$this->row}", 'medium');
+        $font = $sheet->getStyle("A1:G{$this->row}")->getFont()->getColor()->setRGB('171a1c');
         $sheet->setAutoFilter(true);
     }
 
@@ -119,7 +121,7 @@ class CharterReport
 
         $sheet->setCellValue('A1', 'Project Basic Info');
 
-        foreach (range(2, 19) as $i) {
+        foreach (range(2, 24) as $i) {
             $sheet->mergeCells("A{$i}:B{$i}");
             $sheet->mergeCells("C{$i}:G{$i}");
         }
@@ -127,51 +129,72 @@ class CharterReport
         //<editor-fold defaultstate="collapsed" desc="Project basic info">
         $sheet->setCellValue('A2', 'Project Name');
         $sheet->setCellValue('C2', $this->project->name);
-        $sheet->setCellValue('A3', 'Project Client');
+        $sheet->setCellValue('A3', 'Client Name');
         $sheet->setCellValue('C3', $this->project->client_name);
-        $sheet->setCellValue('A4', 'Project Consultant');
+        $sheet->setCellValue('A4', 'Consultant Name');
         $sheet->setCellValue('C4', $this->project->consultant);
         $sheet->setCellValue('A5', 'Project Location');
         $sheet->setCellValue('C5', $this->project->project_location);
-        $sheet->setCellValue('A6', 'Project Type');
-        $sheet->setCellValue('C6', $this->project->project_type);
-        $sheet->setCellValue('A7', 'Project Duration');
-        $sheet->setCellValue('C7', $this->project->project_duration);
-        $sheet->setCellValue('A8', 'Project Plan Start Sate');
-        $sheet->setCellValue('C8', $this->project->project_start_date);
-        $sheet->setCellValue('A9', 'Project Plan Finish Date');
-        $sheet->setCellValue('C9', $this->project->expected_finish_date);
-        $sheet->setCellValue('A10', 'Contract Type');
-        $sheet->setCellValue('C10', $this->project->contract_type);
-        $sheet->setCellValue('A11', 'Project Selling Cost');
+        $sheet->setCellValue('A6', 'Contract Type');
+        $sheet->setCellValue('C6', $this->project->contract_type);
+        $sheet->setCellValue('A7', 'Project Type');
+        $sheet->setCellValue('C7', $this->project->project_type);
+        $sheet->setCellValue('A8', 'Original Project Duration');
+        $sheet->setCellValue('C8', $this->project->project_duration);
+        $sheet->setCellValue('A9', 'Project Plan Start Sate');
+        $sheet->setCellValue('C9', $this->project->project_start_date);
+        $sheet->setCellValue('A10', 'Project Plan Finish Date');
+        $sheet->setCellValue('C10', $this->project->expected_finish_date);
+
+        $sheet->setCellValue('A11', 'Original Signed Contract Value ');
         $sheet->setCellValue('C11', $this->project->project_contract_signed_value);
-        $sheet->setCellValue('A12', 'Total Project Dry Cost');
-        $sheet->setCellValue('C12', $this->project->dry_cost);
-        $sheet->setCellValue('A13', 'Project Overhead + GR');
-        $sheet->setCellValue('C13', $this->project->overhead_and_gr);
-        $sheet->setCellValue('A14', 'Project Estimated Profit + Risk');
-        $sheet->setCellValue('C14', $this->project->estimated_profit_and_risk);
-        $sheet->setCellValue('A15', 'Project Total Budget');
-        $sheet->setCellValue('C15', $this->total);
-        $sheet->setCellValue('A16', 'Project Direct Cost Budget');
-        $sheet->setCellValue('C16', $this->project->direct_cost);
-        $sheet->setCellValue('A17', 'Project General Requirement Budget');
-        $sheet->setCellValue('C17', $this->project->general_requirements);
-        $sheet->setCellValue('A18', 'Management Reserve');
-        $sheet->setCellValue('C18', $this->project->management_reserve);
-        $sheet->setCellValue('A19', 'Project Estimated Profit After Budget');
-        $sheet->setCellValue('C19', $this->project->profit);
+
+        $sheet->setCellValue('A12', 'Tender Direct Cost');
+        $sheet->setCellValue('C12', $this->project->tender_direct_cost);
+        $sheet->setCellValue('A13', 'Tender Indirect Cost');
+        $sheet->setCellValue('C13', $this->project->tender_indirect_cost);
+        $sheet->setCellValue('A14', 'Tender Risk and Escalation');
+        $sheet->setCellValue('C14', $this->project->tender_risk);
+        $sheet->setCellValue('A15', 'Total Tender Amount');
+        $sheet->setCellValue('C15', $this->project->tender_total_cost);
+        $sheet->setCellValue('A16', 'Tender Initial Profit');
+        $sheet->setCellValue('C16', $this->project->tender_initial_profit);
+        $sheet->setCellValue('A17', 'Tender Initial Profitability Index');
+        $sheet->setCellValue('C17', $this->project->tender_initial_profitability_index / 100);
+
+        $sheet->setCellValue('A18', 'Project Direct Cost Budget');
+        $sheet->setCellValue('C18', $this->project->direct_cost);
+        $sheet->setCellValue('A19', 'Project General Requirement Budget');
+        $sheet->setCellValue('C19', $this->project->general_requirements);
+        $sheet->setCellValue('A20', 'Management Reserve');
+        $sheet->setCellValue('C20', $this->project->management_reserve);
+        $sheet->setCellValue('A21', 'Total Budget Cost');
+        $sheet->setCellValue('C21', $this->project->budget_cost);
+
+        $sheet->setCellValue('A22', 'EAC Contract Amount');
+        $sheet->setCellValue('C22', $this->project->eac_contract_amount);
+        $sheet->setCellValue('A23', 'Planned Profit Amount');
+        $sheet->setCellValue('C23', $this->project->planned_profit_amount);
+        $sheet->setCellValue('A24', 'Planned Profitability Index');
+        $sheet->setCellValue('C24', $this->project->planned_profitability / 100);
         //</editor-fold>
 
-        $sheet->cells('A1:A19', function ($cells) {
+        $sheet->cells('A1:A24', function ($cells) {
             $cells->setFont(['bold' => true]);
         })->setColumnFormat([
-            'C11:C19' => \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1
-        ])->cells("A15:G19", function (CellWriter $cells) {
-            $cells->setBackground('#DDF4FF');
+            'C11:C23' => \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1
+        ])->cells("A12:G17", function (CellWriter $cells) {
+            $cells->setBackground('#EFF8FF');
+        })->cells('A18:G21', function($cells) {
+            $cells->setBackground('#CCE8FF');
+        })->cells('A22:G24', function($cells) {
+            $cells->setBackground('#A8D8FF');
         });
 
-        $sheet->mergeCells("A20:G21");
+        $sheet->getStyle('C17')->getNumberFormat()->setFormatCode('0.00%');
+        $sheet->getStyle('C24')->getNumberFormat()->setFormatCode('0.00%');
+
+        $this->row = 25;
     }
 
     /**
@@ -179,27 +202,31 @@ class CharterReport
      */
     protected function addDescription(LaravelExcelWorksheet $sheet)
     {
-        $this->row = 23;
-        $sheet->mergeCells('A22:G22')
-            ->setCellValue('A22', 'Project Brief')
-            ->cells("A22", $this->headerStyle);
+        if (trim($this->project->description)) {
+            $sheet->mergeCells("A{$this->row}:G" . ($this->row + 1));
+            $this->row += 2;
 
-        $description = wordwrap($this->project->description, 95);
-        $rows = array_map('trim', explode("\n", $description));
-
-        foreach ($rows as $line) {
             $sheet->mergeCells("A{$this->row}:G{$this->row}")
-                ->getCell("A{$this->row}")
-                ->setValue($line)->getStyle()->getAlignment()->setWrapText(true);
-            ++$this->row;
-        }
+                ->setCellValue('A{$this->row}', 'Project Brief')
+                ->cells("A{$this->row}", $this->headerStyle);
 
-        $sheet->mergeCells("A{$this->row}:G" . ($this->row + 1));
-        $this->row += 2;
+            $description = wordwrap($this->project->description, 95);
+            $rows = array_map('trim', explode("\n", $description));
+
+            foreach ($rows as $line) {
+                $sheet->mergeCells("A{$this->row}:G{$this->row}")
+                    ->getCell("A{$this->row}")
+                    ->setValue($line)->getStyle()->getAlignment()->setWrapText(true);
+                ++$this->row;
+            }
+        }
     }
 
     protected function addBudgetByDiscipline(LaravelExcelWorksheet $sheet)
     {
+        $sheet->mergeCells("A{$this->row}:G" . ($this->row + 1));
+        $this->row += 2;
+
         $sheet->mergeCells("A{$this->row}:G{$this->row}")
             ->setCellValue("A{$this->row}", 'Project Budget Summary')
             ->cells("A{$this->row}", $this->headerStyle);
@@ -282,10 +309,6 @@ class CharterReport
         ]);
 
         $sheet->cells("A{$this->row}:G{$this->row}", $this->subHeaderStyle);
-
-        ++$this->row;
-        $sheet->mergeCells("A{$this->row}:G" . ($this->row + 1));
-        $this->row += 2;
     }
 
     /**
@@ -294,6 +317,10 @@ class CharterReport
     protected function addDisciplineBrief(LaravelExcelWorksheet $sheet)
     {
         if ($this->project->discipline_brief) {
+            ++$this->row;
+            $sheet->mergeCells("A{$this->row}:G" . ($this->row + 1));
+
+            $this->row += 2;
             $sheet->mergeCells("A{$this->row}:G{$this->row}")
                 ->setCellValue("A{$this->row}", 'Discipline Brief')
                 ->cells("A{$this->row}", $this->headerStyle);
@@ -307,10 +334,6 @@ class CharterReport
                     ->getCell("A{$this->row}")
                     ->setValue($line)->getStyle()->getAlignment()->setWrapText(true);
             }
-
-            ++$this->row;
-            $sheet->mergeCells("A{$this->row}:G" . ($this->row + 1));
-            $this->row += 2;
         }
     }
 
@@ -320,6 +343,9 @@ class CharterReport
     protected function addAssumptions(LaravelExcelWorksheet $sheet)
     {
         if (trim($this->project->assumptions)) {
+            ++$this->row;
+            $sheet->mergeCells("A{$this->row}:G" . ($this->row + 1));
+            $this->row += 2;
             $sheet->mergeCells("A{$this->row}:G{$this->row}")
                 ->setCellValue("A{$this->row}", 'Assumptions')
                 ->cells("A{$this->row}", $this->headerStyle);
