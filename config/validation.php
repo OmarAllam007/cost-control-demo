@@ -28,10 +28,9 @@ return [
     ],
 
     'global_period' => [
-        'name' => 'required',
         'start_date' => 'date|before:end_date',
         'end_date' => 'date|after:start_date',
         'spi_index' => 'numeric',
-        'actual_progress' => 'numeric'
+        'actual_progress' => 'numeric|min:0'
     ]
 ];

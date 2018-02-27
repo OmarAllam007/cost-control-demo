@@ -4,12 +4,6 @@
             <article class="col-sm-6 section b-1">
                 <h4 class="section-header">Period Info</h4>
 
-                <article class="form-group {{$errors->first('name', 'has-error')}}">
-                    {{Form::label('name', null, ['class' => 'control-label'])}}
-                    {{Form::text('name', null, ['class' => 'form-control'])}}
-                    {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
-                </article>
-
                 <article class="form-group {{$errors->first('start_date', 'has-error')}}">
                     {{Form::label('start_date', null, ['class' => 'control-label'])}}
                     {{Form::date('start_date', old('start_date', $global_period->start_date? $global_period->start_date->format('Y-m-d') : ''), ['class' => 'form-control'])}}
