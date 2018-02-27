@@ -19,11 +19,16 @@ class BudgetRevision extends Model
 
     protected $appends = ['url', 'user', 'created_date'];
 
-    protected $fillable = ['name', 'original_contract_amount', 'change_order_amount',];
+    protected $fillable = ['original_contract_amount', 'change_order_amount', 'global_period_id'];
 
     function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    function global_period()
+    {
+        return $this->belongsTo(GlobalPeriod::class);
     }
 
     function created_by_user()
@@ -35,22 +40,19 @@ class BudgetRevision extends Model
     {
         parent::boot();
 
-        self::creating(function (self $rev) {
-            $lastRevNum = 0;
-
-            $lastRev = self::where('project_id', $rev->project_id)->latest()->first();
-            if ($lastRev) {
-                $lastRevNum = $lastRev->rev_num;
-            }
-
-            $rev->rev_num = $lastRevNum + 1;
-
-            $rev->original_contract_amount = $rev->project->project_contract_signed_value;
-            $rev->change_order_amount = $rev->project->change_order_amount;
-        });
-
         self::created(function (self $rev) {
             dispatch(new CreateRevisionForProject($rev));
+        });
+
+        self::saving(function(self $rev) {
+            if (!$rev->exists) {
+                $lastRevNum = self::where('project_id', $rev->project_id)->max('rev_num');
+                $rev->rev_num = $lastRevNum + 1;
+                $rev->original_contract_amount = $rev->project->project_contract_signed_value;
+                $rev->change_order_amount = $rev->project->change_order_amount;
+            }
+
+            $rev->name = $rev->global_period->name . '_Rev.' . sprintf('%02d', $rev->rev_num);
         });
 
         self::deleted(function ($revision) {

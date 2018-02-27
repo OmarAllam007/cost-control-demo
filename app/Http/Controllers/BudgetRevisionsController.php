@@ -24,8 +24,7 @@ class BudgetRevisionsController extends Controller
 
         $revision = new BudgetRevision();
         $revision->project_id = $project->id;
-        $latest = $project->revisions()->latest()->first();
-        $revision->rev_num = $latest ? $latest->rev_num + 1 : 1;
+        $revision->rev_num = $project->revisions()->max('rev_num') + 1;
         return view('revisions.create', compact('revision', 'project'));
     }
 
@@ -36,8 +35,8 @@ class BudgetRevisionsController extends Controller
             return redirect()->route('project.budget', $project);
         }
 
-        $this->validate($request, ['name' => 'required']);
-        $project->revisions()->create($request->only('name'));
+        $this->validate($request, ['global_period_id' => 'required']);
+        $project->revisions()->create($request->only('global_period_id'));
 
         flash('Revision has been created');
 
