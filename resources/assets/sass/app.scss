@@ -1,13 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Lato');
 @import "variables";
+$media: "screen" !default;
+
+@if $media == "print" {
+  $body-bg: #ffffff;
+  $font-size-base: 10px;
+  $line-height-base: 1.2;
+  $text-color: #444;
+}
+
 @import "../../../node_modules/bootstrap-sass-noprint/assets/stylesheets/bootstrap";
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
+
+
 
 #main-panel {
   > .panel-heading {
     h1, h2, h3, h4 {
       float: left;
-      font-size: 20px;
+      font-size: 150%;
       line-height: 1.5;
       vertical-align: middle;
       margin-top: 0;
@@ -580,7 +591,7 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   .card-title {
     margin: 0;
     padding: 10px;
-    font-size: 16px;
+    font-size: 125%;
     line-height: 1.4;
     background-color: #fff;
 
@@ -663,7 +674,7 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
 dl {
   display: flex;
-  font-size: 12px;
+  //font-size: 12px;
   margin-bottom: 5px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
@@ -673,7 +684,7 @@ dt {
   padding: 5px;
   text-align: left;
   color: #444;
-  font-size: 12px;
+  //font-size: 12px;
   width: 40%;
   border-right: 2px solid gray;
 }
@@ -727,20 +738,16 @@ section.sm-card {
 }
 
 table.budget-info{
-  font-size: 15px;
+  font-size: 115%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
 table.budget-info > thead > tr > th {
-  font-size: 12px;
   background-color: rgba(201, 214, 192, 0.6) !important;
 }
 
-table.budget-info > tbody > tr > td{
-  font-size: 12px;
-}
 table.budget-info > tbody > tr > th,
 table.budget-info > thead > tr > th:first-child{
-  font-size: 12px;
+
   background-color:  #fbe4d5 !important;
 }
 
@@ -754,7 +761,6 @@ table.budget-info > thead > tr > th:first-child{
 
 .card-group-item-heading {
   color: #70818a;
-  font-size: 12pt;
   font-weight: 700;
   text-decoration: underline;
 }
@@ -783,7 +789,6 @@ dl.dl-margin{
 .cost-summary-side{
   background-color: #D9E1F2 !important;
   color: black;
-  font-size: 12px;
 }
 
 .mb-1 {
