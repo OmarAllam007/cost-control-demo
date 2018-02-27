@@ -17359,7 +17359,7 @@ __WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalab
 __WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.anchor = 'center';
 __WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.formatter = window.number_format;
 __WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.color = '#fff';
-__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.backgroundColor = '#8ed3d8';
+__WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.backgroundColor = '#5B9BD5';
 __WEBPACK_IMPORTED_MODULE_0_chart_js___default.a.defaults.global.plugins.datalabels.font.weight = '700';
 
 document.querySelectorAll('.chart').forEach(function (item) {

@@ -21,8 +21,8 @@
 
 @section('body')
     <div class="row col-md-10 col-md-offset-1">
-        <div class="col-sm-12  col-md-offset-3">
-            <form action="" method="get" class="row">
+
+            <form action="" method="get">
                 <div class="form-group col-sm-4">
                     <select name="period" id="" class="form-control" title="Select reporting period">
                         <option value="">-- Select Period --</option>
@@ -36,29 +36,20 @@
                     <button class="button btn btn-primary"><i class="fa fa-check"></i> Update</button>
                 </div>
             </form>
-        </div>
 
-        <div class="col-sm-12">
 
-            <section class="card info-section">
-                @include('reports.cost-control.project-info.contract-info')
-            </section>
+        <div class="col-md-12">
 
-            <section class="card info-section">
-                @include('reports.cost-control.project-info.revised_contract-info')
-            </section>
+            @include('reports.cost-control.project-info.contract-info')
 
-            <section class="card info-section">
-                @include('reports.cost-control.project-info.budget-info')
-            </section>
+            @include('reports.cost-control.project-info.revised_contract-info')
 
-            <section class="card info-section">
-                @include('reports.cost-control.project-info.cost-info')
-            </section>
 
-            <section class="card info-section" id="cost-summary">
-                @include('reports.partials.cost-summary', $costSummary)
-            </section>
+            @include('reports.cost-control.project-info.budget-info')
+
+            @include('reports.cost-control.project-info.cost-info')
+
+            @include('reports.partials.cost-summary', $costSummary)
 
         </div>
     </div>
@@ -72,7 +63,7 @@
                 @include('reports.cost-control.project-info.spi-chart')
             </div>
             <div class="col-md-12">
-            @include('reports.cost-control.project-info.waste_index_chart')
+                @include('reports.cost-control.project-info.waste_index_chart')
             </div>
             <div class="col-md-12">
                 @include('reports.cost-control.project-info.productivity_index_chart')
@@ -94,76 +85,76 @@
 @append
 
 @section('css')
-    <style>
-        .card-group-item {
-            padding: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
-            border-radius: 5px;
-        }
+    {{--<style>--}}
+        {{--.card-group-item {--}}
+            {{--padding: 10px;--}}
+            {{--margin-bottom: 15px;--}}
+            {{--box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);--}}
+            {{--border-radius: 5px;--}}
+        {{--}--}}
 
-        .card-group-item:nth-child(even) {
-            background: #F3F7F9;
-        }
+        {{--.card-group-item:nth-child(even) {--}}
+            {{--background: #F3F7F9;--}}
+        {{--}--}}
 
-        .card-group-item-heading {
-            color: #70818a;
-            font-size: 12px;
-            font-weight: 700;
-        }
+        {{--.card-group-item-heading {--}}
+            {{--color: #70818a;--}}
+            {{--font-size: 12px;--}}
+            {{--font-weight: 700;--}}
+        {{--}--}}
 
-        .br-1 {
-            border-right: 1px solid #dedede;
-        }
+        {{--.br-1 {--}}
+            {{--border-right: 1px solid #dedede;--}}
+        {{--}--}}
 
-        .cost-summary-table {
-            font-size: 12px;
-        }
+        {{--.cost-summary-table {--}}
+            {{--font-size: 12px;--}}
+        {{--}--}}
 
-        .budget-info {
-            font-size: 12px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
-        }
+        {{--.budget-info {--}}
+            {{--font-size: 12px;--}}
+            {{--box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);--}}
+        {{--}--}}
 
-        .section-header {
-            font-size: 14px;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 7px;
-            background: #64D5CA;
-            margin-bottom: 5px;
-            letter-spacing: 1.2px;
-        }
+        {{--.section-header {--}}
+            {{--font-size: 14px;--}}
+            {{--color: #fff;--}}
+            {{--text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);--}}
+            {{--font-weight: 700;--}}
+            {{--text-transform: uppercase;--}}
+            {{--padding: 7px;--}}
+            {{--background: #64D5CA;--}}
+            {{--margin-bottom: 5px;--}}
+            {{--letter-spacing: 1.2px;--}}
+        {{--}--}}
 
-        .info-section {
-            margin-bottom: 25px;
-        }
+        {{--.info-section {--}}
+            {{--margin-bottom: 25px;--}}
+        {{--}--}}
 
-        .revision-0 {
-            background: #A0F0ED;
-            border-right: 1px solid #fff;
-            border-bottom: 1px solid #fff;
-            color: #444;
-        }
+        {{--.revision-0 {--}}
+            {{--background: #A0F0ED;--}}
+            {{--border-right: 1px solid #fff;--}}
+            {{--border-bottom: 1px solid #fff;--}}
+            {{--color: #444;--}}
+        {{--}--}}
 
-        .revision-1 {
-            background: #64D5CA;
-            border-bottom: 1px solid #fff;
-            color: #444;
-        }
+        {{--.revision-1 {--}}
+            {{--background: #64D5CA;--}}
+            {{--border-bottom: 1px solid #fff;--}}
+            {{--color: #444;--}}
+        {{--}--}}
 
-        .mb-1 {
-            margin-bottom: 1px;
-        }
+        {{--.mb-1 {--}}
+            {{--margin-bottom: 1px;--}}
+        {{--}--}}
 
-        .no-shadow {
-            box-shadow: none;
-        }
+        {{--.no-shadow {--}}
+            {{--box-shadow: none;--}}
+        {{--}--}}
 
-        .text-warning {
-            color: #cd7920;
-        }
-    </style>
+        {{--.text-warning {--}}
+            {{--color: #cd7920;--}}
+        {{--}--}}
+    {{--</style>--}}
 @append

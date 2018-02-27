@@ -1,5 +1,6 @@
-<h3 class="card-title dark-green">Actual Data</h3>
-<section class="card-body">
+<section class="card-group-item">
+    <h3 class="card-title card-group-item-heading">Actual Data</h3>
+    <section class="card-body">
 
     <div class="row">
         <article class="col-xs-4">
@@ -94,5 +95,6 @@
             </dl>
         </article>
     </div>
+    </section>
 
 </section>

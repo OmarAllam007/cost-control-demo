@@ -1,5 +1,5 @@
-<section class="card info-section ">
-    <h3 class="card-title dark-green">Budget Data</h3>
+<section class="card-group-item">
+    <h3 class="card-title card-group-item-heading">Budget Data</h3>
 
     <div class="card-body display-flex">
         <article class="flex mr-10">
