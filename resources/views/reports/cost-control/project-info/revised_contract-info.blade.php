@@ -32,7 +32,7 @@
                         @if ($period->contract_value > $project->project_contract_signed_value)
                             <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
                         @else
-                            <span class="text-danger"><i class="fa fa-arrow-down"></i></span>
+                            <span class="text-danger"><i class="fa fa-arrow-circle-down"></i></span>
                         @endif
                     </dd>
                 </dl>
@@ -45,9 +45,9 @@
                         <span>{{$period->project_duration ?: '0 Days'}}</span>
 
                         @if ($period->project_duration > $project->project_duration)
-                            <span class="text-success"><i class="fa fa-arrow-up"></i></span>
+                            <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
                         @else
-                            <span class="text-danger"><i class="fa fa-arrow-down"></i></span>
+                            <span class="text-danger"><i class="fa fa-arrow-circle-down"></i></span>
                         @endif
                     </dd>
                 </dl>
