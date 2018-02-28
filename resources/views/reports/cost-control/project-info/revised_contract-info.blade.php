@@ -29,10 +29,10 @@
                     <dd class="display-flex">
                         <span>{{number_format($period->contract_value, 2)}}</span>
 
-                        @if ($period->contract_value > $project->project_contract_signed_value)
-                            <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
-                        @else
+                        @if ($period->contract_value < $project->project_contract_signed_value)
                             <span class="text-danger"><i class="fa fa-arrow-circle-down"></i></span>
+                        @else
+                            <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
                         @endif
                     </dd>
                 </dl>

@@ -17,17 +17,8 @@ class ProjectCharterController extends Controller
     function update(Project $project, Request $request)
     {
         $this->authorize('budget_owner', $project);
-
-        $fields = ['description', 'assumptions', 'discipline_brief',
-            'project_type', 'contract_type', 'consultant',
-            'dry_cost', 'overhead_and_gr', 'estimated_profit_and_risk',
-            'project_contract_signed_value'
-        ];
-
-        foreach ($fields as $field) {
-            $project[$field] = $request->input($field);
-        }
-        $project->save();
+        $project->update($request->all());
+//        $project->save();
 
         flash('Project charter has been updated', 'success');
         return \Redirect::route('project.budget', $project);
