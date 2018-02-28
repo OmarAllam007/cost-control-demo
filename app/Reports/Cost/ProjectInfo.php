@@ -50,7 +50,7 @@ class ProjectInfo
     function getInfo()
     {
         $summary = new CostSummary($this->period);
-        $this->costSummary = $summary->run();
+        $this->costSummary = MasterShadow::dashboardSummary($this->project);
         $this->wasteIndexTrend = $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function ($period) {
             $period->value = round(floatval($period->variance / $period->allowable_cost), 4);
             return $period;
