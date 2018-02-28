@@ -42,7 +42,7 @@
                 <dl>
                     <dt>Duration (Days)</dt>
                     <dd class="display-flex">
-                        <span>{{$period->project_duration ?: '0 Days'}}</span>
+                        <span>{{$period->expected_duration}}</span>
 
                         @if ($period->project_duration > $project->project_duration)
                             <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>

@@ -23,7 +23,7 @@ class Period extends Model
     protected $fillable = [
         'start_date', 'is_open', 'status', 'global_period_id',
         'planned_cost', 'earned_value', 'actual_invoice_amount', 'planned_progress', 'planned_finish_date',
-        'spi_index', 'actual_progress', 'change_order_amount',
+        'spi_index', 'actual_progress', 'change_order_amount', 'forecast_finish_date',
         'time_extension', 'time_elapsed', 'time_remaining', 'expected_duration', 'duration_variance',
     ];
 
@@ -71,15 +71,6 @@ class Period extends Model
         });
     }
 
-    function getChangeOrderAmountAttribute()
-    {
-        if ($this->attributes['change_order_amount']) {
-            return $this->attributes['change_order_amount'];
-        }
-
-        return $this->project->change_order_amount;
-    }
-
     function getPlannedFinishDateAttribute()
     {
         if ($this->attributes['planned_finish_date']) {
@@ -100,7 +91,7 @@ class Period extends Model
             return $this->attributes['expected_duration'];
         }
 
-        return $this->project->project_duration;
+        return $this->project->project_duration ?: 0;
     }
 
     public function scopeLast(Builder $query)
