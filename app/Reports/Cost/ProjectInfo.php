@@ -42,9 +42,9 @@ class ProjectInfo
             \Cache::forget($key);
         }
 
-        return \Cache::remember($key, Carbon::now()->addDay(), function () {
+//        return \Cache::remember($key, Carbon::now()->addDay(), function () {
             return $this->getInfo();
-        });
+//        });
     }
 
     function getInfo()

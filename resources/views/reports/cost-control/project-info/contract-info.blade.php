@@ -26,14 +26,14 @@
             <article class="col-xs-4">
                 <dl>
                     <dt>Initial Profit</dt>
-                    <dd>{{number_format($project->estimated_profit_and_risk, 2)}}</dd>
+                    <dd>{{number_format($project->tender_initial_profit, 2)}}</dd>
                 </dl>
             </article>
 
             <article class="col-xs-4">
                 <dl>
                     <dt>Initial Profitability</dt>
-                    <dd>{{number_format($project->contract_signed_value, 2)}}</dd>
+                    <dd>{{number_format($project->tender_initial_profitability_index, 2)}}%</dd>
                 </dl>
             </article>
 
