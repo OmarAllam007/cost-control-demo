@@ -152,17 +152,21 @@ class ProjectInfo
                 ->where('resource_type_id', 1)->sum('budget_cost');
             $revision0['management_reserve'] = RevisionBreakdownResourceShadow::where('revision_id', $first->id)
                 ->where('resource_type_id', 8)->sum('budget_cost');
+            $revision0['eac_contract_amount'] = $first->eac_contract_amount;
+            $revision0['profit'] = $first->planned_profit_amount;
+            $revision0['profitability_index'] = $first->planned_profitability_index;
         } else {
             $revision0['budget_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
             $revision0['revised_contract_amount'] = $this->project->revised_contract_amount;
             $revision0['general_requirements'] = BreakDownResourceShadow::where('project_id', $this->project->id)
-                ->where('resource_type_id', 1)->sum('budget_cost');;
+                ->where('resource_type_id', 1)->sum('budget_cost');
             $revision0['management_reserve'] = BreakDownResourceShadow::where('project_id', $this->project->id)
-                ->where('resource_type_id', 8)->sum('budget_cost');;
+                ->where('resource_type_id', 8)->sum('budget_cost');
+            $revision0['eac_contract_amount'] = $this->project->eac_contract_amount;
+            $revision0['profit'] = $this->project->planned_profit_amount;
+            $revision1['profitability_index'] = $this->project->planned_profitability;
         }
 
-        $revision0['profit'] = $revision0['revised_contract_amount'] - $revision0['budget_cost'];
-        $revision0['profitability_index'] = $revision0['profit'] * 100 / $revision0['budget_cost'];
         $revision0['indirect_cost'] = $revision0['general_requirements'] + $revision0['management_reserve'];
         $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'];
 
@@ -178,18 +182,22 @@ class ProjectInfo
             $revision1['general_requirements'] = RevisionBreakdownResourceShadow::where('revision_id', $latest->id)
                 ->where('resource_type_id', 1)->sum('budget_cost');
             $revision1['management_reserve'] = RevisionBreakdownResourceShadow::where('revision_id', $latest->id)
-                ->where('resource_type_id', 8)->sum('budget_cost');;
+                ->where('resource_type_id', 8)->sum('budget_cost');
+            $revision1['eac_contract_amount'] = $latest->eac_contract_amount;
+            $revision1['profit'] = $latest->planned_profit_amount;
+            $revision1['profitability_index'] = $latest->planned_profitability_index;
         } else {
             $revision1['budget_cost'] = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
             $revision1['revised_contract_amount'] = $this->project->revised_contract_amount;
             $revision1['general_requirements'] = BreakDownResourceShadow::where('project_id', $this->project->id)
-                ->where('resource_type_id', 1)->sum('budget_cost');;
+                ->where('resource_type_id', 1)->sum('budget_cost');
             $revision1['management_reserve'] = BreakDownResourceShadow::where('project_id', $this->project->id)
-                ->where('resource_type_id', 8)->sum('budget_cost');;
+                ->where('resource_type_id', 8)->sum('budget_cost');
+            $revision1['eac_contract_amount'] = $this->project->eac_contract_amount;
+            $revision1['profit'] = $this->project->planned_profit_amount;
+            $revision1['profitability_index'] = $this->project->planned_profitability;
         }
 
-        $revision1['profit'] = $revision1['revised_contract_amount'] - $revision1['budget_cost'];
-        $revision1['profitability_index'] = $revision1['profit'] * 100 / $revision1['budget_cost'];
         $revision1['indirect_cost'] = $revision1['general_requirements'] + $revision1['management_reserve'];
         $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'];
 

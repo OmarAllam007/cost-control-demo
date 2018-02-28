@@ -73,7 +73,7 @@
                         @if ($budgetInfo['revision1']['management_reserve'] > $budgetInfo['revision0']['management_reserve'])
                             <span class="text-success"><i class="fa  fa-arrow-circle-up"></i></span>
                         @elseif($budgetInfo['revision1']['management_reserve'] < $budgetInfo['revision0']['management_reserve'])
-                            <span class="text-danger"><i class="fa-arrow-circle-down "></i></span>
+                            <span class="text-danger"><i class="fa fa-arrow-circle-down "></i></span>
                         @else
                             <span><strong>&mdash;</strong></span>
                         @endif
@@ -82,12 +82,21 @@
             </tr>
 
             <tr>
-                <th>EAC Contract</th>
-                <td class="revision-0"></td>
+                <th>EAC Contract Amount</th>
+                <td class="revision-0">
+                    {{number_format($budgetInfo['revision0']['eac_contract_amount'], 2)}}
+                </td>
                 <td class="revision-1">
                     <div class="display-flex">
-                        <span class="flex"></span>
+                        <span class="flex">{{number_format($budgetInfo['revision1']['eac_contract_amount'], 2)}}</span>
 
+                        @if ($budgetInfo['revision1']['eac_contract_amount'] > $budgetInfo['revision0']['eac_contract_amount'])
+                            <span class="text-success"><i class="fa  fa-arrow-circle-up"></i></span>
+                        @elseif($budgetInfo['revision1']['eac_contract_amount'] < $budgetInfo['revision0']['eac_contract_amount'])
+                            <span class="text-danger"><i class="fa fa-arrow-circle-down"></i></span>
+                        @else
+                            <span><strong>&mdash;</strong></span>
+                        @endif
                     </div>
                 </td>
             </tr>
@@ -100,7 +109,7 @@
                         <span class="flex">{{number_format($budgetInfo['revision1']['profit'], 2)}}</span>
 
                         @if ($budgetInfo['revision1']['profit'] > $budgetInfo['revision0']['profit'])
-                            <span class="text-success"><i class=" fa-arrow-circle-up"></i></span>
+                            <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
                         @elseif($budgetInfo['revision1']['profit'] < $budgetInfo['revision0']['profit'])
                             <span class="text-danger"><i class="fa fa-arrow-circle-down "></i></span>
                         @else
@@ -117,7 +126,7 @@
                         <span class="flex">{{number_format($budgetInfo['revision1']['profitability_index'], 2)}}%</span>
 
                         @if ($budgetInfo['revision1']['profitability_index'] > $budgetInfo['revision0']['profitability_index'])
-                            <span class="text-success"><i class=" fa-arrow-circle-up"></i></span>
+                            <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
                         @elseif($budgetInfo['revision1']['profitability_index'] < $budgetInfo['revision0']['profitability_index'])
                             <span class="text-danger"><i class="fa fa-arrow-circle-down "></i></span>
                         @else
