@@ -7,7 +7,7 @@
          data-labels="{{$cpiTrend->pluck('p_name')}}"
          data-datasets="[{{ json_encode([
                                 'label' => 'CPI', 'data' => $cpiTrend->pluck('value'),
-                                'backgroundColor' => '#5B9BD5',
+                                'backgroundColor' => 'rgba(104,160,72,0.6)',
                                 'borderColor' => '#ED7D31'
                             ]) }}]"
          style="height: 200px"></div>

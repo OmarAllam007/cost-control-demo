@@ -1,5 +1,6 @@
-<h3 class="card-title  dark-green">Cost Summary</h3>
-<section class="card-body">
+<section class="card-group-item">
+    <h3 class="card-title card-group-item-heading">Cost Summary</h3>
+    <section class="card-body">
     <table class="table table-bordered cost-summary-table">
         <thead>
         <tr>
@@ -64,4 +65,5 @@
         </tr>
         </tfoot>
     </table>
+    </section>
 </section>

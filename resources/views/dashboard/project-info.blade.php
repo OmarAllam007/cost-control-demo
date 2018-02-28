@@ -1,5 +1,5 @@
-<section class="card info-section">
-    <h3 class="card-title dark-green">Contracts Information</h3>
+<section class="card-group-item">
+    <h3 class="card-title card-group-item-heading">Contracts Information</h3>
 
     <section class="card-body">
         <div class="row">
@@ -49,7 +49,7 @@
 
 
 
-        <h5 style="text-decoration: underline">Project Schedule</h5>
+        <h4 class="card-title card-group-item-heading" style="text-decoration: underline">Project Schedule</h4>
         <table class="table table-condensed table-bordered">
             <thead>
             <tr class="bg-primary">
