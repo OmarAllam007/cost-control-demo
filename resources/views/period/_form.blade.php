@@ -30,7 +30,7 @@
                 <div class="form-group form-group-sm {{ $errors->first('change_order_amount', 'has-error') }}">
                     {{ Form::label('change_order_amount', 'Total Change Order Amount', ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
-                        {{ Form::text('change_order_amount', $period->project->change_order_amount ?? 0, ['class' => 'form-control']) }}
+                        {{ Form::text('change_order_amount', null, ['class' => 'form-control']) }}
                         {!! $errors->first('change_order_amount', '<div class="help-block">:message</div>') !!}
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                 <article class="form-group form-group-sm {{ $errors->first('planned_finish_date', 'has-error') }}">
                     {{ Form::label('planned_finish_date', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
-                        {{ Form::date('planned_finish_date', Carbon\Carbon::parse($period->project->expected_finish_date)->format('Y-m-d'), ['class' => 'form-control to-calendar']) }}
+                        {{ Form::date('planned_finish_date', $period->planned_finish_date->format('Y-m-d'), ['class' => 'form-control to-calendar']) }}
                         {!! $errors->first('planned_finish_date', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
