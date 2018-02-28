@@ -1,9 +1,9 @@
 <section class="card-group-item">
-    <h3 class="card-title card-group-item-heading">Budget Information</h3>
+    <h4 class="card-title card-group-item-heading">Budget Information</h4>
 
     <section class="card-body">
 
-        <table class="table table-striped  budget-info">
+        <table class="table table-condensed table-striped budget-info">
             <thead>
             <tr>
                 <th class="col-xs-2"></th>

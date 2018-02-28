@@ -1,5 +1,5 @@
 <section class="card-group-item">
-    <h3 class="card-title card-group-item-heading">Revised Contract information</h3>
+    <h4 class="card-title card-group-item-heading">Revised Contract information</h4>
     <section class="card-body">
         <div class="row">
             <article class="col-xs-4">

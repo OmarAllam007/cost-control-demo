@@ -1,5 +1,5 @@
 <div class="card-group-item">
-    <h3 class="card-group-item-heading">SPI Trend Analysis</h3>
+    <h4 class="card-group-item-heading">SPI Trend Analysis</h4>
 
     <div class="chart"
          id="spiChart"
@@ -7,8 +7,8 @@
          data-labels="{{$spiTrend->pluck('name')}}"
          data-datasets="[{{ json_encode([
                                 'label' => 'SPI', 'data' => $spiTrend->pluck('spi_index'),//
-                                 'backgroundColor' => 'rgba(214,117,53,.7)',
-                                'borderColor' => '#169ec0'
+                                 'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
+                                'borderColor' => 'rgba(0, 32, 96, 0.9)'
                             ]) }}]"
          style="height: 200px"></div>
 </div>
