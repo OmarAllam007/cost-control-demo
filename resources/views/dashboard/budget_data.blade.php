@@ -1,9 +1,9 @@
-<section class="card info-section ">
-    <h3 class="card-title dark-green">Budget Data</h3>
+<section class="card-group-item">
+    <h4 class="card-title card-group-item-heading">Budget Data</h4>
 
     <div class="card-body display-flex">
         <article class="flex mr-10">
-            <table class="table table-bordered">
+            <table class="table table-bordered table-condensed mb-0">
                 <tbody>
                 <tr class="row-height">
                     <th class="w-30p">Revision Zero</th>
@@ -30,7 +30,7 @@
         </article>
 
         <article class="flex">
-            <table class="table table-bordered mb-0">
+            <table class="table table-bordered table-condensed mb-0">
                 <tbody>
                 <tr class=" row-height">
                     <th class="w-30p">Latest Revision</th>

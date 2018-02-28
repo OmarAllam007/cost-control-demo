@@ -8,7 +8,7 @@
 
 @section('header')
     <div class="display-flex">
-        <h2 class="flex">{{$project->name}} &mdash; Project Information Report</h2>
+        <h2 class="flex">{{$project->name}} &mdash; Project Dashboard</h2>
 
         @if(! $print)
         <div class="btn-toolbar">
