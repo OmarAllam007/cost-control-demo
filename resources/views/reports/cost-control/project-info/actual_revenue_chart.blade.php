@@ -1,5 +1,5 @@
 <article class="card-group-item">
-    <h3 class="card-group-item-heading">Revenue Statement</h3>
+    <h4 class="card-group-item-heading">Revenue Statement</h4>
 
     <div class="row">
     <div class="col-md-12">

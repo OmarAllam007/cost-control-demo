@@ -15,6 +15,8 @@ $media: "screen" !default;
 
 
 #main-panel {
+  margin-top: -20px;
+  border-top: none;
   > .panel-heading {
     h1, h2, h3, h4 {
       float: left;
@@ -681,12 +683,12 @@ dl {
 }
 
 dt {
-  background: #fbe4d5;
+  background: #D9E1F2;
   padding: 5px;
   text-align: left;
   color: #444;
   //font-size: 12px;
-  width: 40%;
+  width: 50%;
   border-right: 2px solid gray;
 }
 
@@ -719,7 +721,7 @@ dd {
   width: 30%;
   min-width: 30%;
   max-width: 30%;
-  background-color:#fbe4d5 !important;
+  background-color:#D9E1F2 !important;
   border-right: 2px solid gray !important;
 }
 
@@ -743,13 +745,13 @@ table.budget-info{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
 table.budget-info > thead > tr > th {
-  background-color: rgba(201, 214, 192, 0.6) !important;
+  background-color: #D9E1F2 !important;
 }
 
 table.budget-info > tbody > tr > th,
 table.budget-info > thead > tr > th:first-child{
 
-  background-color:  #fbe4d5 !important;
+  background-color:  #D9E1F2 !important;
 }
 
 .card-group-item{
@@ -759,6 +761,8 @@ table.budget-info > thead > tr > th:first-child{
   border-radius: 5px;
   border: 1px solid black;
   font-size: 90%;
+
+  page-break-inside: avoid;
 }
 
 .card-group-item-heading {
@@ -775,7 +779,7 @@ dl.dl-margin{
 }
 
 .actual-data-cell{
-  background-color: #fbe4d5;
+  background-color: #D9E1F2;
   border: 1px solid black;
 }
 .cost-summary-group{
@@ -790,7 +794,6 @@ dl.dl-margin{
 }
 .cost-summary-side{
   background-color: #D9E1F2 !important;
-  color: black;
 }
 
 .mb-1 {

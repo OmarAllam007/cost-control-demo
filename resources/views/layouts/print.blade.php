@@ -32,12 +32,17 @@
             <img src="{{asset('/images/kcc.png')}}" alt="Logo" class="logo pull-right" width="200">
         </th>
     </tr>
+    <tr>
+        <th colspan="3" style="height: 1cm;"></th>
+    </tr>
     </thead>
 
     <tbody>
     <tr>
-        <td colspan="3">
-            @yield('body')
+        <td colspan="3" style="max-width: 800px; min-width: 700px;">
+            <div class="container">
+                @yield('body')
+            </div>
         </td>
     </tr>
     </tbody>

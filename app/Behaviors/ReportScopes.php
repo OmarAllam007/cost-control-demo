@@ -104,4 +104,15 @@ trait ReportScopes
 
         return $query;
     }
+
+    function scopeDashboardSummary($query, $period)
+    {
+        return $query->where('period_id', $period->id)
+            ->selectRaw('(CASE WHEN resource_type_id in (1, 8) THEN "INDIRECT" ELSE "DIRECT" END) AS type')
+            ->selectRaw('SUM(allowable_ev_cost) AS allowable_cost, SUM(budget_cost) AS budget_cost')
+            ->selectRaw('SUM(to_date_cost) AS to_date_cost, SUM(remaining_cost) AS remaining_cost')
+            ->selectRaw('SUM(completion_cost) AS completion_cost, SUM(allowable_var) as to_date_var')
+            ->selectRaw('SUM(cost_var) AS completion_var')
+            ->groupBy('type');
+    }
 }
