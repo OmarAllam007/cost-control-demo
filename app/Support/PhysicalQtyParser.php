@@ -91,8 +91,8 @@ class PhysicalQtyParser
         $budget_activity = $this->activityCodes->get($store_activity);
 
         $store_resource = trim(strtolower($row[7]));
-        $budget_resources = $this->resourcesMap->get($store_resource);
-        $rollup_resource = $this->rollupResourcesMap->get($store_resource);
+        $budget_resources = $this->resourcesMap->get($store_resource, collect());
+        $rollup_resource = $this->rollupResourcesMap->get($store_resource, collect());
 
         $query = BreakDownResourceShadow::whereProjectId($this->batch->project_id)
             ->whereCode($budget_activity)
