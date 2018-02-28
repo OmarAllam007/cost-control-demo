@@ -52,26 +52,10 @@
             </div>
         </section>
 
-        <section class="card-group-item">
-            <h4 class="card-title dark-cyan card-group-item-heading">Revenue Statement</h4>
 
-            <div class="card-body">
-                <div class="chart"
-                     id="revenueTrendChart"
-                     data-type="line"
-                     data-labels="{{$actual_revenue_trend->keys()}}"
-                     data-datasets="[{{ json_encode([
-                                    'label' => 'Actual Revenue',
-                                    'data' =>$actual_revenue_trend->values(),//)
-                                    'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
-                                    'borderColor' => 'rgba(0, 32, 96, 0.9)'
-                                ]) }}]"
-                     style="height: 150px"></div>
-            </div>
-        </section>
 
         <section class="card-group-item chart-style">
-            <h4 class="card-title card-group-item-heading">Waste Index Trend Analysis</h4>
+            <h4 class="card-title card-group-item-heading">Material Consumption Index Trend Analysis</h4>
 
             <div class="card-body">
                 <div class="chart"
@@ -79,8 +63,8 @@
                      data-type="line"
                      data-labels="{{$waste_index_trend->keys()}}"
                      data-datasets="[{{ json_encode([
-                                    'label' => 'Waste Index',
-                                    'data' => $waste_index_trend->values(),// $waste_index_trend->values(),
+                                    'label' => 'Material Consumption Index',
+                                    'data' => $waste_index_trend->values(),
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
                                 ]) }}]"
@@ -147,6 +131,24 @@
                 </section>
             </div>
         </div>
+
+        <section class="card-group-item">
+            <h4 class="card-title dark-cyan card-group-item-heading">Revenue Statement</h4>
+
+            <div class="card-body">
+                <div class="chart"
+                     id="revenueTrendChart"
+                     data-type="line"
+                     data-labels="{{$actual_revenue_trend->keys()}}"
+                     data-datasets="[{{ json_encode([
+                                    'label' => 'Actual Revenue',
+                                    'data' =>$actual_revenue_trend->values(),//)
+                                    'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
+                                    'borderColor' => 'rgba(0, 32, 96, 0.9)'
+                                ]) }}]"
+                     style="height: 150px"></div>
+            </div>
+        </section>
     </div>
 @endsection
 
