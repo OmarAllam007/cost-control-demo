@@ -37,8 +37,8 @@ document.querySelectorAll('.chart').forEach((item) => {
         options = {
             scales: {
                 yAxes: [{ ticks: { beginAtZero:true }}],
-                    xAxes: [{ ticks: { beginAtZero:false }}],
-                    animation: {duration: 1500, easing: 'easeOutExpo'}
+                xAxes: [{ ticks: { beginAtZero:true }}],
+                animation: {duration: 1500, easing: 'easeOutExpo'}
             }
         }
     }
