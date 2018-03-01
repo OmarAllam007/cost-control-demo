@@ -63,13 +63,14 @@ class BreakdownTemplateImporter
         $template = $this->templates->get($template_id);
         if (!$template) {
             $template = BreakdownTemplate::find($template_id);
-            $this->templates->put($template->id, $template);
 
             if (!$template) {
                 $data['N'] = "Template not found";
                 $this->failed->push($data);
                 return false;
             }
+
+            $this->templates->put($template->id, $template);
         }
 
         if (!$this->project) {
