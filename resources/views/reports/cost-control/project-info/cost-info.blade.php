@@ -29,15 +29,13 @@
                 <dt>Variance</dt>
                 <dd class="display-flex">
                     <span class="flex">{{number_format($costInfo['variance'], 2)}}</span>
-                    <span class="{{$costInfo['variance'] > 0 ? 'text-success' : 'text-warning'}}"><i
+                    <span class="{{$costInfo['variance'] > 0 ? 'text-success' : 'text-danger'}}"><i
                                 class="fa fa-circle"></i></span>
                 </dd>
             </dl>
 
-
-
             <dl>
-                <dt>Actual Cost %</dt>
+                <dt>Actual Cost Percentage</dt>
                 <dd>{{number_format($costInfo['cost_progress'], 2)}}%</dd>
             </dl>
         </article>
