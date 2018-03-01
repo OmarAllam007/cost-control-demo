@@ -25,7 +25,7 @@
 @section('body')
 
     <div class="row">
-        <div class="col-md-12 col-xl-10 col-xl-offset-10">
+        <div class="col-md-12 col-lg-10 col-lg-offset-1">
             @if (!$print)
             <form action="" method="get" class="row">
                 <div class="form-group col-sm-4">

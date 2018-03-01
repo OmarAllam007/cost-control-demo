@@ -79,12 +79,26 @@
 
             <dl class="dl-margin">
                 <dt>SPI</dt>
-                <dd>{{$period->spi_index}}</dd>
+                <dd>
+                    <div class="display-flex">
+                        <span class="display-flex">{{number_format($period->spi_index, 3)}}</span>
+                        <span class="{{$period->spi_index >= 1 ? 'text-success' : 'text-danger'}}">
+                            <i class="fa fa-circle"></i>
+                        </span>
+                    </div>
+                </dd>
             </dl>
 
             <dl class="dl-margin">
                 <dt>Material Consumption Index</dt>
-                <dd>{{number_format($costInfo['waste_index'] * 100, 2)}}%</dd>
+                <dd>
+                    <div class="display-flex">
+                        <span class="display-flex">{{number_format($costInfo['waste_index'], 2)}}</span>
+                        <span class="{{$costInfo['waste_index'] > 0 ? 'text-success' : 'text-danger'}}">
+                            <i class="fa fa-circle"></i>
+                        </span>
+                    </div>
+                </dd>
             </dl>
 
             <dl>

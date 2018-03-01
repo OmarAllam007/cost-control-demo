@@ -9,8 +9,8 @@
              data-labels="{{collect(['Planned Value', 'Earned Value', 'Actual Invoice Value'])}}"
              data-datasets="[{{json_encode([
                                 'label' => 'Revenue Statement',
-                                'data' => [$period->planned_cost, $period->earned_value, $period->actual_invoice_amount],
-                                'backgroundColor' => ['#ED7D31', '#E0F8FF', "#A0F0ED"],
+                                'data' => [$period->planned_value, $period->earned_value, $period->actual_invoice_value],
+                                'backgroundColor' => ['rgba(65,108,182,0.6)', 'rgba(104,160,72,0.6)', "rgba(214,117,53,.7)"],
                                    'borderColor' => '#5B9BD5',
                                 'datalabels' => ['align' => 'center']
                             ])}}]"
