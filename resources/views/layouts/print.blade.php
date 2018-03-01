@@ -21,7 +21,9 @@
             <strong>
                 AlKifah Contracting Co. <br>
                 Project Control Department <br>
+                @if (isset($project))
                 Project: {{$project->name}} <br>
+                @endif
                 {{date('d M Y')}}
             </strong>
         </th>

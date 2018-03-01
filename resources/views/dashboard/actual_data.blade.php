@@ -1,24 +1,26 @@
+@dd($cost_info['highest_risk'])
+
 <section class="card-group-item">
     <h4 class="card-title dark-cyan card-group-item-heading">Actual Data</h4>
 
     <div class="card-body">
-        <div class="row">
+        <div class="display-flex">
 
-            <div class="col-sm-6">
+            <div class="flex mr-10">
                 <dl>
                     <dt>Actual Cost</dt>
                     <dd>{{number_format($cost_info['to_date_cost'], 2)}}</dd>
                 </dl>
             </div>
 
-            <div class="col-sm-6">
+            <div class="flex  mr-10">
                 <dl>
                     <dt>Allowable Cost</dt>
                     <dd>{{number_format($cost_info['allowable_cost'], 2)}}</dd>
                 </dl>
             </div>
 
-            <div class="col-sm-6">
+            <div class="flex">
                 <dl>
                     <dt>Variance</dt>
                     <dd class="{{$cost_info['variance']>0? 'text-success' : 'text-danger'}}">
@@ -26,8 +28,11 @@
                     </dd>
                 </dl>
             </div>
+        </div>
 
-            <div class="col-sm-6">
+        <div class="display-flex">
+
+            <div class="flex mr-10">
                 <dl>
                     <dt>CPI</dt>
                     <dd class="display-flex">
@@ -41,14 +46,14 @@
                 </dl>
             </div>
 
-            <div class="col-sm-6">
+            <div class="flex  mr-10">
                 <dl>
                     <dt>Material Consumption Index</dt>
                     <dd>{{number_format($cost_info['pw_index'], 2)}}%</dd>
                 </dl>
             </div>
 
-            <div class="col-sm-6">
+            <div class="flex">
                 <dl>
                     <dt>SPI</dt>
                     <dd class="display-flex">
@@ -61,8 +66,10 @@
                     </dd>
                 </dl>
             </div>
+        </div>
 
-            <div class="col-sm-6">
+        <div class="display-flex">
+            <div class="flex mr-10">
                 <dl>
                     <dt>EAC Profitability</dt>
                     <dd>
@@ -71,13 +78,16 @@
                 </dl>
             </div>
 
-            <div class="col-sm-6">
+            <div class="flex mr-10">
                 <dl>
                     <dt>EAC Profit Amount</dt>
                     <dd>
 
                     </dd>
                 </dl>
+            </div>
+
+            <div class="flex">
             </div>
         </div>
 
