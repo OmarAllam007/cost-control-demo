@@ -1,19 +1,25 @@
-@extends('layouts.app')
+@php
+$print = request()->exists('print');
+$layout = ($print? 'print' : 'app');
+@endphp
+@extends("layouts.{$layout}")
 
 @section('header')
     <h2><i class="fa fa-dashboard"></i> Dashboard</h2>
 @endsection
 
 @section('body')
-    <div class="col-xl-10 col-xl-offset-1">
-
+    <div class="col-lg-10 col-lg-offset-1">
+        @if (!$print)
         @include('dashboard.filters')
+        @endif
 
         @include('dashboard.project-info')
         @include('dashboard.budget_data')
+        @include('dashboard.actual_data')
         @include('dashboard.cost_summary')
 
-        @include('dashboard.actual_data')
+
 
 
         <section class="card-group-item">

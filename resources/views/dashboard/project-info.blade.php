@@ -2,44 +2,46 @@
     <h4 class="card-title card-group-item-heading">Contracts Information</h4>
 
     <section class="card-body">
-        <div class="row">
+        <div class="display-flex">
 
-            <div class="col-sm-4">
+            <div class="flex mr-10">
                 <dl>
                     <dt>Contracts Value</dt>
                     <dd>{{number_format($contracts_info['contracts_total'], 2)}}</dd>
                 </dl>
             </div>
 
-            <div class="col-sm-4">
+            <div class="flex mr-10">
                 <dl>
                     <dt>Change Orders Value</dt>
                     <dd>{{number_format($contracts_info['change_orders'], 2)}}</dd>
                 </dl>
             </div>
 
-            <div class="col-sm-4">
+            <div class="flex">
                 <dl>
                     <dt>Revised Contracts Value</dt>
                     <dd>{{number_format($contracts_info['revised'], 2)}}</dd>
                 </dl>
             </div>
+        </div>
 
-            <div class="col-sm-4">
+        <div class="display-flex">
+            <div class="flex mr-10">
                 <dl>
                     <dt>Initial Profit</dt>
                     <dd>{{number_format($contracts_info['profit'], 2)}}</dd>
                 </dl>
             </div>
 
-            <div class="col-sm-4">
+            <div class="flex mr-10">
                 <dl>
                     <dt>Initial Profitability</dt>
                     <dd>{{number_format($contracts_info['profitability'], 2)}}%</dd>
                 </dl>
             </div>
 
-            <div class="col-sm-4">
+            <div class="flex">
                 <dl>
                     <dt>Expected Finish Date</dt>
                     <dd>{{$contracts_info['finish_date']->format('d M Y') ?? ''}}</dd>
