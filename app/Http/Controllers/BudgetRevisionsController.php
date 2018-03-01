@@ -56,8 +56,8 @@ class BudgetRevisionsController extends Controller
         $thisRevision = $revision->statsByDiscipline();
         $disciplines = $thisRevision->keys();
 
-        $firstRevisionTotal = $rev1->total();
-        $thisRevisionTotal = $revision->total();
+        $firstRevisionTotal = $rev1->budget_cost;
+        $thisRevisionTotal = $revision->budget_cost;
         $diffTotal = $thisRevisionTotal - $firstRevisionTotal;
         $diffPercentTotal = $firstRevisionTotal ? ($diffTotal/$firstRevisionTotal) * 100 : 0;
 
