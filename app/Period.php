@@ -20,6 +20,8 @@ class Period extends Model
 
     const NONE = 0;
 
+    private $chached_eac_profit;
+
     protected $fillable = [
         'start_date', 'is_open', 'status', 'global_period_id',
         'planned_cost', 'earned_value', 'actual_invoice_amount', 'planned_progress', 'planned_finish_date',
@@ -116,4 +118,25 @@ class Period extends Model
 
         return Carbon::parse($this->attributes['end_date']);
     }
+
+    function getAtCompletionCostAttribute()
+    {
+        return MasterShadow::where('period_id', $this->id)->sum('completion_cost');
+    }
+
+    function getEacProfitAttribute()
+    {
+        if (!empty($this->chached_eac_profit)) {
+            return  $this->chached_eac_profit;
+        }
+
+        return $this->chached_eac_profit = $this->project->eac_contract_amount - $this->at_completion_cost;
+    }
+
+    function getEacProfitabilityIndexAttribute()
+    {
+        return $this->eac_profit * 100 / $this->project->eac_contract_amount;
+    }
+
+
 }

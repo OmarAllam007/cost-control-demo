@@ -4,7 +4,7 @@
     @include('reports.all._budget_cost_by_break_down')
 @endif
 
-@section('title', 'Project Information')
+@section('title', 'Project Dashboard')
 
 @section('header')
     <div class="display-flex">

@@ -77,6 +77,13 @@
                 </div>
 
                 <div class="form-group">
+                    {{Form::label('actual_start_date', 'Actual Start Date', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::date('actual_start_date', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
                     {{Form::label('project_contract_signed_value', 'Original Signed Contract Value', ['class' => 'control-label col-sm-4'])}}
                     <div class="col-sm-8">
                         {{Form::text('project_contract_signed_value', null, ['class' => 'form-control'])}}
