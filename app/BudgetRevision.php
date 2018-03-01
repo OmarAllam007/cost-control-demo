@@ -131,6 +131,7 @@ class BudgetRevision extends Model
         if (isset($this->cached_budget_cost)) {
             return $this->cached_budget_cost;
         }
+
         return $this->cached_budget_cost = RevisionBreakdownResourceShadow::where('revision_id', $this->id)->sum('budget_cost');
     }
 
