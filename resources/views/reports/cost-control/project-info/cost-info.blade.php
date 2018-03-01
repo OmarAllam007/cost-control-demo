@@ -51,7 +51,7 @@
             </dl>
             <dl>
                 <dt>Expected Duration</dt>
-                <dd>{{$period->expecetd_duraion}}</dd>
+                <dd>{{$period->expected_duration}}</dd>
             </dl>
 
             <dl class="dl-margin">
@@ -70,11 +70,11 @@
         <article class="col-xs-4">
             <dl class="mb-1">
                 <dt>Actual Start Date</dt>
-                <dd>{{$project->actual_start_date}}</dd>
+                <dd>{{Carbon\Carbon::parse($project->actual_start_date)->format('d M Y')}}</dd>
             </dl>
             <dl>
                 <dt>Expected Finish Date</dt>
-                <dd>{{$project->expected_finish_date}}</dd>
+                <dd>{{Carbon\Carbon::parse($project->expected_finish_date)->format('d M Y')}}</dd>
             </dl>
 
             <dl class="dl-margin">
@@ -89,7 +89,7 @@
 
             <dl>
                 <dt>Expected EAC Profit Profitability</dt>
-                <dd>{{$costInfo['productivity_index']}}%</dd>
+                <dd>{{number_format($period->eac_profitability_index, 2)}}%</dd>
             </dl>
         </article>
     </div>
