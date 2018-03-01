@@ -42,15 +42,15 @@ class ProjectInfo
             \Cache::forget($key);
         }
 
-        return \Cache::remember($key, Carbon::now()->addDay(), function () {
+//        return \Cache::remember($key, Carbon::now()->addDay(), function () {
             return $this->getInfo();
-        });
+//        });
     }
 
     function getInfo()
     {
         $summary = new CostSummary($this->period);
-        $this->costSummary = $summary->run();
+        $this->costSummary = MasterShadow::dashboardSummary($this->period)->get();
         $this->wasteIndexTrend = $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function ($period) {
             $period->value = round(floatval($period->variance / $period->allowable_cost), 4);
             return $period;

@@ -1,5 +1,5 @@
 <div class="card-group-item">
-    <h3 class="card-group-item-heading">Waste Index Trend</h3>
+    <h4 class="card-group-item-heading">Material Consumption Index Trend</h4>
 
     <div class="chart"
          id="wasteIndexChart"
@@ -7,8 +7,8 @@
          data-labels="{{$wasteIndexTrend->pluck('p_name')}}"
          data-datasets="[{{json_encode([
                                 'label' => 'Waste Index', 'data' => $wasteIndexTrend->pluck('value'),
-                                  'backgroundColor' => '#5B9BD5',
-                                'borderColor' => '#ED7D31'
+                                'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
+                                'borderColor' => 'rgba(0, 32, 96, 0.9)'
                             ])}}]"
          style="height: 200px"></div>
 </div>

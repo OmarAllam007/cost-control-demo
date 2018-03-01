@@ -1,5 +1,5 @@
 <div class="card-group-item">
-    <h3 class="card-group-item-heading">Productivity Index</h3>
+    <h4 class="card-group-item-heading">Productivity Index</h4>
 
     <div class="panel-body">
         <div class="chart"
@@ -7,9 +7,9 @@
              data-type="line"
              data-labels="{{$productivityIndexTrend->pluck('name')}}"
              data-datasets="[{{json_encode([
-                                'label' => 'Productivity Index', 'data' => $productivityIndexTrend->pluck('value'),
-                                  'backgroundColor' => '#9ddcec',
-                                'borderColor' => '#169ec0'
+                                'label' => 'Productivity Index', 'data' => $productivityIndexTrend->pluck('value'),//
+                                'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
+                                'borderColor' => 'rgba(0, 32, 96, 0.9)'
                             ])}}]"
              style="height: 200px"></div>
     </div>

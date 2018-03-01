@@ -11,7 +11,7 @@ Chart.defaults.global.plugins.datalabels.align = 'center';
 Chart.defaults.global.plugins.datalabels.anchor = 'center';
 Chart.defaults.global.plugins.datalabels.formatter = window.number_format;
 Chart.defaults.global.plugins.datalabels.color = '#fff';
-Chart.defaults.global.plugins.datalabels.backgroundColor = '#8ed3d8';
+Chart.defaults.global.plugins.datalabels.backgroundColor = '#5B9BD5';
 Chart.defaults.global.plugins.datalabels.font.weight = '700';
 
 document.querySelectorAll('.chart').forEach((item) => {

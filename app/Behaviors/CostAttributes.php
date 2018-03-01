@@ -96,7 +96,7 @@ trait CostAttributes
         }
 
         $activity = StdActivity::find($this->activity_id);
-        if ($activity->isGeneral() || $this->is_rolled_up) {
+        if ($activity->isGeneral() || $this->is_rollup) {
             return $this->calculated['allowable_ev_cost'] = $this->progress_value * $this->budget_cost;
         }
 
@@ -168,7 +168,7 @@ trait CostAttributes
             return $this->calculated['remaining_cost'];
         }
 
-        if ($this->is_rolled_up) {
+        if ($this->is_rollup) {
             return $this->calculated['remaining_cost'] = $this->completion_cost - $this->to_date_cost;
         }
 
@@ -230,7 +230,7 @@ trait CostAttributes
             return $this->calculated['completion_cost'];
         }
 
-        if ($this->is_rolled_up) {
+        if ($this->is_rollup) {
             if ($this->allowable_ev_cost && $this->to_date_cost) {
                 return $this->calculated['completion_cost'] = $this->budget_cost  / ($this->allowable_ev_cost / $this->to_date_cost);
             }

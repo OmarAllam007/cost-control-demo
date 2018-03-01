@@ -62,7 +62,11 @@
 
     <tr>
         <th>Cost Control Owner</th>
-        <td>Eng. {{$project->cost_owner->name}}</td>
+        <td>
+            @if ($project->cost_owner)
+            Eng. {{$project->cost_owner->name}}
+            @endif
+        </td>
     </tr>
 
     {{-- Tender fields --}}
