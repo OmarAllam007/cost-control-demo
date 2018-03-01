@@ -9,9 +9,9 @@ class AddPlanningToPeriods extends Migration
     {
         Schema::table('periods', function (Blueprint $table) {
             //planned cost value and & EV & Actual invoice amount
-            $table->float('planned_cost', 12, 2)->nullable();
+            $table->float('planned_value', 12, 2)->nullable();
             $table->float('earned_value', 12, 2)->nullable();
-            $table->float('actual_invoice_amount', 12, 2)->nullable();
+            $table->float('actual_invoice_value', 12, 2)->nullable();
         });
     }
 

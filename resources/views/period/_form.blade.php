@@ -1,7 +1,5 @@
 <div class="row form-horizontal">
     <section class="col-sm-9">
-        <fieldset>
-            <legend>Financial Period</legend>
 
             <div class="form-group form-group-sm {{ $errors->first('global_period_id', 'has-error') }}">
                 {{ Form::label('global_period_id', 'Global Period', ['class' => 'control-label col-sm-3']) }}
@@ -20,7 +18,6 @@
                     </label>
                 </div>
             </div>
-        </fieldset>
 
         @if ($period->exists)
 
@@ -71,15 +68,6 @@
             </fieldset>
             <fieldset>
                 <legend>Planning Info</legend>
-                {{--
-                <article class="form-group {{$errors->first('actual_invoice_amount', 'has-error')}}">
-                    {{Form::label('actual_invoice_amount', null, ['class' => 'control-label col-sm-3'])}}
-                    <div class="col-sm-9">
-                        {{ Form::number('actual_invoice_amount', null, ['class' => 'form-control'])}}
-                        {!! $errors->first('actual_invoice_amount', '<div class="help-block">:message</div>') !!}
-                    </div>
-                </article>
-                --}}
                 <article class="form-group form-group-sm {{ $errors->first('planned_progress', 'has-error') }}">
                     {{ Form::label('planned_progress', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
@@ -96,6 +84,14 @@
                     <div class="col-sm-9">
                         {{ Form::date('planned_finish_date', $period->planned_finish_date->format('Y-m-d'), ['class' => 'form-control to-calendar']) }}
                         {!! $errors->first('planned_finish_date', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </article>
+
+                <article class="form-group {{$errors->first('planned_value', 'has-error')}}">
+                    {{Form::label('planned_value', null, ['class' => 'control-label col-sm-3'])}}
+                    <div class="col-sm-9">
+                        {{ Form::number('planned_value', null, ['class' => 'form-control'])}}
+                        {!! $errors->first('planned_value', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
             </fieldset>
@@ -149,6 +145,22 @@
                     <div class="col-sm-9">
                         {{ Form::date('forecast_finish_date', $period->forecast_finish_date? \Carbon\Carbon::parse($period->forecast_finish_date)->format('Y-m-d') : '', ['class' => 'form-control to-calendar']) }}
                         {!! $errors->first('forecast_finish_date', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </article>
+
+                <article class="form-group {{$errors->first('earned_value', 'has-error')}}">
+                    {{Form::label('earned_value', null, ['class' => 'control-label col-sm-3'])}}
+                    <div class="col-sm-9">
+                        {{ Form::number('earned_value', null, ['class' => 'form-control'])}}
+                        {!! $errors->first('earned_value', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </article>
+
+                <article class="form-group {{$errors->first('actual_invoice_value', 'has-error')}}">
+                    {{Form::label('actual_invoice_value', "Actual Invoice Value", ['class' => 'control-label col-sm-3'])}}
+                    <div class="col-sm-9">
+                        {{ Form::number('actual_invoice_value', null, ['class' => 'form-control'])}}
+                        {!! $errors->first('actual_invoice_value', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
             </fieldset>
