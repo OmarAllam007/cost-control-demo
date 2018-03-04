@@ -229,7 +229,8 @@ class GlobalReport
         $total_budget = $this->cost_summary->sum('budget_cost');
         $to_date = $this->cost_summary->sum('to_date_cost');
 
-        $actual_progress = round($to_date * 100 / $total_budget, 2);
+//        $actual_progress = round($to_date * 100 / $total_budget, 2);
+        $actual_progress = round($this->period->actual_progress, 2);
         $planned_progress = round($this->period->planned_progress ?: 0, 2);
 
         $progress = [$actual_progress, $planned_progress];
