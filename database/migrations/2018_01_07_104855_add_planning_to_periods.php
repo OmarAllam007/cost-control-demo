@@ -18,9 +18,9 @@ class AddPlanningToPeriods extends Migration
     public function down()
     {
         Schema::table('periods', function (Blueprint $table) {
-            $table->dropColumn('planned_cost');
+            $table->dropColumn('planned_value');
             $table->dropColumn('earned_value');
-            $table->dropColumn('actual_invoice_amount');
+            $table->dropColumn('actual_invoice_value');
         });
     }
 }
