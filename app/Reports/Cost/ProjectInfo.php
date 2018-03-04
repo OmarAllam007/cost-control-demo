@@ -51,7 +51,7 @@ class ProjectInfo
     {
         $this->costSummary = MasterShadow::dashboardSummary($this->period)->get();
         $this->wasteIndexTrend = $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function ($period) {
-            $period->value = round(floatval($period->variance / $period->allowable_cost) * 100, 2);
+            $period->value = round(abs($period->variance / $period->allowable_cost) * 100, 2);
             return $period;
         })->keyBy('period_id');
 
@@ -65,7 +65,8 @@ class ProjectInfo
                 return $item;
             });
 
-        $this->spiTrend = $this->project->periods()->readyForReporting()->get(['name', 'spi_index']);
+        $this->spiTrend = $this->project->periods()->where('status', Period::GENERATED)
+            ->oldest('id')->get(['name', 'spi_index']);
 
         $cost = MasterShadow::where('period_id', $this->period->id)
             ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();

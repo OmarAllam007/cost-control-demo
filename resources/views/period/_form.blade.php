@@ -54,16 +54,7 @@
                     </div>
                 </div>
 
-                <div class="form-group form-group-sm {{ $errors->first('duration_variance', 'has-error') }}">
-                    {{ Form::label('duration_variance', null, ['class' => 'control-label col-sm-3']) }}
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            {{ Form::text('duration_variance', $period->duration_variance, ['class' => 'form-control']) }}
-                            <span class="input-group-addon">Days</span>
-                        </div>
-                        {!! $errors->first('duration_variance', '<div class="help-block">:message</div>') !!}
-                    </div>
-                </div>
+
                 {{--change_order_amount--}}
             </fieldset>
             <fieldset>
@@ -147,6 +138,17 @@
                         {!! $errors->first('forecast_finish_date', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
+
+                <div class="form-group form-group-sm {{ $errors->first('duration_variance', 'has-error') }}">
+                    {{ Form::label('duration_variance', null, ['class' => 'control-label col-sm-3']) }}
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            {{ Form::text('duration_variance', $period->duration_variance, ['class' => 'form-control']) }}
+                            <span class="input-group-addon">Days</span>
+                        </div>
+                        {!! $errors->first('duration_variance', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </div>
 
                 <article class="form-group {{$errors->first('earned_value', 'has-error')}}">
                     {{Form::label('earned_value', null, ['class' => 'control-label col-sm-3'])}}

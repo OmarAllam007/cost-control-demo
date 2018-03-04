@@ -74,7 +74,7 @@
             </dl>
             <dl>
                 <dt>Expected Finish Date</dt>
-                <dd>{{Carbon\Carbon::parse($project->expected_finish_date)->format('d M Y')}}</dd>
+                <dd>{{Carbon\Carbon::parse($period->forecast_finish_date)->format('d M Y')}}</dd>
             </dl>
 
             <dl class="dl-margin">
