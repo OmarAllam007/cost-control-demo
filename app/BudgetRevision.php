@@ -160,4 +160,34 @@ class BudgetRevision extends Model
 
         return $this->planned_profit_amount * 100 / $this->eac_contract_amount;
     }
+
+    function getGeneralRequirementCostAttribute()
+    {
+        if (empty($this->general_requirement_cost)) {
+            $this->general_requirement_cost = RevisionBreakdownResourceShadow::where('revision_id', $this->id)
+                ->where('resource_type_id', 1)->sum('budget_cost');
+        }
+
+        return $this->general_requirements_cost;
+    }
+
+    function getManagementReserveCostAttribute()
+    {
+        if (empty($this->management_reserver_cost)) {
+            $this->management_reserver_cost = RevisionBreakdownResourceShadow::where('revision_id', $this->id)
+                ->where('resource_type_id', 8)->sum('budget_cost');
+        }
+
+        return $this->management_reserver_cost;
+    }
+
+    function getIndirectCostAttribute()
+    {
+        return $this->general_requirements_cost + $this->management_reserve_cost;
+    }
+
+    function getDirectCostAttribute()
+    {
+        return $this->budget_cost = $this->indirect_cost;
+    }
 }
