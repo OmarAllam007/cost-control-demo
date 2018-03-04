@@ -12359,3 +12359,7 @@ dl.dl-margin {
 }
 }
 
+.no-print {
+  display: none;
+}
+
