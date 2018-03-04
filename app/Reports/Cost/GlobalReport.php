@@ -158,17 +158,32 @@ class GlobalReport
 
     private function cost_info()
     {
-        $cpis = $this->cost_summary->map(function ($period) {
-            $period->cpi = $period->allowable_cost / $period->to_date_cost;
-            $period->variance = $period->allowable_cost - $period->to_date_cost;
-            return $period;
-        })->sortBy('cpi');
+        $cpis = MasterShadow::join('periods as p', 'master_shadows.period_id', '=', 'p.id')
+            ->join('projects', 'master_shadows.project_id', '=', 'projects.id')
+            ->select(['master_shadows.project_id', 'projects.name'])
+            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
+            ->selectRaw('sum(completion_cost) as completion_cost')
+            ->where('p.global_period_id', $this->period->id)->where('to_date_cost', '>', 0)
+            ->groupBy('master_shadows.project_id')->groupBy('projects.name')
+            ->get()->map(function ($period) {
+                $period->cpi = $period->allowable_cost / $period->to_date_cost;
+                $period->variance = $period->allowable_cost - $period->to_date_cost;
+                $revision = BudgetRevision::where('project_id', $period->project_id)
+                    ->where('global_period_id', '<=', $this->period->id)->latest()->first();
+
+                if ($revision) {
+                    $period->eac_contract_amount = $revision->eac_contract_amount;
+                } else {
+                    $period->eac_contract_amount = $period->project->each_contract_amount;
+                }
+                return $period;
+            })->sortBy('cpi');
 
         $allowable_cost = $cpis->sum('allowable_cost');
         $to_date_cost = $cpis->sum('to_date_cost');
         $variance = $allowable_cost - $to_date_cost;
-        $cpi = $allowable_cost / 1;
-        $pw_index = $this->waste_index_trend()->last();
+        $cpi = $allowable_cost / $to_date_cost;
+        $pw_index = $this->waste_index_trend()->get($this->period->id, 0);
 
         $highest_risk = $cpis->first();
         $lowest_risk = $cpis->last();
@@ -176,12 +191,22 @@ class GlobalReport
         $total_budget = $this->cost_summary->sum('budget_cost');
         $to_date = $this->cost_summary->sum('to_date_cost');
 
-        $actual_progress = round($to_date * 100 / 1, 2);
+        $actual_progress = round($to_date * 100 / $total_budget, 2);
         $planned_progress = round($this->period->planned_progress ?: 0, 2);
 
         $progress = [$actual_progress, $planned_progress];
 
-        return compact('allowable_cost', 'to_date_cost', 'variance', 'cpi', 'highest_risk', 'lowest_risk', 'pw_index', 'progress');
+        $total_eac = $cpis->sum('eac_contract_amount');
+        $eac_profit = $total_eac - $cpis->sum('completion_cost');
+        $eac_profitability = 0;
+        if ($total_eac) {
+            $eac_profitability = $eac_profit / $total_eac;
+        }
+
+        return compact(
+            'allowable_cost', 'to_date_cost', 'variance', 'cpi',
+            'highest_risk', 'lowest_risk', 'pw_index', 'progress', 'eac_profit', 'eac_profitability'
+        );
     }
 
     private function cost_summary()
@@ -192,8 +217,8 @@ class GlobalReport
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
         ];
 
-         return $this->cost_summary =  MasterShadow::whereIn('period_id', $this->last_period_ids)
-             ->selectRaw(implode(', ', $fields))->groupBy('type')->get()->keyBy('type');
+        return $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
+            ->selectRaw(implode(', ', $fields))->groupBy('type')->get()->keyBy('type');
 //
 //        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
 //            ->whereIn('period_id', $this->last_period_ids)
@@ -211,7 +236,7 @@ class GlobalReport
         $remaining_cost = $this->cost_summary->sum('remaining_cost');
         $sum = $to_date_cost + $remaining_cost;
 
-        return collect([round($to_date_cost * 100 / 1, 2), round($remaining_cost * 100 / 1, 2)]);
+        return collect([round($to_date_cost * 100 / $sum, 2), round($remaining_cost * 100 / $sum, 2)]);
     }
 
     private function cpi_trend()
