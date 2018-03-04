@@ -1,5 +1,3 @@
-@dd($cost_info['highest_risk'])
-
 <section class="card-group-item">
     <h4 class="card-title dark-cyan card-group-item-heading">Actual Data</h4>
 
@@ -71,23 +69,79 @@
         <div class="display-flex">
             <div class="flex mr-10">
                 <dl>
-                    <dt>EAC Profitability</dt>
+                    <dt>EAC Profit Amount</dt>
                     <dd>
-
+                        {{number_format($cost_info['eac_profit'], 2)}}
                     </dd>
                 </dl>
             </div>
 
             <div class="flex mr-10">
                 <dl>
-                    <dt>EAC Profit Amount</dt>
+                    <dt>EAC Profitability</dt>
                     <dd>
-
+                        {{number_format($cost_info['eac_profitability'], 2)}}
                     </dd>
                 </dl>
             </div>
 
+            <div class="flex"></div>
+        </div>
+
+        <div class="display-flex mt-20">
+            <div class="flex mr-10">
+                <dl>
+                    <dt>Highest Risk Project</dt>
+                    <dd>
+                        {{$cost_info['highest_risk']->name}}
+                    </dd>
+                </dl>
+            </div>
+            <div class="flex mr-10">
+                <dl>
+                    <dt>Variance</dt>
+                    <dd class="display-flex">
+                        <span class="flex {{$cost_info['highest_risk']->variance < 1? 'text-danger' : 'text-success'}}">{{number_format($cost_info['highest_risk']->variance, 2)}}</span>
+                        <span class="{{$cost_info['highest_risk']->variance < 0? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
+                    </dd>
+                </dl>
+            </div>
             <div class="flex">
+                <dl>
+                    <dt>CPI</dt>
+                    <dd class="display-flex">
+                        <span class="flex">{{number_format($cost_info['highest_risk']->cpi, 3)}}</span>
+                        <span class="{{$cost_info['highest_risk']->cpi < 1? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="display-flex">
+            <div class="flex mr-10">
+                <dl>
+                    <dt>Lowest Risk Project</dt>
+                    <dd>
+                        {{$cost_info['lowest_risk']->name}}
+                    </dd>
+                </dl>
+            </div>
+            <div class="flex mr-10">
+                <dl>
+                    <dt>Variance</dt>
+                    <dd class="display-flex">
+                        <span class="flex {{$cost_info['lowest_risk']->variance < 0? 'text-danger' : 'text-success'}}">{{number_format($cost_info['lowest_risk']->variance, 2)}}</span>
+                        <span class="{{$cost_info['lowest_risk']->variance < 0? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="flex">
+                <dl>
+                    <dt>CPI</dt>
+                    <dd class="display-flex">
+                        <span class="flex">{{number_format($cost_info['lowest_risk']->cpi, 3)}}</span>
+                        <span class="{{$cost_info['lowest_risk']->cpi < 1? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
+                    </dd>
+                </dl>
             </div>
         </div>
 

@@ -9,7 +9,7 @@ $layout = ($print? 'print' : 'app');
 @endsection
 
 @section('body')
-    <div class="col-lg-10 col-lg-offset-1">
+    <div class="col-md-12 col-xl-10 col-xl-offset-1">
         @if (!$print)
         @include('dashboard.filters')
         @endif
