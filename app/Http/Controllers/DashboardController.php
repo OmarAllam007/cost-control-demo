@@ -43,11 +43,14 @@ class DashboardController extends Controller
         $period = null;
 
         if ($period_id = $request->get('period')) {
-            $period = GlobalPeriod::find($period_id);
+            $request->session()->put('gloabl-report-period', $period_id);
         }
 
-        if (!$period) {
-            $period = $this->globalPeriods->last();
+        if ($period_id = $request->session()->get('gloabl-report-period')) {
+            $period = GlobalPeriod::find($period_id);
+        } else {
+            $period = $this->globalPeriods->first();
+            $request->session()->put('gloabl-report-period', $period->id);
         }
 
         return $period;
@@ -55,8 +58,8 @@ class DashboardController extends Controller
 
     private function getGlobalPeriods()
     {
-        return GlobalPeriod::orderBy('start_date', 'DESC')->get()->reject(function($period) {
-            return Period::where('global_period_id', $period->id)->where('status', '!=', Period::GENERATED)->exists();
+        return GlobalPeriod::latest('end_date')->get()->filter(function($period) {
+            return Period::where('global_period_id', $period->id)->where('status', Period::GENERATED)->exists();
         });
     }
 }
