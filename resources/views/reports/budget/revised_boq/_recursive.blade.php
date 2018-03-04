@@ -6,7 +6,8 @@
     </th>
     <th class="col-sm-2"></th>
     <th class="col-sm-1"></th>
-    <th class="col-sm-2">{{number_format($wbs_level->original_boq, 2)}}</th>
+    <th class="col-sm-1"></th>
+    <th class="col-sm-1">{{number_format($wbs_level->original_boq, 2)}}</th>
     <th class="col-sm-1"></th>
     <th class="col-sm-2">{{number_format($wbs_level->revised_boq, 2)}}</th>
 </tr>
@@ -20,6 +21,7 @@
         <td class="level-label">{{$cost_account->description}}</td>
         <td>{{$cost_account->cost_account}}</td>
         <td>{{number_format($cost_account->price_ur, 2)}}</td>
+        <td>{{$cost_account->unit->type}}</td>
         <td>{{number_format($cost_account->original_boq, 2)}}</td>
         <td>{{number_format($cost_account->budget_qty, 2)}}</td>
         <td>{{number_format($cost_account->revised_boq, 2)}}</td>

@@ -2,6 +2,7 @@
 
 namespace App\Reports\Budget;
 
+use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Project;
 use Illuminate\Database\Query\JoinClause;
@@ -38,9 +39,8 @@ class RevisedBoqReport
 
     function run()
     {
-        $this->original_boqs = collect(\DB::table('boqs')
-            ->selectRaw('wbs_id, cost_account, description, (price_ur * quantity) as original_boq')
-            ->where('project_id', $this->project->id)->get())
+        $this->original_boqs = Boq::selectRaw('wbs_id, cost_account, description, unit_id, (price_ur * quantity) as original_boq')
+            ->where('project_id', $this->project->id)->with('unit')->get()
             ->groupBy('wbs_id')->map(function (Collection $group) {
                 return $group->keyBy('cost_account');
             });
