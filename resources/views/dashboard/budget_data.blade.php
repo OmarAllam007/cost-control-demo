@@ -14,8 +14,12 @@
                     <td>{{number_format($budget_info['revision0']['direct_cost'], 2)}}</td>
                 </tr>
                 <tr class="row-height">
-                    <th class="w-30p">EAC Contract Value</th>
+                    <th class="w-30p">Indirect Cost</th>
                     <td>{{number_format($budget_info['revision0']['indirect_cost'], 2)}}</td>
+                </tr>
+                <tr class="row-height">
+                    <th class="w-30p">EAC Contract Value</th>
+                    <td>{{number_format($budget_info['revision0']['eac_contracts_value'], 2)}}</td>
                 </tr>
                 <tr class=" row-height">
                     <th class="w-30p">Planned Profit</th>
@@ -72,8 +76,22 @@
                     </td>
                 </tr>
 
+                <tr class="row-height">
+                    <th class="w-30p">EAC Contract Value</th>
+                    <td>
+                        <div class="display-flex">
+                            <span class="flex">{{number_format($budget_info['revision1']['eac_contracts_value'], 2)}}</span>
+                            @if ($budget_info['revision1']['eac_contracts_value'] >= $budget_info['revision0']['eac_contracts_value'])
+                                <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
+                            @else
+                                <span class="text-danger"><i class="fa  fa-arrow-circle-down"></i></span>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+
                 <tr class=" row-height">
-                    <th class="w-30p">Profit</th>
+                    <th class="w-30p">Planned Profit</th>
                     <td>
                         <div class="display-flex">
                             <span class="flex">{{number_format($budget_info['revision1']['profit'], 2)}}</span>
@@ -87,7 +105,7 @@
                 </tr>
 
                 <tr class=" row-height">
-                    <th class="w-30p">Profitability</th>
+                    <th class="w-30p">Planned Profitability</th>
                     <td>
                         <div class="display-flex">
                             <span class="flex">{{number_format($budget_info['revision1']['profitability'], 2)}}</span>

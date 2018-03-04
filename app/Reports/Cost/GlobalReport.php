@@ -44,22 +44,27 @@ class GlobalReport
     {
         $this->projects = Project::all();
 
-        $this->last_period_ids = Period::readyForReporting()->where('global_period_id', $this->period->id)->pluck('id');
+        $this->last_period_ids = Period::readyForReporting()
+            ->selectRaw('max(id) as id, project_id')
+            ->where('global_period_id', $this->period->id)
+            ->groupBy('project_id')
+            ->pluck('id');
+
         $this->periods = Period::find($this->last_period_ids->toArray());
 
         return [
+            'cost_summary' => $this->cost_summary(),
+            'cost_info' => $this->cost_info(),
             'projectNames' => $this->projects->pluck('name', 'id'),
             'contracts_info' => $this->contracts_info(),
             'finish_dates' => $this->finish_dates(),
             'budget_info' => $this->budget_info(),
-            'cost_summary' => $this->cost_summary(),
-            'cost_info' => $this->cost_info(),
             'cost_percentage_chart' => $this->cost_percentage(),
             'cpi_trend' => $this->cpi_trend(),
             'spi_trend' => $this->spi_trend(),
             'waste_index_trend' => $this->waste_index_trend(),
             'pi_trend' => $this->productivity_index_trend(),
-            'actual_revenue_trend' => $this->actual_revenue_trend()
+            'revenue_statement' => $this->revenue_statement()
         ];
     }
 
@@ -71,8 +76,8 @@ class GlobalReport
         $revised = $contracts_total + $change_orders;
         $budget_total = BreakDownResourceShadow::sum('budget_cost');
 
-        $profit = $budget_total - $contracts_total - $change_orders;
-        $profitability = $profit * 100 / $contracts_total;
+        $profit = $this->projects->sum('tender_initial_profit');
+        $profitability = $profit * 100 / $revised;
         $finish_date = Carbon::parse($this->projects->max('expected_finish_date'));
 
         $schedules = $this->periods->map(function ($period) {
@@ -108,34 +113,67 @@ class GlobalReport
 
     private function budget_info()
     {
-        $min_revision_ids = BudgetRevision::minRevisions()->pluck('id');
-        $min_revisions = BudgetRevision::find($min_revision_ids->toArray());
-        $general_requirement = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
-        $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
-        $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $min_revision_ids)->sum('budget_cost');
-        $revised_contracts = $min_revisions->sum('revised_contract_amount');
-        $profit = $revised_contracts - $budget_cost;
+        $firstRevisions = $this->projects->map(function ($project) {
+            $revision = BudgetRevision::where('project_id', $project->id)->oldest()->first();
+
+            if (!$revision) {
+                $revision = $project;
+            }
+
+            $eac_contract_amount = $revision->eac_contract_amount;
+            $budget_cost = $revision->budget_cost;
+            $general_requirements = $revision->general_requirement_cost;
+            $management_reserve = $revision->management_reserve_cost;
+
+            return new Fluent(compact('eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
+        });
+
+        $budget_cost = $firstRevisions->sum('budget_cost');
+        $eac_contracts_value = $firstRevisions->sum('eac_contract_amount');
+        $general_requirements = $firstRevisions->sum('general_requirements');
+        $management_reserve = $firstRevisions->sum('management_reserve');
+        $profit = $eac_contracts_value - $budget_cost;
         $revision0 = [
             'budget_cost' => $budget_cost,
-            'direct_cost' => $budget_cost - $general_requirement - $management_reserve,
-            'indirect_cost' => $general_requirement + $management_reserve,
+            'direct_cost' => $budget_cost - $general_requirements - $management_reserve,
+            'indirect_cost' => $general_requirements + $management_reserve,
+            'eac_contracts_value' => $eac_contracts_value,
             'profit' => $profit,
-            'profitability' => $profit * 100 / $revised_contracts,
+            'profitability' => $profit * 100 / $eac_contracts_value,
         ];
 
-        $max_revision_ids = BudgetRevision::maxRevisions()->pluck('id');
-        $max_revisions = BudgetRevision::find($max_revision_ids->toArray());
-        $general_requirement = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 1)->sum('budget_cost');
-        $management_reserve = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->where('resource_type_id', 8)->sum('budget_cost');
-        $budget_cost = RevisionBreakdownResourceShadow::whereIn('revision_id', $max_revision_ids)->sum('budget_cost');
-        $revised_contracts = $max_revisions->sum('revised_contract_amount');
-        $profit = $revised_contracts - $budget_cost;
+        $latestRevisions = $this->projects->map(function ($project) {
+            $revision = BudgetRevision::where('project_id', $project->id)
+                ->where('global_period_id', '<=', $this->period->id)->latest()->first();
+
+            if (!$revision) {
+                $revision = $project;
+            }
+
+            $eac_contract_amount = $revision->eac_contract_amount;
+            $budget_cost = $revision->budget_cost;
+            $general_requirements = $revision->general_requirement_cost;
+            $management_reserve = $revision->management_reserve_cost;
+            $project_id = $project->id;
+
+            return new Fluent(compact('project_id','eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
+        });
+
+        $latestRevisions->pluck('eac_contract_amount', 'project_id');
+
+        $budget_cost = $latestRevisions->sum('budget_cost');
+        $eac_contracts_value = $latestRevisions->pluck('eac_contract_amount', 'project_id')->sum();
+        $general_requirements = $latestRevisions->sum('general_requirements');
+        $management_reserve = $latestRevisions->sum('management_reserve');
+        $profit = $eac_contracts_value - $budget_cost;
+
         $revision1 = [
             'budget_cost' => $budget_cost,
-            'direct_cost' => $budget_cost - $general_requirement - $management_reserve,
-            'indirect_cost' => $general_requirement + $management_reserve,
+            'direct_cost' => $budget_cost - $general_requirements - $management_reserve,
+            'indirect_cost' => $general_requirements + $management_reserve,
+            'eac_contracts_value' => $eac_contracts_value,
             'profit' => $profit,
-            'profitability' => $profit * 100 / $revised_contracts,
+            'profitability' => $profit * 100 / $eac_contracts_value,
         ];
 
         return compact('revision0', 'revision1');
@@ -183,7 +221,7 @@ class GlobalReport
         $to_date_cost = $cpis->sum('to_date_cost');
         $variance = $allowable_cost - $to_date_cost;
         $cpi = $allowable_cost / $to_date_cost;
-        $pw_index = $this->waste_index_trend()->get($this->period->id, 0);
+        $pw_index = $this->waste_index_trend()->get($this->period->name, 0);
 
         $highest_risk = $cpis->first();
         $lowest_risk = $cpis->last();
@@ -283,7 +321,7 @@ class GlobalReport
             ->get()->map(function ($period) use ($periods) {
                 $period->waste_index = 0;
                 if ($period->allowable_cost) {
-                    $period->waste_index = round($period->variance * 100 / $period->allowable_cost, 4);
+                    $period->waste_index = round(abs($period->variance * 100 / $period->allowable_cost), 4);
                 }
 
                 $period->name = $periods->get($period->global_period_id)->name;
@@ -319,20 +357,23 @@ class GlobalReport
             })->pluck('pi', 'name');
     }
 
-    function actual_revenue_trend()
+    function revenue_statement()
     {
-        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
-        $global_period_ids = $periods->pluck('id');
-        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
-
-        return ActualRevenue::from('actual_revenue as r')
-            ->join('periods as p', 'r.period_id', '=', 'p.id')
-            ->whereIn('period_id', $period_ids)
-            ->selectRaw('p.global_period_id, sum(value) as value')
-            ->groupBy('p.global_period_id')->get(['value', 'global_period_id'])
-            ->map(function ($period) use ($periods) {
-                $period->name = $periods->get($period->global_period_id)->name;
-                return $period;
-            })->pluck('value', 'name');
+        return [
+            $this->period->planned_value, $this->period->earned_value, $this->period->actual_invoice_value
+        ];
+//        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
+//        $global_period_ids = $periods->pluck('id');
+//        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+//
+//        return ActualRevenue::from('actual_revenue as r')
+//            ->join('periods as p', 'r.period_id', '=', 'p.id')
+//            ->whereIn('period_id', $period_ids)
+//            ->selectRaw('p.global_period_id, sum(value) as value')
+//            ->groupBy('p.global_period_id')->get(['value', 'global_period_id'])
+//            ->map(function ($period) use ($periods) {
+//                $period->name = $periods->get($period->global_period_id)->name;
+//                return $period;
+//            })->pluck('value', 'name');
     }
 }
