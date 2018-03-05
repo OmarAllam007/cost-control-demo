@@ -25,6 +25,14 @@ class GlobalPeriod extends Model
     {
         parent::boot();
 
+        // Create a period in each project for the created global period
+        self::created(function($period) {
+            $projects = Project::get()->each(function($project) use ($period) {
+                $project->periods()->create(['global_period_id' => $period->id, 'is_open' => false]);
+            });
+        });
+
+        // Set name for saved period to be its end date
         self::saving(function(GlobalPeriod $period) {
             $period->name = $period->end_date->format('M Y');
         });
