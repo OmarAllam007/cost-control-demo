@@ -37,7 +37,7 @@ class ProjectInfo
     function run()
     {
         $key = "project-info-{$this->project->id}-{$this->period->id}";
-        if (request()->exists('clear')) {
+        if (request()->exists('clear') || request()->exists('refresh')) {
             \Cache::forget($key);
         }
 

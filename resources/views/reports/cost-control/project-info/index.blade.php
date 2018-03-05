@@ -12,8 +12,9 @@
 
         @if(! $print)
         <div class="btn-toolbar">
-            <a href="?excel" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i>
-                Excel</a>
+            {{--<a href="?excel" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i>
+                Excel</a>--}}
+            <a href="?refresh" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Refresh</a>
             <a href="?print=1" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Print</a>
             <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
                         class="fa fa-chevron-left"></i> Back</a>
