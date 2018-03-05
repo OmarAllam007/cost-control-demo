@@ -24,27 +24,12 @@ class Project extends Model
     protected $ids = [];
     protected $depth = 1;
     protected $fillable = [
-        'name',
-        'project_code',
-        'client_name',
-        'project_location',
-        'project_contract_value',
-        'project_start_date',
-        'project_duration',
-        'description',
-        'owner_id',
-        'original_finish_date',
-        'expected_finish_date',
-        'project_contract_signed_value',
-        'project_contract_budget_value',
-        'change_order_amount',
-        'tender_direct_cost',
-        'tender_indirect_cost',
-        'tender_risk',
-        'tender_initial_profit',
-        'total_budget_cost',
-        'cost_owner_id',
-        'cost_threshold'
+        'name', 'project_code', 'client_name', 'project_location', 'project_contract_value',
+        'project_start_date', 'project_duration', 'original_finish_date', 'expected_finish_date',
+        'owner_id', 'cost_owner_id', 'description','assumptions', 'discipline_brief',
+        'project_contract_signed_value', 'project_contract_budget_value', 'change_order_amount',
+        'tender_direct_cost', 'tender_indirect_cost', 'tender_risk', 'tender_initial_profit',
+        'total_budget_cost', 'cost_threshold', 'consultant', 'project_type', 'contract_type',
     ];
 
     protected $dates = ['created_at', 'updated_at'];

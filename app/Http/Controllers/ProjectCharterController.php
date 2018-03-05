@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Project;
 use Illuminate\Http\Request;
 
-class ProjectCharterController extends Controller
+class
+ProjectCharterController extends Controller
 {
     function edit(Project $project)
     {
