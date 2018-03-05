@@ -35,6 +35,12 @@ class GlobalReport
     /** @var Collection */
     private $periods;
 
+    /** @var Collection */
+    private $trend_period_ids;
+
+    /** @var Collection */
+    private $trend_global_periods;
+
     function __construct(GlobalPeriod $period)
     {
         $this->period = $period;
@@ -49,6 +55,11 @@ class GlobalReport
             ->where('global_period_id', $this->period->id)
             ->groupBy('project_id')
             ->pluck('id');
+
+        $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(12)->get()->keyBy('id');
+        $this->trend_period_ids = Period::whereIn('global_period_id',
+            $this->trend_global_periods->pluck('id')
+        )->pluck('id');
 
         $this->periods = Period::find($this->last_period_ids->toArray());
 
@@ -201,7 +212,7 @@ class GlobalReport
             ->select(['master_shadows.project_id', 'projects.name'])
             ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(completion_cost) as completion_cost')
-            ->where('p.global_period_id', $this->period->id)->where('to_date_cost', '>', 0)
+            ->where('p.global_period_id', $this->period->id)
             ->groupBy('master_shadows.project_id')->groupBy('projects.name')
             ->get()->map(function ($period) {
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
@@ -280,25 +291,21 @@ class GlobalReport
 
     private function cpi_trend()
     {
-        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
-        $global_period_ids = $periods->pluck('id');
-        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
-
         return $this->cpi_trend = MasterShadow::from('master_shadows as sh')
             ->selectRaw('p.global_period_id, sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
-            ->whereIn('sh.period_id', $period_ids)
+            ->whereIn('sh.period_id', $this->trend_period_ids)
             ->groupBy('p.global_period_id')
-            ->get()->map(function ($period) use ($periods) {
+            ->get()->map(function ($period) {
                 $period->cpi_index = round($period->allowable_cost / $period->to_date_cost, 2);
-                $period->name = $periods->get($period->global_period_id)->name;
+                $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
                 return $period;
             });
     }
 
     function spi_trend()
     {
-        return GlobalPeriod::latest()->take(12)->pluck('spi_index', 'name');
+        return $this->trend_global_periods->pluck('spi_index', 'name');
     }
 
     function waste_index_trend()
@@ -307,25 +314,21 @@ class GlobalReport
             return $this->waste_index_trend;
         }
 
-        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
-        $global_period_ids = $periods->pluck('id');
-        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
-
         return $this->waste_index_trend = MasterShadow::from('master_shadows as sh')
             ->select('p.global_period_id')
             ->selectRaw('sum((sh.allowable_qty - sh.to_date_qty) * sh.to_date_unit_price) as variance, sum(sh.allowable_ev_cost) as allowable_cost')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
-            ->whereIn('sh.period_id', $period_ids)
+            ->whereIn('sh.period_id', $this->trend_period_ids)
             ->where('resource_type_id', 3)
             ->groupBy('p.global_period_id')
             ->orderBy('p.global_period_id')
-            ->get()->map(function ($period) use ($periods) {
+            ->get()->map(function ($period) {
                 $period->waste_index = 0;
                 if ($period->allowable_cost) {
                     $period->waste_index = round(abs($period->variance * 100 / $period->allowable_cost), 4);
                 }
 
-                $period->name = $periods->get($period->global_period_id)->name;
+                $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
                 return $period;
             })->pluck('waste_index', 'name');
     }
