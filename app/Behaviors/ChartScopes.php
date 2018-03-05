@@ -88,11 +88,13 @@ trait ChartScopes
     {
         $query->from('master_shadows as sh')
             ->where('sh.project_id', $project->id)
-            ->where('sh.to_date_cost', '>', 0)
+            ->where('sh.to_date_qty', '>', 0)
             ->where('sh.resource_type_id', 3)
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
+            ->join('resources as r', 'sh.resource_id', '=', 'r.id')
             ->select(['sh.period_id', 'sh.resource_id'])
-            ->selectRaw('p.name as p_name, sum((sh.allowable_qty - sh.to_date_qty) * sh.to_date_cost/sh.to_date_qty) as variance, sum(sh.allowable_ev_cost) as allowable_cost')
+            ->selectRaw('p.name as p_name, sum(sh.allowable_qty) as allowable_qty, sum(sh.to_date_qty) to_date_qty')
+            ->selectRaw('sum(sh.to_date_cost)/sum(sh.to_date_qty) as to_date_unit_price, sum(sh.allowable_ev_cost) as allowable_cost')
             ->groupBy('sh.period_id', 'sh.resource_id');
     }
 }

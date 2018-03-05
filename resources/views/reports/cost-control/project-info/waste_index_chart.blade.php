@@ -4,7 +4,7 @@
     <div class="chart"
          id="wasteIndexChart"
          data-type="line"
-         data-labels="{{$wasteIndexTrend->pluck('p_name')}}"
+         data-labels="{{$wasteIndexTrend->pluck('name')}}"
          data-datasets="[{{json_encode([
                                 'label' => 'Waste Index', 'data' => $wasteIndexTrend->pluck('value'),
                                 'backgroundColor' => 'rgba(217, 225, 242, 0.6)',

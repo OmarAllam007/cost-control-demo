@@ -81,13 +81,12 @@ class WasteIndexReport
             $type->subtree = $this->buildTree($type->id);
 
             $type->resources_list = $this->resources->get($type->id, collect())->map(function($resource) {
-                if (!$resource->pw_index && $resource->allowable_cost) {
-                    // Some report builds doesn't have a PW Index field generated
+                $resource->pw_index = 0;
+                if ($resource->allowable_cost) {
+
 //                    $resource->pw_index = ($resource->allowable_cost - $resource->to_date_cost) * 100 / $resource->allowable_cost;
                     $resource->variance = ($resource->allowable_qty - $resource->to_date_qty) * $resource->to_date_unit_price;
                     $resource->pw_index = $resource->variance * 100 / $resource->allowable_cost;
-                } else {
-                    $resource->pw_index = 0;
                 }
 
                 return $resource;
