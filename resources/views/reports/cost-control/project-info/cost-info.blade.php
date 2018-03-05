@@ -17,7 +17,7 @@
                 <dt>CPI</dt>
                 <dd>
                     <div class="display-flex">
-                        <span class="flex">{{number_format($costInfo['cpi'], 3)}}</span>
+                        <span class="flex {{$costInfo['cpi'] > 1? 'text-success': 'text-warning'}}">{{number_format($costInfo['cpi'], 3)}}</span>
                         <span class="{{$costInfo['cpi'] > 1? 'text-success': 'text-warning'}}"><i
                                     class="fa fa-circle"></i></span>
                     </div>
@@ -28,7 +28,7 @@
             <dl class="dl-margin">
                 <dt>Variance</dt>
                 <dd class="display-flex">
-                    <span class="flex">{{number_format($costInfo['variance'], 2)}}</span>
+                    <span class="flex {{$costInfo['variance'] > 0 ? 'text-success' : 'text-danger'}}">{{number_format($costInfo['variance'], 2)}}</span>
                     <span class="{{$costInfo['variance'] > 0 ? 'text-success' : 'text-danger'}}"><i
                                 class="fa fa-circle"></i></span>
                 </dd>
@@ -81,7 +81,7 @@
                 <dt>SPI</dt>
                 <dd>
                     <div class="display-flex">
-                        <span class="display-flex">{{number_format($period->spi_index, 3)}}</span>
+                        <span class="display-flex {{$period->spi_index >= 1 ? 'text-success' : 'text-danger'}}">{{number_format($period->spi_index, 3)}}</span>
                         <span class="{{$period->spi_index >= 1 ? 'text-success' : 'text-danger'}}">
                             <i class="fa fa-circle"></i>
                         </span>
@@ -93,8 +93,8 @@
                 <dt>Material Consumption Index</dt>
                 <dd>
                     <div class="display-flex">
-                        <span class="display-flex">{{number_format($costInfo['waste_index'], 2)}}</span>
-                        <span class="{{$costInfo['waste_index'] > 0 ? 'text-success' : 'text-danger'}}">
+                        <span class="display-flex {{$costInfo['waste_index'] < 4.475 ? 'text-success' : 'text-danger'}}">{{number_format($costInfo['waste_index'], 2)}}</span>
+                        <span class="{{$costInfo['waste_index'] < 4.475 ? 'text-success' : 'text-danger'}}">
                             <i class="fa fa-circle"></i>
                         </span>
                     </div>
@@ -103,7 +103,7 @@
 
             <dl>
                 <dt>Expected EAC Profit Profitability</dt>
-                <dd>{{number_format($period->eac_profitability_index, 2)}}%</dd>
+                <dd class="{{$period->eac_profitability_index > 0 ? 'text-success' : 'text-danger'}}">{{number_format($period->eac_profitability_index, 2)}}%</dd>
             </dl>
         </article>
     </div>
