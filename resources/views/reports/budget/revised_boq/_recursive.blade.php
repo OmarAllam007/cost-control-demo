@@ -21,7 +21,7 @@
         <td class="level-label">{{$cost_account->description}}</td>
         <td>{{$cost_account->cost_account}}</td>
         <td>{{number_format($cost_account->price_ur, 2)}}</td>
-        <td>{{$cost_account->unit->type}}</td>
+        <td>{{$cost_account->unit->type ?? ''}}</td>
         <td>{{number_format($cost_account->original_boq, 2)}}</td>
         <td>{{number_format($cost_account->budget_qty, 2)}}</td>
         <td>{{number_format($cost_account->revised_boq, 2)}}</td>
