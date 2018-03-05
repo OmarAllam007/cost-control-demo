@@ -19,7 +19,7 @@
                 <a class="btn btn-sm btn-default" href="{{ route('breakdown-template.index') }}"><i class="fa fa-chevron-left"></i> Back to templates</a>
             @endif
 
-            <a class="btn btn-sm btn-default" href="{{ route('breakdown-templates.modify') . ($project? "?project={$project->id}" : '') }}"><i class="fa fa-chevron-left"></i> Back to import</a>
+            <a class="btn btn-sm btn-default" href="{{ route('breakdown-template.modify') . ($project? "?project={$project->id}" : '') }}"><i class="fa fa-chevron-left"></i> Back to import</a>
         </div>
     </div>
 @endsection
