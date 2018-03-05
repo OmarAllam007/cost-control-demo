@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-6">
             <div class="br-1">
-                <h4 class="card-group-item-heading">Cost Percentage</h4>
+                <h4 class="card-group-item-heading">At Completion Percentage</h4>
                 <div class="chart"
                      id="costChart"
                      data-type="pie"
