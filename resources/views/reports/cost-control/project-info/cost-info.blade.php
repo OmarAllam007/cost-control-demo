@@ -41,11 +41,11 @@
         </article>
 
         <article class="col-xs-4">
-            <dl class="mb-1">
+            <dl>
                 <dt>Time Elapsed</dt>
                 <dd>{{$period->time_elapsed}}</dd>
             </dl>
-            <dl class="mb-1">
+            <dl>
                 <dt>Time Remaining</dt>
                 <dd>{{$period->time_remaining}}</dd>
             </dl>

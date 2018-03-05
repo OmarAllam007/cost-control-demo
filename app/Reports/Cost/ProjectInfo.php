@@ -36,7 +36,6 @@ class ProjectInfo
 
     function run()
     {
-
         $key = "project-info-{$this->project->id}-{$this->period->id}";
         if (request()->exists('clear')) {
             \Cache::forget($key);
@@ -50,10 +49,13 @@ class ProjectInfo
     function getInfo()
     {
         $this->costSummary = MasterShadow::dashboardSummary($this->period)->get();
-        $this->wasteIndexTrend = $query = MasterShadow::wasteIndexChart($this->project)->get()->map(function ($period) {
-            $period->value = round(abs($period->variance / $period->allowable_cost) * 100, 2);
-            return $period;
-        })->keyBy('period_id');
+        $this->wasteIndexTrend = $query = MasterShadow::wasteIndexChart($this->project)
+            ->get()->groupBy('period_id')->map(function ($group) {
+                $period = new Fluent();
+                $period->period_id = $group->first()->period_id;
+                $period->value = round(abs($period->variance / $period->allowable_cost) * 100, 2);
+                return $period;
+            });
 
         $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id)->value;
 
