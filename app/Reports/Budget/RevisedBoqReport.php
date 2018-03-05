@@ -164,7 +164,7 @@ class RevisedBoqReport
         $level->cost_accounts->each(function ($cost_account) use ($sheet, $depth) {
             $sheet->row(++$this->row, [
                 $cost_account->description, $cost_account->cost_account, $cost_account->price_ur,
-                $cost_account->unit->type, $cost_account->original_boq,
+                $cost_account->unit->type ?? '', $cost_account->original_boq,
                 $cost_account->budget_qty, $cost_account->revised_boq,
             ]);
 
