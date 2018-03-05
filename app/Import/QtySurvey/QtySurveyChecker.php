@@ -79,7 +79,7 @@ class QtySurveyChecker
         $excel = new \PHPExcel();
         $sheet = $excel->getActiveSheet();
 
-        $headers = ['WBS Code', 'Item Code', 'Description', 'Budget Qty', 'Eng. Qty', 'Unit', 'Errors'];
+        $headers = ['WBS Code', 'Item Code', 'QS Code', 'Description', 'Budget Qty', 'Eng. Qty', 'Unit', 'Errors'];
         $sheet->fromArray($headers, null, 'A1', true);
 
         $counter = 2;
