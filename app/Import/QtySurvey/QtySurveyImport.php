@@ -82,7 +82,7 @@ class QtySurveyImport
             $validator = \Validator::make($qs, $rules);
             if ($validator->fails()) {
                 $errors = $validator->errors()->all();
-                $data['G'] = implode(PHP_EOL, $errors);
+                $data['H'] = implode(PHP_EOL, $errors);
                 $this->failed->push($data);
                 continue;
             }
