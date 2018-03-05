@@ -131,12 +131,13 @@ class GlobalReport
                 $revision = $project;
             }
 
+            $project_id = $project->id;
             $eac_contract_amount = $revision->eac_contract_amount;
             $budget_cost = $revision->budget_cost;
             $general_requirements = $revision->general_requirement_cost;
             $management_reserve = $revision->management_reserve_cost;
 
-            return new Fluent(compact('eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
+            return new Fluent(compact('project_id', 'eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
         });
 
         $budget_cost = $firstRevisions->sum('budget_cost');
@@ -169,8 +170,6 @@ class GlobalReport
 
             return new Fluent(compact('project_id','eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
         });
-
-        $latestRevisions->pluck('eac_contract_amount', 'project_id');
 
         $budget_cost = $latestRevisions->sum('budget_cost');
         $eac_contracts_value = $latestRevisions->pluck('eac_contract_amount', 'project_id')->sum();
