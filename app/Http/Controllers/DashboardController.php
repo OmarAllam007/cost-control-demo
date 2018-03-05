@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
         $key = 'global-report-' . $period->id;
 
-        if ($request->exists('clear')) {
+        if ($request->exists('clear') || $request->exists('refresh')) {
             \Cache::forget($key);
         }
 
