@@ -27,7 +27,7 @@
                 </tr>
                 <tr class=" row-height">
                     <th class="w-30p">Planned Profitability</th>
-                    <td>{{number_format($budget_info['revision0']['profitability'], 2)}}</td>
+                    <td>{{number_format($budget_info['revision0']['profitability'], 2)}}%</td>
                 </tr>
                 </tbody>
             </table>
@@ -108,7 +108,7 @@
                     <th class="w-30p">Planned Profitability</th>
                     <td>
                         <div class="display-flex">
-                            <span class="flex">{{number_format($budget_info['revision1']['profitability'], 2)}}</span>
+                            <span class="flex">{{number_format($budget_info['revision1']['profitability'], 2)}}%</span>
                             @if ($budget_info['revision1']['profitability'] >= $budget_info['revision0']['profitability'])
                                 <span class="text-success"><i class="fa  fa-arrow-circle-up"></i></span>
                             @else

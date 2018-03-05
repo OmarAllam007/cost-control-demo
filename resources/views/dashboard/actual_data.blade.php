@@ -79,7 +79,7 @@
                     <dt>EAC Profit Amount</dt>
                     <dd class="display-flex">
                         <span class="flex {{$cost_info['eac_profit'] < 0? 'text-danger' : 'text-success'}}">
-                            {{number_format($cost_info['eac_profit'], 2)}}%
+                            {{number_format($cost_info['eac_profit'], 2)}}
                         </span>
                         <span class="{{$cost_info['eac_profit'] < 0? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
                     </dd>
