@@ -69,7 +69,7 @@ class WasteIndexReport
         $this->total_varaince = $this->tree->sum('variance');
 
         if ($allowable_cost) {
-            $this->total_pw_index = $this->total_varaince / $allowable_cost;
+            $this->total_pw_index = $this->total_varaince * 100 / $allowable_cost;
         }
 
         return ['project' => $this->project, 'period' => $this->period, 'tree' => $this->tree, 'total_pw_index' => $this->total_pw_index, 'total_variance' => $this->total_varaince];
