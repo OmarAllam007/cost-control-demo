@@ -142,6 +142,7 @@ class BudgetRevision extends Model
 //                $on->on('boq.id', '=', 'qs.boq_id');
                 $on->on('boq.wbs_id', '=', 'qs.wbs_level_id');
                 $on->on('boq.cost_account', '=', 'qs.cost_account');
+                $on->on('boq.revision_id', '=', 'qs.revision_id');
             })
             ->selectRaw('sum(boq.price_ur * qs.eng_qty) as revised_boq')
             ->value('revised_boq');
