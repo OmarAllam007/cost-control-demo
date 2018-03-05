@@ -28,10 +28,11 @@ class ExportBreakdownTemplates
             $query->whereNull('project_id');
         }
 
-        $templates = $query->get();
-
-        $templates->each(function ($template) {
-            $this->addTemplate($template);
+        // Chunk templates in groups of thousands to save memory
+        $templates = $query->chunk(1000, function ($templates) {
+            $templates->each(function ($template) {
+                $this->addTemplate($template);
+            });
         });
 
         $this->setFormats();
@@ -44,7 +45,7 @@ class ExportBreakdownTemplates
     private function addTemplate($template)
     {
         foreach ($template->resources as $resource) {
-            $this->sheet->fromArray([
+            $input = collect([
                 $template->id,  // A
                 $resource->id,  // B
                 $template->activity->code, // C
@@ -57,8 +58,15 @@ class ExportBreakdownTemplates
                 $resource->labor_count, // J
                 $resource->remarks, // K
                 $resource->equation, // L
-                $resource->important ? '*' : null // M
-            ], null, "A{$this->counter}", true);
+                $resource->important ? '*' : null, // M,
+                '', // N: Errors cell
+            ]);
+
+            $divisions = $template->activity->division->parentsTree->each(function($div) use ($input) {
+                $input->push($div->code . ' ' . $div->name);
+            });
+
+            $this->sheet->fromArray($input->toArray(), null, "A{$this->counter}", true);
 
             ++$this->counter;
         }
