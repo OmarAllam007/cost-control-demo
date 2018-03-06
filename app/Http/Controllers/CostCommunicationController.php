@@ -57,6 +57,6 @@ class CostCommunicationController extends Controller
             return redirect('/blank');
         }
 
-        return redirect()->route('project.budget', $project);
+        return redirect()->route('project.cost-control', $project);
     }
 }
