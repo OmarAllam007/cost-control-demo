@@ -48,4 +48,14 @@ trait RollupResource
     {
         return $this->is_rollup && $this->resource_code == $this->code;
     }
+
+    function isCostAccountRollup()
+    {
+        return $this->is_rollup && $this->resource_code == $this->cost_account;
+    }
+
+    function isResourceRollup()
+    {
+        return $this->is_rollup && !$this->isActivityRollup() && !$this->isCostAccountRollup();
+    }
 }

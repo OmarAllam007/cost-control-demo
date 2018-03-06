@@ -98,7 +98,7 @@ trait CostAttributes
         }
 
         $activity = StdActivity::find($this->activity_id);
-        if ($activity->isGeneral() || $this->is_rollup) {
+        if ($activity->isGeneral() || $this->isActivityRollup() || $this->isResourceRollup()) {
             return $this->calculated['allowable_ev_cost'] = $this->progress_value * $this->budget_cost;
         }
 
@@ -170,8 +170,13 @@ trait CostAttributes
             return $this->calculated['remaining_cost'];
         }
 
-        if ($this->is_rollup) {
-            return $this->calculated['remaining_cost'] = $this->completion_cost - $this->to_date_cost;
+        if ($this->is_rollup && !$this->isCostAccountRollup()) {
+            if (!$this->to_date_cost) {
+                return $this->budget_cost;
+            }
+
+            $cpi = $this->allowable_ev_cost / $this->to_date_cost;
+            return $this->calculated['remaining_cost'] =  max(0, ($this->budget_cost - $this->allowable_ev_cost) / $cpi); //$this->completion_cost - $this->to_date_cost;
         }
 
         return $this->calculated['remaining_cost'] = $this->remaining_unit_price * $this->remaining_qty;
@@ -230,14 +235,6 @@ trait CostAttributes
     {
         if (isset($this->calculated['completion_cost'])) {
             return $this->calculated['completion_cost'];
-        }
-
-        if ($this->is_rollup) {
-            if ($this->allowable_ev_cost && $this->to_date_cost) {
-                return $this->calculated['completion_cost'] = $this->budget_cost  / ($this->allowable_ev_cost / $this->to_date_cost);
-            }
-
-            return $this->calculated['completion_cost'] = $this->budget_cost;
         }
 
         return $this->calculated['completion_cost'] = $this->latest_remaining_cost + $this->to_date_cost;

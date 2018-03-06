@@ -112,7 +112,7 @@ class BreakdownRollup
 
         $total_cost = $breakdown->resources->pluck('shadow')->sum('budget_cost');
         $budget_unit = $this->extra['budget_unit'][$breakdown->id] ?? 1;
-        $unit_id = $this->extra['measure_unit'][$breakdown->id] ?? 3;
+        $unit_id = $this->extra['measure_unit'][$breakdown->id] ?? 15;
         $measure_unit = $this->unit_cache->get($unit_id);
         $unit_price = $total_cost / $budget_unit;
 
