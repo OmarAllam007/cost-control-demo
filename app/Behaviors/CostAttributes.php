@@ -20,6 +20,8 @@ use App\StdActivity;
 
 trait CostAttributes
 {
+    public $ignore_cost = false;
+    public $update_cost = false;
     protected $calculated;
 
     /** @var CostShadow */
@@ -478,5 +480,135 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     function actual_resources()
     {
         return $this->hasMany(ActualResources::class, 'breakdown_resource_id', 'breakdown_resource_id');
+    }
+
+    function getQtyToDateAttribute()
+    {
+        return $this->actual_resources()->sum('qty');
+    }
+
+    public function getCurrQtyAttribute()
+    {
+        $period_id = $this->getCalculationPeriod()->id;
+        if (!empty($this->attributes['curr_qty'])) {
+            return $this->attributes['curr_qty'];
+        }
+
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->curr_qty) && $this->cost->period_id == $period_id) {
+                return $this->cost->curr_qty;
+            }
+        }
+
+        if (isset($this->calculated['curr_qty'])) {
+            return $this->calculated['curr_qty'];
+        }
+
+//        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['curr_qty'] = $this->actual_resources->where('period_id', $period_id)->sum('qty') ?: 0;
+    }
+
+    public function getCurrCostAttribute()
+    {
+        $period_id = $this->getCalculationPeriod()->id;
+        if (!empty($this->attributes['curr_cost'])) {
+            return $this->attributes['curr_cost'];
+        }
+
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
+                return $this->cost->curr_cost;
+            }
+        }
+
+        if (isset($this->calculated['curr_cost'])) {
+            return $this->calculated['curr_cost'];
+        }
+
+//        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['curr_cost'] = $this->actual_resources->where('period_id', $period_id)->sum('cost') ?: 0;
+    }
+
+    public function getCurrUnitPriceAttribute()
+    {
+        if (!empty($this->attributes['curr_unit_price'])) {
+            return $this->attributes['curr_unit_price'];
+        }
+
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
+                return $this->cost->curr_unit_price;
+            }
+        }
+
+        if ($this->curr_qty) {
+            return $this->curr_cost / $this->curr_qty;
+        }
+
+        return 0;
+    }
+
+    public function getPrevQtyAttribute()
+    {
+        $period_id = $this->getCalculationPeriod()->id;
+        if (!empty($this->attributes['prev_qty'])) {
+            return $this->attributes['prev_qty'];
+        }
+
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->prev_qty) && $this->cost->period_id == $period_id) {
+                return $this->cost->prev_qty;
+            }
+        }
+
+        if (isset($this->calculated['prev_qty'])) {
+            return $this->calculated['prev_qty'];
+        }
+
+//        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['prev_qty'] = $this->actual_resources->filter(function ($r) use ($period_id) {
+            return $r->period_id < $period_id;
+        })->sum('qty') ?: 0;
+    }
+
+    public function getPrevCostAttribute()
+    {
+        if (!empty($this->attributes['prev_cost'])) {
+            return $this->attributes['prev_cost'];
+        }
+
+        $period_id = $this->getCalculationPeriod()->id;
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->prev_cost) && $this->cost->period_id == $period_id) {
+                return $this->cost->prev_cost;
+            }
+        }
+
+        if (isset($this->calculated['prev_cost'])) {
+            return $this->calculated['prev_cost'];
+        }
+
+        return $this->calculated['prev_cost'] = $this->actual_resources->filter(function ($r) use ($period_id) {
+            return $r->period_id < $period_id;
+        })->sum('cost') ?: 0;
+    }
+
+    public function getPrevUnitPriceAttribute()
+    {
+        if (!empty($this->attributes['prev_unit_price'])) {
+            return $this->attributes['prev_unit_price'];
+        }
+
+        if (!$this->ignore_cost) {
+            if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
+                return $this->cost->prev_unit_price;
+            }
+        }
+
+        if ($this->prev_qty) {
+            return $this->prev_cost / $this->prev_qty;
+        }
+
+        return 0;
     }
 }

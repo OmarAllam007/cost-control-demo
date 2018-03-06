@@ -15,7 +15,7 @@
                     <p>Roll up all resource up to cost account level under activities (for back to back subcontractors)</p>
                     <form action="{{route('project.rollup.level-2a', $project)}}" method="post" class="btn-toolbar">
                         {{csrf_field()}}
-                        <a class="btn btn-outline btn-primary btn-sm" href="{{route('project.rollup', $project)}}">Select Resources</a>
+                        <a class="btn btn-outline btn-primary btn-sm" href="{{route('project.rollup', $project)}}">Select Cost Accounts</a>
                         <button type="submit" class="btn btn-warning btn-sm" href="">Whole project</button>
                     </form>
                     <hr>
