@@ -70,6 +70,8 @@ class SendCommunicationPlan extends Job implements ShouldQueue
         $report_ids = $user->reports()->pluck('report_id')->unique();
         $reports = Report::find($report_ids->toArray());
 
+        \Config::set('excel.export.includeCharts', true);
+
         $info = \Excel::create('kps_reports', function(LaravelExcelWriter $writer) use ($reports) {
             foreach ($reports as $r) {
                 $class_name = $r->class_name;
@@ -87,7 +89,6 @@ class SendCommunicationPlan extends Job implements ShouldQueue
             }
 
             $writer->setActiveSheetIndex(0);
-            $writer->writer->setIncludeCharts(true);
         })->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
 
         return $info['full'];
