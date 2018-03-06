@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\CommunicationSchedule;
 use App\Report;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\SerializesModels;
@@ -36,6 +37,8 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
         $users = $this->schedule->users()->notSent()->with('reports')->get();
 
+        $this->created_by = User::where('id', $this->schedule->created_by)->value('email');
+
         $users->each(function ($user) {
             \Mail::send("mail.communication-plan.{$this->type}", [
                 'user' => $user,
@@ -45,6 +48,9 @@ class SendCommunicationPlan extends Job implements ShouldQueue
                 $attachment = $this->buildReports($user);
 
                 $msg->to($user->user->email);
+                if ($this->created_by) {
+                    $msg->cc($this->created_by);
+                }
                 $msg->subject("[KPS {$this->schedule->type}] " . $this->schedule->project->name);
                 $msg->attach($attachment, [
                     'as' => slug($this->schedule->project->name) . '_' . $this->type . '_reports.xlsx'
