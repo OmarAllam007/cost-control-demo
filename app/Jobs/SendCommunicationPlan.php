@@ -81,7 +81,7 @@ class SendCommunicationPlan extends Job implements ShouldQueue
             }
 
             $writer->setActiveSheetIndex(0);
-            $writer->excel->setIncludeCharts(true);
+            $writer->writer->setIncludeCharts(true);
         })->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
 
         return $info['full'];
