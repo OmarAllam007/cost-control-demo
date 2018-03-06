@@ -171,7 +171,7 @@ class ActivityReport
         return \Response::download($filename, $name)->deleteFileAfterSend(true);
     }
 
-    private function sheet()
+    function sheet()
     {
         extract($this->run());
 
