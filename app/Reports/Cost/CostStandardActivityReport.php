@@ -23,9 +23,9 @@ class CostStandardActivityReport
     /** @var Collection */
     protected $activityNames;
 
-    function __construct(Project $project, Period $period)
+    function __construct(Period $period)
     {
-        $this->project = $project;
+        $this->project = $period->project;
         $this->period = $period;
     }
 

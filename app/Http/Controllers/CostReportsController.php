@@ -80,7 +80,7 @@ class CostReportsController extends Controller
         $chosen_period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($chosen_period_id);
 
-        $report = new CostStandardActivityReport($project, $period);
+        $report = new CostStandardActivityReport($period);
 
         if ($request->exists('excel')) {
             return $report->excel();
