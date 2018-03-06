@@ -9,6 +9,7 @@ use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\Project;
 use App\Unit;
+use function compact;
 use Illuminate\Support\Collection;
 
 class ImportantResourcesRollup
@@ -146,11 +147,18 @@ class ImportantResourcesRollup
             $to_date_unit_price = $to_date_cost / $to_date_qty;
         }
 
+        $progress = min(100, $this->extra['progress'][$breakdown->id] ?? 0);
+        $status = 'Not Started';
+        if ($progress) {
+            $status = $progress < 100? 'In Progress' : 'Closed';
+            $shadow->update(compact('progress', 'status'));
+        }
+
         ActualResources::forceCreate([
             'project_id' => $this->project->id, 'wbs_level_id' => $shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
             'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
             'unit_id' => $shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $shadow->resource_id,
-            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id
+            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
         ]);
 
         ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();

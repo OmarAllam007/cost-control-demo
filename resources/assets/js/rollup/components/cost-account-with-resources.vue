@@ -11,6 +11,7 @@
             <td>Budget Cost</td>
             <td>To Date Qty</td>
             <td>To Date Cost</td>
+            <td>Progress</td>
         </tr>
         <tr class="info">
             <th class="text-center">&nbsp;</th>
@@ -31,6 +32,9 @@
                 <input type="text" class="form-control input-sm" :name="`to_date_qty[${cost_account.id}]`" placeholder="Budget Unit" value="1" :required="selected">
             </th>
             <th>{{total_to_date_cost}}</th>
+            <th>
+                <input type="text" class="form-control input-sm" :name="`progress[${cost_account.id}]`" placeholder="Progress" value="0" :required="selected">
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -49,6 +53,7 @@
             <td>{{resource.budget_cost | number_format}}</td>
             <td>{{resource.to_date_qty|number_format}}</td>
             <td>{{resource.to_date_cost|number_format}}</td>
+            <td>{{resource.progress|number_format}}%</td>
         </tr>
         </tbody>
     </table>

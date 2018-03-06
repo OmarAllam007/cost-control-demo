@@ -27,6 +27,7 @@ class RollupResourceFormatter implements Jsonable
             'id' => $this->resource->breakdown_resource_id,
             'code' => $this->resource->resource_code,
             'name' => $this->resource->resource_name,
+            'remarks' => $this->resource->remarks,
             'budget_unit' => $this->resource->budget_unit,
             'budget_qty' => $this->resource->budget_qty,
             'measure_unit' => $this->resource->measure_unit,
@@ -35,6 +36,7 @@ class RollupResourceFormatter implements Jsonable
             'to_date_cost' => $this->resource->to_date_cost,
             'to_date_qty' => $this->resource->to_date_qty,
             'important' => $this->resource->important,
+            'progress' => $this->resource->progress,
             'selected' => false,
         ];
     }

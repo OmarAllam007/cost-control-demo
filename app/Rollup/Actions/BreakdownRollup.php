@@ -165,7 +165,7 @@ class BreakdownRollup
             'project_id' => $this->project->id, 'wbs_level_id' => $shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
             'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
             'unit_id' => $shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $shadow->resource_id,
-            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id
+            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
         ]);
 
         $shadow->update(compact('progress', 'status'));

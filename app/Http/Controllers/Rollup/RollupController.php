@@ -42,7 +42,7 @@ class RollupController extends Controller
 
         $rollup = new ImportantResourcesRollup($project,
             $request->get('resources', []),
-            $request->only('budget_unit', 'measure_unit', 'to_date_qty'));
+            $request->only('budget_unit', 'measure_unit', 'to_date_qty', 'progress'));
 
         $status = $rollup->handle();
 
