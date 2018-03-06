@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Model;
 
 class CommunicationSchedule extends Model
 {
+    use RecordsUser;
+
     protected $fillable = ['project_id', 'type', 'period_id', 'revision_id'];
 
     function users()
