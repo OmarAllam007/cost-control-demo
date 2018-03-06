@@ -89,12 +89,12 @@ class ActivityReport
                     $tree[$key]['completion_var'] += $activityCurrent->sum('completion_var');
                 }
 
-                $activityCurrent = $activityCurrent->map(function($resource) use ($activityPrevious) {
-                        $previous = $activityPrevious->get($resource->resource_name, new Fluent());
-                        $resource->prev_cost = $previous->prev_cost;
-                        $resource->prev_allowable = $previous->prev_allowable;
-                        $resource->prev_cost_var = $previous->prev_cost_var;
-                        return $resource;
+                $activityCurrent = $activityCurrent->map(function ($resource) use ($activityPrevious) {
+                    $previous = $activityPrevious->get($resource->resource_name, new Fluent());
+                    $resource->prev_cost = $previous->prev_cost;
+                    $resource->prev_allowable = $previous->prev_allowable;
+                    $resource->prev_cost_var = $previous->prev_cost_var;
+                    return $resource;
                 });
 
                 $tree[$key]['activities'][$activity] = [
@@ -114,7 +114,7 @@ class ActivityReport
 
         }
 
-        return collect($tree)->filter(function($level) {
+        return collect($tree)->filter(function ($level) {
             return $level['to_date_cost'] > 0;
         });
     }
@@ -173,7 +173,8 @@ class ActivityReport
 
     function sheet()
     {
-        extract($this->run());
+        $data = $this->run();
+        $tree = $data['tree'];
 
         $excel = \PHPExcel_IOFactory::createReader('Excel2007')->load(storage_path('templates/cost-activity.xlsx'));
         $sheet = $excel->getActiveSheet();
@@ -188,9 +189,9 @@ class ActivityReport
         $issueDateCell = $sheet->getCell('A5');
         $periodCell = $sheet->getCell('A6');
 
-        $projectCell->setValue($projectCell->getValue() . ' ' . $project->name);
+        $projectCell->setValue($projectCell->getValue() . ' ' . $this->project->name);
         $issueDateCell->setValue($issueDateCell->getValue() . ' ' . date('d M Y'));
-        $periodCell->setValue($periodCell->getValue() . ' ' . $period->name);
+        $periodCell->setValue($periodCell->getValue() . ' ' . $this->period->name);
 
         $logo = imagecreatefrompng(public_path('images/kcc.png'));
         $drawing = new \PHPExcel_Worksheet_MemoryDrawing();
@@ -202,87 +203,7 @@ class ActivityReport
         $start = 11;
         $counter = $start;
 
-        function renderLevel($tree, \PHPExcel_Worksheet $sheet, $parent, $counter, $outlineLevel = 0)
-        {
-            $styleArray = ['font' => ['bold' => true]];
-
-            if ($parent) {
-                ++$outlineLevel;
-                if ($outlineLevel >= 7) {
-                    $outlineLevel = 7;
-                }
-            }
-
-            foreach ($tree->where('parent', $parent) as $name => $level) {
-                $sheet->fromArray([
-                    str_repeat('   ', $outlineLevel) . $level['name'],
-                    $level['budget_cost'] ?: '0.00',
-                    $level['prev_cost'] ?: '0.00',
-                    $level['prev_allowable'] ?: '0.00',
-                    $level['prev_cost_var'] ?: '0.00',
-                    $level['to_date_cost'] ?: '0.00',
-                    $level['to_date_allowable'] ?: '0.00',
-                    $level['to_date_var'] ?: '0.00',
-                    $level['remaining_cost'] ?: '0.00',
-                    $level['completion_cost'] ?: '0.00',
-                    $level['completion_var'] ?: '0.00',
-                ], '', "A{$counter}");
-
-                $sheet->getCell("A$counter")->getStyle()->applyFromArray($styleArray);
-                if ($parent) {
-                    $sheet->getRowDimension($counter)->setOutlineLevel($outlineLevel)->setVisible(false)->setCollapsed(true);
-                }
-
-                ++$counter;
-                if ($tree->where('parent', $name)->count()) {
-                    $counter = renderLevel($tree, $sheet, $name, $counter, $outlineLevel);
-                }
-
-                if (!empty($level['activities'])) {
-                    foreach ($level['activities'] as $name => $activity) {
-                        $sheet->fromArray($arr = [
-                            str_repeat('    ', $outlineLevel + 1) . $name,
-                            $activity['budget_cost'] ?: '0.00',
-                            $activity['prev_cost'] ?: '0.00',
-                            $activity['prev_allowable'] ?: '0.00',
-                            $activity['prev_cost_var'] ?: '0.00',
-                            $activity['to_date_cost'] ?: '0.00',
-                            $activity['to_date_allowable'] ?: '0.00',
-                            $activity['to_date_var'] ?: '0.00',
-                            $activity['remaining_cost'] ?: '0.00',
-                            $activity['completion_cost'] ?: '0.00',
-                            $activity['completion_var'] ?: '0.00',
-                        ], '', "A{$counter}");
-
-                        $sheet->getRowDimension($counter)->setOutlineLevel(min($outlineLevel + 1, 7))->setVisible(false)->setCollapsed(true);
-                        ++$counter;
-
-                        foreach ($activity['resources'] as $resource) {
-                            $sheet->fromArray($arr = [
-                                str_repeat('    ', $outlineLevel + 2) . $resource->resource_name,
-                                $resource['budget_cost'] ?: '0.00',
-                                $resource['prev_cost'] ?: '0.00',
-                                $resource['prev_allowable'] ?: '0.00',
-                                $resource['prev_cost_var'] ?: '0.00',
-                                $resource['to_date_cost'] ?: '0.00',
-                                $resource['to_date_allowable'] ?: '0.00',
-                                $resource['to_date_var'] ?: '0.00',
-                                $resource['remaining_cost'] ?: '0.00',
-                                $resource['completion_cost'] ?: '0.00',
-                                $resource['completion_var'] ?: '0.00',
-                            ], '', "A{$counter}");
-
-                            $sheet->getRowDimension($counter)->setOutlineLevel(min($outlineLevel + 2, 7))->setVisible(false)->setCollapsed(true);
-                            ++$counter;
-                        }
-                    }
-                }
-            }
-
-            return $counter;
-        }
-
-        $counter = renderLevel($tree, $sheet, '', $counter);
+        $counter = $this->renderLevel($tree, $sheet, '', $counter);
 
         $sheet->getStyle("B{$start}:K{$counter}")->getNumberFormat()->setFormatCode('_(#,##0.00_);_(\(#,##0.00\);_("-"??_);_(@_)');
 
@@ -297,5 +218,83 @@ class ActivityReport
         return $sheet;
     }
 
+    private function renderLevel($tree, \PHPExcel_Worksheet $sheet, $parent, $counter, $outlineLevel = 0)
+    {
+        $styleArray = ['font' => ['bold' => true]];
 
+        if ($parent) {
+            ++$outlineLevel;
+            if ($outlineLevel >= 7) {
+                $outlineLevel = 7;
+            }
+        }
+
+        foreach ($tree->where('parent', $parent) as $name => $level) {
+            $sheet->fromArray([
+                str_repeat('   ', $outlineLevel) . $level['name'],
+                $level['budget_cost'] ?: '0.00',
+                $level['prev_cost'] ?: '0.00',
+                $level['prev_allowable'] ?: '0.00',
+                $level['prev_cost_var'] ?: '0.00',
+                $level['to_date_cost'] ?: '0.00',
+                $level['to_date_allowable'] ?: '0.00',
+                $level['to_date_var'] ?: '0.00',
+                $level['remaining_cost'] ?: '0.00',
+                $level['completion_cost'] ?: '0.00',
+                $level['completion_var'] ?: '0.00',
+            ], '', "A{$counter}");
+
+            $sheet->getCell("A$counter")->getStyle()->applyFromArray($styleArray);
+            if ($parent) {
+                $sheet->getRowDimension($counter)->setOutlineLevel($outlineLevel)->setVisible(false)->setCollapsed(true);
+            }
+
+            ++$counter;
+            if ($tree->where('parent', $name)->count()) {
+                $counter = $this->renderLevel($tree, $sheet, $name, $counter, $outlineLevel);
+            }
+
+            if (!empty($level['activities'])) {
+                foreach ($level['activities'] as $name => $activity) {
+                    $sheet->fromArray($arr = [
+                        str_repeat('    ', $outlineLevel + 1) . $name,
+                        $activity['budget_cost'] ?: '0.00',
+                        $activity['prev_cost'] ?: '0.00',
+                        $activity['prev_allowable'] ?: '0.00',
+                        $activity['prev_cost_var'] ?: '0.00',
+                        $activity['to_date_cost'] ?: '0.00',
+                        $activity['to_date_allowable'] ?: '0.00',
+                        $activity['to_date_var'] ?: '0.00',
+                        $activity['remaining_cost'] ?: '0.00',
+                        $activity['completion_cost'] ?: '0.00',
+                        $activity['completion_var'] ?: '0.00',
+                    ], '', "A{$counter}");
+
+                    $sheet->getRowDimension($counter)->setOutlineLevel(min($outlineLevel + 1, 7))->setVisible(false)->setCollapsed(true);
+                    ++$counter;
+
+                    foreach ($activity['resources'] as $resource) {
+                        $sheet->fromArray($arr = [
+                            str_repeat('    ', $outlineLevel + 2) . $resource->resource_name,
+                            $resource['budget_cost'] ?: '0.00',
+                            $resource['prev_cost'] ?: '0.00',
+                            $resource['prev_allowable'] ?: '0.00',
+                            $resource['prev_cost_var'] ?: '0.00',
+                            $resource['to_date_cost'] ?: '0.00',
+                            $resource['to_date_allowable'] ?: '0.00',
+                            $resource['to_date_var'] ?: '0.00',
+                            $resource['remaining_cost'] ?: '0.00',
+                            $resource['completion_cost'] ?: '0.00',
+                            $resource['completion_var'] ?: '0.00',
+                        ], '', "A{$counter}");
+
+                        $sheet->getRowDimension($counter)->setOutlineLevel(min($outlineLevel + 2, 7))->setVisible(false)->setCollapsed(true);
+                        ++$counter;
+                    }
+                }
+            }
+        }
+
+        return $counter;
+    }
 }
