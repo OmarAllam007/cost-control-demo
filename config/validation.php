@@ -32,5 +32,12 @@ return [
         'end_date' => 'date|after:start_date',
         'spi_index' => 'numeric',
         'actual_progress' => 'numeric|min:0'
+    ],
+
+    'project_roles' => [
+        'roles.*.role_id' => 'required',
+        'roles.*.users' => 'required',
+        'roles.*.users.*.name' => 'required',
+        'roles.*.users.*.email' => 'required|email',
     ]
 ];
