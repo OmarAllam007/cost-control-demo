@@ -81,8 +81,8 @@
                         @foreach($group as $survey)
                             <tr>
                                 <td class="col-sm-3">{{$survey->description}}</td>
-                                <td class="col-sm-1 budget-qty" data-value="{{$survey->budget_qty}}">{{number_format($survey->budget_qty, 2)}}</td>
-                                <td class="col-sm-1 eng-qty" data-value="{{$survey->eng_qty}}">{{number_format($survey->eng_qty, 2)}}</td>
+                                <td class="col-sm-1 budget-qty" data-value="{{$survey->budget_qty}}">{{number_format(floatval($survey->budget_qty), 2)}}</td>
+                                <td class="col-sm-1 eng-qty" data-value="{{$survey->eng_qty}}">{{number_format(floatval($survey->eng_qty), 2)}}</td>
                                 <td class="col-sm-1">{{$survey->unit->type}}</td>
                                 <td class="col-sm-1">{{$boq->quantity}}</td>
                                 <td class="col-sm-1">{{$boq->unit->type ?? ''}}</td>
