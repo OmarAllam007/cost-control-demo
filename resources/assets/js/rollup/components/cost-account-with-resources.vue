@@ -23,7 +23,7 @@
             <th>
                 <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`" :required="selected">
                     <option value="">Select Unit</option>
-                    <option v-for="unit in units" :value="unit.id" v-text="unit.type"></option>
+                    <option v-for="unit in units" :selected="unit.id == qs_unit" :value="unit.id" v-text="unit.type"></option>
                 </select>
             </th>
             <th>{{total_budget_cost}}</th>
@@ -101,6 +101,14 @@
                         return true;
                     }
                 }
+            },
+
+            qs_unit() {
+                if (this.cost_account.resources.length > 0) {
+                    return this.cost_account.resources[0].qs_unit;
+                }
+
+                return 0;
             }
         },
 

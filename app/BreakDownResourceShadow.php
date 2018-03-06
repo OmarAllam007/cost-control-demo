@@ -132,12 +132,21 @@ class BreakDownResourceShadow extends Model
         return $query;
     }
 
-    function boq(){
+    function boq()
+    {
         return $this->belongsTo(Boq::class,'boq_id');
     }
 
-    function survey(){
-        return $this->belongsTo(Survey::class,'survey_id');
+    function getSurveyAttribute()
+    {
+        if ($this->qty_survey) {
+            return $this->qty_survey;
+        }
+
+        $qty_survey = Survey::whereIn('wbs_level_id', $this->wbs->getParentIds())
+            ->where('cost_account', $this->cost_account)->orderBy('wbs_id', 'desc')->first();
+
+        return $qty_survey;
     }
 
     function getDescriptorAttribute()

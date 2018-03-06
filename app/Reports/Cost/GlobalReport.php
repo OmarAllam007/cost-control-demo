@@ -48,7 +48,7 @@ class GlobalReport
 
     function run()
     {
-        $this->projects = Project::all();
+
 
         $this->last_period_ids = Period::readyForReporting()
             ->selectRaw('max(id) as id, project_id')
@@ -62,6 +62,7 @@ class GlobalReport
         )->pluck('id');
 
         $this->periods = Period::find($this->last_period_ids->toArray());
+        $this->projects = $this->periods->pluck('project');
 
         return [
             'cost_summary' => $this->cost_summary(),
@@ -216,13 +217,12 @@ class GlobalReport
             ->get()->map(function ($period) {
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
                 $period->variance = $period->allowable_cost - $period->to_date_cost;
-                $revision = BudgetRevision::where('project_id', $period->project_id)
-                    ->where('global_period_id', '<=', $this->period->id)->latest()->first();
+                $revision = BudgetRevision::where('project_id', $period->project_id)->latest()->first();
 
                 if ($revision) {
                     $period->eac_contract_amount = $revision->eac_contract_amount;
                 } else {
-                    $period->eac_contract_amount = $period->project->each_contract_amount;
+                    $period->eac_contract_amount = $period->project->eac_contract_amount;
                 }
                 return $period;
             })->sortBy('cpi');
