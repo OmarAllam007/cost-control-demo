@@ -33,14 +33,14 @@ class Project extends Model
         'project_duration',
         'description',
         'owner_id',
-        'original_finished_date',
-        'expected_finished_date',
+        'original_finish_date',
+        'expected_finish_date',
         'project_contract_signed_value',
         'project_contract_budget_value',
         'change_order_amount',
-        'direct_cost_material',
-        'indirect_cost_general',
-        'total_budget_cost',
+//        'direct_cost_material',
+//        'indirect_cost_general',
+//        'total_budget_cost',
         'cost_owner_id'
     ];
 
