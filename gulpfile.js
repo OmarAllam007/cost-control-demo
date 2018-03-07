@@ -5,4 +5,5 @@ elixir(function (mix) {
     mix.sass('app.scss');
     mix.webpack('rollup/create.js', 'public/js/rollup/create.js');
     mix.webpack('rollup/edit.js', 'public/js/rollup/edit.js');
+    mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
 });

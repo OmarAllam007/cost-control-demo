@@ -85,6 +85,36 @@ export default {
             });
         },
 
+        sumResourcesOnCostAccount() {
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+            const url = `/api/rollup/summarize/${this.wbs_id}/cost-account`
+
+            this.loading = true;
+            $.ajax({
+                url, method: 'post', data: {_token}, dataType: 'json',
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            });
+        },
+
+        sumResourcesOnActivity() {
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+            const url = `/api/rollup/summarize/${this.wbs_id}/cost-account`
+
+            this.loading = true;
+            $.ajax({
+                url, method: 'post', data: {_token}, dataType: 'json',
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            });
+        },
+
         doRollup(activity) {
             const codes = this.breakdowns[activity].reduce((unique, r) => {
                 if (!unique.includes(r.code)) {

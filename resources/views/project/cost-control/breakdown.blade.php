@@ -21,6 +21,16 @@
                 </div>
 
                 @can('cost_owner', $project)
+                    <div class="dropdown pull-left">
+                        <a href="#" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                            &sum; Summarize Resources <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="#" @click.prevent="sumResourcesOnCostAccount">Cost Account Level</a></li>
+                            <li><a href="#" @click.prevent="sumResourcesOnActivity">Activity Level</a></li>
+                        </ul>
+                    </div>
                     <a href="#DeleteWbsDataModal" data-toggle="modal" class="btn btn-danger btn-sm" type="button">
                         <i class="fa fa-remove"></i> Delete current
                     </a>
