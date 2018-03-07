@@ -61,10 +61,10 @@
             {!! $errors->first('original_finished_date', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('expected_finished_date', 'has-error')}}">
-            {{ Form::label('expected_finished_date', null, ['class' => 'control-label']) }}
-            {{ Form::date('expected_finished_date', null, ['class' => 'form-control','contenteditable'=>'true']) }}
-            {!! $errors->first('expected_finished_date', '<div class="help-block">:message</div>') !!}
+        <div class="form-group {{$errors->first('expected_finish_date', 'has-error')}}">
+            {{ Form::label('expected_finish_date', null, ['class' => 'control-label']) }}
+            {{ Form::date('expected_finish_date', null, ['class' => 'form-control','contenteditable'=>'true']) }}
+            {!! $errors->first('expected_finish_date', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('change_order_amount', 'has-error')}}">
