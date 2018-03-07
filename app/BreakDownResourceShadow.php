@@ -144,7 +144,7 @@ class BreakDownResourceShadow extends Model
         }
 
         $qty_survey = Survey::whereIn('wbs_level_id', $this->wbs->getParentIds())
-            ->where('cost_account', $this->cost_account)->orderBy('wbs_id', 'desc')->first();
+            ->where('cost_account', $this->cost_account)->orderBy('wbs_level_id', 'desc')->first();
 
         return $qty_survey;
     }
