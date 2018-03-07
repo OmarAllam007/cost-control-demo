@@ -64,6 +64,7 @@ class SumActivity
         $budget_qty = $resources->first()->budget_qty;
         $eng_qty = $resources->first()->eng_qty;
         $budget_unit = $shadows->sum('budget_unit');
+        $budget_cost = $shadows->sum('budget_cost');
 
         $firstShadow = $shadows->first();
 
@@ -73,8 +74,16 @@ class SumActivity
         if ($progress == 0) {
             $status = 'Not Started';
         } elseif ($progress < $closed_progress) {
-            $progress = $progress / $shadows->count();
             $status = 'In Progress';
+            if ($budget_cost) {
+                $to_date_cost = ActualResources::whereIn('breakdown_resource_id', $resources->pluck('id'))->sum('cost');
+                $progress = $to_date_cost * 100 / $budget_cost;
+                if ($progress > 100) {
+                    $progress = 99;
+                }
+            } else {
+                $progress = 99;
+            }
         } else {
             $progress = 100;
             $status = 'Closed';
@@ -96,7 +105,7 @@ class SumActivity
             'eng_qty' => $eng_qty, 'budget_qty' => $budget_qty, 'resource_qty' => $budget_unit,
             'resource_waste' => $firstShadow->resource_waste, 'resource_type' => $firstShadow->resource_type, 'resource_code' => $firstShadow->resource_code,
             'resource_name' => $firstShadow->resource_name, 'unit_price' => $firstShadow->unit_price,
-            'measure_unit' => $firstShadow->measure_unit, 'budget_unit' => $budget_unit, 'budget_cost' => $shadows->sum('budget_cost'),
+            'measure_unit' => $firstShadow->measure_unit, 'budget_unit' => $budget_unit, 'budget_cost' => $budget_cost,
             'boq_equivilant_rate' => $shadows->sum('boq_equivilant_rate'),
             'labors_count' => $labor_count, 'productivity_output' => $shadows->sum('productivity_output'), 'productivity_ref' => '',
             'remarks' => $remarks, 'resource_id' => $resource_id, 'productivity_id' => 0,

@@ -102,7 +102,7 @@ export default {
 
         sumResourcesOnActivity() {
             const _token = document.querySelector('meta[name=csrf-token]').content;
-            const url = `/api/rollup/summarize/${this.wbs_id}/cost-account`
+            const url = `/api/rollup/summarize/${this.wbs_id}/activity`
 
             this.loading = true;
             $.ajax({
