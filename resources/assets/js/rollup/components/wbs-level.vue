@@ -15,6 +15,11 @@
         </ul>
 
         <ul :class="{'collapse' : true, 'in': show_children}">
+            <div style="padding-top: 15px; padding-bottom: 20px" v-if="hasActivityRollup && activities.length">
+                <a href="#" @click.prevent="checkAll(true)"><i class="fa fa-check-square-o"></i> Select All</a> &verbar;
+                <a href="#" @click.prevent="checkAll(false)"><i class="fa fa-times"></i> Remove All</a>
+            </div>
+
             <activity v-for="activity in activities" :initial="activity" :depth="depth + 1"></activity>
             <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>
@@ -25,7 +30,7 @@
     export default {
         name: 'wbs-level',
 
-        props: ['initial', 'depth'],
+        props: ['initial', 'depth', 'hasActivityRollup'],
 
         data() {
             return {
@@ -52,6 +57,14 @@
                     }, () => {
                         this.loading = false;
                     });
+                }
+            },
+
+            checkAll(state = true) {
+                if (this.hasActivityRollup) {
+                    this.$children
+                        .filter(child => child.constructor.name === 'Activity')
+                        .forEach(child => child.setChecked(state));
                 }
             }
         }

@@ -20,7 +20,7 @@
 
         <wbs-tree :initial="{{$wbsTree}}" inline-template>
             <ul class="wbs-tree list-unstyled" id="wbs-tree">
-                <wbs-level :initial="level" v-for="level in levels" depth="0"></wbs-level>
+                <wbs-level :initial="level" v-for="level in levels" depth="0" :has-activity-rollup="true"></wbs-level>
             </ul>
         </wbs-tree>
 
