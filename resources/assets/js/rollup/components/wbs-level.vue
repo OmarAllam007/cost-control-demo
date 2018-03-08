@@ -11,7 +11,11 @@
         </div>
 
         <ul v-if="level.children.length" :class="{'collapse' : this.depth, 'in': show_children}">
-            <wbs-level :initial="sublevel" v-for="sublevel in level.children" :depth="depth + 1" :name="sublevel.id"></wbs-level>
+            <wbs-level :initial="sublevel"
+                       v-for="sublevel in level.children"
+                       :depth="depth + 1" :name="sublevel.id"
+                       :has-activity-rollup="hasActivityRollup"
+            ></wbs-level>
         </ul>
 
         <ul :class="{'collapse' : true, 'in': show_children}">
@@ -61,11 +65,13 @@
             },
 
             checkAll(state = true) {
-                if (this.hasActivityRollup) {
-                    this.$children
-                        .filter(child => child.constructor.name === 'Activity')
-                        .forEach(child => child.setChecked(state));
+                if (!this.hasActivityRollup) {
+                    return false;
                 }
+
+                this.$children
+                    .filter(child => child.constructor.name === 'Activity')
+                    .forEach(child => child.setChecked(state));
             }
         }
     }

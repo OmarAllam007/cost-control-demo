@@ -99,6 +99,10 @@ export default {
 
         get_input_name(resource, type = 'resources') {
             return `${type}[${this.activity.code}][${resource.id}]`;
+        },
+
+        setChecked(state) {
+            this.check_all = state;
         }
     },
 
