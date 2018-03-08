@@ -523,7 +523,7 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         }
 
 //        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
-        return $this->calculated['curr_cost'] = $this->actual_resources->where('period_id', $period_id)->sum('cost') ?: 0;
+        return $this->calculated['curr_cost'] = $this->actual_resources()->where('period_id', $period_id)->sum('cost') ?: 0;
     }
 
     public function getCurrUnitPriceAttribute()
