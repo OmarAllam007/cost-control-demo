@@ -5,7 +5,7 @@
 @section('header')
     <div class="display-flex">
         <h2 class="flex">
-            {{$project->name}} &mdash; Semi Cost Account Rollup
+            {{$project->name}} &mdash; Semi Activity Rollup
         </h2>
 
         <a href="{{route('project.cost-control', $project)}}" class="btn btn-default btn-sm">
@@ -15,7 +15,7 @@
 @endsection
 
 @section('body')
-    <form action="" method="post" id="EditRollupForm">
+    <form action="" method="post" id="RollupForm">
         {{csrf_field()}}
 
         <wbs-tree :initial="{{$wbsTree}}" inline-template>
@@ -35,5 +35,5 @@
         window.units = {!! \App\Unit::select('id', 'type')->orderBy('type')->get() !!};
     </script>
 
-    <script src="/js/rollup/semi-cost-account.js"></script>
+    <script src="/js/rollup/semi-activity.js"></script>
 @endsection

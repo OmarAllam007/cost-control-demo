@@ -20,7 +20,7 @@ class SemiActivityRollupController extends Controller
     {
         $this->authorize('cost_owner', $project);
 
-        return view('rollup.semi-activity-account', compact('project'));
+        return view('rollup.semi-activity', compact('project'));
     }
 
     function store(Project $project, Request $request)

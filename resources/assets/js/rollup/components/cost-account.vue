@@ -33,7 +33,7 @@
                 <th v-text="total_budget_cost"></th>
                 <th :class="invalid_to_date_qty">
                     <input class="form-control input-sm"
-                           type="text" :value="0"
+                           type="text"
                            :name="`to_date_qty[${cost_account.id}]`"
                            :required="selected"
                            placeholder="To date Qty">

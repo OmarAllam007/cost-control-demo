@@ -275,6 +275,7 @@ Route::post('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollup
 Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');
     Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
+    Route::get('activity-resources/{wbsLevel}/{code}', 'Rollup\Api\ActivityResourcesController@show');
     Route::get('cost-account/{wbsLevel}/{breakdown_id}', 'Rollup\Api\CostAccountController@show');
 
     Route::post('summarize/{wbs}/cost-account', 'Rollup\Api\CostAccountSumController@store');

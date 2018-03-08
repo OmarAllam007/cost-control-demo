@@ -35,5 +35,5 @@
         window.units = {!! \App\Unit::select('id', 'type')->orderBy('type')->get() !!};
     </script>
 
-    <script src="/js/rollup/create.js"></script>
+    <script src="/js/rollup/cost-account.js"></script>
 @endsection

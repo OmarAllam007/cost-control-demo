@@ -29,11 +29,11 @@
             </th>
             <th>{{total_budget_cost}}</th>
             <th>
-                <input type="text" class="form-control input-sm" :name="`to_date_qty[${cost_account.id}]`" placeholder="Budget Unit" value="1" :required="selected">
+                <input type="text" class="form-control input-sm" :name="`to_date_qty[${cost_account.id}]`" placeholder="To date Qty" :required="selected">
             </th>
             <th>{{total_to_date_cost}}</th>
             <th>
-                <input type="text" class="form-control input-sm" :name="`progress[${cost_account.id}]`" placeholder="Progress" value="0" :required="selected">
+                <input type="text" class="form-control input-sm" :name="`progress[${cost_account.id}]`" placeholder="Progress" :required="selected">
             </th>
         </tr>
         </thead>
