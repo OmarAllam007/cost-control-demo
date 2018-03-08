@@ -97,7 +97,7 @@ class ActivityRollup
             'activity_id' => $resource->activity_id, 'activity' => $resource->activity,
             'eng_qty' => 1, 'budget_qty' => 1, 'resource_qty' => 1, 'budget_unit' => 1,
             'resource_waste' => 0, 'unit_price' => $total_cost, 'budget_cost' => $total_cost,
-            'measure_unit' => 'LM', 'unit_id' => 3, 'template' => 'Cost Account Rollup',
+            'measure_unit' => 'LS', 'unit_id' => 15, 'template' => 'Activity Rollup',
             'breakdown_id' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
             'remarks' => 'Cost account rollup', 'productivity_ref' => '', 'productivity_output' => 0,

@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 07/03/2018
- * Time: 3:31 PM
- */
 
 namespace App\Rollup\Actions;
-
 
 use App\ActualResources;
 use App\BreakdownResource;

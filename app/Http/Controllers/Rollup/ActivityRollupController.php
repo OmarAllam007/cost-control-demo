@@ -9,6 +9,7 @@ use App\Project;
 
 class ActivityRollupController extends Controller
 {
+    // Rollup whole project
     function store(Project $project)
     {
         $this->authorize('actual_resources', $project);
@@ -22,6 +23,7 @@ class ActivityRollupController extends Controller
         return \Redirect::route('project.cost-control', $project);
     }
 
+    // Specify activity
     function update(Project $project, Request $request)
     {
         $this->authorize('actual_resources', $project);

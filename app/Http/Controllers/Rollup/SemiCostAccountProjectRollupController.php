@@ -1,13 +1,20 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: hazem
+ * Date: 08/03/2018
+ * Time: 8:38 AM
+ */
 
 namespace App\Http\Controllers\Rollup;
 
+
 use App\Http\Controllers\Controller;
 use App\Project;
-use App\Rollup\Actions\ImportantResourcesRollup;
+use App\Rollup\Actions\SemiCostAccountRollup;
 use Illuminate\Http\Request;
 
-class ImportantResourcesRollupController extends Controller
+class SemiCostAccountProjectRollupController extends Controller
 {
     function store(Project $project, Request $request)
     {
@@ -18,7 +25,7 @@ class ImportantResourcesRollupController extends Controller
                 return $breakdown->rollable_resources->pluck('id', 'id');
             });
 
-        $rollup = new ImportantResourcesRollup($project, $data);
+        $rollup = new SemiCostAccountRollup($project, $data);
         $rollup->handle();
 
 

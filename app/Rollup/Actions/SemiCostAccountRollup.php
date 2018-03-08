@@ -12,7 +12,7 @@ use App\Unit;
 use function compact;
 use Illuminate\Support\Collection;
 
-class ImportantResourcesRollup
+class SemiCostAccountRollup
 {
     //<editor-fold defaultstate="collapsed" desc="Variable definitions">
     /** @var Project */
@@ -107,7 +107,7 @@ class ImportantResourcesRollup
             $cost_account_suffix = sprintf('%02d', $suffix);
         }
 
-        $shadow = $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
+        $this->rollup_shadow = $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $breakdown->cost_account . '.' . $cost_account_suffix, 'resource_type_id' => 3,
             'resource_name' => $breakdown->qty_survey->description, 'resource_type' => '03.MATERIAL',
@@ -126,44 +126,7 @@ class ImportantResourcesRollup
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true, 'cost_account' => $breakdown->cost_account
         ]);
 
-        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resource_ids)->get();
-
-        $period = $this->project->open_period();
-        if (!$period) {
-            // If no open period select the last period in the project to apply
-            $period = $this->project->periods()->latest('id')->first();
-
-            // If there is no period at all in the project then ignore to date values as it is pointless
-            if (!$period) {
-                return $shadow;
-            }
-        }
-
-        $to_date_cost = $actual_resources->sum('cost');
-        $to_date_qty = $this->extra['to_date_qty'][$breakdown->id] ?? 0;
-        $to_date_unit_price = 0;
-
-        if ($to_date_qty) {
-            $to_date_unit_price = $to_date_cost / $to_date_qty;
-        }
-
-        $progress = min(100, $this->extra['progress'][$breakdown->id] ?? 0);
-        $status = 'Not Started';
-        if ($progress) {
-            $status = $progress < 100? 'In Progress' : 'Closed';
-            $shadow->update(compact('progress', 'status'));
-        }
-
-        ActualResources::forceCreate([
-            'project_id' => $this->project->id, 'wbs_level_id' => $shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
-            'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
-            'unit_id' => $shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $shadow->resource_id,
-            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
-        ]);
-
-        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
-
-        return $shadow;
+        return $this->update_cost($breakdown, $resource_ids);
     }
 
     private function createRollupResource($breakdown)
@@ -179,6 +142,48 @@ class ImportantResourcesRollup
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
             'created_by' => $this->user_id, 'created_at' => $this->now
         ]);
+    }
+
+    private function update_cost($breakdown, $resource_ids)
+    {
+        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resource_ids)->get();
+
+        $period = $this->project->open_period();
+        if (!$period) {
+            // If no open period select the last period in the project to apply
+            $period = $this->project->periods()->latest('id')->first();
+
+            // If there is no period at all in the project then ignore to date values as it is pointless
+            if (!$period) {
+                return $this->rollup_shadow;
+            }
+        }
+
+        $to_date_cost = $actual_resources->sum('cost');
+        $to_date_qty = $this->extra['to_date_qty'][$breakdown->id] ?? 0;
+        $to_date_unit_price = 0;
+
+        if ($to_date_qty) {
+            $to_date_unit_price = $to_date_cost / $to_date_qty;
+        }
+
+        $progress = min(100, $this->extra['progress'][$breakdown->id] ?? 0);
+        $status = 'Not Started';
+        if ($progress) {
+            $status = $progress < 100 ? 'In Progress' : 'Closed';
+            $this->rollup_shadow->update(compact('progress', 'status'));
+        }
+
+        ActualResources::forceCreate([
+            'project_id' => $this->project->id, 'wbs_level_id' => $this->rollup_shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
+            'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
+            'unit_id' => $this->rollup_shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $this->rollup_shadow->resource_id,
+            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
+        ]);
+
+        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
+
+        return $this->rollup_shadow;
     }
 
 
