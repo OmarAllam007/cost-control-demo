@@ -9,12 +9,25 @@
         </div>
 
         <ul :class="{'collapse' : true, 'in': show_children}">
+
+            <li v-if="cost_accounts.length" class="check-all-box">
+                <a href="#" @click.prevent="checkAll(true)"><i class="fa fa-check-square-o"></i> Select All</a> &verbar;
+                <a href="#" @click.prevent="checkAll(false)"><i class="fa fa-times"></i> Remove All</a>
+            </li>
+
             <cost-account v-for="cost_account in cost_accounts" :initial="cost_account"></cost-account>
 
             <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>
     </li>
 </template>
+
+<style>
+    .check-all-box {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+</style>
 
 <script>
     export default {
@@ -40,6 +53,10 @@
                         this.loading = false;
                     });
                 }
+            },
+
+            checkAll(state) {
+                this.$children.forEach(child => child.setChecked(state));
             }
         }
     };

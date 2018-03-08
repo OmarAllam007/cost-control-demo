@@ -141,15 +141,19 @@
             },
 
             checkAll() {
-                this.check_all = !this.check_all;
-
-                this.cost_account.resources.filter(resource => !resource.important).forEach(resource => {
-                    resource.selected = this.check_all;
-                });
+                this.setChecked(!this.check_all);
             },
 
             get_input_name(resource, type = 'resources') {
                 return `${type}[${this.cost_account.id}][${resource.id}]`;
+            },
+
+            setChecked(state = true) {
+                this.check_all = state;
+
+                this.cost_account.resources.filter(resource => !resource.important).forEach(resource => {
+                    resource.selected = this.check_all;
+                });
             }
         },
 

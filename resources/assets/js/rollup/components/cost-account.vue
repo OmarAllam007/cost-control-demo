@@ -67,6 +67,12 @@
             };
         },
 
+        methods: {
+            setChecked(state = true) {
+                this.selected = state;
+            }
+        },
+
         computed: {
             total_budget_cost() {
                 let total = 0;

@@ -15,7 +15,7 @@
 @endsection
 
 @section('body')
-    <form action="" method="post" id="CreateRollupForm">
+    <form action="" method="post" id="RollupForm">
         {{csrf_field()}}
 
         <wbs-tree :initial="{{$wbsTree}}" inline-template>
