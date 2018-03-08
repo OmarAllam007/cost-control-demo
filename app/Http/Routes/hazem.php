@@ -260,15 +260,17 @@ Route::get('/rollup/create/{project}/{wbsLevel}/{stdActivity}', 'RollupControlle
 Route::post('/rollup/store/{key}', 'RollupController@store')->name('rollup.store');
 Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
 
-Route::get('project/{project}/rollup', 'Rollup\RollupController@create')->name('project.rollup');
-Route::post('project/{project}/rollup', 'Rollup\RollupController@store');
-Route::get('project/{project}/rollup/edit', 'Rollup\RollupController@edit')->name('project.rollup.edit');
-Route::patch('project/{project}/rollup', 'Rollup\RollupController@update')->name('project.rollup.update');
+Route::get('project/{project}/rollup-cost-account', 'Rollup\CostAccountRollupController@create');
+Route::post('project/{project}/rollup-cosst-account', 'Rollup\CostAccountRollupController@store');
 
-Route::post('project/{project}/rollup-level-2a', 'Rollup\CostAccountRollupController@store')->name('project.rollup.level-2a');
-Route::post('project/{project}/rollup-level-2b', 'Rollup\ImportantResourcesRollupController@store')->name('project.rollup.level-2b');
-Route::post('project/{project}/rollup-level-3', 'Rollup\ActivityRollupController@store')->name('project.rollup.level-3');
-Route::put('project/{project}/activity-rollup', 'Rollup\ActivityRollupController@update');
+Route::get('project/{project}/rollup-semi-cost-account', 'Rollup\SemiCostAccountRollupController@create');
+Route::post('project/{project}/rollup-semi-cost-account', 'Rollup\SemiCostAccountRollupController@store');
+
+Route::post('project/{project}/rollup-project-activity', 'Rollup\ActivityRollupController@store');
+Route::put('project/{project}/rollup-activity', 'Rollup\ActivityRollupController@update');
+
+Route::get('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollupController@create');
+Route::post('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollupController@store');
 
 Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');

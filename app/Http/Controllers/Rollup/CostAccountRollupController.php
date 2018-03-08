@@ -14,7 +14,7 @@ class CostAccountRollupController extends Controller
         $this->authorize('cost_owner', $project);
 
         // We get WBS levels from WbsComposer
-        return view('rollup.create', compact('project'));
+        return view('rollup.cost-account', compact('project'));
     }
 
     function store(Project $project, Request $request)
