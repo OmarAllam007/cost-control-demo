@@ -25,6 +25,6 @@ class CostAccountRollupController extends Controller
         $status = $rollup->handle();
 
         flash("$status Cost accounts have been rolled up", 'success');
-        return \Redirect::route('project.rollup.edit', $project);
+        return redirect("/project/{$project->id}/rollup-semi-cost-account");
     }
 }

@@ -11,31 +11,42 @@
 
             <main class="modal-body">
                 <article>
-                    <h4>Level 2 &mdash; Cost Account</h4>
-                    <p>Roll up all resource up to cost account level under activities (for back to back subcontractors)</p>
-                    <form action="{{route('project.rollup.level-2a', $project)}}" method="post" class="btn-toolbar">
+                    <h4>Cost Account</h4>
+                    <p>Roll up all resource to cost account level (for back to back subcontractors)</p>
+                    <a class="btn btn-primary btn-sm" href="/project/{{$project->id}}/rollup-cost-account">Select Cost Accounts</a>
+                    {{--<form action="/project/{{$project->id}}/rollup-project-cost-account" method="post" class="btn-toolbar">
                         {{csrf_field()}}
-                        <a class="btn btn-outline btn-primary btn-sm" href="{{route('project.rollup', $project)}}">Select Cost Accounts</a>
                         <button type="submit" class="btn btn-warning btn-sm" href="">Whole project</button>
-                    </form>
+                    </form>--}}
                     <hr>
                 </article>
 
                 <article>
-                    <h4>Level 2 &mdash; Resources</h4>
-                    <p>Select resources to rollup on cost account level</p>
-                    <form action="{{route('project.rollup.level-2b', $project)}}" method="post" class="btn-toolbar">
+                    <h4>Semi Cost Account</h4>
+                    <p>Select resources to rollup on cost account level. This excludes important resources.</p>
+                    <a class="btn btn-primary btn-sm" href="/project/{{$project->id}}/rollup-semi-cost-account">Select Resources</a>
+                    {{--<form action="/project/{{$project->id}}/rollup-project-semi-cost-account" method="post" class="btn-toolbar">
                         {{csrf_field()}}
-                        <a class="btn btn-outline btn-primary btn-sm" href="{{route('project.rollup.edit', $project)}}">Select Resources</a>
                         <button type="submit" class="btn btn-warning btn-sm" href="">Whole project</button>
-                    </form>
+                    </form>--}}
                     <hr>
                 </article>
 
                 <article>
-                    <h4>Level 3 &mdash; Activity</h4>
+                    <h4>Semi Activity</h4>
+                    <p>Select resources to rollup on activity level. This excludes important resources.</p>
+                    <a class="btn btn-primary btn-sm" href="/project/{{$project->id}}/rollup-semi-activity">Select Resources</a>
+                    {{--<form action="/project/{{$project->id}}/rollup-project-semi-activity" method="post" class="btn-toolbar">
+                        {{csrf_field()}}
+                        <button type="submit" class="btn btn-warning btn-sm" href="">Whole project</button>
+                    </form>--}}
+                    <hr>
+                </article>
+
+                <article>
+                    <h4>Activity</h4>
                     <p>Rollup all budget resources on activity level</p>
-                    <form action="{{route('project.rollup.level-3', $project)}}" method="post" class="btn-toolbar">
+                    <form action="/project/{{$project->id}}/rollup-project-activity" method="post" class="btn-toolbar">
                         {{csrf_field()}}
                         <button type="submit" class="btn btn-warning btn-sm" href="">Whole project</button>
                     </form>

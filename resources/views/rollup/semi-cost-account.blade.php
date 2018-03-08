@@ -15,9 +15,8 @@
 @endsection
 
 @section('body')
-    <form action="{{route('project.rollup.update', $project)}}" method="post" id="EditRollupForm">
+    <form action="" method="post" id="EditRollupForm">
         {{csrf_field()}}
-        {{method_field('patch')}}
 
         <wbs-tree :initial="{{$wbsTree}}" inline-template>
             <ul class="wbs-tree list-unstyled" id="wbs-tree">

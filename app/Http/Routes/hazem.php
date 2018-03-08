@@ -261,7 +261,7 @@ Route::post('/rollup/store/{key}', 'RollupController@store')->name('rollup.store
 Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
 
 Route::get('project/{project}/rollup-cost-account', 'Rollup\CostAccountRollupController@create');
-Route::post('project/{project}/rollup-cosst-account', 'Rollup\CostAccountRollupController@store');
+Route::post('project/{project}/rollup-cost-account', 'Rollup\CostAccountRollupController@store');
 
 Route::get('project/{project}/rollup-semi-cost-account', 'Rollup\SemiCostAccountRollupController@create');
 Route::post('project/{project}/rollup-semi-cost-account', 'Rollup\SemiCostAccountRollupController@store');
