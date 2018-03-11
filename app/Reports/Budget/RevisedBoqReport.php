@@ -49,7 +49,7 @@ class RevisedBoqReport
             \DB::table('qty_surveys as qs')
                 ->where('qs.project_id', $this->project->id)
                 ->join('boqs as boq', function (JoinClause $on) {
-                    $on->on('qs.boq_id', '=', 'boq.id');
+                    $on->on('qs.wbs_level_id', '=', 'boq.wbs_id');
                     $on->on('qs.cost_account', '=', 'boq.cost_account');
                 })
                 ->selectRaw('boq.wbs_id as boq_wbs_id, boq.cost_account, eng_qty, boq.price_ur, count(DISTINCT qs.wbs_level_id)')
