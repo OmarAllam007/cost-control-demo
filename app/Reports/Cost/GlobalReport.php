@@ -48,8 +48,6 @@ class GlobalReport
 
     function run()
     {
-
-
         $this->last_period_ids = Period::readyForReporting()
             ->selectRaw('max(id) as id, project_id')
             ->where('global_period_id', $this->period->id)

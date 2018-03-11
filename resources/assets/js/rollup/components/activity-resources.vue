@@ -53,7 +53,7 @@
                 <td v-text="resource.code"></td>
                 <td v-text="resource.name"></td>
                 <td v-text="resource.remarks"></td>
-                <td>{{resource.budget_qty | number_format}}</td>
+                <td>{{resource.budget_unit | number_format}}</td>
                 <td>{{resource.measure_unit}}</td>
                 <td>{{resource.budget_cost | number_format}}</td>
                 <td>{{resource.to_date_qty|number_format}}</td>
