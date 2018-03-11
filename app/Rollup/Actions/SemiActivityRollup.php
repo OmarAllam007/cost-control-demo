@@ -3,9 +3,11 @@
 namespace App\Rollup\Actions;
 
 
+use App\ActualResources;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Project;
+use App\Unit;
 use function collect;
 use function compact;
 use Illuminate\Support\Collection;
@@ -27,6 +29,9 @@ class SemiActivityRollup
     private $data;
     private $extra;
 
+    /** @var Collection */
+    private $unit_cache;
+
     public function __construct(Project $project, $data, $extra)
     {
         $this->project = $project;
@@ -36,6 +41,7 @@ class SemiActivityRollup
 
         $this->now = date('Y-m-d H:i:s');
         $this->user_id = auth()->id() ?: 2;
+        $this->unit_cache = Unit::pluck('type', 'id');
 
         BreakdownResource::flushEventListeners();
         BreakDownResourceShadow::flushEventListeners();
@@ -58,9 +64,9 @@ class SemiActivityRollup
     {
         $resources = BreakdownResource::where('project_id', $this->project->id)
             ->where(compact('code'))->where('important', 0)
-            ->whereIn('id', $this->data->get('code'))
+            ->whereIn('id', $this->data->get($code))
             ->whereNull('rolled_up_at')
-            ->where('is_rollup', 1)->get();
+            ->where('is_rollup', 0)->get();
 
         if (!$resources->count()) {
             return false;
@@ -106,8 +112,8 @@ class SemiActivityRollup
         $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $resource->code, 'resource_type_id' => 4,
-            'resource_name' => $resource->activity, 'resource_type' => '07.OTHERS',
-            'activity_id' => $resource->activity_id, 'activity' => $resource->activity,
+            'resource_name' => $resource->shadow->activity, 'resource_type' => '07.OTHERS',
+            'activity_id' => $resource->shadow->activity_id, 'activity' => $resource->shadow->activity,
             'eng_qty' => 1, 'budget_qty' => 1, 'resource_qty' => 1, 'budget_unit' => 1,
             'resource_waste' => 0, 'unit_price' => $total_cost, 'budget_cost' => $total_cost,
             'measure_unit' => 'LS', 'unit_id' => 15, 'template' => 'Semi Activity Rollup',
@@ -116,8 +122,8 @@ class SemiActivityRollup
             'remarks' => 'Cost account rollup', 'productivity_ref' => '', 'productivity_output' => 0,
             'labors_count' => 0, 'boq_equivilant_rate' => 1, 'productivity_id' => 0,
             'code' => $this->rollup_resource->code, 'resource_id' => 0,
-            'boq_id' => $resource->boq_id, 'survey_id' => $resource->survey_id,
-            'boq_wbs_id' => $breakdown->qty_survey->boq->wbs_id ?? 0, 'survey_wbs_id' => $resource->qs_wbs_id ?? 0,
+            'boq_id' => $resource->shadow->boq_id, 'survey_id' => $resource->shadow->survey_id,
+            'boq_wbs_id' => $resource->shadow->boq->wbs_id ?? 0, 'survey_wbs_id' => $resource->shadow->qs_wbs_id ?? 0,
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true
         ]);

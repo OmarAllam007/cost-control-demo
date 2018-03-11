@@ -259,13 +259,18 @@ class GlobalReport
     private function cost_summary()
     {
         $fields = [
-            "(CASE WHEN resource_type_id IN (1,8) THEN 'INDIRECT' ELSE 'DIRECT' END) AS 'type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
+            "project_id, (CASE WHEN resource_type_id IN (1,8) THEN 'INDIRECT' ELSE 'DIRECT' END) AS 'type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
         ];
 
         return $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
-            ->selectRaw(implode(', ', $fields))->groupBy('type')->get()->keyBy('type');
+            ->selectRaw(implode(', ', $fields))
+            ->groupBy(['project_id', 'type'])->get()
+            ->map(function($project) {
+
+            })
+            ->keyBy('type');
 //
 //        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
 //            ->whereIn('period_id', $this->last_period_ids)
