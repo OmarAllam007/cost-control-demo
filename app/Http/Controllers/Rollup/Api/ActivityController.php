@@ -37,6 +37,7 @@ class ActivityController extends Controller
 
 
             $cost_account->resources = BreakDownResourceShadow::where('wbs_id', $cost_account->wbs_id)
+                ->where('show_in_cost', 1)->whereNull('rolled_up_at')->where('is_rollup', '<>', 1)
                 ->where('cost_account', $cost_account->code)->get()->map(function ($resource) {
                     return new RollupResourceFormatter($resource);
                 });

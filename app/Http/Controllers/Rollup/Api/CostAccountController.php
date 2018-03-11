@@ -18,6 +18,7 @@ class CostAccountController extends Controller
         return BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
             ->where('breakdown_id', $breakdown_id)
             ->where('is_rollup', false)->whereNull('rolled_up_at')
+            ->where('show_in_cost', 1)
             ->selectRaw('breakdown_resource_id as id, resource_code as code, resource_name as name, remarks')
             ->selectRaw('budget_unit, important')
             ->get()->map(function($resource) {
