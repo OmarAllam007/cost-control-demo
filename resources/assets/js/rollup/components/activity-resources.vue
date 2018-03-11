@@ -74,7 +74,7 @@ export default {
     props: ['initial', 'depth'],
 
     data() {
-        return { activity: this.initial, resources: [], check_all: false };
+        return { activity: this.initial, resources: [], check_all: false, units: window.units };
     },
 
     created() {
