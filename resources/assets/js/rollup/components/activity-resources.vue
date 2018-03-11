@@ -157,7 +157,7 @@ export default {
         },
 
         qs_unit() {
-            if (this.cost_account.resources.length > 0) {
+            if (this.resources.length > 0) {
                 return this.resources[0].qs_unit;
             }
 

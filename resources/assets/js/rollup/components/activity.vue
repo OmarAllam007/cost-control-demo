@@ -11,11 +11,20 @@
         <ul :class="{'collapse' : true, 'in': show_children}">
 
             <li v-if="cost_accounts.length" class="check-all-box">
-                <a href="#" @click.prevent="checkAll(true)"><i class="fa fa-check-square-o"></i> Select All</a> &verbar;
-                <a href="#" @click.prevent="checkAll(false)"><i class="fa fa-times"></i> Remove All</a>
+                <div class="display-flex">
+                    <div>
+                        <a href="#" @click.prevent="checkAll(true)"><i class="fa fa-check-square-o"></i> Select All</a> &verbar;
+                        <a href="#" @click.prevent="checkAll(false)"><i class="fa fa-times"></i> Remove All</a>
+                    </div>
+
+                    <div style="width: 200px;">
+                        <input type="search" v-model="search" class="form-control" placeholder="Cost Account Search">
+                    </div>
+                </div>
+
             </li>
 
-            <cost-account v-for="cost_account in cost_accounts" :initial="cost_account"></cost-account>
+            <cost-account v-for="cost_account in filtered_cost_accounts" :initial="cost_account"></cost-account>
 
             <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>
@@ -34,7 +43,20 @@
         props: ['initial', 'depth'],
 
         data() {
-            return { activity: this.initial, cost_accounts: [], show_children: false, loading: false }
+            return { activity: this.initial, cost_accounts: [], show_children: false, loading: false, search: '' }
+        },
+
+        computed: {
+            filtered_cost_accounts() {
+                if (!this.search) {
+                    return this.cost_accounts;
+                }
+
+                const term = this.search.toLowerCase();
+                return this.cost_accounts.filter(
+                    cost_account => cost_account.code.toLowerCase().indexOf(term) >= 0
+                )
+            }
         },
 
         methods: {
