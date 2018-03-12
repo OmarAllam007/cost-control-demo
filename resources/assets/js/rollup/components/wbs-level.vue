@@ -19,12 +19,19 @@
         </ul>
 
         <ul :class="{'collapse' : true, 'in': show_children}">
-            <div style="padding-top: 15px; padding-bottom: 20px" v-if="hasActivityRollup && activities.length">
-                <a href="#" @click.prevent="checkAll(true)"><i class="fa fa-check-square-o"></i> Select All</a> &verbar;
-                <a href="#" @click.prevent="checkAll(false)"><i class="fa fa-times"></i> Remove All</a>
-            </div>
+            <li style="padding-top: 15px; padding-bottom: 20px" v-if="hasActivityRollup && activities.length">
+                <div class="display-flex">
+                    <div class="flex">
+                        <a href="#" @click.prevent="checkAll(true)"><i class="fa fa-check-square-o"></i> Select All</a> &verbar;
+                        <a href="#" @click.prevent="checkAll(false)"><i class="fa fa-times"></i> Remove All</a>
+                    </div>
+                    <div>
+                        <input type="search" v-model="search" id="" class="form-control input-sm" placeholder="Activity Code Search" style="width: 200px">
+                    </div>
+                </div>
+            </li>
 
-            <activity v-for="activity in activities" :initial="activity" :depth="depth + 1"></activity>
+            <activity v-for="activity in filteredActivities" :initial="activity" :depth="depth + 1"></activity>
             <li v-if="loading"><i class="fa fa-refresh fa-spin"></i></li>
         </ul>
     </li>
@@ -41,8 +48,22 @@
                 level: this.initial,
                 activities: [],
                 show_children: false,
-                loading: false
+                loading: false,
+                search: ''
             };
+        },
+
+        computed: {
+            filteredActivities() {
+                if (!this.search) {
+                    return this.activities;
+                }
+
+                const code = this.search.toLowerCase();
+                return this.activities.filter(
+                    activity => activity.code.toLowerCase().indexOf(code) >= 0
+                );
+            }
         },
 
         methods: {
