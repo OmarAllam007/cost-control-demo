@@ -11,6 +11,7 @@ use App\Period;
 use App\Project;
 use App\ResourceCode;
 use App\Resources;
+use App\StoreResource;
 use App\Support\CostImporter;
 use App\Unit;
 use App\UnitAlias;
@@ -24,11 +25,14 @@ class ImportActualMaterialJob extends ImportJob
     /** @var Project */
     protected $project;
 
+    /** @var Period */
+    private $period;
+
     public function __construct(Project $project, $file)
     {
         $this->project = $project;
+        $this->period = $this->project->open_period();
         $this->file = $file;
-
     }
 
     public function handle()
@@ -42,7 +46,7 @@ class ImportActualMaterialJob extends ImportJob
 
 
         $material = collect();
-        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id(), 'file' => $this->file, 'project_id' => $this->project->id, 'period_id' => $this->project->open_period()->id]);
+        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id(), 'file' => $this->file, 'project_id' => $this->project->id, 'period_id' => $this->period->id]);
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
@@ -55,17 +59,20 @@ class ImportActualMaterialJob extends ImportJob
                 continue;
             }
 
-            $hash = str_random(8);
-
             $dateVal = $sheet->getCell('B' . $row->getRowIndex())->getValue();
             $data[1] = Carbon::create(1899, 12, 30)->addDays($dateVal)->format('Y-m-d');
 
-            $material->put($hash, $data);
+            $row_id = StoreResource::create([
+                'project_id' => $this->project->id, 'period_id' => $this->period->id, 'batch_id' => $batch->id,
+                'activity_code' => $data[0], 'store_date' => $data[1], 'item_desc' => $data[2],
+                'measure_unit' => $data[3], 'qty' => $data[4], 'unit_price' => $data[5], 'cost' => $data[6],
+                'item_code' => $data[7], 'doc_no' => $data[8],
+            ]);
+
+            $material->put($row_id, $data);
         }
 
         $costImporter = new CostImporter($batch, $material);
         return $costImporter->checkMapping();
-
-//        return dispatch(new ImportMaterialDataJob($this->project, $material, $batch));
     }
 }
