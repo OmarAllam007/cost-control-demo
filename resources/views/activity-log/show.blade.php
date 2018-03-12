@@ -2,7 +2,7 @@
 
 @section('header')
     <div class="display-flex">
-        <h4 class="flex">{{$wbs->project->name}} &mdash; Actviity Log</h4>
+        <h2 class="flex">{{$wbs->project->name}} &mdash; Activity Log</h2>
 
         <a href="{{route('project.cost-control', $wbs->project)}}" class="btn btn-default btn-sm">
             <i class="fa fa-chevron-left"></i> Back to Project
@@ -11,6 +11,7 @@
 @endsection
 
 @section('body')
+    <h4 class="page-header">{{$wbs->path}}</h4>
     <div id="activityLog">
         <section class="info-box card">
             <div class="card-body">
@@ -132,7 +133,7 @@
                                         </table>
                                     </article>
 
-                                    <article class="col-sm-7">
+                                    <article class="col-sm-7 bl-1">
                                         <table class="table table-striped table-condensed">
                                             <thead>
                                             <tr>
@@ -201,6 +202,14 @@
 
         .card .form-group {
             margin-bottom: 0;
+        }
+
+        h4.page-header {
+            margin: 10px 0;
+        }
+
+        .bl-1 {
+            border-left: 1px solid #e5e5e5;
         }
     </style>
 @endsection
