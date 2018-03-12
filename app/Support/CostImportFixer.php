@@ -7,6 +7,7 @@ use App\ActualBatch;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
+use App\StoreResource;
 use Illuminate\Support\Collection;
 
 class CostImportFixer
@@ -90,7 +91,7 @@ class CostImportFixer
 //        $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
         $resourcesLog = collect();
         foreach ($data as $key => $qty) {
-            $hash = str_random(6);
+
 
             $rows = $errors[$key]['rows'];
             $newResource = $rows->first();
@@ -100,12 +101,22 @@ class CostImportFixer
             $newResource[5] = $newResource[6] / $qty;
             $newResource[8] = $rows->pluck(8)->unique()->implode(', ');
 
+
             $resource = $errors[$key]['resource'];
             if ($resource->is_rollup || ($resource->rollup_resource_id && $resource->important)) {
                 $newResource['resource'] = $resource;
             }
 
-            $this->rows->put($hash, $newResource);
+            $row_id = StoreResource::create([
+                'project_id' => $this->batch->project->id, 'period_id' => $this->batch->period->id, 'batch_id' => $this->batch->id,
+                'activity_code' => $newResource[0], 'store_date' => $newResource[1], 'item_desc' => $newResource[2],
+                'measure_unit' => $newResource[3], 'qty' => $newResource[4], 'unit_price' => $newResource[5], 'cost' => $newResource[6],
+                'item_code' => $newResource[7], 'doc_no' => $newResource[8], 'row_ids' => $rows->pluck('hash')
+            ])->id;
+
+            $newResource['hash'] = $row_id;
+
+            $this->rows->put($row_id, $newResource);
             $resourcesLog->push(compact('resource', 'rows', 'newResource'));
         }
 
@@ -158,6 +169,7 @@ class CostImportFixer
                     $newRow = [
                         $resource->code, $date, $resource->resource_name, $resource->measure_unit,
                         $qty, $unit_price, $total, $resource->resource_code, $error[8] ?? '',
+                        'original_row_id' => $error['hash'],
                         'resource' => $resource
                     ];
 

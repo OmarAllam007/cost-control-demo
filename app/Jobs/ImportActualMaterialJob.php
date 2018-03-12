@@ -62,12 +62,12 @@ class ImportActualMaterialJob extends ImportJob
             $dateVal = $sheet->getCell('B' . $row->getRowIndex())->getValue();
             $data[1] = Carbon::create(1899, 12, 30)->addDays($dateVal)->format('Y-m-d');
 
-            $row_id = StoreResource::create([
+            $row_id = StoreResource::create($attributes = [
                 'project_id' => $this->project->id, 'period_id' => $this->period->id, 'batch_id' => $batch->id,
                 'activity_code' => $data[0], 'store_date' => $data[1], 'item_desc' => $data[2],
                 'measure_unit' => $data[3], 'qty' => $data[4], 'unit_price' => $data[5], 'cost' => $data[6],
                 'item_code' => $data[7], 'doc_no' => $data[8],
-            ]);
+            ])->id;
 
             $material->put($row_id, $data);
         }

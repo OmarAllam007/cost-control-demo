@@ -25,11 +25,15 @@ class MigrateActualResources extends Command
 
         StoreResource::truncate();
 
-        ActualResources::chunk(1000, function ($group) {
+        ActualResources::with('breakdown_resource')->chunk(1000, function ($group) {
             foreach ($group as $resource) {
                 $original_data = json_decode($resource->original_data, true);
                 if (empty($original_data)) {
                     $this->bar->advance();
+                    continue;
+                }
+
+                if (!$resource->breakdown_resource) {
                     continue;
                 }
 
@@ -38,7 +42,8 @@ class MigrateActualResources extends Command
                     'project_id' => $resource->project_id,
                     'period_id' => $resource->period_id,
                     'batch_id' => $resource->batch_id,
-                    'breakdown_resource_id' => $resource->breakdown_resource_id,
+                    'budget_code' => $resource->breakdown_resource->code,
+                    'resource_id' => $resource->breakdown_resource->resource_id,
                     'activity_code' => $original_data[0],
                     'store_date' => $original_data[1],
                     'item_desc' => $original_data[2],
