@@ -158,6 +158,10 @@ class ActivityRollup
         $progress = max($to_date_qty * 100, 100);
         $status = $progress < 100 ? 'In Progress' : 'Closed';
 
+        if (!$to_date_qty) {
+            return $this->rollup_shadow;
+        }
+
 
         $to_date_unit_price = $to_date_cost / $to_date_qty;
         ActualResources::forceCreate([
