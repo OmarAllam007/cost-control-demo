@@ -65,6 +65,13 @@ class SumCostAccount
             $q->where('show_in_budget', 1);
         })->with('shadow')->where('resource_id', $resource_id)->get();
 
+        $alreadySummed = $breakdown->shadows()->where('resource_id', $resource_id)
+            ->where('show_in_budget', 0)->where('show_in_cost', 1   )->exists();
+
+        if ($alreadySummed) {
+            return;
+        }
+
         $shadows = $resources->pluck('shadow');
 
         $remarks = $resources->pluck('remarks')->unique()->implode(', ');
