@@ -9,6 +9,7 @@
 namespace App\Rollup\Actions;
 
 
+use App\ActualResources;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Project;
@@ -90,7 +91,7 @@ class ActivityRollup
             ->where('code', $resource->code)
             ->sum('budget_cost');
 
-        return $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
+        $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $resource->code, 'resource_type_id' => 4,
             'resource_name' => $resource->activity, 'resource_type' => '07.OTHERS',
@@ -108,6 +109,8 @@ class ActivityRollup
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true
         ]);
+
+        return $this->update_cost($resource->code);
     }
 
     private function createRollupResource($resource)
@@ -122,5 +125,52 @@ class ActivityRollup
         ]);
     }
 
+    private function update_cost($code)
+    {
+        $resource_ids = BreakdownResource::where('project_id', $this->project->id)->where('code', $code)->pluck('id');
+        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resource_ids)->get();
 
+        $period = $this->project->open_period();
+        if (!$period) {
+            // If no open period select the last period in the project to apply
+            $period = $this->project->periods()->latest('id')->first();
+
+            // If there is no period at all in the project then ignore to date values as it is pointless
+            if (!$period) {
+                return $this->rollup_shadow;
+            }
+        }
+
+        // Update actual resource data based on to date quantity
+        $to_date_cost = $actual_resources->sum('cost');
+
+        // If there no to_date_cost then there are no actual uploaded, skip actual
+        if (!$to_date_cost) {
+            return $this->rollup_shadow;
+        }
+
+        $to_date_qty = 0;
+        if ($this->rollup_shadow->budget_cost) {
+            $to_date_qty = $to_date_cost / $this->rollup_shadow->budget_cost;
+        }
+
+        $to_date_unit_price = 0;
+        $progress = max($to_date_qty * 100, 100);
+        $status = $progress < 100 ? 'In Progress' : 'Closed';
+
+
+        $to_date_unit_price = $to_date_cost / $to_date_qty;
+        ActualResources::forceCreate([
+            'project_id' => $this->project->id, 'wbs_level_id' => $this->rollup_shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
+            'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
+            'unit_id' => $this->rollup_shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $this->rollup_shadow->resource_id,
+            'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
+        ]);
+
+        $this->rollup_shadow->update(compact('progress', 'status'));
+
+        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
+
+        return $this->rollup_shadow;
+    }
 }
