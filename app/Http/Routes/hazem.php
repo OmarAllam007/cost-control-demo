@@ -25,7 +25,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'cost'], function() {
         Route::get('breakdowns/{wbs_level}', 'Api\CostController@breakdowns');
         Route::get('resources/{project}', 'Api\CostController@resources');
-        Route::get('activity-log/{wbs_level}', 'Api\CostController@activityLog');
+        Route::get('activity-log/{wbs}/{code}', 'Api\ActivityLogController@show');
         Route::get('batches/{project}', 'Api\CostController@batches');
 
         Route::delete('/delete-resource/{breakdown_resource}', 'Api\CostController@deleteResource');
@@ -285,3 +285,6 @@ Route::group(['prefix' => '/api/rollup/'], function () {
 Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
 Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
 Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
+
+Route::get('activity-log/{wbs}/{code}', 'ActivityLogController@show')->name('activity-log.show');
+Route::get('/api/activity-log/{wbs}/{code}', 'Api\ActivityLogController@show');
