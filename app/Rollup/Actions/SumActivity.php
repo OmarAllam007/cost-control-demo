@@ -49,7 +49,15 @@ class SumActivity
                 $q->where('show_in_budget', 1);
             })->with('shadow')->get();
 
+        $alreadySummed = BreakDownResourceShadow::where('code', $code)->where('resource_id', $resource_id)
+            ->where('is_rollup', false)->where('show_in_budget', 0)->where('show_in_cost', 1)->exists();
+
+        if ($alreadySummed) {
+            return 0;
+        }
+
         $shadows = $resources->pluck('shadow');
+        $firstShadow = $shadows->first();
 
         $remarks = $resources->pluck('remarks')->unique()->implode(', ');
         $important = $resources->where('important', 1, false)->count() > 0;
@@ -58,8 +66,6 @@ class SumActivity
         $eng_qty = $resources->first()->eng_qty;
         $budget_unit = $shadows->sum('budget_unit');
         $budget_cost = $shadows->sum('budget_cost');
-
-        $firstShadow = $shadows->first();
 
         $closed_progress = $shadows->count() * 100;
         $progress = $shadows->sum('progress');

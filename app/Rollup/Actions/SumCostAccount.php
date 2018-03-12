@@ -66,7 +66,7 @@ class SumCostAccount
         })->with('shadow')->where('resource_id', $resource_id)->get();
 
         $alreadySummed = $breakdown->shadows()->where('resource_id', $resource_id)
-            ->where('show_in_budget', 0)->where('show_in_cost', 1   )->exists();
+            ->where('is_rollup', false)->where('show_in_budget', 0)->where('show_in_cost', 1)->exists();
 
         if ($alreadySummed) {
             return;
