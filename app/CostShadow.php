@@ -87,7 +87,7 @@ class CostShadow extends Model
     function recalculate()
     {
         $budget_shadow = BreakDownResourceShadow::where('breakdown_resource_id', $this->breakdown_resource_id)->first();
-        $budget_shadow->append_fields();
+        $budget_shadow->appendFields();
         $this->fill($budget_shadow->getAttributes())->save();
     }
 
