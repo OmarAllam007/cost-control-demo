@@ -57,9 +57,9 @@ class GlobalReport
         $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(12)->get()->keyBy('id');
         $this->trend_period_ids = Period::whereIn('global_period_id',
             $this->trend_global_periods->pluck('id')
-        )->pluck('id');
+        )->selectRaw('max(id) as id, global_period_id')->groupBy('global_period_id')->pluck('id');
 
-        $this->periods = Period::find($this->last_period_ids->toArray());
+        $this->periods = Period::with('project')->find($this->last_period_ids->toArray());
         $this->projects = $this->periods->pluck('project');
 
         return [
@@ -84,7 +84,7 @@ class GlobalReport
         $change_orders = $this->periods->sum('change_order_amount');
 
         $revised = $contracts_total + $change_orders;
-        $budget_total = BreakDownResourceShadow::sum('budget_cost');
+//        $budget_total = BreakDownResourceShadow::sum('budget_cost');
 
         $profit = $this->projects->sum('tender_initial_profit');
         $profitability = $profit * 100 / $revised;
@@ -225,8 +225,8 @@ class GlobalReport
                 return $period;
             })->sortBy('cpi');
 
-        $allowable_cost = $cpis->sum('allowable_cost');
-        $to_date_cost = $cpis->sum('to_date_cost');
+        $allowable_cost = $this->cost_summary->sum('allowable_cost');
+        $to_date_cost = $this->cost_summary->sum('to_date_cost');
         $variance = $allowable_cost - $to_date_cost;
         $cpi = $allowable_cost / $to_date_cost;
         $pw_index = $this->waste_index_trend()->get($this->period->name, 0);
@@ -244,10 +244,10 @@ class GlobalReport
         $progress = [$actual_progress, $planned_progress];
 
         $total_eac = $cpis->sum('eac_contract_amount');
-        $eac_profit = $total_eac - $cpis->sum('completion_cost');
+        $eac_profit = $total_eac - $this->cost_summary->sum('completion_cost');
         $eac_profitability = 0;
         if ($total_eac) {
-            $eac_profitability = $eac_profit * 100/ $total_eac;
+            $eac_profitability = $eac_profit * 100 / $total_eac;
         }
 
         return compact(
@@ -275,7 +275,7 @@ class GlobalReport
             $reserve->completion_cost = $reserve->remaining_cost = 0;
             $reserve->completion_cost_var = $reserve->budget_cost;
 
-            $progress = $this->cost_summary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost');
+            $progress = min(1, $this->cost_summary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost'));
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
