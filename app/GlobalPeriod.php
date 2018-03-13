@@ -12,6 +12,11 @@ class GlobalPeriod extends Model
 
     protected $has_project_periods = null;
 
+    function periods()
+    {
+        return $this->hasMany(Period::class);
+    }
+
     function hasProjectPeriods()
     {
         if ($this->has_project_periods !== null) {

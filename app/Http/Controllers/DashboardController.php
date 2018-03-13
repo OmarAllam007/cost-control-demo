@@ -58,8 +58,8 @@ class DashboardController extends Controller
 
     private function getGlobalPeriods()
     {
-        return GlobalPeriod::latest('end_date')->get()->filter(function($period) {
-            return Period::where('global_period_id', $period->id)->where('status', Period::GENERATED)->exists();
-        });
+        return GlobalPeriod::latest('end_date')->whereHas('periods', function($query) {
+            $query->where('status', Period::GENERATED);
+        })->get();
     }
 }
