@@ -108,7 +108,7 @@ trait ReportScopes
     function scopeDashboardSummary($query, $period)
     {
         return $query->where('period_id', $period->id)
-            ->selectRaw('(CASE WHEN resource_type_id in (1, 8) THEN "INDIRECT" ELSE "DIRECT" END) AS type')
+            ->selectRaw("(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'")
             ->selectRaw('SUM(prev_cost) AS previous_cost')
             ->selectRaw('SUM(allowable_ev_cost) AS allowable_cost, SUM(budget_cost) AS budget_cost')
             ->selectRaw('SUM(to_date_cost) AS to_date_cost, SUM(remaining_cost) AS remaining_cost')

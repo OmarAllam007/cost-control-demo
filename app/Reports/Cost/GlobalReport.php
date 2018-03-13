@@ -48,8 +48,6 @@ class GlobalReport
 
     function run()
     {
-        $this->projects = Project::all();
-
         $this->last_period_ids = Period::readyForReporting()
             ->selectRaw('max(id) as id, project_id')
             ->where('global_period_id', $this->period->id)
@@ -62,6 +60,7 @@ class GlobalReport
         )->pluck('id');
 
         $this->periods = Period::find($this->last_period_ids->toArray());
+        $this->projects = $this->periods->pluck('project');
 
         return [
             'cost_summary' => $this->cost_summary(),
@@ -168,7 +167,7 @@ class GlobalReport
             $management_reserve = $revision->management_reserve_cost;
             $project_id = $project->id;
 
-            return new Fluent(compact('project_id','eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
+            return new Fluent(compact('project_id', 'eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
         });
 
         $budget_cost = $latestRevisions->sum('budget_cost');
@@ -216,13 +215,12 @@ class GlobalReport
             ->get()->map(function ($period) {
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
                 $period->variance = $period->allowable_cost - $period->to_date_cost;
-                $revision = BudgetRevision::where('project_id', $period->project_id)
-                    ->where('global_period_id', '<=', $this->period->id)->latest()->first();
+                $revision = BudgetRevision::where('project_id', $period->project_id)->latest()->first();
 
                 if ($revision) {
                     $period->eac_contract_amount = $revision->eac_contract_amount;
                 } else {
-                    $period->eac_contract_amount = $period->project->each_contract_amount;
+                    $period->eac_contract_amount = $period->project->eac_contract_amount;
                 }
                 return $period;
             })->sortBy('cpi');
@@ -261,14 +259,27 @@ class GlobalReport
     private function cost_summary()
     {
         $fields = [
-            "(CASE WHEN resource_type_id IN (1,8) THEN 'INDIRECT' ELSE 'DIRECT' END) AS 'type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
+            "(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
         ];
 
-        return $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
-            ->selectRaw(implode(', ', $fields))->groupBy('type')->get()->keyBy('type');
-//
+        $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
+            ->selectRaw(implode(', ', $fields))
+            ->groupBy('type')->get()
+            ->keyBy('type');
+
+        if ($this->cost_summary->has('MANAGEMENT RESERVE')) {
+            $reserve = $this->cost_summary->get('MANAGEMENT RESERVE');
+            $reserve->completion_cost = $reserve->remaining_cost = 0;
+            $reserve->completion_cost_var = $reserve->budget_cost;
+
+            $progress = $this->cost_summary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost');
+            $reserve->allowable_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+        }
+
+        return $this->cost_summary;
+
 //        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
 //            ->whereIn('period_id', $this->last_period_ids)
 //            ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')

@@ -49,6 +49,16 @@ class ProjectInfo
     function getInfo()
     {
         $this->costSummary = MasterShadow::dashboardSummary($this->period)->get();
+
+        if ($this->costSummary->has('MANAGEMENT RESERVE')) {
+            $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
+            $reserve->completion_cost = $reserve->remaining_cost = 0;
+            $reserve->completion_cost_var = $reserve->budget_cost;
+
+            $progress = $this->costSummary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost');
+            $reserve->allowable_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+        }
+
         $this->wasteIndexTrend = $this->project->periods()->latest()
             ->readyForReporting()->take(12)->get()->reverse()->keyBy('id')->map(function ($period) {
                 $report = new WasteIndexReport($period);
