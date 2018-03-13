@@ -56,7 +56,7 @@ class ProjectInfo
             $reserve->completion_cost_var = $reserve->budget_cost;
 
             $progress = $this->costSummary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost');
-            $reserve->allowable_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
         $this->wasteIndexTrend = $this->project->periods()->latest()
