@@ -167,7 +167,7 @@ class GlobalReport
             $management_reserve = $revision->management_reserve_cost;
             $project_id = $project->id;
 
-            return new Fluent(compact('project_id','eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
+            return new Fluent(compact('project_id', 'eac_contract_amount', 'budget_cost', 'general_requirements', 'management_reserve'));
         });
 
         $budget_cost = $latestRevisions->sum('budget_cost');
@@ -259,19 +259,27 @@ class GlobalReport
     private function cost_summary()
     {
         $fields = [
-            "project_id, (CASE WHEN resource_type_id IN (1,8) THEN 'INDIRECT' ELSE 'DIRECT' END) AS 'type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
+            "(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
         ];
 
-        return $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
+        $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
             ->selectRaw(implode(', ', $fields))
-            ->groupBy(['project_id', 'type'])->get()
-            ->map(function($project) {
-
-            })
+            ->groupBy('type')->get()
             ->keyBy('type');
-//
+
+        if ($this->cost_summary->has('MANAGEMENT RESERVE')) {
+            $reserve = $this->cost_summary->get('MANAGEMENT RESERVE');
+            $reserve->completion_cost = $reserve->remaining_cost = 0;
+            $reserve->completion_cost_var = $reserve->budget_cost;
+
+            $progress = $this->cost_summary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost');
+            $reserve->allowable_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+        }
+
+        return $this->cost_summary;
+
 //        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
 //            ->whereIn('period_id', $this->last_period_ids)
 //            ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
