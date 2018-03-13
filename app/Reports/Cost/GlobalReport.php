@@ -259,7 +259,8 @@ class GlobalReport
     private function cost_summary()
     {
         $fields = [
-            "(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'", 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
+            "(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
+            'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
         ];
@@ -275,7 +276,7 @@ class GlobalReport
             $reserve->completion_cost_var = $reserve->budget_cost;
 
             $progress = $this->cost_summary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost');
-            $reserve->allowable_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
         return $this->cost_summary;
