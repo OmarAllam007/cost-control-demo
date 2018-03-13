@@ -20,6 +20,6 @@ class CacheGlobalReportJob extends Job implements ShouldQueue
     {
         $report = new GlobalReport($this->period);
 
-        \Cache::put('global-report', $report->run(), Carbon::parse('+2 days'));
+        \Cache::put('global-report-' . $this->period->id, $report->run(), Carbon::parse('+2 days'));
     }
 }
