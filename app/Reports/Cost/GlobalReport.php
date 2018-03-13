@@ -247,7 +247,7 @@ class GlobalReport
         $eac_profit = $total_eac - $cpis->sum('completion_cost');
         $eac_profitability = 0;
         if ($total_eac) {
-            $eac_profitability = $eac_profit / $total_eac;
+            $eac_profitability = $eac_profit * 100/ $total_eac;
         }
 
         return compact(
