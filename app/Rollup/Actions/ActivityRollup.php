@@ -155,7 +155,7 @@ class ActivityRollup
         }
 
         $to_date_unit_price = 0;
-        $progress = max($to_date_qty * 100, 100);
+        $progress = min($to_date_qty * 100, 100);
         $status = $progress < 100 ? 'In Progress' : 'Closed';
 
         if (!$to_date_qty) {
