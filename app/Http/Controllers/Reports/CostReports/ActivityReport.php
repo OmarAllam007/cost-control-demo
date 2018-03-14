@@ -134,15 +134,15 @@ class ActivityReport
         }
 
         if ($wbs = $request->get('wbs')) {
-            $term = "%$wbs%";
-            $levels = WbsLevel::where('project_id', $this->project->id)->where(function ($q) use ($term) {
-                $q->where('code', 'like', $term)->orWhere('name', 'like', $term);
-            })->pluck('id');
-            $query->whereIn('wbs_id', $levels);
+//            $term = "%$wbs%";
+//            $levels = WbsLevel::where('project_id', $this->project->id)->where(function ($q) use ($term) {
+//                $q->where('code', 'like', $term)->orWhere('name', 'like', $term);
+//            })->pluck('id');
+            $query->whereIn('wbs_id', $wbs);
         }
 
         if ($activity = $request->get('activity')) {
-            $query->where('activity', $activity);
+            $query->whereIn('activity_id', $activity);
         }
 
         if ($request->exists('negative_to_date')) {

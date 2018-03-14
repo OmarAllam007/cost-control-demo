@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\GlobalPeriod;
 use App\Period;
 use App\Project;
 use Illuminate\Http\Request;
@@ -21,7 +22,11 @@ class PeriodController extends Controller
             return \Redirect::route('project.cost-control', $project);
         }
 
-        return view('period.create', compact('project'));
+        $period = new Period(['project_id' => $project->id]);
+        $period->project = $project;
+        $globalPeriods = GlobalPeriod::pluck('name', 'id');
+
+        return view('period.create', compact('project', 'period', 'globalPeriods'));
     }
 
     function store(Request $request)
@@ -53,7 +58,9 @@ class PeriodController extends Controller
             return \Redirect::route('project.cost-control', $project);
         }
 
-        return view('period.edit', compact('period'));
+        $globalPeriods = GlobalPeriod::pluck('name', 'id');
+
+        return view('period.edit', compact('period', 'globalPeriods'));
     }
 
     function update(Request $request, Period $period)
@@ -74,6 +81,9 @@ class PeriodController extends Controller
 
     protected function doValidation(Request $request)
     {
-        $this->validate($request, ['name' => 'required', 'start_date' => 'required|date']);
+        $this->validate($request, [
+            'global_period_id' => 'required|exists:global_periods,id',
+            'spi_index' => 'numeric'
+        ]);
     }
 }

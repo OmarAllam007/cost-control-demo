@@ -47,8 +47,8 @@ trait ChartScopes
     function scopeCpiTrendChart(Builder $query)
     {
         $query->join('periods as p', 'p.id', '=', 'master_shadows.period_id')
-            ->selectRaw('p.name as name, sum(allowable_ev_cost) / sum(to_date_cost) as value')
-            ->groupBy('p.name')->orderBy('p.id');
+            ->selectRaw('p.id as p_id, p.name as p_name, sum(allowable_ev_cost) / sum(to_date_cost) as value')
+            ->groupBy('p.id', 'p.name')->orderBy('p.id');
     }
 
     function scopeChartFilter(Builder $query)
@@ -82,5 +82,17 @@ trait ChartScopes
     function scopeBoqChartFilter(Builder $query, $items)
     {
         return $query->whereIn('boq_id', $items)->addSelect('boq')->groupBy('boq')->orderBy('boq');
+    }
+
+    function scopeWasteIndexChart(Builder $query, $project)
+    {
+        $query->from('master_shadows as sh')
+            ->where('sh.project_id', $project->id)
+            ->where('sh.to_date_cost', '>', 0)
+            ->where('sh.resource_type_id', 3)
+            ->join('periods as p', 'sh.period_id', '=', 'p.id')
+            ->select(['sh.period_id'])
+            ->selectRaw('p.name as p_name, sum((sh.allowable_qty - sh.to_date_qty) * sh.to_date_unit_price) as variance, sum(sh.allowable_ev_cost) as allowable_cost')
+            ->groupBy('sh.period_id', 'p.name');
     }
 }

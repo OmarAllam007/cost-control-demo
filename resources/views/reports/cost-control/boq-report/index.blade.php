@@ -119,4 +119,4 @@
             }
         });
     </script>
-@endsection
+@append

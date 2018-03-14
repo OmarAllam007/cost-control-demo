@@ -31,5 +31,12 @@ return [
         'resource_id' => 'exists:resources,id',
         'productivity_id' => 'sometimes|exists:productivities,id',
         'equation' => 'valid_equation'
+    ],
+
+    'global_period' => [
+        'start_date' => 'date|before:end_date',
+        'end_date' => 'date|after:start_date',
+        'spi_index' => 'numeric',
+        'actual_progress' => 'numeric|min:0'
     ]
 ];

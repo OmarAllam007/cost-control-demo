@@ -206,6 +206,9 @@ class Resources extends Model
 
     function isMaterial()
     {
+        if (!isset($this->types->root->name)) {
+            dd($this->toArray());
+        }
         //TODO: use id instead of name after data cleaning
         return strpos(strtolower($this->types->root->name), 'material') !== false;
     }
