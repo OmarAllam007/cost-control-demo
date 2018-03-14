@@ -90,6 +90,7 @@ class ExportCostShadow extends Job
 
             $query = BreakDownResourceShadow::where('project_id', $this->project->id)
                 ->whereRaw('breakdown_resource_id in (' . $subquery->toSql() . ')')
+                ->where('show_in_cost', 1)
                 ->mergeBindings($subquery->getQuery());
         }
 
@@ -113,10 +114,12 @@ class ExportCostShadow extends Job
                     $wbs = $this->getWbs($costShadow);
                     $activityDivs = $this->getActivityDivisions($costShadow);
                     $resource = Resources::find($costShadow->resource_id);
-                    $resourceDivs = $this->getResourceDivisions($resource);
+                    $resourceDivs = '"","",""';
+                    if ($resource) {
+                        $resourceDivs = $this->getResourceDivisions($resource);
+                    }
                     $boq_description = $this->getBoqDescription($costShadow);
                 }
-
 
                 $this->buffer .= "\r\n" .
                     $wbs.','.

@@ -8,6 +8,10 @@ trait RollupResource
 
     function getTopMaterialAttribute()
     {
+        if ($this->is_rollup) {
+            return '';
+        }
+
         return $this->resource->top_material;
     }
 
