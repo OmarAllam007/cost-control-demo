@@ -16,6 +16,7 @@ use App\WbsLevel;
 use App\WbsResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use function microtime;
 
 class ExportCostShadow extends Job
 {
@@ -80,10 +81,10 @@ class ExportCostShadow extends Job
         $this->buffer .= implode(',', array_map('csv_quote', $headers));
 
         if ($this->perspective == 'budget') {
-            $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
-            if (!$query->exists()) {
+//            $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
+//            if (!$query->exists()) {
                 $query = BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1);
-            }
+//            }
         } else {
             $subquery = ActualResources::where('project_id', $this->project->id)
                 ->where('period_id', $this->period->id)->select('breakdown_resource_id');
@@ -93,10 +94,9 @@ class ExportCostShadow extends Job
                 ->where('show_in_cost', 1)
                 ->mergeBindings($subquery->getQuery());
         }
-
         /** @var $query Builder */
 
-        $query->chunk(5000, function ($shadows) {
+        $query->with('actual_resources', 'boq')->chunk(2000, function ($shadows) {
             $time = microtime(1);
 
             foreach ($shadows as $costShadow) {
@@ -185,7 +185,7 @@ class ExportCostShadow extends Job
             unset($shadows);
             gc_collect_cycles();
 
-            \Log::info('Chunk has been buffered; memory: ' . round(memory_get_usage() / (1024 * 1024), 2));
+            \Log::info('Chunk has been buffered; memory: ' . round(memory_get_usage() / (1024 * 1024), 2) . '. Time: ' . round(microtime(1) - $time, 4));
         });
 
         if ($this->export) {

@@ -98,7 +98,7 @@ trait CostAttributes
         }
 
         $activity = StdActivity::find($this->activity_id);
-        if ($activity->isGeneral() || $this->isActivityRollup() || $this->isResourceRollup()) {
+        if ($this->resource_type_id == 1 || $this->isActivityRollup() || $this->isResourceRollup()) {
             return $this->calculated['allowable_ev_cost'] = $this->progress_value * $this->budget_cost;
         }
 
