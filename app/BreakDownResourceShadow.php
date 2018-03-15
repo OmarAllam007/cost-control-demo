@@ -34,7 +34,7 @@ class BreakDownResourceShadow extends Model
         'progress', 'status', 'boq_id', 'boq_wbs_id'
     ];
 
-    protected $casts = ['boolean' => ['show_in_cost', 'show_in_budget']];
+    protected $casts = ['boolean' => ['show_in_cost', 'show_in_budget', 'is_rollup', 'is_sum']];
 
     function scopeByRawData(Builder $query, $row)
     {
