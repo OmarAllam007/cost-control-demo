@@ -53,85 +53,86 @@ class ExportCostToMaster extends Job implements ShouldQueue
     {
         MasterShadow::where('period_id', $this->period->id)->delete();
 
-        BreakDownResourceShadow::where('project_id', $this->project->id)->chunk(900, function ($shadows) {
+        BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->where('show_in_cost', 1)->chunk(900, function ($shadows) {
 //            $start = microtime(1);
-            $records = [];
-            $now = Carbon::now()->format('Y-m-d H:i:s');
-            foreach ($shadows as $costShadow) {
-                $costShadow->setCalculationPeriod($this->period);
-                $boq = Boq::find($costShadow->boq_id);
-                if ($boq) {
-                    $boqDescription = $boq->description;
-                    $boqDiscipline = $boq->type;
-                    $boq_id = $boq->id;
-                    $boq_wbs_id = $boq->wbs_id;
-                } else {
-                    $boqDescription = '';
-                    $boqDiscipline = '';
-                    $boq_id = 0;
-                    $boq_wbs_id = 0;
+                $records = [];
+                $now = Carbon::now()->format('Y-m-d H:i:s');
+                foreach ($shadows as $costShadow) {
+                    $costShadow->setCalculationPeriod($this->period);
+                    $boq = Boq::find($costShadow->boq_id);
+                    if ($boq) {
+                        $boqDescription = $boq->description;
+                        $boqDiscipline = $boq->type;
+                        $boq_id = $boq->id;
+                        $boq_wbs_id = $boq->wbs_id;
+                    } else {
+                        $boqDescription = '';
+                        $boqDiscipline = '';
+                        $boq_id = 0;
+                        $boq_wbs_id = 0;
+                    }
+
+                    if (isset($this->cache['resources'][$costShadow->resource_id])) {
+                        $resource = $this->cache['resources'][$costShadow->resource_id];
+                    } else {
+                        $this->cache['resources'][$costShadow->resource_id] = $resource = Resources::find($costShadow->resource_id);
+                    }
+
+                    $wbs = $this->getWbs($costShadow);
+                    $activityDivs = $this->getActivityDivisions($costShadow);
+
+                    $records[] = [
+                        'budget_id' => $costShadow['id'], 'project_id' => $this->project->id, 'period_id' => $this->period->id,
+                        'breakdown_resource_id' => $costShadow['breakdown_resource_id'],
+                        'wbs_id' => $costShadow->wbs->id, 'activity_id' => $costShadow['activity_id'],
+                        'resource_id' => $costShadow['resource_id'], 'resource_type_id' => $costShadow['resource_type_id'],
+                        'productivity_id' => $costShadow['productivity_id'],
+                        'wbs' => json_encode($wbs), 'activity_divs' => json_encode($activityDivs), 'activity' => $costShadow['activity'],
+                        'code' => $costShadow['code'], 'boq' => $boqDescription, 'cost_account' => $costShadow['cost_account'],
+                        'eng_qty' => $costShadow['eng_qty'], 'budget_qty' => $costShadow['budget_qty'],
+                        'resource_qty' => $costShadow['resource_qty'], 'waste' => $costShadow['resource_waste'],
+                        'resource_divs' => '', //json_encode($this->getResourceDivisions($resource)),
+                        'resource_code' => $costShadow['resource_code'],
+                        'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material,
+                        'unit_price' => $costShadow['unit_price'], 'measure_unit' => $costShadow['measure_unit'],
+                        'budget_unit' => $costShadow['budget_unit'], 'budget_cost' => $costShadow['budget_cost'],
+                        'boq_equivilant_rate' => $costShadow['boq_equivilant_rate'], 'budget_unit_rate' => $costShadow['budget_unit_rate'],
+                        'labors_count' => $costShadow['labors_count'], 'productivity_output' => $costShadow['productivity_output'],
+                        'productivity_ref' => $costShadow['productivity_ref'], 'remarks' => $costShadow['remarks'],
+                        'progress' => $costShadow['progress'], 'status' => $costShadow['status'] ?: 'Not Started',
+                        'prev_unit_price' => $costShadow['prev_unit_price'], 'prev_qty' => $costShadow['prev_qty'],
+                        'prev_cost' => $costShadow['prev_cost'], 'curr_unit_price' => $costShadow['curr_unit_price'],
+                        'curr_qty' => $costShadow['curr_qty'], 'curr_cost' => $costShadow['curr_cost'],
+                        'to_date_unit_price' => $costShadow['to_date_unit_price'], 'to_date_qty' => $costShadow['to_date_qty'],
+                        'to_date_cost' => $costShadow['to_date_cost'], 'allowable_ev_cost' => $costShadow['allowable_ev_cost'],
+                        'allowable_var' => $costShadow['allowable_var'], 'remaining_unit_price' => $costShadow['remaining_unit_price'],
+                        'remaining_qty' => $costShadow['remaining_qty'], 'remaining_cost' => $costShadow['remaining_cost'],
+                        'bl_allowable_cost' => $costShadow['bl_allowable_cost'], 'bl_allowable_var' => $costShadow['bl_allowable_var'],
+                        'completion_unit_price' => $costShadow['completion_unit_price'], 'completion_qty' => $costShadow['completion_qty'],
+                        'completion_cost' => $costShadow['completion_cost'], 'unit_price_var' => $costShadow['unit_price_var'],
+                        'qty_var' => $costShadow['qty_var'], 'cost_var' => $costShadow['cost_var'], 'physical_unit' => $costShadow['physical_unit'],
+                        'cost_variance_to_date_due_unit_price' => $costShadow['cost_variance_to_date_due_unit_price'], 'allowable_qty' => $costShadow['allowable_qty'],
+                        'cost_variance_remaining_due_unit_price' => $costShadow['cost_variance_remaining_due_unit_price'],
+                        'cost_variance_completion_due_unit_price' => $costShadow['cost_variance_completion_due_unit_price'],
+                        'cost_variance_completion_due_qty' => $costShadow['cost_variance_completion_due_qty'],
+                        'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
+                        'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
+                        'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
+                        'created_at' => $now, 'updated_at' => $now, 'pw_index' => $costShadow['pw_index']
+                    ];
+
                 }
 
-                if (isset($this->cache['resources'][$costShadow->resource_id])) {
-                    $resource = $this->cache['resources'][$costShadow->resource_id];
-                } else {
-                    $this->cache['resources'][$costShadow->resource_id] = $resource = Resources::find($costShadow->resource_id);
-                }
-
-                $wbs = $this->getWbs($costShadow);
-                $activityDivs = $this->getActivityDivisions($costShadow);
-
-                $records[] = [
-                    'budget_id' => $costShadow['id'], 'project_id' => $this->project->id, 'period_id' => $this->period->id,
-                    'breakdown_resource_id' => $costShadow['breakdown_resource_id'],
-                    'wbs_id' => $costShadow->wbs->id, 'activity_id' => $costShadow['activity_id'],
-                    'resource_id' => $costShadow['resource_id'], 'resource_type_id' => $costShadow['resource_type_id'],
-                    'productivity_id' => $costShadow['productivity_id'],
-                    'wbs' => json_encode($wbs), 'activity_divs' => json_encode($activityDivs), 'activity' => $costShadow['activity'],
-                    'code' => $costShadow['code'], 'boq' => $boqDescription, 'cost_account' => $costShadow['cost_account'],
-                    'eng_qty' => $costShadow['eng_qty'], 'budget_qty' => $costShadow['budget_qty'],
-                    'resource_qty' => $costShadow['resource_qty'], 'waste' => $costShadow['resource_waste'],
-                    'resource_divs' => '', //json_encode($this->getResourceDivisions($resource)),
-                    'resource_code' => $costShadow['resource_code'],
-                    'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material,
-                    'unit_price' => $costShadow['unit_price'], 'measure_unit' => $costShadow['measure_unit'],
-                    'budget_unit' => $costShadow['budget_unit'], 'budget_cost' => $costShadow['budget_cost'],
-                    'boq_equivilant_rate' => $costShadow['boq_equivilant_rate'], 'budget_unit_rate' => $costShadow['budget_unit_rate'],
-                    'labors_count' => $costShadow['labors_count'], 'productivity_output' => $costShadow['productivity_output'],
-                    'productivity_ref' => $costShadow['productivity_ref'], 'remarks' => $costShadow['remarks'],
-                    'progress' => $costShadow['progress'], 'status' => $costShadow['status'] ?: 'Not Started',
-                    'prev_unit_price' => $costShadow['prev_unit_price'], 'prev_qty' => $costShadow['prev_qty'],
-                    'prev_cost' => $costShadow['prev_cost'], 'curr_unit_price' => $costShadow['curr_unit_price'],
-                    'curr_qty' => $costShadow['curr_qty'], 'curr_cost' => $costShadow['curr_cost'],
-                    'to_date_unit_price' => $costShadow['to_date_unit_price'], 'to_date_qty' => $costShadow['to_date_qty'],
-                    'to_date_cost' => $costShadow['to_date_cost'], 'allowable_ev_cost' => $costShadow['allowable_ev_cost'],
-                    'allowable_var' => $costShadow['allowable_var'], 'remaining_unit_price' => $costShadow['remaining_unit_price'],
-                    'remaining_qty' => $costShadow['remaining_qty'], 'remaining_cost' => $costShadow['remaining_cost'],
-                    'bl_allowable_cost' => $costShadow['bl_allowable_cost'], 'bl_allowable_var' => $costShadow['bl_allowable_var'],
-                    'completion_unit_price' => $costShadow['completion_unit_price'], 'completion_qty' => $costShadow['completion_qty'],
-                    'completion_cost' => $costShadow['completion_cost'], 'unit_price_var' => $costShadow['unit_price_var'],
-                    'qty_var' => $costShadow['qty_var'], 'cost_var' => $costShadow['cost_var'], 'physical_unit' => $costShadow['physical_unit'],
-                    'cost_variance_to_date_due_unit_price' => $costShadow['cost_variance_to_date_due_unit_price'], 'allowable_qty' => $costShadow['allowable_qty'],
-                    'cost_variance_remaining_due_unit_price' => $costShadow['cost_variance_remaining_due_unit_price'],
-                    'cost_variance_completion_due_unit_price' => $costShadow['cost_variance_completion_due_unit_price'],
-                    'cost_variance_completion_due_qty' => $costShadow['cost_variance_completion_due_qty'],
-                    'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
-                    'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
-                    'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
-                    'created_at' => $now, 'updated_at' => $now, 'pw_index' => $costShadow['pw_index']
-                ];
-
-            }
-
-            \DB::transaction(function() use ($records) {
-                MasterShadow::insert($records);
-            });
+                \DB::transaction(function () use ($records) {
+                    MasterShadow::insert($records);
+                });
 
 //            $time = microtime(1) - $start;
-            unset($shadows, $records);
-            gc_collect_cycles();
+                unset($shadows, $records);
+                gc_collect_cycles();
 //            \Log::info("Chunk has been buffered; memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4) . '; Insert time: ' . round($insertTime, 4));
-        });
+            });
 
         $this->period->update(['status' => Period::GENERATED]);
     }
@@ -171,6 +172,10 @@ class ExportCostToMaster extends Job implements ShouldQueue
 
     protected function getResourceDivisions($resource)
     {
+        if (!$resource) {
+            return [];
+        }
+
         if (isset($this->cache['divisions'][$resource->id])) {
             return $this->cache['divisions'][$resource->id];
         }
