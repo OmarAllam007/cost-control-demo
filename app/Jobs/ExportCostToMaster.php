@@ -171,6 +171,10 @@ class ExportCostToMaster extends Job implements ShouldQueue
 
     protected function getResourceDivisions($resource)
     {
+        if (!$resource) {
+            return [];
+        }
+
         if (isset($this->cache['divisions'][$resource->id])) {
             return $this->cache['divisions'][$resource->id];
         }
