@@ -101,7 +101,7 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="main">
         <div class="panel panel-default" id="main-panel">
             <div class="panel-heading clearfix">
                 @yield('header')

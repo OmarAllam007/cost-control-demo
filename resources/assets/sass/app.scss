@@ -745,16 +745,17 @@ section.sm-card {
 }
 
 table.budget-info{
-  font-size: 115%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
+
 table.budget-info > thead > tr > th {
   background-color: #D9E1F2 !important;
+  color: #444;
 }
 
 table.budget-info > tbody > tr > th,
 table.budget-info > thead > tr > th:first-child{
-
+  color: #444;
   background-color:  #D9E1F2 !important;
 }
 
@@ -798,6 +799,7 @@ dl.dl-margin{
 }
 .cost-summary-side{
   background-color: #D9E1F2 !important;
+  color: #444;
 }
 
 .mb-1 {

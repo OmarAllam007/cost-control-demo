@@ -12,14 +12,14 @@
             <article class="col-xs-4">
                 <dl>
                     <dt>Time Extension</dt>
-                    <dd>{{$period->time_extension ?: '0 Days'}}</dd>
+                    <dd>{{$period->time_extension ?: '0'}} <small>(Days)</small></dd>
                 </dl>
             </article>
 
             <article class="col-xs-4">
                 <dl>
                     <dt>Planned Start Date</dt>
-                    <dd>{{ \Carbon\Carbon::parse($project->project_start_date)->format('d M Y') }}</dd>
+                    <dd>{{$project->project_start_date? \Carbon\Carbon::parse($project->project_start_date)->format('d M Y') : ''}}</dd>
                 </dl>
             </article>
 
@@ -40,9 +40,9 @@
 
             <article class="col-xs-4">
                 <dl>
-                    <dt>Duration (Days)</dt>
+                    <dt>Duration</dt>
                     <dd class="display-flex">
-                        <span>{{$period->expected_duration}}</span>
+                        <span>{{$period->expected_duration?:0}} <small>(Days)</small></span>
 
                         @if ($period->project_duration > $project->project_duration)
                             <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
