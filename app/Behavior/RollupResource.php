@@ -62,4 +62,9 @@ trait RollupResource
     {
         return $this->is_rollup && !$this->isActivityRollup() && !$this->isCostAccountRollup();
     }
+
+    function scopeCanBeRolled($query)
+    {
+        $query->whereNull('rolled_up_at')->whereNull('summed_at');
+    }
 }
