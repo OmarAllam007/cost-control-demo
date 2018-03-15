@@ -65,8 +65,7 @@ class SumCostAccount
             $q->where('show_in_budget', 1);
         })->with('shadow')->where('resource_id', $resource_id)->get();
 
-        $alreadySummed = $breakdown->shadows()->where('resource_id', $resource_id)
-            ->where('is_rollup', false)->where('show_in_budget', 0)->where('show_in_cost', 1)->exists();
+        $alreadySummed = $breakdown->shadows()->where('resource_id', $resource_id)->where('is_sum', 1)->exists();
 
         if ($alreadySummed) {
             return;
@@ -132,9 +131,12 @@ class SumCostAccount
             'survey_wbs_id' => $firstShadow->survey_wbs_id, 'boq_qs_id' => $firstShadow->boq_qs_id,
             'important' => $important, 'show_in_budget' => 0, 'show_in_cost' => 1, 'is_rollup' => 0,
             'created_at' => $this->now, 'updated_at' => $this->now, 'created_by' => $this->user_id, 'updated_by' => $this->user_id,
+            'is_sum' => 1
         ]);
 
-        BreakDownResourceShadow::whereIn('id', $shadows->pluck('id'))->update(['show_in_budget' => 1, 'show_in_cost' => 0]);
+        BreakDownResourceShadow::whereIn('id', $shadows->pluck('id'))->update([
+            'show_in_budget' => 1, 'show_in_cost' => 0, 'summed_at' => $this->now
+        ]);
 
         $period = $this->wbs->project->open_period();
         if ($period) {
