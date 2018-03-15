@@ -11,7 +11,7 @@ namespace App\Http\Controllers\Rollup;
 
 use App\Http\Controllers\Controller;
 use App\Project;
-use App\Rollup\Actions\BreakdownRollup;
+use App\Rollup\Actions\CostAccountRollup;
 
 class CostAccountProjectRollupController extends Controller
 {
@@ -22,7 +22,7 @@ class CostAccountProjectRollupController extends Controller
         $project->breakdowns()
             ->select('id')->chunk(100, function ($breakdowns) use ($project) {
                 \DB::beginTransaction();
-                $rollup = new BreakdownRollup($project, $breakdowns->pluck('id')->toArray());
+                $rollup = new CostAccountRollup($project, $breakdowns->pluck('id')->toArray());
                 $rollup->handle();
                 \DB::commit();
             });

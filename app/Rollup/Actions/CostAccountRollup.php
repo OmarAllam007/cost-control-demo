@@ -13,7 +13,7 @@ use Carbon\Carbon;
 use function compact;
 use Illuminate\Support\Collection;
 
-class BreakdownRollup
+class CostAccountRollup
 {
     //<editor-fold defaultstate="collapsed" desc="Variables definitions">
     /** @var Project */
@@ -61,8 +61,8 @@ class BreakdownRollup
             ->whereRaw("id in (select breakdown_id from break_down_resource_shadows where project_id = {$this->project->id})")
             // Do not select already rolled up cost accounts
             ->whereNull('rolled_up_at')
-            // Do not select cost accounts with rolled resources
-            ->doesntHave('rolled_resources')
+//            // Do not select cost accounts with rolled resources
+//            ->doesntHave('rolled_resources')
             ->get()
             ->each(function ($breakdown) {
                 $this->rollupBreakdown($breakdown);
@@ -73,20 +73,23 @@ class BreakdownRollup
 
     private function rollupBreakdown($breakdown)
     {
-        $breakdown->rolled_up_at = $this->now;
-        $breakdown->save();
-
         $this->createRollupShadow($breakdown);
+
+        $breakdown->resources()->where('id', '<>', $this->rollup_resource->id)->where('is_rollup')->delete();
 
         $breakdown->resources()->where('id', '<>', $this->rollup_resource->id)->update([
             'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
             'updated_by' => $this->user_id, 'updated_at' => $this->now
         ]);
 
+        $breakdown->shadows()->where('is_rollup', true)->where('id', '<>', $this->rollup_shadow->id)->delete();
         BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->where('id', '<>', $this->rollup_shadow->id)->update([
             'show_in_cost' => false, 'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_shadow->id,
             'updated_by' => $this->user_id, 'updated_at' => $this->now
         ]);
+
+        $breakdown->rolled_up_at = $this->now;
+        $breakdown->save();
     }
 
     private function createRollupResource($breakdown)
@@ -110,7 +113,12 @@ class BreakdownRollup
     {
         $this->createRollupResource($breakdown);
 
-        $total_cost = $breakdown->resources->pluck('shadow')->sum('budget_cost');
+        $shadows = BreakDownResourceShadow::with('breakdown_resource')
+            ->where('breakdown_id', $breakdown->id)
+            ->canBeRolled()->get();
+
+        $total_cost =  $shadows->sum('budget_cost'); //$breakdown->resources->pluck('shadow')->sum('budget_cost');
+        \Log::info("Total Cost", compact('total_cost'));
         $budget_unit = $this->extra['budget_unit'][$breakdown->id] ?? 1;
         $unit_id = $this->extra['measure_unit'][$breakdown->id] ?? 15;
         $measure_unit = $this->unit_cache->get($unit_id);
@@ -135,16 +143,16 @@ class BreakdownRollup
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true, 'cost_account' => $breakdown->cost_account
         ]);
 
-        return $this->update_cost($breakdown);
+        return $this->update_cost($breakdown, $shadows->pluck('breakdown_resource'));
     }
 
     /**
      * @param $breakdown
      * @return BreakDownResourceShadow
      */
-    private function update_cost($breakdown): BreakDownResourceShadow
+    private function update_cost($breakdown, $resources): BreakDownResourceShadow
     {
-        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $breakdown->resources()->pluck('id'))->get();
+        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resources->pluck('id'))->get();
 
         $period = $this->project->open_period();
         if (!$period) {
@@ -180,6 +188,7 @@ class BreakdownRollup
         $this->rollup_shadow->update(compact('progress', 'status'));
 
         ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
+
         return $this->rollup_shadow;
     }
 }

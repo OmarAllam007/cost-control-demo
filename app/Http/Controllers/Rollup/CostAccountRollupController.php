@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Rollup;
 
 use App\Http\Controllers\Controller;
 use App\Project;
-use App\Rollup\Actions\BreakdownRollup;
+use App\Rollup\Actions\CostAccountRollup;
 use Illuminate\Http\Request;
 
 class CostAccountRollupController extends Controller
@@ -21,7 +21,7 @@ class CostAccountRollupController extends Controller
     {
         $this->authorize('cost_owner', $project);
 
-        $rollup = new BreakdownRollup($project, $request->get('cost_account', []), $request->only('budget_unit', 'measure_unit', 'to_date_qty'));
+        $rollup = new CostAccountRollup($project, $request->get('cost_account', []), $request->only('budget_unit', 'measure_unit', 'to_date_qty'));
         $status = $rollup->handle();
 
         flash("$status Cost accounts have been rolled up", 'success');

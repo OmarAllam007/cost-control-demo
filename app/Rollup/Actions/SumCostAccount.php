@@ -76,7 +76,7 @@ class SumCostAccount
         $remarks = $resources->pluck('remarks')->unique()->implode(', ');
         $important = $resources->where('important', 1, false)->count() > 0;
         $labor_count = $resources->sum('labor_count');
-        $budget_cost = $resources->sum('budget_cost');
+        $budget_cost = $shadows->sum('budget_cost');
         $budget_qty = $resources->first()->budget_qty;
         $eng_qty = $resources->first()->eng_qty;
         $budget_unit = $shadows->sum('budget_unit');
