@@ -228,7 +228,10 @@ class GlobalReport
         $allowable_cost = $this->cost_summary->sum('allowable_cost');
         $to_date_cost = $this->cost_summary->sum('to_date_cost');
         $variance = $allowable_cost - $to_date_cost;
-        $cpi = $allowable_cost / $to_date_cost;
+        $cpi = 0;
+        if ($to_date_cost) {
+            $cpi = $allowable_cost / $to_date_cost;
+        }
         $pw_index = $this->waste_index_trend()->get($this->period->name, 0);
 
         $highest_risk = $cpis->first();
