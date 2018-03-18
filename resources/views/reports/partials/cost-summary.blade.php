@@ -47,8 +47,8 @@
             <td class="cost-summary-side">Total</td>
             <td class="text-right cost-summary-side">{{number_format($costSummary->sum('budget_cost'),2) }}</td>
             <td class="text-right cost-summary-side">{{number_format($costSummary->sum('previous_cost'),2) }}</td>
-            <td class="text-right cost-summary-side">{{number_format($costSummary->sum('to_date_cost'),2) }}</td>
             <td class="text-right cost-summary-side">{{number_format($costSummary->sum('allowable_cost'),2) }}</td>
+            <td class="text-right cost-summary-side">{{number_format($costSummary->sum('to_date_cost'),2) }}</td>
             <td class="text-right cost-summary-side {{$to_date_var < 0 ? 'text-danger' : 'text-success'}}">{{number_format($to_date_var,2) }}</td>
             <td class="text-right cost-summary-side">{{number_format($costSummary->sum('remaining_cost'),2) }}</td>
             <td class="text-right cost-summary-side">{{number_format($costSummary->sum('completion_cost'),2) }}</td>
