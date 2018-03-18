@@ -23,7 +23,7 @@ class BudgetRevision extends Model
 
     protected $chached_eac_value;
 
-    protected $fillable = ['global_period_id'];
+    protected $fillable = ['global_period_id', 'is_generated'];
 
     function project()
     {
