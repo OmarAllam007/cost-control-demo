@@ -110,7 +110,7 @@ class Period extends Model
             return $this->attributes['time_extension'];
         }
 
-        return $this->expected_duration - $this->project->project_duration;
+        return intval($this->expected_duration) - intval($this->project->project_duration);
     }
 
     function getTimeRemainingAttribute()

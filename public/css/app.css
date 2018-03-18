@@ -11425,7 +11425,6 @@ dl.dl-margin {
 
 .cost-summary-side {
   background-color: #D9E1F2 !important;
-  color: #444;
 }
 
 .mb-1 {
@@ -11505,6 +11504,10 @@ dl.dl-margin {
 
 .breakdown-activity-header a {
   color: #f0f9ff;
+}
+
+.card-group-item canvas {
+  max-width: 100%;
 }
 
 /*# sourceMappingURL=app.css.map */
