@@ -195,6 +195,6 @@ class Period extends Model
             return $this->attributes['duration_variance'];
         }
 
-        return $this->actual_duration - $this->expected_duration;
+        return $this->expected_duration - $this->actual_duration;
     }
 }
