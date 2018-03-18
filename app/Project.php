@@ -29,7 +29,7 @@ class Project extends Model
         'owner_id', 'cost_owner_id', 'description','assumptions', 'discipline_brief',
         'project_contract_signed_value', 'project_contract_budget_value', 'change_order_amount',
         'tender_direct_cost', 'tender_indirect_cost', 'tender_risk', 'tender_initial_profit',
-        'total_budget_cost', 'cost_threshold', 'consultant', 'project_type', 'contract_type',
+        'total_budget_cost', 'cost_threshold', 'consultant', 'project_type', 'contract_type', 'actual_start_date',
     ];
 
     protected $dates = ['created_at', 'updated_at'];

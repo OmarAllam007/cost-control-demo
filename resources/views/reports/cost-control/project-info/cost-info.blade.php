@@ -51,14 +51,18 @@
                 </dl>
                 <dl>
                     <dt>Expected Duration</dt>
-                    <dd>{{$period->expected_duration ?: 0}} <small>(Days)</small></dd>
+                    <dd>{{$period->actual_duration ?: 0}} <small>(Days)</small></dd>
                 </dl>
 
                 <dl>
                     <dt>Duration Var</dt>
-                    <dd>
-                        <span class="{{$period->duration_variance < 0 ?'':'text-danger'}}">
+                    <dd class="display-flex">
+                        <span class="flex {{$period->duration_variance < 0 ?'':'text-danger'}}">
                             {{$period->duration_variance ?: 0}} <small>(Days)</small>
+                        </span>
+
+                        <span class="{{$period->duration_variance < 0? 'text-success' : 'text-danger'}}">
+                            <i class="fa fa-circle"></i>
                         </span>
                     </dd>
                 </dl>

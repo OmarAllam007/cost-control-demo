@@ -3,6 +3,7 @@
 namespace App\Behaviors;
 
 
+use Carbon\Carbon;
 use Illuminate\Database\Query\JoinClause;
 
 trait CharterData
@@ -74,6 +75,22 @@ trait CharterData
         }
 
         return $this->planned_profit_amount * 100 / $this->eac_contract_amount;
+    }
+
+    function getProjectDurationAttribute()
+    {
+        if ($this->attributes['project_duration']) {
+            return $this->attributes['project_duration'];
+        }
+
+        if ($this->expected_finish_date && $this->project_start_date) {
+            $start = Carbon::parse($this->project_start_date);
+            $finish = Carbon::parse($this->expected_finish_date);
+
+            return $finish->diffInDays($start);
+        }
+
+        return '';
     }
 
 }
