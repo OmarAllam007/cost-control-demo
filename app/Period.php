@@ -90,11 +90,53 @@ class Period extends Model
 
     function getExpectedDurationAttribute()
     {
-        if ($this->attributes['expected_duration']) {
+        if (!empty($this->attributes['expected_duration'])) {
             return $this->attributes['expected_duration'];
         }
 
-        return $this->project->project_duration ?: 0;
+        if (!empty($this->project->project_start_date) && !empty($this->planned_finish_date)) {
+            $actual_start = Carbon::parse($this->project->project_start_date);
+            $expected_finish = Carbon::parse($this->planned_finish_date);
+
+            return $expected_finish->diffInDays($actual_start);
+        }
+
+        return $this->project->project_duration;
+    }
+
+    function getTimeExtensionAttribute()
+    {
+        if (!empty($this->attributes['time_extension'])) {
+            return $this->attributes['time_extension'];
+        }
+
+        return $this->expected_duration - $this->project->project_duration;
+    }
+
+    function getTimeRemainingAttribute()
+    {
+        if (!empty($this->attributes['time_remaining'])) {
+            return $this->attributes['time_remaining'];
+        }
+
+        if ($this->expected_duration) {
+            return $this->expected_duration - $this->time_elapsed;
+        }
+
+        return '';
+    }
+
+    function getActualProgressAttribute()
+    {
+        if (!empty($this->attributes['actual_progress'])) {
+            return $this->attributes['actual_progress'];
+        }
+
+        if ($this->expected_duration) {
+            return round(min(100,$this->time_elapsed * 100 / $this->expected_duration), 2);
+        }
+
+        return '';
     }
 
     public function scopeLast(Builder $query)
@@ -139,5 +181,20 @@ class Period extends Model
         return $this->eac_profit * 100 / $this->project->eac_contract_amount;
     }
 
+    function getActualDurationAttribute()
+    {
+        $actual_finish = Carbon::parse($this->forecast_finish_date);
+        $actual_start = Carbon::parse($this->project->actual_start_date);
 
+        return $actual_finish->diffInDays($actual_start);
+    }
+
+    function getDurationVarianceAttribute()
+    {
+        if ($this->attributes['duration_variance']) {
+            return $this->attributes['duration_variance'];
+        }
+
+        return $this->actual_duration - $this->expected_duration;
+    }
 }

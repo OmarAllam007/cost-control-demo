@@ -17,9 +17,10 @@
                     <dt>CPI</dt>
                     <dd>
                         <div class="display-flex">
-                            <span class="flex {{$costInfo['cpi'] > 1? 'text-success': 'text-warning'}}">{{number_format($costInfo['cpi'], 3)}}</span>
-                            <span class="{{$costInfo['cpi'] > 1? 'text-success': 'text-warning'}}"><i
-                                        class="fa fa-circle"></i></span>
+                            <span class="flex {{$costInfo['cpi'] > 1? 'text-success': 'text-danger'}}">{{number_format($costInfo['cpi'], 3)}}</span>
+                            <span class="{{$costInfo['cpi'] > 1? 'text-success': 'text-danger'}}">
+                                <i class="fa fa-circle"></i>
+                            </span>
                         </div>
 
                     </dd>
@@ -51,14 +52,18 @@
                 </dl>
                 <dl>
                     <dt>Expected Duration</dt>
-                    <dd>{{$period->expected_duration ?: 0}} <small>(Days)</small></dd>
+                    <dd>{{$period->actual_duration ?: 0}} <small>(Days)</small></dd>
                 </dl>
 
                 <dl>
                     <dt>Duration Var</dt>
-                    <dd>
-                        <span class="{{$period->duration_variance < 0 ?'':'text-danger'}}">
+                    <dd class="display-flex">
+                        <span class="flex {{$period->duration_variance < 0 ?'':'text-danger'}}">
                             {{$period->duration_variance ?: 0}} <small>(Days)</small>
+                        </span>
+
+                        <span class="{{$period->duration_variance < 0? 'text-success' : 'text-danger'}}">
+                            <i class="fa fa-circle"></i>
                         </span>
                     </dd>
                 </dl>
