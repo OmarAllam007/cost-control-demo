@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xs-6">
             <div class="br-1">
-                <h4 class="card-group-item-heading">At Completion Percentage</h4>
+                <h4 class="card-group-item-heading">Cost Performance</h4>
                 <div class="chart"
                      id="costChart"
                      data-type="pie"
@@ -17,7 +17,7 @@
             </div>
 
         <div class="col-xs-6">
-            <h4 class="card-group-item-heading">Progress Percentage</h4>
+            <h4 class="card-group-item-heading">Time Percentage</h4>
             <div class="chart"
                  id="progressChart"
                  data-type="horizontalBar"

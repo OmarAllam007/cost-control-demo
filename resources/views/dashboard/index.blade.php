@@ -173,6 +173,11 @@
 
 @section('javascript')
     <script src="/js/cost-info-charts.js"></script>
+    <script>
+        $(function() {
+            $('.abbr').tooltip();
+        })
+    </script>
 @endsection
 
 @section('css')

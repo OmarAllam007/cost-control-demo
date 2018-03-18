@@ -111,6 +111,11 @@ class BudgetRevision extends Model
         return url("/project/{$this->project_id}/revisions/{$this->id}");
     }
 
+    function total()
+    {
+        return RevisionBreakdownResourceShadow::where('revision_id', $this->id)->sum('budget_cost');
+    }
+
     function scopeMinRevisions(Builder $query)
     {
         return $query->select('project_id')->selectRaw('min(id) as id')->groupBy('project_id');

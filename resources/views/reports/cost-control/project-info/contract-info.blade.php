@@ -11,15 +11,15 @@
 
             <article class="col-xs-4">
                 <dl>
-                    <dt>Duration (Days)</dt>
-                    <dd>{{$project->project_duration}}</dd>
+                    <dt>Duration</dt>
+                    <dd>{{$project->project_duration?:0}} <small>(Days)</small></dd>
                 </dl>
             </article>
 
             <article class="col-xs-4">
                 <dl>
                     <dt>Planned Start Date</dt>
-                    <dd>{{\Carbon\Carbon::parse($project->project_start_date)->format('d M Y')}}</dd>
+                    <dd>{{$project->project_start_date? \Carbon\Carbon::parse($project->project_start_date)->format('d M Y') : ''}}</dd>
                 </dl>
             </article>
 
@@ -40,7 +40,7 @@
             <article class="col-xs-4">
                 <dl>
                     <dt>Planned Finish Date</dt>
-                    <dd>{{\Carbon\Carbon::parse($project->expected_finish_date)->format('d M Y')}}</dd>
+                    <dd>{{$project->expected_finish_date? \Carbon\Carbon::parse($project->expected_finish_date)->format('d M Y') : ''}}</dd>
                 </dl>
             </article>
         </div>

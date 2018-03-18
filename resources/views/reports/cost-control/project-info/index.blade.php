@@ -11,72 +11,67 @@
         <h2 class="flex">{{$project->name}} &mdash; Project Dashboard</h2>
 
         @if(! $print)
-        <div class="btn-toolbar">
-            {{--<a href="?excel" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i>
-                Excel</a>--}}
-            <a href="?refresh" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Refresh</a>
-            <a href="?print=1" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Print</a>
-            <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
-                        class="fa fa-chevron-left"></i> Back</a>
-        </div>
+            <div class="btn-toolbar">
+                {{--<a href="?excel" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i>
+                    Excel</a>--}}
+                <a href="?refresh" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Refresh</a>
+                <a href="?print=1" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Print</a>
+                <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
+                            class="fa fa-chevron-left"></i> Back</a>
+            </div>
         @endif
     </div>
 @endsection
 
 @section('body')
+    @if (!$print)
+        <form action="" method="get" class="row">
+            <div class="form-group col-sm-4">
+                <select name="period" id="" class="form-control" title="Select reporting period">
+                    <option value="">-- Select Period --</option>
+                    @foreach($periods as $p)
+                        <option value="{{$p->id}}" {{$p->id == $period->id? 'selected' : ''}}>{{$p->name}}</option>
+                    @endforeach
+                </select>
+            </div>
 
-    <div class="row">
-        <div class="col-md-12 col-lg-10 col-lg-offset-1">
-            @if (!$print)
-            <form action="" method="get" class="row">
-                <div class="form-group col-sm-4">
-                    <select name="period" id="" class="form-control" title="Select reporting period">
-                        <option value="">-- Select Period --</option>
-                        @foreach($periods as $p)
-                            <option value="{{$p->id}}" {{$p->id == $period->id? 'selected' : ''}}>{{$p->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="form-group">
+                <button class="button btn btn-primary"><i class="fa fa-check"></i> Update</button>
+            </div>
+        </form>
+    @endif
 
-                <div class="form-group">
-                    <button class="button btn btn-primary"><i class="fa fa-check"></i> Update</button>
-                </div>
-            </form>
-            @endif
+    @include('reports.cost-control.project-info.contract-info')
 
-            @include('reports.cost-control.project-info.contract-info')
+    @include('reports.cost-control.project-info.revised_contract-info')
 
-            @include('reports.cost-control.project-info.revised_contract-info')
+    @include('reports.cost-control.project-info.budget-info')
 
+    @include('reports.cost-control.project-info.cost-info')
 
-            @include('reports.cost-control.project-info.budget-info')
+    @include('reports.partials.cost-summary', $costSummary)
 
-            @include('reports.cost-control.project-info.cost-info')
-
-            @include('reports.partials.cost-summary', $costSummary)
-
-            <section class="row info-section">
-                <div class="col-md-12">
-                    @include('reports.cost-control.project-info.cpi-chart')
-                </div>
-                <div class="col-md-12">
-                    @include('reports.cost-control.project-info.spi-chart')
-                </div>
-                <div class="col-md-12">
-                    @include('reports.cost-control.project-info.waste_index_chart')
-                </div>
-                <div class="col-md-12">
-                    @include('reports.cost-control.project-info.productivity_index_chart')
-                </div>
-                <div class="col-md-12">
-                    @include('reports.cost-control.project-info.cost_progress_charts')
-                </div>
-                <div class="col-md-12">
-                    @include('reports.cost-control.project-info.actual_revenue_chart')
-                </div>
-            </section>
+    <section class="row info-section">
+        <div class="col-md-12">
+            @include('reports.cost-control.project-info.cpi-chart')
         </div>
-    </div>
+        <div class="col-md-12">
+            @include('reports.cost-control.project-info.spi-chart')
+        </div>
+        <div class="col-md-12">
+            @include('reports.cost-control.project-info.waste_index_chart')
+        </div>
+        <div class="col-md-12">
+            @include('reports.cost-control.project-info.productivity_index_chart')
+        </div>
+        <div class="col-md-12">
+            @include('reports.cost-control.project-info.cost_progress_charts')
+        </div>
+        <div class="col-md-12">
+            @include('reports.cost-control.project-info.actual_revenue_chart')
+        </div>
+    </section>
+
 @endsection
 
 @section('javascript')

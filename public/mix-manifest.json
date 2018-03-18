@@ -1,8 +1,5 @@
 {
-  "/js/cost-info-charts.js": "/js/cost-info-charts.js",
-  "/css/app.css": "/css/app.css",
-  "/css/print.css": "/css/print.css",
-  "/js/rollup/edit.js": "/js/rollup/edit.js",
-  "/js/rollup/create.js": "/js/rollup/create.js",
-  "/mix.js": "/mix.js"
+    "/js/cost-info-charts.js": "/js/cost-info-charts.js",
+    "/css/app.css": "/css/app.css",
+    "/css/print.css": "/css/print.css"
 }
