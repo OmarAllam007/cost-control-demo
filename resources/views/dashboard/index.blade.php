@@ -4,6 +4,8 @@
 @endphp
 @extends("layouts.{$layout}")
 
+@section('title', 'Dashboard')
+
 @section('header')
     <div class="display-flex">
         <h2 class="flex"><i class="fa fa-dashboard no-print"></i> Dashboard</h2>
