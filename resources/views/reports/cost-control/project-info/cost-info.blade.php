@@ -17,9 +17,10 @@
                     <dt>CPI</dt>
                     <dd>
                         <div class="display-flex">
-                            <span class="flex {{$costInfo['cpi'] > 1? 'text-success': 'text-warning'}}">{{number_format($costInfo['cpi'], 3)}}</span>
-                            <span class="{{$costInfo['cpi'] > 1? 'text-success': 'text-warning'}}"><i
-                                        class="fa fa-circle"></i></span>
+                            <span class="flex {{$costInfo['cpi'] > 1? 'text-success': 'text-danger'}}">{{number_format($costInfo['cpi'], 3)}}</span>
+                            <span class="{{$costInfo['cpi'] > 1? 'text-success': 'text-danger'}}">
+                                <i class="fa fa-circle"></i>
+                            </span>
                         </div>
 
                     </dd>
