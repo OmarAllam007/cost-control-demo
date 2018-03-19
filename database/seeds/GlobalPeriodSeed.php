@@ -1,5 +1,6 @@
 <?php
 
+use App\GlobalPeriod;
 use Illuminate\Database\Seeder;
 
 class GlobalPeriodSeed extends Seeder
@@ -11,22 +12,24 @@ class GlobalPeriodSeed extends Seeder
      */
     public function run()
     {
-        \App\GlobalPeriod::truncate();
+        GlobalPeriod::flushEventListeners();
 
-        \App\GlobalPeriod::create(['start_date' => '2016-11-01', 'end_date' => '2016-11-30']);
-        \App\GlobalPeriod::create(['start_date' => '2016-12-01', 'end_date' => '2016-12-31']);
-        \App\GlobalPeriod::create(['start_date' => '2017-01-01', 'end_date' => '2017-01-31']);
-        \App\GlobalPeriod::create(['start_date' => '2017-02-01', 'end_date' => '2017-02-28']);
-        \App\GlobalPeriod::create(['start_date' => '2017-03-01', 'end_date' => '2017-03-31']);
-        \App\GlobalPeriod::create(['start_date' => '2017-04-01', 'end_date' => '2017-04-30']);
-        \App\GlobalPeriod::create(['start_date' => '2017-05-01', 'end_date' => '2017-05-31']);
-        \App\GlobalPeriod::create(['start_date' => '2017-06-01', 'end_date' => '2017-06-30']);
-        \App\GlobalPeriod::create(['start_date' => '2017-07-01', 'end_date' => '2017-07-31']);
-        \App\GlobalPeriod::create(['start_date' => '2017-08-01', 'end_date' => '2017-08-31']);
-        \App\GlobalPeriod::create(['start_date' => '2017-09-01', 'end_date' => '2017-09-30']);
-        \App\GlobalPeriod::create(['start_date' => '2017-10-01', 'end_date' => '2017-10-31']);
-        \App\GlobalPeriod::create(['start_date' => '2017-11-01', 'end_date' => '2017-11-30']);
-        \App\GlobalPeriod::create(['start_date' => '2017-12-01', 'end_date' => '2017-12-31']);
+        GlobalPeriod::truncate();
+
+        GlobalPeriod::create(['start_date' => '2016-11-01', 'end_date' => '2016-11-30']);
+        GlobalPeriod::create(['start_date' => '2016-12-01', 'end_date' => '2016-12-31']);
+        GlobalPeriod::create(['start_date' => '2017-01-01', 'end_date' => '2017-01-31']);
+        GlobalPeriod::create(['start_date' => '2017-02-01', 'end_date' => '2017-02-28']);
+        GlobalPeriod::create(['start_date' => '2017-03-01', 'end_date' => '2017-03-31']);
+        GlobalPeriod::create(['start_date' => '2017-04-01', 'end_date' => '2017-04-30']);
+        GlobalPeriod::create(['start_date' => '2017-05-01', 'end_date' => '2017-05-31']);
+        GlobalPeriod::create(['start_date' => '2017-06-01', 'end_date' => '2017-06-30']);
+        GlobalPeriod::create(['start_date' => '2017-07-01', 'end_date' => '2017-07-31']);
+        GlobalPeriod::create(['start_date' => '2017-08-01', 'end_date' => '2017-08-31']);
+        GlobalPeriod::create(['start_date' => '2017-09-01', 'end_date' => '2017-09-30']);
+        GlobalPeriod::create(['start_date' => '2017-10-01', 'end_date' => '2017-10-31']);
+        GlobalPeriod::create(['start_date' => '2017-11-01', 'end_date' => '2017-11-30']);
+        GlobalPeriod::create(['start_date' => '2017-12-01', 'end_date' => '2017-12-31']);
 
         \DB::update('UPDATE costcontrol.periods SET global_period_id = 1 WHERE id = 1');
         \DB::update('UPDATE costcontrol.periods SET global_period_id = 1 WHERE id = 2');
@@ -87,6 +90,12 @@ class GlobalPeriodSeed extends Seeder
         \DB::update('UPDATE costcontrol.periods SET global_period_id = 12 WHERE id = 60');
         \DB::update('UPDATE costcontrol.periods SET global_period_id = 12 WHERE id = 61');
         \DB::update('UPDATE costcontrol.periods SET global_period_id = 13 WHERE id = 62');
+        \DB::update('UPDATE costcontrol.periods SET global_period_id = 14 WHERE id = 59');
+        \DB::update('UPDATE costcontrol.periods SET global_period_id = 14 WHERE id = 65');
         \DB::update('UPDATE costcontrol.periods SET global_period_id = 14 WHERE id = 63');
+        \DB::update('UPDATE costcontrol.periods SET global_period_id = 14 WHERE id = 64');
+        \DB::update('UPDATE costcontrol.periods SET global_period_id = 14 WHERE id = 66');
+        \DB::update('UPDATE costcontrol.periods SET global_period_id = 14 WHERE id = 68');
+        \DB::update('UPDATE costcontrol.periods SET global_period_id = 14 WHERE id = 72');
     }
 }
