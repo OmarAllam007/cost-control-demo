@@ -36,7 +36,7 @@
                     {{ Form::label('time_extension', "Total Time Extension", ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
                         <div class="input-group">
-                            {{ Form::text('time_extension', null, ['class' => 'form-control']) }}
+                            {{ Form::text('time_extension', null, ['class' => 'form-control', 'disabled']) }}
                             <span class="input-group-addon">Days</span>
                         </div>
                         {!! $errors->first('time_extension', '<div class="help-block">:message</div>') !!}
@@ -47,7 +47,7 @@
                     {{ Form::label('expected_duration', 'Total duration', ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
                         <div class="input-group">
-                            {{ Form::text('expected_duration', $period->project_duration, ['class' => 'form-control']) }}
+                            {{ Form::text('expected_duration', $period->project_duration, ['class' => 'form-control', 'disabled']) }}
                             <span class="input-group-addon">Days</span>
                         </div>
                         {!! $errors->first('expected_duration', '<div class="help-block">:message</div>') !!}
@@ -109,6 +109,14 @@
                     </div>
                 </div>
 
+                <article class="form-group form-group-sm {{ $errors->first('forecast_finish_date', 'has-error') }}">
+                    {{ Form::label('forecast_finish_date', null, ['class' => 'control-label col-sm-3']) }}
+                    <div class="col-sm-9">
+                        {{ Form::date('forecast_finish_date', $period->forecast_finish_date? \Carbon\Carbon::parse($period->forecast_finish_date)->format('Y-m-d') : '', ['class' => 'form-control to-calendar']) }}
+                        {!! $errors->first('forecast_finish_date', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </article>
+
                 <div class="form-group form-group-sm {{ $errors->first('time_elapsed', 'has-error') }}">
                     {{ Form::label('time_elapsed', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
@@ -124,26 +132,18 @@
                     {{ Form::label('time_remaining', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
                         <div class="input-group">
-                            {{ Form::text('time_remaining', null, ['class' => 'form-control']) }}
+                            {{ Form::text('time_remaining', null, ['class' => 'form-control', 'disabled']) }}
                             <span class="input-group-addon">Days</span>
                         </div>
                         {!! $errors->first('time_remaining', '<div class="help-block">:message</div>') !!}
                     </div>
                 </div>
 
-                <article class="form-group form-group-sm {{ $errors->first('forecast_finish_date', 'has-error') }}">
-                    {{ Form::label('forecast_finish_date', null, ['class' => 'control-label col-sm-3']) }}
-                    <div class="col-sm-9">
-                        {{ Form::date('forecast_finish_date', $period->forecast_finish_date? \Carbon\Carbon::parse($period->forecast_finish_date)->format('Y-m-d') : '', ['class' => 'form-control to-calendar']) }}
-                        {!! $errors->first('forecast_finish_date', '<div class="help-block">:message</div>') !!}
-                    </div>
-                </article>
-
                 <div class="form-group form-group-sm {{ $errors->first('duration_variance', 'has-error') }}">
                     {{ Form::label('duration_variance', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
                         <div class="input-group">
-                            {{ Form::text('duration_variance', $period->duration_variance, ['class' => 'form-control']) }}
+                            {{ Form::text('duration_variance', $period->duration_variance, ['class' => 'form-control', 'disabled']) }}
                             <span class="input-group-addon">Days</span>
                         </div>
                         {!! $errors->first('duration_variance', '<div class="help-block">:message</div>') !!}

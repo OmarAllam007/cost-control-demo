@@ -58,7 +58,7 @@
                 <div class="form-group">
                     {{Form::label('project_duration', 'Project Duration', ['class' => 'control-label col-sm-4'])}}
                     <div class="col-sm-8">
-                        {{Form::text('project_duration', null, ['class' => 'form-control'])}}
+                        {{Form::text('project_duration', null, ['class' => 'form-control', 'disabled'])}}
                     </div>
                 </div>
 
