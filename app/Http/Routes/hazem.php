@@ -244,6 +244,8 @@ Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
+Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
+Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
 Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);
 Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
 
