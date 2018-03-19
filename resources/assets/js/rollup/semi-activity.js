@@ -1,12 +1,27 @@
 import Vue from 'vue';
-import WbsTree from './components/wbs-tree';
+import WbsModal from './components/WbsModal.vue';
+import WbsTree from './components/WbsTree.vue';
 import WbsLevel from './components/wbs-level.vue';
-import Activity from './components/activity-resources.vue';
+import ActivityList from './components/ActivityList.vue';
+import ActivityRollupForm from './components/ActivityRollupForm.vue';
 
+Vue.component('activity-list', ActivityList);
 Vue.component('wbs-tree', WbsTree);
+Vue.component('wbs-modal', WbsModal);
 Vue.component('wbs-level', WbsLevel);
-Vue.component('activity', Activity);
+Vue.component('rollup-form', ActivityRollupForm);
 
 window.app = new Vue({
-    el: '#RollupForm'
+    el: '#RollupForm',
+
+    data: {
+        wbs: {},
+        activity_code: ''
+    },
+
+    methods: {
+        show_wbs_modal() {
+            this.$broadcast('show_wbs_modal');
+        }
+    }
 });

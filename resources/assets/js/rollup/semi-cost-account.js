@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import WbsTree from './components/wbs-tree';
+import WbsTree from './components/WbsTree';
 import WbsLevel from './components/wbs-level.vue';
 import Activity from './components/activity.vue';
 import CostAccount from './components/cost-account-with-resources.vue';
