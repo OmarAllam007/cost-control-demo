@@ -11,10 +11,10 @@
         <h2 class="flex"><i class="fa fa-dashboard no-print"></i> Dashboard</h2>
 
         @if (!$print)
-        <div class="btn-toolbar">
-            <a href="?refresh" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Refresh</a>
-            <a href="?print" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
-        </div>
+            <div class="btn-toolbar">
+                <a href="?refresh" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Refresh</a>
+                <a href="?print" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
+            </div>
         @endif
     </div>
 
@@ -33,76 +33,86 @@
             @include('dashboard.cost_summary')
 
 
-            <section class="card-group-item">
-                <h4 class="card-title dark-cyan card-group-item-heading">CPI Trend Analysis</h4>
+            <section class="row">
+                <div class="col-md-6">
+                    <article class="card-group-item">
+                        <h4 class="card-title dark-cyan card-group-item-heading">CPI Trend Analysis</h4>
 
-                <div class="card-body">
-                    <div class="chart"
-                         id="cpiTrendChart"
-                         data-type="line"
-                         data-labels="{{$cpi_trend->pluck('name')}}"
-                         data-datasets="[{{ json_encode([
+                        <div class="card-body">
+                            <div class="chart"
+                                 id="cpiTrendChart"
+                                 data-type="line"
+                                 data-labels="{{$cpi_trend->pluck('name')}}"
+                                 data-datasets="[{{ json_encode([
                                     'label' => 'CPI Index',
                                     'data' =>$cpi_trend->pluck('cpi_index'),//$cpi_trend->pluck('cpi_index')
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
                                 ]) }}]"
-                         style="height: 150px"></div>
+                                 style="height: 150px"></div>
+                        </div>
+                    </article>
                 </div>
-            </section>
 
-            <section class="card-group-item">
-                <h4 class="card-title dark-cyan card-group-item-heading">SPI Trend Analysis</h4>
+                <div class="col-md-6">
+                    <article class="card-group-item">
+                        <h4 class="card-title dark-cyan card-group-item-heading">SPI Trend Analysis</h4>
 
-                <div class="card-body">
-                    <div class="chart"
-                         id="spiTrendChart"
-                         data-type="line"
-                         data-labels="{{$spi_trend->keys()}}"
-                         data-datasets="[{{ json_encode([
+                        <div class="card-body">
+                            <div class="chart"
+                                 id="spiTrendChart"
+                                 data-type="line"
+                                 data-labels="{{$spi_trend->keys()}}"
+                                 data-datasets="[{{ json_encode([
                                     'label' => 'SPI Index',
                                     'data' => $spi_trend->values(),//$spi_trend->values()
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
                                 ]) }}]"
-                         style="height: 150px"></div>
+                                 style="height: 150px"></div>
+                        </div>
+                    </article>
                 </div>
             </section>
 
+            <section class="row">
+                <div class="col-md-6">
+                    <section class="card-group-item chart-style">
+                        <h4 class="card-title card-group-item-heading">Material Consumption Index Trend Analysis</h4>
 
-            <section class="card-group-item chart-style">
-                <h4 class="card-title card-group-item-heading">Material Consumption Index Trend Analysis</h4>
-
-                <div class="card-body">
-                    <div class="chart"
-                         id="wasteIndexTrendChart"
-                         data-type="line"
-                         data-labels="{{$waste_index_trend->keys()}}"
-                         data-datasets="[{{ json_encode([
+                        <div class="card-body">
+                            <div class="chart"
+                                 id="wasteIndexTrendChart"
+                                 data-type="line"
+                                 data-labels="{{$waste_index_trend->keys()}}"
+                                 data-datasets="[{{ json_encode([
                                     'label' => 'Material Consumption Index',
                                     'data' => $waste_index_trend->values(),
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
                                 ]) }}]"
-                         style="height: 150px"></div>
+                                 style="height: 150px"></div>
+                        </div>
+                    </section>
                 </div>
-            </section>
+                <div class="col-md-6">
+                    <section class="card-group-item">
+                        <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend Analysis</h4>
 
-            <section class="card-group-item">
-                <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend Analysis</h4>
-
-                <div class="card-body">
-                    <div class="chart"
-                         id="prodIndexTrendChart"
-                         data-type="line"
-                         data-labels="{{$pi_trend->keys()}}"
-                         data-datasets="[{{ json_encode([
+                        <div class="card-body">
+                            <div class="chart"
+                                 id="prodIndexTrendChart"
+                                 data-type="line"
+                                 data-labels="{{$pi_trend->keys()}}"
+                                 data-datasets="[{{ json_encode([
                                     'label' => 'Productivity Index',
                                     'data' => $pi_trend->values(),
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
                                 ]) }}]"
-                         style="height: 150px"></div>
+                                 style="height: 150px"></div>
+                        </div>
+                    </section>
                 </div>
             </section>
 
@@ -176,7 +186,7 @@
 @section('javascript')
     <script src="/js/cost-info-charts.js"></script>
     <script>
-        $(function() {
+        $(function () {
             $('.abbr').tooltip();
         })
     </script>
