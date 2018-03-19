@@ -88,16 +88,16 @@ class GlobalReport
 
         $profit = $this->projects->sum('tender_initial_profit');
         $profitability = $profit * 100 / $revised;
-        $finish_date = Carbon::parse($this->projects->max('expected_finish_date'));
+        $finish_date = Carbon::parse($this->periods->max('forecast_finish_date'));
 
         $schedules = $this->periods->map(function ($period) {
             $schedule = new Fluent();
             $schedule->project_name = $period->project->name;
-            $schedule->planned_start = Carbon::parse($period->project->project_start_date)->format('d M Y');
-            $schedule->original_duration = $period->project->project_duration;
-            $schedule->planned_finish = Carbon::parse($period->planned_finish_date)->format('d M Y');
-            $schedule->actual_start = Carbon::parse($period->project->actual_start_date)->format('d M Y');
-            $schedule->expected_duration = $period->expected_duration;
+            $schedule->planned_start = $period->project->project_start_date? Carbon::parse($period->project->project_start_date)->format('d M Y') : '';
+            $schedule->original_duration = $period->expected_duration;
+            $schedule->planned_finish = $period->planned_finish_date? Carbon::parse($period->planned_finish_date)->format('d M Y') : '';
+            $schedule->actual_start = $period->project->actual_start_date? Carbon::parse($period->project->actual_start_date)->format('d M Y') : '';
+            $schedule->expected_duration = $period->actual_duration;
             $schedule->forecast_finish = $period->forecast_finish_date ? Carbon::parse($period->forecast_finish_date)->format('d M Y') : '';
             $schedule->delay_variance = $period->duration_variance;
 
