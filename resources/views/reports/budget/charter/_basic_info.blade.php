@@ -46,7 +46,7 @@
         </tr>
         <tr>
             <th>Project Plan Finish Date</th>
-            <td>{{Carbon\Carbon::parse($project->expected_finished_date)->format('d M Y')}}</td>
+            <td>{{Carbon\Carbon::parse($project->expected_finish_date)->format('d M Y')}}</td>
         </tr>
 
         <tr>
