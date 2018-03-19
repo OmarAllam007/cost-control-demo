@@ -24,8 +24,7 @@ class BudgetRevisionsController extends Controller
 
         $revision = new BudgetRevision();
         $revision->project_id = $project->id;
-        $latest = $project->revisions()->latest()->first();
-        $revision->rev_num = $latest ? $latest->rev_num + 1 : 1;
+        $revision->rev_num = $project->revisions()->max('rev_num') + 1;
         return view('revisions.create', compact('revision', 'project'));
     }
 
@@ -36,8 +35,8 @@ class BudgetRevisionsController extends Controller
             return redirect()->route('project.budget', $project);
         }
 
-        $this->validate($request, ['name' => 'required']);
-        $project->revisions()->create($request->only('name'));
+        $this->validate($request, ['global_period_id' => 'required']);
+        $project->revisions()->create($request->only('global_period_id'));
 
         flash('Revision has been created');
 
@@ -57,7 +56,15 @@ class BudgetRevisionsController extends Controller
         $thisRevision = $revision->statsByDiscipline();
         $disciplines = $thisRevision->keys();
 
-        return view('revisions.show', compact('project', 'revision', 'firstRevision', 'thisRevision', 'rev1', 'disciplines'));
+        $firstRevisionTotal = $rev1->budget_cost;
+        $thisRevisionTotal = $revision->budget_cost;
+        $diffTotal = $thisRevisionTotal - $firstRevisionTotal;
+        $diffPercentTotal = $firstRevisionTotal ? ($diffTotal/$firstRevisionTotal) * 100 : 0;
+
+        return view('revisions.show', compact(
+            'project', 'revision', 'firstRevision', 'thisRevision', 'rev1', 'disciplines',
+            'firstRevisionTotal', 'thisRevisionTotal', 'diffTotal', 'diffPercentTotal'
+        ));
     }
 
     function export(Project $project, BudgetRevision $revision) {
@@ -66,10 +73,10 @@ class BudgetRevisionsController extends Controller
         return \Response::download($file)->deleteFileAfterSend(true);
     }
 
-    function edit(BudgetRevision $revision)
+    function edit(Project $project, BudgetRevision $revision)
     {
         $project = $revision->project;
-        if (cannot('modify', $project)) {
+        if (cannot('budget_owner', $project)) {
             flash('You are not authorized to do this action');
             return redirect()->route('project.budget', $project);
         }
@@ -77,7 +84,7 @@ class BudgetRevisionsController extends Controller
         return view('revisions.edit', compact('revision', 'project'));
     }
 
-    function update(Request $request, BudgetRevision $revision)
+    function update(Request $request, $project, BudgetRevision $revision)
     {
         $project = $revision->project;
 
@@ -88,9 +95,9 @@ class BudgetRevisionsController extends Controller
 
         $this->validate($request, ['name' => 'required']);
 
-        $revision->update($request->only('name'));
+        $revision->update($request->only('name', 'change_order_amount', 'original_contract_amount'));
 
-        flash('Revision has been updated');
+        flash('Revision has been updated', 'success');
         return redirect()->to(route('project.budget', $project));
     }
 

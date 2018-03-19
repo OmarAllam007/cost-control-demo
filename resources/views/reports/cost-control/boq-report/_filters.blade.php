@@ -13,12 +13,9 @@
                     </select>
                 </div>
             </div>
-
+    
             <div class="col-sm-3">
-                <div class="form-group">
-                    <label for="wbs">WBS</label>
-                    <input type="text" class="form-control" name="wbs" id="wbs" value="{{request('wbs')}}">
-                </div>
+                @include('reports.partials.wbs-filter')
             </div>
 
             <div class="col-sm-3">
@@ -42,8 +39,15 @@
             </div>
 
             <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="cost_account">Description</label>
+                    <input type="text" class="form-control" name="description" id="description" value="{{request('description')}}">
+                </div>
+            </div>
+
+            <div class="col-sm-3">
                 <div class="checkbox">
-                    <label>
+                    <label style="margin-top: 25px;">
                         <input name="negative_to_date" type="checkbox" {{request()->exists('negative_to_date') ? 'checked' : ''}}>
                         Negative Variance To Date
                     </label>
@@ -52,7 +56,7 @@
 
             <div class="col-sm-3">
                 <div class="checkbox">
-                    <label>
+                    <label style="margin-top: 25px;">
                         <input name="negative_completion" type="checkbox" {{request()->exists('negative_completion') ? 'checked' : ''}}>
                         Negative Variance At Completion
                     </label>
@@ -60,9 +64,13 @@
             </div>
 
             <div class="col-sm-6">
-                <button class="pull-right btn btn-rounded btn-outline btn-primary" type="submit">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+                <div class="pull-right">
+                    <button class="btn btn-rounded btn-outline btn-primary" type="submit">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+
+                    <a href="?reset" class="btn-rounded btn btn-default btn-outline">Reset</a>
+                </div>
             </div>
         </div>
 

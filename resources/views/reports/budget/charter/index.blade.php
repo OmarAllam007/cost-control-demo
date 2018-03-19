@@ -26,11 +26,11 @@
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
             @include('reports.budget.charter._basic_info')
 
-            @include('reports.budget.charter._brief')
 
             <h4 class="page-header">Project Budget Summary</h4>
             @include('reports.budget.charter._budget_by_discipline')
             @include('reports.budget.charter._budget_by_resource_type')
+            @include('reports.budget.charter._brief')
             @include('reports.budget.charter._discipline_brief')
             @include('reports.budget.charter._assumptions')
         </div>
@@ -74,16 +74,4 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/c3.min.css">
-    <style>
-        .table > tbody > tr > td, .table > tbody > tr > th {
-            font-size: 92%;
-            line-height: 1.4;
-        }
-
-        h4.page-header {
-            margin-top: 20px; margin-bottom: 10px;
-        }
-
-
-    </style>
 @endsection

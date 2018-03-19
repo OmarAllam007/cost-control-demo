@@ -7,7 +7,6 @@ use App\BreakDownResourceShadow;
 use App\Http\Controllers\Reports\CostReports\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
-use App\Http\Controllers\Reports\CostReports\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
 use App\Http\Controllers\Reports\CostReports\ProductivityReport;
@@ -20,6 +19,11 @@ use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use App\Reports\Cost\CostSummary;
+use App\Reports\Cost\ProductivityIndexReport;
+use App\Reports\Cost\ProjectInfo;
+use App\Reports\Cost\ThresholdReport;
+use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -30,18 +34,20 @@ class CostReportsController extends Controller
 {
 
     public function projectInformation(Project $project, Request $request)
+
     {
         $period_id = $this->getPeriod($project, $request);
 
-        $projectInfo = new ProjectInformation(Period::find($period_id));
-        return $projectInfo->run();
+        $projectInfo = new ProjectInfo(Period::find($period_id));
+
+        return view('reports.cost-control.project-info.index', $projectInfo->run());
     }
 
     public function costSummary(Project $project, Request $request)
     {
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
-        $costSummary = new CostSummary($project, $period);
+        $costSummary = new CostSummary($period);
 
         $data = $costSummary->run();
 
@@ -127,8 +133,13 @@ class CostReportsController extends Controller
     public function overdraftReport(Project $project, Request $request)
     {
         $period_id = $this->getPeriod($project, $request);
-        $draft = new OverdraftReport(Period::find($period_id));
-        return $draft->run();
+        $report = new OverdraftReport(Period::find($period_id));
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.cost-control.over-draft.over_draft', $report->run());
     }
 
     public function activityReport(Project $project, Request $request)
@@ -232,6 +243,49 @@ class CostReportsController extends Controller
 
         return view('reports.cost-control.dashboard.dashboard', compact('project', 'activities', 'periods', 'resourceTypes', 'resources', 'boqs'));
     }
+
+    function threshold(Project $project, Request $request)
+    {
+        $period = Period::find($this->getPeriod($project, $request));
+        $report = new ThresholdReport($period);
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.cost-control.threshold.index', $data);
+    }
+
+    function wasteIndexReport(Project $project, Request $request)
+    {
+        $period = Period::find($this->getPeriod($project, $request));
+        $report = new WasteIndexReport($period);
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.cost-control.waste-index.index', $data);
+    }
+
+    function productivityIndexReport(Project $project, Request $request)
+    {
+        $period = Period::find($this->getPeriod($project, $request));
+        $report = new ProductivityIndexReport($period);
+
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        $data = $report->run();
+
+        return view('reports.cost-control.productivity-index.index', $data);
+    }
+
 
     public function chart(Project $project, Request $request)
     {

@@ -78,30 +78,29 @@
                     <td class="col-xs-6">{{$resource->resource->name??''}}</td>
                     <td class="col-xs-3">{{$resource->equation??''}}</td>
                     <td class="col-xs-3">
-                        @can('write', 'breakdown-template')
-                            {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}
-                            <a href="{{route('std-activity-resource.edit', $resource)}}" class="btn btn-primary btn-sm">
-                                <i class="fa fa-edit"></i> Edit
-                            </a>
-
-                            @can('delete', 'breakdown-template')
+                        @if ($breakdown_template->project)
+                            @can('breakdown_templates', $breakdown_template->project)
+                                {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}
+                                <a href="{{route('std-activity-resource.edit', $resource)}}"
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
                                 <button class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Remove</button>
+                                {{Form::close()}}
                             @endcan
-                            {{Form::close()}}
                         @else
-                            @if ($breakdown_template->project)
-                                @can('breakdown_templates', $breakdown_template->project)
-                                    {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}
-                                    <a href="{{route('std-activity-resource.edit', $resource)}}"
-                                       class="btn btn-primary btn-sm">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
+                            @can('write', 'breakdown-template')
+                                {{Form::model($resource, ['route' => ['std-activity-resource.destroy', $resource], 'method' => 'delete'])}}
+                                <a href="{{route('std-activity-resource.edit', $resource)}}" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
 
+                                @can('delete', 'breakdown-template')
                                     <button class="btn btn-warning btn-sm"><i class="fa fa-trash"></i> Remove</button>
-                                    {{Form::close()}}
                                 @endcan
-                            @endif
-                        @endcan
+                                {{Form::close()}}
+                            @endcan
+                        @endif
                     </td>
                 </tr>
             @endforeach

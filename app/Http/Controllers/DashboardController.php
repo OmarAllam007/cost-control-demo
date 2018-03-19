@@ -2,25 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
+use App\GlobalPeriod;
+use App\Period;
+use App\Reports\Cost\GlobalReport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Support\Collection;
 
 class DashboardController extends Controller
 {
-    function index()
+    /** @var Collection */
+    private $globalPeriods;
+
+    function index(Request $request)
     {
-        $projectNames = Project::orderBy('name')->pluck('name', 'id');
-        $projectStats = collect(\DB::select('SELECT sh.project_id, sum(budget_cost) AS budget_cost, sum(cost) AS actual_cost FROM break_down_resource_shadows sh LEFT JOIN actual_resources ar ON (sh.breakdown_resource_id = ar.breakdown_resource_id) GROUP BY sh.project_id'))
-            ->keyBy('project_id')->map(function ($project) {
-                return ['budget_cost' => $project->budget_cost ?: 0, 'actual_cost' => $project->actual_cost ?: 0];
-            });
+        $this->globalPeriods = $this->getGlobalPeriods();
 
-        $topActivities = \DB::select('SELECT activity, sum(budget_cost) AS budget_cost, sum(cost) AS actual_cost FROM break_down_resource_shadows sh LEFT JOIN actual_resources ar ON (sh.breakdown_resource_id = ar.breakdown_resource_id) GROUP BY activity ORDER BY 2 DESC, 1 LIMIT 10');
-        $topResources = \DB::select('SELECT resource_name, sum(budget_cost) AS budget_cost, sum(cost) AS actual_cost FROM break_down_resource_shadows sh LEFT JOIN actual_resources ar ON (sh.breakdown_resource_id = ar.breakdown_resource_id) GROUP BY resource_name ORDER BY 2 DESC, 1 LIMIT 10');
-        $resourceTypes = \DB::select('SELECT resource_type, sum(budget_cost) AS budget_cost, sum(cost) AS actual_cost FROM break_down_resource_shadows sh LEFT JOIN actual_resources ar ON (sh.breakdown_resource_id = ar.breakdown_resource_id) GROUP BY resource_type ORDER BY 1');
+        $period = $this->getPeriod($request);
 
-        return view('dashboard', compact('projectNames', 'projectStats', 'topActivities', 'topResources', 'resourceTypes'));
+        $key = 'global-report-' . $period->id;
+
+        if ($request->exists('clear') || $request->exists('refresh')) {
+            \Cache::forget($key);
+        }
+
+
+        $data = \Cache::remember($key, Carbon::tomorrow(), function () use ($period) {
+            $report = new GlobalReport($period);
+            return $report->run();
+        });
+
+        $data['globalPeriods'] = $this->globalPeriods;
+        $data['reportPeriod'] = $period;
+
+        return view('dashboard.index', $data);
+    }
+
+    private function getPeriod(Request $request)
+    {
+        $period = null;
+
+        if ($period_id = $request->get('period')) {
+            $request->session()->put('gloabl-report-period', $period_id);
+        }
+
+        if ($period_id = $request->session()->get('gloabl-report-period')) {
+            $period = GlobalPeriod::find($period_id);
+        } else {
+            $period = $this->globalPeriods->first();
+            $request->session()->put('gloabl-report-period', $period->id);
+        }
+
+        return $period;
+    }
+
+    private function getGlobalPeriods()
+    {
+        return GlobalPeriod::latest('end_date')->whereHas('periods', function($query) {
+            $query->where('status', Period::GENERATED);
+        })->get();
     }
 }

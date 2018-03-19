@@ -9,15 +9,24 @@ use App\Formatters\BreakdownResourceFormatter;
 use App\Http\Controllers\Caching\ResourcesCache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
+/**
+ * @property String description
+ * @property String cost_account
+ * @property Collection variables
+ * @property int parent_id
+ * @property Survey parent
+ * @property WbsLevel wbsLevel
+ */
 class Survey extends Model
 {
-    use CachesQueries;
+//    use CachesQueries;
     use HasChangeLog, RecordsUser;
 
     protected $table = 'qty_surveys';
 
-    protected $fillable = ['unit_id', 'budget_qty', 'eng_qty', 'cost_account', 'category_id', 'description', 'wbs_level_id', 'project_id', 'code', 'item_code'];
+    protected $fillable = ['unit_id', 'budget_qty', 'eng_qty', 'cost_account', 'category_id', 'description', 'wbs_level_id', 'project_id', 'qs_code', 'item_code', 'boq_id', 'discipline'];
 
     protected $dates = ['created_at', 'updated_at'];
 
@@ -107,6 +116,16 @@ class Survey extends Model
         $query->whereIn('wbs_level_id', $wbs_parents)->where('cost_account', $cost_account);
 
         return $query;
+    }
+
+    function boq()
+    {
+        return $this->belongsTo(Boq::class);
+    }
+
+    function getDescriptorAttribute()
+    {
+        return $this->wbsLevel->path . ' / ' . $this->description . " ($this->cost_account)";
     }
 
 }

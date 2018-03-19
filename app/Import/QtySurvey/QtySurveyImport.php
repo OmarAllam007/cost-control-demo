@@ -71,24 +71,24 @@ class QtySurveyImport
             $qs = [
                 'wbs_level_id' => $this->wbs_levels->get(strtolower($data['A'])),
                 'item_code' => $data['B'],
-                'description' => $data['C'],
-                'budget_qty' => $data['D'],
-                'eng_qty' => $data['E'],
-                'unit_id' => $this->units->get(strtolower($data['F'])),
+                'qs_code' => $data['C'],
+                'description' => $data['D'],
+                'budget_qty' => $data['E'],
+                'eng_qty' => $data['F'],
+                'unit_id' => $this->units->get(strtolower($data['G'])),
                 'project_id' => $this->project->id
             ];
 
             $validator = \Validator::make($qs, $rules);
             if ($validator->fails()) {
                 $errors = $validator->errors()->all();
-                $data['G'] = implode(PHP_EOL, $errors);
+                $data['H'] = implode(PHP_EOL, $errors);
                 $this->failed->push($data);
                 continue;
             }
 
             $this->surveys->push(new Survey($qs));
         }
-
 
         $checker = new QtySurveyChecker($this->project, $this->surveys, $this->failed);
         return $checker->check();

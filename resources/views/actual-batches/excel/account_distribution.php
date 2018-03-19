@@ -5,11 +5,14 @@ $levels = \App\WbsLevel::find($wbs_ids->toArray())->keyBy('id')->map(function ($
     return $level->path;
 });
 
-$activities = $activities->groupBy(function ($row) use ($levels) {
+$activities = $activities->groupBy(function($row) use ($levels) {
+    if (empty($row['newRows'][0]['resource'])) {
+        return 'unassigned';
+    }
+
     $resource = $row['newRows'][0]['resource'];
     return $levels[$resource['wbs_id']] . ' &mdash; ' . $resource['activity'];
-});
-
+})->forget('unassigned');
 $counter = 2;
 
 

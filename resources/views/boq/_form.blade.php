@@ -19,16 +19,15 @@
 
         <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
             {{ Form::label('wbs_id', 'Wbs Level', ['class' => 'control-label']) }}
-            <div class="hidden">
-                {{ Form::select('wbs_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
-            </div>
             <p>
                 <a href="#WBSModal" data-toggle="modal" id="select-parent" class="tree-open">
                     @if($wbs_id = request('wbs_id'))
                         {{App\WbsLevel::with('parent')->find($wbs_id)->path}}
                         {{Form::hidden('wbs_id', $wbs_id)}}
                     @else
-                        {{Form::getValueAttribute('wbs_id')? App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_id'))->path : 'Select Wbs Level' }}
+                        @php $wbs_id = Form::getValueAttribute('wbs_id') @endphp
+                        {{$wbs_id? App\WbsLevel::with('parent')->find($wbs_id)->path : 'Select Wbs Level' }}
+                        {{Form::hidden('wbs_id', $wbs_id)}}
                     @endif
                 </a>
                 <a class="remove-tree-input text-danger" data-label="Select Wbs Level" data-target="#LevelsModal"><span
@@ -137,7 +136,7 @@
 
 @include('wbs-level._modal', ['project_id' => $project_id, 'value' => Form::getValueAttribute('wbs_id'), 'input' => 'wbs_id'])
 
-<div id="LevelsModal2" class="modal fade" tabindex="-1" role="dialog">
+{{--<div id="LevelsModal2" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -154,7 +153,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>--}}
 
 
 @section('javascript')

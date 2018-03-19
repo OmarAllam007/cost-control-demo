@@ -3,7 +3,8 @@
 @section('header')
     <div class="display-flex">
         <h2 class="flex">Edit Project Charter</h2>
-        <a href="{{ route('project.budget', $project)}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+        <a href="{{ route('project.budget', $project)}}" class="btn btn-sm btn-default"><i
+                    class="fa fa-chevron-left"></i> Back</a>
     </div>
 
 @stop
@@ -13,71 +14,141 @@
 
     {{ method_field('patch') }}
 
-    <div class="row">
-        <section class="col-sm-6">
-            <div class="form-group">
-                {{Form::label('consultant', 'Consultant', ['class' => 'control-label'])}}
-                {{Form::text('consultant', null, ['class' => 'form-control'])}}
-            </div>
+    <div class="row mb-1">
+        <section class="col-sm-6 br-1">
+            <fieldset class="form-horizontal">
+                <legend>Basic Information</legend>
 
-            <div class="form-group">
-                {{Form::label('project_type', 'Project Type', ['class' => 'control-label'])}}
-                {{Form::text('project_type', null, ['class' => 'form-control'])}}
-            </div>
+                <div class="form-group">
+                    {{Form::label('project_type', 'Project Type', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('project_type', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
 
-            <div class="form-group">
-                {{Form::label('contract_type', 'Contract Type', ['class' => 'control-label'])}}
-                {{Form::text('contract_type', null, ['class' => 'form-control'])}}
-            </div>
+                <div class="form-group">
+                    {{Form::label('contract_type', 'Contract Type', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('contract_type', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
 
-            <div class="form-group">
-                {{Form::label('project_contract_signed_value', 'Selling cost', ['class' => 'control-label'])}}
-                {{Form::text('project_contract_signed_value', null, ['class' => 'form-control'])}}
-            </div>
+                <div class="form-group">
+                    {{Form::label('client_name', 'Client Name', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('client_name', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
 
-            <div class="form-group">
-                {{Form::label('dry_cost', 'Total project dry cost', ['class' => 'control-label'])}}
-                {{Form::text('dry_cost', null, ['class' => 'form-control'])}}
-            </div>
 
-            <div class="form-group">
-                {{Form::label('change_order_amount', 'Total change order amount', ['class' => 'control-label'])}}
-                {{Form::text('change_order_amount', null, ['class' => 'form-control'])}}
-            </div>
+                <div class="form-group">
+                    {{Form::label('consultant', 'Consultant Name', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('consultant', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
 
-            <div class="form-group">
-                {{Form::label('overhead_and_gr', 'Overhead + General requirements', ['class' => 'control-label'])}}
-                {{Form::text('overhead_and_gr', null, ['class' => 'form-control'])}}
-            </div>
+                <div class="form-group">
+                    {{Form::label('project_location', 'Project Location', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('project_location', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
 
-            <div class="form-group">
-                {{Form::label('estimated_profit_and_risk', 'Estimated Profit + Risk', ['class' => 'control-label'])}}
-                {{Form::text('estimated_profit_and_risk', null, ['class' => 'form-control'])}}
-            </div>
+                <div class="form-group">
+                    {{Form::label('project_duration', 'Project Duration', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('project_duration', null, ['class' => 'form-control', 'disabled'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('project_start_date', 'Planned Start Date', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::date('project_start_date', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('expected_finish_date', 'Planned Finish Date', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::date('expected_finish_date', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('actual_start_date', 'Actual Start Date', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::date('actual_start_date', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('project_contract_signed_value', 'Original Signed Contract Value', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('project_contract_signed_value', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-horizontal">
+                <legend>Tender</legend>
+
+                <div class="form-group">
+                    {{Form::label('tender_direct_cost', 'Direct Cost', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('tender_direct_cost', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('tender_indirect_cost', 'Indirect Cost', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('tender_indirect_cost', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('tender_risk', 'Risk and Escalation', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('tender_risk', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('tender_initial_profit', 'Initial Profit', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('tender_initial_profit', null, ['class' => 'form-control'])}}
+                    </div>
+                </div>
+            </fieldset>
         </section>
 
         <section class="col-sm-6">
-            <div class="form-group">
-                {{Form::label('description', 'Project Brief', ['class' => 'control-label'])}}
-                {{Form::textarea('description', null, ['rows' => 3, 'class' => 'form-control'])}}
-            </div>
+            <fieldset>
+                <legend>Brief</legend>
+                <div class="form-group">
+                    {{Form::label('description', 'Project Brief', ['class' => 'control-label'])}}
+                    {{Form::textarea('description', null, ['rows' => 3, 'class' => 'form-control'])}}
+                </div>
 
-            <div class="form-group">
-                {{Form::label('discipline_brief', 'Discipline Brief', ['class' => 'control-label'])}}
-                {{Form::textarea('discipline_brief', null, ['rows' => 5, 'class' => 'form-control'])}}
-            </div>
+                <div class="form-group">
+                    {{Form::label('discipline_brief', 'Discipline Brief', ['class' => 'control-label'])}}
+                    {{Form::textarea('discipline_brief', null, ['rows' => 5, 'class' => 'form-control'])}}
+                </div>
 
-            <div class="form-group">
-                {{Form::label('assumptions', 'Assumptions', ['class' => 'control-label'])}}
-                {{Form::textarea('assumptions', null, ['rows' => 5, 'class' => 'form-control'])}}
-            </div>
-
+                <div class="form-group">
+                    {{Form::label('assumptions', 'Assumptions', ['class' => 'control-label'])}}
+                    {{Form::textarea('assumptions', null, ['rows' => 5, 'class' => 'form-control'])}}
+                </div>
+            </fieldset>
         </section>
     </div>
 
-    <div class="form-group">
+    <div class="form-group text-center">
         <button class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
     </div>
+
 
 
 

@@ -201,22 +201,23 @@ trait CostAttributes
         // Find current data for the resource
         $current = ActualResources::where($conditions)
             ->where('period_id', $this->getCalculationPeriod()->id)
-            ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+            ->selectRaw('sum(cost)/sum(qty) as unit_price')->value('unit_price');
 
-        if ($current->unit_price !== null) {
-            $remainingUnitPrice = $current->unit_price;
+        if ($current !== null) {
+            $remainingUnitPrice = $current;
         } else {
             // If no current data, find to date data for the resource
             $todate = ActualResources::where($conditions)
                 ->where('period_id', '<=', $this->getCalculationPeriod()->id)
-                ->selectRaw('sum(cost)/sum(qty) as unit_price')->first();
+                ->selectRaw('sum(cost)/sum(qty) as unit_price')->value('unit_price');
 
-            if ($todate->unit_price !== null) {
-                $remainingUnitPrice = $todate->unit_price;
+
+            if ($todate !== null) {
+                $remainingUnitPrice = $todate;
             } else {
                 // If the resource didn't start use budget unit rate
-                $budgetResource = Resources::find($this->resource_id);
-                $remainingUnitPrice = $budgetResource->rate;
+//                $budgetResource = Resources::find($this->resource_id);
+                $remainingUnitPrice = $this->unit_price;
             }
         }
         
@@ -391,13 +392,22 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         return $this->progress / 100;
     }
 
+    function getWbsLevelIdAttribute()
+    {
+        if (!empty($this->attributes['wbs_level_id'])) {
+            return $this->attributes['wbs_level_id'];
+        }
+        return $this->wbs_id;
+    }
+
     function appendFields()
     {
         return $this->appends = [
             'to_date_qty', 'to_date_cost', 'to_date_unit_price', 'allowable_ev_cost', 'allowable_var', 'bl_allowable_cost', 'bl_allowable_var', 'remaining_qty', 'remaining_cost',
             'remaining_unit_price', 'completion_cost', 'completion_qty', 'completion_unit_price', 'unit_price_var', 'qty_var', 'cost_var', 'physical_unit', 'allowable_qty',
             'cost_variance_to_date_due_unit_price', 'cost_variance_remaining_due_unit_price', 'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty',
-            'cost_variance_to_date_due_qty', 'latest_remaining_qty', 'latest_remaining_cost', 'latest_remaining_unit_price'
+            'cost_variance_to_date_due_qty', 'latest_remaining_qty', 'latest_remaining_cost', 'latest_remaining_unit_price', 'curr_cost', 'curr_qty',
+            'curr_unit_price', 'prev_cost', 'prev_qty', 'prev_unit_price', 'wbs_level_id', 'to_date_price_var', 'to_date_qty_var',
             //'budget_unit_rate',
             //'pw_index',
         ];

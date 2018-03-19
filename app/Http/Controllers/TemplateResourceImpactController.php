@@ -45,7 +45,7 @@ class TemplateResourceImpactController extends Controller
         Breakdown::with('wbs_level')
             ->where('project_id', $project->id)
             ->where('template_id', $breakdown_template->id)
-            ->whereIn('id', array_keys($request->get('breakdown')))
+            ->whereIn('id', array_keys($request->get('breakdown', [])))
             ->get()->each(function (Breakdown $breakdown) use ($resource) {
                 $budget_qty = $breakdown->wbs_level->getBudgetQty($breakdown->cost_account);
                 $eng_qty = $breakdown->wbs_level->getEngQty($breakdown->cost_account);
@@ -72,20 +72,28 @@ class TemplateResourceImpactController extends Controller
 
         $new_template_resource = session('template_resource');
 
+        $resource = Resources::where('project_id', $project->id)
+            ->where('resource_id', $template_resource->resource_id)
+            ->first();
+
+        if (!$resource) {
+            $resource = Resources::find($template_resource->resource_id);
+        }
+
         $breakdown_resource_ids = BreakdownResource::where('std_activity_resource_id', $template_resource->id)->pluck('id');
         $resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $breakdown_resource_ids)
             ->with(['wbs', 'breakdown_resource'])
-            ->get()->map(function ($shadow) use ($new_template_resource) {
+            ->get()->map(function ($shadow) use ($new_template_resource, $resource) {
                 $new_breakdown_resource = clone $shadow->breakdown_resource;
                 $new_breakdown_resource->std_activity_resource_id = $new_template_resource->id;
-                $new_breakdown_resource->resource_id = $new_template_resource->resource_id;
+                $new_breakdown_resource->resource_id = $resource->id;
                 $new_breakdown_resource->equation = $new_template_resource->equation;
                 $new_breakdown_resource->labor_count = $new_template_resource->labor_count;
                 $new_breakdown_resource->productivity_id = $new_template_resource->productivity_id;
 
                 $attributes = (new BreakdownResourceFormatter($new_breakdown_resource))->toArray();
                 $shadow->new_shadow = new BreakDownResourceShadow($attributes);
-                if ($new_template_resource->resource_id != $shadow->breakdown_resource_id) {
+                if ($resource->id != $shadow->resource_id) {
                     $shadow->has_actual = ActualResources::where('breakdown_resource_id', $shadow->breakdown_resource_id)->exists();
                 } else {
                     $shadow->has_actual = false;
@@ -118,6 +126,7 @@ class TemplateResourceImpactController extends Controller
                 $resource->equation = $new_template_resource->equation;
                 $resource->labor_count = $new_template_resource->labor_count;
                 $resource->productivity_id = $new_template_resource->productivity_id;
+                $resource->remarks = $new_template_resource->remarks;
 
                 $resource->save();
             });
@@ -161,7 +170,6 @@ class TemplateResourceImpactController extends Controller
 
         BreakdownResource::where('std_activity_resource_id', $template_resource->id)
             ->whereIn('id', $request->get('resources'))
-            ->with('boq')
             ->get()->each(function ($resource) {
                 $resource->delete();
             });

@@ -34,8 +34,9 @@ class QtySurveyChecker
     function check()
     {
         $this->boqs = $this->surveys->map(function($survey) {
-            $boq_id = Boq::forQs($survey)->value('id');
-            $survey->boq_id = $boq_id;
+            $boq = Boq::forQs($survey)->first();
+            $survey->boq_id = $boq->id;
+//            $survey->boq = $boq;
 
             return $survey;
         })->groupBy('boq_id')->reject(function(Collection $group)  {
@@ -50,18 +51,22 @@ class QtySurveyChecker
                 return false;
             }
 
-            if ($survey->unit != $survey->boq->id) {
+            if ($survey->unit_id != $survey->boq->unit_id) {
                 return false;
             }
 
             $survey->save();
 
             // Create equivalent QS
-            Survey::craete([
-                'wbs_level_id' => $survey->boq->wbs_id, 'cost-account' => $survey->boq->cost_account,
+            Survey::create([
+                'project_id' => $survey->project_id, 'wbs_level_id' => $survey->boq->wbs_id, 'cost_account' => $survey->boq->cost_account,
                 'description' => $survey->boq->description, 'boq_id' => $survey->boq_id, 'unit_id' => $survey->unit,
-                'budget_qty' => $survey->budget_qty, 'eng_qty' => $survey->eng_qty
+                'budget_qty' => $survey->budget_qty, 'eng_qty' => $survey->eng_qty, 'item_code' => $survey->boq->item_code,
+                'qs_code' => ''
             ]);
+
+
+            ++$this->counter;
 
             return true;
         });
@@ -74,7 +79,7 @@ class QtySurveyChecker
         $excel = new \PHPExcel();
         $sheet = $excel->getActiveSheet();
 
-        $headers = ['WBS Code', 'Item Code', 'Description', 'Budget Qty', 'Eng. Qty', 'Unit', 'Errors'];
+        $headers = ['WBS Code', 'Item Code', 'QS Code', 'Description', 'Budget Qty', 'Eng. Qty', 'Unit', 'Errors'];
         $sheet->fromArray($headers, null, 'A1', true);
 
         $counter = 2;
@@ -108,7 +113,7 @@ class QtySurveyChecker
             return view('survey.import-failed', ['success' => $this->counter, 'project' => $this->project, 'failed' => $failed]);
         }
 
-        flash("{$this->counter} Qty survey items have been imported");
+        flash("{$this->counter} Qty survey items have been imported", 'info');
         if ($iframe) {
             return \Redirect::to('/blank?reload=quantities');
         }

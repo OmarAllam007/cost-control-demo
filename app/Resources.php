@@ -86,14 +86,15 @@ class Resources extends Model
 
     function morphToJSON()
     {
+        $root = $this->types->root;
         return [
             'id' => $this->id,
             'name' => $this->name,
             'type' => $this->types->name ?? '',
             'unit' => $this->units->type ?? '',
             'rate' => $this->rate,
-            'root_type' => $this->types ? $this->types->root->name : '',
-            'resource_type_id' => $this->types ? $this->types->root->id : 0,
+            'root_type' => $root->name ?? '',
+            'resource_type_id' => $root->id ?? 0,
             'waste' => $this->waste,
             'resource_code' => $this->resource_code,
         ];
@@ -205,8 +206,15 @@ class Resources extends Model
 
     function isMaterial()
     {
+        if (!isset($this->types->root->name)) {
+            dd($this->toArray());
+        }
         //TODO: use id instead of name after data cleaning
         return strpos(strtolower($this->types->root->name), 'material') !== false;
     }
 
+    function getDescriptorAttribute()
+    {
+        return $this->name . " ($this->resource_code)";
+    }
 }

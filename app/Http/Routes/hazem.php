@@ -98,6 +98,10 @@ Route::group(['prefix' => 'survey'], function () {
 });
 
 Route::group(['prefix' => 'breakdown-template'], function () {
+    Route::get('export', 'BreakdownTemplateExportModifyController@index')->name('breakdown-template.export');
+    Route::get('modify', 'BreakdownTemplateExportModifyController@edit')->name('breakdown-template.modify');
+    Route::put('modify', 'BreakdownTemplateExportModifyController@update');
+
     Route::post('filters', ['as' => 'breakdown-template.filters', 'uses' => 'BreakdownTemplateController@filters']);
 
     Route::get('import', ['as' => 'breakdown-template.import', 'uses' => 'BreakdownTemplateController@import']);
@@ -211,7 +215,8 @@ Route::get('project/{project}/revisions/{revision}', ['as' => 'revisions.show', 
 Route::get('project/{project}/revisions/{revision}/export', ['as' => 'revisions.export', 'uses' => 'BudgetRevisionsController@export']);
 Route::post('project/{project}/revisions', ['as' => 'revisions.store', 'uses' => 'BudgetRevisionsController@store']);
 Route::delete('project/{project}/revisions/{revision}/delete', 'BudgetRevisionsController@destroy');
-//Route::put('project/{project}/revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);
+Route::get('project/{project}/revisions/{revision}/edit', ['as' => 'revisions.edit', 'uses' => 'BudgetRevisionsController@edit']);
+Route::put('project/{project}/revisions/{revision}', ['as' => 'revisions.update', 'uses' => 'BudgetRevisionsController@update']);
 
 Route::post('/period-report/{period}', 'PeriodReportsController@store')->name('period-report.store');
 
@@ -228,8 +233,22 @@ Route::get('project/{project}/modify-productivity', 'ProjectProductivityControll
 Route::post('project/{project}/modify-productivity', 'ProjectProductivityController@update')->name('project.modify-productivity');
 Route::get('project/{project}/failed-productivity', 'ProjectProductivityController@show')->name('project.failed-productivity');
 
+Route::get('project/{project}/threshold', 'CostReportsController@threshold')->name('threshold-report');
+
+Route::get('/project/{project}/cost-man-days', 'CostManDaysController@create')->name('cost-man-days.import');
+Route::post('/project/{project}/cost-man-days', 'CostManDaysController@store')->name('cost-man-days.store');
+Route::get('/project/{project}/cost-man-days/export', 'CostManDaysController@show')->name('cost-man-days.export');
+
+Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
+Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
 Route::get('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@create')->name('qty-survey.fix-boq');
 Route::post('/qty-survey/fix/{key}', 'FixQtySurveyBoqController@store');
 
 Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
 Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
+Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);
+Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
+
+Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
+Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
+Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');

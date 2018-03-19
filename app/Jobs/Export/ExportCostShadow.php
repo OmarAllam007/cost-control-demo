@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Export;
 
+use App\ActualResources;
 use App\Boq;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
@@ -49,6 +50,7 @@ class ExportCostShadow extends Job
             $period = $this->project->open_period();
         }
         $this->period = $period;
+        $this->buffer = "\xEF\xBB\xBF";
     }
 
 
@@ -75,7 +77,7 @@ class ExportCostShadow extends Job
             'Cost Variance Completion Due to Unit Price', 'Cost Variance Completion Due to Qty', 'Cost Variance to Date Due to Qty',
         ];
 
-        $this->buffer = implode(',', array_map('csv_quote', $headers));
+        $this->buffer .= implode(',', array_map('csv_quote', $headers));
 
         if ($this->perspective == 'budget') {
             $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
@@ -83,7 +85,12 @@ class ExportCostShadow extends Job
                 $query = BreakDownResourceShadow::where('project_id', $this->project->id);
             }
         } else {
-            $query = CostShadow::joinShadow(null, $period);
+            $subquery = ActualResources::where('project_id', $this->project->id)
+                ->where('period_id', $this->period->id)->select('breakdown_resource_id');
+
+            $query = BreakDownResourceShadow::where('project_id', $this->project->id)
+                ->whereRaw('breakdown_resource_id in (' . $subquery->toSql() . ')')
+                ->mergeBindings($subquery->getQuery());
         }
 
         /** @var $query Builder */

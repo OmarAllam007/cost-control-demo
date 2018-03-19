@@ -2,6 +2,8 @@
 
 namespace App\Reports\Budget;
 
+use App\Boq;
+use App\BreakDownResourceShadow;
 use App\Project;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -37,24 +39,25 @@ class RevisedBoqReport
 
     function run()
     {
-        $this->original_boqs = collect(\DB::table('boqs')
-            ->selectRaw('wbs_id, cost_account, description, sum(price_ur * quantity) as original_boq')
-            ->where('project_id', $this->project->id)
-            ->groupBy('wbs_id', 'cost_account', 'description')
-            ->get())->groupBy('wbs_id')->map(function (Collection $group) {
-            return $group->keyBy('cost_account');
-        });
+        $this->original_boqs = Boq::selectRaw('wbs_id, cost_account, description, unit_id, (price_ur * quantity) as original_boq')
+            ->where('project_id', $this->project->id)->with('unit')->get()
+            ->groupBy('wbs_id')->map(function (Collection $group) {
+                return $group->keyBy('cost_account');
+            });
 
         $this->revised_boqs = collect(
-            \DB::table('break_down_resource_shadows as sh')
-                ->where('sh.project_id', $this->project->id)
-                ->join('boqs as boq', 'sh.boq_id', '=', 'boq.id')
-                ->selectRaw('boq_wbs_id as wbs_level_id, sh.cost_account, eng_qty, boq.price_ur, count(DISTINCT sh.wbs_id) as rep')
-                ->groupBy('sh.boq_wbs_id', 'sh.cost_account', 'eng_qty', 'boq.price_ur')
+            \DB::table('qty_surveys as qs')
+                ->where('qs.project_id', $this->project->id)
+                ->join('boqs as boq', function (JoinClause $on) {
+                    $on->on('qs.wbs_level_id', '=', 'boq.wbs_id');
+                    $on->on('qs.cost_account', '=', 'boq.cost_account');
+                })
+                ->selectRaw('boq.wbs_id as boq_wbs_id, boq.cost_account, eng_qty, boq.price_ur, count(DISTINCT qs.wbs_level_id)')
+                ->groupBy('boq.wbs_id', 'boq.cost_account', 'eng_qty', 'boq.price_ur')
                 ->get())
-            ->groupBy('wbs_level_id')
+            ->groupBy('boq_wbs_id')
             ->map(function (Collection $group) {
-                return $group->keyBy(function($boq) {
+                return $group->keyBy(function ($boq) {
                     return trim($boq->cost_account);
                 });
             });
@@ -74,15 +77,22 @@ class RevisedBoqReport
             $level->cost_accounts = $this->original_boqs->get($level->id, collect())->map(function ($cost_account) {
                 $revised = $cost_account->revised_boq = $this->revised_boqs
                     ->get($cost_account->wbs_id, collect())->get(trim($cost_account->cost_account));
-                
+
                 if ($revised) {
-                    $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur * $revised->rep;
+                    $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur;
+                    $cost_account->budget_qty = $revised->eng_qty;
+                    $cost_account->price_ur = $revised->price_ur;
                 } else {
                     $cost_account->revised_boq = 0;
+                    $cost_account->budget_qty = 0;
+                    $cost_account->price_ur = 0;
                 }
 
                 return $cost_account;
+            })->reject(function ($cost_account) {
+                return $cost_account->revised_boq == 0 && $cost_account->original_boq == 0;
             });
+
 
             $level->original_boq = $level->cost_accounts->sum('original_boq') + $level->subtree->sum('original_boq');
             $level->revised_boq = $level->cost_accounts->sum('revised_boq') + $level->subtree->sum('revised_boq');
@@ -108,9 +118,9 @@ class RevisedBoqReport
     {
         $this->run();
 
-        $sheet->row($this->row, ['Description', 'Cost Account', 'Original BOQ', 'Revised BOQ']);
+        $sheet->row($this->row, ['Description', 'Cost Account', 'Price U.R.', 'Unit of Measure', 'Original BOQ', 'Eng Qty', 'Revised BOQ']);
 
-        $sheet->cells('A1:D1', function (CellWriter $cells) {
+        $sheet->cells('A1:G1', function (CellWriter $cells) {
             $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
         });
 
@@ -121,18 +131,20 @@ class RevisedBoqReport
 //        $sheet->setAutoFilter();
         $sheet->freezeFirstRow();
         $sheet->setColumnFormat([
+            "B2:B{$this->row}" => '@',
             "C2:C{$this->row}" => '#,##0.00',
-            "D2:D{$this->row}" => '#,##0.00',
+            "E2:G{$this->row}" => '#,##0.00',
         ]);
 
         $sheet->getColumnDimension('A')->setWidth(80);
-        $sheet->setAutoSize(['B', "C", "D"]);
+        $sheet->setAutoSize(['B', "C", "D", "E", "F", "G"]);
         $sheet->setAutoSize(false);
+        $sheet->setShowSummaryBelow(false);
     }
 
     protected function buildSheet(LaravelExcelWorksheet $sheet, $level, $depth = 0)
     {
-        $sheet->row(++$this->row, [$level->name, '', $level->original_boq, $level->revised_boq]);
+        $sheet->row(++$this->row, [$level->name, '', '', '', $level->original_boq, '', $level->revised_boq]);
 
         if ($depth) {
             $sheet->getRowDimension($this->row)
@@ -150,7 +162,11 @@ class RevisedBoqReport
         });
 
         $level->cost_accounts->each(function ($cost_account) use ($sheet, $depth) {
-            $sheet->row(++$this->row, [$cost_account->description, $cost_account->cost_account, $cost_account->original_boq, $cost_account->revised_boq]);
+            $sheet->row(++$this->row, [
+                $cost_account->description, $cost_account->cost_account, $cost_account->price_ur,
+                $cost_account->unit->type ?? '', $cost_account->original_boq,
+                $cost_account->budget_qty, $cost_account->revised_boq,
+            ]);
 
             $sheet->getRowDimension($this->row)
                 ->setVisible(false)->setCollapsed(true)

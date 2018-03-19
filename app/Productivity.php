@@ -37,6 +37,11 @@ class Productivity extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     public static function options()
     {
         return static::whereNull('project_id')->orderBy('csi_code')->pluck('csi_code', 'id')->prepend('Select Reference', '');
@@ -188,5 +193,10 @@ class Productivity extends Model
                 });
             }
         });
+    }
+
+    function getDescriptorAttribute()
+    {
+        return $this->description . " ({$this->csi_code})";
     }
 }

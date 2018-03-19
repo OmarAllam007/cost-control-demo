@@ -53,6 +53,7 @@ class Kernel extends ConsoleKernel
         CreateRevisions::class,
         Commands\FixProductivityForDhahran::class,
         Commands\DataCleaning::class,
+        Commands\CacheGlobalReport::class
     ];
 
     /**
@@ -65,5 +66,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+
+        $schedule->command('global-report-cache')->dailyAt('02:00');
     }
 }

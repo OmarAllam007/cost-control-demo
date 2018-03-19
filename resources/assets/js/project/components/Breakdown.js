@@ -44,8 +44,11 @@ export default {
             }).success(response => {
                 if (response.ok) {
                     this.loadBreakdown();
+                } else {
+                    this.loading = false;
                 }
             }).error(() => {
+                this.loading = false;
             });
         },
 

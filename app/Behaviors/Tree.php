@@ -104,4 +104,16 @@ trait Tree
 
         return $stack->reverse();
     }
+
+    function getParentsTreeAttribute()
+    {
+        $stack = collect([$this]);
+        $parent = $this->parent;
+        while ($parent) {
+            $stack->push($parent);
+            $parent = $parent->parent;
+        }
+
+        return $stack->reverse();
+    }
 }

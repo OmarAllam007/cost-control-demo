@@ -28,7 +28,7 @@
         <a href="{{route('budget_summary.report', $project)}}" target="_blank" class="btn btn-success btn-block">STANDARD ACTIVITY COST</a>
         <a href="{{route('activity_resource_breakdown.report', $project)}}" target="_blank" class="btn btn-success btn-block">ACTIVITY RESOURCE BREAKDOWN</a>
         <a href="{{route('wbs_dictionary_report', $project)}}" target="_blank" class="btn btn-success btn-block">WBS DICTIONARY</a>
-        <a href="{{route('revised_boq.report', $project)}}" target="_blank" class="btn btn-success btn-block">REVISED BOQ</a>
+        <a href="{{route('revised_boq.report', $project)}}" target="_blank" class="btn btn-success btn-block">REVISED BOQ (EAC Contract)</a>
         <a href="{{route('boq_price_list.report', $project)}}" target="_blank" class="btn btn-success btn-block">BOQ PRICE LIST</a>
     </div>
 

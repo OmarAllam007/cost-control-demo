@@ -17,10 +17,10 @@
 
 @section('body')
     <div class="alert alert-info">
-        {{$status['success']}} resources have been imported successfully. However, could not import some resources.
+        {{$status['success']}} resources have been imported successfully.
     </div>
 
     <div class="form-group">
-        <a href="{{$status['failed']}}" class="btn btn-primary"><i class="fa fa-download"></i> Download Failed Resources</a>
+        <a href="{{$status['result_file']}}" class="btn btn-primary"><i class="fa fa-download"></i> Download Import Result</a>
     </div>
 @endsection

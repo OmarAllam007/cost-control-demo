@@ -51,7 +51,7 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'activity' => $this->resource->breakdown->std_activity->name,
             'activity_id' => $this->resource->breakdown->std_activity->id,
             'cost_account' => $this->resource->breakdown->cost_account,
-            'resource_waste' => $this->resource->resource_waste,
+            'resource_waste' => $this->resource->resource->waste,
             'eng_qty' => $this->resource->eng_qty,
             'budget_qty' => $this->resource->budget_qty,
             'resource_qty' => $this->resource->resource_qty,
@@ -73,7 +73,8 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'unit_id'=>$this->resource->resource->units->id??0,
             'boq_id' => $boq->id ?? 0,
             'boq_wbs_id' => $boq->wbs_id ?? 0,
-            'survey_id' => $qs->id ?? 0, 'boq_qs_id' => $boq_qs->id ?? 0
+            'survey_id' => $qs->id ?? 0, 'boq_qs_id' => $boq_qs->id ?? 0,
+            'important' => $this->resource->important
         ];
     }
 

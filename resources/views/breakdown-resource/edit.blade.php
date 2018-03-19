@@ -61,6 +61,12 @@
         {!! $errors->first('productivity_id', '<div class="help-block">:message</div>') !!}
     </div>
 
+    <div class="checkbox">
+        <label>
+            {{Form::checkbox('important', 1)}} Mark as important
+        </label>
+    </div>
+
     <div class="form-group">
         <button class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
     </div>

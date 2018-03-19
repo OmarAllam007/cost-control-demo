@@ -46,28 +46,28 @@
                 <tr>
                     <th class="col-sm-3">Resource</th>
                     <td>{{$template_resource->resource->name}}</td>
+                    <td>{{$new_template_resource->resource->name}}</td>
                 </tr>
                 <tr>
                     <th>Type</th>
                     <td>{{$template_resource->resource->types->path}}</td>
+                    <td>{{$new_template_resource->resource->types->path}}</td>
                 </tr>
                 <tr>
                     <th>Rate</th>
                     <td>{{number_format($template_resource->resource->rate, 2)}}</td>
+                    <td>{{number_format($new_template_resource->resource->rate, 2)}}</td>
                 </tr>
-
                 <tr>
-                    <th>Old Equation</th>
+                    <th>Equation</th>
                     <td><code>{{$template_resource->equation}}</code></td>
-                </tr>
-                <tr>
-                    <th>New Equation</th>
                     <td><code>{{$new_template_resource->equation}}</code></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
 
 
     <form action="{{route('template-resource.update', [$project, $template_resource])}}" method="post">
