@@ -51,11 +51,11 @@ class ExportBreakdownJob extends Job
                 };
                 $levels = array_reverse($levels);
 
-                $divisions[] = $division->name;
+                $divisions[] = $division->code . $division->name;
 
                 $parentDiv = $division->parent;
                 while ($parentDiv) {
-                    $divisions[] = $parentDiv->name;
+                    $divisions[] = $parentDiv->code . $parentDiv->name;
                     $parentDiv = $parentDiv->parent;
                 }
                 $divisions = array_reverse($divisions);
