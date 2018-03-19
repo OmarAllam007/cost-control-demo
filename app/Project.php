@@ -6,7 +6,7 @@ use App\Behaviors\CachesQueries;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\RecordsUser;
-use App\Behaviors\Tree;
+use App\Behaviors\CharterData;
 use App\Support\DuplicateProject;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -17,31 +17,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Project extends Model
 {
-    use SoftDeletes, HasOptions, Tree, CachesQueries;
-    use HasChangeLog, RecordsUser;
+    use SoftDeletes, HasOptions, CachesQueries;
+    use HasChangeLog, RecordsUser, CharterData;
 
     protected static $alias = 'Project';
     protected $ids = [];
     protected $depth = 1;
     protected $fillable = [
-        'name',
-        'project_code',
-        'client_name',
-        'project_location',
-        'project_contract_value',
-        'project_start_date',
-        'project_duration',
-        'description',
-        'owner_id',
-        'original_finish_date',
-        'expected_finish_date',
-        'project_contract_signed_value',
-        'project_contract_budget_value',
-        'change_order_amount',
-//        'direct_cost_material',
-//        'indirect_cost_general',
-//        'total_budget_cost',
-        'cost_owner_id'
+        'name', 'project_code', 'client_name', 'project_location', 'project_contract_value',
+        'project_start_date', 'project_duration', 'original_finish_date', 'expected_finish_date',
+        'owner_id', 'cost_owner_id', 'description','assumptions', 'discipline_brief',
+        'project_contract_signed_value', 'project_contract_budget_value', 'change_order_amount',
+        'tender_direct_cost', 'tender_indirect_cost', 'tender_risk', 'tender_initial_profit',
+        'total_budget_cost', 'cost_threshold', 'consultant', 'project_type', 'contract_type', 'actual_start_date',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
@@ -273,5 +261,10 @@ class Project extends Model
         }
 
         return $project_users->sortBy('name');
+    }
+
+    function getRevisedContractAmountAttribute()
+    {
+        return $this->project_contract_signed_value + $this->change_order_amount;
     }
 }

@@ -76,6 +76,8 @@ class CreateRevisionForProject extends Job implements ShouldQueue
 
         $this->copyShadows();
 
+        $this->revision->update(['is_generated', true]);
+        
         $this->sendNotificationEmail();
         \Log::info("Revision for project {$this->project->name} has been created");
     }

@@ -31,7 +31,7 @@
         <br>
     </div>
 
-    <table class="table table-condensed">
+    <table class="table table-condensed cost-summary-table">
         <thead>
         <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
             <th class="col-sm-2" rowspan="2" style="border: 2px solid black;text-align: center">Resource Type</th>
@@ -101,6 +101,7 @@
         </tr>
         </tfoot>
     </table>
+
 
     <input type="hidden" value="{{$project->id}}" id="project_id">
 
@@ -177,7 +178,7 @@
             }
             $to_date_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_cost : 0;
             $completion_values[$id] = $toDateData[$id]? $toDateData[$id]->completion_cost : 0;
-            $allowable_values[$id] = $toDateData[$id]? $toDateData[$id]->to_date_allowable : 0;
+            $allowable_values[$id] = $toDateData[$id]? $toDateData[$id]->ev : 0;
             $budget_values[$id] = $toDateData[$id]? $toDateData[$id]->budget_cost : 0;
             $typeNames[] = $name;
         }
@@ -197,7 +198,7 @@
         $costTrendsByResourceTypes = \App\MasterShadow::with('period')->orderBy('period_id')
             ->where('project_id', $project->id)->groupBy('period_id', 'resource_type_id')
             ->selectRaw('period_id, resource_type_id, sum(completion_cost) completion_cost, sum(cost_var) as cost_var')->get()->groupBy('period_id')->map(function($records){
-                return $records->keyBy('resource_type_id')->toArray();
+                return $records->keyBy('resource_type_id');
             });
 
         $resourceTypeTrends = [];
@@ -229,6 +230,11 @@
                 x: {
                     type: 'category',
                     categories: {!! $typeNames !!}
+                },
+                y: {
+                    tick: {
+                        format: d3.format(",.2f")
+                    }
                 }
             },
             grid: {
@@ -253,6 +259,11 @@
                 x: {
                     type: 'category',
                     categories: {!! $typeNames !!}
+                },
+                y: {
+                    tick: {
+                        format: d3.format(",.2f")
+                    }
                 }
             },
             grid: {
@@ -274,7 +285,12 @@
                 x: {
                     type: 'category',
                     categories: {!! $periods !!}
-                }
+                },
+                y: {
+                    tick: {
+                        format: d3.format(",.2f")
+                    }
+                },
             },
             grid: {
                 x: {show: true},
@@ -295,7 +311,12 @@
                 x: {
                     type: 'category',
                     categories: {!! $periods !!}
-                }
+                },
+                y: {
+                    tick: {
+                        format: d3.format(",.2f")
+                    }
+                },
             },
             grid: {
                 x: {show: true},
@@ -316,7 +337,12 @@
                 x: {
                     type: 'category',
                     categories: {!! $periods !!}
-                }
+                },
+                y: {
+                    tick: {
+                        format: d3.format(",.2f")
+                    }
+                },
             },
             grid: {
                 x: {show: true},

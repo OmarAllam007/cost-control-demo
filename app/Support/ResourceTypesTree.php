@@ -12,6 +12,7 @@ class ResourceTypesTree
 
     private $current_type;
 
+    /** @return Collection */
     function get()
     {
         $this->resource_types = ResourceType::where('archived', 0)
@@ -19,7 +20,7 @@ class ResourceTypesTree
             ->load('db_resources')
             ->groupBy('parent_id');
 
-        return $this->tree();
+        return $this->tree()->keyBy('id');
     }
 
     private function tree($parent = 0)

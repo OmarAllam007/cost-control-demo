@@ -4,8 +4,11 @@ namespace App;
 
 use App\Behaviors\RecordsUser;
 use App\Jobs\CreateRevisionForProject;
+use App\Revision\RevisionBoq;
 use App\Revision\RevisionBreakdownResourceShadow;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -18,11 +21,18 @@ class BudgetRevision extends Model
 
     protected $appends = ['url', 'user', 'created_date'];
 
-    protected $fillable = ['name', 'original_contract_amount', 'change_order_amount',];
+    protected $chached_eac_value;
+
+    protected $fillable = ['global_period_id', 'is_generated'];
 
     function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    function global_period()
+    {
+        return $this->belongsTo(GlobalPeriod::class);
     }
 
     function created_by_user()
@@ -34,22 +44,19 @@ class BudgetRevision extends Model
     {
         parent::boot();
 
-        self::creating(function (self $rev) {
-            $lastRevNum = 0;
-
-            $lastRev = self::where('project_id', $rev->project_id)->latest()->first();
-            if ($lastRev) {
-                $lastRevNum = $lastRev->rev_num;
-            }
-
-            $rev->rev_num = $lastRevNum + 1;
-
-            $rev->original_contract_amount = $rev->project->project_contract_signed_value;
-            $rev->change_order_amount = $rev->project->change_order_amount;
-        });
-
         self::created(function (self $rev) {
             dispatch(new CreateRevisionForProject($rev));
+        });
+
+        self::saving(function(self $rev) {
+            if (!$rev->exists) {
+                $lastRevNum = self::where('project_id', $rev->project_id)->max('rev_num');
+                $rev->rev_num = $lastRevNum + 1;
+                $rev->original_contract_amount = $rev->project->project_contract_signed_value;
+                $rev->change_order_amount = $rev->project->change_order_amount;
+            }
+
+            $rev->name = $rev->global_period->name . '_Rev.' . sprintf('%02d', $rev->rev_num);
         });
 
         self::deleted(function ($revision) {
@@ -81,7 +88,7 @@ class BudgetRevision extends Model
             return 'System';
         }
 
-        return $this->created_by_user->name;
+        return $this->created_by_user->name ?? '';
     }
 
     protected function getUrlAttribute()
@@ -91,7 +98,7 @@ class BudgetRevision extends Model
 
     protected function getCreatedDateAttribute()
     {
-        return $this->created_at->format('d/m/Y');
+        return $this->created_at->format('d/m/Y') ?? '';
     }
 
     /*public function getRevisedContractAmount()
@@ -109,4 +116,84 @@ class BudgetRevision extends Model
         return RevisionBreakdownResourceShadow::where('revision_id', $this->id)->sum('budget_cost');
     }
 
+    function scopeMinRevisions(Builder $query)
+    {
+        return $query->select('project_id')->selectRaw('min(id) as id')->groupBy('project_id');
+    }
+
+    function scopeMaxRevisions(Builder $query)
+    {
+        return $query->select('project_id')->selectRaw('max(id) as id')->groupBy('project_id');
+    }
+
+    function getBudgetCostAttribute()
+    {
+        if (isset($this->cached_budget_cost)) {
+            return $this->cached_budget_cost;
+        }
+
+        return $this->cached_budget_cost = RevisionBreakdownResourceShadow::where('revision_id', $this->id)->sum('budget_cost');
+    }
+
+    function getEacContractAmountAttribute()
+    {
+        if (!is_null($this->chached_eac_value)) {
+            return $this->chached_eac_value;
+        }
+
+        return $this->chached_eac_value = \DB::table('revision_boqs as boq')->where('boq.project_id', $this->project_id)
+            ->where('boq.revision_id', $this->id)
+            ->join('revision_qty_surveys as qs', function(JoinClause $on){
+//                $on->on('boq.id', '=', 'qs.boq_id');
+                $on->on('boq.wbs_id', '=', 'qs.wbs_level_id');
+                $on->on('boq.cost_account', '=', 'qs.cost_account');
+                $on->on('boq.revision_id', '=', 'qs.revision_id');
+            })
+            ->selectRaw('sum(boq.price_ur * qs.eng_qty) as revised_boq')
+            ->value('revised_boq');
+    }
+
+    function getPlannedProfitAmountAttribute()
+    {
+        return $this->eac_contract_amount - $this->budget_cost;
+    }
+
+    function getPlannedProfitabilityIndexAttribute()
+    {
+        if (!$this->eac_contract_amount) {
+            return 0;
+        }
+
+        return $this->planned_profit_amount * 100 / $this->eac_contract_amount;
+    }
+
+    function getGeneralRequirementCostAttribute()
+    {
+        if (empty($this->general_requirement_cost)) {
+            $this->general_requirement_cost = RevisionBreakdownResourceShadow::where('revision_id', $this->id)
+                ->where('resource_type_id', 1)->sum('budget_cost');
+        }
+
+        return $this->general_requirements_cost;
+    }
+
+    function getManagementReserveCostAttribute()
+    {
+        if (empty($this->management_reserver_cost)) {
+            $this->management_reserver_cost = RevisionBreakdownResourceShadow::where('revision_id', $this->id)
+                ->where('resource_type_id', 8)->sum('budget_cost');
+        }
+
+        return $this->management_reserver_cost;
+    }
+
+    function getIndirectCostAttribute()
+    {
+        return $this->general_requirements_cost + $this->management_reserve_cost;
+    }
+
+    function getDirectCostAttribute()
+    {
+        return $this->budget_cost = $this->indirect_cost;
+    }
 }

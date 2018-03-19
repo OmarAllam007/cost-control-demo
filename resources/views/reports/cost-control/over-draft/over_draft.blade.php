@@ -2,6 +2,9 @@
 @if(request('all'))
     @include('reports.all._standard-activity')
 @endif
+
+@section('title', 'Overdraft')
+
 @section('header')
     <div class="display-flex">
         <h2 class="flex">{{$project->name}} - Overdraft</h2>
@@ -65,7 +68,7 @@
 
 @endsection
 
-@section('head')
+@section('css')
     <style>
         .level-1 td:first-child {
             padding-left: 20px;
