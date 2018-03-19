@@ -59,8 +59,9 @@ class ProjectInfo
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
-        $this->wasteIndexTrend = $this->project->periods()->latest()
-            ->readyForReporting()->take(12)->get()->reverse()->keyBy('id')->map(function ($period) {
+        $this->wasteIndexTrend = $this->project->periods()->latest('id')
+            ->where('global_period_id', '>=', 12)
+            ->readyForReporting()->take(6)->get()->reverse()->keyBy('id')->map(function ($period) {
                 $report = new WasteIndexReport($period);
                 $data = $report->run();
 
@@ -73,13 +74,16 @@ class ProjectInfo
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
         $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
-            ->cpiTrendChart()->get()->map(function ($item) {
+            ->cpiTrendChart()->get()->reverse()->map(function ($item) {
                 $item->value = round($item->value, 4);
                 return $item;
             });
 
-        $this->spiTrend = $this->project->periods()->where('status', Period::GENERATED)
-            ->oldest('id')->get(['name', 'spi_index']);
+        $this->spiTrend = $this->project->periods()
+            ->where('status', Period::GENERATED)
+            ->where('global_period_id', '>=', 12)
+            ->take(6)
+            ->latest('id')->get(['name', 'spi_index'])->reverse();
 
         $cost = MasterShadow::where('period_id', $this->period->id)
             ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
@@ -118,10 +122,13 @@ class ProjectInfo
 
     private function getProductivityIndexTrend()
     {
-        $allowable_qty = MasterShadow::where('project_id', $this->project->id)->where('resource_type_id', 2)
-            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
+        $periods = $this->project->periods()
+            ->where('status', Period::GENERATED)
+            ->where('global_period_id', '>=', 12)->take(6)->pluck('name', 'id');
 
-        $periods = $this->project->periods->pluck('name', 'id');
+        $allowable_qty = MasterShadow::whereIn('period_id', $periods->keys())
+            ->where('resource_type_id', 2)
+            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
 
         $cost_man_days = CostManDay::whereIn('period_id', $periods->keys()->toArray())
             ->selectRaw('period_id, sum(actual) as actual')
