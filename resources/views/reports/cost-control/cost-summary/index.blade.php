@@ -198,7 +198,7 @@
         $costTrendsByResourceTypes = \App\MasterShadow::with('period')->orderBy('period_id')
             ->where('project_id', $project->id)->groupBy('period_id', 'resource_type_id')
             ->selectRaw('period_id, resource_type_id, sum(completion_cost) completion_cost, sum(cost_var) as cost_var')->get()->groupBy('period_id')->map(function($records){
-                return $records->keyBy('resource_type_id')->toArray();
+                return $records->keyBy('resource_type_id');
             });
 
         $resourceTypeTrends = [];
