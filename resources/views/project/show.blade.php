@@ -8,10 +8,13 @@
             <a href="{{ route('project.edit', $project)}}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> Edit</a>
 
             @can('budget_owner', $project)
-                <a href="{{route('project.charter-data', $project)}}" class="btn btn-sm btn-info">Edit charter data</a>
+                <a href="{{route('project.charter-data', $project)}}" class="btn btn-sm btn-info">
+                    <i class="fa fa-file"></i> Edit charter data
+                </a>
+                <a href="{{route('project.changelog', $project)}}" class="btn btn-sm btn-primary">
+                    <i class="fa fa-history"></i> History
+                </a>
             @endcan
-
-            <a href="#DeleteProjectModal" class="btn btn-sm btn-warning" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete </a>
         @endcan
 
         <a href="{{ route('project.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
@@ -31,7 +34,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="{{route('boq.export', $project)}}">BOQ</a></li>
                     <li><a href="{{route('survey.export', $project)}}">Qty Survey</a></li>
-                    <li><a href="{{route('break_down.export', $project)}}">Data sheet</a></li>
+                    <li><a href="{{route('break_down.export', $project)}}">Breakdown</a></li>
                 </ul>
             </div>
 
@@ -43,9 +46,12 @@
                     <li><a href="{{route('boq.import', $project)}}" class="in-iframe" title="Import BOQ">Import BOQ</a></li>
                     <li><a href="{{route('survey.import', $project)}}" class="in-iframe" title="Import Quantity Survey">Import Qty Survey</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{route('easy-upload', $project)}}" class="in-iframe" title="Import Breakdown">Import Breakdown</a></li>
+                    <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
+                    @can('budget_woner', $project)
                     <li class="divider"></li>
-                    <li><a href="{{route('boq.modify', $project)}}" title="Modify BOQ">Modify Boq</a></li>
+{{--                    <li><a href="{{route('easy-upload', $project)}}" class="in-iframe" title="Import Breakdown">Import Breakdown</a></li>--}}
+                    <li><a href="{{route('project.breakdown.import', $project)}}">Modify Breakdown</a></li>
+                    @endcan
                 </ul>
             </div>
         </div>
