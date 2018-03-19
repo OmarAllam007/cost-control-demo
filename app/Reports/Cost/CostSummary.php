@@ -108,16 +108,16 @@ class CostSummary
 
             $row = [
                 $value,
-                $typeToDateData['budget_cost'] ?: '0.00',
+                $typeToDateData['budget_cost'] ?? '0.00',
                 $typePreviousData['previous_cost'] ?? '0.00',
                 $typePreviousData['previous_allowable'] ?? '0.00',
                 $typePreviousData['previous_var'] ?? '0.00',
-                $typeToDateData['to_date_cost'] ?: '0.00',
-                $typeToDateData['ev'] ?: '0.00',
-                $typeToDateData['to_date_var'] ?: '0.00',
-                $typeToDateData['remaining_cost'] ?: '0.00',
-                $typeToDateData['completion_cost'] ?: '0.00',
-                $typeToDateData['completion_cost_var'] ?: '0.00',
+                $typeToDateData['to_date_cost'] ?? '0.00',
+                $typeToDateData['ev'] ?? '0.00',
+                $typeToDateData['to_date_var'] ?? '0.00',
+                $typeToDateData['remaining_cost'] ?? '0.00',
+                $typeToDateData['completion_cost'] ?? '0.00',
+                $typeToDateData['completion_cost_var'] ?? '0.00',
             ];
 
             $sheet->fromArray($row, '', "A{$counter}");
