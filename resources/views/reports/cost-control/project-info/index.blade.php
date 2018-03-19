@@ -55,16 +55,16 @@
     @include('reports.partials.cost-summary', $costSummary)
 
     <section class="row info-section">
-        <div class="col-md-12">
+        <div class="col-md-6">
             @include('reports.cost-control.project-info.cpi-chart')
         </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
             @include('reports.cost-control.project-info.spi-chart')
         </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
             @include('reports.cost-control.project-info.waste_index_chart')
         </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
             @include('reports.cost-control.project-info.productivity_index_chart')
         </div>
         <div class="col-md-12">
