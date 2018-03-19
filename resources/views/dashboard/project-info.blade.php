@@ -73,7 +73,7 @@
                         <td>{{$schedule->planned_start}}</td>
                         <td>{{$schedule->original_duration}}</td>
                         <td>{{$schedule->planned_finish}}</td>
-                        <td>{{$schedule->actual_start}}</td>
+                        <td>{{$schedule->actual_start ?: ''}}</td>
                         <td>{{$schedule->expected_duration}}</td>
                         <td>{{$schedule->forecast_finish}}</td>
                         <td class="{{$schedule->delay_variance < 0? 'text-danger' : 'text-success'}}">
