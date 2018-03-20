@@ -4,6 +4,8 @@ namespace App\Reports\Budget;
 
 use App\BreakDownResourceShadow;
 use App\Project;
+use App\Survey;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
@@ -17,6 +19,21 @@ class ComparisonReport
     /** @var int */
     private $row = 2;
 
+    /** @var Collection */
+    private $qty_surveys;
+
+    /** @var Collection */
+    private $boqs;
+
+    /** @var Collection */
+    private $wbs_levels;
+
+    /** @var Collection */
+    private $budget_costs;
+
+    /** @var Collection */
+    private $tree;
+
     function __construct(Project $project)
     {
         $this->project = $project;
@@ -26,9 +43,21 @@ class ComparisonReport
     {
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
-        $this->boqs = $this->project->boqs()->with('unit')->get()->keyBy('cost_account')->groupBy('wbs_id');
+        $this->boqs = $this->project->boqs()->with('unit')->get()
+            ->groupBy('wbs_id')->map(function ($group) {
+                return $group->keyBy('cost_account');
+            });;
 
-        $this->qty_surveys = Qty::where('project', $this->project->id)->get()->keyBy('cost_account')->groupBy('wbs_level_id');
+        $this->qty_surveys = Survey::where('project_id', $this->project->id)->get()
+            ->groupBy('wbs_level_id')->map(function ($group) {
+                return $group->keyBy('cost_account');
+            });
+
+        $this->budget_costs = BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->selectRaw('wbs_id, cost_account, sum(budget_cost) as budget_cost')->groupBy(['wbs_id', 'cost_account'])
+            ->get()->groupBy('wbs_level_id')->map(function ($group) {
+                return $group->keyBy('cost_account');
+            });
 
         /*$this->cost_accounts = BreakDownResourceShadow::where('project_id', $this->project->id)
             ->selectRaw('boq_id, boq_wbs_id, avg(budget_qty) as budget_qty, avg(eng_qty) as eng_qty')
@@ -42,41 +71,56 @@ class ComparisonReport
 
     protected function buildTree($parent = 0)
     {
-        return $this->wbs_levels->get($parent, collect())->map(function($level) {
+        return $this->wbs_levels->get($parent, collect())->map(function ($level) {
             $level->subtree = $this->buildTree($level->id);
 
+            $childrenIds = $level->getChildrenIds();
 
-            $level->cost_accounts = $this->boqs->get($level->id, collect())->map(function($boq) {
-                $cost_account = $this->cost_accounts->get($boq->id, new Fluent());
+            $level->cost_accounts = $this->boqs->get($level->id, collect())->map(function ($boq) use ($childrenIds) {
+                $cost_account = new Fluent();
+//                $cost_account = $this->cost_accounts->get($boq->id, new Fluent());
+                $cost_account->cost_account = $boq->cost_account;
+                $cost_account->description = $boq->description;
+                $cost_account->item_code = $boq->item_code;
+                $cost_account->price_ur = $boq->price_ur;
+                $cost_account->dry_ur = $boq->dry_ur;
+                $cost_account->quantity = $boq->quantity;
 
-                $boq->budget_qty = $cost_account->budget_qty * $cost_account->num_used;
-                $boq->eng_qty = $cost_account->eng_qty * $cost_account->num_used;
-                $boq->budget_cost = $cost_account->budget_cost;
-                $boq->budget_price = $boq->budget_qty? $boq->budget_cost / $boq->budget_qty : 0;
+                $qty_survey = $this->qty_surveys->get($boq->wbs_id, collect())->get($boq->cost_account, new Fluent());
+                $cost_account->budget_qty = $qty_survey->budget_qty;
+                $cost_account->eng_qty = $qty_survey->eng_qty;
 
-                $boq->boq_cost = $boq->price_ur * $boq->quantity;
-                $boq->dry_cost = $boq->dry_ur * $boq->quantity;
+                $cost_account->budget_cost = $childrenIds->map(function ($wbs_id) use ($boq) {
+                    return $this->budget_costs->get($wbs_id, collect())->get($boq->cost_account);
+                })->sum('budget_cost');
 
-                $boq->revised_boq = $boq->eng_qty * $boq->price_ur;
+                $cost_account->budget_price = $cost_account->budget_qty ? $cost_account->budget_cost / $cost_account->budget_qty : 0;
 
-                $boq->qty_diff = ($boq->budget_qty - $boq->quantity) * $boq->budget_price;
-                $boq->price_diff = ($boq->budget_price - $boq->dry_ur) * $boq->budget_qty;
 
-                return $boq;
-            })->sortBy('cost_account')->keyBy('id');
+                $cost_account->boq_cost = $cost_account->price_ur * $cost_account->quantity;
+                $cost_account->dry_cost = $cost_account->dry_ur * $cost_account->quantity;
 
-            // Append budget items that doesn't have a BOQ
-            $this->cost_accounts->where('boq_wbs_id', $level->id)->each(function($cost_account) use ($level) {
-                if (!$level->cost_accounts->has($cost_account->boq_id)) {
-                    $cost_account->budget_qty *= $cost_account->num_used;
-                    $cost_account->eng_qty *= $cost_account->num_used;
-                    $cost_account->budget_price = $cost_account->budget_qty? $cost_account->budget_cost / $cost_account->budget_qty : 0;
-                    $cost_account->qty_diff = ($cost_account->budget_qty - $cost_account->quantity) * $cost_account->budget_price;
-                    $cost_account->price_diff = ($cost_account->budget_price - $cost_account->dry_ur) * $cost_account->budget_qty;
+                $cost_account->revised_boq = $cost_account->eng_qty * $cost_account->price_ur;
 
-                    $level->cost_accounts->push($cost_account);
-                }
-            });
+                $cost_account->qty_diff = ($cost_account->budget_qty - $cost_account->quantity) * $cost_account->budget_price;
+                $cost_account->price_diff = ($cost_account->budget_price - $cost_account->dry_ur) * $cost_account->budget_qty;
+
+                return $cost_account;
+            })->sortBy('cost_account')->keyBy('cost_account');
+
+
+//            // Append budget items that doesn't have a BOQ
+//            $this->cost_accounts->where('boq_wbs_id', $level->id)->each(function ($cost_account) use ($level) {
+//                if (!$level->cost_accounts->has($cost_account->boq_id)) {
+//                    $cost_account->budget_qty *= $cost_account->num_used;
+//                    $cost_account->eng_qty *= $cost_account->num_used;
+//                    $cost_account->budget_price = $cost_account->budget_qty ? $cost_account->budget_cost / $cost_account->budget_qty : 0;
+//                    $cost_account->qty_diff = ($cost_account->budget_qty - $cost_account->quantity) * $cost_account->budget_price;
+//                    $cost_account->price_diff = ($cost_account->budget_price - $cost_account->dry_ur) * $cost_account->budget_qty;
+//
+//                    $level->cost_accounts->push($cost_account);
+//                }
+//            });
 
             $level->cost = $level->subtree->sum('cost') + $level->cost_accounts->sum('budget_cost');
             $level->boq_cost = $level->subtree->sum('boq_cost') + $level->cost_accounts->sum('boq_cost');
@@ -86,15 +130,15 @@ class ComparisonReport
             $level->revised_boq = $level->subtree->sum('revised_boq') + $level->cost_accounts->sum('revised_boq');
 
             return $level;
-        })->reject(function($level) {
+        })->reject(function ($level) {
             return $level->subtree->isEmpty() && $level->cost_accounts->isEmpty();
         });
     }
 
     function excel()
     {
-        \Excel::create(slug($this->project->name) .  '-comparison_report', function(LaravelExcelWriter $excel) {
-            $excel->sheet('Comparison Report', function($sheet) {
+        \Excel::create(slug($this->project->name) . '-comparison_report', function (LaravelExcelWriter $excel) {
+            $excel->sheet('Comparison Report', function ($sheet) {
                 $this->sheet($sheet);
             });
             $excel->download('xlsx');
@@ -107,7 +151,7 @@ class ComparisonReport
 
         $this->sheetHeader($sheet);
 
-        $this->tree->each(function($level) use ($sheet) {
+        $this->tree->each(function ($level) use ($sheet) {
             $this->sheetRow($sheet, $level);
         });
 
@@ -158,7 +202,7 @@ class ComparisonReport
             $this->tree->sum('price_diff'), $this->tree->sum('qty_diff')
         ]);
 
-        $sheet->cells("A1:Q{$this->row}", function(CellWriter $cells) {
+        $sheet->cells("A1:Q{$this->row}", function (CellWriter $cells) {
             $cells->setFont(['bold' => true])
                 ->setAlignment('center')->setValignment('center');
         });
@@ -178,7 +222,7 @@ class ComparisonReport
             });
         }
 
-        $level->subtree->each(function($sublevel) use ($sheet, $depth) {
+        $level->subtree->each(function ($sublevel) use ($sheet, $depth) {
             $this->sheetRow($sheet, $sublevel, $depth + 1);
         });
 
