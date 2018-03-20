@@ -54,7 +54,8 @@ class ExportCostToMaster extends Job implements ShouldQueue
         MasterShadow::where('period_id', $this->period->id)->delete();
 
         BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->where('show_in_cost', 1)->chunk(900, function ($shadows) {
+//            ->where('show_in_cost', 1)
+            ->chunk(900, function ($shadows) {
 //            $start = microtime(1);
                 $records = [];
                 $now = Carbon::now()->format('Y-m-d H:i:s');
