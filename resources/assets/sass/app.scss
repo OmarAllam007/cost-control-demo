@@ -885,3 +885,28 @@ dl.dl-margin{
 .card-group-item canvas {
   max-width: 100%;
 }
+
+.file-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    display: block;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .file-name {
+    font-weight: 700;
+  }
+}
