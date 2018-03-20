@@ -107,7 +107,7 @@ class ExportCostShadow extends Job
                     $wbs = implode(',', array_map('csv_quote', $levels));
 
                     $activityDivs = implode(',', array_map('csv_quote', array_only(array_pad($costShadow['activity_divs'], 3, ''), range(0, 2))));
-                    $resourceDivs = implode(',', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'], 3, ''), range(0, 2))));
+                    $resourceDivs = implode(',', array_map('csv_quote', array_only(array_pad($costShadow['resource_divs'] ?? [], 3, ''), range(0, 2))));
 
                     $boq_description = $costShadow->boq;
                 } else {
