@@ -25,11 +25,15 @@ class ComparisonReport
     function run()
     {
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
-        $this->boqs = $this->project->boqs()->with('unit')->get()->keyBy('id')->groupBy('wbs_id');
-        $this->cost_accounts = BreakDownResourceShadow::where('project_id', $this->project->id)
+
+        $this->boqs = $this->project->boqs()->with('unit')->get()->keyBy('cost_account')->groupBy('wbs_id');
+
+        $this->qty_surveys = Qty::where('project', $this->project->id)->get()->keyBy('cost_account')->groupBy('wbs_level_id');
+
+        /*$this->cost_accounts = BreakDownResourceShadow::where('project_id', $this->project->id)
             ->selectRaw('boq_id, boq_wbs_id, avg(budget_qty) as budget_qty, avg(eng_qty) as eng_qty')
             ->selectRaw('sum(budget_cost) as budget_cost, count(DISTINCT wbs_id) as num_used')
-            ->groupBy(['boq_id', 'boq_wbs_id'])->get()->keyBy('boq_id');
+            ->groupBy(['boq_id', 'boq_wbs_id'])->get()->keyBy('boq_id');*/
 
         $this->tree = $this->buildTree();
 
