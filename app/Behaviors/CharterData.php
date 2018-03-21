@@ -54,7 +54,7 @@ trait CharterData
         $this->cached_eac_contract_amount = \DB::table('boqs')
             ->where('boqs.project_id', $this->id)
             ->join('qty_surveys as qs', function (JoinClause $on) {
-                $on->on('boqs.id', '=', 'qs.boq_id');
+//                $on->on('boqs.id', '=', 'qs.boq_id');
                 $on->on('boqs.wbs_id', '=', 'qs.wbs_level_id');
                 $on->on('boqs.cost_account', '=', 'qs.cost_account');
             })->selectRaw('sum(boqs.price_ur * qs.eng_qty) as revised_boq')
