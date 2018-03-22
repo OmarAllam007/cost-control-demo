@@ -64,7 +64,7 @@ trait ReportScopes
         $query->select($fields)->selectRaw(
             'sum(budget_cost) as budget_cost, sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_ev_cost) to_date_allowable,'.
             'sum(allowable_var) as to_date_var, sum(remaining_cost) remaining_cost, sum(completion_cost) completion_cost, sum(cost_var) completion_var'
-        )->where('to_date_cost', '>', 0);
+        );
         $query->orderBy('resource_name', 'activity');
     }
 
