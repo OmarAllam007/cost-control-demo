@@ -113,7 +113,7 @@ class Survey extends Model
             $parent = $parent->parent;
         }
 
-        $query->whereIn('wbs_level_id', $wbs_parents)->where('cost_account', $cost_account);
+        $query->whereIn('wbs_level_id', $wbs_parents)->where('cost_account', $cost_account)->latest('wbs_level_id');
 
         return $query;
     }
