@@ -107,6 +107,7 @@
         .table {
             margin-bottom: 0;
             min-width: 100%;
+            width: 1850px;
         }
 
         .horizontal-scroll {
