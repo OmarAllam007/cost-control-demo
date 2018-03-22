@@ -114,9 +114,7 @@ class ActivityReport
 
         }
 
-        return collect($tree)->filter(function ($level) {
-            return $level['to_date_cost'] > 0;
-        });
+        return collect($tree);
     }
 
     private function applyFilters(Builder $query)
