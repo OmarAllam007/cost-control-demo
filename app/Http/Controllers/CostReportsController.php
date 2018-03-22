@@ -14,7 +14,6 @@ use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
-use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
@@ -25,16 +24,12 @@ use App\Reports\Cost\ProjectInfo;
 use App\Reports\Cost\ThresholdReport;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class CostReportsController extends Controller
 {
 
     public function projectInformation(Project $project, Request $request)
-
     {
         $period_id = $this->getPeriod($project, $request);
 
@@ -47,14 +42,13 @@ class CostReportsController extends Controller
     {
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
-        $costSummary = new CostSummary($period);
-
-        $data = $costSummary->run();
+        $report = new CostSummary($period);
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.cost-summary.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-cost-summary.xlsx');
+            return $report->excel();
         }
+
+        $data = $report->run();
 
         return view('reports.cost-control.cost-summary.index', $data);
     }
@@ -87,14 +81,15 @@ class CostReportsController extends Controller
         $chosen_period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($chosen_period_id);
 
-        $standard_activity = new CostStandardActivityReport($project, $period);
-        $data = $standard_activity->run();
+        $report = new CostStandardActivityReport($project, $period);
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-std-activity.xlsx');
+            return $report->excel();
+//            $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-std-activity.xlsx');
         }
 
+        $data = $report->run();
         return view('reports.cost-control.standard_activity.index', $data);
     }
 
@@ -145,16 +140,16 @@ class CostReportsController extends Controller
     public function activityReport(Project $project, Request $request)
     {
         $period = Period::find($this->getPeriod($project, $request));
-
         $report = new ActivityReport($period);
 
-        $data = $report->run();
-
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.activity.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-activity.xlsx');
+            return $report->excel();
+
+//            $filename = view('reports.cost-control.activity.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-activity.xlsx');
         }
 
+        $data = $report->run();
         return view('reports.cost-control.activity.index', $data);
     }
 

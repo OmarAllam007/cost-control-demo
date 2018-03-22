@@ -105,25 +105,32 @@ class StdActivityReport
         \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
 
             $writer->sheet('Std Activity', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, ['Activity', $this->includeCost? 'Budget Cost' : '', $this->includeCost? 'Weight' : '']);
-
-                $sheet->cells('A1:C1', function(CellWriter $cells) {
-                    $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
-                });
-
-                $this->tree->each(function ($division) use ($sheet) {
-                    $this->buildExcel($sheet, $division);
-                });
-
-                $sheet->setColumnFormat(["B2:B{$this->row}" => '#,##0.00']);
-                $sheet->setColumnFormat(["C2:C{$this->row}" => '0.00%']);
-
-                $sheet->setAutoFilter();
-                $sheet->freezeFirstRow();
+                $this->sheet($sheet);
             });
 
             $writer->download('xlsx');
         });
+    }
+
+    function sheet($sheet)
+    {
+        $this->run();
+
+        $sheet->row(1, ['Activity', $this->includeCost? 'Budget Cost' : '', $this->includeCost? 'Weight' : '']);
+
+        $sheet->cells('A1:C1', function(CellWriter $cells) {
+            $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
+        });
+
+        $this->tree->each(function ($division) use ($sheet) {
+            $this->buildExcel($sheet, $division);
+        });
+
+        $sheet->setColumnFormat(["B2:B{$this->row}" => '#,##0.00']);
+        $sheet->setColumnFormat(["C2:C{$this->row}" => '0.00%']);
+
+        $sheet->setAutoFilter();
+        $sheet->freezeFirstRow();
     }
 
     protected function buildExcel(LaravelExcelWorksheet $sheet, $division, $depth = 0)

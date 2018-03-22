@@ -267,4 +267,9 @@ class Project extends Model
     {
         return $this->project_contract_signed_value + $this->change_order_amount;
     }
+
+    function roles()
+    {
+        return $this->hasMany(ProjectRole::class);
+    }
 }

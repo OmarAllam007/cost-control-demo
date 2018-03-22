@@ -11,6 +11,10 @@
                 <a href="{{route('project.charter-data', $project)}}" class="btn btn-sm btn-info">
                     <i class="fa fa-file"></i> Edit charter data
                 </a>
+                <a href="{{route('project.roles', $project)}}?back={{route('project.budget', $project, false)}}" class="btn btn-sm btn-info">
+                    <i class="fa fa-send"></i> Communication Plan
+                </a>
+
                 <a href="{{route('project.changelog', $project)}}" class="btn btn-sm btn-primary">
                     <i class="fa fa-history"></i> History
                 </a>
