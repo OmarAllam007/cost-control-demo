@@ -111,6 +111,7 @@
 
         .horizontal-scroll {
             overflow-x: auto;
+            width: 1870px;
         }
 
         .vertical-scroll {
@@ -125,7 +126,7 @@
 
         .vertical-scroll {
             padding-right: 20px;
-            width: 1820px;
+            width: 1870px;
         }
 
         th.col-xs-1, td.col-xs-1 {
