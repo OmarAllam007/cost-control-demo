@@ -28,7 +28,6 @@ class CostReportsController extends Controller
 {
 
     public function projectInformation(Project $project, Request $request)
-
     {
         $period_id = $this->getPeriod($project, $request);
 

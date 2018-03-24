@@ -87,26 +87,33 @@ class ProductivityReport
         \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function (LaravelExcelWriter $writer) {
 
             $writer->sheet('Productivity', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, ['Description', 'Crew Structure', 'Output', 'Unit of measure']);
-                $sheet->cells('A1:D1', function (CellWriter $cells) {
-                    $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
-                });
-
-                $this->tree->each(function ($division) use ($sheet) {
-                    $this->buildExcel($sheet, $division);
-                });
-
-                $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
-
-                $sheet->setAutoFilter();
-                $sheet->freezeFirstRow();
-
-                $sheet->setAutoSize(['B', 'C', 'D']);
-                $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(10);
+                $this->sheet($sheet);
             });
 
             $writer->download('xlsx');
         });
+    }
+
+    function sheet($sheet)
+    {
+        $this->run();
+
+        $sheet->row(1, ['Description', 'Crew Structure', 'Output', 'Unit of measure']);
+        $sheet->cells('A1:D1', function (CellWriter $cells) {
+            $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
+        });
+
+        $this->tree->each(function ($division) use ($sheet) {
+            $this->buildExcel($sheet, $division);
+        });
+
+        $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
+
+        $sheet->setAutoFilter();
+        $sheet->freezeFirstRow();
+
+        $sheet->setAutoSize(['B', 'C', 'D']);
+        $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(10);
     }
 
     protected function buildExcel(LaravelExcelWorksheet $sheet, $division, $depth = 0)

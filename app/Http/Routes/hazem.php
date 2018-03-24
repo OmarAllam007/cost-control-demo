@@ -257,6 +257,8 @@ Route::post('/project/{project}/communication/budget', 'BudgetCommunicationContr
 
 Route::get('/project/{project}/communication/cost', 'CostCommunicationController@create')->name('communication.cost');
 Route::post('/project/{project}/communication/cost', 'CostCommunicationController@store');
+Route::get('/projet/{project}/easy-upload', 'EasyUploadController@create')->name('easy-upload');
+Route::post('/projet/{project}/easy-upload', 'EasyUploadController@store');
 Route::resource('global-periods', 'GlobalPeriodsController', ['parameters' => 'singular']);
 Route::get('project/{project}/changelog', 'ChangelogController@show')->name('project.changelog');
 Route::get('/rollup/create/{project}/{wbsLevel}/{stdActivity}', 'RollupController@create')->name('rollup.create');

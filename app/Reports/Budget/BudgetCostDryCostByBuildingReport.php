@@ -88,8 +88,6 @@ class BudgetCostDryCostByBuildingReport
 
     function excel()
     {
-        $this->run();
-
         \Excel::create(slug($this->project->name) . '-budget_cost_vs_dry_by_building', function(LaravelExcelWriter $writer) {
             $writer->sheet('BudgetCostVSDryCostBuilding', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
@@ -101,6 +99,8 @@ class BudgetCostDryCostByBuildingReport
 
     function sheet(LaravelExcelWorksheet $sheet)
     {
+        $this->run();
+
         $sheet->row(1, ['WBS Level', 'Budget Cost', 'Dry Cost', 'Difference', 'Increase']);
 
         $sheet->cells("A1:E1", function(CellWriter $cells) {

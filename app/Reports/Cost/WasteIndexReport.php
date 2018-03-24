@@ -154,6 +154,8 @@ class WasteIndexReport
         $this->tree->each(function($type) use ($sheet) {
             $this->buildExcelTypes($sheet, $type);
         });
+
+        return $sheet;
     }
 
     function buildExcelTypes(LaravelExcelWorksheet $sheet, $type, $depth = 0)

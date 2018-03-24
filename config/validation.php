@@ -27,6 +27,13 @@ return [
         'template_id' => 'required',
     ],
 
+    'project_roles' => [
+        'roles.*.role_id' => 'required',
+        'roles.*.users' => 'required',
+        'roles.*.users.*.name' => 'required',
+        'roles.*.users.*.email' => 'required|email',
+    ],
+
     'breakdown_resource' => [
         'resource_id' => 'exists:resources,id',
         'productivity_id' => 'sometimes|exists:productivities,id',
