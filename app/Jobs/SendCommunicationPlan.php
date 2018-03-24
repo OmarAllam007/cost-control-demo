@@ -13,6 +13,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
+use \Reflection;
+use ReflectionClass;
 
 class SendCommunicationPlan extends Job implements ShouldQueue
 {
@@ -83,9 +85,16 @@ class SendCommunicationPlan extends Job implements ShouldQueue
                     });
                 } else {
                     $report = new $class_name($this->schedule->period);
-                    $writer->excel->addExternalSheet($report->sheet());
+                    $class = new ReflectionClass($report);
+                    $method = $class->getMethod('sheet');
+                    if ($method->getParameters()) {
+                        $writer->sheet($r->name, function(LaravelExcelWorksheet $sheet) use ($report) {
+                            $report->sheet($sheet);
+                        });
+                    } else {
+                        $writer->excel->addExternalSheet($report->sheet());
+                    }
                 }
-
             }
 
             $writer->setActiveSheetIndex(0);

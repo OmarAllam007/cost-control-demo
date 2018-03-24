@@ -1,6 +1,6 @@
 @extends(request('iframe')? 'layouts.iframe' : 'layouts.app')
 
-@section('title', 'Send Budget Reports')
+@section('title', 'Send Cost Control Reports')
 
 @section('header')
     <div class="display-flex">
