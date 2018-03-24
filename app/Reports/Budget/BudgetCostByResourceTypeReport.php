@@ -48,36 +48,42 @@ class BudgetCostByResourceTypeReport
 
         \Excel::create(slug($this->project->name) . '-budget_cost_by_discipline', function (LaravelExcelWriter $excel){
             $excel->sheet('Budget Cost by Resource Type', function (LaravelExcelWorksheet $sheet) {
-                $data = $this->run();
-
-                $sheet->row(1, ['Resource Type', 'Budget Cost', 'Weight']);
-
-
-                $this->costs->each(function ($cost) use ($sheet) {
-                    $sheet->row($this->row, [$cost->resource_type, $cost->budget_cost, $cost->weight / 100]);
-                    ++$this->row;
-                });
-
-                $sheet->row($this->row, ['Total', $data['total_cost'], 1]);
-
-                $sheet->cells('A1:C1', function (CellWriter $cells) {
-                    $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
-                });
-
-                $sheet->cells("A{$this->row}:C{$this->row}", function (CellWriter $cells) {
-                    $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
-                });
-
-
-                $sheet->getColumnDimension('A')->setWidth(50);
-                $sheet->setAutoSize(['B', "C"]);
-                $sheet->setAutoSize(false);
-
-                $sheet->setColumnFormat(["B2:B{$this->row}" => '#,##0.00']);
-                $sheet->setColumnFormat(["C2:C{$this->row}" => '0.00%']);
+                $this->sheet($sheet);
             });
 
             $excel->download('xlsx');
         });
     }
+
+    public function sheet($sheet)
+    {
+        $data = $this->run();
+
+        $sheet->row(1, ['Resource Type', 'Budget Cost', 'Weight']);
+
+
+        $this->costs->each(function ($cost) use ($sheet) {
+            $sheet->row($this->row, [$cost->resource_type, $cost->budget_cost, $cost->weight / 100]);
+            ++$this->row;
+        });
+
+        $sheet->row($this->row, ['Total', $data['total_cost'], 1]);
+
+        $sheet->cells('A1:C1', function (CellWriter $cells) {
+            $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
+        });
+
+        $sheet->cells("A{$this->row}:C{$this->row}", function (CellWriter $cells) {
+            $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
+        });
+
+
+        $sheet->getColumnDimension('A')->setWidth(50);
+        $sheet->setAutoSize(['B', "C"]);
+        $sheet->setAutoSize(false);
+
+        $sheet->setColumnFormat(["B2:B{$this->row}" => '#,##0.00']);
+        $sheet->setColumnFormat(["C2:C{$this->row}" => '0.00%']);
+    }
+
 }

@@ -69,6 +69,7 @@ class BoqPriceListReport
         });
 
         $this->tree = $this->buildTree();
+//        dd($this->project);
 
         return ['project' => $this->project, 'tree' => $this->tree];
     }
@@ -98,19 +99,7 @@ class BoqPriceListReport
     {
         \Excel::create(slug($this->project->name) . '_boq-price-list.xlsx', function (LaravelExcelWriter $excel) {
             $excel->sheet('BOQ Price List', function (LaravelExcelWorksheet $sheet) {
-                $sheet->row(1, [
-                    'Item', 'Cost Account', 'Budget Qty', 'U.O.M', 'General Requirement', 'Labours', 'Material',
-                    'Subcontractors', 'Equipment', 'Scaffolding', 'Others', 'Grand Total'
-                ]);
-
-                $this->tree->each(function (WbsLevel $level) use ($sheet) {
-                    $this->buildExcel($sheet, $level);
-                });
-
-                $sheet->setAutoFilter();
-                $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
-                $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
-                $sheet->setColumnFormat(["E2:L{$this->row}" => '#,##0.00']);
+                $this->sheet($sheet);
             });
 
             $excel->download('xlsx');
@@ -155,5 +144,24 @@ class BoqPriceListReport
                 ->setOutlineLevel($depth + 1 < 8? $depth + 1 : 8)
                 ->setCollapsed(true)->setVisible(false);
         });
+    }
+
+    public function sheet($sheet)
+    {
+        $this->run();
+        
+        $sheet->row(1, [
+            'Item', 'Cost Account', 'Budget Qty', 'U.O.M', 'General Requirement', 'Labours', 'Material',
+            'Subcontractors', 'Equipment', 'Scaffolding', 'Others', 'Grand Total'
+        ]);
+
+        $this->tree->each(function (WbsLevel $level) use ($sheet) {
+            $this->buildExcel($sheet, $level);
+        });
+
+        $sheet->setAutoFilter();
+        $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
+        $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
+        $sheet->setColumnFormat(["E2:L{$this->row}" => '#,##0.00']);
     }
 }
