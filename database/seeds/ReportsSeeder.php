@@ -62,12 +62,12 @@ class ReportsSeeder extends Seeder
             ['name' => 'QS Summary', 'class_name' => QsSummaryReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'BUDGET VS DRY QTY & COST', 'class_name' => QtyAndCostReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Resource Dictionary', 'class_name' => ResourceDictReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
+            ['name' =>'Profitability Report', 'class_name' => ProfitabilityIndexReport::class, 'type' => 'Budget'],
 
             //Insert Cost Reports
             ['name' => 'Cost Summary', 'class_name' => CostSummary::class, 'type' => 'Cost Control'],
             ['name' => 'Activity', 'class_name' => ActivityReport::class, 'type' => 'Cost Control'],
             ['name' =>'Standard Activity', 'class_name' => CostStandardActivityReport::class, 'type' => 'Cost Control'],
-            ['name' =>'Profitability Report', 'class_name' => ProfitabilityIndexReport::class, 'type' => 'Cost Control'],
 //            ['name' =>'Productivity Report', 'class_name' => ProductivityIndexReport::class, 'type' => 'Cost Control'],
             ['name' =>'Threshold Report', 'class_name' => ThresholdReport::class, 'type' => 'Cost Control'],
             ['name' =>'Material Consumption Report', 'class_name' => WasteIndexReport::class, 'type' => 'Cost Control'],
