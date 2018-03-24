@@ -54,13 +54,13 @@ class ReportsSeeder extends Seeder
             ['name' => 'BOQ Price List', 'class_name' => BoqPriceListReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Budget Cost By Discipline', 'class_name' => BudgetCostByDisciplineReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'BUDGET COST BY ITEM BREAKDOWN', 'class_name' => BudgetCostByResourceTypeReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'BUDGET COST V.S DRY COST BY BUILDING', 'class_name' => BudgetCostDryCostByBuildingReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'BUDGET COST V.S DRY COST BY DISCIPLINE', 'class_name' => BudgetCostDryCostByDisciplineReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'BUDGET VS DRY BY BUILDING', 'class_name' => BudgetCostDryCostByBuildingReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'BUDGET VS DRY BY DISCIPLINE', 'class_name' => BudgetCostDryCostByDisciplineReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Budget Trend', 'class_name' => BudgetTrendReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Comparison Report', 'class_name' => ComparisonReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'High Priority Material', 'class_name' => HighPriorityMaterialsReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'QS Summary', 'class_name' => QsSummaryReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'BUDGET COST V.S DRY COST QTY & COST', 'class_name' => QtyAndCostReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'BUDGET VS DRY QTY & COST', 'class_name' => QtyAndCostReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Resource Dictionary', 'class_name' => ResourceDictReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
 
             //Insert Cost Reports
