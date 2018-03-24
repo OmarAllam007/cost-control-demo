@@ -52,6 +52,6 @@ class ActualBatch extends Model
 
     function getPeriodNameAttribute()
     {
-        return $this->period->name;
+        return $this->period()->value('name');
     }
 }
