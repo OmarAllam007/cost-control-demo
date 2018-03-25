@@ -53,7 +53,7 @@ class ProductivityIndexReport
             ->selectRaw('wbs_id, activity_id, sum(actual) as actual, avg(progress) as progress')
             ->groupBy(['wbs_id', 'activity_id'])
             ->get()->keyBy(function($activity) {
-                return $activity->wbs_id . '.' . $activity->id;
+                return $activity->wbs_id . '.' . $activity->activity_id;
             });
 
         $this->tree = $this->buildTree();
