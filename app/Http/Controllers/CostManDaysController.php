@@ -13,7 +13,7 @@ class CostManDaysController extends Controller
 {
     public function create(Project $project)
     {
-        if (cannot('actual_resource', $project)) {
+        if (cannot('actual_resources', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.cost-control', $project);
         }
@@ -29,7 +29,7 @@ class CostManDaysController extends Controller
 
     public function store(Project $project, Request $request)
     {
-        if (cannot('actual_resource', $project)) {
+        if (cannot('actual_resources', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.cost-control', $project);
         }
@@ -55,7 +55,7 @@ class CostManDaysController extends Controller
 
     public function show(Project $project)
     {
-        if (cannot('actual_resource', $project)) {
+        if (cannot('actual_resources', $project)) {
             flash('You are not authorized to do this action');
             return \Redirect::route('project.cost-control', $project);
         }
