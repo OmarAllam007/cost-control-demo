@@ -124,6 +124,8 @@ class ThresholdReport
         $this->tree->each(function ($level) use ($sheet) {
             $this->buildExcelLevel($sheet, $level);
         });
+
+        $sheet->setShowSummaryBelow(false);
     }
 
     private function buildExcelLevel(LaravelExcelWorksheet $sheet, $level, $depth = 0)
