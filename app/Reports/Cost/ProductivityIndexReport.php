@@ -9,6 +9,8 @@ use App\Project;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class ProductivityIndexReport
 {
@@ -21,8 +23,8 @@ class ProductivityIndexReport
     /** @var Collection */
     protected $tree;
 
-    protected $start = 12;
-    protected $row = 12;
+    protected $start = 11;
+    protected $row = 10;
 
     /** @var Collection */
     protected $wbs_levels;
@@ -51,7 +53,7 @@ class ProductivityIndexReport
             ->selectRaw('wbs_id, activity_id, sum(actual) as actual, avg(progress) as progress')
             ->groupBy(['wbs_id', 'activity_id'])
             ->get()->keyBy(function($activity) {
-                return $activity->wbs_id . '.' . $activity->id;
+                return $activity->wbs_id . '.' . $activity->activity_id;
             });
 
         $this->tree = $this->buildTree();
@@ -100,16 +102,89 @@ class ProductivityIndexReport
 
     function excel()
     {
+        $excel = new \PHPExcel();
 
+        $excel->removeSheetByIndex(0);
+        $excel->addExternalSheet($this->sheet());
+
+        $filename = storage_path('app/cost-summary-' . uniqid() . '.xlsx');
+        $writer = new \PHPExcel_Writer_Excel2007($excel);
+        $writer->setIncludeCharts(true);
+        $writer->save($filename);
+
+        $name = slug($this->project->name) . '_' . slug($this->period->name) . '_cost-summary.xlsx';
+        return \Response::download($filename, $name)->deleteFileAfterSend(true);
     }
 
-    function sheet(LaravelExcelWorksheet $sheet)
+    function sheet()
     {
+        $excel = \PHPExcel_IOFactory::load(storage_path('templates/productivity-index.xlsx'));
+        $sheet = $excel->getSheet(0);
 
+        $this->run();
+
+        $sheet->setCellValue('A4', "Project: {$this->project->name}");
+        $sheet->setCellValue('A5', "Issue Date: " . date('d M Y'));
+        $sheet->setCellValue('A6', "Period: {$this->period->name}");
+
+        $logo = imagecreatefrompng(public_path('images/kcc.png'));
+        $drawing = new \PHPExcel_Worksheet_MemoryDrawing();
+        $drawing->setName('Logo')->setImageResource($logo)
+            ->setRenderingFunction(\PHPExcel_Worksheet_MemoryDrawing::RENDERING_PNG)
+            ->setMimeType(\PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
+            ->setCoordinates('F2')->setWorksheet($sheet);
+
+        $this->tree->each(function ($level) use ($sheet) {
+            $this->buildExcelLevel($sheet, $level);
+        });
+
+        $sheet->setShowSummaryBelow(false);
+
+        $sheet->getStyle("B{$this->start}:B{$this->row}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("D{$this->start}:F{$this->row}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("C{$this->start}:C{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
+        $sheet->getStyle("G{$this->start}:G{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
+
+        return $sheet;
     }
 
-    protected function buildExcelLevel()
+    protected function buildExcelLevel(\PHPExcel_Worksheet $sheet, $level, $depth = 0)
     {
+        ++$this->row;
+        $sheet->fromArray([
+            $level->name, $level->budget_unit, '', $level->allowable_qty, $level->actual_man_days, $level->variance, $level->pi
+        ], null, "A{$this->row}", true);
 
+        if ($depth) {
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel(min($depth, 7))
+                ->setCollapsed(true)->setVisible(false);
+
+            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * $depth);
+        }
+
+        $sheet->getStyle("A{$this->row}:G{$this->row}")->getFont()->setBold(true);
+        $sheet->getStyle("A{$this->row}:G{$this->row}")->getBorders()->getAllBorders()->setBorderStyle('thin');
+        $fillColor = new \PHPExcel_Style_Color();
+        $fillColor->setRGB('d9edf7');
+        $sheet->getStyle("A{$this->row}:G{$this->row}")
+            ->getFill()->setFillType('solid')
+            ->setStartColor($fillColor)->setEndColor($fillColor);
+
+        $level->subtree->each(function($sublevel) use ($sheet, $depth) {
+            $this->buildExcelLevel($sheet, $sublevel, $depth + 1);
+        });
+
+        ++$depth;
+        $level->labour_activities->each(function($activity) use ($sheet, $depth) {
+            ++$this->row;
+            $sheet->fromArray([
+                $activity->activity, $activity->budget_unit, $activity->progress / 100, $activity->allowable_qty, $activity->actual_man_days, $activity->variance, $activity->pi / 100
+            ], null, "A{$this->row}", true);
+
+            $sheet->getRowDimension($this->row)
+                ->setOutlineLevel(min($depth, 7))
+                ->setCollapsed(true)->setVisible(false);
+        });
     }
 }
