@@ -183,7 +183,10 @@ class CostImportFixer
 
         $progressLog = collect();
         foreach ($progress as $id => $value) {
-            $resource = $resources[$id];
+            $resource = $resources->get('id');
+            if (!$resource) {
+                continue;
+            }
             $data = ['progress' => $value];
             if ($value == 100) {
                 $data['status'] = 'Closed';
