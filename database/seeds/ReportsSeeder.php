@@ -68,7 +68,7 @@ class ReportsSeeder extends Seeder
             ['name' => 'Cost Summary', 'class_name' => CostSummary::class, 'type' => 'Cost Control'],
             ['name' => 'Activity', 'class_name' => ActivityReport::class, 'type' => 'Cost Control'],
             ['name' =>'Standard Activity', 'class_name' => CostStandardActivityReport::class, 'type' => 'Cost Control'],
-//            ['name' =>'Productivity Report', 'class_name' => ProductivityIndexReport::class, 'type' => 'Cost Control'],
+            ['name' =>'Productivity Report', 'class_name' => ProductivityIndexReport::class, 'type' => 'Cost Control'],
             ['name' =>'Threshold Report', 'class_name' => ThresholdReport::class, 'type' => 'Cost Control'],
             ['name' =>'Material Consumption Report', 'class_name' => WasteIndexReport::class, 'type' => 'Cost Control'],
         ])->sortBy(function($r) {
