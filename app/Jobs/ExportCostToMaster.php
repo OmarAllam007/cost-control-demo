@@ -126,7 +126,9 @@ class ExportCostToMaster extends Job implements ShouldQueue
                 }
 
                 \DB::transaction(function () use ($records) {
+                    \DB::statement('ALTER TABLE master_shadows DISABLE KEYS');
                     MasterShadow::insert($records);
+                    \DB::statement('ALTER TABLE master_shadows ENABLE KEYS');
                 });
 
 //            $time = microtime(1) - $start;
