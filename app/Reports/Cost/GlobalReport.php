@@ -310,6 +310,7 @@ class GlobalReport
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->whereIn('sh.period_id', $this->trend_period_ids)
             ->groupBy('p.global_period_id')
+            ->orderBy('p.global_period_id', "DESC")
             ->get()->map(function ($period) {
                 $period->cpi_index = round($period->allowable_cost / $period->to_date_cost, 2);
                 $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
@@ -335,7 +336,7 @@ class GlobalReport
             ->whereIn('sh.period_id', $this->trend_period_ids)
             ->where('resource_type_id', 3)
             ->groupBy('p.global_period_id')
-            ->orderBy('p.global_period_id')
+            ->orderBy('p.global_period_id', "DESC")
             ->get()->map(function ($period) {
                 $period->waste_index = 0;
                 if ($period->allowable_cost) {
@@ -363,6 +364,7 @@ class GlobalReport
             ->selectRaw("p.global_period_id, sum(budget_unit) as budget_unit, sum(allowable_qty) as allowable_qty, sum(actual) as actual")
             ->where('sh.resource_type_id', 2)->where('to_date_cost', '>', 0)
             ->whereIn('sh.period_id', $period_ids)
+            ->orderBy('p.global_period_id', "DESC")
             ->groupBy('p.global_period_id')
             ->get()->map(function ($period) use ($periods) {
                 $period->name = $periods->get($period->global_period_id)->name;
