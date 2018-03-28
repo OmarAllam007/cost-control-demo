@@ -110,11 +110,12 @@ class BoqPriceListReport
     {
         ++$this->row;
         $sheet->mergeCells("A{$this->row}:K{$this->row}");
-        $name = (str_repeat(' ', 6 * $depth)) . $level->name;
+        $name = $level->name;
+        $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * $depth);
         $sheet->row($this->row, [$name, $level->cost]);
 
         $sheet->cells("A{$this->row}:L{$this->row}", function (CellWriter $cells) {
-            $cells->setBackground('#f7f7f7')->setFont(['bold' => true]);
+            $cells->setBackground('#BCDEFA')->setFont(['bold' => true]);
         });
 
         if ($depth) {
@@ -123,14 +124,15 @@ class BoqPriceListReport
                 ->setCollapsed(true)->setVisible(false);
         }
 
+        ++ $depth;
 
         $level->subtree->each(function (WbsLevel $level) use ($sheet, $depth) {
-            $this->buildExcel($sheet, $level, $depth + 1);
+            $this->buildExcel($sheet, $level, $depth);
         });
 
         $level->cost_accounts->sortBy('description')->each(function ($cost_account) use ($sheet, $depth) {
             ++$this->row;
-            $description = str_repeat(' ', 6 * ($depth + 1)) . $cost_account['description'];
+            $description = $cost_account['description'];
             $sheet->row($this->row, [
                 $description, $cost_account['cost_account'], $cost_account['budget_qty'], $cost_account['unit_of_measure'],
                 $cost_account['types']['01.general requirment'] ?? 0, $cost_account['types']['02.labors'] ?? 0,
@@ -139,6 +141,7 @@ class BoqPriceListReport
                 $cost_account['types']['07.others'] ?? 0,
                 $cost_account['grand_total'],
             ]);
+            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * $depth);
 
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel($depth + 1 < 8? $depth + 1 : 8)
@@ -148,6 +151,7 @@ class BoqPriceListReport
 
     public function sheet($sheet)
     {
+        /** @var LaravelExcelWorksheet $sheet */
         $this->run();
         
         $sheet->row(1, [
@@ -155,13 +159,25 @@ class BoqPriceListReport
             'Subcontractors', 'Equipment', 'Scaffolding', 'Others', 'Grand Total'
         ]);
 
+        $sheet->getStyle("A1:L1")->applyFromArray([
+            'font' => ['bold' => true, 'color' => ['rgb' => 'EFF8FF']],
+            'fill' => ['type' => 'solid', 'startcolor' => ['rgb' => '2779BD']]
+        ]);
+
         $this->tree->each(function (WbsLevel $level) use ($sheet) {
             $this->buildExcel($sheet, $level);
         });
 
-        $sheet->setAutoFilter();
+        $sheet->setAutoSize(false);
+        $sheet->getColumnDimension('A')->setWidth(90)->setAutoSize(false);
+        foreach(range('B', 'L') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
         $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
         $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
         $sheet->setColumnFormat(["E2:L{$this->row}" => '#,##0.00']);
+
+        $sheet->setShowSummaryBelow(false);
+        $sheet->setSelectedCell("A2");
     }
 }

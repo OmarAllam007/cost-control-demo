@@ -10,6 +10,7 @@ use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
+use PHPExcel_Style_Color;
 
 class ComparisonReport
 {
@@ -85,6 +86,7 @@ class ComparisonReport
                 $cost_account->price_ur = $boq->price_ur;
                 $cost_account->dry_ur = $boq->dry_ur;
                 $cost_account->quantity = $boq->quantity;
+                $cost_account->measure_unit = $boq->unit->type ?? '';
 
                 $qty_survey = $this->qty_surveys->get($boq->wbs_id, collect())->get($boq->cost_account, new Fluent());
                 $cost_account->budget_qty = $qty_survey->budget_qty;
@@ -162,9 +164,8 @@ class ComparisonReport
         }
         $sheet->getColumnDimension('C')->setWidth(60)->setAutoSize(false);
 
-        $sheet->setColumnFormat([
-            "E3:Q{$this->row}" => \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2
-        ]);
+        $sheet->getStyle("E3:Q{$this->row}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("B4:B{$this->row}")->getNumberFormat()->setFormatCode('@');
     }
 
     private function sheetHeader(LaravelExcelWorksheet $sheet)
@@ -202,9 +203,24 @@ class ComparisonReport
             $this->tree->sum('price_diff'), $this->tree->sum('qty_diff')
         ]);
 
-        $sheet->cells("A1:Q{$this->row}", function (CellWriter $cells) {
+        $sheet->cells("A1:Q2", function (CellWriter $cells) {
+            $cells->setFont(['bold' => true, 'color' => ['rgb' => 'EFF8FF']])
+                ->setAlignment('center')
+                ->setValignment('center')
+                ->setBackground('2779BD');
+        });
+        $sheet->getStyle("A1:Q3")
+            ->getBorders()->getInside()
+            ->setBorderStyle('thin')
+            ->setColor(new PHPExcel_Style_Color('EFF8FF'));
+
+
+        $sheet->cells("A3:Q3", function (CellWriter $cells) {
             $cells->setFont(['bold' => true])
-                ->setAlignment('center')->setValignment('center');
+                ->setAlignment('center')
+                ->setValignment('center')
+                ->setBackground('BCDEFA')
+                ->setBorder('thin', 'thin', 'thin', 'thin');
         });
     }
 
@@ -229,7 +245,7 @@ class ComparisonReport
         ++$depth;
         $level->cost_accounts->each(function ($boq) use ($sheet, $depth) {
             $cells = [
-                '', $boq->cost_account, $boq->description, $boq->unit->type ?? '',
+                '', $boq->cost_account, $boq->description, $boq->measure_unit,
                 $boq->price_ur, $boq->quantity, $boq->boq_cost,
                 $boq->dry_ur, $boq->quantity, $boq->dry_cost,
                 $boq->budget_qty, $boq->eng_qty, $boq->budget_price, $boq->budget_cost,
@@ -238,5 +254,7 @@ class ComparisonReport
             $sheet->row(++$this->row, $cells);
             $sheet->getRowDimension($this->row)->setOutlineLevel(min($depth, 7))->setVisible(false)->setCollapsed(true);
         });
+
+        $sheet->setShowSummaryBelow(false);
     }
 }

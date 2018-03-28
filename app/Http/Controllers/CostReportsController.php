@@ -97,13 +97,14 @@ class CostReportsController extends Controller
         $period = $project->periods()->find($period_id);
 
         $boq = new BoqReport($period);
-        $data = $boq->run();
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.boq-report.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-boq.xlsx');
+            return $boq->excel();
+//            $filename = view('reports.cost-control.boq-report.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-boq.xlsx');
         }
 
+        $data = $boq->run();
         return view('reports.cost-control.boq-report.index', $data);
     }
 
@@ -172,13 +173,12 @@ class CostReportsController extends Controller
         $period = Period::find($period_id);
 
         $report = new VarianceAnalysisReport($period);
-        $data = $report->run();
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.variance_analysis.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-variance-analysis.xlsx');
+            return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.cost-control.variance_analysis.index', $data);
     }
 
