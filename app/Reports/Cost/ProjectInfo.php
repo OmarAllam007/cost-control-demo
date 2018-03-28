@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 11/15/17
- * Time: 2:36 PM
- */
 
 namespace App\Reports\Cost;
-
 
 use App\ActualRevenue;
 use App\BreakDownResourceShadow;
