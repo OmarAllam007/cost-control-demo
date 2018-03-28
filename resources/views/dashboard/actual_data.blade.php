@@ -62,7 +62,8 @@
                 <dl>
                     <dt>SPI</dt>
                     <dd class="display-flex">
-                        <span class="flex {{$spi_trend->last()<1?'text-danger' : 'text-success'}}">{{number_format($spi_trend->last(), 2)}}</span>
+                        @php $spi_index = $spi_trend->get($period->name) @endphp
+                        <span class="flex {{$spi_index<1?'text-danger' : 'text-success'}}">{{number_format($spi_index, 2)}}</span>
                         @if ($spi_trend->last() >= 1)
                             <span class="text-success"><i class="fa fa-circle"></i></span>
                         @else
