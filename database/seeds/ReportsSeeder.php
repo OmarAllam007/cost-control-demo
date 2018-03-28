@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
+use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\Report;
 use App\Reports\Budget\ActivityResourceBreakDownReport;
 use App\Reports\Budget\BoqPriceListReport;
@@ -75,6 +76,7 @@ class ReportsSeeder extends Seeder
             ['name' =>'Productivity Report', 'class_name' => ProductivityIndexReport::class, 'type' => 'Cost Control'],
             ['name' =>'Threshold Report', 'class_name' => ThresholdReport::class, 'type' => 'Cost Control'],
             ['name' =>'Material Consumption Report', 'class_name' => WasteIndexReport::class, 'type' => 'Cost Control'],
+            ['name' =>'Variance Analysis', 'class_name' => VarianceAnalysisReport::class, 'type' => 'Cost Control'],
         ])->sortBy(function($r) {
             return $r['type'] . '-' . $r['name'];
         });
