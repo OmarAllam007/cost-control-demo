@@ -65,6 +65,7 @@ class GlobalReport
         return [
             'cost_summary' => $this->cost_summary(),
             'cost_info' => $this->cost_info(),
+            'period' => $this->period,
             'projectNames' => $this->projects->pluck('name', 'id'),
             'contracts_info' => $this->contracts_info(),
             'finish_dates' => $this->finish_dates(),
