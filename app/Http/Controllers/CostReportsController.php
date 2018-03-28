@@ -114,13 +114,13 @@ class CostReportsController extends Controller
         $period = $project->periods()->find($period_id);
 
         $resourceCodeReport = new ResourceCodeReport($project, $period);
-        $data = $resourceCodeReport->run();
+
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.resource_code.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-resource_dict.xlsx');
+            return $resourceCodeReport->excel();
         }
 
+        $data = $resourceCodeReport->run();
         return view('reports.cost-control.resource_code.index', $data);
     }
 
