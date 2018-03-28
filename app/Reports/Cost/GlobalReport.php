@@ -57,7 +57,7 @@ class GlobalReport
         $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(6)->where('end_date', '>=', '2017-10-01')->get()->keyBy('id');
         $this->trend_period_ids = Period::whereIn('global_period_id',
             $this->trend_global_periods->pluck('id')
-        )->selectRaw('max(id) as id, global_period_id')->groupBy('global_period_id')->pluck('id');
+        )->selectRaw('max(id) as id, project_id, global_period_id')->groupBy(['project_id', 'global_period_id'])->pluck('id');
 
         $this->periods = Period::with('project')->find($this->last_period_ids->toArray());
         $this->projects = $this->periods->pluck('project');
