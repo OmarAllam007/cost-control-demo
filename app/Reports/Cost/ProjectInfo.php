@@ -15,6 +15,7 @@ use App\BudgetRevision;
 use App\CostManDay;
 use App\MasterShadow;
 use App\Period;
+use App\Project;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
@@ -48,14 +49,14 @@ class ProjectInfo
 
     function getInfo()
     {
-        $this->costSummary = MasterShadow::dashboardSummary($this->period)->get();
+        $this->costSummary = MasterShadow::dashboardSummary($this->period)->get()->keyBy('type');
 
         if ($this->costSummary->has('MANAGEMENT RESERVE')) {
             $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
             $reserve->completion_cost = $reserve->remaining_cost = 0;
             $reserve->completion_cost_var = $reserve->budget_cost;
 
-            $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost'));
+            $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->costSummary->sum('budget_cost'));
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
@@ -226,8 +227,8 @@ class ProjectInfo
     {
         $info = [
             'spi' => $this->period->spi_index,
-            'actual_cost' => MasterShadow::where('period_id', $this->period->id)->sum('to_date_cost'),
-            'allowable_cost' => MasterShadow::where('period_id', $this->period->id)->sum('allowable_ev_cost'),
+            'actual_cost' => $this->costSummary->sum('to_date_cost'),
+            'allowable_cost' => $this->costSummary->sum('allowable_cost'),
         ];
 
         $budget_cost = MasterShadow::where('period_id', $this->period->id)->sum('budget_cost');
