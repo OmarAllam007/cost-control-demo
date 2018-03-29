@@ -116,29 +116,36 @@ class ProjectInfo
 
     private function getProductivityIndexTrend()
     {
-        $periods = $this->project->periods()
+//        $periods = $this->project->periods()
+//            ->where('status', Period::GENERATED)
+//            ->where('global_period_id', '>=', 12)->take(6)->pluck('name', 'id');
+//
+//        $allowable_qty = MasterShadow::whereIn('period_id', $periods->keys())
+//            ->where('resource_type_id', 2)
+//            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
+//
+//        $cost_man_days = CostManDay::whereIn('period_id', $periods->keys()->toArray())
+//            ->selectRaw('period_id, sum(actual) as actual')
+//            ->groupBy('period_id')->get()->keyBy('period_id');
+//
+//        return $allowable_qty->map(function ($period) use ($cost_man_days, $periods) {
+//            $actual = $cost_man_days->get($period->period_id)->actual ?? 0;
+//            $value = 0;
+//            if ($actual) {
+//                $value = $period->allowable_qty / $actual;
+//            }
+//
+//            $name = $periods->get($period->period_id, '');
+//
+//            return new Fluent(compact('name', 'value'));
+//        });
+
+        return $this->project->periods()->latest('global_period_id')->take(6)
+            ->selectRaw('id, name, productivity_index as value')
+//            ->whereNotNull('productivity_index')
+            ->where('global_period_id', '>=', 12)
             ->where('status', Period::GENERATED)
-            ->where('global_period_id', '>=', 12)->take(6)->pluck('name', 'id');
-
-        $allowable_qty = MasterShadow::whereIn('period_id', $periods->keys())
-            ->where('resource_type_id', 2)
-            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
-
-        $cost_man_days = CostManDay::whereIn('period_id', $periods->keys()->toArray())
-            ->selectRaw('period_id, sum(actual) as actual')
-            ->groupBy('period_id')->get()->keyBy('period_id');
-
-        return $allowable_qty->map(function ($period) use ($cost_man_days, $periods) {
-            $actual = $cost_man_days->get($period->period_id)->actual ?? 0;
-            $value = 0;
-            if ($actual) {
-                $value = $period->allowable_qty / $actual;
-            }
-
-            $name = $periods->get($period->period_id, '');
-
-            return new Fluent(compact('name', 'value'));
-        });
+            ->get()->reverse()->keyBy('id');
     }
 
     private function getActualRevenue()
