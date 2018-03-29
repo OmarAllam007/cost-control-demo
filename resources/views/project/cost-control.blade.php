@@ -63,7 +63,7 @@
         @endif
     @endcan
 
-    <div id="projectArea" class="hidden">
+    <section id="projectArea" class="hidden">
         <nav id="project-nav" class="project-nav btn-toolbar pull-right">
             <a href="#datasheet" class="btn btn-primary btn-sm btn-outline"><i class="fa fa-table"></i> Data sheet</a>
             <a href="#Resources" class="btn btn-info btn-sm btn-outline">Resources</a>
@@ -100,7 +100,7 @@
         @can('reports', $project)
             @include('project.cost-control._report')
         @endcan
-    </div>
+    </section>
 
     @include('project.templates.iframe-modal')
 
