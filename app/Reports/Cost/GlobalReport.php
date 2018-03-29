@@ -57,7 +57,7 @@ class GlobalReport
         $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(6)->where('end_date', '>=', '2017-10-01')->get()->keyBy('id');
         $this->trend_period_ids = Period::whereIn('global_period_id',
             $this->trend_global_periods->pluck('id')
-        )->selectRaw('max(id) as id, global_period_id')->groupBy('global_period_id')->pluck('id');
+        )->selectRaw('max(id) as id, project_id, global_period_id')->groupBy(['project_id', 'global_period_id'])->pluck('id');
 
         $this->periods = Period::with('project')->find($this->last_period_ids->toArray());
         $this->projects = $this->periods->pluck('project');
@@ -65,6 +65,7 @@ class GlobalReport
         return [
             'cost_summary' => $this->cost_summary(),
             'cost_info' => $this->cost_info(),
+            'period' => $this->period,
             'projectNames' => $this->projects->pluck('name', 'id'),
             'contracts_info' => $this->contracts_info(),
             'finish_dates' => $this->finish_dates(),
@@ -310,6 +311,7 @@ class GlobalReport
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->whereIn('sh.period_id', $this->trend_period_ids)
             ->groupBy('p.global_period_id')
+            ->orderBy('p.global_period_id')
             ->get()->map(function ($period) {
                 $period->cpi_index = round($period->allowable_cost / $period->to_date_cost, 2);
                 $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
@@ -319,7 +321,7 @@ class GlobalReport
 
     function spi_trend()
     {
-        return $this->trend_global_periods->pluck('spi_index', 'name');
+        return $this->trend_global_periods->sortBy('id')->pluck('spi_index', 'name');
     }
 
     function waste_index_trend()
@@ -363,6 +365,7 @@ class GlobalReport
             ->selectRaw("p.global_period_id, sum(budget_unit) as budget_unit, sum(allowable_qty) as allowable_qty, sum(actual) as actual")
             ->where('sh.resource_type_id', 2)->where('to_date_cost', '>', 0)
             ->whereIn('sh.period_id', $period_ids)
+            ->orderBy('p.global_period_id')
             ->groupBy('p.global_period_id')
             ->get()->map(function ($period) use ($periods) {
                 $period->name = $periods->get($period->global_period_id)->name;

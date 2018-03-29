@@ -119,8 +119,8 @@ class Period extends Model
             return $this->attributes['time_remaining'];
         }
 
-        if ($this->expected_duration) {
-            return $this->expected_duration - $this->time_elapsed;
+        if ($this->actual_duration) {
+            return $this->actual_duration - $this->time_elapsed;
         }
 
         return '';

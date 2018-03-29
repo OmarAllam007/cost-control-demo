@@ -99,14 +99,14 @@ class CostImporter
                 if ($rows->count() > 1) {
                     $count = $rows->pluck(7)->unique()->count();
                     if ($count > 1) {
-                        $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
+                        $errors->put($hash, collect(['rows' => collect($rows), 'resource' => $record['resource'], 'hash' => $hash]));
                         continue;
                     }
 
                     foreach ($rows as $row) {
                         $unit_id = $this->unitsMap->get($row[3]);
                         if ($record['resource']->unit_id != $unit_id) {
-                            $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
+                            $errors->put($hash, collect(['rows' => collect($rows), 'resource' => $record['resource'], 'hash' => $hash]));
                             break;
                         }
                     }
@@ -114,7 +114,7 @@ class CostImporter
                     $row = $rows->first();
                     $unit_id = $this->unitsMap->get(trim(strtolower($row[3])));
                     if ($record['resource']->unit_id != $unit_id) {
-                        $errors->put($hash, ['rows' => $rows, 'resource' => $record['resource'], 'hash' => $hash]);
+                        $errors->put($hash, collect(['rows' => collect($rows), 'resource' => $record['resource'], 'hash' => $hash]));
                     }
                 }
 
