@@ -16,6 +16,7 @@ use App\Project;
 use App\StdActivity;
 use App\Survey;
 use App\WbsLevel;
+use function collect;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
@@ -87,7 +88,7 @@ class QsSummaryReport
                 $level->activities = $this->activities->only($activity_ids->toArray())
                     ->map(function ($activity) use ($info, $level) {
 
-                        $items = $info->get($activity->id)->map(function ($cost_account) {
+                        $items = $info->get($activity->id, collect())->map(function ($cost_account) {
                             $cost_account->boq_description = $this->boqs->get($cost_account->boq_id)->description ?? '';
                             $cost_account->unit_of_measure = $this->boqs->get($cost_account->boq_id)->unit->type ?? '';
                             return $cost_account;
@@ -108,30 +109,36 @@ class QsSummaryReport
     {
         \Excel::create(slug($this->project->name) . '-qs-summary', function (LaravelExcelWriter $excel) {
             $excel->sheet('QS Summary', function (LaravelExcelWorksheet $sheet) {
-
-                $sheet->row(1, ['Activity', 'Cost Account', 'BOQ Description', 'Eng Qty', 'Budget Qty', 'Unit of measure']);
-                $sheet->cells('A1:F1', function (CellWriter $cells) {
-                    $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
-                });
-
-                $sheet->setAutoFilter();
-                $sheet->freezeFirstRow();
-
-                $this->tree->each(function (WbsLevel $level) use ($sheet) {
-                    $this->buildExcel($sheet, $level);
-                });
-
-                $sheet->cells("A2:A{$this->row}", function (CellWriter $cells) {
-                    $cells->setFont(['bold' => true]);
-                });
-
-                $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
-                $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
-                $sheet->setColumnFormat(["D2:D{$this->row}" => '#,##0.00']);
+                $this->sheet($sheet);
             });
 
             $excel->download('xlsx');
         });
+    }
+
+    function sheet($sheet)
+    {
+        $this->run();
+
+        $sheet->row(1, ['Activity', 'Cost Account', 'BOQ Description', 'Eng Qty', 'Budget Qty', 'Unit of measure']);
+        $sheet->cells('A1:F1', function (CellWriter $cells) {
+            $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
+        });
+
+        $sheet->setAutoFilter();
+        $sheet->freezeFirstRow();
+
+        $this->tree->each(function (WbsLevel $level) use ($sheet) {
+            $this->buildExcel($sheet, $level);
+        });
+
+        $sheet->cells("A2:A{$this->row}", function (CellWriter $cells) {
+            $cells->setFont(['bold' => true]);
+        });
+
+        $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
+        $sheet->setColumnFormat(["C2:C{$this->row}" => '#,##0.00']);
+        $sheet->setColumnFormat(["D2:D{$this->row}" => '#,##0.00']);
     }
 
     protected function buildExcel(LaravelExcelWorksheet $sheet, $level, $depth = 0)
@@ -182,7 +189,7 @@ class QsSummaryReport
                     ->setOutlineLevel($newDepth < 7 ? $newDepth : 7)
                     ->setCollapsed(true)->setVisible(false);
 
-                $activity->cost_accounts->each(function ($cost_account) use ($sheet, $newDepth) {
+                $activity->items->each(function ($cost_account) use ($sheet, $newDepth) {
                     ++$this->row;
                     $sheet->row($this->row, [
                         '', $cost_account->cost_account, $cost_account->boq_description,

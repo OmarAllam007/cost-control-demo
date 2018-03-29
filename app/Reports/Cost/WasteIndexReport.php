@@ -11,6 +11,9 @@ use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Readers\LaravelExcelReader;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Worksheet;
 
 class WasteIndexReport
 {
@@ -93,6 +96,7 @@ class WasteIndexReport
             });
 
             $type->allowable_cost = $type->resources_list->sum('allowable_cost') + $type->subtree->sum('allowable_cost');
+            $type->to_date_cost = $type->resources_list->sum('to_date_cost') + $type->subtree->sum('to_date_cost');
             $type->variance = $type->resources_list->sum('variance') + $type->subtree->sum('variance');
             $type->pw_index = 0;
             if ($type->allowable_cost) {
@@ -126,20 +130,33 @@ class WasteIndexReport
 
     function excel()
     {
-        \Excel::load(storage_path('templates/waste-index.xlsx'), function(LaravelExcelReader $excel) {
+        $excel = new \PHPExcel();
 
-            $excel->sheet(0, function($sheet) {
-                $this->sheet($sheet);
-            });
+        $excel->removeSheetByIndex(0);
+        $excel->addExternalSheet($this->sheet());
+        $filename = storage_path('app/waste-index-' . uniqid() . '.xlsx');
+        $writer = new \PHPExcel_Writer_Excel2007($excel);
+        $writer->setIncludeCharts(true);
+        $writer->save($filename);
 
-            $excel->setFilename(slug($this->project->name) . '-waste_index');
-            $excel->export('xlsx');
-        });
+        $name = slug($this->project->name) . '_' . slug($this->period->name) . '_waste-index.xlsx';
+        return \Response::download($filename, $name)->deleteFileAfterSend(true);
+
+//        \Excel::create(slug($this->project->name) . '-waste_index', function(LaravelExcelWriter $excel) {
+//
+//            $excel->sheet(0, function($sheet) {
+//                $this->sheet($sheet);
+//            });
+//
+//            $excel->export('xlsx');
+//        });
     }
 
-    function sheet(LaravelExcelWorksheet $sheet)
+    function sheet()
     {
         $this->run();
+
+        $sheet = PHPExcel_IOFactory::load(storage_path('templates/waste-index.xlsx'))->getSheet(0);
 
         $sheet->setCellValue('A4', "Project: {$this->project->name}");
         $sheet->setCellValue('A5', "Issue Date: " . date('d M Y'));
@@ -149,34 +166,40 @@ class WasteIndexReport
         $sheet->setCellValue("F{$this->row}", $this->tree->sum('allowable_cost'));
         $sheet->setCellValue("G{$this->row}", $this->tree->sum('to_date_cost'));
         $sheet->setCellValue("H{$this->row}", $this->tree->sum('to_date_cost_var'));
-        $sheet->setCellValue("I{$this->row}", $this->total_pw_index);
+        $sheet->setCellValue("I{$this->row}", $this->total_pw_index / 100);
 
         $this->tree->each(function($type) use ($sheet) {
             $this->buildExcelTypes($sheet, $type);
         });
+
+        $sheet->getStyle("B{$this->start}:H{$this->row}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("I{$this->start}:I{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
+        $sheet->setShowSummaryBelow(false);
+        return $sheet;
     }
 
-    function buildExcelTypes(LaravelExcelWorksheet $sheet, $type, $depth = 0)
+    /**
+     * @param PHPExcel_Worksheet $sheet
+     * @param $type
+     * @param int $depth
+     */
+    function buildExcelTypes($sheet, $type, $depth = 0)
     {
         ++$this->row;
 
-        $sheet->row($this->row, [
+        $sheet->fromArray([
             $type->name, '', '', '', '',
-            $type->allowable_cost, $type->to_date_cost, $type->to_date_cost_var, $type->pw_index
-        ]);
+            $type->allowable_cost, $type->to_date_cost, $type->variance, $type->pw_index / 100
+        ], null, "A{$this->row}", true);
 
-        $sheet->cells("A{$this->row}:I{$this->row}", function($cells) {
-            $cells->setFont(['bold' => true]);
-        });
+        $sheet->getStyle("A{$this->row}:I{$this->row}")->getFont()->setBold(true);
 
         if ($depth) {
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel(min($depth, 7))
                 ->setVisible(false)->setCollapsed(true);
 
-            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
-                $cells->setTextIndent($depth * 6);
-            });
+            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent($depth * 6);
         }
 
         ++$depth;
@@ -186,19 +209,17 @@ class WasteIndexReport
 
         $type->resources_list->each(function($resource) use ($sheet, $depth) {
             ++$this->row;
-            $sheet->row($this->row, [
-                $resource->resource_name, $resource->to_date_unit_price, $resource->to_date_qty,
-                $resource->allowable_qty, $resource->to_date_qty_var,
-                $resource->allowable_cost, $resource->to_date_cost, $resource->to_date_cost_var, $resource->pw_index
-            ]);
+            $sheet->fromArray([
+                $resource->resource_name, $resource->to_date_unit_price ?: 0, $resource->to_date_qty,
+                $resource->allowable_qty ?: 0, $resource->qty_var ?: 0,
+                $resource->allowable_cost ?: 0, $resource->to_date_cost ?: 0, $resource->variance ?: 0, $resource->pw_index / 100
+            ], null, "A{$this->row}", true);
 
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel(min($depth, 7))
                 ->setVisible(false)->setCollapsed(true);
 
-            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
-                $cells->setTextIndent($depth * 6);
-            });
+            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent($depth * 6);
         });
     }
 

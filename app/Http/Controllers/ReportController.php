@@ -68,24 +68,24 @@ class ReportController extends Controller
     public function productivityReport(Project $project)
     {
         $report = new ProductivityReport($project);
-        $data = $report->run();
 
         if (request()->exists('excel')) {
             return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.budget.productivity.index', $data);
     }
 
     public function stdActivityReport(Project $project)
     {
         $report = new StdActivityReport($project, false);
-        $data = $report->run();
 
         if (request()->exists('excel')) {
             return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.budget.std-activity.index', $data);
     }
 
@@ -104,24 +104,24 @@ class ReportController extends Controller
     public function resourceDictionary(Project $project)
     {
         $report = new ResourceDictReport($project);
-        $data = $report->run();
 
         if (request()->exists('excel')) {
             return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.budget.resource-dict.index', $data);
     }
 
     public function qsSummary(Project $project)
     {
         $report = new QsSummaryReport($project);
-        $data = $report->run();
 
         if (request()->exists('excel')) {
             return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.budget.qs-summary.index', $data);
     }
 

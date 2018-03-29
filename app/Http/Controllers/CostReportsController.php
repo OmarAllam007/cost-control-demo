@@ -4,37 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Boq;
 use App\BreakDownResourceShadow;
-use App\Http\Controllers\Reports\CostReports\ActivityReport;
+use App\Reports\Cost\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
-use App\Http\Controllers\Reports\CostReports\CostStandardActivityReport;
+use App\Reports\Cost\CostStandardActivityReport;
+use App\Reports\Cost\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
-use App\Http\Controllers\Reports\CostReports\ProductivityReport;
-use App\Http\Controllers\Reports\CostReports\ProjectInformation;
 use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
-use App\Http\Controllers\Reports\CostReports\StandardActivity;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
-use App\Reports\Cost\CostSummary;
 use App\Reports\Cost\ProductivityIndexReport;
 use App\Reports\Cost\ProjectInfo;
 use App\Reports\Cost\ThresholdReport;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class CostReportsController extends Controller
 {
 
     public function projectInformation(Project $project, Request $request)
-
     {
         $period_id = $this->getPeriod($project, $request);
 
@@ -47,14 +40,13 @@ class CostReportsController extends Controller
     {
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
-        $costSummary = new CostSummary($period);
-
-        $data = $costSummary->run();
+        $report = new CostSummary($period);
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.cost-summary.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-cost-summary.xlsx');
+            return $report->excel();
         }
+
+        $data = $report->run();
 
         return view('reports.cost-control.cost-summary.index', $data);
     }
@@ -87,14 +79,15 @@ class CostReportsController extends Controller
         $chosen_period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($chosen_period_id);
 
-        $standard_activity = new CostStandardActivityReport($project, $period);
-        $data = $standard_activity->run();
+        $report = new CostStandardActivityReport($period);
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-std-activity.xlsx');
+            return $report->excel();
+//            $filename = view('reports.cost-control.standard_activity.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-std-activity.xlsx');
         }
 
+        $data = $report->run();
         return view('reports.cost-control.standard_activity.index', $data);
     }
 
@@ -104,13 +97,14 @@ class CostReportsController extends Controller
         $period = $project->periods()->find($period_id);
 
         $boq = new BoqReport($period);
-        $data = $boq->run();
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.boq-report.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-boq.xlsx');
+            return $boq->excel();
+//            $filename = view('reports.cost-control.boq-report.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-boq.xlsx');
         }
 
+        $data = $boq->run();
         return view('reports.cost-control.boq-report.index', $data);
     }
 
@@ -120,13 +114,13 @@ class CostReportsController extends Controller
         $period = $project->periods()->find($period_id);
 
         $resourceCodeReport = new ResourceCodeReport($project, $period);
-        $data = $resourceCodeReport->run();
+
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.resource_code.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-resource_dict.xlsx');
+            return $resourceCodeReport->excel();
         }
 
+        $data = $resourceCodeReport->run();
         return view('reports.cost-control.resource_code.index', $data);
     }
 
@@ -145,16 +139,16 @@ class CostReportsController extends Controller
     public function activityReport(Project $project, Request $request)
     {
         $period = Period::find($this->getPeriod($project, $request));
-
         $report = new ActivityReport($period);
 
-        $data = $report->run();
-
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.activity.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-activity.xlsx');
+            return $report->excel();
+
+//            $filename = view('reports.cost-control.activity.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-activity.xlsx');
         }
 
+        $data = $report->run();
         return view('reports.cost-control.activity.index', $data);
     }
 
@@ -179,13 +173,12 @@ class CostReportsController extends Controller
         $period = Period::find($period_id);
 
         $report = new VarianceAnalysisReport($period);
-        $data = $report->run();
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.variance_analysis.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-variance-analysis.xlsx');
+            return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.cost-control.variance_analysis.index', $data);
     }
 

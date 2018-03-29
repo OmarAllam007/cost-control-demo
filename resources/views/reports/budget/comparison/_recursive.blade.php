@@ -36,7 +36,7 @@
         <td style="width: 120px; min-width: 120px;  max-width: 120px;">{{$boq->item_code}}</td>
         <td style="width: 150px; min-width: 150px;  max-width: 150px;">{{$boq->cost_account}}</td>
         <td style="width: 200px; min-width: 200px;  max-width: 200px;">{{$boq->description}}</td>
-        <td style="width: 75px; min-width: 75px; max-width: 75px;">{{$boq->unit->type ?? ''}}</td>
+        <td style="width: 75px; min-width: 75px; max-width: 75px;">{{$boq->measure_unit}}</td>
 
         {{-- BOQ --}}
         <td style="width: 120px; min-width: 120px;  max-width: 120px;">{{number_format($boq->price_ur, 2)}}</td>

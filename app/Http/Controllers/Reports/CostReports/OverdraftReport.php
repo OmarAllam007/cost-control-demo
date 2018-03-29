@@ -25,13 +25,13 @@ class OverdraftReport
     /** @var Project */
     protected $project;
 
-    /** @var Collection  */
+    /** @var Collection */
     protected $wbs_levels;
 
-    /** @var Collection  */
+    /** @var Collection */
     protected $rawData;
 
-    /** @var Collection  */
+    /** @var Collection */
     protected $tree;
 
     /** @var Fluent */
@@ -76,7 +76,7 @@ class OverdraftReport
     protected function buildTree($parent = 0)
     {
 
-        return $this->wbs_levels->get($parent, collect())->map(function($level) {
+        return $this->wbs_levels->get($parent, collect())->map(function ($level) {
             $level->subtree = $this->buildTree($level->id);
             $level->boqs = $this->rawData->get($level->id, collect())->map(function ($boq) {
                 $boq->var = $boq->actual_revenue - $boq->physical_revenue;
@@ -91,16 +91,16 @@ class OverdraftReport
             $level->actual_revenue = $level->subtree->sum('actual_revenue') + $level->boqs->sum('actual_revenue');
 
             return $level;
-        })->reject(function($level) {
+        })->reject(function ($level) {
             return $level->subtree->isEmpty() && $level->boqs->isEmpty();
         });
     }
 
     function excel()
     {
-        $excel = \PHPExcel_IOFactory::load(storage_path('templates/overdraft.xlsx'));
-
-        $this->sheet($excel->getSheet(0));
+        $excel = new \PHPExcel();
+        $excel->removeSheetByIndex(0);
+        $excel->addExternalSheet($this->sheet(), 0);
 
         $filename = storage_path('app/' . uniqid('overdraft_') . '.xlsx');
         \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
@@ -110,14 +110,25 @@ class OverdraftReport
         )->deleteFileAfterSend(true);
     }
 
-    function sheet(\PHPExcel_Worksheet $sheet)
+    function sheet()
     {
         $this->run();
 
+        $template = \PHPExcel_IOFactory::load(storage_path('templates/overdraft.xlsx'));
+        $sheet = $template->getSheet(0);
+
+        $logo = imagecreatefrompng(public_path('images/kcc.png'));
+        $drawing = new \PHPExcel_Worksheet_MemoryDrawing();
+        $drawing->setName('Logo')->setImageResource($logo)
+            ->setRenderingFunction(\PHPExcel_Worksheet_MemoryDrawing::RENDERING_PNG)
+            ->setMimeType(\PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
+            ->setCoordinates('G1')->setWorksheet($sheet);
+//
+//
         $sheet->setCellValue('A4', 'Project: ' . $this->project->name);
         $sheet->setCellValue('A5', 'Period: ' . $this->period->name);
         $sheet->setCellValue('A6', 'Issue Date: ' . date('d/m/Y'));
-
+//
         $this->tree->each(function($level) use ($sheet) {
             $this->buildExcelTree($sheet, $level);
         });
@@ -145,11 +156,11 @@ class OverdraftReport
 
         ++$depth;
 
-        $level->subtree->each(function($sublevel) use ($sheet, $depth) {
+        $level->subtree->each(function ($sublevel) use ($sheet, $depth) {
             $this->buildExcelTree($sheet, $sublevel, $depth);
         });
 
-        $level->boqs->each(function($boq) use ($sheet, $depth) {
+        $level->boqs->each(function ($boq) use ($sheet, $depth) {
             ++$this->row;
 
             $sheet->fromArray([
