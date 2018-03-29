@@ -181,8 +181,8 @@ class ProjectInfo
             $revision1['profitability_index'] = $this->project->planned_profitability;
         }
 
-        $revision0['indirect_cost'] = $revision0['general_requirements'] + $revision0['management_reserve'];
-        $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'];
+        $revision0['indirect_cost'] = $revision0['general_requirements'];
+        $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'] - $revision0['management_reserve'];
 
         $latest = BudgetRevision::where('project_id', $this->project->id)->where('is_generated', 1)->latest()->first();
 
@@ -210,8 +210,8 @@ class ProjectInfo
             $revision1['profitability_index'] = $this->project->planned_profitability;
         }
 
-        $revision1['indirect_cost'] = $revision1['general_requirements'] + $revision1['management_reserve'];
-        $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'];
+        $revision1['indirect_cost'] = $revision1['general_requirements'];
+        $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'] - $revision1['management_reserve'];
 
         return compact('revision0', 'revision1');
     }
