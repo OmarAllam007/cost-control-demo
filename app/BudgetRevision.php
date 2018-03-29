@@ -25,6 +25,8 @@ class BudgetRevision extends Model
 
     protected $fillable = ['global_period_id', 'is_generated'];
 
+    protected $general_requirement_cost;
+
     function project()
     {
         return $this->belongsTo(Project::class);
@@ -174,7 +176,7 @@ class BudgetRevision extends Model
                 ->where('resource_type_id', 1)->sum('budget_cost');
         }
 
-        return $this->general_requirements_cost;
+        return $this->general_requirement_cost;
     }
 
     function getManagementReserveCostAttribute()
