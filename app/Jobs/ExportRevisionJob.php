@@ -59,6 +59,9 @@ class ExportRevisionJob extends Job
                 $collection->each(function (RevisionBreakdownResourceShadow $resource) {
                     $discpline = $resource->std_activity->discipline;
                     $level = $resource->wbs;
+                    if (!$level) {
+                        return true;
+                    }
 
                     $levels = $this->resolveWbsLevels($level);
                     $divisions = $this->resolveRevisions($resource);

@@ -90,7 +90,7 @@ class VarianceAnalysisReport
         $excel->removeSheetByIndex(0);
         $excel->addExternalSheet($this->sheet(), 0);
 
-        $filename = storage_path('app/' . uniqid('overdraft_') . '.xlsx');
+        $filename = storage_path('app/' . uniqid('varanalysis_') . '.xlsx');
         \PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
 
         return \Response::download($filename,
@@ -204,6 +204,8 @@ class VarianceAnalysisReport
 
         $sheet->setShowSummaryBelow(false);
         $sheet->setSelectedCell("A{$start}");
+
+        $sheet->setTitle('Variance Analysis');
 
         return $sheet;
     }

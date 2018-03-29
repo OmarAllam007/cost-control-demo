@@ -211,6 +211,7 @@ class BoqReport
         $sheet->getStyle("N{$start}:Q{$counter}")->setConditionalStyles([$varCondition]);
 
         $sheet->setShowSummaryBelow(false);
+        $sheet->setTitle('BOQ (Cost)');
 
         return $sheet;
     }

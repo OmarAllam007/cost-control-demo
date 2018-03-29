@@ -24,7 +24,7 @@
             <article class="form-group {{$errors->first('spi_index', 'has-error')}}">
                 {{Form::label('spi_index', null, ['class' => 'control-label col-sm-4'])}}
                 <div class="col-sm-8">
-                    {{Form::number('spi_index', null, ['class' => 'form-control', 'step' => '0.1'])}}
+                    {{Form::number('spi_index', null, ['class' => 'form-control', 'step' => '0.01'])}}
                     {!! $errors->first('spi_index', '<div class="help-block">:message</div>') !!}
                 </div>
             </article>
@@ -33,7 +33,7 @@
                 {{Form::label('planned_progress', null, ['class' => 'control-label col-sm-4'])}}
                 <div class="col-sm-8">
                     <div class="input-group">
-                        {{Form::number('planned_progress', null, ['class' => 'form-control', 'step' => '1'])}}
+                        {{Form::number('planned_progress', null, ['class' => 'form-control', 'step' => '0.01'])}}
                         <span class="input-group-addon">%</span>
                     </div>
 
@@ -45,7 +45,7 @@
                 {{Form::label('actual_progress', null, ['class' => 'control-label col-sm-4'])}}
                 <div class="col-sm-8">
                     <div class="input-group">
-                        {{Form::number('actual_progress', null, ['class' => 'form-control', 'step' => '1'])}}
+                        {{Form::number('actual_progress', null, ['class' => 'form-control', 'step' => '0.01'])}}
                         <span class="input-group-addon">%</span>
                     </div>
 
@@ -56,7 +56,7 @@
             <article class="form-group {{$errors->first('planned_value', 'has-error')}}">
                 {{Form::label('planned_value', null, ['class' => 'control-label col-sm-4'])}}
                 <div class="col-sm-8">
-                    {{Form::number('planned_value', null, ['class' => 'form-control', 'step' => '0.1'])}}
+                    {{Form::number('planned_value', null, ['class' => 'form-control', 'step' => '0.01'])}}
                     {!! $errors->first('planned_value', '<div class="help-block">:message</div>') !!}
                 </div>
             </article>
@@ -64,7 +64,7 @@
             <article class="form-group {{$errors->first('earned_value', 'has-error')}}">
                 {{Form::label('earned_value', null, ['class' => 'control-label col-sm-4'])}}
                 <div class="col-sm-8">
-                    {{Form::number('earned_value', null, ['class' => 'form-control', 'step' => '0.1'])}}
+                    {{Form::number('earned_value', null, ['class' => 'form-control', 'step' => '0.01'])}}
                     {!! $errors->first('earned_value', '<div class="help-block">:message</div>') !!}
                 </div>
             </article>
@@ -72,7 +72,7 @@
             <article class="form-group {{$errors->first('actual_invoice_value', 'has-error')}}">
                 {{Form::label('actual_invoice_value', null, ['class' => 'control-label col-sm-4'])}}
                 <div class="col-sm-8">
-                    {{Form::number('actual_invoice_value', null, ['class' => 'form-control', 'step' => '0.1'])}}
+                    {{Form::number('actual_invoice_value', null, ['class' => 'form-control', 'step' => '0.01'])}}
                     {!! $errors->first('actual_invoice_value', '<div class="help-block">:message</div>') !!}
                 </div>
             </article>
