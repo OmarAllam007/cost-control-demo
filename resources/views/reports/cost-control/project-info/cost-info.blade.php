@@ -58,11 +58,11 @@
                 <dl>
                     <dt>Duration Var</dt>
                     <dd class="display-flex">
-                        <span class="flex {{$period->duration_variance < 0 ?'':'text-danger'}}">
+                        <span class="flex {{$period->duration_variance > 0 ?'text-success':'text-danger'}}">
                             {{$period->duration_variance ?: 0}} <small>(Days)</small>
                         </span>
 
-                        <span class="{{$period->duration_variance < 0? 'text-success' : 'text-danger'}}">
+                        <span class="{{$period->duration_variance > 0? 'text-success' : 'text-danger'}}">
                             <i class="fa fa-circle"></i>
                         </span>
                     </dd>
