@@ -49,10 +49,10 @@
 
             <div class="flex  mr-10">
                 <dl>
-                    <dt>Material Consumption Index</dt>
+                    <dt>MCI</dt>
                     <dd class="display-flex">
-                        <span class="flex {{$cost_info['pw_index'] > 4.475? 'text-danger' : 'text-success'}}">{{number_format($cost_info['pw_index'], 2)}}%</span>
-                        <span class="{{$cost_info['pw_index'] > 4.475? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
+                        <span class="flex {{$cost_info['pw_index'] > 4.75? 'text-danger' : 'text-success'}}">{{number_format($cost_info['pw_index'], 2)}}%</span>
+                        <span class="{{$cost_info['pw_index'] > 4.75? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
 
                     </dd>
                 </dl>
@@ -108,14 +108,14 @@
                     <dt>Highest Risk Project</dt>
                     <dd>
                         <span class="abbr" title="{{$cost_info['highest_risk']->name}}">
-                            {{ str_limit($cost_info['highest_risk']->name, 25) }}
+                            {{ str_limit($cost_info['highest_risk']->project_code, 25) }}
                         </span>
                     </dd>
                 </dl>
             </div>
             <div class="flex mr-10">
                 <dl>
-                    <dt> Highest Risk Variance</dt>
+                    <dt>Highest Risk Variance</dt>
                     <dd class="display-flex">
                         <span class="flex {{$cost_info['highest_risk']->variance < 1? 'text-danger' : 'text-success'}}">{{number_format($cost_info['highest_risk']->variance, 2)}}</span>
                         <span class="{{$cost_info['highest_risk']->variance < 0? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
@@ -138,7 +138,7 @@
                     <dt>Lowest Risk Project</dt>
                     <dd>
                         <span class="abbr" title="{{$cost_info['highest_risk']->name}}">
-                            {{ str_limit($cost_info['lowest_risk']->name, 25) }}
+                            {{ str_limit($cost_info['lowest_risk']->project_code, 25) }}
                         </span>
                     </dd>
                 </dl>

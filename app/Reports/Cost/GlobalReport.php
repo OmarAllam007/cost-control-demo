@@ -209,11 +209,11 @@ class GlobalReport
     {
         $cpis = MasterShadow::join('periods as p', 'master_shadows.period_id', '=', 'p.id')
             ->join('projects', 'master_shadows.project_id', '=', 'projects.id')
-            ->select(['master_shadows.project_id', 'projects.name'])
+            ->select(['master_shadows.project_id', 'projects.name', 'projects.project_code'])
             ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(completion_cost) as completion_cost')
             ->where('p.global_period_id', $this->period->id)
-            ->groupBy('master_shadows.project_id')->groupBy('projects.name')
+            ->groupBy(['master_shadows.project_id','projects.name', 'projects.project_code'])
             ->get()->map(function ($period) {
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
                 $period->variance = $period->allowable_cost - $period->to_date_cost;

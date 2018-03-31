@@ -121,7 +121,7 @@
                     <section class="card-group-item">
                         <h4 class="card-title dark-cyan card-group-item-heading">Cost Percentage</h4>
 
-                        <div class="card-body">
+                        <div class="card-body pie-chart">
                             <div class="chart"
                                  id="costChart"
                                  data-type="pie"
@@ -208,6 +208,10 @@
 
         .card .table > tbody > tr.high-risk-project > th.separator, .card .table > tbody > tr.high-risk-project > td.separator {
             background-color: transparent;
+        }
+
+        .card-group-item .pie-chart canvas {
+            max-width: initial;
         }
     </style>
 @endsection

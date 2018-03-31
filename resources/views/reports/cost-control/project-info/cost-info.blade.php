@@ -100,11 +100,11 @@
                     <dt>MCI</dt>
                     <dd>
                         <div class="display-flex">
-                            <span class="flex {{$costInfo['waste_index'] < 4.475 ? 'text-success' : 'text-danger'}}">
+                            <span class="flex {{$costInfo['waste_index'] < 4.75 ? 'text-success' : 'text-danger'}}">
                                 {{number_format($costInfo['waste_index'], 2)}}%
                             </span>
 
-                            <span class="{{$costInfo['waste_index'] < 4.475 ? 'text-success' : 'text-danger'}}">
+                            <span class="{{$costInfo['waste_index'] < 4.75 ? 'text-success' : 'text-danger'}}">
                                 <i class="fa fa-circle"></i>
                             </span>
                         </div>
