@@ -11557,7 +11557,7 @@ dl.dl-margin {
   }
   @page {
     size: A4;
-    padding: 1cm;
+    margin: 0.4cm;
   }
 }
 

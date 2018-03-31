@@ -11,6 +11,7 @@ use App\Period;
 use App\Project;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
+use function dd;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
@@ -208,11 +209,11 @@ class GlobalReport
     {
         $cpis = MasterShadow::join('periods as p', 'master_shadows.period_id', '=', 'p.id')
             ->join('projects', 'master_shadows.project_id', '=', 'projects.id')
-            ->select(['master_shadows.project_id', 'projects.name'])
+            ->select(['master_shadows.project_id', 'projects.name', 'projects.project_code'])
             ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(completion_cost) as completion_cost')
             ->where('p.global_period_id', $this->period->id)
-            ->groupBy('master_shadows.project_id')->groupBy('projects.name')
+            ->groupBy(['master_shadows.project_id','projects.name', 'projects.project_code'])
             ->get()->map(function ($period) {
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
                 $period->variance = $period->allowable_cost - $period->to_date_cost;
@@ -307,13 +308,16 @@ class GlobalReport
     private function cpi_trend()
     {
         return $this->cpi_trend = MasterShadow::from('master_shadows as sh')
-            ->selectRaw('p.global_period_id, sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')
+            ->selectRaw('p.global_period_id, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
+            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(CASE WHEN resource_type_id = 8 THEN budget_cost END) as total_reserve')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->whereIn('sh.period_id', $this->trend_period_ids)
             ->groupBy('p.global_period_id')
             ->orderBy('p.global_period_id')
             ->get()->map(function ($period) {
-                $period->cpi_index = round($period->allowable_cost / $period->to_date_cost, 2);
+                $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->total_reserve));
+                $reserve = $period->total_reserve * $progress;
+                $period->cpi_index = round(($period->allowable_cost + $reserve) / $period->to_date_cost, 2);
                 $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
                 return $period;
             });
