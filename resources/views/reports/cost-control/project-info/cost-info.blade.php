@@ -36,7 +36,7 @@
                 </dl>
 
                 <dl>
-                    <dt>Actual Cost Percentage</dt>
+                    <dt>Cost Progress</dt>
                     <dd>{{number_format($costInfo['cost_progress'], 2)}}%</dd>
                 </dl>
             </article>
@@ -97,7 +97,7 @@
                 </dl>
 
                 <dl>
-                    <dt>Material Consumption Index</dt>
+                    <dt>MCI</dt>
                     <dd>
                         <div class="display-flex">
                             <span class="flex {{$costInfo['waste_index'] < 4.475 ? 'text-success' : 'text-danger'}}">
@@ -112,7 +112,7 @@
                 </dl>
 
                 <dl>
-                    <dt>Expected EAC Profit Profitability</dt>
+                    <dt>Expected Profitability</dt>
                     <dd class="display-flex">
                         <span class="flex {{$period->eac_profitability_index > 0 ? 'text-success' : 'text-danger'}}">
                             {{number_format($period->eac_profitability_index, 2)}}%

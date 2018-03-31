@@ -82,6 +82,11 @@
 @append
 
 @section('css')
+    <style>
+        .card-group-item .pie-chart canvas {
+            max-width: initial;
+        }
+    </style>
     {{--<style>--}}
     {{--.card-group-item {--}}
     {{--padding: 10px;--}}

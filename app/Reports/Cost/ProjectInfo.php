@@ -47,7 +47,7 @@ class ProjectInfo
         if ($this->costSummary->has('MANAGEMENT RESERVE')) {
             $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
             $reserve->completion_cost = $reserve->remaining_cost = 0;
-            $reserve->completion_cost_var = $reserve->budget_cost;
+            $reserve->completion_var = $reserve->budget_cost;
 
             $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->costSummary->sum('budget_cost'));
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
