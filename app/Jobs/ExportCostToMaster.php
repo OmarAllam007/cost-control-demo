@@ -84,6 +84,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     $wbs = $this->getWbs($costShadow);
                     $activityDivs = $this->getActivityDivisions($costShadow);
 
+                    $time = microtime(1);
                     $records[] = [
                         'budget_id' => $costShadow['id'], 'project_id' => $this->project->id, 'period_id' => $this->period->id,
                         'breakdown_resource_id' => $costShadow['breakdown_resource_id'],
@@ -121,9 +122,9 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
                         'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
                         'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
-                        'created_at' => $now, 'updated_at' => $now, 'pw_index' => $costShadow['pw_index']
+                        'created_at' => $now, 'updated_at' => $now,
+                        //'pw_index' => $costShadow['pw_index']
                     ];
-
                 }
 
                 \DB::transaction(function () use ($records) {
