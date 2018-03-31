@@ -68,8 +68,18 @@ class ProjectInfo
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
         $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
-            ->cpiTrendChart()->get()->reverse()->map(function ($item) {
-                $item->value = round($item->value, 4);
+            ->cpiTrendChart()->get()->reverse()->groupBy('p_id')->map(function ($period_items) {
+                $items = $period_items->keyBy('resource_type_id');
+                $allowable_cost = $items->sum('allowable_cost');
+                $to_date_cost = $items->sum('to_date_cost');
+                $reserve = $items->get(8, new Fluent());
+                $budget_cost = $items->sum('budget_cost') - $reserve->budget_cost;
+                $to_date_reserve = $reserve->budget_cost * $to_date_cost / $budget_cost;
+                $allowable_cost += $to_date_reserve;
+
+                $item = new Fluent();
+                $item->p_name = $period_items->pluck('p_name')->first();
+                $item->value = round($allowable_cost/$to_date_cost, 4);
                 return $item;
             });
 
