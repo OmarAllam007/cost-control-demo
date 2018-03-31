@@ -11535,6 +11535,14 @@ dl.dl-margin {
   font-weight: 700;
 }
 
+.text-danger .fa:before {
+  color: #a94442;
+}
+
+.text-success .fa:before {
+  color: #3c763d;
+}
+
 @media print {
   table {
     width: 100%;
