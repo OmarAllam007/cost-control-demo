@@ -1,9 +1,9 @@
 <article class="card-group-item">
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-{{$print? 12 : 6}}">
             <div class="br-1">
                 <h4 class="card-group-item-heading">Cost Performance</h4>
-                <div class="chart"
+                <div class="chart pie-chart"
                      id="costChart"
                      data-type="pie"
                      data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
@@ -16,8 +16,8 @@
             </div>
             </div>
 
-        <div class="col-xs-6">
-            <h4 class="card-group-item-heading">Time Percentage</h4>
+        <div class="col-xs-{{$print? 12 : 6}}">
+            <h4 class="card-group-item-headinsg">Time Percentage</h4>
             <div class="chart"
                  id="progressChart"
                  data-type="horizontalBar"
