@@ -181,7 +181,7 @@
                 <article class="form-group {{$errors->first('at_completion_optimistic', 'has-error')}}">
                     {{Form::label('at_completion_optimistic', 'Optimistic', ['class' => 'control-label col-sm-3'])}}
                     <div class="col-sm-9">
-                        {{ Form::number('at_completion_optimistic', null, ['class' => 'form-control'])}}
+                        {{ Form::number('at_completion_optimistic', null, ['class' => 'form-control', 'step' => '0.01'])}}
                         {!! $errors->first('at_completion_optimistic', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
@@ -189,15 +189,15 @@
                 <article class="form-group {{$errors->first('at_completion_likely', 'has-error')}}">
                     {{Form::label('at_completion_likely', 'Most likely', ['class' => 'control-label col-sm-3'])}}
                     <div class="col-sm-9">
-                        {{ Form::number('at_completion_likely', null, ['class' => 'form-control'])}}
+                        {{ Form::number('at_completion_likely', null, ['class' => 'form-control', 'step' => '0.01'])}}
                         {!! $errors->first('at_completion_likely', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
 
                 <article class="form-group {{$errors->first('at_completion_pessimistic', 'has-error')}}">
-                    {{Form::label('at_completion_pessimistic', null, ['class' => 'control-label col-sm-3'])}}
+                    {{Form::label('at_completion_pessimistic', 'Pessimistic', ['class' => 'control-label col-sm-3'])}}
                     <div class="col-sm-9">
-                        {{ Form::number('at_completion_pessimistic', null, ['class' => 'form-control'])}}
+                        {{ Form::number('at_completion_pessimistic', null, ['class' => 'form-control', 'step' => '0.01'])}}
                         {!! $errors->first('at_completion_pessimistic', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
