@@ -274,7 +274,7 @@ class ProjectInfo
             $indirect->completion_cost_optimistic = $this->period->at_completion_optimistic;
             $indirect->completion_var_optimistic = $indirect->budget_cost - $this->period->at_completion_optimistic;
 
-            $indirect->completion_cost_pessimestic = $this->period->at_completion_pessimistic;
+            $indirect->completion_cost_pessimistic = $this->period->at_completion_pessimistic;
             $indirect->completion_var_pessimistic = $indirect->budget_cost - $this->period->at_completion_pessimistic;
         }
 
