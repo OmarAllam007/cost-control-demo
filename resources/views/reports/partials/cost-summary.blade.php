@@ -9,7 +9,8 @@
             <th class="cost-summary-group">Previous</th>
             <th colspan="3" class="text-center cost-summary-group">To-Date</th>
             <th colspan="1" class="text-center cost-summary-group">Remaining</th>
-            <th colspan="6" class="text-center cost-summary-group">At Completion</th>
+            <th colspan="3" class="text-center cost-summary-group">at Completion Cost</th>
+            <th colspan="3" class="text-center cost-summary-group">at Completion Cost Var +/-</th>
         </tr>
         <tr>
             <th class="text-center col-xs-1 cost-summary-header">Base Line</th>
@@ -18,12 +19,12 @@
             <th class="text-center col-xs-1 cost-summary-header">To Date Cost</th>
             <th class="text-center col-xs-1 cost-summary-header">To Date Cost Variance</th>
             <th class="text-center col-xs-1 cost-summary-header">Remaining Cost</th>
-            <th class="text-center col-xs-1 cost-summary-header">Completion Cost (Optimistic)</th>
-            <th class="text-center col-xs-1 cost-summary-header">Completion Cost (Most Likely)</th>
-            <th class="text-center col-xs-1 cost-summary-header">Completion Cost (Pessimistic)</th>
-            <th class="text-center col-xs-1 cost-summary-header">Completion Cost Var (Optimistic)</th>
-            <th class="text-center col-xs-1 cost-summary-header">Completion Cost Var (Most Likely)</th>
-            <th class="text-center col-xs-1 cost-summary-header">Completion Cost Var (Pessimistic)</th>
+            <th class="text-center col-xs-1 cost-summary-header">Optimistic</th>
+            <th class="text-center col-xs-1 cost-summary-header">Most Likely</th>
+            <th class="text-center col-xs-1 cost-summary-header">Pessimistic</th>
+            <th class="text-center col-xs-1 cost-summary-header">Optimistic</th>
+            <th class="text-center col-xs-1 cost-summary-header">Most Likely</th>
+            <th class="text-center col-xs-1 cost-summary-header">Pessimistic</th>
         </tr>
 
         </thead>

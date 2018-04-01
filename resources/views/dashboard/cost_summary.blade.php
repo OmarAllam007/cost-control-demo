@@ -11,8 +11,8 @@
                 <th rowspan="2">To Date Cost</th>
                 <th rowspan="2">To Date Cost Var +/-</th>
                 <th rowspan="2">Remaining Cost</th>
-                <th class="text-center" colspan="3">Completion Cost</th>
-                <th class="text-center" colspan="3">Completion Cost Var +/-</th>
+                <th class="text-center" colspan="3">at Completion Cost</th>
+                <th class="text-center" colspan="3">at Completion Cost Var +/-</th>
             </tr>
             <tr class="bg-primary">
                 <th>Optimistic</th>

@@ -321,10 +321,6 @@ class GlobalReport
             $reserve->completion_cost_var_optimistic = $reserve->budget_cost;
             $reserve->completion_cost_var_likely = $reserve->budget_cost;
             $reserve->completion_cost_var_pessimistic = $reserve->budget_cost;
-
-            $budget_cost = $this->cost_summary->sum('budget_cost') - $reserve->budget_cost;
-            $progress = min(1, $this->cost_summary->sum('to_date_cost') / $budget_cost);
-            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
         if ($this->cost_summary->has('INDIRECT')) {
@@ -348,15 +344,6 @@ class GlobalReport
         }
 
         return $this->cost_summary;
-
-//        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
-//            ->whereIn('period_id', $this->last_period_ids)
-//            ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
-//            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(allowable_var) as to_date_var')
-//            ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
-//            ->selectRaw('sum(cost_var) as completion_var')
-//            ->groupBy('sh.project_id', 'p.name')->orderBy('p.name')->get();
-
     }
 
     private function cost_percentage()
