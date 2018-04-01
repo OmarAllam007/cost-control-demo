@@ -125,7 +125,7 @@
                     </div>
                 </article>
 
-                <div class="form-group form-group-sm {{ $errors->first('time_elapsed', 'has-error') }}">
+                <article class="form-group form-group-sm {{ $errors->first('time_elapsed', 'has-error') }}">
                     {{ Form::label('time_elapsed', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
                         <div class="input-group">
@@ -134,9 +134,9 @@
                         </div>
                         {!! $errors->first('time_elapsed', '<div class="help-block">:message</div>') !!}
                     </div>
-                </div>
+                </article>
 
-                <div class="form-group form-group-sm {{ $errors->first('time_remaining', 'has-error') }}">
+                <article class="form-group form-group-sm {{ $errors->first('time_remaining', 'has-error') }}">
                     {{ Form::label('time_remaining', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
                         <div class="input-group">
@@ -145,9 +145,9 @@
                         </div>
                         {!! $errors->first('time_remaining', '<div class="help-block">:message</div>') !!}
                     </div>
-                </div>
+                </article>
 
-                <div class="form-group form-group-sm {{ $errors->first('duration_variance', 'has-error') }}">
+                <article class="form-group form-group-sm {{ $errors->first('duration_variance', 'has-error') }}">
                     {{ Form::label('duration_variance', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
                         <div class="input-group">
@@ -156,7 +156,7 @@
                         </div>
                         {!! $errors->first('duration_variance', '<div class="help-block">:message</div>') !!}
                     </div>
-                </div>
+                </article>
 
                 <article class="form-group {{$errors->first('earned_value', 'has-error')}}">
                     {{Form::label('earned_value', null, ['class' => 'control-label col-sm-3'])}}
@@ -173,6 +173,35 @@
                         {!! $errors->first('actual_invoice_value', '<div class="help-block">:message</div>') !!}
                     </div>
                 </article>
+            </fieldset>
+
+            <fieldset>
+                <legend>Indirect At Completion</legend>
+
+                <article class="form-group {{$errors->first('at_completion_optimistic', 'has-error')}}">
+                    {{Form::label('at_completion_optimistic', 'Optimistic', ['class' => 'control-label col-sm-3'])}}
+                    <div class="col-sm-9">
+                        {{ Form::number('at_completion_optimistic', null, ['class' => 'form-control'])}}
+                        {!! $errors->first('at_completion_optimistic', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </article>
+
+                <article class="form-group {{$errors->first('at_completion_likely', 'has-error')}}">
+                    {{Form::label('at_completion_likely', 'Most likely', ['class' => 'control-label col-sm-3'])}}
+                    <div class="col-sm-9">
+                        {{ Form::number('at_completion_likely', null, ['class' => 'form-control'])}}
+                        {!! $errors->first('at_completion_likely', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </article>
+
+                <article class="form-group {{$errors->first('at_completion_pessimistic', 'has-error')}}">
+                    {{Form::label('at_completion_pessimistic', null, ['class' => 'control-label col-sm-3'])}}
+                    <div class="col-sm-9">
+                        {{ Form::number('at_completion_pessimistic', null, ['class' => 'form-control'])}}
+                        {!! $errors->first('at_completion_pessimistic', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </article>
+
             </fieldset>
         @endif
         <hr>
