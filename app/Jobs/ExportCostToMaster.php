@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use function microtime;
 
 class ExportCostToMaster extends Job implements ShouldQueue
 {
@@ -56,7 +57,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
         BreakDownResourceShadow::where('project_id', $this->project->id)
 //            ->where('show_in_cost', 1)
             ->chunk(900, function ($shadows) {
-//            $start = microtime(1);
+            $start = microtime(1);
                 $records = [];
                 $now = Carbon::now()->format('Y-m-d H:i:s');
                 foreach ($shadows as $costShadow) {
@@ -121,20 +122,19 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
                         'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
                         'created_at' => $now, 'updated_at' => $now,
+                        //'pw_index' => $costShadow['pw_index']
                     ];
-
                 }
 
                 \DB::transaction(function () use ($records) {
-                    \DB::statement('ALTER TABLE master_shadows DISABLE KEYS');
                     MasterShadow::insert($records);
-                    \DB::statement('ALTER TABLE master_shadows ENABLE KEYS');
                 });
 
-//            $time = microtime(1) - $start;
                 unset($shadows, $records);
                 gc_collect_cycles();
-//            \Log::info("Chunk has been buffered; memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4) . '; Insert time: ' . round($insertTime, 4));
+
+                $time = microtime(true) - $start;
+                \Log::info("Chunk has been buffered; project: {$this->project->id} memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4));
             });
 
         $this->period->update(['status' => Period::GENERATED]);

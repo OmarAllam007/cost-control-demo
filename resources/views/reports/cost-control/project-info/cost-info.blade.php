@@ -36,7 +36,7 @@
                 </dl>
 
                 <dl>
-                    <dt>Actual Cost Percentage</dt>
+                    <dt>Cost Progress</dt>
                     <dd>{{number_format($costInfo['cost_progress'], 2)}}%</dd>
                 </dl>
             </article>
@@ -58,11 +58,11 @@
                 <dl>
                     <dt>Duration Var</dt>
                     <dd class="display-flex">
-                        <span class="flex {{$period->duration_variance < 0 ?'':'text-danger'}}">
+                        <span class="flex {{$period->duration_variance > 0 ?'text-success':'text-danger'}}">
                             {{$period->duration_variance ?: 0}} <small>(Days)</small>
                         </span>
 
-                        <span class="{{$period->duration_variance < 0? 'text-success' : 'text-danger'}}">
+                        <span class="{{$period->duration_variance > 0? 'text-success' : 'text-danger'}}">
                             <i class="fa fa-circle"></i>
                         </span>
                     </dd>
@@ -97,14 +97,14 @@
                 </dl>
 
                 <dl>
-                    <dt>Material Consumption Index</dt>
+                    <dt>MCI</dt>
                     <dd>
                         <div class="display-flex">
-                            <span class="flex {{$costInfo['waste_index'] < 4.475 ? 'text-success' : 'text-danger'}}">
+                            <span class="flex {{$costInfo['waste_index'] < 4.75 ? 'text-success' : 'text-danger'}}">
                                 {{number_format($costInfo['waste_index'], 2)}}%
                             </span>
 
-                            <span class="{{$costInfo['waste_index'] < 4.475 ? 'text-success' : 'text-danger'}}">
+                            <span class="{{$costInfo['waste_index'] < 4.75 ? 'text-success' : 'text-danger'}}">
                                 <i class="fa fa-circle"></i>
                             </span>
                         </div>
@@ -112,7 +112,7 @@
                 </dl>
 
                 <dl>
-                    <dt>Expected EAC Profit Profitability</dt>
+                    <dt>Expected Profitability</dt>
                     <dd class="display-flex">
                         <span class="flex {{$period->eac_profitability_index > 0 ? 'text-success' : 'text-danger'}}">
                             {{number_format($period->eac_profitability_index, 2)}}%

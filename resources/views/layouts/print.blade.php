@@ -14,10 +14,10 @@
 
 <body id="app-layout">
 
-<table>
+<table style="width:100%">
     <thead>
     <tr>
-        <th>
+        <th class="col-xs-4">
             <strong>
                 AlKifah Contracting Co. <br>
                 Project Control Department <br>
@@ -27,10 +27,10 @@
                 {{date('d M Y')}}
             </strong>
         </th>
-        <th class="header-text text-center">
+        <th class="header-text text-center col-xs-4">
             @yield('header')
         </th>
-        <th>
+        <th class="col-xs-4">
             <img src="{{asset('/images/kcc.png')}}" alt="Logo" class="logo pull-right" width="200">
         </th>
     </tr>

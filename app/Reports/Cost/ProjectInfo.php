@@ -47,7 +47,7 @@ class ProjectInfo
         if ($this->costSummary->has('MANAGEMENT RESERVE')) {
             $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
             $reserve->completion_cost = $reserve->remaining_cost = 0;
-            $reserve->completion_cost_var = $reserve->budget_cost;
+            $reserve->completion_var = $reserve->budget_cost;
 
             $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->costSummary->sum('budget_cost'));
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
@@ -68,8 +68,18 @@ class ProjectInfo
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
         $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
-            ->cpiTrendChart()->get()->reverse()->map(function ($item) {
-                $item->value = round($item->value, 4);
+            ->cpiTrendChart()->get()->reverse()->groupBy('p_id')->map(function ($period_items) {
+                $items = $period_items->keyBy('resource_type_id');
+                $allowable_cost = $items->sum('allowable_cost');
+                $to_date_cost = $items->sum('to_date_cost');
+                $reserve = $items->get(8, new Fluent());
+                $budget_cost = $items->sum('budget_cost') - $reserve->budget_cost;
+                $to_date_reserve = $reserve->budget_cost * $to_date_cost / $budget_cost;
+                $allowable_cost += $to_date_reserve;
+
+                $item = new Fluent();
+                $item->p_name = $period_items->pluck('p_name')->first();
+                $item->value = round($allowable_cost/$to_date_cost, 4);
                 return $item;
             });
 
@@ -116,29 +126,36 @@ class ProjectInfo
 
     private function getProductivityIndexTrend()
     {
-        $periods = $this->project->periods()
+//        $periods = $this->project->periods()
+//            ->where('status', Period::GENERATED)
+//            ->where('global_period_id', '>=', 12)->take(6)->pluck('name', 'id');
+//
+//        $allowable_qty = MasterShadow::whereIn('period_id', $periods->keys())
+//            ->where('resource_type_id', 2)
+//            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
+//
+//        $cost_man_days = CostManDay::whereIn('period_id', $periods->keys()->toArray())
+//            ->selectRaw('period_id, sum(actual) as actual')
+//            ->groupBy('period_id')->get()->keyBy('period_id');
+//
+//        return $allowable_qty->map(function ($period) use ($cost_man_days, $periods) {
+//            $actual = $cost_man_days->get($period->period_id)->actual ?? 0;
+//            $value = 0;
+//            if ($actual) {
+//                $value = $period->allowable_qty / $actual;
+//            }
+//
+//            $name = $periods->get($period->period_id, '');
+//
+//            return new Fluent(compact('name', 'value'));
+//        });
+
+        return $this->project->periods()->latest('global_period_id')->take(6)
+            ->selectRaw('id, name, productivity_index as value')
+//            ->whereNotNull('productivity_index')
+            ->where('global_period_id', '>=', 12)
             ->where('status', Period::GENERATED)
-            ->where('global_period_id', '>=', 12)->take(6)->pluck('name', 'id');
-
-        $allowable_qty = MasterShadow::whereIn('period_id', $periods->keys())
-            ->where('resource_type_id', 2)
-            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
-
-        $cost_man_days = CostManDay::whereIn('period_id', $periods->keys()->toArray())
-            ->selectRaw('period_id, sum(actual) as actual')
-            ->groupBy('period_id')->get()->keyBy('period_id');
-
-        return $allowable_qty->map(function ($period) use ($cost_man_days, $periods) {
-            $actual = $cost_man_days->get($period->period_id)->actual ?? 0;
-            $value = 0;
-            if ($actual) {
-                $value = $period->allowable_qty / $actual;
-            }
-
-            $name = $periods->get($period->period_id, '');
-
-            return new Fluent(compact('name', 'value'));
-        });
+            ->get()->reverse()->keyBy('id');
     }
 
     private function getActualRevenue()

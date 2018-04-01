@@ -11535,4 +11535,12 @@ dl.dl-margin {
   font-weight: 700;
 }
 
+.text-danger .fa:before {
+  color: #a94442;
+}
+
+.text-success .fa:before {
+  color: #3c763d;
+}
+
 /*# sourceMappingURL=app.css.map */

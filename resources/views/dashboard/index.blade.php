@@ -34,7 +34,7 @@
 
 
             <section class="row">
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <article class="card-group-item">
                         <h4 class="card-title dark-cyan card-group-item-heading">CPI Trend Analysis</h4>
 
@@ -54,7 +54,7 @@
                     </article>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <article class="card-group-item">
                         <h4 class="card-title dark-cyan card-group-item-heading">SPI Trend Analysis</h4>
 
@@ -76,7 +76,7 @@
             </section>
 
             <section class="row">
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item chart-style">
                         <h4 class="card-title card-group-item-heading">Material Consumption Index Trend Analysis</h4>
 
@@ -95,7 +95,7 @@
                         </div>
                     </section>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item">
                         <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend Analysis</h4>
 
@@ -117,11 +117,11 @@
             </section>
 
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
                         <h4 class="card-title dark-cyan card-group-item-heading">Cost Percentage</h4>
 
-                        <div class="card-body">
+                        <div class="card-body pie-chart">
                             <div class="chart"
                                  id="costChart"
                                  data-type="pie"
@@ -136,7 +136,7 @@
                     </section>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
                         <h4 class="card-title dark-cyan card-group-item-heading">Progress Percentage</h4>
 
@@ -208,6 +208,10 @@
 
         .card .table > tbody > tr.high-risk-project > th.separator, .card .table > tbody > tr.high-risk-project > td.separator {
             background-color: transparent;
+        }
+
+        .card-group-item .pie-chart canvas {
+            max-width: initial;
         }
     </style>
 @endsection

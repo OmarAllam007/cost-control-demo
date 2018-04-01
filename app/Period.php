@@ -27,7 +27,7 @@ class Period extends Model
         'planned_cost', 'earned_value', 'actual_invoice_amount', 'planned_progress', 'planned_finish_date',
         'spi_index', 'actual_progress', 'change_order_amount', 'forecast_finish_date',
         'time_extension', 'time_elapsed', 'time_remaining', 'expected_duration', 'duration_variance',
-        'planned_value', 'actual_invoice_value',
+        'planned_value', 'actual_invoice_value', 'productivity_index'
     ];
 
     protected $dates = ['created_at', 'update_at', 'start_date'];

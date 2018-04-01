@@ -29,6 +29,14 @@
                 </div>
             </article>
 
+            <article class="form-group {{$errors->first('productivity_index', 'has-error')}}">
+                {{Form::label('productivity_index', null, ['class' => 'control-label col-sm-4'])}}
+                <div class="col-sm-8">
+                    {{Form::number('productivity_index', null, ['class' => 'form-control', 'step' => '0.01'])}}
+                    {!! $errors->first('productivity_index', '<div class="help-block">:message</div>') !!}
+                </div>
+            </article>
+
             <article class="form-group {{$errors->first('actual_progress', 'has-error')}}">
                 {{Form::label('planned_progress', null, ['class' => 'control-label col-sm-4'])}}
                 <div class="col-sm-8">

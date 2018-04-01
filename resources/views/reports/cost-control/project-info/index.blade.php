@@ -55,16 +55,16 @@
     @include('reports.partials.cost-summary', $costSummary)
 
     <section class="row info-section">
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.cpi-chart')
         </div>
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.spi-chart')
         </div>
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.waste_index_chart')
         </div>
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.productivity_index_chart')
         </div>
         <div class="col-md-12">
@@ -82,6 +82,11 @@
 @append
 
 @section('css')
+    <style>
+        .card-group-item .pie-chart canvas {
+            max-width: initial;
+        }
+    </style>
     {{--<style>--}}
     {{--.card-group-item {--}}
     {{--padding: 10px;--}}

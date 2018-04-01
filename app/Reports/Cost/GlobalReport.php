@@ -11,6 +11,7 @@ use App\Period;
 use App\Project;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
+use function dd;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
@@ -208,11 +209,11 @@ class GlobalReport
     {
         $cpis = MasterShadow::join('periods as p', 'master_shadows.period_id', '=', 'p.id')
             ->join('projects', 'master_shadows.project_id', '=', 'projects.id')
-            ->select(['master_shadows.project_id', 'projects.name'])
+            ->select(['master_shadows.project_id', 'projects.name', 'projects.project_code'])
             ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(completion_cost) as completion_cost')
             ->where('p.global_period_id', $this->period->id)
-            ->groupBy('master_shadows.project_id')->groupBy('projects.name')
+            ->groupBy(['master_shadows.project_id','projects.name', 'projects.project_code'])
             ->get()->map(function ($period) {
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
                 $period->variance = $period->allowable_cost - $period->to_date_cost;
@@ -307,13 +308,16 @@ class GlobalReport
     private function cpi_trend()
     {
         return $this->cpi_trend = MasterShadow::from('master_shadows as sh')
-            ->selectRaw('p.global_period_id, sum(to_date_cost) as to_date_cost, sum(allowable_ev_cost) as allowable_cost')
+            ->selectRaw('p.global_period_id, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
+            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(CASE WHEN resource_type_id = 8 THEN budget_cost END) as total_reserve')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->whereIn('sh.period_id', $this->trend_period_ids)
             ->groupBy('p.global_period_id')
             ->orderBy('p.global_period_id')
             ->get()->map(function ($period) {
-                $period->cpi_index = round($period->allowable_cost / $period->to_date_cost, 2);
+                $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->total_reserve));
+                $reserve = $period->total_reserve * $progress;
+                $period->cpi_index = round(($period->allowable_cost + $reserve) / $period->to_date_cost, 2);
                 $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
                 return $period;
             });
@@ -351,31 +355,32 @@ class GlobalReport
 
     function productivity_index_trend()
     {
-        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
-        $global_period_ids = $periods->pluck('id');
-        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+        return GlobalPeriod::latest('end_date')->where('id', '>=', 12)->take(6)->get()->sortBy('end_date')->pluck('productivity_index', 'name');
 
-        return MasterShadow::from('master_shadows as sh')
-            ->join('periods as p', 'sh.period_id', '=', 'p.id')
-            ->join('cost_man_days as md', function (JoinClause $on) {
-                $on->where('sh.period_id', '=', 'md.period-id')
-                    ->where('sh.wbs_id', '=', 'md.wbs_id')
-                    ->where('sh.activity_id', '=', 'md.activity_id');
-            })
-            ->selectRaw("p.global_period_id, sum(budget_unit) as budget_unit, sum(allowable_qty) as allowable_qty, sum(actual) as actual")
-            ->where('sh.resource_type_id', 2)->where('to_date_cost', '>', 0)
-            ->whereIn('sh.period_id', $period_ids)
-            ->orderBy('p.global_period_id')
-            ->groupBy('p.global_period_id')
-            ->get()->map(function ($period) use ($periods) {
-                $period->name = $periods->get($period->global_period_id)->name;
-                $period->pi = 0;
-                if ($period->actual) {
-                    $period->pi = $period->allowable_qty / $period->actual;
-                }
-
-                return $period;
-            })->pluck('pi', 'name');
+//        $global_period_ids = $periods->pluck('id');
+//        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
+//
+//        return MasterShadow::from('master_shadows as sh')
+//            ->join('periods as p', 'sh.period_id', '=', 'p.id')
+//            ->join('cost_man_days as md', function (JoinClause $on) {
+//                $on->where('sh.period_id', '=', 'md.period-id')
+//                    ->where('sh.wbs_id', '=', 'md.wbs_id')
+//                    ->where('sh.activity_id', '=', 'md.activity_id');
+//            })
+//            ->selectRaw("p.global_period_id, sum(budget_unit) as budget_unit, sum(allowable_qty) as allowable_qty, sum(actual) as actual")
+//            ->where('sh.resource_type_id', 2)->where('to_date_cost', '>', 0)
+//            ->whereIn('sh.period_id', $period_ids)
+//            ->orderBy('p.global_period_id')
+//            ->groupBy('p.global_period_id')
+//            ->get()->map(function ($period) use ($periods) {
+//                $period->name = $periods->get($period->global_period_id)->name;
+//                $period->pi = 0;
+//                if ($period->actual) {
+//                    $period->pi = $period->allowable_qty / $period->actual;
+//                }
+//
+//                return $period;
+//            })->pluck('pi', 'name');
     }
 
     function revenue_statement()

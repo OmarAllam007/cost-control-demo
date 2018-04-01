@@ -98,6 +98,14 @@
                     </div>
                 </div>
 
+                <div class="form-group form-group-sm {{ $errors->first('spi_index', 'has-error') }}">
+                    {{ Form::label('productivity_index', 'Productivity Index', ['class' => 'control-label col-sm-3']) }}
+                    <div class="col-sm-9">
+                        {{ Form::text('productivity_index', null, ['class' => 'form-control']) }}
+                        {!! $errors->first('productivity_index', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </div>
+
                 <div class="form-group form-group-sm {{ $errors->first('actual_progress', 'has-error') }}">
                     {{ Form::label('actual_progress', null, ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
