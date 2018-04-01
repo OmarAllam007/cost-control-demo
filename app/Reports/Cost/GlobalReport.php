@@ -371,7 +371,7 @@ class GlobalReport
             ->get()->map(function ($period) {
                 $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->total_reserve));
                 $reserve = $period->total_reserve * $progress;
-                $period->cpi_index = round(($period->allowable_cost + $reserve) / $period->to_date_cost, 2);
+                $period->cpi_index = round(($period->allowable_cost + $reserve) / $period->to_date_cost, 3);
                 $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
                 return $period;
             });
