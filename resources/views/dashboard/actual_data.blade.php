@@ -25,7 +25,7 @@
                         <span class="flex {{$cost_info['variance']>0? 'text-success' : 'text-danger'}}">
                             {{number_format($cost_info['variance'], 2)}}
                         </span>
-                        <span class="{{$cost_info['eac_profit'] < 0? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
+                        <span class="{{$cost_info['variance'] < 0? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
                     </dd>
                 </dl>
             </div>
