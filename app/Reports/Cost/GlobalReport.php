@@ -42,6 +42,9 @@ class GlobalReport
     /** @var Collection */
     private $trend_global_periods;
 
+    /** @var Collection */
+    private $cost_summary;
+
     function __construct(GlobalPeriod $period)
     {
         $this->period = $period;
@@ -277,11 +280,36 @@ class GlobalReport
 
         if ($this->cost_summary->has('MANAGEMENT RESERVE')) {
             $reserve = $this->cost_summary->get('MANAGEMENT RESERVE');
-            $reserve->completion_cost = $reserve->remaining_cost = 0;
-            $reserve->completion_cost_var = $reserve->budget_cost;
+            $reserve->completion_cost_optimistic = $reserve->remaining_cost = 0;
+            $reserve->completion_cost_likely = 0;
+            $reserve->completion_cost_pessimistic = 0;
+            $reserve->completion_cost_var_optimistic = $reserve->budget_cost;
+            $reserve->completion_cost_var_likely = $reserve->budget_cost;
+            $reserve->completion_cost_var_pessimistic = $reserve->budget_cost;
 
-            $progress = min(1, $this->cost_summary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost'));
+            $budget_cost = $this->cost_summary->sum('budget_cost') - $reserve->budget_cost;
+            $progress = min(1, $this->cost_summary->sum('to_date_cost') / $budget_cost);
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+        }
+
+        if ($this->cost_summary->has('INDIRECT')) {
+            $indirect = $this->cost_summary->get('INDIRECT');
+            $indirect->completion_cost_optimistic = $this->periods->sum('at_completion_optimistic');
+            $indirect->completion_cost_likely = $this->periods->sum('at_completion_likely');
+            $indirect->completion_cost_pessimistic = $this->periods->sum('at_completion_pessimistic');
+            $indirect->completion_cost_var_optimistic = $indirect->budget_cost - $indirect->completion_cost_optimistic;
+            $indirect->completion_cost_var_likely = $indirect->budget_cost - $indirect->completion_cost_likely;
+            $indirect->completion_cost_var_pessimistic = $indirect->budget_cost - $indirect->completion_cost_pessimistic;
+        }
+
+        if ($this->cost_summary->has('DIRECT')) {
+            $direct = $this->cost_summary->get('DIRECT');
+            $direct->completion_cost_optimistic = $direct->completion_cost;
+            $direct->completion_cost_likely = $direct->completion_cost;
+            $direct->completion_cost_pessimistic = $direct->completion_cost;
+            $direct->completion_cost_var_optimistic = $direct->completion_cost_var;
+            $direct->completion_cost_var_likely = $direct->completion_cost_var;
+            $direct->completion_cost_var_pessimistic = $direct->completion_cost_var;
         }
 
         return $this->cost_summary;
