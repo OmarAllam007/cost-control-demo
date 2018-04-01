@@ -11,7 +11,10 @@ use App\Period;
 use App\Project;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
+use function collect;
+use function compact;
 use function dd;
+use function func_get_arg;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
@@ -41,6 +44,9 @@ class GlobalReport
 
     /** @var Collection */
     private $trend_global_periods;
+
+    /** @var Collection */
+    private $cost_summary;
 
     function __construct(GlobalPeriod $period)
     {
@@ -264,7 +270,7 @@ class GlobalReport
     private function cost_summary()
     {
         $fields = [
-            "(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
+            "project_id, (CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
             'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
@@ -273,7 +279,39 @@ class GlobalReport
         $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
             ->selectRaw(implode(', ', $fields))
             ->groupBy('type')->get()
-            ->keyBy('type');
+            ->groupBy('project_id')->map(function($group) {
+                return $group->keyBy('type');
+            })->map(function($project) {
+                $reserve = $project->get('MANAGEMENT RESERVE');
+                if ($reserve->budget_cost) {
+                    $reserve->completion_cost = $reserve->remaining_cost = 0;
+                    $reserve->completion_cost_var = $reserve->budget_cost;
+
+                    $progress = min(1, $project->sum('to_date_cost') / ($project->sum('budget_cost') - $reserve->budget_cost));
+                    $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+                }
+                return $project;
+            })->reduce(function($summary, $project) {
+                $types = ['DIRECT', "INDIRECT", 'MANAGEMENT RESERVE'];
+                $fields = [
+                    'budget_cost', 'to_date_cost', 'allowable_cost', 'to_date_var',
+                    'remaining_cost', 'completion_cost', 'completion_cost_var'
+                ];
+                foreach ($types as $type) {
+                    if (!$summary->has($type)) {
+                        $summary->put($type, new Fluent(compact('type')));
+                    }
+
+                    foreach ($fields as $field) {
+                        $typeData = $summary->get($type);
+                        $typeData->$field += $project->get($type)->$field;
+                    }
+                }
+
+                return $summary;
+            }, collect());
+
+
 
         if ($this->cost_summary->has('MANAGEMENT RESERVE')) {
             $reserve = $this->cost_summary->get('MANAGEMENT RESERVE');
