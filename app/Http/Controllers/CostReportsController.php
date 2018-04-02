@@ -31,9 +31,13 @@ class CostReportsController extends Controller
     {
         $period_id = $this->getPeriod($project, $request);
 
-        $projectInfo = new ProjectInfo(Period::find($period_id));
+        $report = new ProjectInfo(Period::find($period_id));
 
-        return view('reports.cost-control.project-info.index', $projectInfo->run());
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        return view('reports.cost-control.project-info.index', $report->run());
     }
 
     public function costSummary(Project $project, Request $request)
