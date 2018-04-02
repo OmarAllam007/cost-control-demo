@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Reports\CostReports\BoqReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
+use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\Report;
 use App\Reports\Budget\ActivityResourceBreakDownReport;
@@ -74,7 +75,7 @@ class ReportsSeeder extends Seeder
             ['name' =>'Overdraft', 'class_name' => OverdraftReport::class, 'type' => 'Cost Control'],
             ['name' =>'Standard Activity', 'class_name' => CostStandardActivityReport::class, 'type' => 'Cost Control'],
             ['name' =>'Productivity Report', 'class_name' => ProductivityIndexReport::class, 'type' => 'Cost Control'],
-            ['name' =>'Resource Dictionary (Cost)', 'class_name' => ProductivityIndexReport::class, 'type' => 'Cost Control'],
+            ['name' =>'Resource Dictionary (Cost)', 'class_name' => ResourceCodeReport::class, 'type' => 'Cost Control'],
             ['name' =>'Threshold Report', 'class_name' => ThresholdReport::class, 'type' => 'Cost Control'],
             ['name' =>'Material Consumption Report', 'class_name' => WasteIndexReport::class, 'type' => 'Cost Control'],
             ['name' =>'Variance Analysis', 'class_name' => VarianceAnalysisReport::class, 'type' => 'Cost Control'],
