@@ -17,6 +17,7 @@ use Illuminate\Support\Fluent;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_Excel2007;
+use PHPExcel_Style_Color;
 use PHPExcel_Writer_Excel2007;
 use Response;
 use function slug;
@@ -163,6 +164,9 @@ class ProjectInfo
             ->setMimeType(\PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
             ->setCoordinates('K2')->setWorksheet($sheet);
 
+        $sheet->getStyle('A1:N125')->getBorders()->getOutline()
+            ->setBorderStyle('thick')->setColor(new PHPExcel_Style_Color('#1F9D55'));
+
         // Contract information
         $sheet->setCellValue('C10', $data['project']->project_contract_signed_value);
         $sheet->setCellValue('C12', $data['project']->tender_initial_profit);
@@ -298,6 +302,7 @@ class ProjectInfo
         $sheet->fromArray([$data['actual_cost_percentage'] / 100, $data['remaining_cost_percentage']/ 100], null, 'AA84', true);
         $sheet->fromArray([$data['period']->actual_progress / 100, $data['period']->planned_progress/ 100], null, 'AA87', true);
         $sheet->fromArray([$data['period']->planned_value, $data['period']->earned_value, $data['period']->actual_invoice_value], null, 'AA90', true);
+
 
 
         $sheet->setShowGridlines(false)->setPrintGridlines(false);
