@@ -13,6 +13,14 @@ use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
 use Illuminate\Support\Fluent;
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Reader_Excel2007;
+use PHPExcel_Writer_Excel2007;
+use Response;
+use function slug;
+use function storage_path;
+use function str_random;
 
 class ProjectInfo
 {
@@ -122,6 +130,48 @@ class ProjectInfo
     function excel()
     {
 
+        $excel = new PHPExcel();
+        $excel->removeSheetByIndex(0);
+        $excel->addExternalSheet($this->sheet());
+
+
+        /** @var PHPExcel_Writer_Excel2007 $writer */
+        $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $writer->setOffice2003Compatibility(false)->setIncludeCharts(true);
+        $writer->save($filename = storage_path('app/' . str_random() . '.xlsx'));
+
+        return Response::download($filename, slug($this->project->name) . '-dashboard.xlsx')
+            ->deleteFileAfterSend(true);
+    }
+
+    function sheet()
+    {
+        $data = $this->run();
+
+        $template = storage_path('templates/dashboard.xlsx');
+        /** @var PHPExcel_Reader_Excel2007 $reader */
+        $reader = PHPExcel_IOFactory::createReaderForFile($template);
+        $reader->setIncludeCharts(true);
+        $file = $reader->load($template);
+        $sheet = $file->getSheet(0);
+
+        // Contract information
+        $sheet->setCellValue('C10', $data['project']->project_contract_signed_value);
+        $sheet->setCellValue('C12', $data['project']->tender_initial_profit);
+        $sheet->setCellValue('H10', $data['project']->project_duration);
+        $sheet->setCellValue('H12', $data['project']->tender_initial_profitability_index/100);
+        $sheet->setCellValue('M10', $data['project']->project_start_date? \Carbon\Carbon::parse($data['project']->project_start_date)->format('d M Y') : '');
+        $sheet->setCellValue('M12', $data['project']->expected_finish_date? \Carbon\Carbon::parse($data['project']->expected_finish_date)->format('d M Y') : '');
+
+        // Revised Contract information
+        $sheet->setCellValue('C16', $data['period']->change_order_amount);
+        $sheet->setCellValue('C18', $data['period']->contract_value);
+        $sheet->setCellValue('H16', $data['period']->time_extension);
+        $sheet->setCellValue('H18', $data['period']->expected_duration);
+        $sheet->setCellValue('M16', $data['project']->project_start_date? \Carbon\Carbon::parse($data['project']->project_start_date)->format('d M Y') : '');
+        $sheet->setCellValue('M18', $data['period']->planned_finish_date->format('d M Y'));
+
+        return $sheet;
     }
 
     private function getProductivityIndexTrend()
