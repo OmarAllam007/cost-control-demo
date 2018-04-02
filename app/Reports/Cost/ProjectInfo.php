@@ -190,7 +190,23 @@ class ProjectInfo
         $sheet->setCellValue('H29', $data['budgetInfo']['revision1']['profitability_index'] / 100);
 
         //Actual Data
+        $sheet->setCellValue('C33', $data['costInfo']['actual_cost']);
+        $sheet->setCellValue('C35', $data['costInfo']['allowable_cost']);
+        $sheet->setCellValue('C37', $data['costInfo']['cpi']);
+        $sheet->setCellValue('C39', $data['costInfo']['variance']);
+        $sheet->setCellValue('C41', $data['costInfo']['cost_progress']/100);
 
+        $sheet->setCellValue('H33', $data['period']->time_elapsed);
+        $sheet->setCellValue('H35', $data['period']->time_remaining);
+        $sheet->setCellValue('H37', $data['period']->actual_duration);
+        $sheet->setCellValue('H39', $data['period']->duration_variance);
+        $sheet->setCellValue('H41', $data['period']->actual_progress/100);
+
+        $sheet->setCellValue('M33', $data['project']->actual_start_date? Carbon::parse($data['project']->actual_start_date)->format('d M Y') : '');
+        $sheet->setCellValue('M35', $data['period']->forecast_finish_date? Carbon::parse($data['period']->forecast_finish_date)->format('d M Y') : '');
+        $sheet->setCellValue('M37', $data['period']->spi_index);
+        $sheet->setCellValue('M39', $data['costInfo']['waste_index']/100);
+        $sheet->setCellValue('M41', $data['period']->eac_profitability_index / 100);
 
         $sheet->setShowGridlines(false)->setPrintGridlines(false);
         return $sheet;
