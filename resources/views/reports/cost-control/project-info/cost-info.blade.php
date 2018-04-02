@@ -70,7 +70,7 @@
 
                 <dl>
                     <dt>Progress (Time)</dt>
-                    <dd>{{$period->actual_progress}}%</dd>
+                    <dd>{{$period->actual_time_progress}}%</dd>
                 </dl>
             </article>
 
