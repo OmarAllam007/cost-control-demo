@@ -28,9 +28,9 @@ class ResourceCodeReport
     /** @var Period */
     protected $period;
 
-    function __construct(Project $project, $period)
+    function __construct($period)
     {
-        $this->project = $project;
+        $this->project = $period->project;
         $this->period = $period;
     }
 
