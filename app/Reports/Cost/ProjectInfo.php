@@ -171,6 +171,28 @@ class ProjectInfo
         $sheet->setCellValue('M16', $data['project']->project_start_date? \Carbon\Carbon::parse($data['project']->project_start_date)->format('d M Y') : '');
         $sheet->setCellValue('M18', $data['period']->planned_finish_date->format('d M Y'));
 
+        // Budget Data
+        //Revision 0
+        $sheet->setCellValue('D23', $data['budgetInfo']['revision0']['budget_cost']);
+        $sheet->setCellValue('D24', $data['budgetInfo']['revision0']['direct_cost']);
+        $sheet->setCellValue('D25', $data['budgetInfo']['revision0']['indirect_cost']);
+        $sheet->setCellValue('D26', $data['budgetInfo']['revision0']['management_reserve']);
+        $sheet->setCellValue('D27', $data['budgetInfo']['revision0']['eac_contract_amount']);
+        $sheet->setCellValue('D28', $data['budgetInfo']['revision0']['profit']);
+        $sheet->setCellValue('D29', $data['budgetInfo']['revision0']['profitability_index'] / 100);
+        // Last Revision
+        $sheet->setCellValue('H23', $data['budgetInfo']['revision1']['budget_cost']);
+        $sheet->setCellValue('H24', $data['budgetInfo']['revision1']['direct_cost']);
+        $sheet->setCellValue('H25', $data['budgetInfo']['revision1']['indirect_cost']);
+        $sheet->setCellValue('H26', $data['budgetInfo']['revision1']['management_reserve']);
+        $sheet->setCellValue('H27', $data['budgetInfo']['revision1']['eac_contract_amount']);
+        $sheet->setCellValue('H28', $data['budgetInfo']['revision1']['profit']);
+        $sheet->setCellValue('H29', $data['budgetInfo']['revision1']['profitability_index'] / 100);
+
+        //Actual Data
+
+
+        $sheet->setShowGridlines(false)->setPrintGridlines(false);
         return $sheet;
     }
 
