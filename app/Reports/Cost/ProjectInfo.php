@@ -284,6 +284,7 @@ class ProjectInfo
         // Progress Charts
         $sheet->fromArray([$data['actual_cost_percentage'] / 100, $data['remaining_cost_percentage']/ 100], null, 'AA84', true);
         $sheet->fromArray([$data['period']->actual_progress / 100, $data['period']->planned_progress/ 100], null, 'AA87', true);
+        $sheet->fromArray([$data['period']->planned_value, $data['period']->earned_value, $data['period']->actual_invoice_value], null, 'AA90', true);
 
 
         $sheet->setShowGridlines(false)->setPrintGridlines(false);
