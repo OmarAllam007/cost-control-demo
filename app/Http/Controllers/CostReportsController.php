@@ -113,7 +113,7 @@ class CostReportsController extends Controller
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
 
-        $resourceCodeReport = new ResourceCodeReport($project, $period);
+        $resourceCodeReport = new ResourceCodeReport($period);
 
 
         if ($request->exists('excel')) {
