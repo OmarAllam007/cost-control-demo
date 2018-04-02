@@ -265,6 +265,25 @@ class ProjectInfo
         $sheet->setCellValue('N49', $data['costSummary']['MANAGEMENT RESERVE']->completion_var_pessimistic);
         $sheet->setCellValue('N50', $data['costSummary']->sum('completion_var_pessimistic'));
 
+        //CPI Trend
+        $sheet->fromArray($data['cpiTrend']->pluck('p_name')->toArray(), null, 'AA69', true);
+        $sheet->fromArray($data['cpiTrend']->pluck('value')->toArray(), null, 'AA70', true);
+
+        // SPI Trend
+        $sheet->fromArray($data['spiTrend']->pluck('name')->toArray(), null, 'AA72', true);
+        $sheet->fromArray($data['spiTrend']->pluck('spi_index')->toArray(), null, 'AA73', true);
+
+        // Waste Index Trend
+        $sheet->fromArray($data['wasteIndexTrend']->pluck('name')->toArray(), null, 'AA76', true);
+        $sheet->fromArray($data['wasteIndexTrend']->pluck('value')->toArray(), null, 'AA77', true);
+
+        // Productivity Index Trend
+        $sheet->fromArray($data['productivityIndexTrend']->pluck('name')->toArray(), null, 'AA80', true);
+        $sheet->fromArray($data['productivityIndexTrend']->pluck('value')->toArray(), null, 'AA81', true);
+
+        // Progress Charts
+        $sheet->fromArray([$data['actual_cost_percentage'] / 100, $data['remaining_cost_percentage']/ 100], null, 'AA84', true);
+        $sheet->fromArray([$data['period']->actual_progress / 100, $data['period']->planned_progress/ 100], null, 'AA87', true);
 
 
         $sheet->setShowGridlines(false)->setPrintGridlines(false);
