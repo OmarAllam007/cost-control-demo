@@ -168,21 +168,21 @@ class ProjectInfo
 
         // Budget Data
         //Revision 0
-        $sheet->setCellValue('D23', $data['budgetInfo']['revision0']['budget_cost']);
-        $sheet->setCellValue('D24', $data['budgetInfo']['revision0']['direct_cost']);
-        $sheet->setCellValue('D25', $data['budgetInfo']['revision0']['indirect_cost']);
-        $sheet->setCellValue('D26', $data['budgetInfo']['revision0']['management_reserve']);
-        $sheet->setCellValue('D27', $data['budgetInfo']['revision0']['eac_contract_amount']);
-        $sheet->setCellValue('D28', $data['budgetInfo']['revision0']['profit']);
-        $sheet->setCellValue('D29', $data['budgetInfo']['revision0']['profitability_index'] / 100);
+        $sheet->setCellValue('E23', $data['budgetInfo']['revision0']['budget_cost']);
+        $sheet->setCellValue('E24', $data['budgetInfo']['revision0']['direct_cost']);
+        $sheet->setCellValue('E25', $data['budgetInfo']['revision0']['indirect_cost']);
+        $sheet->setCellValue('E26', $data['budgetInfo']['revision0']['management_reserve']);
+        $sheet->setCellValue('E27', $data['budgetInfo']['revision0']['eac_contract_amount']);
+        $sheet->setCellValue('E28', $data['budgetInfo']['revision0']['profit']);
+        $sheet->setCellValue('E29', $data['budgetInfo']['revision0']['profitability_index'] / 100);
         // Last Revision
-        $sheet->setCellValue('H23', $data['budgetInfo']['revision1']['budget_cost']);
-        $sheet->setCellValue('H24', $data['budgetInfo']['revision1']['direct_cost']);
-        $sheet->setCellValue('H25', $data['budgetInfo']['revision1']['indirect_cost']);
-        $sheet->setCellValue('H26', $data['budgetInfo']['revision1']['management_reserve']);
-        $sheet->setCellValue('H27', $data['budgetInfo']['revision1']['eac_contract_amount']);
-        $sheet->setCellValue('H28', $data['budgetInfo']['revision1']['profit']);
-        $sheet->setCellValue('H29', $data['budgetInfo']['revision1']['profitability_index'] / 100);
+        $sheet->setCellValue('J23', $data['budgetInfo']['revision1']['budget_cost']);
+        $sheet->setCellValue('J24', $data['budgetInfo']['revision1']['direct_cost']);
+        $sheet->setCellValue('J25', $data['budgetInfo']['revision1']['indirect_cost']);
+        $sheet->setCellValue('J26', $data['budgetInfo']['revision1']['management_reserve']);
+        $sheet->setCellValue('J27', $data['budgetInfo']['revision1']['eac_contract_amount']);
+        $sheet->setCellValue('J28', $data['budgetInfo']['revision1']['profit']);
+        $sheet->setCellValue('J29', $data['budgetInfo']['revision1']['profitability_index'] / 100);
 
         //Actual Data
         $sheet->setCellValue('C33', $data['costInfo']['actual_cost']);
@@ -202,6 +202,70 @@ class ProjectInfo
         $sheet->setCellValue('M37', $data['period']->spi_index);
         $sheet->setCellValue('M39', $data['costInfo']['waste_index']/100);
         $sheet->setCellValue('M41', $data['period']->eac_profitability_index / 100);
+
+        // Cost Summary
+        $sheet->setCellValue('C47', $data['costSummary']['DIRECT']->budget_cost);
+        $sheet->setCellValue('C48', $data['costSummary']['INDIRECT']->budget_cost);
+        $sheet->setCellValue('C49', $data['costSummary']['MANAGEMENT RESERVE']->budget_cost);
+        $sheet->setCellValue('C50', $data['costSummary']->sum('budget_cost'));
+
+        $sheet->setCellValue('D47', $data['costSummary']['DIRECT']->previous_cost);
+        $sheet->setCellValue('D48', $data['costSummary']['INDIRECT']->previous_cost);
+        $sheet->setCellValue('D49', $data['costSummary']['MANAGEMENT RESERVE']->previous_cost);
+        $sheet->setCellValue('D50', $data['costSummary']->sum('previous_cost'));
+
+        $sheet->setCellValue('E47', $data['costSummary']['DIRECT']->allowable_cost);
+        $sheet->setCellValue('E48', $data['costSummary']['INDIRECT']->allowable_cost);
+        $sheet->setCellValue('E49', $data['costSummary']['MANAGEMENT RESERVE']->allowable_cost);
+        $sheet->setCellValue('E50', $data['costSummary']->sum('allowable_cost'));
+
+        $sheet->setCellValue('F47', $data['costSummary']['DIRECT']->to_date_cost);
+        $sheet->setCellValue('F48', $data['costSummary']['INDIRECT']->to_date_cost);
+        $sheet->setCellValue('F49', $data['costSummary']['MANAGEMENT RESERVE']->to_date_cost);
+        $sheet->setCellValue('F50', $data['costSummary']->sum('to_date_cost'));
+
+        $sheet->setCellValue('G47', $data['costSummary']['DIRECT']->to_date_var);
+        $sheet->setCellValue('G48', $data['costSummary']['INDIRECT']->to_date_var);
+        $sheet->setCellValue('G49', $data['costSummary']['MANAGEMENT RESERVE']->to_date_var);
+        $sheet->setCellValue('G50', $data['costSummary']->sum('to_date_var'));
+
+        $sheet->setCellValue('H47', $data['costSummary']['DIRECT']->remaining_cost);
+        $sheet->setCellValue('H48', $data['costSummary']['INDIRECT']->remaining_cost);
+        $sheet->setCellValue('H49', $data['costSummary']['MANAGEMENT RESERVE']->remaining_cost);
+        $sheet->setCellValue('H50', $data['costSummary']->sum('remaining_cost'));
+
+        $sheet->setCellValue('I47', $data['costSummary']['DIRECT']->completion_cost_optimistic);
+        $sheet->setCellValue('I48', $data['costSummary']['INDIRECT']->completion_cost_optimistic);
+        $sheet->setCellValue('I49', $data['costSummary']['MANAGEMENT RESERVE']->completion_cost_optimistic);
+        $sheet->setCellValue('I50', $data['costSummary']->sum('completion_cost_optimistic'));
+
+        $sheet->setCellValue('J47', $data['costSummary']['DIRECT']->completion_cost_likely);
+        $sheet->setCellValue('J48', $data['costSummary']['INDIRECT']->completion_cost_likely);
+        $sheet->setCellValue('J49', $data['costSummary']['MANAGEMENT RESERVE']->completion_cost_likely);
+        $sheet->setCellValue('J50', $data['costSummary']->sum('completion_cost_likely'));
+
+        $sheet->setCellValue('K47', $data['costSummary']['DIRECT']->completion_cost_pessimistic);
+        $sheet->setCellValue('K48', $data['costSummary']['INDIRECT']->completion_cost_pessimistic);
+        $sheet->setCellValue('K49', $data['costSummary']['MANAGEMENT RESERVE']->completion_cost_pessimistic);
+        $sheet->setCellValue('K50', $data['costSummary']->sum('completion_cost_pessimistic'));
+
+
+        $sheet->setCellValue('L47', $data['costSummary']['DIRECT']->completion_var_optimistic);
+        $sheet->setCellValue('L48', $data['costSummary']['INDIRECT']->completion_var_optimistic);
+        $sheet->setCellValue('L49', $data['costSummary']['MANAGEMENT RESERVE']->completion_var_optimistic);
+        $sheet->setCellValue('L50', $data['costSummary']->sum('completion_var_optimistic'));
+
+        $sheet->setCellValue('M47', $data['costSummary']['DIRECT']->completion_var_likely);
+        $sheet->setCellValue('M48', $data['costSummary']['INDIRECT']->completion_var_likely);
+        $sheet->setCellValue('M49', $data['costSummary']['MANAGEMENT RESERVE']->completion_var_likely);
+        $sheet->setCellValue('M50', $data['costSummary']->sum('completion_var_likely'));
+
+        $sheet->setCellValue('N47', $data['costSummary']['DIRECT']->completion_var_pessimistic);
+        $sheet->setCellValue('N48', $data['costSummary']['INDIRECT']->completion_var_pessimistic);
+        $sheet->setCellValue('N49', $data['costSummary']['MANAGEMENT RESERVE']->completion_var_pessimistic);
+        $sheet->setCellValue('N50', $data['costSummary']->sum('completion_var_pessimistic'));
+
+
 
         $sheet->setShowGridlines(false)->setPrintGridlines(false);
         return $sheet;
