@@ -127,11 +127,11 @@ class Period extends Model
         return '';
     }
 
-    function getActualProgressAttribute()
+    function getActualTimeProgressAttribute()
     {
-        if (!empty($this->attributes['actual_progress'])) {
-            return $this->attributes['actual_progress'];
-        }
+//        if (!empty($this->attributes['actual_progress'])) {
+//            return $this->attributes['actual_progress'];
+//        }
 
         if ($this->expected_duration) {
             return round(min(100,$this->time_elapsed * 100 / $this->expected_duration), 2);
