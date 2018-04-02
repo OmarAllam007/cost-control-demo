@@ -11,7 +11,10 @@ use App\Period;
 use App\Project;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
+use function collect;
+use function compact;
 use function dd;
+use function func_get_arg;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
@@ -41,6 +44,9 @@ class GlobalReport
 
     /** @var Collection */
     private $trend_global_periods;
+
+    /** @var Collection */
+    private $cost_summary;
 
     function __construct(GlobalPeriod $period)
     {
@@ -264,7 +270,7 @@ class GlobalReport
     private function cost_summary()
     {
         $fields = [
-            "(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
+            "project_id, (CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
             'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
@@ -273,27 +279,71 @@ class GlobalReport
         $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
             ->selectRaw(implode(', ', $fields))
             ->groupBy('type')->get()
-            ->keyBy('type');
+            ->groupBy('project_id')->map(function($group) {
+                return $group->keyBy('type');
+            })->map(function($project) {
+                $reserve = $project->get('MANAGEMENT RESERVE');
+                if ($reserve->budget_cost) {
+                    $reserve->completion_cost = $reserve->remaining_cost = 0;
+                    $reserve->completion_cost_var = $reserve->budget_cost;
+
+                    $progress = min(1, $project->sum('to_date_cost') / ($project->sum('budget_cost') - $reserve->budget_cost));
+                    $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+                }
+                return $project;
+            })->reduce(function($summary, $project) {
+                $types = ['DIRECT', "INDIRECT", 'MANAGEMENT RESERVE'];
+                $fields = [
+                    'budget_cost', 'to_date_cost', 'allowable_cost', 'to_date_var',
+                    'remaining_cost', 'completion_cost', 'completion_cost_var'
+                ];
+                foreach ($types as $type) {
+                    if (!$summary->has($type)) {
+                        $summary->put($type, new Fluent(compact('type')));
+                    }
+
+                    foreach ($fields as $field) {
+                        $typeData = $summary->get($type);
+                        $typeData->$field += $project->get($type)->$field;
+                    }
+                }
+
+                return $summary;
+            }, collect());
+
+
 
         if ($this->cost_summary->has('MANAGEMENT RESERVE')) {
             $reserve = $this->cost_summary->get('MANAGEMENT RESERVE');
-            $reserve->completion_cost = $reserve->remaining_cost = 0;
-            $reserve->completion_cost_var = $reserve->budget_cost;
+            $reserve->completion_cost_optimistic = $reserve->remaining_cost = 0;
+            $reserve->completion_cost_likely = 0;
+            $reserve->completion_cost_pessimistic = 0;
+            $reserve->completion_cost_var_optimistic = $reserve->budget_cost;
+            $reserve->completion_cost_var_likely = $reserve->budget_cost;
+            $reserve->completion_cost_var_pessimistic = $reserve->budget_cost;
+        }
 
-            $progress = min(1, $this->cost_summary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost'));
-            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+        if ($this->cost_summary->has('INDIRECT')) {
+            $indirect = $this->cost_summary->get('INDIRECT');
+            $indirect->completion_cost_optimistic = $this->periods->sum('at_completion_optimistic');
+            $indirect->completion_cost_likely = $this->periods->sum('at_completion_likely');
+            $indirect->completion_cost_pessimistic = $this->periods->sum('at_completion_pessimistic');
+            $indirect->completion_cost_var_optimistic = $indirect->budget_cost - $indirect->completion_cost_optimistic;
+            $indirect->completion_cost_var_likely = $indirect->budget_cost - $indirect->completion_cost_likely;
+            $indirect->completion_cost_var_pessimistic = $indirect->budget_cost - $indirect->completion_cost_pessimistic;
+        }
+
+        if ($this->cost_summary->has('DIRECT')) {
+            $direct = $this->cost_summary->get('DIRECT');
+            $direct->completion_cost_optimistic = $direct->completion_cost;
+            $direct->completion_cost_likely = $direct->completion_cost;
+            $direct->completion_cost_pessimistic = $direct->completion_cost;
+            $direct->completion_cost_var_optimistic = $direct->completion_cost_var;
+            $direct->completion_cost_var_likely = $direct->completion_cost_var;
+            $direct->completion_cost_var_pessimistic = $direct->completion_cost_var;
         }
 
         return $this->cost_summary;
-
-//        return $this->cost_summary = MasterShadow::from('master_shadows as sh')->join('projects as p', 'sh.project_id', '=', 'p.id')
-//            ->whereIn('period_id', $this->last_period_ids)
-//            ->selectRaw('sh.project_id, p.name as project_name, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
-//            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(allowable_var) as to_date_var')
-//            ->selectRaw('sum(remaining_cost) as remaining_cost, sum(completion_cost) as completion_cost')
-//            ->selectRaw('sum(cost_var) as completion_var')
-//            ->groupBy('sh.project_id', 'p.name')->orderBy('p.name')->get();
-
     }
 
     private function cost_percentage()

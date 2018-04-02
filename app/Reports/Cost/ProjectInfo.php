@@ -12,6 +12,7 @@ use App\Project;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
+use FontLib\TrueType\Collection;
 use Illuminate\Support\Fluent;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -29,6 +30,9 @@ class ProjectInfo
 
     /** @var Project */
     private $project;
+
+    /** @var Collection */
+    private $costSummary;
 
     public function __construct(Period $period)
     {
@@ -50,16 +54,7 @@ class ProjectInfo
 
     function getInfo()
     {
-        $this->costSummary = MasterShadow::dashboardSummary($this->period)->get()->keyBy('type');
-
-        if ($this->costSummary->has('MANAGEMENT RESERVE')) {
-            $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
-            $reserve->completion_cost = $reserve->remaining_cost = 0;
-            $reserve->completion_var = $reserve->budget_cost;
-
-            $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->costSummary->sum('budget_cost'));
-            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
-        }
+        $this->costSummary();
 
         $this->wasteIndexTrend = $this->project->periods()->latest('id')
             ->where('global_period_id', '>=', 12)
@@ -340,5 +335,47 @@ class ProjectInfo
         $info['actual_start_date'] = $this->project->actual_start_date;
 
         return $info;
+    }
+
+    private function costSummary()
+    {
+        $this->costSummary = MasterShadow::dashboardSummary($this->period)->get()->keyBy('type');
+
+        if ($this->costSummary->has('MANAGEMENT RESERVE')) {
+            $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
+            $reserve->completion_cost = $reserve->remaining_cost = 0;
+            $reserve->completion_cost_likely = $reserve->completion_cost_optimistic = $reserve->completion_cost_pessimestic = 0;
+            $reserve->completion_var_likely = $reserve->budget_cost;
+            $reserve->completion_var_optimistic = $reserve->budget_cost;
+            $reserve->completion_var_pessimistic = $reserve->budget_cost;
+
+            $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->costSummary->sum('budget_cost'));
+            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+        }
+
+        if ($this->costSummary->has('INDIRECT')) {
+            $indirect = $this->costSummary->get('INDIRECT');
+
+            $indirect->completion_cost_likely = $this->period->at_completion_likely;
+            $indirect->completion_var_likely = $indirect->budget_cost - $this->period->at_completion_likely;
+
+            $indirect->completion_cost_optimistic = $this->period->at_completion_optimistic;
+            $indirect->completion_var_optimistic = $indirect->budget_cost - $this->period->at_completion_optimistic;
+
+            $indirect->completion_cost_pessimistic = $this->period->at_completion_pessimistic;
+            $indirect->completion_var_pessimistic = $indirect->budget_cost - $this->period->at_completion_pessimistic;
+        }
+
+        if ($this->costSummary->has('DIRECT')) {
+            $direct = $this->costSummary->get('DIRECT');
+            $direct->completion_cost_likely = $direct->completion_cost;
+            $direct->completion_var_likely = $direct->completion_var;
+            $direct->completion_cost_optimistic = $direct->completion_cost;
+            $direct->completion_var_optimistic = $direct->completion_var;
+            $direct->completion_cost_pessimistic = $direct->completion_cost;
+            $direct->completion_var_pessimistic = $direct->completion_var;
+        }
+
+//        dd($this->costSummary);
     }
 }

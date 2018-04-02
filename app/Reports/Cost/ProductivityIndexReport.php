@@ -145,6 +145,7 @@ class ProductivityIndexReport
         $sheet->getStyle("C{$this->start}:C{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
         $sheet->getStyle("G{$this->start}:G{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
 
+        $sheet->setTitle('Productivity Index (Cost)');
         return $sheet;
     }
 
