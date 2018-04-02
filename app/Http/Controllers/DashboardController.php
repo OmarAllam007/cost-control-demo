@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\GlobalPeriod;
 use App\Period;
 use App\Reports\Cost\GlobalReport;
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use function redirect;
 
 class DashboardController extends Controller
 {
@@ -16,6 +18,10 @@ class DashboardController extends Controller
 
     function index(Request $request)
     {
+        if (!Auth::user()->is_admin) {
+            return redirect('/projects');
+        }
+
         $this->globalPeriods = $this->getGlobalPeriods();
 
         $period = $this->getPeriod($request);
