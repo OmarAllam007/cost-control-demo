@@ -42,6 +42,7 @@
                             <div class="chart"
                                  id="cpiTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$cpi_trend->pluck('name')}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'CPI Index',
@@ -62,6 +63,7 @@
                             <div class="chart"
                                  id="spiTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$spi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'SPI Index',
@@ -84,6 +86,7 @@
                             <div class="chart"
                                  id="wasteIndexTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$waste_index_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Material Consumption Index',
@@ -103,6 +106,7 @@
                             <div class="chart"
                                  id="prodIndexTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$pi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Productivity Index',
@@ -125,11 +129,12 @@
                             <div class="chart"
                                  id="costChart"
                                  data-type="pie"
+                                 data-formatter="percent"
                                  data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Cost Percentage',
                                     'data' => $cost_percentage_chart,
-                                    'backgroundColor' => [ 'rgba(217, 225, 242, 0.6)', 'rgba(0, 32, 96, 0.9)']
+                                    'backgroundColor' => [ 'rgba(38,89,137,.6)', 'rgba(0, 32, 96, 0.9)']
                                 ]) }}]"
                                  style="height: 200px"></div>
                         </div>
@@ -144,6 +149,7 @@
                             <div class="chart"
                                  id="costChart"
                                  data-type="horizontalBar"
+                                 data-formatter="percent"
                                  data-labels="{{json_encode(['Actual', 'Planned'])}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Progress',

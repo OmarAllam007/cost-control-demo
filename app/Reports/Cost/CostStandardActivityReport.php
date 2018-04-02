@@ -31,7 +31,7 @@ class CostStandardActivityReport
 
     function run()
     {
-        $this->previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->orderBy('id')->first();
+        $this->previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->orderBy('id', 'DESC')->first();
         if ($this->previousPeriod) {
             $previousTotals = MasterShadow::whereProjectId($this->project->id)->wherePeriodId($this->previousPeriod->id)
                 ->selectRaw('sum(to_date_cost) previous_cost, sum(allowable_ev_cost) previous_allowable, sum(allowable_var) as previous_var')

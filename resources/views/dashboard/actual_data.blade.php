@@ -137,7 +137,7 @@
                 <dl>
                     <dt>Lowest Risk Project</dt>
                     <dd>
-                        <span class="abbr" title="{{$cost_info['highest_risk']->name}}">
+                        <span class="abbr" title="{{$cost_info['lowest_risk']->name}}">
                             {{ str_limit($cost_info['lowest_risk']->project_code, 25) }}
                         </span>
                     </dd>
