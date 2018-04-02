@@ -150,6 +150,19 @@ class ProjectInfo
         $file = $reader->load($template);
         $sheet = $file->getSheet(0);
 
+        $projectCell = $sheet->getCell('A4');
+        $issueDateCell = $sheet->getCell('A5');
+
+        $projectCell->setValue($projectCell->getValue() . ' ' . $data['project']->name);
+        $issueDateCell->setValue($issueDateCell->getValue() . ' ' . date('d M Y'));
+
+        $logo = imagecreatefrompng(public_path('images/kcc.png'));
+        $drawing = new \PHPExcel_Worksheet_MemoryDrawing();
+        $drawing->setName('Logo')->setImageResource($logo)
+            ->setRenderingFunction(\PHPExcel_Worksheet_MemoryDrawing::RENDERING_PNG)
+            ->setMimeType(\PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
+            ->setCoordinates('K2')->setWorksheet($sheet);
+
         // Contract information
         $sheet->setCellValue('C10', $data['project']->project_contract_signed_value);
         $sheet->setCellValue('C12', $data['project']->tender_initial_profit);
