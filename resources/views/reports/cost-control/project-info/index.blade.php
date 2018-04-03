@@ -1,4 +1,4 @@
-@php $print = request()->exists('print') @endphp
+@php $print = $print ?? request()->exists('print') @endphp
 @extends('layouts.' . ($print? 'print' : 'app'))
 @if(request('all'))
     @include('reports.all._budget_cost_by_break_down')
@@ -79,7 +79,7 @@
 @endsection
 
 @section('javascript')
-    <script src="/js/cost-info-charts.js"></script>
+    <script src="{{asset('/js/cost-info-charts.js')}}"></script>
 @append
 
 @section('css')
