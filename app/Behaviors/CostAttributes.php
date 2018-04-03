@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 2/20/17
- * Time: 2:34 PM
- */
 
 namespace App\Behaviors;
-
 
 use App\ActualResources;
 use App\BreakDownResourceShadow;
@@ -25,8 +18,8 @@ use App\StdActivity;
  * @property float $to_date_unit_price
  * @property float $allowable_ev_cost
  * @property float $allowable_qty
- * @property float $at_completion_cost
- * @property float $at_completion_qty
+ * @property float $completion_cost
+ * @property float $completion_qty
  * @property float $remaining_cost
  * @property float $remaining_qty
  * @property float $remaining_unit_price
@@ -42,6 +35,7 @@ use App\StdActivity;
 trait CostAttributes
 {
     protected $calculated;
+    protected $completion_values;
 
     /** @var CostShadow */
     protected $latestCost = null;
@@ -432,6 +426,7 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             'cost_variance_to_date_due_unit_price', 'cost_variance_remaining_due_unit_price', 'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty',
             'cost_variance_to_date_due_qty', 'latest_remaining_qty', 'latest_remaining_cost', 'latest_remaining_unit_price', 'curr_cost', 'curr_qty',
             'curr_unit_price', 'prev_cost', 'prev_qty', 'prev_unit_price', 'wbs_level_id', 'to_date_price_var', 'to_date_qty_var',
+            'completion_cost_optimistic', 'completion_cost_likely', 'completion_cost_pessimistic'
             //'budget_unit_rate',
             //'pw_index',
         ];
@@ -506,30 +501,31 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         return $this->is_general_requirement = $activity->isGeneral();
     }
 
-    function getAtCompletionCostLikelyAttribute()
+    function getCompletionCostLikelyAttribute()
     {
         if (!$this->isGeneral()) {
-            return $this->at_completion_cost;
+            return $this->completion_cost;
         }
 
         $values = $this->completionValues();
         return $values[1];
     }
 
-    function getAtCompletionCostOptimisticAttribute()
+    function getCompletionCostOptimisticAttribute()
     {
         if (!$this->isGeneral()) {
-            return $this->at_completion_cost;
+            return $this->completion_cost;
         }
 
         $values = $this->completionValues();
+
         return $values[0];
     }
 
-    function getAtCompletionCostPessimisticAttribute()
+    function getCompletionCostPessimisticAttribute()
     {
         if (!$this->isGeneral()) {
-            return $this->at_completion_cost;
+            return $this->completion_cost;
         }
 
         $values = $this->completionValues();
@@ -545,7 +541,7 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         $spi = $this->getCalculationPeriod()->spi_index ?: 1;
 
         $this->completion_values = [
-            $this->at_completion_cost,
+            $this->completion_cost,
             $this->budget_cost - $this->allowable_ev_cost,
             ($this->budget_cost - $this->allowable_ev_cost) / ($spi * $this->cpi)
         ];
@@ -555,7 +551,7 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         return $this->completion_values;
     }
 
-    private function getCpiAttribute()
+    public function getCpiAttribute()
     {
         $cpi = 1;
         if ($this->to_date_cost && $this->allowable_ev_cost) {

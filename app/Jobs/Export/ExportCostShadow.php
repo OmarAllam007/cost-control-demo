@@ -69,7 +69,7 @@ class ExportCostShadow extends Job
             'To Date Price/Unit(Eqv)', 'To Date Quantity', 'To Date Cost', 'Allowable (EV) cost', 'Var +/-',
             'To Date Price/Unit Var', 'To Date Qty Var',
             'Remaining Price/Unit', 'Remaining Qty', 'Remaining Cost', 'BL Allowable Cost', 'Var +/- 10',
-            'Completion Price/Unit', 'Completion Qty', 'Completion Cost', 'Price/Unit Var', 'Qty Var +/-', 'Cost Var +/-',
+            'Completion Price/Unit', 'Completion Qty', 'Completion Cost', 'Completion Cost - Optimistic' , 'Completion Cost - Most Likely', 'Completion Cost - Pessimistic', 'Price/Unit Var', 'Qty Var +/-', 'Cost Var +/-',
             'Physical Unit',
 //            '(P/W) Index',
 
@@ -166,6 +166,9 @@ class ExportCostShadow extends Job
                     '"'.($costShadow['completion_unit_price'] ?: '0').'",'.
                     '"'.($costShadow['completion_qty'] ?: '0').'",'.
                     '"'.($costShadow['completion_cost'] ?: '0').'",'.
+                    '"'.($costShadow['completion_cost_optimistic'] ?: '0').'",'.
+                    '"'.($costShadow['completion_cost_likely'] ?: '0').'",'.
+                    '"'.($costShadow['completion_cost_pessimistic'] ?: '0').'",'.
                     '"'.($costShadow['unit_price_var'] ?: '0').'",'.
                     '"'.($costShadow['qty_var'] ?: '0').'",'.
                     '"'.($costShadow['cost_var'] ?: '0').'",'.

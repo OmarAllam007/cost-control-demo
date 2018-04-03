@@ -27,10 +27,11 @@ class CostController extends Controller
 
         $perspective = $request->get('perspective');
 
-        if ($perspective == 'budget') {
-            $query = BreakDownResourceShadow::joinCost($wbs_level, $period)->with('actual_resources');
-        } else {
-            $query = CostShadow::joinShadow($wbs_level, $period);
+        $query = BreakDownResourceShadow::with('actual_resources')->whereIn('wbs_id', $wbs_level->getChildrenIds());
+        if ($perspective != 'budget') {
+            $query->whereRaw(
+                "breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = $period->id)"
+            );
         }
 
         if ($activity_id = $request->get('activity')) {
@@ -52,11 +53,11 @@ class CostController extends Controller
         }
 
         $rows = $query->paginate(100);
-        if ($perspective == 'budget') {
-            $rows->each(function (BreakDownResourceShadow $resource) {
-                $resource->appendFields();
-            });
-        }
+
+        $rows->each(function (BreakDownResourceShadow $resource) {
+            $resource->appendFields();
+        });
+
 
         return $rows;
     }

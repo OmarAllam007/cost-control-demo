@@ -126,6 +126,9 @@
                             <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Completion Price/Unit</th>
                             <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Completion Qty</th>
                             <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Completion Cost</th>
+                            <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Completion Cost - Optimistic</th>
+                            <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Completion Cost - Most Liekly</th>
+                            <th class="bg-violet" style="min-width: 150px; max-width: 150px;">Completion Cost - Pessimistic</th>
                             <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Price/Unit Var,</th>
                             <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Qty Var +/-</th>
                             <th class="bg-orange" style="min-width: 150px; max-width: 150px;">Cost Var +/-</th>
@@ -264,8 +267,10 @@
                                 style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_unit_price : 0 | number_format }}</td>
                             <td class="bg-violet"
                                 style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_qty : 0 | number_format }}</td>
-                            <td class="bg-violet"
-                                style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost : 0 | number_format }}</td>
+                            <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost : 0 | number_format }}</td>
+                            <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost_optimistic : 0 | number_format }}</td>
+                            <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost_likely : 0 | number_format }}</td>
+                            <td class="bg-violet" style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.completion_cost_pessimistic : 0 | number_format }}</td>
                             <td class="bg-orange"
                                 style="min-width: 150px; max-width: 150px;">@{{ breakdown? breakdown.unit_price_var : 0 | number_format }}</td>
                             <td class="bg-orange"
