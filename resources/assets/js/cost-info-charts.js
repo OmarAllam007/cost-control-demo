@@ -71,6 +71,11 @@ document.querySelectorAll('.chart').forEach((item) => {
         options.plugins.datalabels.backgroundColor = '#8ed3d8';
     }
 
+    if (item.dataset.animate !== undefined) {
+        options.animation= {duration: 0};
+        console.log(options);
+    }
+
     const chart = new Chart(canvas, {
         type: item.dataset.type, data, options
     });

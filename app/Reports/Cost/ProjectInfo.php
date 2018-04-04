@@ -11,7 +11,15 @@ use App\Period;
 use App\Project;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Revision\RevisionBreakdownResourceShadow;
+use function basename;
 use Carbon\Carbon;
+use function dd;
+use function env;
+use function escapeshellarg;
+use function escapeshellcmd;
+use function file_exists;
+use function file_put_contents;
+use function flash;
 use FontLib\TrueType\Collection;
 use Illuminate\Support\Fluent;
 use PHPExcel;
@@ -19,7 +27,11 @@ use PHPExcel_IOFactory;
 use PHPExcel_Reader_Excel2007;
 use PHPExcel_Style_Color;
 use PHPExcel_Writer_Excel2007;
+use function request;
 use Response;
+use function storage_path;
+use function str_random;
+use function unlink;
 
 class ProjectInfo
 {
@@ -118,6 +130,40 @@ class ProjectInfo
             'budgetInfo' => $this->getBudgetInfo(),
             'costInfo' => $this->getCostInfo()
         ];
+    }
+
+    function pdf()
+    {
+        if (!env('CHROME_PATH')) {
+            flash('Failed to generate PDF');
+            return redirect()->to(request()->path());
+        }
+
+        $data = $this->run();
+        $data['print'] = 1;
+
+        $content = view('reports.cost-control.project-info.index', $data)->render();
+        $str_random = str_random(8);
+        $filename = storage_path('app/public/' . $str_random . '.html');
+        file_put_contents($filename, $content);
+
+        $chrome = escapeshellcmd(env('CHROME_PATH'));
+        $filepath = url('/storage/' . basename($filename));
+        $output_file = storage_path('app/' . $str_random . '.pdf');
+        $output = escapeshellarg($output_file);
+
+        $result = exec($command = "'$chrome' --headless --window-size=1280,720 --disable-gpu --print-to-pdf='$output_file' '$filepath'");
+
+        @unlink($filename);
+
+        if (!file_exists($output_file)) {
+            flash('Failed to generate PDF');
+            return redirect()->to(request()->path());
+        }
+
+        return response()->download($output_file,
+            slug($this->project->name) . '-' . slug($this->period->name) . '-dashboard.pdf')
+            ->deleteFileAfterSend(true);
     }
 
     function excel()

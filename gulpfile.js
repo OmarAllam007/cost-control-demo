@@ -12,6 +12,9 @@ require('laravel-elixir-vue');
  */
 
 elixir(function (mix) {
+    mix.sass('app.scss');
+    mix.sass('print.scss');
+    // mix.webpack('cost-info-charts.js');
     // mix.sass('app.scss');
     // mix.sass('print.scss');
 

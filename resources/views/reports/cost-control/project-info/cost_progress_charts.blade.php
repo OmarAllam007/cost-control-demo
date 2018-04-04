@@ -7,6 +7,7 @@
                      id="costChart"
                      data-type="pie"
                      data-formatter="percent"
+                     data-animate="{{$print? "false" : "true"}}"
                      data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                      data-datasets="[{{ json_encode([
                                 'label' => 'Cost Percentage', 'data' => [$actual_cost_percentage, $remaining_cost_percentage],

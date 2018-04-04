@@ -37,6 +37,10 @@ class CostReportsController extends Controller
             return $report->excel();
         }
 
+        if ($request->exists('pdf')) {
+            return $report->pdf();
+        }
+
         return view('reports.cost-control.project-info.index', $report->run());
     }
 
