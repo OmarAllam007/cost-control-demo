@@ -31,6 +31,13 @@ use App\StdActivity;
  * @property float $budget_unit
  * @property float $calculated
  * @property float $cpi
+ * @property float $cost_var
+ * @property float $completion_cost_optimistic
+ * @property float $completion_cost_likely
+ * @property float $completion_cost_pessimistic
+ * @property float $completion_var_optimistic
+ * @property float $completion_var_likely
+ * @property float $completion_var_pessimistic
  */
 trait CostAttributes
 {
@@ -501,16 +508,6 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         return $this->is_general_requirement = $activity->isGeneral();
     }
 
-    function getCompletionCostLikelyAttribute()
-    {
-        if (!$this->isGeneral()) {
-            return $this->completion_cost;
-        }
-
-        $values = $this->completionValues();
-        return $values[1];
-    }
-
     function getCompletionCostOptimisticAttribute()
     {
         if (!$this->isGeneral()) {
@@ -522,6 +519,16 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         return $values[0];
     }
 
+    function getCompletionCostLikelyAttribute()
+    {
+        if (!$this->isGeneral()) {
+            return $this->completion_cost;
+        }
+
+        $values = $this->completionValues();
+        return $values[1];
+    }
+
     function getCompletionCostPessimisticAttribute()
     {
         if (!$this->isGeneral()) {
@@ -530,6 +537,33 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
 
         $values = $this->completionValues();
         return $values[2];
+    }
+
+    function getCompletionVarOptimisticAttribute()
+    {
+        if (!$this->isGeneral()) {
+            return $this->cost_var;
+        }
+
+        return $this->budget_cost - $this->completion_cost_optimisitc;
+    }
+
+    function getCompletionVarLikelyAttribute()
+    {
+        if (!$this->isGeneral()) {
+            return $this->cost_var;
+        }
+
+        return $this->budget_cost - $this->completion_cost_likely;
+    }
+
+    function getCompletionVarPessimisticAttribute()
+    {
+        if (!$this->isGeneral()) {
+            return $this->cost_var;
+        }
+
+        return $this->budget_cost - $this->completion_cost_pessimistic;
     }
 
     private function completionValues()

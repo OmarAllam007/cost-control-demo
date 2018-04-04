@@ -57,7 +57,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
         BreakDownResourceShadow::where('project_id', $this->project->id)
 //            ->where('show_in_cost', 1)
             ->chunk(900, function ($shadows) {
-            $start = microtime(1);
+                $start = microtime(1);
                 $records = [];
                 $now = Carbon::now()->format('Y-m-d H:i:s');
                 foreach ($shadows as $costShadow) {
@@ -84,7 +84,6 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     $wbs = $this->getWbs($costShadow);
                     $activityDivs = $this->getActivityDivisions($costShadow);
 
-                    $time = microtime(1);
                     $records[] = [
                         'budget_id' => $costShadow['id'], 'project_id' => $this->project->id, 'period_id' => $this->period->id,
                         'breakdown_resource_id' => $costShadow['breakdown_resource_id'],
