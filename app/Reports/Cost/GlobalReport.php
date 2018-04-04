@@ -82,7 +82,8 @@ class GlobalReport
             'spi_trend' => $this->spi_trend(),
             'waste_index_trend' => $this->waste_index_trend(),
             'pi_trend' => $this->productivity_index_trend(),
-            'revenue_statement' => $this->revenue_statement()
+            'revenue_statement' => $this->revenue_statement(),
+            'completionValues' => $this->completionValues
         ];
     }
 
@@ -277,7 +278,9 @@ class GlobalReport
             "project_id, (CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
             'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
-            'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost'
+            'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost',
+            'sum(completion_cost_optimistic) as completion_cost_optimistic', 'sum(completion_cost_likely) as completion_cost_likely',
+            'sum(completion_cost_pessimistic) as completion_cost_pessimistic',
         ];
 
         $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
@@ -299,8 +302,10 @@ class GlobalReport
                 $types = ['DIRECT', "INDIRECT", 'MANAGEMENT RESERVE'];
                 $fields = [
                     'budget_cost', 'to_date_cost', 'allowable_cost', 'to_date_var',
-                    'remaining_cost', 'completion_cost', 'completion_cost_var'
+                    'remaining_cost', 'completion_cost', 'completion_cost_var',
+                    'completion_cost_optimistic', 'completion_cost_likely', 'completion_cost_pessimistic',
                 ];
+
                 foreach ($types as $type) {
                     if (!$summary->has($type)) {
                         $summary->put($type, new Fluent(compact('type')));
@@ -322,30 +327,19 @@ class GlobalReport
             $reserve->completion_cost_optimistic = $reserve->remaining_cost = 0;
             $reserve->completion_cost_likely = 0;
             $reserve->completion_cost_pessimistic = 0;
+            $reserve->completion_cost_var = $reserve->budget_cost;
             $reserve->completion_cost_var_optimistic = $reserve->budget_cost;
             $reserve->completion_cost_var_likely = $reserve->budget_cost;
             $reserve->completion_cost_var_pessimistic = $reserve->budget_cost;
         }
 
-        if ($this->cost_summary->has('INDIRECT')) {
-            $indirect = $this->cost_summary->get('INDIRECT');
-            $indirect->completion_cost_optimistic = $this->periods->sum('at_completion_optimistic');
-            $indirect->completion_cost_likely = $this->periods->sum('at_completion_likely');
-            $indirect->completion_cost_pessimistic = $this->periods->sum('at_completion_pessimistic');
-            $indirect->completion_cost_var_optimistic = $indirect->budget_cost - $indirect->completion_cost_optimistic;
-            $indirect->completion_cost_var_likely = $indirect->budget_cost - $indirect->completion_cost_likely;
-            $indirect->completion_cost_var_pessimistic = $indirect->budget_cost - $indirect->completion_cost_pessimistic;
-        }
+        $this->completionValues = [
+            $this->cost_summary->sum('completion_cost_optimistic'),
+            $this->cost_summary->sum('completion_cost_likely'),
+            $this->cost_summary->sum('completion_cost_pessimistic'),
+        ];
 
-        if ($this->cost_summary->has('DIRECT')) {
-            $direct = $this->cost_summary->get('DIRECT');
-            $direct->completion_cost_optimistic = $direct->completion_cost;
-            $direct->completion_cost_likely = $direct->completion_cost;
-            $direct->completion_cost_pessimistic = $direct->completion_cost;
-            $direct->completion_cost_var_optimistic = $direct->completion_cost_var;
-            $direct->completion_cost_var_likely = $direct->completion_cost_var;
-            $direct->completion_cost_var_pessimistic = $direct->completion_cost_var;
-        }
+        sort($this->completionValues);
 
         return $this->cost_summary;
     }
