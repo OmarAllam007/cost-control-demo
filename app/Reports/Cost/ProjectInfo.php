@@ -128,7 +128,8 @@ class ProjectInfo
             'remaining_cost_percentage' => $this->remaining_cost_percentage,
             'actualRevenue' => $this->actualRevenue,
             'budgetInfo' => $this->getBudgetInfo(),
-            'costInfo' => $this->getCostInfo()
+            'costInfo' => $this->getCostInfo(),
+            'completionValues' => $this->completionValues,
         ];
     }
 
@@ -168,7 +169,6 @@ class ProjectInfo
 
     function excel()
     {
-
         $excel = new PHPExcel();
         $excel->removeSheetByIndex(0);
         $excel->addExternalSheet($this->sheet());
@@ -488,6 +488,7 @@ class ProjectInfo
             $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
             $reserve->completion_cost = $reserve->remaining_cost = 0;
             $reserve->completion_cost_likely = $reserve->completion_cost_optimistic = $reserve->completion_cost_pessimestic = 0;
+            $reserve->completion_var = $reserve->budget_cost;
             $reserve->completion_var_likely = $reserve->budget_cost;
             $reserve->completion_var_optimistic = $reserve->budget_cost;
             $reserve->completion_var_pessimistic = $reserve->budget_cost;
@@ -496,29 +497,14 @@ class ProjectInfo
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
-        if ($this->costSummary->has('INDIRECT')) {
-            $indirect = $this->costSummary->get('INDIRECT');
+        $this->completionValues = [
+            $this->costSummary->sum('completion_cost_optimistic'),
+            $this->costSummary->sum('completion_cost_likely'),
+            $this->costSummary->sum('completion_cost_pessimistic'),
+        ];
 
-            $indirect->completion_cost_likely = $this->period->at_completion_likely;
-            $indirect->completion_var_likely = $indirect->budget_cost - $this->period->at_completion_likely;
+        sort($this->completionValues);
 
-            $indirect->completion_cost_optimistic = $this->period->at_completion_optimistic;
-            $indirect->completion_var_optimistic = $indirect->budget_cost - $this->period->at_completion_optimistic;
-
-            $indirect->completion_cost_pessimistic = $this->period->at_completion_pessimistic;
-            $indirect->completion_var_pessimistic = $indirect->budget_cost - $this->period->at_completion_pessimistic;
-        }
-
-        if ($this->costSummary->has('DIRECT')) {
-            $direct = $this->costSummary->get('DIRECT');
-            $direct->completion_cost_likely = $direct->completion_cost;
-            $direct->completion_var_likely = $direct->completion_var;
-            $direct->completion_cost_optimistic = $direct->completion_cost;
-            $direct->completion_var_optimistic = $direct->completion_var;
-            $direct->completion_cost_pessimistic = $direct->completion_cost;
-            $direct->completion_var_pessimistic = $direct->completion_var;
-        }
-
-//        dd($this->costSummary);
+        return $this->costSummary;
     }
 }

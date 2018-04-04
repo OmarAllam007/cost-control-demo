@@ -515,29 +515,28 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->completion_cost;
         }
 
-        $values = $this->completionValues();
-
-        return $values[0];
+        // ETC = BC - EV
+        return ($this->budget_cost - $this->allowable_ev_cost) + $this->to_date_cost;
     }
 
     function getCompletionCostLikelyAttribute()
     {
-        if (!$this->isGeneral()) {
-            return $this->completion_cost;
-        }
-
-        $values = $this->completionValues();
-        return $values[1];
+        // ETC = (BC - EV) / cpi
+        // Revise Remaining Cost
+        return $this->completion_cost;
     }
 
     function getCompletionCostPessimisticAttribute()
     {
+        // ETC = (BC - EV) / (cpi * spi)
+
         if (!$this->isGeneral()) {
             return $this->completion_cost;
         }
 
-        $values = $this->completionValues();
-        return $values[2];
+        $spi = $this->getCalculationPeriod()->spi_index ?: 1;
+
+        return (($this->budget_cost - $this->allowable_ev_cost) / ($spi * $this->cpi)) + $this->to_date_cost;
     }
 
     function getCompletionVarOptimisticAttribute()

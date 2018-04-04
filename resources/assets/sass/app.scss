@@ -918,3 +918,42 @@ dl.dl-margin{
 .text-success .fa:before {
   color: $state-success-text;
 }
+
+
+.borderless {
+  border: none !important;
+}
+
+.border {
+  border: 1px solid #fefefe;
+}
+
+td.optimistic {
+  background: #E3FCEC;
+}
+th.optimistic {
+  background: #51D88A;
+  color: #E3FCEC;
+}
+
+td.most-liekly {
+  background: #FCFBEB;
+}
+
+th.most-liekly {
+  background: #F2D024;
+  color: #FCFBEB;
+}
+
+td.pessimistic {
+  background-color: #FCEBEA;
+}
+
+th.pessimistic {
+  background: #CC1F1A;
+  color: #FCEBEA;
+}
+
+.bg-grey {
+  background: #F1F5F8;
+}
