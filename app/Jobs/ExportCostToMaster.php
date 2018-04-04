@@ -124,7 +124,10 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'created_at' => $now, 'updated_at' => $now,
                         'completion_cost_optimistic' => $costShadow['completion_cost_optimistic'],
                         'completion_cost_likely' => $costShadow['completion_cost_likely'],
-                        'completion_cost_pessimistic' => $costShadow['completion_cost_pessimistic']
+                        'completion_cost_pessimistic' => $costShadow['completion_cost_pessimistic'],
+                        'completion_var_optimistic' => $costShadow['completion_var_optimistic'],
+                        'completion_var_likely' => $costShadow['completion_var_likely'],
+                        'completion_var_pessimistic' => $costShadow['completion_var_pessimistic'],
                         //'pw_index' => $costShadow['pw_index']
                     ];
                 }
