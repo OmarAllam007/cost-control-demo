@@ -930,28 +930,32 @@ dl.dl-margin{
 
 td.optimistic {
   background: #E3FCEC;
+  text-align: right;
 }
 th.optimistic {
   background: #51D88A;
   color: #E3FCEC;
+  text-align: center;
 }
 
 td.most-liekly {
   background: #FCFBEB;
+  text-align: right;
 }
-
 th.most-liekly {
   background: #F2D024;
   color: #FCFBEB;
+  text-align: center;
 }
 
 td.pessimistic {
   background-color: #FCEBEA;
+  text-align: right;
 }
-
 th.pessimistic {
   background: #CC1F1A;
   color: #FCEBEA;
+  text-align: center;
 }
 
 .bg-grey {
