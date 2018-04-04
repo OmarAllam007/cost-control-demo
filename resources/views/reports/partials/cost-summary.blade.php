@@ -84,8 +84,8 @@
             @endphp
             <tr>
                 <th class="bg-grey text-right">at Completion Cost Var +/-</th>
-                <td class="optimistic  {{$completion_var_optimistic > 0 ? 'text-red' : 'text-danger'}}">{{number_format($completion_var_optimistic, 2)}}</td>
-                <td class="most-liekly {{$completion_var_likely > 0 ? 'text-red' : 'text-danger'}} ">{{number_format($completion_var_likely, 2)}}</td>
+                <td class="optimistic  {{$completion_var_optimistic > 0 ? 'text-success' : 'text-danger'}}">{{number_format($completion_var_optimistic, 2)}}</td>
+                <td class="most-liekly {{$completion_var_likely > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_likely, 2)}}</td>
                 <td class="pessimistic {{$completion_var_pessimistic > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_pessimistic, 2)}}</td>
             </tr>
             </tbody>
