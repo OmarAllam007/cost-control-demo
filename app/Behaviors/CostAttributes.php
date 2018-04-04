@@ -433,7 +433,8 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             'cost_variance_to_date_due_unit_price', 'cost_variance_remaining_due_unit_price', 'cost_variance_completion_due_unit_price', 'cost_variance_completion_due_qty',
             'cost_variance_to_date_due_qty', 'latest_remaining_qty', 'latest_remaining_cost', 'latest_remaining_unit_price', 'curr_cost', 'curr_qty',
             'curr_unit_price', 'prev_cost', 'prev_qty', 'prev_unit_price', 'wbs_level_id', 'to_date_price_var', 'to_date_qty_var',
-            'completion_cost_optimistic', 'completion_cost_likely', 'completion_cost_pessimistic'
+            'completion_cost_optimistic', 'completion_cost_likely', 'completion_cost_pessimistic',
+            'completion_var_optimistic', 'completion_var_likely', 'completion_var_pessimistic'
             //'budget_unit_rate',
             //'pw_index',
         ];
@@ -545,7 +546,7 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->cost_var;
         }
 
-        return $this->budget_cost - $this->completion_cost_optimisitc;
+        return $this->budget_cost - $this->completion_cost_optimistic;
     }
 
     function getCompletionVarLikelyAttribute()
@@ -576,8 +577,8 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
 
         $this->completion_values = [
             $this->completion_cost,
-            $this->budget_cost - $this->allowable_ev_cost,
-            ($this->budget_cost - $this->allowable_ev_cost) / ($spi * $this->cpi)
+            ($this->budget_cost - $this->allowable_ev_cost) + $this->to_date_cost,
+            (($this->budget_cost - $this->allowable_ev_cost) / ($spi * $this->cpi)) + $this->to_date_cost
         ];
 
 
