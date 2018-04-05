@@ -135,29 +135,9 @@ class ProjectInfo
 
     function pdf()
     {
-        if (!env('CHROME_PATH')) {
-            flash('Failed to generate PDF');
-            return redirect()->to(request()->path());
-        }
+        $output_file = $this->createPdf();
 
-        $data = $this->run();
-        $data['print'] = 1;
-
-        $content = view('reports.cost-control.project-info.index', $data)->render();
-        $str_random = str_random(8);
-        $filename = storage_path('app/public/' . $str_random . '.html');
-        file_put_contents($filename, $content);
-
-        $chrome = escapeshellcmd(env('CHROME_PATH'));
-        $filepath = url('/storage/' . basename($filename));
-        $output_file = storage_path('app/' . $str_random . '.pdf');
-        $output = escapeshellarg($output_file);
-
-        $result = exec($command = "'$chrome' --headless --window-size=1280,720 --disable-gpu --print-to-pdf='$output_file' '$filepath'");
-
-        @unlink($filename);
-
-        if (!file_exists($output_file)) {
+        if (!$output_file) {
             flash('Failed to generate PDF');
             return redirect()->to(request()->path());
         }
@@ -506,5 +486,30 @@ class ProjectInfo
         sort($this->completionValues);
 
         return $this->costSummary;
+    }
+
+    public function createPdf()
+    {
+        if (!env('CHROME_PATH')) {
+            return false;
+        }
+
+        $data = $this->run();
+        $data['print'] = 1;
+
+        $content = view('reports.cost-control.project-info.index', $data)->render();
+        $str_random = str_random(8);
+        $filename = storage_path('app/public/' . $str_random . '.html');
+        file_put_contents($filename, $content);
+
+        $chrome = escapeshellcmd(env('CHROME_PATH'));
+        $filepath = url('/storage/' . basename($filename));
+        $output_file = storage_path('app/' . $str_random . '.pdf');
+
+        exec($command = "'$chrome' --headless --window-size=1280,720 --disable-gpu --print-to-pdf='$output_file' '$filepath' 2>/dev/null");
+
+        @unlink($filename);
+
+        return file_exists($output_file)? $output_file : false;
     }
 }

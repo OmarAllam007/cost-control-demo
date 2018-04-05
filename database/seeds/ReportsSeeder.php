@@ -30,6 +30,7 @@ use App\Reports\Cost\ActivityReport;
 use App\Reports\Cost\CostStandardActivityReport;
 use App\Reports\Cost\CostSummary;
 use App\Reports\Cost\ProductivityIndexReport;
+use App\Reports\Cost\ProjectInfo;
 use App\Reports\Cost\ThresholdReport;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Database\Seeder;
@@ -52,7 +53,6 @@ class ReportsSeeder extends Seeder
             ['name' => 'Labour Budget (Cost-Unit)', 'class_name' => ManPowerReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Revised BOQ (EAC Contract)', 'class_name' => RevisedBoqReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Project Charter', 'class_name' => CharterReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'Profitability Report', 'class_name' => ProfitabilityIndexReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Productivity', 'class_name' => ProductivityReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'Activity Resource Breakdown', 'class_name' => ActivityResourceBreakDownReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'BOQ Price List', 'class_name' => BoqPriceListReport::class, 'type' => 'Budget', 'created_at' => $now, 'updated_at' => $now],
@@ -79,6 +79,7 @@ class ReportsSeeder extends Seeder
             ['name' =>'Threshold Report', 'class_name' => ThresholdReport::class, 'type' => 'Cost Control'],
             ['name' =>'Material Consumption Report', 'class_name' => WasteIndexReport::class, 'type' => 'Cost Control'],
             ['name' =>'Variance Analysis', 'class_name' => VarianceAnalysisReport::class, 'type' => 'Cost Control'],
+            ['name' =>'Project Dashboard', 'class_name' => ProjectInfo::class, 'type' => 'Cost Control'],
         ])->sortBy(function($r) {
             return $r['type'] . '-' . $r['name'];
         });
