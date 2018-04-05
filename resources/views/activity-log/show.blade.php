@@ -82,11 +82,11 @@
                 <div class="row">
                     <article class="form-group col-sm-3">
                         <input type="search" id="ResourceSearch" class="form-control input-sm"
-                               placeholder="Search by Resource">
+                               placeholder="Search by Resource" v-model="resource_search">
                     </article>
 
                     <article class="form-group col-sm-3">
-                        <select id="PeriodId" class="form-control input-sm">
+                        <select id="PeriodId" class="form-control input-sm" v-model="resource_mode">
                             <option value="all">All Resources</option>
                             <option value="important">Important Only</option>
                         </select>
@@ -148,7 +148,6 @@
                                                 <th>Amount</th>
                                                 <th>Date from store</th>
                                                 <th>Date uploaded</th>
-                                                <th>File</th>
                                                 <th>Reference</th>
                                             </tr>
                                             </thead>
@@ -162,9 +161,17 @@
                                                 <td>{{actual_resource.qty|number_format}}</td>
                                                 <td>{{actual_resource.cost|number_format}}</td>
                                                 <td v-text="actual_resource.store_date"></td>
-                                                <td v-text="actual_resource.created_at"></td>
-                                                <td></td>
-                                                <td v-text="actual_resource.doc_no"></td>
+                                                <td>
+                                                    <a class="in-iframe"
+                                                       :href="`/actual-batches/${actual_resource.batch_id}`"
+                                                       v-text="actual_resource.created_at">
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a :href="`/actual-batches/${actual_resource.batch_id}/download`"
+                                                       v-text="actual_resource.doc_no">
+                                                    </a>
+                                                </td>
                                             </tr>
                                             </tbody>
                                         </table>

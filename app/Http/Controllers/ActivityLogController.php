@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BreakDownResourceShadow;
 use App\WbsLevel;
 use function compact;
+use function func_get_args;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
