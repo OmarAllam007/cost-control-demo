@@ -14,7 +14,7 @@
 
 <body id="app-layout">
 
-<table style="width:100%">
+<table style="width:100%; padding: 1cm;">
     <thead>
     <tr>
         <th class="col-xs-4">
