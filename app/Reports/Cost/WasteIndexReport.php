@@ -85,10 +85,10 @@ class WasteIndexReport
 
             $type->resources_list = $this->resources->get($type->id, collect())->map(function($resource) {
                 $resource->pw_index = 0;
-                if ($resource->allowable_cost) {
+                $resource->variance = ($resource->allowable_qty - $resource->to_date_qty) * $resource->to_date_unit_price;
 
+                if ($resource->allowable_cost) {
 //                    $resource->pw_index = ($resource->allowable_cost - $resource->to_date_cost) * 100 / $resource->allowable_cost;
-                    $resource->variance = ($resource->allowable_qty - $resource->to_date_qty) * $resource->to_date_unit_price;
                     $resource->pw_index = $resource->variance * 100 / $resource->allowable_cost;
                 }
 
