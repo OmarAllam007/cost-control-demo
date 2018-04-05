@@ -11,8 +11,8 @@
                 <th rowspan="2">To Date Cost</th>
                 <th rowspan="2">To Date Cost Var +/-</th>
                 <th rowspan="2">Remaining Cost</th>
-                <th class="text-center">at Completion Cost</th>
-                <th class="text-center">at Completion Cost Var +/-</th>
+                <th class="text-center">At Completion Cost</th>
+                <th class="text-center">At Completion Cost Var +/-</th>
             </tr>
             </thead>
             <tbody>
@@ -46,19 +46,19 @@
             </tfoot>
         </table>
 
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th class="borderless"></th>
-                <th class="optimistic">Optimistic</th>
-                <th class="most-liekly">Most Likely</th>
-                <th class="pessimistic">Pessimistic</th>
+                <th class="optimistic text-center">Optimistic</th>
+                <th class="most-liekly text-center">Most Likely</th>
+                <th class="pessimistic text-center">Pessimistic</th>
             </tr>
             </thead>
 
             <tbody>
             <tr>
-                <th class="bg-grey text-right">at Completion Cost</th>
+                <th class="bg-grey">At Completion Cost</th>
                 <td class="optimistic">{{number_format($completionValues[0], 2)}}</td>
                 <td class="most-liekly">{{number_format($completionValues[1], 2)}}</td>
                 <td class="pessimistic">{{number_format($completionValues[2], 2)}}</td>
@@ -72,7 +72,7 @@
 
             @endphp
             <tr>
-                <th class="bg-grey text-right">at Completion Cost Var +/-</th>
+                <th class="bg-grey">At Completion Cost Var +/-</th>
                 <td class="optimistic  {{$completion_var_optimistic > 0 ? 'text-success' : 'text-danger'}}">{{number_format($completion_var_optimistic, 2)}}</td>
                 <td class="most-liekly {{$completion_var_likely > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_likely, 2)}}</td>
                 <td class="pessimistic {{$completion_var_pessimistic > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_pessimistic, 2)}}</td>
