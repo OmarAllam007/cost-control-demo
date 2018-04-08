@@ -52,7 +52,7 @@ class ThresholdReport
                 ->where('to_date_qty', '>', 0)
                 ->selectRaw('wbs_id, activity, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
                 ->selectRaw('sum(allowable_ev_cost) - sum(to_date_cost) as variance')
-                ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')
+//                ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')
                 ->groupBy('wbs_id', 'activity')
                 ->orderBy('wbs_id', 'activity')
         )->get()->groupBy('wbs_id');
@@ -73,20 +73,20 @@ class ThresholdReport
             $level->subtree = $this->buildTree($level->id);
 
             $level->activities = $this->activities->get($level->id, collect())->filter(function($activity) {
-               /* $activity->increase = 100;
+                $activity->increase = 0;
                 if ($activity->allowable_cost) {
-                    $activity->increase = ($activity->variance / $activity->allowable_cost) * 100;
-                }*/
+                    $activity->increase = - ($activity->variance / $activity->allowable_cost) * 100;
+                }
 
                 $activity->compare_variance = - $activity->variance;
                 if ($this->threshold >= 0) {
-                    $threshold = $activity->increase > $this->threshold;
+                    $threshold = $activity->increase >= $this->threshold;
                 } else {
                     $threshold = $activity->increase < $this->threshold;
                 }
 
                 if ($this->threshold_value >= 0) {
-                    $threshold_value = abs($activity->variance) > abs($this->threshold_value);
+                    $threshold_value = abs($activity->variance) >= abs($this->threshold_value);
                 } else {
                     $threshold_value = $activity->variance > abs($this->threshold_value);
                 }

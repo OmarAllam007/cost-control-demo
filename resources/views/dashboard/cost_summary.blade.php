@@ -11,8 +11,8 @@
                 <th rowspan="2">To Date Cost</th>
                 <th rowspan="2">To Date Cost Var +/-</th>
                 <th rowspan="2">Remaining Cost</th>
-                <th class="text-center">At Completion Cost</th>
-                <th class="text-center">At Completion Cost Var +/-</th>
+                <th>At Completion Cost</th>
+                <th>At Completion Cost Var +/-</th>
             </tr>
             </thead>
             <tbody>
@@ -53,9 +53,9 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th class="optimistic text-center">Optimistic</th>
-                        <th class="most-liekly text-center">Most Likely</th>
-                        <th class="pessimistic text-center">Pessimistic</th>
+                        <th class="optimistic">Optimistic</th>
+                        <th class="most-liekly">Most Likely</th>
+                        <th class="pessimistic">Pessimistic</th>
                     </tr>
                     </thead>
 
