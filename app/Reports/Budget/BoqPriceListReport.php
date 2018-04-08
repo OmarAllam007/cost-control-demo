@@ -120,7 +120,7 @@ class BoqPriceListReport
 
         if ($depth) {
             $sheet->getRowDimension($this->row)
-                ->setOutlineLevel($depth < 8 ? $depth : 8)
+                ->setOutlineLevel(min($depth, 7))
                 ->setCollapsed(true)->setVisible(false);
         }
 
@@ -144,7 +144,7 @@ class BoqPriceListReport
             $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * $depth);
 
             $sheet->getRowDimension($this->row)
-                ->setOutlineLevel($depth + 1 < 8? $depth + 1 : 8)
+                ->setOutlineLevel(min($depth + 1, 7))
                 ->setCollapsed(true)->setVisible(false);
         });
     }
