@@ -121,7 +121,7 @@ class SendCommunicationPlan extends Job implements ShouldQueue
                 ++$this->reports_count;
             }
 
-//            $writer->setActiveSheetIndex(0);
+            $writer->setActiveSheetIndex(0);
         });
         if ($this->reports_count) {
             $info = $writer->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
