@@ -1,5 +1,5 @@
 <div class="card-group-item">
-    <h4 class="card-group-item-heading">SPI Trend Analysis</h4>
+    <h4 class="card-group-item-heading">Schedule Performance Index (SPI) Trend</h4>
 
     <div class="chart"
          id="spiChart"
