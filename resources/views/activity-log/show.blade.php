@@ -15,7 +15,7 @@
     <div id="activityLog">
         <section class="info-box card">
             <div class="card-body">
-                <div class="row mb-10">
+                <div class="row mb-5">
                     <div class="col-sm-4">
                         <dl>
                             <dt>Activity Name</dt>
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-10">
+                <div class="row mb-5">
                     <div class="col-sm-4">
                         <dl>
                             <dt>Activity ID</dt>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-10">
+                <div class="row">
                     <div class="col-sm-4">
                         <dl>
                             <dt>Status</dt>

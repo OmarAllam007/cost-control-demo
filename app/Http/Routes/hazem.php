@@ -287,4 +287,5 @@ Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@upd
 Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
 
 Route::get('activity-log/{wbs}/{code}', 'ActivityLogController@show')->name('activity-log.show');
+Route::get('activity-log/{wbs}/{code}/excel', 'ActivityLogController@excel')->name('activity-log.excel');
 Route::get('/api/activity-log/{wbs}/{code}', 'Api\ActivityLogController@show');

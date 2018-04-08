@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\BreakDownResourceShadow;
+use App\Export\ActivityLogExport;
 use App\WbsLevel;
 use function compact;
 use function func_get_args;
@@ -19,7 +20,10 @@ class ActivityLogController extends Controller
 
         $periods = $wbs->project->periods()->latest('end_date')->get();
 
-        $shadows = BreakDownResourceShadow::with('actual_resources')->where('wbs_id', $wbs->id)->where('code', $code)->get();
+        $shadows = BreakDownResourceShadow::with('actual_resources')
+            ->where('wbs_id', $wbs->id)
+            ->where('code', $code)
+            ->get();
 
         $activity_name = $shadows->first()->activity;
         $budget_cost = $shadows->sum('budget_cost');
@@ -41,5 +45,13 @@ class ActivityLogController extends Controller
         return view('activity-log.show', compact(
             'wbs', 'code', 'periods', 'activity_name', 'budget_cost', 'first_upload', 'last_upload', 'actual_cost', 'status', 'variance'
         ));
+    }
+
+    function excel(WbsLevel $wbs, $code)
+    {
+        $this->authorize('actual_resources', $wbs->project);
+
+        $export = new ActivityLogExport($wbs, $code);
+        return $export->download();
     }
 }
