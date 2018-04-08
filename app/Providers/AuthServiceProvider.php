@@ -31,6 +31,11 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
         });
+
+        $gate->define('admin', function ($user) {
+            return $user->is_admin;
+        });
+
         $gate->define('read', 'App\Policies\DataPolicy@read');
         $gate->define('write', 'App\Policies\DataPolicy@write');
         $gate->define('delete', 'App\Policies\DataPolicy@delete');

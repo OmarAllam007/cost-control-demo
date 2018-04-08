@@ -6,9 +6,13 @@ use App\GlobalPeriod;
 use App\Period;
 use App\Reports\Cost\GlobalReport;
 use Auth;
+use function back;
 use Carbon\Carbon;
+use function compact;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Collection;
+use Mail;
 use function redirect;
 
 class DashboardController extends Controller
@@ -25,19 +29,13 @@ class DashboardController extends Controller
         $this->globalPeriods = $this->getGlobalPeriods();
 
         $period = $this->getPeriod($request);
+        $report = new GlobalReport($period);
 
-        $key = 'global-report-' . $period->id;
-
-        if ($request->exists('clear') || $request->exists('refresh')) {
-            \Cache::forget($key);
+        if (request()->exists('pdf')) {
+            return $report->pdf();
         }
 
-
-        $data = \Cache::remember($key, Carbon::tomorrow(), function () use ($period) {
-            $report = new GlobalReport($period);
-            return $report->run();
-        });
-
+        $data = $report->run();
         $data['globalPeriods'] = $this->globalPeriods;
         $data['reportPeriod'] = $period;
 
@@ -64,8 +62,53 @@ class DashboardController extends Controller
 
     private function getGlobalPeriods()
     {
-        return GlobalPeriod::latest('end_date')->whereHas('periods', function($query) {
+        return GlobalPeriod::latest('end_date')->whereHas('periods', function ($query) {
             $query->where('status', Period::GENERATED);
         })->get();
+    }
+
+    function send()
+    {
+        $this->authorize('admin');
+
+        $periods = GlobalPeriod::select('id', 'name')->latest('end_date')->get();
+
+        return view('dashboard.send', compact('periods'));
+    }
+
+    function postSend(Request $request)
+    {
+        $this->authorize('admin');
+
+        $this->validate($request, [
+            'period_id' => 'required|exists:global_periods,id',
+            'recipients.*.name' => 'required',
+            'recipients.*.email' => 'required|email',
+            'recipients' => 'required|array|min:1'
+        ]);
+
+        $period = GlobalPeriod::find($request->get('period_id'));
+
+        $report = new GlobalReport($period);
+        $file = $report->createPdf();
+
+        if (!$file) {
+            flash('Could not generate dashboard as PDF');
+            return back();
+        }
+
+        foreach ($request->get('recipients') as $recipient) {
+            Mail::send('mail.dashboard',
+                compact('recipient', 'period'),
+                function (Message $msg) use ($file, $recipient, $period) {
+                    $msg->attach($file, ['as' => 'KPS Dashboard.pdf']);
+                    $msg->to($recipient['email']);
+                    $msg->cc(Auth::user()->email);
+                    $msg->subject('KPS Dashboard - ' . $period->name);
+                });
+        }
+
+        flash('Dashboard has been sent', 'success');
+        return redirect('/dashboard');
     }
 }

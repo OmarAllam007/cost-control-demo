@@ -47,7 +47,7 @@
         </table>
 
         <div class="row">
-            <div class="col-md-6 col-md-offset-3">
+            <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
 
                 <table class="table table-bordered">
                     <thead>

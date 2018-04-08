@@ -1,5 +1,5 @@
 @php
-    $print = request()->exists('print');
+    $print = $print ?? request()->exists('print');
     $layout = ($print? 'print' : 'app');
 @endphp
 @extends("layouts.{$layout}")
@@ -130,6 +130,7 @@
                                  id="costChart"
                                  data-type="pie"
                                  data-formatter="percent"
+                                 data-animate="false"
                                  data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Cost Percentage',

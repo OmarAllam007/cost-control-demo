@@ -263,3 +263,6 @@ Route::get('project/{project}/changelog', 'ChangelogController@show')->name('pro
 Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
 Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
 Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
+
+Route::get('/dashboard/send', 'DashboardController@send');
+Route::post('/dashboard/send', 'DashboardController@postSend');

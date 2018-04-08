@@ -55,6 +55,19 @@ class GlobalReport
 
     function run()
     {
+        $key = 'global-report-' . $this->period->id;
+
+        if (request()->exists('clear') || request()->exists('refresh')) {
+            \Cache::forget($key);
+        }
+
+        return \Cache::remember($key, Carbon::tomorrow(), function () {
+            return $this->getInfo();
+        });
+    }
+
+    function getInfo()
+    {
         $this->last_period_ids = Period::readyForReporting()
             ->selectRaw('max(id) as id, project_id')
             ->where('global_period_id', $this->period->id)
@@ -449,5 +462,43 @@ class GlobalReport
 //                $period->name = $periods->get($period->global_period_id)->name;
 //                return $period;
 //            })->pluck('value', 'name');
+    }
+
+    function pdf()
+    {
+        $output_file = $this->createPdf();
+
+        if (!$output_file) {
+            flash('Failed to generate PDF');
+            return redirect()->to(request()->path());
+        }
+
+        return response()->download($output_file, 'kps-dashboard.pdf')
+            ->deleteFileAfterSend(true);
+    }
+
+    function createPdf()
+    {
+        if (!env('CHROME_PATH')) {
+            return false;
+        }
+
+        $data = $this->run();
+        $data['print'] = 1;
+
+        $content = view('dashboard.index', $data)->render();
+        $str_random = str_random(8);
+        $filename = storage_path('app/public/' . $str_random . '.html');
+        file_put_contents($filename, $content);
+
+        $chrome = escapeshellcmd(env('CHROME_PATH'));
+        $filepath = url('/storage/' . basename($filename));
+        $output_file = storage_path('app/' . $str_random . '.pdf');
+
+        exec($command = "'$chrome' --headless --window-size=1280,720 --disable-gpu --print-to-pdf='$output_file' '$filepath' 2>/dev/null");
+
+        @unlink($filename);
+
+        return file_exists($output_file)? $output_file : false;
     }
 }
