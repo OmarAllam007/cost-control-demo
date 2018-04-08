@@ -30,8 +30,10 @@ class BreakdownObserver
                 ->first();
 
 //        $breakdown->cost_account = $qty_survey->cost_account;
-            $breakdown->qs_id = $qty_survey->id;
-            $breakdown->boq_id = $qty_survey->boq_id;
+            if ($qty_survey) {
+                $breakdown->qs_id = $qty_survey->id;
+                $breakdown->boq_id = $qty_survey->boq_id;
+            }
         }
     }
 
