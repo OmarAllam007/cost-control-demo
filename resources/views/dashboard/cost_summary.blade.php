@@ -46,40 +46,45 @@
             </tfoot>
         </table>
 
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th class="borderless"></th>
-                <th class="optimistic text-center">Optimistic</th>
-                <th class="most-liekly text-center">Most Likely</th>
-                <th class="pessimistic text-center">Pessimistic</th>
-            </tr>
-            </thead>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
 
-            <tbody>
-            <tr>
-                <th class="bg-grey">At Completion Cost</th>
-                <td class="optimistic">{{number_format($completionValues[0], 2)}}</td>
-                <td class="most-liekly">{{number_format($completionValues[1], 2)}}</td>
-                <td class="pessimistic">{{number_format($completionValues[2], 2)}}</td>
-            </tr>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="optimistic text-center">Optimistic</th>
+                        <th class="most-liekly text-center">Most Likely</th>
+                        <th class="pessimistic text-center">Pessimistic</th>
+                    </tr>
+                    </thead>
 
-            @php
-                $budget_cost = $cost_summary->sum('budget_cost');
-                $completion_var_optimistic = $budget_cost - $completionValues[0];
-                $completion_var_likely = $budget_cost - $completionValues[1];
-                $completion_var_pessimistic = $budget_cost - $completionValues[2];
+                    <tbody>
+                    <tr>
+                        <th class="bg-grey">At Completion Cost</th>
+                        <td class="optimistic">{{number_format($completionValues[0], 2)}}</td>
+                        <td class="most-liekly">{{number_format($completionValues[1], 2)}}</td>
+                        <td class="pessimistic">{{number_format($completionValues[2], 2)}}</td>
+                    </tr>
 
-            @endphp
-            <tr>
-                <th class="bg-grey">At Completion Cost Var +/-</th>
-                <td class="optimistic  {{$completion_var_optimistic > 0 ? 'text-success' : 'text-danger'}}">{{number_format($completion_var_optimistic, 2)}}</td>
-                <td class="most-liekly {{$completion_var_likely > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_likely, 2)}}</td>
-                <td class="pessimistic {{$completion_var_pessimistic > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_pessimistic, 2)}}</td>
-            </tr>
-            </tbody>
+                    @php
+                        $budget_cost = $cost_summary->sum('budget_cost');
+                        $completion_var_optimistic = $budget_cost - $completionValues[0];
+                        $completion_var_likely = $budget_cost - $completionValues[1];
+                        $completion_var_pessimistic = $budget_cost - $completionValues[2];
 
-        </table>
+                    @endphp
+                    <tr>
+                        <th class="bg-grey">At Completion Cost Var +/-</th>
+                        <td class="optimistic  {{$completion_var_optimistic > 0 ? 'text-success' : 'text-danger'}}">{{number_format($completion_var_optimistic, 2)}}</td>
+                        <td class="most-liekly {{$completion_var_likely > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_likely, 2)}}</td>
+                        <td class="pessimistic {{$completion_var_pessimistic > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_pessimistic, 2)}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
 
     </div>
 </section>
