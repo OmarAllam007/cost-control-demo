@@ -28,6 +28,7 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
     private $cleanup = [];
     private $send_dashboard = false;
+    private $reports_count = 0;
 
     public function __construct(CommunicationSchedule $schedule)
     {
@@ -61,9 +62,11 @@ class SendCommunicationPlan extends Job implements ShouldQueue
                 }
                 $msg->subject("[KPS {$this->schedule->type}] " . $this->schedule->project->name);
 
-                $msg->attach($attachment, [
-                    'as' => slug($this->schedule->project->name) . '_' . $this->type . '_reports.xlsx'
-                ]);
+                if ($attachment) {
+                    $msg->attach($attachment, [
+                        'as' => slug($this->schedule->project->name) . '_' . $this->type . '_reports.xlsx'
+                    ]);
+                }
 
                 if ($this->send_dashboard) {
                     $this->attachDashboard($msg);
@@ -82,12 +85,13 @@ class SendCommunicationPlan extends Job implements ShouldQueue
 
     private function buildReports($user)
     {
+        $this->reports_count = 0;
         $report_ids = $user->reports()->pluck('report_id')->unique();
         $reports = Report::find($report_ids->toArray());
 
         \Config::set('excel.export.includeCharts', true);
 
-        $info = \Excel::create('kps_reports', function(LaravelExcelWriter $writer) use ($reports) {
+        $writer = \Excel::create('kps_reports', function(LaravelExcelWriter $writer) use ($reports) {
             foreach ($reports as $r) {
                 $class_name = $r->class_name;
 
@@ -113,14 +117,21 @@ class SendCommunicationPlan extends Job implements ShouldQueue
                         $writer->excel->addExternalSheet($report->sheet());
                     }
                 }
+
+                ++$this->reports_count;
             }
 
-            $writer->setActiveSheetIndex(0);
-        })->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
+//            $writer->setActiveSheetIndex(0);
+        });
+        if ($this->reports_count) {
+            $info = $writer->store($ext = 'xlsx', $path = storage_path('app'), $returnInfo = true);
 
-        $this->cleanup[] = $info['full'];
+            $this->cleanup[] = $info['full'];
 
-        return $info['full'];
+            return $info['full'];
+        }
+
+        return '';
     }
 
     private function cleanFiles()
