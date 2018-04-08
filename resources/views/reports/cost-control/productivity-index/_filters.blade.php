@@ -36,7 +36,7 @@
                     </div>
                     <div class="modal-body">
                         <ul class="tree list-unstyled">
-                            @php $resourceTypes = (new App\Support\ResourceTypesTree())->get()->get(3); @endphp
+                            @php $resourceTypes = (new App\Support\ResourceTypesTree())->get()->get(2); @endphp
                             @foreach($resourceTypes->subtree as $type)
                                 @include('reports.cost-control.waste-index._recursive_material', compact('type'))
                             @endforeach
