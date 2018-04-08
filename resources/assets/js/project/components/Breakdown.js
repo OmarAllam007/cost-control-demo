@@ -61,7 +61,12 @@ export default {
             if (this.copied_wbs_id && this.wbs_id) {
                 this.loading = true;
                 $.ajax({
-                    url: '/breakdown/copy-wbs/' + this.copied_wbs_id + '/' + this.wbs_id
+                    url: '/breakdown/copy-wbs/' + this.copied_wbs_id + '/' + this.wbs_id,
+                    method: 'post',
+                    dataType: 'json',
+                    data: {
+                        _token: $('meta[name=csrf-token]').attr('content')
+                    }
                 }).success(response => {
                     this.loading = false;
                     this.$dispatch('request_alert', {
