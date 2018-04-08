@@ -40,7 +40,7 @@ class ActivityReport
 
     function buildTree()
     {
-        $previousPeriod = $this->period->project->periods()->where('id', '<', $this->period->id)->first();
+        $previousPeriod = $this->period->project->periods()->where('id', '<', $this->period->id)->orderBy('id', "DESC")->first();
         if ($previousPeriod) {
             $previousData = MasterShadow::previousActivityReport($previousPeriod)->get()->groupBy('wbs_id')->map(function ($group) {
                 return $group->groupBy('activity');
