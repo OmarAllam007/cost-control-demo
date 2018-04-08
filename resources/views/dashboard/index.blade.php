@@ -14,6 +14,7 @@
             <div class="btn-toolbar">
                 <a href="?refresh" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Refresh</a>
                 <a href="?print" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
+                <a href="{{url('/dashboard/send')}}" class="btn btn-primary btn-sm"><i class="fa fa-send"></i> Send Dashboard</a>
             </div>
         @endif
     </div>
