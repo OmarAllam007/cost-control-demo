@@ -13,6 +13,7 @@ use App\Resources;
 use App\Survey;
 use App\WbsLevel;
 use Barryvdh\Debugbar\Middleware\Debugbar;
+use function dd;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -134,9 +135,9 @@ class BreakdownResourceController extends Controller
                 ->orderBy('wbs_level_id', 'DESC')->first();
 
             if ($newQtySurvey) {
-                $breakdown->cost_account = $newQtySurvey->cost_account;
-                $breakdown->qs_id = $newQtySurvey->id;
-                $breakdown->boq_id = $newQtySurvey->boq_id;
+                $breakdownData['cost_account'] = $newQtySurvey->cost_account;
+                $breakdownData['qs_id'] = $newQtySurvey->id;
+                $breakdownData['boq_id'] = $newQtySurvey->boq_id;
             }
 
             $newBreakdown = Breakdown::create($breakdownData);
