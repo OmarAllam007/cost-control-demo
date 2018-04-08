@@ -132,6 +132,7 @@ class BreakdownResourceController extends Controller
 
             $newQtySurvey = Survey::whereIn('wbs_level_id', $target_wbs->getParentIds())
                 ->where('item_code', $breakdown->qty_survey->item_code)
+                ->where('qs_code', $breakdown->qty_survey->qs_code)
                 ->orderBy('wbs_level_id', 'DESC')->first();
 
             if ($newQtySurvey) {
