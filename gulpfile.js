@@ -12,8 +12,8 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    // mix.sass('app.scss');
-    // mix.sass('print.scss');
+    mix.sass('app.scss');
+    mix.sass('print.scss');
     mix.webpack('project/index.js', 'public/js/project.js');
     // mix.webpack('cost-info-charts.js');
     // mix.webpack('project/index.js', 'public/js/project.js');

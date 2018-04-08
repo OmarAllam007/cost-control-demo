@@ -12,14 +12,14 @@
                 <th colspan="2" class="text-center cost-summary-group">at Completion</th>
             </tr>
             <tr>
-                <th class="text-center col-xs-1 cost-summary-header">Base Line</th>
-                <th class="text-center col-xs-1 cost-summary-header">Previous Cost</th>
-                <th class="text-center col-xs-1 cost-summary-header">Allowable (EV) Cost</th>
-                <th class="text-center col-xs-1 cost-summary-header">To Date Cost</th>
-                <th class="text-center col-xs-1 cost-summary-header">To Date Cost Variance</th>
-                <th class="text-center col-xs-1 cost-summary-header">Remaining Cost</th>
-                <th class="text-center col-xs-1 cost-summary-header">At Completion Cost</th>
-                <th class="text-center col-xs-1 cost-summary-header">At Completion Cost Var +/-</th>
+                <th class="col-xs-1 cost-summary-header">Base Line</th>
+                <th class="col-xs-1 cost-summary-header">Previous Cost</th>
+                <th class="col-xs-1 cost-summary-header">Allowable (EV) Cost</th>
+                <th class="col-xs-1 cost-summary-header">To Date Cost</th>
+                <th class="col-xs-1 cost-summary-header">To Date Cost Variance</th>
+                <th class="col-xs-1 cost-summary-header">Remaining Cost</th>
+                <th class="col-xs-1 cost-summary-header">At Completion Cost</th>
+                <th class="col-xs-1 cost-summary-header">At Completion Cost Var +/-</th>
             </tr>
 
             </thead>
@@ -27,14 +27,14 @@
             @foreach($costSummary as $type)
                 <tr>
                     <td class="cost-summary-side">{{$type->type}}</td>
-                    <td class="text-right">{{number_format($type->budget_cost,2) }}</td>
-                    <td class="text-right">{{number_format($type->previous_cost,2)}}</td>
-                    <td class="text-right">{{number_format($type->allowable_cost,2)}}</td>
-                    <td class="text-right">{{number_format($type->to_date_cost, 2)}}</td>
-                    <td class="text-right {{$type->to_date_var < 0? 'text-danger' : 'text-success'}}">{{number_format($type->to_date_var,2)}}</td>
-                    <td class="text-right">{{number_format($type->remaining_cost,2)}}</td>
-                    <td class="text-right">{{number_format($type->completion_cost,2)}}</td>
-                    <td class="text-right {{$type->completion_cost_var < 0? 'text-danger' : 'text-success'}}">{{number_format($type->completion_var,2)}}</td>
+                    <td>{{number_format($type->budget_cost,2) }}</td>
+                    <td>{{number_format($type->previous_cost,2)}}</td>
+                    <td>{{number_format($type->allowable_cost,2)}}</td>
+                    <td>{{number_format($type->to_date_cost, 2)}}</td>
+                    <td class="{{$type->to_date_var < 0? 'text-danger' : 'text-success'}}">{{number_format($type->to_date_var,2)}}</td>
+                    <td>{{number_format($type->remaining_cost,2)}}</td>
+                    <td>{{number_format($type->completion_cost,2)}}</td>
+                    <td class="{{$type->completion_cost_var < 0? 'text-danger' : 'text-success'}}">{{number_format($type->completion_var,2)}}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -63,9 +63,9 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th class="text-center optimistic">Optimistic</th>
-                        <th class="text-center most-liekly">Most Likely</th>
-                        <th class="text-center pessimistic">Pessimistic</th>
+                        <th class="optimistic">Optimistic</th>
+                        <th class="most-liekly">Most Likely</th>
+                        <th class="pessimistic">Pessimistic</th>
                     </tr>
                     </thead>
 
