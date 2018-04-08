@@ -202,6 +202,11 @@ class VarianceAnalysisReport
         $sheet->getStyle("L{$start}:L{$counter}")->setConditionalStyles([$varCondition]);
         $sheet->getStyle("M{$start}:M{$counter}")->setConditionalStyles([$varCondition]);
 
+        $sheet->getStyle("A{$start}:A{$counter}")->getBorders()->getRight()->setBorderStyle('medium');
+        $sheet->getStyle("G{$start}:G{$counter}")->getBorders()->getRight()->setBorderStyle('medium');
+        $sheet->getStyle("K{$start}:K{$counter}")->getBorders()->getRight()->setBorderStyle('medium');
+        $sheet->getStyle("M{$start}:M{$counter}")->getBorders()->getRight()->setBorderStyle('medium');
+
         $sheet->setShowSummaryBelow(false);
         $sheet->setSelectedCell("A{$start}");
 
