@@ -1,7 +1,25 @@
 import Vue from 'vue';
 
 Vue.component('ResourceLog', {
-    props: ['resource']
+    props: ['resource'],
+
+    computed: {
+        first() {
+            return this.resource.budget_resources[0];
+        },
+
+        budget_unit() {
+            let total = 0;
+            this.resource.budget_resources.forEach(res => { total += res.budget_unit });
+            return total;
+        },
+
+        budget_cost() {
+            let total = 0;
+            this.resource.budget_resources.forEach(res => { total += res.budget_cost });
+            return total;
+        }
+    }
 });
 
 Vue.filter('number_format', function(val) {

@@ -106,16 +106,41 @@
                                     <small>({{ resource.code }})</small>
                                 </h4>
 
+                                <div class="row mb-5">
+                                    <div class="col-sm-3">
+                                        <dl>
+                                            <dt>U.O.M</dt>
+                                            <dd v-text="first.measure_unit"></dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <dl>
+                                            <dt>Unit Price</dt>
+                                            <dd>{{first.unit_price|number_format}}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <dl>
+                                            <dt>∑ Budget Unit</dt>
+                                            <dd>{{budget_unit|number_format}}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <dl>
+                                            <dt>∑ Amount</dt>
+                                            <dd>{{budget_cost|number_format}}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+
                                 <div class="row">
-                                    <article class="col-sm-5">
+                                    <article class="col-sm-3">
                                         <table class="table table-striped table-condensed">
                                             <thead>
                                             <tr>
-                                                <th class="text-center" colspan="5">Budget</th>
+                                                <th class="text-center table-caption" colspan="5">Budget</th>
                                             </tr>
                                             <tr>
-                                                <th>U.O.M</th>
-                                                <th>Unit Price</th>
                                                 <th>Budget Unit</th>
                                                 <th>Amount</th>
                                                 <th>Cost Account</th>
@@ -123,8 +148,6 @@
                                             </thead>
                                             <tbody>
                                             <tr v-for="budget_resource in resource.budget_resources">
-                                                <td v-text="budget_resource.measure_unit"></td>
-                                                <td>{{budget_resource.unit_price|number_format}}</td>
                                                 <td>{{budget_resource.budget_unit|number_format}}</td>
                                                 <td>{{budget_resource.budget_cost|number_format}}</td>
                                                 <td v-text="budget_resource.cost_account"></td>
@@ -133,11 +156,11 @@
                                         </table>
                                     </article>
 
-                                    <article class="col-sm-7 bl-1">
+                                    <article class="col-sm-9 bl-1">
                                         <table class="table table-striped table-condensed">
                                             <thead>
                                             <tr>
-                                                <th class="text-center" colspan="10">Actual</th>
+                                                <th class="text-center table-caption" colspan="10">Actual</th>
                                             </tr>
                                             <tr>
                                                 <th>Resource ID</th>
