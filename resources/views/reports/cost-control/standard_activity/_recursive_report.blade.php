@@ -12,7 +12,7 @@
     <td class="col-xs-1 {{$level['previous_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['previous_var'], 2)}}</td>
     <td class="col-xs-1">{{number_format($level['to_date_cost'], 2)}}</td>
     <td class="col-xs-1">{{number_format($level['to_date_allowable'], 2)}}</td>
-    <td class="col-xs-1" class="{{$level['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['to_date_var'], 2)}}</td>
+    <td class="col-xs-1 {{$level['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['to_date_var'], 2)}}</td>
     <td class="col-xs-1">{{number_format($level['remaining_cost'], 2)}}</td>
     <td class="col-xs-1">{{number_format($level['completion_cost'], 2)}}</td>
     <td class="col-xs-1 {{$level['completion_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($level['completion_var'], 2)}}</td>
@@ -35,7 +35,7 @@
             <td class="col-xs-1 {{$activity['previous_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['previous_var'], 2)}}</td>
             <td class="col-xs-1">{{number_format($activity['to_date_cost'], 2)}}</td>
             <td class="col-xs-1">{{number_format($activity['to_date_allowable'], 2)}}</td>
-            <td class="col-xs-1" class="{{$activity['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['to_date_var'], 2)}}</td>
+            <td class="col-xs-1 {{$activity['to_date_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['to_date_var'], 2)}}</td>
             <td class="col-xs-1">{{number_format($activity['remaining_cost'], 2)}}</td>
             <td class="col-xs-1">{{number_format($activity['completion_cost'], 2)}}</td>
             <td class="col-xs-1 {{$activity['completion_var'] >= 0? 'text-success' : 'text-danger'}}">{{number_format($activity['completion_var'], 2)}}</td>
