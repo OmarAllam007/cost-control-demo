@@ -49,7 +49,7 @@ class ThresholdReport
 
         $this->activities = $this->applyFilters(
             MasterShadow::where('period_id', $this->period->id)
-                ->where('to_date_qty', '>', 0)
+//                ->where('to_date_qty', '>', 0)
                 ->selectRaw('wbs_id, activity, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
                 ->selectRaw('sum(allowable_ev_cost) - sum(to_date_cost) as variance')
 //                ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')

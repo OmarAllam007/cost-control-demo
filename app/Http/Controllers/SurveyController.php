@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Boq;
+use App\Breakdown;
+use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\Category;
 use App\Http\Requests\WipeRequest;
 use App\Import\QtySurvey\QtySurveyChecker;
@@ -140,7 +143,18 @@ class SurveyController extends Controller
             return \Redirect::route('project.index');
         }
 
+        if ($request->get('delete_breakdowns')) {
+            Breakdown::whereIn('wbs_level_id', $survey->wbsLevel->getChildrenIds())
+                ->where('cost_account', $survey->cost_account)
+                ->each(function(Breakdown $breakdown) {
+                    BreakdownResource::where('breakdown_id', $breakdown->id)->delete();
+                    BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->delete();
+                    $breakdown->variables()->delete();
+                    $breakdown->delete();
+                });
+        }
         $survey->delete();
+
 
         $msg = 'Quantity survey has been deleted';
         if ($request->ajax()) {
