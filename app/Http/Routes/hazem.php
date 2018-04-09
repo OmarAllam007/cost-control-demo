@@ -124,7 +124,7 @@ Route::group(['prefix' => 'breakdown'], function () {
     Route::post('filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
     Route::delete('wipe/{wbs_level}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
 
-    Route::get('copy-wbs/{source_wbs}/{target_wbs}', 'BreakdownResourceController@copy_wbs');
+    Route::post('copy-wbs/{source_wbs}/{target_wbs}', 'BreakdownResourceController@copy_wbs');
 });
 
 Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
@@ -290,6 +290,9 @@ Route::group(['prefix' => '/api/rollup/'], function () {
 Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
 Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
 Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
+
+Route::get('/dashboard/send', 'DashboardController@send');
+Route::post('/dashboard/send', 'DashboardController@postSend');
 
 Route::get('activity-log/{wbs}/{code}', 'ActivityLogController@show')->name('activity-log.show');
 Route::get('activity-log/{wbs}/{code}/excel', 'ActivityLogController@excel')->name('activity-log.excel');

@@ -10,6 +10,7 @@ use App\Observers\BreakDownResourceObserver;
 use App\Productivity;
 use App\Project;
 use App\Resources;
+use App\Survey;
 use App\WbsLevel;
 use Barryvdh\Debugbar\Middleware\Debugbar;
 use Illuminate\Http\Request;
@@ -128,7 +129,16 @@ class BreakdownResourceController extends Controller
             unset($breakdownData['id'], $breakdownData['created_at'], $breakdownData['updated_at']);
             $breakdownData['wbs_level_id'] = $target_wbs->id;
 
+            $newQtySurvey = Survey::whereIn('wbs_level_id', $target_wbs->getParentIds())
+                ->where('item_code', $breakdown->qty_survey->item_code)
+                ->where('qs_code', $breakdown->qty_survey->qs_code)
+                ->orderBy('wbs_level_id', 'DESC')->first();
 
+            if ($newQtySurvey) {
+                $breakdownData['cost_account'] = $newQtySurvey->cost_account;
+                $breakdownData['qs_id'] = $newQtySurvey->id;
+                $breakdownData['boq_id'] = $newQtySurvey->boq_id;
+            }
 
             $newBreakdown = Breakdown::create($breakdownData);
 

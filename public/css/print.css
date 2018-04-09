@@ -11418,7 +11418,6 @@ dl.dl-margin {
 }
 
 .cost-summary-header {
-  text-align: center;
   background-color: #D9E1F2 !important;
   color: black;
 }
@@ -11541,6 +11540,30 @@ dl.dl-margin {
 
 .text-success .fa:before {
   color: #3c763d;
+}
+
+.borderless {
+  border: none !important;
+}
+
+.border {
+  border: 1px solid #fefefe;
+}
+
+td.optimistic {
+  background: #E3FCEC;
+}
+
+td.most-liekly {
+  background: #FCFBEB;
+}
+
+td.pessimistic {
+  background-color: #FCEBEA;
+}
+
+.bg-grey {
+  background: #F1F5F8;
 }
 
 @media print {

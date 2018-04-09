@@ -46,6 +46,8 @@ class ProductivityIndexReport
             ->where('resource_type_id', 2) //->where('to_date_qty', '>', 0)
             ->selectRaw("wbs_id, activity_id, activity, sum(budget_unit) as budget_unit, avg(progress) as progress")
             ->selectRaw("sum(allowable_qty) as allowable_qty")
+            ->where('resource_code', 'NOT LIKE', 'L.05.%')
+            ->where('resource_code', 'NOT LIKE', 'L.06.%')
             ->groupBy(['wbs_id', 'activity_id', 'activity'])
             ->get()->groupBy('wbs_id');
 

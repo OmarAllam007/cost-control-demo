@@ -1,5 +1,5 @@
 @php
-    $print = request()->exists('print');
+    $print = $print ?? request()->exists('print');
     $layout = ($print? 'print' : 'app');
 @endphp
 @extends("layouts.{$layout}")
@@ -14,6 +14,7 @@
             <div class="btn-toolbar">
                 <a href="?refresh" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Refresh</a>
                 <a href="?print" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
+                <a href="{{url('/dashboard/send')}}" class="btn btn-primary btn-sm"><i class="fa fa-send"></i> Send Dashboard</a>
             </div>
         @endif
     </div>
@@ -36,7 +37,7 @@
             <section class="row">
                 <div class="col-md-{{$print? 12 : 6}}">
                     <article class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">CPI Trend Analysis</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Cost Performance Index (CPI) Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
@@ -57,7 +58,7 @@
 
                 <div class="col-md-{{$print? 12 : 6}}">
                     <article class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">SPI Trend Analysis</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Schedule Performance Index (SPI) Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
@@ -80,7 +81,7 @@
             <section class="row">
                 <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item chart-style">
-                        <h4 class="card-title card-group-item-heading">Material Consumption Index Trend Analysis</h4>
+                        <h4 class="card-title card-group-item-heading">Material Consumption Index Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
@@ -100,7 +101,7 @@
                 </div>
                 <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend Analysis</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
@@ -123,13 +124,14 @@
             <div class="row">
                 <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Cost Percentage</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Cost Performance</h4>
 
                         <div class="card-body pie-chart">
                             <div class="chart"
                                  id="costChart"
                                  data-type="pie"
                                  data-formatter="percent"
+                                 data-animate="false"
                                  data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Cost Percentage',
@@ -143,7 +145,7 @@
 
                 <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Progress Percentage</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Time Performance</h4>
 
                         <div class="card-body">
                             <div class="chart"

@@ -113,6 +113,9 @@ trait ReportScopes
             ->selectRaw('SUM(allowable_ev_cost) AS allowable_cost, SUM(budget_cost) AS budget_cost')
             ->selectRaw('SUM(to_date_cost) AS to_date_cost, SUM(remaining_cost) AS remaining_cost')
             ->selectRaw('SUM(completion_cost) AS completion_cost, SUM(allowable_var) as to_date_var')
+            ->selectRaw('SUM(completion_cost_optimistic) AS completion_cost_optimistic, SUM(completion_var_optimistic) AS completion_var_optimistic')
+            ->selectRaw('SUM(completion_cost_likely) AS completion_cost_likely, SUM(completion_var_likely) AS completion_var_likely')
+            ->selectRaw('SUM(completion_cost_pessimistic) AS completion_cost_pessimistic, SUM(completion_var_pessimistic) AS completion_var_pessimistic')
             ->selectRaw('SUM(cost_var) AS completion_var')
             ->groupBy('type');
     }
