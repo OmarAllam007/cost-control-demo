@@ -10,6 +10,7 @@ use App\ImportantActualResource;
 use App\Jobs\UpdateResourceDictJob;
 use App\ResourceCode;
 use App\Resources;
+use App\StoreResource;
 use App\Unit;
 use App\UnitAlias;
 use function GuzzleHttp\Psr7\str;
@@ -174,6 +175,7 @@ class CostImporter
                 $row['resources'] = $shadows;
                 $errors->push($row);
             } elseif ($shadows->count() < 1) {
+                StoreResource::where('id', $hash)->delete();
                 $this->rows->forget($hash);
                 $invalid->push($row);
             }
@@ -230,6 +232,7 @@ class CostImporter
             }
 
             if (!$resource) {
+                StoreResource::where('id', $hash)->delete();
                 $this->rows->forget($hash);
                 $invalid->push($row);
                 continue;
@@ -247,6 +250,9 @@ class CostImporter
             } else {
                 ImportantActualResource::create($attributes);
             }
+
+            StoreResource::where('id', $hash)
+                ->update(['budget_code' => $resource->code, 'resource_id' => $resource->resource_id]);
 
             if (!$resource->is_rollup) {
                 $resource_dict->push($resource->resource_id);

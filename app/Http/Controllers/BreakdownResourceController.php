@@ -127,6 +127,9 @@ class BreakdownResourceController extends Controller
             $breakdownData = $breakdown->getAttributes();
             unset($breakdownData['id'], $breakdownData['created_at'], $breakdownData['updated_at']);
             $breakdownData['wbs_level_id'] = $target_wbs->id;
+
+
+
             $newBreakdown = Breakdown::create($breakdownData);
 
             $variables = $breakdown->variables->pluck('value', 'display_order');

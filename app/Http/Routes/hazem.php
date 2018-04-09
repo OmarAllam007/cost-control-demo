@@ -277,9 +277,6 @@ Route::put('project/{project}/rollup-activity', 'Rollup\ActivityRollupController
 Route::get('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollupController@create');
 Route::post('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollupController@store');
 
-Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
-Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
-Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
 Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');
     Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
@@ -289,3 +286,11 @@ Route::group(['prefix' => '/api/rollup/'], function () {
     Route::post('summarize/{wbs}/cost-account', 'Rollup\Api\CostAccountSumController@store');
     Route::post('summarize/{wbs}/activity', 'Rollup\Api\ActivitySumController@store');
 });
+
+Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
+Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
+Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
+
+Route::get('activity-log/{wbs}/{code}', 'ActivityLogController@show')->name('activity-log.show');
+Route::get('activity-log/{wbs}/{code}/excel', 'ActivityLogController@excel')->name('activity-log.excel');
+Route::get('/api/activity-log/{wbs}/{code}', 'Api\ActivityLogController@show');
