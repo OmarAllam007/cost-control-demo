@@ -50,10 +50,12 @@
                     <td class="col-xs-1">@{{ quantity.unit.type}}</td>
                     <td class="col-xs-2">
                         @can('qty_survey', $project)
-                            <form action="/survey/@{{quantity.id}}" method="post" @submit.prevent="destroy(quantity.id)" class="delete_form" data-name="QS">
+                            <form action="/survey/@{{quantity.id}}" method="post" @submit.prevent="remove(quantity.id)" class="delete_form" data-name="QS">
                                 {{csrf_field()}}{{method_field('delete')}}
                                 <a href="/survey/@{{quantity.id}}/edit" class="btn btn-sm btn-primary in-iframe" title="Edit Quantity Survey"><i class="fa fa-edit"></i> Edit</a>
+                                @can('budget_owner', $project)
                                 <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>
+                                @endcan
                             </form>
                         @endcan
                     </td>
@@ -67,4 +69,34 @@
             <i class="fa fa-info-circle"></i> No quantities found
         </div>
     </div>
+
+    @can('budget_owner', $project)
+        <div class="modal fade" tabindex="-1" role="dialog" id="DeleteQsModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Delete Qty Survey</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="lead">Are you sure you want to delete this Qty Survey?</p>
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="delete_breakdown" id="delete_breakdown" v-model="delete_breakdowns" :value="1">
+                                Delete related breakdowns
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" @click="destroy()" :disabled="loading">
+                            <i class="fa" :class="loading? 'fa-spinner fa-spin': 'fa-trash'"></i> Delete
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
 </qty-survey>
+
