@@ -217,11 +217,11 @@ trait CostAttributes
 
         $resource = Resources::find($this->resource_id);
 
-        if (!$resource->rate) {
+        if (!$this->unit_price) {
             return $this->calculated['remaining_unit_price'] = 0;
         }
 
-        if ($resource->isMaterial()) {
+        if ($this->isMaterial()) {
             // For material we calculate over resource in all activities
             $conditions['resource_id'] = $this->resource_id;
         } else {
@@ -229,7 +229,7 @@ trait CostAttributes
             $conditions['breakdown_resource_id'] = $this->breakdown_resource_id;
         }
 
-        $latest = CostShadow::where($conditions)->orderBy('period_id', 'desc')->first();
+        $latest = CostShadow::where(['breakdown_resource_id' => $this->breakdown_resource_id])->orderBy('period_id', 'desc')->first();
         if ($latest && $latest->manual_edit) {
             return $this->calculated['remaining_unit_price'] = $latest->remaining_unit_price;
         }
@@ -734,5 +734,10 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         }
 
         return 0;
+    }
+
+    function isMaterial()
+    {
+        return $this->resource_type_id == 3;
     }
 }
