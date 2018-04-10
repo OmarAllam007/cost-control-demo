@@ -15,6 +15,7 @@ use App\Survey;
 use App\Unit;
 use App\UnitAlias;
 use App\WbsLevel;
+use function config;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -66,6 +67,8 @@ class SurveyController extends Controller
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
+
+        $this->validate($request, config('validation.qty_survey'));
 
         $newSurvey = new Survey($request->all());
         $boq = Boq::forQs($newSurvey)->first();
@@ -125,6 +128,7 @@ class SurveyController extends Controller
         }
 
         $this->validate($request, config('validation.qty_survey'));
+
         $survey->syncVariables($request->get('variables'));
         $survey->update($request->except('qs_code'));
 
