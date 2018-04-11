@@ -17,11 +17,24 @@ class Breakdown extends Model
     use HasChangeLog, RecordsUser;
 
     protected $fillable = ['std_activity_id', 'template_id', 'name', 'cost_account', 'project_id', 'wbs_level_id', 'code', 'qs_id', 'boq_id', 'qs_code'];
+
+    protected $dates = ['created_at', 'updated_at', 'rolled_up_at'];
+
     protected $cached_qty_survey;
 
     function resources()
     {
         return $this->hasMany(BreakdownResource::class, 'breakdown_id');
+    }
+
+    function rollable_resources()
+    {
+        return $this->resources()->where('important', '<>', 1)->where('is_rollup', '<>', 1)->whereNull('rolled_up_at');
+    }
+
+    function rolled_resources()
+    {
+        return $this->resources()->whereNotNull('rolled_up_at');
     }
 
     function shadows()

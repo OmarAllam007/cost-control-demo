@@ -1,25 +1,17 @@
 var elixir = require('laravel-elixir');
-
-/*
- |--------------------------------------------------------------------------
- | Elixir Asset Management
- |--------------------------------------------------------------------------
- |
- | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Sass
- | file for our application, as well as publishing vendor resources.
- |
- */
+require('laravel-elixir-vue');
 
 elixir(function (mix) {
     mix.sass('app.scss');
     mix.sass('print.scss');
-    mix.webpack('project/index.js', 'public/js/project.js');
-    // mix.webpack('cost-info-charts.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
-    // mix.copy('node_modules/c3/c3.min.js', 'public/js/c3.min.js');
-    // mix.copy('node_modules/d3/d3.min.js', 'public/js/d3.min.js');
+    // mix.webpack('cost-info-charts.js');
+    // mix.sass('app.scss');
+    // mix.webpack('rollup/cost-account.js', 'public/js/rollup/cost-account.js');
+    // mix.webpack('rollup/semi-cost-account.js', 'public/js/rollup/semi-cost-account.js');
+    // mix.webpack('rollup/semi-activity.js', 'public/js/rollup/semi-activity.js');
     // mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
+    mix.webpack('ActivityLog.js', 'public/js/activity-log.js');
     // mix.scripts([
     //     'breakdown/load-templates.js',
     //     'breakdown/load-resources.js',

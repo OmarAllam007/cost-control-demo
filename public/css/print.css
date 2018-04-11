@@ -11274,18 +11274,8 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   background-color: white;
 }
 
-.card .table td, .card .table th {
-  background-color: #fff;
-}
-
-.card .table td.separator, .card .table th.separator {
-  border: none;
-  background-color: transparent;
-}
-
 .card .table {
   margin-bottom: 0;
-  font-size: 80%;
 }
 
 .card .table .highlight td, .card .table .highlight th {
@@ -11564,6 +11554,11 @@ td.pessimistic {
 
 .bg-grey {
   background: #F1F5F8;
+}
+
+th.table-caption {
+  font-size: 114%;
+  font-weight: 600;
 }
 
 @media print {

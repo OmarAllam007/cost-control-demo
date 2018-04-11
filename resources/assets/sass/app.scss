@@ -646,20 +646,8 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
     padding: 10px;
     background-color: white;
   }
-
-  .table td, .table th {
-    background-color: #fff;
-
-    &.separator {
-      border: none;
-      background-color: transparent;
-    }
-  }
-
   .table {
     margin-bottom: 0;
-    font-size: 80%;
-
     .highlight td, .highlight th {
       background-color: #ffc;
 
@@ -941,4 +929,9 @@ td.pessimistic {
 
 .bg-grey {
   background: #F1F5F8;
+}
+
+th.table-caption {
+  font-size: 114%;
+  font-weight: 600;
 }

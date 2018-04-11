@@ -31,14 +31,11 @@ class BreakdownShadowObserver
                 'project_id' => $resource->project_id
             ];
 
-            $costShadow = CostShadow::firstOrCreate($conditions);
-            $costShadow->progress = $resource->progress;
-            $costShadow->status = $resource->status;
-            $costShadow->recalculate(true);
+            $costShadow = CostShadow::firstOrCreate($conditions)->recalculate();
 
             $latestResource = ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
                 ->latest()->first();
-            
+
             if ($latestResource) {
                 $latestResource->update(['progress' => $resource->progress, 'status' => $resource->status]);
             }

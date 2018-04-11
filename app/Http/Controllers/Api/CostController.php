@@ -21,13 +21,13 @@ class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
-        set_time_limit(180);
+//        set_time_limit(180);
 
         $period = $wbs_level->project->open_period();
 
         $perspective = $request->get('perspective');
 
-        $query = BreakDownResourceShadow::with('actual_resources')->whereIn('wbs_id', $wbs_level->getChildrenIds());
+        $query = BreakDownResourceShadow::with('actual_resources')->whereIn('wbs_id', $wbs_level->getChildrenIds())->costOnly();
         if ($perspective != 'budget') {
             $query->whereRaw(
                 "breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = $period->id)"

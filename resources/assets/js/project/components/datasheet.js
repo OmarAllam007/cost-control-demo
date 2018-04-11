@@ -1,6 +1,8 @@
 import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
+import BreakdownResource from './breakdown-resource';
 import Pagination from './server-pagination';
+import _ from 'lodash';
 
 export default {
 
@@ -10,8 +12,7 @@ export default {
         let perspective = window.localStorage.cost_perspective;
 
         return {
-            breakdowns: [],
-            loading: false,
+            breakdowns: [], loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
             perspective, count: 0, first: 0, last: 99
         };
@@ -29,6 +30,10 @@ export default {
                 }
             });
             return url + urlTokens.join('&');
+        },
+
+        show_breakdowns() {
+            return Object.keys(this.breakdowns).length > 0;
         }
     },
     //</editor-fold>
@@ -62,13 +67,13 @@ export default {
             this.loading = true;
             $.ajax({
                 url: '/api/cost/delete-wbs/' + this.wbs_id, method: 'delete', dataType: 'json',
-                data: { _method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
+                data: {_method: 'delete', _token: document.querySelector('[name=csrf-token]').content}
             }).success(response => {
                 this.loading = false;
                 $('#DeleteWbsDataModal').modal('hide');
                 this.$broadcast('reloadPage');
                 this.$dispatch('request_alert', {
-                    type: response.ok? 'info' : 'error', message: response.message
+                    type: response.ok ? 'info' : 'error', message: response.message
                 });
             }).error(() => {
                 this.loading = false;
@@ -78,6 +83,65 @@ export default {
                 });
 
             });
+        },
+
+        sumResourcesOnCostAccount() {
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+            const url = `/api/rollup/summarize/${this.wbs_id}/cost-account`
+
+            this.loading = true;
+            $.ajax({
+                url, method: 'post', data: {_token}, dataType: 'json',
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            });
+        },
+
+        sumResourcesOnActivity() {
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+            const url = `/api/rollup/summarize/${this.wbs_id}/activity`
+
+            this.loading = true;
+            $.ajax({
+                url, method: 'post', data: {_token}, dataType: 'json',
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            });
+        },
+
+        doRollup(activity) {
+            const codes = this.breakdowns[activity].reduce((unique, r) => {
+                if (!unique.includes(r.code)) {
+                    unique.push(r.code);
+                }
+
+                return unique;
+            }, []);
+
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+
+            this.loading = true;
+            $.ajax({
+                url: `/project/${this.project}/activity-rollup`,
+                data: { codes, _token },
+                dataType: 'json',
+                method: 'put'
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            })
+        },
+
+        slug(str) {
+            return str.trim().replace(/[\s\W]+/g, '-').toLowerCase();
         }
     },
 
@@ -94,7 +158,8 @@ export default {
         },
 
         pageChanged(data) {
-            this.breakdowns = data;
+            this.breakdowns = _.groupBy(data, 'activity');
+            // this.breakdowns = data;
             this.loading = false;
         },
 
@@ -111,6 +176,12 @@ export default {
     },
 
     components: {
-        DeleteActivityModal, DeleteResourceModal, Pagination
+        BreakdownResource, DeleteActivityModal, DeleteResourceModal, Pagination
+    },
+
+    filters: {
+        number_format(val) {
+            return parseFloat(val.toFixed(2)).toLocaleString();
+        }
     }
 }

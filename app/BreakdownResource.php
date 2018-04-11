@@ -282,4 +282,9 @@ class BreakdownResource extends Model
     {
         return $this->shadow->descriptor;
     }
+
+    function scopeBudgetOnly($query)
+    {
+        return $query->whereNull('rolled_up_at')->where('is_rollup', 0);
+    }
 }
