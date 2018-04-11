@@ -9,6 +9,8 @@ export default {
             loading: false,
             wbs_id: 0,
             wiping: false,
+            delete_breakdowns: false,
+            selected_id: 0,
             filter: '',
             count: 0,
             first: 0,
@@ -31,11 +33,20 @@ export default {
             });
         },
 
-        destroy(qty_id) {
+        remove(qty_id) {
+            this.selected_id = qty_id;
+            $('#DeleteQsModal').modal();
+        },
+
+        destroy() {
             this.loading = true;
             $.ajax({
-                url: '/survey/' + qty_id,
-                data: {_token: document.querySelector('meta[name=csrf-token]').content,_method: 'delete'},
+                url: '/survey/' + this.selected_id,
+                data: {
+                    _token: document.querySelector('meta[name=csrf-token]').content,
+                    _method: 'delete',
+                    delete_breakdowns: this.delete_breakdowns
+                },
                 method: 'post'
             }).success(response => {
                 if (response.ok) {
@@ -45,8 +56,12 @@ export default {
                         message: response.message
                     });
                 }
+
+                $('#DeleteQsModal').modal('hide');
+                this.loading = false;
             }).error(() => {
                 this.loading = false;
+                $('#DeleteQsModal').modal('hide');
             });
         },
 
