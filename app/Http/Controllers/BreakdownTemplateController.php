@@ -76,9 +76,10 @@ class BreakdownTemplateController extends Controller
 
                 }else{
                     $resources = StdActivityResource::where('template_id', $parent->id)->get();
-                    $parent->parent_template_id = $parent->id;
-                    $parent->project_id = $request->project_id;
-                    unset($parent->id);
+                    $attributes = $parent->getAttributes();
+                    $attributes['parent_template_id'] = $parent->id;
+                    $attributes['project_id'] = $request->project_id;
+                    unset($attributes['id']);
                     $template = BreakdownTemplate::create($parent->toArray());
                     foreach ($resources as $resource) {
                         $resource->template_id = $template->id;
