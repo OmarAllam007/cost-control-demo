@@ -6,6 +6,7 @@ use App\Breakdown;
 use App\Jobs\Job;
 use App\Project;
 use App\StdActivityResource;
+use App\WbsLevel;
 use function array_add;
 use function array_pad;
 use function GuzzleHttp\Psr7\str;
@@ -84,9 +85,8 @@ class EasyUploadJob extends ImportJob
 
     protected function loadWbsCodes()
     {
-        $this->wbs_codes = collect(\DB::table('wbs_levels')
-            ->where('project_id', $this->project->id)
-            ->get(['id', 'code', 'parent_id']))
+        $this->wbs_codes = WbsLevel::where('project_id', $this->project->id)
+            ->get(['id', 'code', 'parent_id'])
             ->keyBy(function ($level) {
                 return strtolower($level->code);
             });
