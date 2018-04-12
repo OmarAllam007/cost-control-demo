@@ -34,13 +34,14 @@
                         <a :href="`/breakdown-template/${tpl.id}`" v-text="tpl.name"></a>
                     </td>
                     <td>
-                        <a class="btn btn-sm btn-info" :href="`/breakdown-template/${tpl.id}`">
-                            <i class="fa fa-eye"></i> Show
-                        </a>
+                            <a class="btn btn-sm btn-info" :href="`/breakdown-template/${tpl.id}`">
+                                <i class="fa fa-eye"></i> Show
+                            </a>
+                            <a v-if="can_edit" class="btn btn-sm btn-primary" :href="`/breakdown-template/${tpl.id}/edit`">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
 
-                        <a v-if="can_edit" class="btn btn-sm btn-primary" :href="`/breakdown-template/${tpl.id}/edit`">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
+                            <button class="btn-warning btn-sm" type="button" @click.prevent="deleteTemplate(tpl.id)"><i class="fa fa-trash"></i> Delete</button>
                     </td>
                 </tr>
                 </tbody>
@@ -84,7 +85,18 @@
         methods: {
             updateSearch: _.debounce(function () {
                 this.$parent.term = this.search;
-            }, 500)
+            }, 500),
+
+            deleteTemplate(template_id) {
+                $.ajax({
+                    url: `/breakdown-template/${template_id}`, method: 'delete',
+                    data: {
+                        _token: document.querySelector('meta[name=csrf-token]').content
+                    }, dataType: 'json'
+                }).done(() => {
+                    this.$children[0].loadData(false);
+                });
+            }
         },
 
         components: {
