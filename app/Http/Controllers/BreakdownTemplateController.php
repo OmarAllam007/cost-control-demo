@@ -80,7 +80,7 @@ class BreakdownTemplateController extends Controller
                     $attributes['parent_template_id'] = $parent->id;
                     $attributes['project_id'] = $request->project_id;
                     unset($attributes['id']);
-                    $template = BreakdownTemplate::create($parent->toArray());
+                    $template = BreakdownTemplate::create($attributes);
                     foreach ($resources as $resource) {
                         $resource->template_id = $template->id;
                         StdActivityResource::create($resource->toArray());
