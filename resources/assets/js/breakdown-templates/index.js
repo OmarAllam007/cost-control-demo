@@ -11,7 +11,7 @@ const app = new Vue({
     el: '#breakdownTemplates',
 
     data: {
-        division: 0, activity: 0
+        division: 0, activity: 0, term: ''
     },
 
     computed: {
@@ -19,6 +19,10 @@ const app = new Vue({
             let url = '';
             if (this.activity || this.division) {
                 url = `/api/breakdown-template?division=${this.division}&activity=${this.activity}`;
+
+                if (this.term) {
+                    url += `&term=${this.term}`;
+                }
             }
             return url;
         }

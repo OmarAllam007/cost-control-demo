@@ -7,6 +7,7 @@ use App\BreakdownTemplate;
 use App\Http\Controllers\Controller;
 use App\Project;
 use App\StdActivity;
+use function request;
 
 class BreakdownTemplateController extends Controller
 {
@@ -25,6 +26,11 @@ class BreakdownTemplateController extends Controller
                 $q->whereIn('std_activity_id', $activities);
             }
             return $q;
+        })->when(request('term'), function($q) {
+            return $q->where(function($q) {
+                $term = '%' . request('term') . '%';
+                $q->where('name', 'like', $term)->orWhere('code', 'like', $term);
+            });
         })->orderBy('name')->select('name', 'id', 'code')->paginate(50);
     }
 

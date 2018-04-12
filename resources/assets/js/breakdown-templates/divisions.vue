@@ -1,7 +1,7 @@
 <template>
     <div class="divisions">
         <div class="form-group">
-            <input type="search" class="form-control" v-model="search" placeholder="Type to search">
+            <input type="search" class="form-control" v-model="search" placeholder="Type to search" autofocus>
         </div>
 
         <ul class="wbs-tree">
@@ -21,3 +21,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .wbs-tree {
+        max-height: max-content;
+    }
+</style>
