@@ -83,7 +83,7 @@
 
         methods: {
             updateSearch: _.debounce(function () {
-                this.$root.term = this.search;
+                this.$parent.term = this.search;
             }, 500)
         },
 

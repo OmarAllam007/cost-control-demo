@@ -1,7 +1,7 @@
 <template>
     <li>
         <article v-if="should_show()">
-            <div class="wbs-item" :class="{active: division.id == $root.division}">
+            <div class="wbs-item" :class="{active: division.id == root.division}">
             <span class="wbs-icon">
                 <a @click.prevent="collapsed = !collapsed" :href="`#division-${division.id}`">
                     <i class="fa" :class="collapsed? 'fa-plus-square-o':'fa-minus-square-o'"></i>
@@ -15,7 +15,7 @@
                 <division v-for="division in division.subtree" :division="division" :search="search"></division>
 
                 <li v-for="activity in filtered_activities">
-                    <div class="wbs-item" :class="{active: activity.id == $root.activity}">
+                    <div class="wbs-item" :class="{active: activity.id == root.activity}">
                         <span class="wbs-icon"><i class="fa fa-caret-right"></i></span>
                         <a :href="`#activity-${activity.id}`" v-text="activity.name"
                            @click.prevent="change_activity(activity.id)"></a>
@@ -33,7 +33,11 @@
         props: ['division', 'search'],
 
         data() {
-            return {collapsed: true};
+            let root = this;
+            while (root.constructor.name !== 'BreakdownTemplates') {
+                root = root.$parent;
+            }
+            return {collapsed: true, root};
         },
 
         computed: {
@@ -52,13 +56,13 @@
 
         methods: {
             change_division(division_id) {
-                this.$root.division = division_id;
-                this.$root.activity = 0;
+                this.root.division = division_id;
+                this.root.activity = 0;
             },
 
             change_activity(activity_id) {
-                this.$root.activity = activity_id;
-                this.$root.division = 0;
+                this.root.activity = activity_id;
+                this.root.division = 0;
             },
 
             should_show() {

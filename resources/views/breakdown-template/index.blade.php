@@ -28,18 +28,9 @@
 @stop
 
 @section('body')
-
-    <div class="row" id="breakdownTemplates">
-        <div class="col-sm-4 col-md-3 br-1">
-            <divisions :divisions="{{$divisions}}"></divisions>
-        </div>
-
-        <div class="col-sm-8 col-md-9">
-            <templates :url="url"
-                       :can_edit="{{can('write', 'breakdown-template')}}"
-            ></templates>
-        </div>
-    </div>
+<div id="breakdownTemplates">
+    <breakdown-templates :can_edit="{{can('write', 'breakdown-template')}}" :divisions="{{$divisions}}"></breakdown-templates>
+</div>
 
 @stop
 
