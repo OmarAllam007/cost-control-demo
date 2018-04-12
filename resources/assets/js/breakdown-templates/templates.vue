@@ -1,13 +1,13 @@
 <template>
     <section>
         <section class="listing">
-            <div v-show="templates.length" class="row">
+            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <input type="search" class="form-control" v-model="search" placeholder="Search by code or name">
                     </div>
                 </div>
-                <div class="col-md-8 text-right">
+                <div class="col-md-8 text-right" v-show="templates.length" >
                     <pagination :url="url" property="templates"></pagination>
                 </div>
             </div>
