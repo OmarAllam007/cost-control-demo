@@ -15,7 +15,7 @@ class BreakdownTemplateController extends Controller
     {
         return BreakdownTemplate::when(request('project_id'), function($q) {
             return $q->where('project_id',request('project_id'));
-        }, function($q) {
+        })->when(!request('project_id'), function($q) {
             return $q->whereNull('project_id');
         })->when(request('activity'), function($q) {
             return $q->where('std_activity_id', request('activity'));

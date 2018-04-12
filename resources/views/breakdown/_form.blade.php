@@ -86,7 +86,7 @@
 </div>
 
 @section('javascript')
-    <script src="/js/breakdown.js"></script>
+    <script src="{{asset('js/breakdown.js')}}"></script>
 
     <script>
 
