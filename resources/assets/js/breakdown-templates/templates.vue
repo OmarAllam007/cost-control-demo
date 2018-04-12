@@ -55,7 +55,6 @@
                     $.ajax({
                         url: this.url, dataType: 'json'
                     }).done(response => {
-                        console.log(response);
                         this.templates = response.data
                     });
                 } else {

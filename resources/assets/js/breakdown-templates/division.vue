@@ -1,5 +1,5 @@
 <template>
-    <li>
+    <li v-if="should_show()">
         <div class="wbs-item">
             <span class="wbs-icon">
                 <a @click.prevent="collapsed = !collapsed" :href="`#division-${division.id}`">
@@ -10,9 +10,9 @@
         </div>
 
         <ul :id="`division-${division.id}`" :class="{collapse: collapsed}">
-            <division v-for="division in division.subtree" :division="division"></division>
+            <division v-for="division in division.subtree" :division="division" :search="search"></division>
 
-            <li v-for="activity in division.activities">
+            <li v-for="activity in filtered_activities">
                 <div class="wbs-item">
                     <span class="wbs-icon"><i class="fa fa-caret-right"></i></span>
                     <a :href="`#activity-${activity.id}`" v-text="activity.name" @click.prevent="change_activity(activity.id)"></a>
@@ -26,10 +26,24 @@
     export default {
         name: "division",
 
-        props: ['division'],
+        props: ['division', 'search'],
 
         data() {
             return {collapsed: true};
+        },
+
+        computed: {
+            filtered_activities() {
+                const term = this.filter.toLowerCase();
+                return this.division.activities.filter(activity => {
+                    return activity.name.toLowerCase().indexOf(term) >= 0;
+                });
+            },
+
+            filter() {
+                return this.search || '';
+            }
+
         },
 
         methods: {
@@ -41,6 +55,22 @@
             change_activity(activity_id) {
                 this.$root.activity = activity_id;
                 this.$root.division = 0;
+            },
+
+            should_show() {
+                const term = this.filter.toLowerCase();
+                if (this.division.label.toLowerCase().indexOf(term) >= 0) {
+                    return true;
+                }
+
+                for (let index in this.$children) {
+                    const child = this.$children[index];
+                    if (child.should_show()) {
+                        return true;
+                    }
+                }
+
+                return !! this.filtered_activities.length;
             }
         }
     }
