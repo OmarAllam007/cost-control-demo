@@ -1,7 +1,7 @@
 <template>
     <li>
         <article v-if="should_show()">
-            <div class="wbs-item">
+            <div class="wbs-item" :class="{active: division.id == $root.division}">
             <span class="wbs-icon">
                 <a @click.prevent="collapsed = !collapsed" :href="`#division-${division.id}`">
                     <i class="fa" :class="collapsed? 'fa-plus-square-o':'fa-minus-square-o'"></i>
@@ -15,7 +15,7 @@
                 <division v-for="division in division.subtree" :division="division" :search="search"></division>
 
                 <li v-for="activity in filtered_activities">
-                    <div class="wbs-item">
+                    <div class="wbs-item" :class="{active: activity.id == $root.activity}">
                         <span class="wbs-icon"><i class="fa fa-caret-right"></i></span>
                         <a :href="`#activity-${activity.id}`" v-text="activity.name"
                            @click.prevent="change_activity(activity.id)"></a>
