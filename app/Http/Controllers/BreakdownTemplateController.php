@@ -153,27 +153,23 @@ class BreakdownTemplateController extends Controller
         return \Redirect::route('breakdown-template.show', $breakdown_template);
     }
 
-    public function destroy(BreakdownTemplate $breakdown_template)
+    public function destroy(BreakdownTemplate $breakdown_template, Request $request)
     {
         if ($breakdown_template->project) {
-            if (\Gate::denies('breakdown_templates', $breakdown_template->project)) {
-                flash("You don't have access to this page");
-                return \Redirect::to('/');
-            }
-        } else if (\Gate::denies('write', 'breakdown-template')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
+            $this->authorize('breakdown_templates', $breakdown_template->project);
+        } else {
+            $this->authorize('write', 'breakdown-template');
         }
 
         $breakdown_template->resources()->delete();
         $breakdown_template->delete();
-        flash('Breakdown template has been deleted', 'success');
 
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
-        $breakdownTemplates = $filter->filter()->paginate(50);
+        if ($request->wantsJson()) {
+            return ['ok' => true];
+        }
+
+        flash('Breakdown template has been deleted', 'success');
         return \Redirect::back();
-//        return view('breakdown-template.index', compact('breakdownTemplates'));
-//        return \Redirect::route('std-activity.show', $breakdown_template->activity);
     }
 
     function filters(Request $request)
