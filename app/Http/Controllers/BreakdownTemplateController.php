@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActivityDivision;
 use App\Breakdown;
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
@@ -9,6 +10,7 @@ use App\Jobs\ImportBreakdownTemplateJob;
 use App\Project;
 use App\StdActivity;
 use App\StdActivityResource;
+use App\Support\ActivityDivisionTree;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -24,9 +26,11 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
-        $breakdownTemplates = $filter->filter()->paginate(75);
-        return view('breakdown-template.index', compact('breakdownTemplates'));
+//        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
+//        $breakdownTemplates = $filter->filter()->paginate(75);
+        $divisions = (new ActivityDivisionTree())->get();
+
+        return view('breakdown-template.index', compact('divisions'));
     }
 
     public function create()
