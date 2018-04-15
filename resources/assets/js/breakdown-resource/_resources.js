@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default {
     template: document.getElementById('ResourcesTemplate').innerHTML,
 
@@ -24,32 +26,28 @@ export default {
     },
 
     watch: {
-        term: function (term) {
+        term: _.debounce(function (term) {
             const root = $('#ResourcesModal');
-            if (term == '') {
-                root.find('.radio').removeClass('hidden');
-                root.find('.collapse').removeClass('in');
-            } else {
+            root.find('.radio').removeClass('hidden');
+            root.find('.collapse').removeClass('in');
+            root.find('li').removeClass('hidden');
+            if (term !== '') {
                 const lower = term.toLowerCase();
-                root.find('.resource-name').each((index, element) => {
-                    let $el = $(element);
-                    if ($el.html().toLowerCase().indexOf(lower) != -1) {
-                        $el.parents('.radio').removeClass('hidden');
-                    } else {
-                        $el.parents('.radio').addClass('hidden');
-                    }
-                });
-
+                root.find('.radio').filter((index, el) => {
+                    return $(el).find('.resource-name').text().toLowerCase().indexOf(lower) < 0;
+                }).addClass('hidden');
             }
-            root.find('.tree--item').each((index, element) => {
-                let $parent = $(element).parent('li');
-                if ($parent.find('.radio').not('.hidden').length) {
-                    $parent.show();
-                } else {
-                    $parent.hide();
-                }
-            });
-        }
+
+            // console.log(root.find('.tree--item').parent('li'));
+
+            root.find('li').not('.radio').filter((idx, element) => {
+                return $(element).find('.radio.hidden').length === $(element).find('.radio').length;
+            }).addClass('hidden');
+            // root.find('.tree--item').filter(element => {
+            //     let $parent = $(element).parent('li');
+            //     return $parent.find('.radio').not('.hidden').length
+            // }).parent('li').show();
+        }, 500)
     },
 
     methods: {
