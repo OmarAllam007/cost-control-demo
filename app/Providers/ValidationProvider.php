@@ -153,7 +153,7 @@ class ValidationProvider extends ServiceProvider
             }
         });
 
-        \Validator::extend('cost_account_one_breakdown', function ($_, $cost_accunt, $options, Validator $validator) {
+        \Validator::extend('cost_account_one_breakdown', function ($_, $cost_account, $options, Validator $validator) {
             $data = $validator->getData();
             $wbs_id = $data['wbs_level_id'];
 
