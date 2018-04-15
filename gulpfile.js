@@ -16,7 +16,7 @@ elixir(function (mix) {
     // mix.sass('app.scss');
     // mix.sass('print.scss');
     // mix.webpack('project/index.js', 'public/js/project.js');
-    mix.webpack('breakdown-templates/index.js', 'public/js/breakdown-templates.js');
+    // mix.webpack('breakdown-templates/index.js', 'public/js/breakdown-templates.js');
     // mix.webpack('cost-info-charts.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.copy('node_modules/c3/c3.min.js', 'public/js/c3.min.js');
@@ -41,13 +41,13 @@ elixir(function (mix) {
     // .sass('print.scss')
     // .webpack('resource-codes.js');
 //comment again
-//     mix.scripts([
-//         'breakdown/load-templates.js',
-//         'breakdown/load-resources.js',
-//         'breakdown/load-variables.js',
-//         'autocomplete.js',
-//         'tree-select.js'
-//     ], 'public/js/breakdown.js');
+    mix.scripts([
+        'breakdown/load-templates.js',
+        'breakdown/load-resources.js',
+        'breakdown/load-variables.js',
+        'autocomplete.js',
+        'tree-select.js'
+    ], 'public/js/breakdown.js');
 
     // mix.scripts([
     //     'project/components/Breakdown.js',
