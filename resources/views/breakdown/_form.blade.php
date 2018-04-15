@@ -5,12 +5,9 @@
             @if (request('project'))
                 <p><em>{{App\Project::find(request('project'))->name}}</em></p>
                 {{Form::hidden('project_id', request('project'), ['id' => 'ProjectId'])}}
-
             @else
-                {{--{{Form::select('project_id', App\Project::options(), request('project'), ['class' => 'form-control', 'id' => 'Activity-ID'])}}--}}
                 <p><em>{{$breakdown->project->name}}</em></p>
                 {{Form::hidden('project_id', $breakdown->project->name, ['id' => 'ProjectId'])}}
-
                 <input hidden value="{{$breakdown->project->id}}" id="project_id">
             @endif
         </div>
@@ -22,44 +19,36 @@
                         {{request('wbs_id')? \App\WbsLevel::find(request('wbs_id'))->path: 'Select WBS Level' }}
                         {{Form::hidden('wbs_level_id',request('wbs_id'), ['id'=>'WbsID'])}}
                     @else
-                        {{
-                            Form::getValueAttribute('wbs_level_id')?
-                                App\WbsLevel::with('parent')->find(Form::getValueAttribute('wbs_level_id'))->path :
-                                'Select WBS Level'
-                        }}
+                        {{ old('wbs_level_id')? App\WbsLevel::with('parent')->find(old('wbs_level_id'))->path : 'Select WBS Level' }}
                     @endif
                 </a>
             </p>
             {!! $errors->first('wbs_level_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-
-        <div class="form-group {{$errors->first('cost_account', 'has-errors')}}">
+        <div class="form-group {{$errors->first('cost_account', 'has-error')}}">
             {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
             {{Form::text('cost_account', null, ['class' => 'form-control', 'id' => 'CostAccount'])}}
+            {!! $errors->first('cost_account', '<div class="help-block">:message</div>') !!}
         </div>
-
 
         <div class="form-group {{$errors->first('std_activity_id', 'has-errors')}}">
             {{Form::label('std_activity_id', 'Standard Activity', ['class' => 'control-label'])}}
-            {{--{{Form::select('std_activity_id', App\StdActivity::options(), null, ['class' => 'form-control', 'id' => 'ActivityID'])}}--}}
             <p>
                 <a href="#ActivitiesModal" data-toggle="modal" id="select-activity">
-                    {{Form::getValueAttribute('std_activity_id')?
-                    App\StdActivity::find(Form::getValueAttribute('std_activity_id'))->path : 'Select Activity' }}
+                    {{old('std_activity_id')? App\StdActivity::find(old('std_activity_id'))->path : 'Select Activity' }}
                 </a>
             </p>
         </div>
 
         <div class="form-group {{$errors->first('template_id', 'has-errors')}}">
             {{Form::label('template_id', 'Breakdown Template', ['class' => 'control-label'])}}
-            {{Form::select('template_id', ['' => 'Select Template'], null,
-            ['class' => 'form-control', 'id' => 'TemplateID'])}}
+            {{Form::select('template_id', ['' => 'Select Template'], null, ['class' => 'form-control', 'id' => 'TemplateID', 'data-value' => old('template_id')])}}
         </div>
+
         <input type="hidden" name="code">
         <div class="form-group" id="SetVariablesPane">
-            <a href="#VariablesModal" class="btn btn-info" data-toggle="modal"><i class="fa fa-dollar"></i> Set
-                Variables</a>
+            <a href="#VariablesModal" class="btn btn-info" data-toggle="modal"><i class="fa fa-dollar"></i> Set Variables</a>
         </div>
     </div>
 </div>
@@ -82,18 +71,22 @@
 @include('std-activity._modal', ['input' => 'std_activity_id', 'value' => Form::getValueAttribute('std_activity_id')])
 
 <div class="form-group">
-    <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
+    <button type="submit" class="btn btn-primary submit"><i class="fa fa-check"></i> Save</button>
 </div>
 
 @section('javascript')
     <script src="{{asset('js/breakdown.js')}}"></script>
 
     <script>
-
         jQuery(function ($) {
             $('#CostAccount').completeList({
                 url: '/api/cost-accounts?project={{request('project')}}&wbs_id=' + $('#WbsID').val()
             });
+
+            $('#AddBreakdownForm').on('submit', function() {
+                $(this).find('.submit').prop('disabled', true)
+                    .find('.fa').toggleClass('fa-check fa-spinner fa-spin');
+            })
         });
     </script>
 @stop

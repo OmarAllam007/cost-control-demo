@@ -29,21 +29,24 @@
         };
 
         var fillBreakdowns = function (options) {
-            var oldValue = templateInput.val();
+            var oldValue = templateInput.data('value');
 
             var optionsHtml = '<option value="">' + breakdownEmptyText + '</option>';
-
-            for (var key in options) {
-                var selected = '';
-                var option = options[key];
-                if (option.id == oldValue) {
+            for (let key in options) {
+                let selected = '';
+                const tpl = options[key];
+                if (tpl.id == oldValue) {
                     selected = ' selected="selected"';
                 }
-                optionsHtml += '<option value="' + option.id + '"' + selected +'>' + option.name + '</option>';
+                optionsHtml += '<option value="' + tpl.id + '"' + selected +'>' + tpl.name + '</option>';
             }
 
             templateInput.html(optionsHtml);
         };
+
+        templateInput.on('change', function() {
+            $(this).data('value', $(this).val());
+        });
 
         $('.activity-input').on('change', function(){
 
