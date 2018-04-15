@@ -34,7 +34,7 @@
 
         data() {
             let root = this;
-            while (root.constructor.name !== 'BreakdownTemplates') {
+            while (root && root.constructor.name !== 'BreakdownTemplate') {
                 root = root.$parent;
             }
             return {collapsed: true, root};
