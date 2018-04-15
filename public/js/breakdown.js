@@ -35,10 +35,11 @@
 
             for (var key in options) {
                 var selected = '';
-                if (key == oldValue) {
+                var option = options[key];
+                if (option.id == oldValue) {
                     selected = ' selected="selected"';
                 }
-                optionsHtml += '<option value="' + key + '"' + selected +'>' + options[key] + '</option>';
+                optionsHtml += '<option value="' + option.id + '"' + selected +'>' + option.name + '</option>';
             }
 
             templateInput.html(optionsHtml);
@@ -56,7 +57,7 @@
                         showLoader();
                         $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value ,project_id:project}})
                             .then(function(response){
-                                fillBreakdowns(response);
+                                fillBreakdowns(response.data);
                                 hideLoader();
                             }, function(){
                                 showError('Cannot load breakdowns');

@@ -22,6 +22,8 @@ class ActivityDivision extends Model
 
     protected $orderBy = ['code', 'name'];
 
+    protected $appends = ['label'];
+
     public function getLabelAttribute()
     {
         return $this->code . '' . $this->name;
