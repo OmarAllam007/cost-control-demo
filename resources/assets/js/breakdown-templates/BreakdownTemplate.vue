@@ -7,13 +7,19 @@
         <div class="col-sm-8 col-md-9">
             <templates :url="url"
                        :can_edit="can_edit"
+                       :can_delete="can_delete"
             ></templates>
         </div>
     </div>
 </template>
 <script>
+    import divisions from './divisions.vue';
+    import templates from './templates.vue';
+
     export default {
-        props: ['project_id', 'divisions', 'can_edit'],
+        name: 'BreakdownTemplate',
+
+        props: ['project_id', 'divisions', 'can_edit', 'can_delete'],
 
         data() {
             return {division: 0, activity: 0, term: ''};
@@ -35,6 +41,8 @@
                 }
                 return url;
             }
-        }
+        },
+
+        components: { divisions, templates }
     }
 </script>

@@ -11,6 +11,7 @@
 </template>
 
 <script>
+    import division from './division.vue';
     export default {
         name: "divisions",
 
@@ -18,7 +19,9 @@
 
         data() {
             return {search: ''};
-        }
+        },
+
+        components: { division }
     }
 </script>
 
