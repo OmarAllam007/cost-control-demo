@@ -1,5 +1,4 @@
-<resources inline-temaplate
-        :resource="{{($resource_id = Form::getValueAttribute('resource_id'))? json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) : '{}' }}">
+<template id="ResourcesTemplate">
     <div id="ResourcesModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -11,8 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group form-group-sm">
-                        <input type="text" v-model="term" placeholder="Type here to search" class="form-control search"
-                               debounce="500" autocomplete="off">
+                        <input type="text" v-model="term" placeholder="Type here to search" class="form-control search" autocomplete="off">
                     </div>
                     <section>
                         <ul class="list-unstyled tree">
@@ -25,4 +23,6 @@
             </div>
         </div>
     </div>
-</resources>
+</template>
+
+<resources :resource="{{($resource_id = Form::getValueAttribute('resource_id'))? json_encode(\App\Resources::find(Form::getValueAttribute('resource_id'))->morphToJSON()) : '{}' }}"></resources>
