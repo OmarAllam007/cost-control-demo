@@ -81,6 +81,11 @@ class Import
     {
         $idx = intval($row['A']);
         $breakdownResource = $this->breakdownResources->get($idx);
+        if (!$breakdownResource) {
+            $row['M'] = 'Breakdown resource not found';
+            $this->failed->push($row);
+            return false;
+        }
 
         $attributes = [];
 
