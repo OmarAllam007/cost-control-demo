@@ -27,6 +27,11 @@ class Breakdown extends Model
         return $this->hasMany(BreakdownResource::class, 'breakdown_id');
     }
 
+    function qs()
+    {
+        return $this->belongsTo(Survey::class, 'qs_id');
+    }
+
     function rollable_resources()
     {
         return $this->resources()->where('important', '<>', 1)->where('is_rollup', '<>', 1)->whereNull('rolled_up_at');
@@ -69,6 +74,10 @@ class Breakdown extends Model
 
     function getQtySurveyAttribute()
     {
+        if ($this->qs) {
+            return $this->qs;
+        }
+
         if ($this->cached_qty_survey) {
             return $this->cached_qty_survey;
         }

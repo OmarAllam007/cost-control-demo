@@ -132,13 +132,7 @@ class ActivityRollup
 
         $period = $this->project->open_period();
         if (!$period) {
-            // If no open period select the last period in the project to apply
-            $period = $this->project->periods()->latest('id')->first();
-
-            // If there is no period at all in the project then ignore to date values as it is pointless
-            if (!$period) {
-                return $this->rollup_shadow;
-            }
+            return $this->rollup_shadow;
         }
 
         // Update actual resource data based on to date quantity
