@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rollup;
 
 use App\Http\Controllers\Controller;
 use App\Rollup\Actions\ActivityRollup;
+use function flash;
 use Illuminate\Http\Request;
 use App\Project;
 
@@ -12,7 +13,12 @@ class ActivityRollupController extends Controller
     // Rollup whole project
     function store(Project $project)
     {
-        $this->authorize('actual_resources', $project);
+        $this->authorize('cost_owner', $project);
+        
+        if (!$project->open_period()) {
+            flash('Cannot rollup only when there is open period');
+            return back();
+        }
 
         $codes = $project->shadows()->selectRaw('distinct code')->pluck('code');
 
@@ -26,7 +32,12 @@ class ActivityRollupController extends Controller
     // Specify activity
     function update(Project $project, Request $request)
     {
-        $this->authorize('actual_resources', $project);
+        $this->authorize('cost_owner', $project);
+
+        if (!$project->open_period()) {
+            flash('Rollup can only be done when there is open period');
+            return back();
+        }
 
         $count = (new ActivityRollup($project, $request->input('codes', [])))->handle();
 
