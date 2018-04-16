@@ -40,6 +40,8 @@
         @endforeach
         </tbody>
     </table>
+
+        {{$globalPeriods->links()}}
     @else
         <div class="alert alert-info"><i class="fa fa-info-circle"></i> No periods found</div>
     @endif
