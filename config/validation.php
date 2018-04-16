@@ -23,7 +23,7 @@ return [
     'breakdown' => [
         'wbs_level_id' => 'required',
         'std_activity_id' => 'required',
-        'cost_account' => 'required|qs_code_found_on_wbs',
+        'cost_account' => 'required|qs_code_found_on_wbs|cost_account_one_breakdown',
         'template_id' => 'required',
     ],
 

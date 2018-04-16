@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Boq;
+use App\BreakDownResourceShadow;
 use App\Project;
 use App\Survey;
 use App\WbsLevel;
+use function compact;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Validator;
 use PhpParser\Error;
@@ -149,6 +151,13 @@ class ValidationProvider extends ServiceProvider
             } catch (Error $e) {
                 return false;
             }
+        });
+
+        \Validator::extend('cost_account_one_breakdown', function ($_, $cost_account, $options, Validator $validator) {
+            $data = $validator->getData();
+            $wbs_id = $data['wbs_level_id'];
+
+            return ! BreakDownResourceShadow::where(compact('wbs_id', 'cost_account'))->exists();
         });
     }
 }

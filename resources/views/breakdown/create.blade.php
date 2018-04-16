@@ -6,7 +6,7 @@
 @endsection
 
 @section('body')
-    {{Form::open(['route' => 'breakdown.store'])}}
+    {{Form::open(['route' => 'breakdown.store', 'id' => 'AddBreakdownForm'])}}
         @include('breakdown._form')
     {{Form::close()}}
 @stop
