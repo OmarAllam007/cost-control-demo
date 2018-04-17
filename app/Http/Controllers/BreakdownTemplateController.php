@@ -45,22 +45,11 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-//        $wbsTree = WbsLevel::tree()->get();
-        $templates = [];
-        if (request('import') && $project_id) {
-            $projectTemplates = \App\BreakdownTemplate::where(compact('project_id'))
-                ->whereNotNull('parent_template_id')->pluck('parent_template_id','parent_template_id');
-
-            $templates = \App\BreakdownTemplate::orderBy('name')
-                ->whereNull('project_id')->whereNotIn('id', $projectTemplates)->pluck('name', 'id');
-        }
-
-        return view('breakdown-template.create', compact('templates'));
+        return view('breakdown-template.create');
     }
 
     public function store(Request $request)
     {
-        $template = '';
         if ($project_id = request('project_id')) {
             if (\Gate::denies('breakdown_templates', Project::find($project_id))) {
                 flash("You don't have access to this page");
@@ -71,32 +60,8 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-        if ($request->project_id && request('import')) {
-            $parents = BreakdownTemplate::whereIn('id', $request->parent_template_id)->get();
-            $prev=[];
-            foreach ($parents as $parent) {
-                $previousTemp = BreakdownTemplate::where('parent_template_id',$parent->id)->where('project_id',$request->project_id)->first();
-                if($previousTemp){
-
-                }else{
-                    $resources = StdActivityResource::where('template_id', $parent->id)->get();
-                    $attributes = $parent->getAttributes();
-                    $attributes['parent_template_id'] = $parent->id;
-                    $attributes['project_id'] = $request->project_id;
-                    unset($attributes['id']);
-                    $template = BreakdownTemplate::create($attributes);
-                    foreach ($resources as $resource) {
-                        $resource->template_id = $template->id;
-                        StdActivityResource::create($resource->toArray());
-                    }
-                }
-            }
-            $project = Project::find($request->project_id);
-            return \Redirect::route('project.show',compact('project','prev'));
-        } else {
-            $this->validate($request, $this->rules);
-            $template = BreakdownTemplate::create($request->all());
-        }
+        $this->validate($request, $this->rules);
+        $template = BreakdownTemplate::create($request->all());
 
         flash('Breakdown template has been saved', 'success');
         return \Redirect::route('breakdown-template.show', $template);

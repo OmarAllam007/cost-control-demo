@@ -7,7 +7,7 @@
                         <input type="search" class="form-control" v-model="search" placeholder="Search by code or name">
                     </div>
                 </div>
-                <div class="col-md-8 text-right" v-show="templates.length" >
+                <div class="col-md-8 text-right" v-show="templates.length">
                     <pagination :url="url" property="templates"></pagination>
                 </div>
             </div>
@@ -19,29 +19,38 @@
             <table v-if="templates.length" class="table table-condensed table-striped">
                 <thead>
                 <tr>
-                    <th class="col-xs-3">Code</th>
-                    <th class="col-xs-6">Template</th>
-                    <th class="col-xs-3">Actions</th>
+                    <th class="select-cell" v-if="enableSelect">
+                        <input type="checkbox" @change="selectAll">
+                    </th>
+                    <th class="">Code</th>
+                    <th class="">Template</th>
+                    <th class="" v-if="!enableSelect">Actions</th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <tr v-for="tpl in templates">
+                    <td v-if="enableSelect" class="select-cell">
+                        <input type="checkbox" @change="tpl.selected = ! tpl.selected" name="templates[]" :value="tpl.id" :checked="!! tpl.selected">
+                    </td>
                     <td>
                         <a :href="`/breakdown-template/${tpl.id}`" v-text="tpl.code"></a>
                     </td>
                     <td>
                         <a :href="`/breakdown-template/${tpl.id}`" v-text="tpl.name"></a>
                     </td>
-                    <td>
-                            <a class="btn btn-sm btn-info" :href="`/breakdown-template/${tpl.id}`">
-                                <i class="fa fa-eye"></i> Show
-                            </a>
-                            <a v-if="can_edit" class="btn btn-sm btn-primary" :href="`/breakdown-template/${tpl.id}/edit`">
-                                <i class="fa fa-edit"></i> Edit
-                            </a>
+                    <td v-if="!enableSelect">
+                        <a class="btn btn-sm btn-info" :href="`/breakdown-template/${tpl.id}`">
+                            <i class="fa fa-eye"></i> Show
+                        </a>
 
-                            <button class="btn-warning btn-sm" type="button" @click.prevent="deleteTemplate(tpl.id)"><i class="fa fa-trash"></i> Delete</button>
+                        <a v-if="can_edit" class="btn btn-sm btn-primary" :href="`/breakdown-template/${tpl.id}/edit`">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+
+                        <button class="btn-warning btn-sm" type="button" @click.prevent="deleteTemplate(tpl.id)"><i
+                                class="fa fa-trash"></i> Delete
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -60,7 +69,7 @@
     export default {
         name: 'Templates',
 
-        props: ['url', 'can_edit'],
+        props: ['url', 'can_edit', 'can_delete', 'enableSelect'],
 
         data() {
             return {templates: [], search: '', loading: false};
@@ -96,6 +105,12 @@
                 }).done(() => {
                     this.$children[0].loadData(false);
                 });
+            },
+
+            selectAll(e) {
+                this.templates.forEach(tpl => {
+                    tpl.selected = e.target.checked;
+                })
             }
         },
 
@@ -121,5 +136,11 @@
         align-items: flex-start;
         padding: 100px;
         background: rgba(255, 255, 255, 0.6);
+    }
+
+    .select-cell {
+        width: 25px;
+        min-width: 25px;
+        max-width: 25px;
     }
 </style>

@@ -10,7 +10,7 @@
             <a href="#" @click.prevent="page = p" v-text="p"></a>
         </li>
         <li v-if="hasNext">
-            <a href="#" @click.prevent="page--">&raquo;</a>
+            <a href="#" @click.prevent="page++">&raquo;</a>
         </li>
         <li v-if="hasNext">
             <a href="#" @click.prevent="page = totalPages"><i class="fa fa-forward"></i></a>
