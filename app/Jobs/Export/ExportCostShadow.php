@@ -83,17 +83,12 @@ class ExportCostShadow extends Job
 
         $this->buffer .= implode(',', array_map('csv_quote', $headers));
 
-        if ($this->perspective == 'budget') {
-//            $query = MasterShadow::where('project_id', $this->project->id)->where('period_id', $period->id);
-//            if (!$query->exists()) {
-                $query = BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1);
-//            }
-        } else {
+        $query = BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1);
+        if ($this->perspective != 'budget') {
             $subquery = ActualResources::where('project_id', $this->project->id)
                 ->where('period_id', $this->period->id)->select('breakdown_resource_id');
 
-            $query = BreakDownResourceShadow::where('project_id', $this->project->id)
-                ->whereRaw('breakdown_resource_id in (' . $subquery->toSql() . ')')
+            $query->whereRaw('breakdown_resource_id in (' . $subquery->toSql() . ')')
                 ->where('show_in_cost', 1)
                 ->mergeBindings($subquery->getQuery());
         }

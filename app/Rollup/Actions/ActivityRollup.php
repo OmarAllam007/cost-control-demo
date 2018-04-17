@@ -40,6 +40,7 @@ class ActivityRollup
     {
         $success = 0;
 
+        //@todo: Chunk this and eager load breakdown resources
         foreach ($this->codes as $code) {
             if ($this->rollupActivity($code)) {
                 ++$success;
