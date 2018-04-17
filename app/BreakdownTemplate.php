@@ -21,6 +21,9 @@ class BreakdownTemplate extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
+    // This is only for import to project page
+    protected $appends = ['selected'];
+
     public function activity()
     {
         return $this->belongsTo(StdActivity::class, 'std_activity_id');
@@ -41,6 +44,11 @@ class BreakdownTemplate extends Model
         return $query->where(function (Builder $q){
             $q->whereNull('project_id')->orWhere('project_id', 0);
         });
+    }
+
+    function getSelectedAttribute()
+    {
+        return false;
     }
 
     public function morphToJSON(){

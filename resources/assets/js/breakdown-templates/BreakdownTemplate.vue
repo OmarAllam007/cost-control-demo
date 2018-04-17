@@ -8,6 +8,7 @@
             <templates :url="url"
                        :can_edit="can_edit"
                        :can_delete="can_delete"
+                       :enable-select="enableSelect"
             ></templates>
         </div>
     </div>
@@ -19,7 +20,7 @@
     export default {
         name: 'BreakdownTemplate',
 
-        props: ['project_id', 'divisions', 'can_edit', 'can_delete'],
+        props: ['project_id', 'divisions', 'can_edit', 'can_delete', 'reject', 'enableSelect'],
 
         data() {
             return {division: 0, activity: 0, term: ''};
@@ -37,6 +38,10 @@
 
                     if (this.term) {
                         url += `&term=${this.term}`;
+                    }
+
+                    if (this.reject) {
+                        url += `&reject=${this.reject}`;
                     }
                 }
                 return url;

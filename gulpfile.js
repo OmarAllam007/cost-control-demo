@@ -13,10 +13,10 @@ require('laravel-elixir-vue');
  */
 
 elixir(function (mix) {
-    mix.sass('app.scss');
-    mix.sass('print.scss');
+    // mix.sass('app.scss');
+    // mix.sass('print.scss');
     // mix.webpack('project/index.js', 'public/js/project.js');
-    // mix.webpack('breakdown-templates/index.js', 'public/js/breakdown-templates.js');
+    mix.webpack('breakdown-templates/index.js', 'public/js/breakdown-templates.js');
     // mix.webpack('cost-info-charts.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.copy('node_modules/c3/c3.min.js', 'public/js/c3.min.js');

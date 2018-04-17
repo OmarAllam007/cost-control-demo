@@ -266,3 +266,6 @@ Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownControl
 
 Route::get('/dashboard/send', 'DashboardController@send');
 Route::post('/dashboard/send', 'DashboardController@postSend');
+
+Route::get('breakdown-template/import/{project}', 'ImportTemplateToProjectController@create');
+Route::post('breakdown-template/import/{project}', 'ImportTemplateToProjectController@store');
