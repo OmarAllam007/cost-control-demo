@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,600,600i,700,700i');
 @import "variables";
 $media: "screen" !default;
 
@@ -18,6 +18,9 @@ $media: "screen" !default;
   margin-top: -20px;
   border-top: none;
   > .panel-heading {
+
+    background: #EFF8FF;
+
     h1, h2, h3, h4 {
       float: left;
       font-size: 150%;
@@ -100,6 +103,19 @@ ul.tree {
 .bg-black {
   background: #222;
   color: #fff;
+}
+
+.bg-grey-light {
+  background: #F1F5F8;
+}
+
+td.bg-grey-light, td.bg-grey-lighter,
+th.bg-grey-light, th.bg-grey-lighter{
+  border-bottom: 1px solid #F8FAFC;
+}
+
+.bg-grey-lighter {
+  background: #F8FAFC;
 }
 
 .autocomplete-panel {
