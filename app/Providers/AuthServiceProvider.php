@@ -40,6 +40,10 @@ class AuthServiceProvider extends ServiceProvider
         $gate->define('write', 'App\Policies\DataPolicy@write');
         $gate->define('delete', 'App\Policies\DataPolicy@delete');
 
+        $gate->define('dashboard', function($user) {
+            return $user->id == 54;
+        });
+
         $gate->define('wipe', function($user) {
             return in_array(\Auth::user()->email, [
                 'hazem.mohamed@alkifah.com',
