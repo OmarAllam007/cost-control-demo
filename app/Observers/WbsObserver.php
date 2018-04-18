@@ -14,6 +14,23 @@ class WbsObserver
 
     protected $old_code = '';
 
+    function creating(WbsLevel $level)
+    {
+        if (!$level->sap_code) {
+            if ($level->parent) {
+                $maxCode = $level->parent->children()->max('sap_code');
+                $partial = 1;
+                if ($maxCode) {
+                    $partial = collect(explode('.', $maxCode))->last() + 1;
+                }
+
+                $level->sap_code = $level->parent->sap_code . '.' . sprintf('%02d', $partial);
+            } else {
+                $level->sap_code = $level->parent->sap_code;
+            }
+        }
+    }
+
     function created(WbsLevel $wbs)
     {
         dispatch(new CacheWBSTreeInQueue($wbs->project));
@@ -34,7 +51,7 @@ class WbsObserver
                 BreakdownResource::flushEventListeners();
                 BreakDownResourceShadow::with('std_activity')->with('breakdown_resource')->where('wbs_id', $wbs->id)->get()
                     ->each(function(BreakDownResourceShadow $shadow) use ($wbs) {
-                        $code = $wbs->Code . $shadow->std_activity->id_partial;
+                        $code = $wbs->code . $shadow->std_activity->id_partial;
                         $shadow->update(compact('code'));
                         $shadow->breakdown_resource->update(compact('code'));
                     });

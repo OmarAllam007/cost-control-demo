@@ -170,8 +170,9 @@ $config = [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ValidationProvider::class,
-        \App\Providers\CollectionMacrosServiceProvider::class,
+        App\Providers\CollectionMacrosServiceProvider::class,
         App\Providers\ResourceRulesProvider::class,
+        App\Providers\ObserversProvider::class,
     ],
 
     /*

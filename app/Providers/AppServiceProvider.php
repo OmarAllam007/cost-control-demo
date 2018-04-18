@@ -39,13 +39,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-
     public function boot()
     {
         \View::composer([
@@ -59,30 +52,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->csiCategoryActions();
         $this->ProductivityActions();
-        $this->wbsActions();
-
-        Project::observe(GlobalReportObserver::class);
-        Productivity::observe(ProductivityObserver::class);
-        BreakdownResource::observe(BreakDownResourceObserver::class);
-        Resources::observe(ResourcesObserver::class);
-        ResourceType::observe(ResourceTypeObserver::class);
-        BreakdownTemplate::observe(BreakdownTemplateObserver::class);
-        Breakdown::observe(BreakdownObserver::class);
-        BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
-        Survey::observe(QuantitySurveyObserver::class);
-//        StdActivityResource::observe(StandardActivityResourceObserver::class);
-        Survey::observe(QSObserver::class);
-        CostShadow::observe(CostShadowObserver::class);
-//        BreakdownVariable::observe(BreakdownVariableObserver::class);
-        BreakdownVariable::observe(BreakdownVariableObserver::class);
-        WbsLevel::observe(WbsObserver::class);
 
         if (PHP_SAPI == 'cli') {
             app()->instance('change_log', new ChangeLogger());
         }
     }
-
-
 
     public function csiCategoryActions()
     {
@@ -107,21 +81,6 @@ class AppServiceProvider extends ServiceProvider
         Productivity::deleted(function () {
             \Cache::forget('csi-tree');
             dispatch(new CacheCsiCategoryTree());
-        });
-    }
-
-    public function wbsActions()
-    {
-
-        WbsLevel::saved(function (WbsLevel $wbs) {
-            \Cache::forget('wbs-tree-' . $wbs->project_id);
-            dispatch(new CacheWBSTree(Project::find($wbs->project_id)));
-
-        });
-
-        WbsLevel::deleted(function (WbsLevel $wbs) {
-            \Cache::forget('wbs-tree-' . $wbs->project_id);
-            dispatch(new CacheWBSTree(Project::find($wbs->project_id)));
         });
     }
 
