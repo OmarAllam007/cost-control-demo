@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\CacheGlobalReport::class,
         Commands\WbsSapCode::class,
+        Commands\StdActivitySapCode::class,
     ];
 
     protected function schedule(Schedule $schedule)
