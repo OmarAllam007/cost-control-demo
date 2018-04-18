@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
     function index(Request $request)
     {
-        if (!Auth::user()->is_admin) {
+        if (cannot('dashboard')) {
             return redirect('/projects');
         }
 

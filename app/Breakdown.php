@@ -102,7 +102,10 @@ class Breakdown extends Model
             foreach ($variables as $index => $value) {
                 $var = BreakdownVariable::where('qty_survey_id', $this->qty_survey->id)->where('display_order', $index)->first();
                 if ($var) {
-                    $var->update(compact('value'));
+                    $var->update([
+                        'value' => $value,
+                        'breakdown_id' => $this->id
+                    ]);
                 } else {
                     $this->variables()->create([
                         'qty_survey_id' => $this->qty_survey->id,
