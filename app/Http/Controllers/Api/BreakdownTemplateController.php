@@ -31,6 +31,9 @@ class BreakdownTemplateController extends Controller
                 $term = '%' . request('term') . '%';
                 $q->where('name', 'like', $term)->orWhere('code', 'like', $term);
             });
+        })->when(request('reject'), function($q) {
+            $usedInProject = BreakdownTemplate::where('project_id', request('reject'))->pluck('parent_template_id')->filter()->unique();
+            return $q->whereNotIn('id', $usedInProject);
         })->orderBy('name')->select('name', 'id', 'code')->paginate(50);
     }
 

@@ -297,3 +297,6 @@ Route::post('/dashboard/send', 'DashboardController@postSend');
 Route::get('activity-log/{wbs}/{code}', 'ActivityLogController@show')->name('activity-log.show');
 Route::get('activity-log/{wbs}/{code}/excel', 'ActivityLogController@excel')->name('activity-log.excel');
 Route::get('/api/activity-log/{wbs}/{code}', 'Api\ActivityLogController@show');
+
+Route::get('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@create')->name('breakdown-template.import-to-project');
+Route::post('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@store');

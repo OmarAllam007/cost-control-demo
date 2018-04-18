@@ -18,7 +18,7 @@ class WbsLevel extends Model
 {
     use SoftDeletes;
     use Tree, HasOptions;
-    use CachesQueries;
+//    use CachesQueries;
     use HasChangeLog, RecordsUser;
 
     protected $fillable = ['name', 'project_id', 'parent_id', 'comments', 'code'];

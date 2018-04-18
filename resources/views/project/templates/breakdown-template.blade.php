@@ -28,7 +28,7 @@
                         </div>
                     @endcan
 
-                    <a href="{{route('breakdown-template.create', ['project' => $project,'import'=>true])}}"
+                    <a href="{{route('breakdown-template.import-to-project', ['project' => $project])}}"
                        class="btn btn-success btn-sm in-iframe" title="Import Template">
                         <i class="fa fa-level-down" aria-hidden="true"></i>
                         Import Template
