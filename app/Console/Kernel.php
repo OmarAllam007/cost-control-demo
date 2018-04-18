@@ -26,47 +26,13 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
     protected $commands = [
-        CostUpdateReminder::class,
-        CleanResourceTypes::class,
-//        FixBudgetQty::class,
-//        RebuildCostShadow::class,
-//        RebuildBudgetShadow::class,
-//        UpdateActivityCode::class,
-//        FixBreakdownVars::class,
-        ExportAllResources::class,
-//        RecalculateCost::class,
-//        FixModResources::class,
-//        AddBoqDisciplineToMasterShadow::class,
-//        AddBoqToMasterSahdow::class,
-//        AddBoqAndSurveyToBreakdownShadow::class,
-//        AddBoqAndSurveyToBreakdownShadowProject::class,
-//        FixProductivity::class,
-        FixProjectProductivity::class,
-        UpdateResourceTypesAndResources::class,
-        CreateRevisionsForCurrentProject::class,
-        CreateRevisions::class,
-        Commands\FixProductivityForDhahran::class,
-        Commands\DataCleaning::class,
-        Commands\CacheGlobalReport::class
+        Commands\CacheGlobalReport::class,
+        Commands\WbsSapCode::class,
     ];
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-
         $schedule->command('global-report-cache')->dailyAt('02:00');
     }
 }
