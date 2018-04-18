@@ -19,11 +19,13 @@ use App\Observers\ProductivityObserver;
 use App\Observers\QuantitySurveyObserver;
 use App\Observers\ResourcesObserver;
 use App\Observers\ResourceTypeObserver;
+use App\Observers\StdActivityObserver;
 use App\Observers\WbsObserver;
 use App\Productivity;
 use App\Project;
 use App\Resources;
 use App\ResourceType;
+use App\StdActivity;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\ServiceProvider;
@@ -44,6 +46,7 @@ class ObserversProvider extends ServiceProvider
         CostShadow::observe(CostShadowObserver::class);
         BreakdownVariable::observe(BreakdownVariableObserver::class);
         WbsLevel::observe(WbsObserver::class);
+        StdActivity::observe(StdActivityObserver::class);
     }
 
     public function register()
