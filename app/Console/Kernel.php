@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
         Commands\CacheGlobalReport::class,
         Commands\WbsSapCode::class,
         Commands\StdActivitySapCode::class,
+        Commands\BreakdownSapCode::class,
         MigrateActualResources::class,
     ];
 

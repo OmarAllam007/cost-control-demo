@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 
 class WbsSapCode extends Command
 {
-    protected $signature = 'wbs:sap-code';
+    protected $signature = 'sap-code:wbs';
 
     protected $description = 'Generate a SAP code for each WBS';
 

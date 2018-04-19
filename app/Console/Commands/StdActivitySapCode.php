@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class StdActivitySapCode extends Command
 {
-    protected $signature = 'activities:sap-code';
+    protected $signature = 'sap-code:activities';
 
     protected $description = 'Generate SAP code partial';
 
