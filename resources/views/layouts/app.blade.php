@@ -37,9 +37,10 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 @if (Auth::check())
                 <ul class="nav navbar-nav">
-                    @if (Auth::user()->is_admin)
+                    @can ('dashboard')
                     <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                    @endif
+                    @endcan
+
                     <li><a href="{{ url('/project') }}">Projects</a></li>
 
                     @can('read', 'std-activity')

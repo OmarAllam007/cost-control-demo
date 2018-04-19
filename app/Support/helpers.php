@@ -19,7 +19,7 @@ function slug($value='')
     return Illuminate\Support\Str::slug($value);
 }
 
- function cannot($ability, $object)
+ function cannot($ability, $object = null)
  {
      return \Gate::denies($ability, $object);
  }
