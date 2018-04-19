@@ -84,14 +84,10 @@ class BreakDownResourceObserver
         }
     }
 
-
-    function deleting(BreakdownResource $resource)
-    {
-        BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->delete();
-    }
-
     function deleted(BreakdownResource $resource)
     {
+        BreakDownResourceShadow::where('breakdown_resource_id', $resource->id)->delete();
+
         if ($resource->resource) {
             $this->checkForResources($resource->resource);
         }
