@@ -610,9 +610,11 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   .card-title {
     margin: 0;
     padding: 10px;
-    font-size: 125%;
+    font-size: 150%;
+    font-weight: 600;
     line-height: 1.4;
-    background-color: #fff;
+    background-color: #EFF8FF;
+    color: #1C3D5A;
 
     &.blue {
       background-color: #3490DC;
@@ -660,8 +662,20 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
   .card-body {
     padding: 10px;
-    background-color: white;
+    background-color: #FFF;
   }
+  .card-row {
+    //margin-bottom: 10px;
+    //padding-bottom: 10px;
+    border-bottom: 1px solid #F1F5F8;
+
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
   .table {
     margin-bottom: 0;
     .highlight td, .highlight th {
