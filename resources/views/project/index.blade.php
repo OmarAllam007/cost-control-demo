@@ -85,12 +85,8 @@
                 @endforeach
             </div>
             
-            <div class="col-sm-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <img src="{{asset('images/logo.png')}}" alt="logo">
-                    </div>
-                </div>
+            <div class="col-sm-4 text-center">
+                <img src="{{asset('images/kcc.png')}}" alt="logo">
             </div>
         </div>
 
