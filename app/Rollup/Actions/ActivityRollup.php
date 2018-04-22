@@ -12,6 +12,7 @@ namespace App\Rollup\Actions;
 use App\ActualResources;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\MasterShadow;
 use App\Project;
 
 class ActivityRollup
@@ -38,43 +39,40 @@ class ActivityRollup
 
     function handle()
     {
-        $success = 0;
-
-        //@todo: Chunk this and eager load breakdown resources
-        foreach ($this->codes as $code) {
-            if ($this->rollupActivity($code)) {
-                ++$success;
+        $this->success = 0;
+        $this->codes->chunk(50)->each(function($chunk) {
+            $this->breakdown_resources = BreakdownResource::where('project_id', $this->project->id)->whereIn('code', $chunk)->with('shadow')->get()->groupBy('code');
+            foreach ($chunk as $code) {
+                if ($this->rollupActivity($code)) {
+                    ++$this->success;
+                }
             }
-        }
+        });
 
-        return $success;
+        return $this->success;
     }
 
     private function rollupActivity($code)
     {
-        $hasRollup = BreakdownResource::where('project_id', $this->project->id)
-            ->where(compact('code'))->where('is_rollup', 1)->exists();
+        $breakdown_resources = $this->breakdown_resources->get($code);
+        $hasRollup = $breakdown_resources->where('is_rollup', 1)->count();
 
         if ($hasRollup) {
             return false;
         }
 
-        $resource = $this->project->shadows()
-            ->where('code', $code)
-            ->first();
+        $resource = $breakdown_resources->first()->shadow;
 
         $this->createRollupShadow($resource);
 
-        BreakdownResource::where('id', '<>', $this->rollup_resource->id)
-            ->where('project_id', $this->project->id)->where('code', $code)
+        BreakdownResource::whereIn('id', $breakdown_resources->pluck('id'))
             ->update([
                 'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
                 'updated_by' => $this->user_id, 'updated_at' => $this->now
             ]);
 
         $this->project->shadows()
-            ->where('id', '<>', $this->rollup_shadow->id)
-            ->where('code', $code)
+            ->whereIn('breakdown_resource_id', $breakdown_resources->pluck('id'))
             ->update([
                 'show_in_cost' => false, 'rolled_up_at' => $this->now,
                 'rollup_resource_id' => $this->rollup_shadow->id,
@@ -88,9 +86,8 @@ class ActivityRollup
     {
         $this->createRollupResource($resource);
 
-        $total_cost = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->where('code', $resource->code)
-            ->sum('budget_cost');
+        $breakdown_resources = $this->breakdown_resources->get($resource->code);
+        $total_cost = $breakdown_resources->pluck('shadow')->sum('budget_cost');
 
         $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
@@ -128,16 +125,16 @@ class ActivityRollup
 
     private function update_cost($code)
     {
-        $resource_ids = BreakdownResource::where('project_id', $this->project->id)->where('code', $code)->pluck('id');
-        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resource_ids)->get();
+        $breakdown_resources = $this->breakdown_resources->get($code);
 
         $period = $this->project->open_period();
         if (!$period) {
             return $this->rollup_shadow;
         }
 
+//        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resource_ids)->get();
         // Update actual resource data based on to date quantity
-        $to_date_cost = $actual_resources->sum('cost');
+        $to_date_cost = $breakdown_resources->pluck('shadow')->sum('to_date_cost');
 
         // If there no to_date_cost then there are no actual uploaded, skip actual
         if (!$to_date_cost) {
@@ -149,14 +146,12 @@ class ActivityRollup
             $to_date_qty = $to_date_cost / $this->rollup_shadow->budget_cost;
         }
 
-        $to_date_unit_price = 0;
         $progress = min($to_date_qty * 100, 100);
         $status = $progress < 100 ? 'In Progress' : 'Closed';
 
         if (!$to_date_qty) {
             return $this->rollup_shadow;
         }
-
 
         $to_date_unit_price = $to_date_cost / $to_date_qty;
         ActualResources::forceCreate([
@@ -168,7 +163,7 @@ class ActivityRollup
 
         $this->rollup_shadow->update(compact('progress', 'status'));
 
-        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
+        ActualResources::whereIn('breakdown_resource_id', $breakdown_resources->pluck('id'))->where('period_id', $period->id)->delete();
 
         return $this->rollup_shadow;
     }
