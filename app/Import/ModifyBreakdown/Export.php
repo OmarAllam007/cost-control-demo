@@ -34,7 +34,7 @@ class Export
 
         $sheet->fromArray($headers, '', "A1", true);
 
-        $this->project->shadows()->take(1000)
+        $this->project->shadows()
 //            ->budgetOnly()
             ->with(['breakdown_resource', 'wbs'])
             ->chunk(1000, function ($shadows) use ($sheet) {
