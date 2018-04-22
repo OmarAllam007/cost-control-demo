@@ -57,7 +57,7 @@ class WasteIndexReport
             ->join('resources as r', 'sh.resource_id', '=', 'r.id')
             ->selectRaw('sh.resource_name, r.resource_type_id, sum(sh.to_date_qty) as to_date_qty')
             ->selectRaw('sum(sh.allowable_qty) as allowable_qty, sum(sh.to_date_cost) / sum(sh.to_date_qty) as to_date_unit_price')
-            ->selectRaw('sum(sh.allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
+            ->selectRaw('sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(sh.allowable_ev_cost - to_date_cost) as to_date_cost_var')
             ->selectRaw('sum(to_date_qty_var) as qty_var, sum(pw_index) as pw_index')
             ->groupBy(['sh.resource_name', 'r.resource_type_id']);
@@ -86,9 +86,9 @@ class WasteIndexReport
             $type->resources_list = $this->resources->get($type->id, collect())->map(function($resource) {
                 $resource->pw_index = 0;
                 $resource->variance = ($resource->allowable_qty - $resource->to_date_qty) * $resource->to_date_unit_price;
+                $resource->allowable_cost = $resource->allowable_qty * $resource->to_date_unit_price;
 
                 if ($resource->allowable_cost) {
-//                    $resource->pw_index = ($resource->allowable_cost - $resource->to_date_cost) * 100 / $resource->allowable_cost;
                     $resource->pw_index = $resource->variance * 100 / $resource->allowable_cost;
                 }
 
