@@ -54,8 +54,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
     {
         MasterShadow::where('period_id', $this->period->id)->delete();
 
-        BreakDownResourceShadow::where('project_id', $this->project->id)
-//            ->where('show_in_cost', 1)
+        BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1)
             ->chunk(800, function ($shadows) {
                 $start = microtime(1);
                 $records = [];
@@ -96,7 +95,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'resource_qty' => $costShadow['resource_qty'], 'waste' => $costShadow['resource_waste'],
                         'resource_divs' => json_encode($this->getResourceDivisions($resource)),
                         'resource_code' => $costShadow['resource_code'],
-                        'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material,
+                        'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material ?? 0,
                         'unit_price' => $costShadow['unit_price'], 'measure_unit' => $costShadow['measure_unit'],
                         'budget_unit' => $costShadow['budget_unit'], 'budget_cost' => $costShadow['budget_cost'],
                         'boq_equivilant_rate' => $costShadow['boq_equivilant_rate'], 'budget_unit_rate' => $costShadow['budget_unit_rate'],
