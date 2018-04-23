@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.' . (request()->exists('iframe')? 'iframe': 'app'))
 
 @section('header')
     <div class="display-flex">
