@@ -41,7 +41,11 @@ class ActivityRollup
     {
         $this->success = 0;
         $this->codes->chunk(50)->each(function($chunk) {
-            $this->breakdown_resources = BreakdownResource::where('project_id', $this->project->id)->whereIn('code', $chunk)->with('shadow')->get()->groupBy('code');
+            $this->breakdown_resources = BreakdownResource::where('project_id', $this->project->id)
+                ->whereIn('code', $chunk)->where('is_rollup', '<>', 1)->whereHas('shadow', function($q) {
+                    $q->where('is_sum', '<>' ,1);
+                })->with('shadow')->get()->groupBy('code');
+
             foreach ($chunk as $code) {
                 if ($this->rollupActivity($code)) {
                     ++$this->success;
@@ -65,14 +69,13 @@ class ActivityRollup
 
         $this->createRollupShadow($resource);
 
-        BreakdownResource::whereIn('id', $breakdown_resources->pluck('id'))
+        BreakdownResource::where(compact('code'))->where('id', '<>', $this->rollup_resource->id)
             ->update([
                 'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
                 'updated_by' => $this->user_id, 'updated_at' => $this->now
             ]);
 
-        $this->project->shadows()
-            ->whereIn('breakdown_resource_id', $breakdown_resources->pluck('id'))
+        $this->project->shadows()->where(compact('code'))->where('id', '<>', $this->rollup_shadow->id)
             ->update([
                 'show_in_cost' => false, 'rolled_up_at' => $this->now,
                 'rollup_resource_id' => $this->rollup_shadow->id,
