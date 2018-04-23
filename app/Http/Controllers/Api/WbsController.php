@@ -34,7 +34,7 @@ class WbsController extends Controller
 
     function boq(WbsLevel $wbs_level)
     {
-        return Boq::where('wbs_id', $wbs_level->id)->get()->groupBy('type');
+        return Boq::where('wbs_id', $wbs_level->id)->orderBy('type')->orderBy('cost_account')->get()->groupBy('type');
     }
 
     function qtySurvey(WbsLevel $wbs_level)
