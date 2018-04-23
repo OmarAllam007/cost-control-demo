@@ -39,7 +39,7 @@ class WbsController extends Controller
 
     function qtySurvey(WbsLevel $wbs_level)
     {
-        return Survey::where('wbs_level_id', $wbs_level->id)->with('unit')->get();
+        return Survey::where('wbs_level_id', $wbs_level->id)->with('unit')->orderBy('cost_account')->get();
     }
 
     function tree_by_resource($project)
