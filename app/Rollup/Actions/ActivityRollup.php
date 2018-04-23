@@ -42,8 +42,8 @@ class ActivityRollup
         $this->success = 0;
         $this->codes->chunk(50)->each(function($chunk) {
             $this->breakdown_resources = BreakdownResource::where('project_id', $this->project->id)
-                ->whereIn('code', $chunk)->where('is_rollup', '<>', 1)->whereHas('shadow', function($q) {
-                    $q->where('is_sum', '<>' ,1);
+                ->whereIn('code', $chunk)->whereHas('shadow', function($q) {
+                    $q->where('show_in_budget', 1);
                 })->with('shadow')->get()->groupBy('code');
 
             foreach ($chunk as $code) {
