@@ -34,12 +34,12 @@ class WbsController extends Controller
 
     function boq(WbsLevel $wbs_level)
     {
-        return Boq::where('wbs_id', $wbs_level->id)->orderBy('type')->orderBy('cost_account')->get()->groupBy('type');
+        return Boq::where('wbs_id', $wbs_level->id)->orderBy('type')->get()->groupBy('type');
     }
 
     function qtySurvey(WbsLevel $wbs_level)
     {
-        return Survey::where('wbs_level_id', $wbs_level->id)->with('unit')->orderBy('cost_account')->get();
+        return Survey::where('wbs_level_id', $wbs_level->id)->with('unit')->get();
     }
 
     function tree_by_resource($project)
