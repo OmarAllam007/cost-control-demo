@@ -36,7 +36,7 @@ class FixQtySurveyBoqController extends Controller
         $fixer = new QtySurveyFixer($project, $items, $request->only('budget_qty', 'eng_qty'));
         $fixer->fix();
 
-        flash('Qty surveys have been imported', 'success');
+        flash('Qty surveys have been saved', 'success');
 
         if (request('iframe')) {
             return \Redirect::to('/blank?reload=quantities');
