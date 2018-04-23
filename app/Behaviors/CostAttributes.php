@@ -200,8 +200,8 @@ trait CostAttributes
                 return $this->budget_cost;
             }
 
-            $cpi = $this->allowable_ev_cost / $this->to_date_cost;
-            return $this->calculated['remaining_cost'] =  max(0, ($this->budget_cost - $this->allowable_ev_cost) / $cpi); //$this->completion_cost - $this->to_date_cost;
+//            $cpi = $this->allowable_ev_cost / $this->to_date_cost;
+            return $this->calculated['remaining_cost'] =  max(0, ($this->budget_cost - $this->allowable_ev_cost) / $this->cpi); //$this->completion_cost - $this->to_date_cost;
         }
 
         return $this->calculated['remaining_cost'] = $this->remaining_unit_price * $this->remaining_qty;

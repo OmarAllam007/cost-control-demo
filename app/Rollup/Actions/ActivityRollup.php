@@ -148,12 +148,11 @@ class ActivityRollup
 
         $progress = min($to_date_qty * 100, 100);
         $status = $progress < 100 ? 'In Progress' : 'Closed';
-
-        if (!$to_date_qty) {
-            return $this->rollup_shadow;
+        $to_date_unit_price = $this->rollup_shadow->unit_price;
+        if ($to_date_qty) {
+            $to_date_unit_price = $to_date_cost / $to_date_qty;
         }
 
-        $to_date_unit_price = $to_date_cost / $to_date_qty;
         ActualResources::forceCreate([
             'project_id' => $this->project->id, 'wbs_level_id' => $this->rollup_shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
             'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
