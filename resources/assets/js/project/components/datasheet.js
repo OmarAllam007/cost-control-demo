@@ -39,8 +39,9 @@ export default {
 
     methods: {
         loadBreakdowns(cache = true) {
-            this.$broadcast('reloadPage');
-
+            if (this.wbs_id) {
+                this.$broadcast('reloadPage');
+            }
         },
 
         deleteResource(resource) {

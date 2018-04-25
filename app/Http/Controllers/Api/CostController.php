@@ -67,6 +67,7 @@ class CostController extends Controller
                     $collection->put($code, new Fluent([
                         'code' => $code,
                         'activity' => $activity,
+                        'wbs_id' => $resource->wbs_id,
                         'resources' => collect()
                     ]));
                 }

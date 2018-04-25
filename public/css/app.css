@@ -11537,6 +11537,7 @@ dl.dl-margin {
 
 .breakdown-activity-header a {
   color: #f0f9ff;
+  display: block;
 }
 
 .card-group-item canvas {
