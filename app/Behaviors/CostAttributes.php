@@ -110,16 +110,18 @@ trait CostAttributes
             return $this->calculated['allowable_ev_cost'];
         }
 
-        $latest = $this->getLatestCost();
-        if ($latest && $latest->manual_edit) {
-            return $this->calculated['allowable_ev_cost'] = $latest->allowable_ev_cost;
+        if ($this->isGeneral()) {
+            $latest = $this->getLatestCost();
+            if ($latest && $latest->manual_edit) {
+                return $this->calculated['allowable_ev_cost'] = $latest->allowable_ev_cost;
+            }
         }
 
         if (!$this->budget_cost) {
             return 0;
         }
 
-        if ($this->isGeneral()) {
+        if ($this->isGeneral() || $this->isActivityRollup()) {
             return $this->calculated['allowable_ev_cost'] = $this->progress_value * $this->budget_cost;
         }
 

@@ -32,6 +32,7 @@ class BreakdownShadowObserver
             ];
 
             $costShadow = CostShadow::firstOrCreate($conditions)->recalculate();
+            dd($costShadow);
 
             $latestResource = ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
                 ->latest()->first();

@@ -24,31 +24,21 @@ class CostController extends Controller
         $current_period_id = $shadow->project->open_period()->id;
 
         $costShadow = CostShadow::whereBreakdownResourceId($breakdown_resource->id)
-            ->where('period_id', '<=', $current_period_id)
+            ->where('period_id', '=', $current_period_id)
             ->orderBy('period_id', 'DESC')->first();
 
         if (!$costShadow) {
             $attributes = [
-                'project_id' => $shadow->project_id,
                 'wbs_level_id' => $shadow->wbs_id,
+                'project_id' => $shadow->project_id,
                 'period_id' => $current_period_id,
-                'breakdown_resource_id' => $breakdown_resource->id
+                'breakdown_resource_id' => $breakdown_resource->id,
+                'resource_id' => $shadow->resource_id
             ];
 
-            $costShadow = CostShadow::create($attributes);
-        } elseif ($costShadow->period_id != $current_period_id) {
-            $attributes = $costShadow->getAttributes();
-            unset($attributes['id'], $attributes['created_at'], $attributes['updated_at']);
-            unset($attributes['period_id']);
-
-            $attributes['manual_edit'] = 0;
-            $attributes['period_id'] = $current_period_id;
-            $attributes['curr_qty'] = 0;
-            $attributes['curr_cost'] = 0;
-            $attributes['curr_unit_price'] = 0;
-            $attributes['prev_qty'] = $attributes['to_date_qty'];
-            $attributes['prev_cost'] = $attributes['to_date_cost'];
-            $attributes['prev_unit_price'] = $attributes['to_date_unit_price'];
+            foreach ($shadow->appendFields() as $field) {
+                $attributes[$field] = $shadow->getAttribute($field);
+            }
 
             $costShadow = CostShadow::create($attributes);
         }
