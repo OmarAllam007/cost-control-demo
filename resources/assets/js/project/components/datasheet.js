@@ -1,7 +1,7 @@
 import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
 import BreakdownResource from './breakdown-resource';
-import Pagination from './server-pagination';
+import Pagination from '../../LaravelPagination.vue';
 
 export default {
 
@@ -38,12 +38,6 @@ export default {
     //</editor-fold>
 
     methods: {
-        loadBreakdowns(cache = true) {
-            if (this.wbs_id) {
-                this.$broadcast('reloadPage');
-            }
-        },
-
         deleteResource(resource) {
             this.$broadcast('show_delete_resource', resource);
         },
@@ -135,25 +129,19 @@ export default {
 
     events: {
         wbs_changed(params) {
-            if (this.wbs_id != params.selection) {
-                this.loading = true;
-                this.wbs_id = params.selection;
-            }
-        },
-
-        changingPage() {
-            this.loading = true;
-        },
-
-        pageChanged(data) {
-            this.breakdowns = data;
-
-            // this.breakdowns = data;
-            this.loading = false;
+            this.wbs_id = params.selection;
         },
 
         reload_breakdowns() {
             this.loadBreakdowns();
+        },
+
+        loadingStart() {
+            this.loading= true;
+        },
+
+        loadingDone() {
+            this.loading = false;
         }
     },
 

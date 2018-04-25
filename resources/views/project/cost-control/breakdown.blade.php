@@ -46,7 +46,6 @@
 
                 <div class="col-sm-3">
                     <div class="form-group form-group-sm">
-                        {{Form::label('activity', 'Activity', ['class' => 'control-label'])}}
                         <div class="btn-group btn-group-sm btn-group-block">
                             <a href="#ActivitiesModal" data-toggle="modal"
                                class="btn btn-default btn-block tree-open">{{ session('filters.breakdown.'.$project->id.'.activity')? App\StdActivity::find(session('filters.breakdown.'.$project->id.'.activity'))->name : 'Select Activity' }}</a>
@@ -58,14 +57,12 @@
 
                 <div class="col-sm-3">
                     <div class="form-group form-group-sm">
-                        {{Form::label('cost_account', 'Cost Account', ['class' => 'control-label'])}}
-                        {{Form::text('cost_account', session('filters.breakdown.' . $project->id . '.cost_account'), ['class' => 'form-control', 'v-model' => 'cost_account', 'debounce' => 500])}}
+                        {{Form::text('cost_account', session('filters.breakdown.' . $project->id . '.cost_account'), ['class' => 'form-control', 'v-model' => 'cost_account', 'placeholder' => 'Cost Account' , 'debounce' => 500])}}
                     </div>
                 </div>
 
                 <div class="col-sm-3">
                     <div class="form-group form-group-sm">
-                        {{Form::label('resource_type', 'Resource Type', ['class' => 'control-label'])}}
                         <div class="btn-group btn-group-sm btn-group-block">
                             <a href="#ResourceTypeModal" data-toggle="modal"
                                class="tree-open btn btn-default btn-block">Select Resource Type</a>
@@ -82,8 +79,7 @@
 
                 <div class="col-sm-3">
                     <div class="form-group form-group-sm">
-                        {{Form::label('resource', 'Resource Name', ['class' => 'control-label'])}}
-                        {{Form::text('resource', session('filters.breakdown.'.$project->id.'.resource'), ['class' => 'form-control', 'v-model' => 'resource'])}}
+                        {{Form::text('resource', session('filters.breakdown.'.$project->id.'.resource'), ['class' => 'form-control', 'v-model' => 'resource', 'placeholder' => 'Resource Code or Name'])}}
                     </div>
                 </div>
             </section>
@@ -205,7 +201,9 @@
 
             <div class="alert alert-info" v-else><i class="fa fa-info-circle"></i> No breakdowns found</div>
 
-            <pagination :url="url"></pagination>
+            <div class="text-center mt-20">
+                <pagination :url="url" property="breakdowns"></pagination>
+            </div>
 
             @can('delete_resources', $project)
                 <delete-resource-modal inline-template>

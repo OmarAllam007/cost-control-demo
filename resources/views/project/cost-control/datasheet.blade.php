@@ -21,7 +21,7 @@
                 <alert></alert>
 
 
-                <article class="tab-pane active" id="Breakdown">
+                <article id="Breakdown">
                     @include('project.cost-control.breakdown')
                 </article>
             </section>

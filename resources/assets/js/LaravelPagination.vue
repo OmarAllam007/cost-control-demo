@@ -81,16 +81,22 @@
                 if (url.indexOf('?') >= 0) {
                     separator = '&';
                 }
+
+                if (resetPage) {
+                    this.page = 1;
+                }
+
                 url += `${separator}page=${this.page}`;
+
+                this.$dispatch('loadingStart');
 
                 $.ajax({
                     url, dataType: 'json'
                 }).done(response => {
                     this.$parent[this.property] = response.data;
                     this.totalPages = response.last_page;
-                    if (resetPage) {
-                        this.page = 1;
-                    }
+
+                    this.$dispatch('loadingDone');
                 });
             }
         }

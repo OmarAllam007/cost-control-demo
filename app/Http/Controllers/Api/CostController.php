@@ -55,7 +55,8 @@ class CostController extends Controller
 
         $page = request('page', 1);
         $perPage = 100;
-        $total = ceil($query->count() / $perPage);
+        $total = $query->count();
+        $last_page = ceil($total / $perPage);
 
         $rows = $query->forPage($page, $perPage)->get()
             ->reduce(function (\Illuminate\Support\Collection $collection, $resource) {
@@ -76,7 +77,7 @@ class CostController extends Controller
                 return $collection;
             }, collect());
 
-        return ['total' => $total, 'current_page' => $page, 'perPage' => $perPage, 'data' => $rows];
+        return ['total' => $total, 'current_page' => $page, 'perPage' => $perPage, 'last_page' => $last_page, 'data' => $rows];
     }
 
     function activityLog(WbsLevel $wbs_level, Request $request)
