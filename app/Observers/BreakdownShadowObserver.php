@@ -31,8 +31,7 @@ class BreakdownShadowObserver
                 'project_id' => $resource->project_id
             ];
 
-            $costShadow = CostShadow::firstOrCreate($conditions)->recalculate();
-            dd($costShadow);
+            CostShadow::firstOrCreate($conditions)->recalculate();
 
             $latestResource = ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
                 ->latest()->first();
