@@ -35,17 +35,23 @@ class ActivityRollupController extends Controller
         $this->authorize('cost_owner', $project);
 
         if (!$project->open_period()) {
-            flash('Rollup can only be done when there is open period');
+            $msg = 'Rollup can only be done when there is open period';
+            if (!$request->wantsJson()) {
+                return ['ok' => false, 'message' => $msg];
+            }
+
+            flash($msg);
             return back();
         }
 
-        $count = (new ActivityRollup($project, $request->input('codes', [])))->handle();
+        $codes = collect($request->input('codes', []));
+        $count = (new ActivityRollup($project, $codes))->handle();
 
+        $msg = "$count activities have been rolled up";
         if ($request->wantsJson()) {
-            return ['ok' => true, 'count' => $count];
+            return ['ok' => true, 'message' => $msg];
         }
-
-        flash("$count activities have been rolled up", 'success');
+        flash($msg, 'success');
         return redirect()->route('project.cost-control', $project);
     }
 }

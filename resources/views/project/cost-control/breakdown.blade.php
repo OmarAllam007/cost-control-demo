@@ -89,20 +89,25 @@
             </section>
 
             <section v-if="show_breakdowns">
-                <div class="    vertical-scroll-pane">
-                    <section class="activity-section" v-for="(activity, resources) in breakdowns">
-
+                <div class="vertical-scroll-pane">
+                    <section class="activity-section" v-for="activity in breakdowns">
                         <header class="display-flex breakdown-activity-header">
-                            <h5 class="flex"><a data-toggle="collapse" :href="'#' + slug(activity)">@{{ activity }}</a></h5>
+                            <h5 class="flex"><a data-toggle="collapse" :href="'#' + slug(activity.code)" v-text="activity.activity + ' (' + activity.code + ')'"></a></h5>
 
-                            <button class="btn btn-default btn-sm" @click="doRollup(activity)">
-                                <i class="fa fa-compress"></i> Rollup
-                            </button>
+                            <div class="btn-toolbar">
+                                <button class="btn btn-default btn-sm" @click="doRollup(activity.code)">
+                                    <i class="fa fa-compress"></i> Rollup
+                                </button>
+
+                                <a class="btn btn-info btn-sm" href="#">
+                                    <i class="fa fa-history"></i> Activity Log
+                                </a>
+                            </div>
                         </header>
 
-                        <div :id="'#' + slug(activity)">
+                        <div :id="slug(activity.code)" class="collapse">
                         <breakdown-resource inline-template
-                                            v-for="resource in resources"
+                                            v-for="resource in activity.resources"
                                             :activity="activity"
                                             :resource="resource"
                                             :class="resource.is_rollup? 'highlight' : '' ">

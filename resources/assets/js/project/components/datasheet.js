@@ -2,7 +2,6 @@ import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
 import BreakdownResource from './breakdown-resource';
 import Pagination from './server-pagination';
-import _ from 'lodash';
 
 export default {
 
@@ -41,18 +40,7 @@ export default {
     methods: {
         loadBreakdowns(cache = true) {
             this.$broadcast('reloadPage');
-            // if (this.wbs_id) {
-            //     this.loading = true;
-            //     $.ajax({
-            //         dataType: 'json', cache
-            //     }).success(response => {
-            //         this.loading = false;
-            //         this.breakdowns = response;
-            //     }).error(() => {
-            //         this.loading = false;
-            //         this.breakdowns = [];
-            //     });
-            // }
+
         },
 
         deleteResource(resource) {
@@ -115,25 +103,24 @@ export default {
             });
         },
 
-        doRollup(activity) {
-            const codes = this.breakdowns[activity].reduce((unique, r) => {
-                if (!unique.includes(r.code)) {
-                    unique.push(r.code);
-                }
-
-                return unique;
-            }, []);
-
+        doRollup(activity_code) {
             const _token = document.querySelector('meta[name=csrf-token]').content;
 
             this.loading = true;
             $.ajax({
-                url: `/project/${this.project}/activity-rollup`,
-                data: { codes, _token },
+                url: `/project/${this.project}/rollup-activity`,
+                data: { codes: [activity_code], _token },
                 dataType: 'json',
                 method: 'put'
-            }).then(() => {
-                this.loadBreakdowns();
+            }).then(response => {
+                if (response.ok) {
+                    this.loadBreakdowns();
+                }
+
+                this.$dispatch('request_alert', {
+                    type: response.ok ? 'info' : 'error', message: response.message
+                });
+
                 this.loading = false;
             }, () => {
                 this.loading = false;
@@ -158,7 +145,8 @@ export default {
         },
 
         pageChanged(data) {
-            this.breakdowns = _.groupBy(data, 'activity');
+            this.breakdowns = data;
+
             // this.breakdowns = data;
             this.loading = false;
         },

@@ -15,14 +15,13 @@ use App\WbsLevel;
 use App\WbsResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Fluent;
 
 
 class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
-//        set_time_limit(180);
-
         $period = $wbs_level->project->open_period();
 
         $perspective = $request->get('perspective');
@@ -52,14 +51,31 @@ class CostController extends Controller
             });
         }
 
-        $rows = $query->paginate(100);
+        $query->orderBy('activity')->orderBy('code');
 
-        $rows->each(function (BreakDownResourceShadow $resource) {
-            $resource->appendFields();
-        });
+        $page = request('page', 1);
+        $perPage = 100;
+        $total = ceil($query->count() / $perPage);
 
+        $rows = $query->forPage($page, $perPage)->get()
+            ->reduce(function (\Illuminate\Support\Collection $collection, $resource) {
+                $resource->appendFields();
 
-        return $rows;
+                $code = $resource->code;
+                $activity = $resource->activity;
+                if (!$collection->has($code)) {
+                    $collection->put($code, new Fluent([
+                        'code' => $code,
+                        'activity' => $activity,
+                        'resources' => collect()
+                    ]));
+                }
+
+                $collection->get($code)->resources->push($resource);
+                return $collection;
+            }, collect());
+
+        return ['total' => $total, 'current_page' => $page, 'perPage' => $perPage, 'data' => $rows];
     }
 
     function activityLog(WbsLevel $wbs_level, Request $request)
