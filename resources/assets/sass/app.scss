@@ -849,9 +849,8 @@ dl.dl-margin{
 
 .breakdown-resource {
   padding: 10px;
-  font-size: 12px;
   border-bottom: 1px solid #b8d0e0;
-
+  align-items: flex-start;
 
   &:hover, &:nth-child(odd):hover, &.active, &.highlight:hover {
     background-color: #fefef0;
@@ -870,6 +869,10 @@ dl.dl-margin{
   &.highlight {
     background-color: #ffc;
     border-bottom: 1px solid #f4ed25;
+  }
+
+  .actions {
+    margin-left: 10px;
   }
 
   .actions .btn {

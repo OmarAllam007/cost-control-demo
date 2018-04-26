@@ -21,6 +21,8 @@
     export default {
         props: ['url', 'property'],
 
+        name: 'LaravelPagination',
+
         data() {
             return {page: 1, totalPages: 1, cardinality: 8}
         },

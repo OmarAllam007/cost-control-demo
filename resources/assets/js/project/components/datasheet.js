@@ -38,6 +38,10 @@ export default {
     //</editor-fold>
 
     methods: {
+        loadBreakdowns() {
+
+        },
+
         deleteResource(resource) {
             this.$broadcast('show_delete_resource', resource);
         },
