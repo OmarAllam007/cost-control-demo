@@ -7,7 +7,7 @@
 @stop
 
 @section('body')
-    {{ Form::open(['route' => 'survey.store']) }}
+    {{ Form::open(['route' => ['survey.store', 'iframe' => 1]]) }}
 
     @include('survey._form')
 

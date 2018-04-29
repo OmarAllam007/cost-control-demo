@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 11/15/17
- * Time: 2:36 PM
- */
 
 namespace App\Reports\Cost;
-
 
 use App\ActualRevenue;
 use App\BreakDownResourceShadow;
@@ -15,10 +8,30 @@ use App\BudgetRevision;
 use App\CostManDay;
 use App\MasterShadow;
 use App\Period;
+use App\Project;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Revision\RevisionBreakdownResourceShadow;
+use function basename;
 use Carbon\Carbon;
+use function dd;
+use function env;
+use function escapeshellarg;
+use function escapeshellcmd;
+use function file_exists;
+use function file_put_contents;
+use function flash;
+use FontLib\TrueType\Collection;
 use Illuminate\Support\Fluent;
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Reader_Excel2007;
+use PHPExcel_Style_Color;
+use PHPExcel_Writer_Excel2007;
+use function request;
+use Response;
+use function storage_path;
+use function str_random;
+use function unlink;
 
 class ProjectInfo
 {
@@ -27,6 +40,9 @@ class ProjectInfo
 
     /** @var Project */
     private $project;
+
+    /** @var Collection */
+    private $costSummary;
 
     public function __construct(Period $period)
     {
@@ -48,16 +64,7 @@ class ProjectInfo
 
     function getInfo()
     {
-        $this->costSummary = MasterShadow::dashboardSummary($this->period)->get();
-
-        if ($this->costSummary->has('MANAGEMENT RESERVE')) {
-            $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
-            $reserve->completion_cost = $reserve->remaining_cost = 0;
-            $reserve->completion_cost_var = $reserve->budget_cost;
-
-            $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->cost_summary->sum('budget_cost'));
-            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
-        }
+        $this->costSummary();
 
         $this->wasteIndexTrend = $this->project->periods()->latest('id')
             ->where('global_period_id', '>=', 12)
@@ -74,8 +81,18 @@ class ProjectInfo
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
         $this->cpiTrend = MasterShadow::where('master_shadows.project_id', $this->project->id)
-            ->cpiTrendChart()->get()->reverse()->map(function ($item) {
-                $item->value = round($item->value, 4);
+            ->cpiTrendChart()->get()->reverse()->groupBy('p_id')->map(function ($period_items) {
+                $items = $period_items->keyBy('resource_type_id');
+                $allowable_cost = $items->sum('allowable_cost');
+                $to_date_cost = $items->sum('to_date_cost');
+                $reserve = $items->get(8, new Fluent());
+                $budget_cost = $items->sum('budget_cost') - $reserve->budget_cost;
+                $to_date_reserve = $reserve->budget_cost * $to_date_cost / $budget_cost;
+                $allowable_cost += $to_date_reserve;
+
+                $item = new Fluent();
+                $item->p_name = $period_items->pluck('p_name')->first();
+                $item->value = round($allowable_cost/$to_date_cost, 4);
                 return $item;
             });
 
@@ -111,40 +128,240 @@ class ProjectInfo
             'remaining_cost_percentage' => $this->remaining_cost_percentage,
             'actualRevenue' => $this->actualRevenue,
             'budgetInfo' => $this->getBudgetInfo(),
-            'costInfo' => $this->getCostInfo()
+            'costInfo' => $this->getCostInfo(),
+            'completionValues' => $this->completionValues,
         ];
+    }
+
+    function pdf()
+    {
+        $output_file = $this->createPdf();
+
+        if (!$output_file) {
+            flash('Failed to generate PDF');
+            return redirect()->to(request()->path());
+        }
+
+        return response()->download($output_file,
+            slug($this->project->name) . '-' . slug($this->period->name) . '-dashboard.pdf')
+            ->deleteFileAfterSend(true);
     }
 
     function excel()
     {
+        $excel = new PHPExcel();
+        $excel->removeSheetByIndex(0);
+        $excel->addExternalSheet($this->sheet());
 
+
+        /** @var PHPExcel_Writer_Excel2007 $writer */
+        $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $writer->setOffice2003Compatibility(false)->setIncludeCharts(true);
+        $writer->save($filename = storage_path('app/' . str_random() . '.xlsx'));
+
+        return Response::download($filename, slug($this->project->name) . '-dashboard.xlsx')
+            ->deleteFileAfterSend(true);
+    }
+
+    function sheet()
+    {
+        $data = $this->run();
+
+        $template = storage_path('templates/dashboard.xlsx');
+        /** @var PHPExcel_Reader_Excel2007 $reader */
+        $reader = PHPExcel_IOFactory::createReaderForFile($template);
+        $reader->setIncludeCharts(true);
+        $file = $reader->load($template);
+        $sheet = $file->getSheet(0);
+
+        $projectCell = $sheet->getCell('A4');
+        $issueDateCell = $sheet->getCell('A5');
+
+        $projectCell->setValue($projectCell->getValue() . ' ' . $data['project']->name);
+        $issueDateCell->setValue($issueDateCell->getValue() . ' ' . date('d M Y'));
+
+        $logo = imagecreatefrompng(public_path('images/kcc.png'));
+        $drawing = new \PHPExcel_Worksheet_MemoryDrawing();
+        $drawing->setName('Logo')->setImageResource($logo)
+            ->setRenderingFunction(\PHPExcel_Worksheet_MemoryDrawing::RENDERING_PNG)
+            ->setMimeType(\PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
+            ->setCoordinates('K2')->setWorksheet($sheet);
+
+        $sheet->getStyle('A1:N125')->getBorders()->getOutline()
+            ->setBorderStyle('thick')->setColor(new PHPExcel_Style_Color('#1F9D55'));
+
+        // Contract information
+        $sheet->setCellValue('C10', $data['project']->project_contract_signed_value);
+        $sheet->setCellValue('C12', $data['project']->tender_initial_profit);
+        $sheet->setCellValue('H10', $data['project']->project_duration);
+        $sheet->setCellValue('H12', $data['project']->tender_initial_profitability_index/100);
+        $sheet->setCellValue('M10', $data['project']->project_start_date? \Carbon\Carbon::parse($data['project']->project_start_date)->format('d M Y') : '');
+        $sheet->setCellValue('M12', $data['project']->expected_finish_date? \Carbon\Carbon::parse($data['project']->expected_finish_date)->format('d M Y') : '');
+
+        // Revised Contract information
+        $sheet->setCellValue('C16', $data['period']->change_order_amount);
+        $sheet->setCellValue('C18', $data['period']->contract_value);
+        $sheet->setCellValue('H16', $data['period']->time_extension);
+        $sheet->setCellValue('H18', $data['period']->expected_duration);
+        $sheet->setCellValue('M16', $data['project']->project_start_date? \Carbon\Carbon::parse($data['project']->project_start_date)->format('d M Y') : '');
+        $sheet->setCellValue('M18', $data['period']->planned_finish_date->format('d M Y'));
+
+        // Budget Data
+        //Revision 0
+        $sheet->setCellValue('E23', $data['budgetInfo']['revision0']['budget_cost']);
+        $sheet->setCellValue('E24', $data['budgetInfo']['revision0']['direct_cost']);
+        $sheet->setCellValue('E25', $data['budgetInfo']['revision0']['indirect_cost']);
+        $sheet->setCellValue('E26', $data['budgetInfo']['revision0']['management_reserve']);
+        $sheet->setCellValue('E27', $data['budgetInfo']['revision0']['eac_contract_amount']);
+        $sheet->setCellValue('E28', $data['budgetInfo']['revision0']['profit']);
+        $sheet->setCellValue('E29', $data['budgetInfo']['revision0']['profitability_index'] / 100);
+        // Last Revision
+        $sheet->setCellValue('J23', $data['budgetInfo']['revision1']['budget_cost']);
+        $sheet->setCellValue('J24', $data['budgetInfo']['revision1']['direct_cost']);
+        $sheet->setCellValue('J25', $data['budgetInfo']['revision1']['indirect_cost']);
+        $sheet->setCellValue('J26', $data['budgetInfo']['revision1']['management_reserve']);
+        $sheet->setCellValue('J27', $data['budgetInfo']['revision1']['eac_contract_amount']);
+        $sheet->setCellValue('J28', $data['budgetInfo']['revision1']['profit']);
+        $sheet->setCellValue('J29', $data['budgetInfo']['revision1']['profitability_index'] / 100);
+
+        //Actual Data
+        $sheet->setCellValue('C33', $data['costInfo']['actual_cost']);
+        $sheet->setCellValue('C35', $data['costInfo']['allowable_cost']);
+        $sheet->setCellValue('C37', $data['costInfo']['cpi']);
+        $sheet->setCellValue('C39', $data['costInfo']['variance']);
+        $sheet->setCellValue('C41', $data['costInfo']['cost_progress']/100);
+
+        $sheet->setCellValue('H33', $data['period']->time_elapsed);
+        $sheet->setCellValue('H35', $data['period']->time_remaining);
+        $sheet->setCellValue('H37', $data['period']->actual_duration);
+        $sheet->setCellValue('H39', $data['period']->duration_variance);
+        $sheet->setCellValue('H41', $data['period']->actual_progress/100);
+
+        $sheet->setCellValue('M33', $data['project']->actual_start_date? Carbon::parse($data['project']->actual_start_date)->format('d M Y') : '');
+        $sheet->setCellValue('M35', $data['period']->forecast_finish_date? Carbon::parse($data['period']->forecast_finish_date)->format('d M Y') : '');
+        $sheet->setCellValue('M37', $data['period']->spi_index);
+        $sheet->setCellValue('M39', $data['costInfo']['waste_index']/100);
+        $sheet->setCellValue('M41', $data['period']->eac_profitability_index / 100);
+
+        // Cost Summary
+        $sheet->setCellValue('C47', $data['costSummary']['DIRECT']->budget_cost);
+        $sheet->setCellValue('C48', $data['costSummary']['INDIRECT']->budget_cost);
+        $sheet->setCellValue('C49', $data['costSummary']['MANAGEMENT RESERVE']->budget_cost);
+        $sheet->setCellValue('C50', $data['costSummary']->sum('budget_cost'));
+
+        $sheet->setCellValue('D47', $data['costSummary']['DIRECT']->previous_cost);
+        $sheet->setCellValue('D48', $data['costSummary']['INDIRECT']->previous_cost);
+        $sheet->setCellValue('D49', $data['costSummary']['MANAGEMENT RESERVE']->previous_cost);
+        $sheet->setCellValue('D50', $data['costSummary']->sum('previous_cost'));
+
+        $sheet->setCellValue('E47', $data['costSummary']['DIRECT']->allowable_cost);
+        $sheet->setCellValue('E48', $data['costSummary']['INDIRECT']->allowable_cost);
+        $sheet->setCellValue('E49', $data['costSummary']['MANAGEMENT RESERVE']->allowable_cost);
+        $sheet->setCellValue('E50', $data['costSummary']->sum('allowable_cost'));
+
+        $sheet->setCellValue('F47', $data['costSummary']['DIRECT']->to_date_cost);
+        $sheet->setCellValue('F48', $data['costSummary']['INDIRECT']->to_date_cost);
+        $sheet->setCellValue('F49', $data['costSummary']['MANAGEMENT RESERVE']->to_date_cost);
+        $sheet->setCellValue('F50', $data['costSummary']->sum('to_date_cost'));
+
+        $sheet->setCellValue('G47', $data['costSummary']['DIRECT']->to_date_var);
+        $sheet->setCellValue('G48', $data['costSummary']['INDIRECT']->to_date_var);
+        $sheet->setCellValue('G49', $data['costSummary']['MANAGEMENT RESERVE']->to_date_var);
+        $sheet->setCellValue('G50', $data['costSummary']->sum('to_date_var'));
+
+        $sheet->setCellValue('H47', $data['costSummary']['DIRECT']->remaining_cost);
+        $sheet->setCellValue('H48', $data['costSummary']['INDIRECT']->remaining_cost);
+        $sheet->setCellValue('H49', $data['costSummary']['MANAGEMENT RESERVE']->remaining_cost);
+        $sheet->setCellValue('H50', $data['costSummary']->sum('remaining_cost'));
+
+        $sheet->setCellValue('I47', $data['costSummary']['DIRECT']->completion_cost_optimistic);
+        $sheet->setCellValue('I48', $data['costSummary']['INDIRECT']->completion_cost_optimistic);
+        $sheet->setCellValue('I49', $data['costSummary']['MANAGEMENT RESERVE']->completion_cost_optimistic);
+        $sheet->setCellValue('I50', $data['costSummary']->sum('completion_cost_optimistic'));
+
+        $sheet->setCellValue('J47', $data['costSummary']['DIRECT']->completion_cost_likely);
+        $sheet->setCellValue('J48', $data['costSummary']['INDIRECT']->completion_cost_likely);
+        $sheet->setCellValue('J49', $data['costSummary']['MANAGEMENT RESERVE']->completion_cost_likely);
+        $sheet->setCellValue('J50', $data['costSummary']->sum('completion_cost_likely'));
+
+        $sheet->setCellValue('K47', $data['costSummary']['DIRECT']->completion_cost_pessimistic);
+        $sheet->setCellValue('K48', $data['costSummary']['INDIRECT']->completion_cost_pessimistic);
+        $sheet->setCellValue('K49', $data['costSummary']['MANAGEMENT RESERVE']->completion_cost_pessimistic);
+        $sheet->setCellValue('K50', $data['costSummary']->sum('completion_cost_pessimistic'));
+
+
+        $sheet->setCellValue('L47', $data['costSummary']['DIRECT']->completion_var_optimistic);
+        $sheet->setCellValue('L48', $data['costSummary']['INDIRECT']->completion_var_optimistic);
+        $sheet->setCellValue('L49', $data['costSummary']['MANAGEMENT RESERVE']->completion_var_optimistic);
+        $sheet->setCellValue('L50', $data['costSummary']->sum('completion_var_optimistic'));
+
+        $sheet->setCellValue('M47', $data['costSummary']['DIRECT']->completion_var_likely);
+        $sheet->setCellValue('M48', $data['costSummary']['INDIRECT']->completion_var_likely);
+        $sheet->setCellValue('M49', $data['costSummary']['MANAGEMENT RESERVE']->completion_var_likely);
+        $sheet->setCellValue('M50', $data['costSummary']->sum('completion_var_likely'));
+
+        $sheet->setCellValue('N47', $data['costSummary']['DIRECT']->completion_var_pessimistic);
+        $sheet->setCellValue('N48', $data['costSummary']['INDIRECT']->completion_var_pessimistic);
+        $sheet->setCellValue('N49', $data['costSummary']['MANAGEMENT RESERVE']->completion_var_pessimistic);
+        $sheet->setCellValue('N50', $data['costSummary']->sum('completion_var_pessimistic'));
+
+        //CPI Trend
+        $sheet->fromArray($data['cpiTrend']->pluck('p_name')->toArray(), null, 'AA69', true);
+        $sheet->fromArray($data['cpiTrend']->pluck('value')->toArray(), null, 'AA70', true);
+
+        // SPI Trend
+        $sheet->fromArray($data['spiTrend']->pluck('name')->toArray(), null, 'AA72', true);
+        $sheet->fromArray($data['spiTrend']->pluck('spi_index')->toArray(), null, 'AA73', true);
+
+        // Waste Index Trend
+        $sheet->fromArray($data['wasteIndexTrend']->pluck('name')->toArray(), null, 'AA76', true);
+        $sheet->fromArray($data['wasteIndexTrend']->pluck('value')->toArray(), null, 'AA77', true);
+
+        // Productivity Index Trend
+        $sheet->fromArray($data['productivityIndexTrend']->pluck('name')->toArray(), null, 'AA80', true);
+        $sheet->fromArray($data['productivityIndexTrend']->pluck('value')->toArray(), null, 'AA81', true);
+
+        // Progress Charts
+        $sheet->fromArray([$data['actual_cost_percentage'] / 100, $data['remaining_cost_percentage']/ 100], null, 'AA84', true);
+        $sheet->fromArray([$data['period']->actual_progress / 100, $data['period']->planned_progress/ 100], null, 'AA87', true);
+        $sheet->fromArray([$data['period']->planned_value, $data['period']->earned_value, $data['period']->actual_invoice_value], null, 'AA90', true);
+
+        $sheet->setShowGridlines(false)->setPrintGridlines(false);
+        return $sheet;
     }
 
     private function getProductivityIndexTrend()
     {
-        $periods = $this->project->periods()
+//        $periods = $this->project->periods()
+//            ->where('status', Period::GENERATED)
+//            ->where('global_period_id', '>=', 12)->take(6)->pluck('name', 'id');
+//
+//        $allowable_qty = MasterShadow::whereIn('period_id', $periods->keys())
+//            ->where('resource_type_id', 2)
+//            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
+//
+//        $cost_man_days = CostManDay::whereIn('period_id', $periods->keys()->toArray())
+//            ->selectRaw('period_id, sum(actual) as actual')
+//            ->groupBy('period_id')->get()->keyBy('period_id');
+//
+//        return $allowable_qty->map(function ($period) use ($cost_man_days, $periods) {
+//            $actual = $cost_man_days->get($period->period_id)->actual ?? 0;
+//            $value = 0;
+//            if ($actual) {
+//                $value = $period->allowable_qty / $actual;
+//            }
+//
+//            $name = $periods->get($period->period_id, '');
+//
+//            return new Fluent(compact('name', 'value'));
+//        });
+
+        return $this->project->periods()->latest('global_period_id')->take(6)
+            ->selectRaw('id, name, productivity_index as value')
+//            ->whereNotNull('productivity_index')
+            ->where('global_period_id', '>=', 12)
             ->where('status', Period::GENERATED)
-            ->where('global_period_id', '>=', 12)->take(6)->pluck('name', 'id');
-
-        $allowable_qty = MasterShadow::whereIn('period_id', $periods->keys())
-            ->where('resource_type_id', 2)
-            ->groupBy('period_id')->selectRaw('period_id, sum(allowable_qty) as allowable_qty')->get();
-
-        $cost_man_days = CostManDay::whereIn('period_id', $periods->keys()->toArray())
-            ->selectRaw('period_id, sum(actual) as actual')
-            ->groupBy('period_id')->get()->keyBy('period_id');
-
-        return $allowable_qty->map(function ($period) use ($cost_man_days, $periods) {
-            $actual = $cost_man_days->get($period->period_id)->actual ?? 0;
-            $value = 0;
-            if ($actual) {
-                $value = $period->allowable_qty / $actual;
-            }
-
-            $name = $periods->get($period->period_id, '');
-
-            return new Fluent(compact('name', 'value'));
-        });
+            ->get()->reverse()->keyBy('id');
     }
 
     private function getActualRevenue()
@@ -187,8 +404,8 @@ class ProjectInfo
             $revision1['profitability_index'] = $this->project->planned_profitability;
         }
 
-        $revision0['indirect_cost'] = $revision0['general_requirements'] + $revision0['management_reserve'];
-        $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'];
+        $revision0['indirect_cost'] = $revision0['general_requirements'];
+        $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'] - $revision0['management_reserve'];
 
         $latest = BudgetRevision::where('project_id', $this->project->id)->where('is_generated', 1)->latest()->first();
 
@@ -216,8 +433,8 @@ class ProjectInfo
             $revision1['profitability_index'] = $this->project->planned_profitability;
         }
 
-        $revision1['indirect_cost'] = $revision1['general_requirements'] + $revision1['management_reserve'];
-        $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'];
+        $revision1['indirect_cost'] = $revision1['general_requirements'];
+        $revision1['direct_cost'] = $revision1['budget_cost'] - $revision1['indirect_cost'] - $revision1['management_reserve'];
 
         return compact('revision0', 'revision1');
     }
@@ -226,8 +443,8 @@ class ProjectInfo
     {
         $info = [
             'spi' => $this->period->spi_index,
-            'actual_cost' => MasterShadow::where('period_id', $this->period->id)->sum('to_date_cost'),
-            'allowable_cost' => MasterShadow::where('period_id', $this->period->id)->sum('allowable_ev_cost'),
+            'actual_cost' => $this->costSummary->sum('to_date_cost'),
+            'allowable_cost' => $this->costSummary->sum('allowable_cost'),
         ];
 
         $budget_cost = MasterShadow::where('period_id', $this->period->id)->sum('budget_cost');
@@ -236,10 +453,63 @@ class ProjectInfo
         $info['cpi'] = $info['allowable_cost'] / $info['actual_cost'];
         $info['cost_progress'] = $info['actual_cost'] * 100 / $budget_cost;
         $info['waste_index'] = $this->wasteIndex ?? 0;
-        $info['time_progress'] = $this->period->actual_progress;
+        $info['time_progress'] = $this->period->actual_time_progress;
         $info['productivity_index'] = $this->productivityIndexTrend->where('period_id', $this->period->id)->value ?? 0;
         $info['actual_start_date'] = $this->project->actual_start_date;
 
         return $info;
+    }
+
+    private function costSummary()
+    {
+        $this->costSummary = MasterShadow::dashboardSummary($this->period)->get()->keyBy('type');
+
+        if ($this->costSummary->has('MANAGEMENT RESERVE')) {
+            $reserve = $this->costSummary->get('MANAGEMENT RESERVE');
+            $reserve->completion_cost = $reserve->remaining_cost = 0;
+            $reserve->completion_cost_likely = $reserve->completion_cost_optimistic = $reserve->completion_cost_pessimestic = 0;
+            $reserve->completion_var = $reserve->budget_cost;
+            $reserve->completion_var_likely = $reserve->budget_cost;
+            $reserve->completion_var_optimistic = $reserve->budget_cost;
+            $reserve->completion_var_pessimistic = $reserve->budget_cost;
+
+            $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->costSummary->sum('budget_cost'));
+            $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+        }
+
+        $this->completionValues = [
+            $this->costSummary->sum('completion_cost_optimistic'),
+            $this->costSummary->sum('completion_cost_likely'),
+            $this->costSummary->sum('completion_cost_pessimistic'),
+        ];
+
+        sort($this->completionValues);
+
+        return $this->costSummary;
+    }
+
+    public function createPdf()
+    {
+        if (!env('CHROME_PATH')) {
+            return false;
+        }
+
+        $data = $this->run();
+        $data['print'] = 1;
+
+        $content = view('reports.cost-control.project-info.index', $data)->render();
+        $str_random = str_random(8);
+        $filename = storage_path('app/public/' . $str_random . '.html');
+        file_put_contents($filename, $content);
+
+        $chrome = escapeshellcmd(env('CHROME_PATH'));
+        $filepath = url('/storage/' . basename($filename));
+        $output_file = storage_path('app/' . $str_random . '.pdf');
+
+        exec($command = "'$chrome' --headless --window-size=1280,720 --disable-gpu --print-to-pdf='$output_file' '$filepath' 2>/dev/null");
+
+        @unlink($filename);
+
+        return file_exists($output_file)? $output_file : false;
     }
 }

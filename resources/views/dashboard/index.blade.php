@@ -1,5 +1,5 @@
 @php
-    $print = request()->exists('print');
+    $print = $print ?? request()->exists('print');
     $layout = ($print? 'print' : 'app');
 @endphp
 @extends("layouts.{$layout}")
@@ -14,6 +14,7 @@
             <div class="btn-toolbar">
                 <a href="?refresh" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i> Refresh</a>
                 <a href="?print" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print</a>
+                <a href="{{url('/dashboard/send')}}" class="btn btn-primary btn-sm"><i class="fa fa-send"></i> Send Dashboard</a>
             </div>
         @endif
     </div>
@@ -34,14 +35,15 @@
 
 
             <section class="row">
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <article class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">CPI Trend Analysis</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Cost Performance Index (CPI) Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
                                  id="cpiTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$cpi_trend->pluck('name')}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'CPI Index',
@@ -54,14 +56,15 @@
                     </article>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <article class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">SPI Trend Analysis</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Schedule Performance Index (SPI) Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
                                  id="spiTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$spi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'SPI Index',
@@ -76,14 +79,15 @@
             </section>
 
             <section class="row">
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item chart-style">
-                        <h4 class="card-title card-group-item-heading">Material Consumption Index Trend Analysis</h4>
+                        <h4 class="card-title card-group-item-heading">Material Consumption Index Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
                                  id="wasteIndexTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$waste_index_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Material Consumption Index',
@@ -95,14 +99,15 @@
                         </div>
                     </section>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend Analysis</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
                                  id="prodIndexTrendChart"
                                  data-type="line"
+                                 data-formatter="number_3"
                                  data-labels="{{$pi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Productivity Index',
@@ -117,33 +122,36 @@
             </section>
 
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Cost Percentage</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Cost Performance</h4>
 
-                        <div class="card-body">
+                        <div class="card-body pie-chart">
                             <div class="chart"
                                  id="costChart"
                                  data-type="pie"
+                                 data-formatter="percent"
+                                 data-animate="false"
                                  data-labels="{{json_encode(['Actual Cost', 'Remaining Cost'])}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Cost Percentage',
                                     'data' => $cost_percentage_chart,
-                                    'backgroundColor' => [ 'rgba(217, 225, 242, 0.6)', 'rgba(0, 32, 96, 0.9)']
+                                    'backgroundColor' => [ 'rgba(38,89,137,.6)', 'rgba(0, 32, 96, 0.9)']
                                 ]) }}]"
                                  style="height: 200px"></div>
                         </div>
                     </section>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Progress Percentage</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Time Performance</h4>
 
                         <div class="card-body">
                             <div class="chart"
                                  id="costChart"
                                  data-type="horizontalBar"
+                                 data-formatter="percent"
                                  data-labels="{{json_encode(['Actual', 'Planned'])}}"
                                  data-datasets="[{{ json_encode([
                                     'label' => 'Progress',
@@ -208,6 +216,10 @@
 
         .card .table > tbody > tr.high-risk-project > th.separator, .card .table > tbody > tr.high-risk-project > td.separator {
             background-color: transparent;
+        }
+
+        .card-group-item .pie-chart canvas {
+            max-width: initial;
         }
     </style>
 @endsection

@@ -31,9 +31,17 @@ class CostReportsController extends Controller
     {
         $period_id = $this->getPeriod($project, $request);
 
-        $projectInfo = new ProjectInfo(Period::find($period_id));
+        $report = new ProjectInfo(Period::find($period_id));
 
-        return view('reports.cost-control.project-info.index', $projectInfo->run());
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
+
+        if ($request->exists('pdf')) {
+            return $report->pdf();
+        }
+
+        return view('reports.cost-control.project-info.index', $report->run());
     }
 
     public function costSummary(Project $project, Request $request)
@@ -97,13 +105,14 @@ class CostReportsController extends Controller
         $period = $project->periods()->find($period_id);
 
         $boq = new BoqReport($period);
-        $data = $boq->run();
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.boq-report.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-boq.xlsx');
+            return $boq->excel();
+//            $filename = view('reports.cost-control.boq-report.excel', $data)->render();
+//            return response()->download($filename, slug($project->name) . '-boq.xlsx');
         }
 
+        $data = $boq->run();
         return view('reports.cost-control.boq-report.index', $data);
     }
 
@@ -112,14 +121,14 @@ class CostReportsController extends Controller
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
 
-        $resourceCodeReport = new ResourceCodeReport($project, $period);
-        $data = $resourceCodeReport->run();
+        $resourceCodeReport = new ResourceCodeReport($period);
+
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.resource_code.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-resource_dict.xlsx');
+            return $resourceCodeReport->excel();
         }
 
+        $data = $resourceCodeReport->run();
         return view('reports.cost-control.resource_code.index', $data);
     }
 
@@ -172,13 +181,12 @@ class CostReportsController extends Controller
         $period = Period::find($period_id);
 
         $report = new VarianceAnalysisReport($period);
-        $data = $report->run();
 
         if ($request->exists('excel')) {
-            $filename = view('reports.cost-control.variance_analysis.excel', $data)->render();
-            return response()->download($filename, slug($project->name) . '-variance-analysis.xlsx');
+            return $report->excel();
         }
 
+        $data = $report->run();
         return view('reports.cost-control.variance_analysis.index', $data);
     }
 

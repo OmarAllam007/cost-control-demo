@@ -124,7 +124,7 @@ Route::group(['prefix' => 'breakdown'], function () {
     Route::post('filters/{project}', ['as' => 'breakdown.filters', 'uses' => 'BreakdownController@filters']);
     Route::delete('wipe/{wbs_level}', ['as' => 'breakdown.wipe', 'uses' => 'BreakdownResourceController@wipe']);
 
-    Route::get('copy-wbs/{source_wbs}/{target_wbs}', 'BreakdownResourceController@copy_wbs');
+    Route::post('copy-wbs/{source_wbs}/{target_wbs}', 'BreakdownResourceController@copy_wbs');
 });
 
 Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
@@ -277,9 +277,6 @@ Route::put('project/{project}/rollup-activity', 'Rollup\ActivityRollupController
 Route::get('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollupController@create');
 Route::post('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollupController@store');
 
-Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
-Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
-Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
 Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');
     Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
@@ -289,3 +286,17 @@ Route::group(['prefix' => '/api/rollup/'], function () {
     Route::post('summarize/{wbs}/cost-account', 'Rollup\Api\CostAccountSumController@store');
     Route::post('summarize/{wbs}/activity', 'Rollup\Api\ActivitySumController@store');
 });
+
+Route::get('/project/{project}/modify-breakdown', 'ModifyBreakdownController@edit')->name('project.breakdown.import');
+Route::put('/project/{project}/modify-breakdown', 'ModifyBreakdownController@update')->name('project.breakdown.export');
+Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownController@index')->name('project.breakdown.export');
+
+Route::get('/dashboard/send', 'DashboardController@send');
+Route::post('/dashboard/send', 'DashboardController@postSend');
+
+Route::get('activity-log/{wbs}/{code}', 'ActivityLogController@show')->name('activity-log.show');
+Route::get('activity-log/{wbs}/{code}/excel', 'ActivityLogController@excel')->name('activity-log.excel');
+Route::get('/api/activity-log/{wbs}/{code}', 'Api\ActivityLogController@show');
+
+Route::get('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@create')->name('breakdown-template.import-to-project');
+Route::post('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@store');

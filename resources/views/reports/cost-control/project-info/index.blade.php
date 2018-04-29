@@ -1,4 +1,4 @@
-@php $print = request()->exists('print') @endphp
+@php $print = $print ?? request()->exists('print') @endphp
 @extends('layouts.' . ($print? 'print' : 'app'))
 @if(request('all'))
     @include('reports.all._budget_cost_by_break_down')
@@ -18,6 +18,7 @@
                 {{--<a href="?excel" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-cloud-download"></i>
                     Excel</a>--}}
                 <a href="?refresh" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Refresh</a>
+                <a href="?pdf" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-cloud-download"></i> PDF</a>
                 <a href="?print=1" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Print</a>
                 <a href="{{URL::previous()}}#report" class="btn btn-default btn-sm pull-right"><i
                             class="fa fa-chevron-left"></i> Back</a>
@@ -55,16 +56,16 @@
     @include('reports.partials.cost-summary', $costSummary)
 
     <section class="row info-section">
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.cpi-chart')
         </div>
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.spi-chart')
         </div>
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.waste_index_chart')
         </div>
-        <div class="col-md-6">
+        <div class="col-md-{{$print? 12 : 6}}">
             @include('reports.cost-control.project-info.productivity_index_chart')
         </div>
         <div class="col-md-12">
@@ -78,10 +79,15 @@
 @endsection
 
 @section('javascript')
-    <script src="/js/cost-info-charts.js"></script>
+    <script src="{{asset('/js/cost-info-charts.js')}}"></script>
 @append
 
 @section('css')
+    <style>
+        .card-group-item .pie-chart canvas {
+            max-width: initial;
+        }
+    </style>
     {{--<style>--}}
     {{--.card-group-item {--}}
     {{--padding: 10px;--}}

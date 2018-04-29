@@ -74,7 +74,8 @@ class BreakdownResourceFormatter implements \JsonSerializable
             'boq_id' => $boq->id ?? 0,
             'boq_wbs_id' => $boq->wbs_id ?? 0,
             'survey_id' => $qs->id ?? 0, 'boq_qs_id' => $boq_qs->id ?? 0,
-            'important' => $this->resource->important
+            'important' => $this->resource->important,
+            'sap_code' => $this->resource->sap_code,
         ];
     }
 

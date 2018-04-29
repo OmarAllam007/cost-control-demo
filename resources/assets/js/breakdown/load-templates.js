@@ -29,20 +29,24 @@
         };
 
         var fillBreakdowns = function (options) {
-            var oldValue = templateInput.val();
+            var oldValue = templateInput.data('value');
 
             var optionsHtml = '<option value="">' + breakdownEmptyText + '</option>';
-
-            for (var key in options) {
-                var selected = '';
-                if (key == oldValue) {
+            for (let key in options) {
+                let selected = '';
+                const tpl = options[key];
+                if (tpl.id == oldValue) {
                     selected = ' selected="selected"';
                 }
-                optionsHtml += '<option value="' + key + '"' + selected +'>' + options[key] + '</option>';
+                optionsHtml += '<option value="' + tpl.id + '"' + selected +'>' + tpl.name + '</option>';
             }
 
             templateInput.html(optionsHtml);
         };
+
+        templateInput.on('change', function() {
+            $(this).data('value', $(this).val());
+        });
 
         $('.activity-input').on('change', function(){
 
@@ -56,7 +60,7 @@
                         showLoader();
                         $.ajax({ url: '/api/breakdown-template', dataType: 'json', data: {activity: value ,project_id:project}})
                             .then(function(response){
-                                fillBreakdowns(response);
+                                fillBreakdowns(response.data);
                                 hideLoader();
                             }, function(){
                                 showError('Cannot load breakdowns');

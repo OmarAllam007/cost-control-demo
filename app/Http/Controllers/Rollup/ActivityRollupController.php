@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rollup;
 
 use App\Http\Controllers\Controller;
 use App\Rollup\Actions\ActivityRollup;
+use function flash;
 use Illuminate\Http\Request;
 use App\Project;
 
@@ -12,7 +13,12 @@ class ActivityRollupController extends Controller
     // Rollup whole project
     function store(Project $project)
     {
-        $this->authorize('actual_resources', $project);
+        $this->authorize('cost_owner', $project);
+        
+        if (!$project->open_period()) {
+            flash('Cannot rollup only when there is open period');
+            return back();
+        }
 
         $codes = $project->shadows()->selectRaw('distinct code')->pluck('code');
 
@@ -26,15 +32,26 @@ class ActivityRollupController extends Controller
     // Specify activity
     function update(Project $project, Request $request)
     {
-        $this->authorize('actual_resources', $project);
+        $this->authorize('cost_owner', $project);
 
-        $count = (new ActivityRollup($project, $request->input('codes', [])))->handle();
+        if (!$project->open_period()) {
+            $msg = 'Rollup can only be done when there is open period';
+            if (!$request->wantsJson()) {
+                return ['ok' => false, 'message' => $msg];
+            }
 
-        if ($request->wantsJson()) {
-            return ['ok' => true, 'count' => $count];
+            flash($msg);
+            return back();
         }
 
-        flash("$count activities have been rolled up", 'success');
+        $codes = collect($request->input('codes', []));
+        $count = (new ActivityRollup($project, $codes))->handle();
+
+        $msg = "$count activities have been rolled up";
+        if ($request->wantsJson()) {
+            return ['ok' => true, 'message' => $msg];
+        }
+        flash($msg, 'success');
         return redirect()->route('project.cost-control', $project);
     }
 }

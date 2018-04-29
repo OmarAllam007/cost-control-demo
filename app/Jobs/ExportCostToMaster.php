@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use function microtime;
 
 class ExportCostToMaster extends Job implements ShouldQueue
 {
@@ -53,10 +54,9 @@ class ExportCostToMaster extends Job implements ShouldQueue
     {
         MasterShadow::where('period_id', $this->period->id)->delete();
 
-        BreakDownResourceShadow::where('project_id', $this->project->id)
-//            ->where('show_in_cost', 1)
-            ->chunk(900, function ($shadows) {
-//            $start = microtime(1);
+        BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1)
+            ->chunk(800, function ($shadows) {
+                $start = microtime(1);
                 $records = [];
                 $now = Carbon::now()->format('Y-m-d H:i:s');
                 foreach ($shadows as $costShadow) {
@@ -95,7 +95,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'resource_qty' => $costShadow['resource_qty'], 'waste' => $costShadow['resource_waste'],
                         'resource_divs' => json_encode($this->getResourceDivisions($resource)),
                         'resource_code' => $costShadow['resource_code'],
-                        'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material,
+                        'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material ?? 0,
                         'unit_price' => $costShadow['unit_price'], 'measure_unit' => $costShadow['measure_unit'],
                         'budget_unit' => $costShadow['budget_unit'], 'budget_cost' => $costShadow['budget_cost'],
                         'boq_equivilant_rate' => $costShadow['boq_equivilant_rate'], 'budget_unit_rate' => $costShadow['budget_unit_rate'],
@@ -121,18 +121,25 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
                         'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
                         'created_at' => $now, 'updated_at' => $now,
+                        'completion_cost_optimistic' => $costShadow['completion_cost_optimistic'],
+                        'completion_cost_likely' => $costShadow['completion_cost_likely'],
+                        'completion_cost_pessimistic' => $costShadow['completion_cost_pessimistic'],
+                        'completion_var_optimistic' => $costShadow['completion_var_optimistic'],
+                        'completion_var_likely' => $costShadow['completion_var_likely'],
+                        'completion_var_pessimistic' => $costShadow['completion_var_pessimistic'],
+                        //'pw_index' => $costShadow['pw_index']
                     ];
-
                 }
 
                 \DB::transaction(function () use ($records) {
                     MasterShadow::insert($records);
                 });
 
-//            $time = microtime(1) - $start;
                 unset($shadows, $records);
                 gc_collect_cycles();
-//            \Log::info("Chunk has been buffered; memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4) . '; Insert time: ' . round($insertTime, 4));
+
+                $time = microtime(true) - $start;
+                \Log::info("Chunk has been buffered; project: {$this->project->id} memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4));
             });
 
         $this->period->update(['status' => Period::GENERATED]);

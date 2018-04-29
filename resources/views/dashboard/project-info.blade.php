@@ -20,7 +20,7 @@
 
             <div class="flex">
                 <dl>
-                    <dt>Revised Contracts Value</dt>
+                    <dt>Rev. Contracts</dt>
                     <dd>{{number_format($contracts_info['revised'], 2)}}</dd>
                 </dl>
             </div>
@@ -57,8 +57,8 @@
             <tr class="bg-primary">
                 <th>Project</th>
                 <th>Planned Start (PS)</th>
-                <th>Original Duration (Days)</th>
-                <th class="br-2">Planned Finish Date (PF)</th>
+                <th>Revised Duration (Days)</th>
+                <th class="br-2">Revised Finish Date</th>
                 <th>Actual Start</th>
                 <th>Expected Duration (Days)</th>
                 <th>Forecast Finish</th>

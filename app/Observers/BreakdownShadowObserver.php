@@ -10,9 +10,11 @@ namespace App\Observers;
 
 
 use App\ActualResources;
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
 use App\WbsResource;
+use function compact;
 
 class BreakdownShadowObserver
 {
@@ -31,7 +33,7 @@ class BreakdownShadowObserver
                 'project_id' => $resource->project_id
             ];
 
-            $costShadow = CostShadow::firstOrCreate($conditions)->recalculate();
+            CostShadow::firstOrCreate($conditions)->recalculate();
 
             $latestResource = ActualResources::where('breakdown_resource_id', $resource->breakdown_resource_id)
                 ->latest()->first();
@@ -40,5 +42,18 @@ class BreakdownShadowObserver
                 $latestResource->update(['progress' => $resource->progress, 'status' => $resource->status]);
             }
         }
+
+        if ($resource->rollup_resource_id) {
+            $this->updateRollup($resource);
+        }
     }
+
+    private function updateRollup(BreakdownResourceShadow $resource)
+    {
+        //todo: needs further discussion on how to update Qty
+        $budget_cost = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->sum('budget_cost');
+        BreakDownResourceShadow::where('id', $resource->rollup_resource_id)->update(compact('budget_cost'));
+    }
+
+
 }

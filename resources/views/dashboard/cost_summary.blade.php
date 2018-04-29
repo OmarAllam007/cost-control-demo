@@ -3,36 +3,36 @@
 
     <div class="card-body">
         <table class="table table-bordered table-condensed dashboaad-cost-summary">
-        <thead>
+            <thead>
             <tr class="bg-primary">
-                <th></th>
-                <th>Budget</th>
-                <th>Allowable (EV) Cost</th>
-                <th>To Date Cost</th>
-                <th>Todate Cost Var +/-</th>
-                <th>Remaining Cost</th>
-                <th>at Completion Cost</th>
-                <th>at Completion Cost Var +/-</th>
+                <th rowspan="2"></th>
+                <th rowspan="2">Budget</th>
+                <th rowspan="2">Allowable (EV) Cost</th>
+                <th rowspan="2">To Date Cost</th>
+                <th rowspan="2">To Date Cost Var +/-</th>
+                <th rowspan="2">Remaining Cost</th>
+                <th>At Completion Cost</th>
+                <th>At Completion Cost Var +/-</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach($cost_summary as $type)
-            <tr>
-                <td>{{ $type->type }}</td>
-                <td>{{number_format($type->budget_cost, 2)}}</td>
+                <tr>
+                    <td>{{ $type->type }}</td>
+                    <td>{{number_format($type->budget_cost, 2)}}</td>
 
-                <td>{{number_format($type->allowable_cost, 2)}}</td>
-                <td>{{number_format($type->to_date_cost, 2)}}</td>
-                <td class="{{$type->to_date_var > 0? 'text-success' : 'text-danger'}}">{{number_format($type->to_date_var, 2)}}</td>
+                    <td>{{number_format($type->allowable_cost, 2)}}</td>
+                    <td>{{number_format($type->to_date_cost, 2)}}</td>
+                    <td class="{{$type->to_date_var > 0? 'text-success' : 'text-danger'}}">{{number_format($type->to_date_var, 2)}}</td>
 
-                <td>{{number_format($type->remaining_cost, 2)}}</td>
+                    <td>{{number_format($type->remaining_cost, 2)}}</td>
 
-                <td>{{number_format($type->completion_cost, 2)}}</td>
-                <td class="{{$type->completion_cost_var > 0? 'text-success' : 'text-danger'}}">{{number_format($type->completion_cost_var, 2)}}</td>
-            </tr>
+                    <td>{{number_format($type->completion_cost, 2)}}</td>
+                    <td class="{{$type->completion_cost_var> 0? 'text-success' : 'text-danger'}}">{{number_format($type->completion_cost_var, 2)}}</td>
+                </tr>
             @endforeach
-        </tbody>
-        <tfoot>
+            </tbody>
+            <tfoot>
             <tr class="info">
                 <th>Total</th>
                 <th>{{number_format($cost_summary->sum('budget_cost'), 2) }}</th>
@@ -43,7 +43,48 @@
                 <th>{{number_format($cost_summary->sum('completion_cost'), 2) }}</th>
                 <td class="{{$cost_summary->sum('completion_cost_var') > 0? 'text-success' : 'text-danger'}}">{{number_format($cost_summary->sum('completion_cost_var'), 2)}}</td>
             </tr>
-        </tfoot>
+            </tfoot>
         </table>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th class="optimistic">Optimistic</th>
+                        <th class="most-liekly">Most Likely</th>
+                        <th class="pessimistic">Pessimistic</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <th class="bg-grey">At Completion Cost</th>
+                        <td class="optimistic">{{number_format($completionValues[0], 2)}}</td>
+                        <td class="most-liekly">{{number_format($completionValues[1], 2)}}</td>
+                        <td class="pessimistic">{{number_format($completionValues[2], 2)}}</td>
+                    </tr>
+
+                    @php
+                        $budget_cost = $cost_summary->sum('budget_cost');
+                        $completion_var_optimistic = $budget_cost - $completionValues[0];
+                        $completion_var_likely = $budget_cost - $completionValues[1];
+                        $completion_var_pessimistic = $budget_cost - $completionValues[2];
+
+                    @endphp
+                    <tr>
+                        <th class="bg-grey">At Completion Cost Var +/-</th>
+                        <td class="optimistic  {{$completion_var_optimistic > 0 ? 'text-success' : 'text-danger'}}">{{number_format($completion_var_optimistic, 2)}}</td>
+                        <td class="most-liekly {{$completion_var_likely > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_likely, 2)}}</td>
+                        <td class="pessimistic {{$completion_var_pessimistic > 0 ? 'text-success' : 'text-danger'}} ">{{number_format($completion_var_pessimistic, 2)}}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
     </div>
 </section>

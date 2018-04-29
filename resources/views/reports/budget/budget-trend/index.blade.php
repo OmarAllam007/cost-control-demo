@@ -92,7 +92,7 @@
                                     <td width="150">{{number_format($activityTotals[$activity][$rev_id]['cost'] ?? 0, 2)}}</td>
                                 @endforeach
                                 <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diff, 2)}}</td>
-                                <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}</td>
+                                <td width="150" class="{{$diff > 0? 'text-danger' : ($diff < 0? 'text-success' : '')}}">{{number_format($diffPercent, 2)}}%</td>
                             </tr>
                             @foreach ($activityData as $resource => $resourceData)
                                 <tr class="{{slug($activity)}} hidden">

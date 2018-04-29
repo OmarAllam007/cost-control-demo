@@ -15,23 +15,22 @@ use App\WbsLevel;
 use App\WbsResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Fluent;
 
 
 class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
-//        set_time_limit(180);
-
         $period = $wbs_level->project->open_period();
 
         $perspective = $request->get('perspective');
 
-        $query = BreakDownResourceShadow::whereIn('wbs_id', $wbs_level->getChildrenIds())
-        ->with('actual_resources')->costOnly()->orderBy('activity')->orderBy('code');
-
-        if ($perspective !== 'budget') {
-            $query->currentOnly($period);
+        $query = BreakDownResourceShadow::with('actual_resources')->whereIn('wbs_id', $wbs_level->getChildrenIds())->costOnly();
+        if ($perspective != 'budget') {
+            $query->whereRaw(
+                "breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = $period->id)"
+            );
         }
 
         if ($activity_id = $request->get('activity')) {
@@ -52,12 +51,33 @@ class CostController extends Controller
             });
         }
 
-        $rows = $query->paginate(100);
-        $rows->each(function (BreakDownResourceShadow $resource) {
-            $resource->appendFields();
-        });
+        $query->orderBy('activity')->orderBy('code');
 
-        return $rows;
+        $page = request('page', 1);
+        $perPage = 100;
+        $total = $query->count();
+        $last_page = ceil($total / $perPage);
+
+        $rows = $query->forPage($page, $perPage)->get()
+            ->reduce(function (\Illuminate\Support\Collection $collection, $resource) {
+                $resource->appendFields();
+
+                $code = $resource->code;
+                $activity = $resource->activity;
+                if (!$collection->has($code)) {
+                    $collection->put($code, new Fluent([
+                        'code' => $code,
+                        'activity' => $activity,
+                        'wbs_id' => $resource->wbs_id,
+                        'resources' => collect()
+                    ]));
+                }
+
+                $collection->get($code)->resources->push($resource);
+                return $collection;
+            }, collect());
+
+        return ['total' => $total, 'current_page' => $page, 'perPage' => $perPage, 'last_page' => $last_page, 'data' => $rows];
     }
 
     function activityLog(WbsLevel $wbs_level, Request $request)

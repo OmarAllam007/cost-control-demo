@@ -50,9 +50,9 @@
                     <li><a href="{{route('survey.import', $project)}}" class="in-iframe" title="Import Quantity Survey">Import Qty Survey</a></li>
                     <li class="divider"></li>
                     <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
-                    @can('budget_woner', $project)
+                    @can('budget_owner', $project)
                     <li class="divider"></li>
-{{--                    <li><a href="{{route('easy-upload', $project)}}" class="in-iframe" title="Import Breakdown">Import Breakdown</a></li>--}}
+                    <li><a href="{{route('easy-upload', $project)}}" class="in-iframe" title="Import Breakdown">Import Breakdown</a></li>
                     <li><a href="{{route('project.breakdown.import', $project)}}">Modify Breakdown</a></li>
                     @endcan
                 </ul>

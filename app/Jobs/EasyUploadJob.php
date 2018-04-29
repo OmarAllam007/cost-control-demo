@@ -6,11 +6,18 @@ use App\Breakdown;
 use App\Jobs\Job;
 use App\Project;
 use App\StdActivityResource;
+use App\WbsLevel;
+use function array_add;
+use function array_pad;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
+use function ord;
+use PHPExcel;
+use PHPExcel_IOFactory;
+use function storage_path;
 
 class EasyUploadJob extends ImportJob
 {
@@ -29,7 +36,10 @@ class EasyUploadJob extends ImportJob
     /** @var Collection */
     protected $cost_accounts;
 
-    protected $status = ['success' => 0];
+    /** @var Collection */
+    protected $failed;
+
+    protected $success = 0;
 
     /** @var int */
     protected $errorFieldIndex;
@@ -39,7 +49,7 @@ class EasyUploadJob extends ImportJob
         $this->project = $project;
         $this->file = $file;
 
-        $this->status['failed'] = collect();
+        $this->failed = collect();
     }
 
     public function handle()
@@ -53,7 +63,7 @@ class EasyUploadJob extends ImportJob
 
         $sheet = $excel->getSheet(0);
 
-        $this->errorFieldIndex = ord($sheet->getHighestColumn()) - ord('A');
+        $this->errorFieldIndex = ord($sheet->getHighestColumn()) - ord('A') + 1;
 
         $rows = $sheet->getRowIterator(2);
 
@@ -64,15 +74,19 @@ class EasyUploadJob extends ImportJob
             $this->importRow($data);
         }
 
+        $status = ['success' => $this->success, 'failed' => ''];
 
-        return $this->status;
+        if ($this->failed->count()) {
+            $status['failed'] = $this->generateFailedExcel();
+        }
+
+        return $status;
     }
 
     protected function loadWbsCodes()
     {
-        $this->wbs_codes = collect(\DB::table('wbs_levels')
-            ->where('project_id', $this->project->id)
-            ->get(['id', 'code', 'parent_id']))
+        $this->wbs_codes = WbsLevel::where('project_id', $this->project->id)
+            ->get(['id', 'code', 'parent_id'])
             ->keyBy(function ($level) {
                 return strtolower($level->code);
             });
@@ -116,7 +130,7 @@ class EasyUploadJob extends ImportJob
 
         $breakdown->syncVariables($this->getVariables($data));
 
-        $this->status['success'] ++;
+        $this->success++;
     }
 
     protected function loadCostAccounts()
@@ -162,7 +176,7 @@ class EasyUploadJob extends ImportJob
 
         if ($error) {
             $data[$this->errorFieldIndex] = $error;
-            $this->status['failed']->push($data);
+            $this->failed->push($data);
             return false;
         }
 
@@ -178,6 +192,26 @@ class EasyUploadJob extends ImportJob
             ++$index;
         }
         return $vars;
+    }
+
+    private function generateFailedExcel()
+    {
+        $excel = PHPExcel_IOFactory::load(public_path('files/templates/easy-upload.xlsx'));
+        $sheet = $excel->getSheet(0);
+
+        $counter = 2;
+        foreach ($this->failed as $row) {
+            $sheet->fromArray($row, null, "A{$counter}", true);
+            ++$counter;
+        }
+
+        $sheet->getColumnDimensionByColumn($this->errorFieldIndex)->setAutoSize(true);
+
+        $basename = 'easy_upload_' . date('YmdHis') . '.xlsx';
+        $filename = storage_path('app/public/' . $basename);
+        PHPExcel_IOFactory::createWriter($excel,'Excel2007')->save($filename);
+
+        return url('/storage/' . $basename);
     }
 
 }

@@ -27,7 +27,7 @@ class EasyUploadController extends Controller
         if (!can('breakdown', $project)) {
             flash('This action is not authorized');
             if ($request->has('iframe')) {
-                return redirect('/blank');
+                return back();
             } else {
                 return redirect('/');
             }
@@ -41,11 +41,11 @@ class EasyUploadController extends Controller
 
         $status = dispatch(new EasyUploadJob($project, $file->path()));
 
-        if ($status['failed']->count()) {
+        if ($status['failed']) {
             return view('easy-upload.failed', compact('project', 'status'));
         }
 
-        flash('File has been imported successfully');
+        flash('File has been imported successfully', 'success');
         return redirect('/blank?reload=breakdowns');
     }
 }

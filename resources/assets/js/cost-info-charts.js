@@ -3,15 +3,30 @@ import Chart from 'chart.js';
 require('chartjs-plugin-datalabels');
 
 
-window.number_format = function(num) {
-    return parseFloat(parseFloat(num).toFixed(2)).toLocaleString();
+window.number_format = function(num, digits) {
+    return parseFloat(parseFloat(num).toFixed(3)).toLocaleString({
+        minimumFractionDigits : digits,
+        maximumFractionDigits: digits
+    });
 };
+
+window.number_format2 = function (num) {
+    return window.number_format(num, 2);
+};
+
+window.number_format3 = function (num) {
+    return window.number_format(num, 3);
+}
+
+window.percent = function (num) {
+    return window.number_format(num, 2) + '%';
+}
 
 Chart.defaults.global.plugins.datalabels.align = 'center';
 Chart.defaults.global.plugins.datalabels.anchor = 'center';
 Chart.defaults.global.plugins.datalabels.formatter = window.number_format;
 Chart.defaults.global.plugins.datalabels.color = '#fff';
-Chart.defaults.global.plugins.datalabels.backgroundColor = '#5B9BD5';
+// Chart.defaults.global.plugins.datalabels.backgroundColor = '#8ed3d8';
 Chart.defaults.global.plugins.datalabels.font.weight = '700';
 
 document.querySelectorAll('.chart').forEach((item) => {
@@ -41,6 +56,24 @@ document.querySelectorAll('.chart').forEach((item) => {
                 animation: {duration: 1500, easing: 'easeOutExpo'}
             }
         }
+    }
+
+    options.plugins = { datalabels: {} };
+    if (item.dataset.formatter == 'number_2') {
+        options.plugins.datalabels.formatter = window.number_format2;
+    } else if (item.dataset.formatter == 'number_3') {
+        options.plugins.datalabels.formatter = window.number_format3;
+    } else if (item.dataset.formatter == 'percent') {
+        options.plugins.datalabels.formatter = window.percent;
+    }
+
+    if (item.dataset.type == 'line') {
+        options.plugins.datalabels.backgroundColor = '#8ed3d8';
+    }
+
+    if (item.dataset.animate !== undefined) {
+        options.animation= {duration: 0};
+        console.log(options);
     }
 
     const chart = new Chart(canvas, {

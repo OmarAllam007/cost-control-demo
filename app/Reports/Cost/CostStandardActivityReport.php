@@ -31,7 +31,7 @@ class CostStandardActivityReport
 
     function run()
     {
-        $this->previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->orderBy('id')->first();
+        $this->previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->orderBy('id', 'DESC')->first();
         if ($this->previousPeriod) {
             $previousTotals = MasterShadow::whereProjectId($this->project->id)->wherePeriodId($this->previousPeriod->id)
                 ->selectRaw('sum(to_date_cost) previous_cost, sum(allowable_ev_cost) previous_allowable, sum(allowable_var) as previous_var')
@@ -54,7 +54,8 @@ class CostStandardActivityReport
                 return $div->code . ' ' . $div->name;
             });
 
-        $project = $this->project; $period = $this->period;
+        $project = $this->project;
+        $period = $this->period;
         return compact('project', 'period', 'currentTotals', 'previousTotals', 'tree', 'periods', 'activityNames', 'divisionNames');
     }
 
@@ -67,7 +68,7 @@ class CostStandardActivityReport
 
         $this->applyFilters($query);
 
-        $currentActivities = collect($query->groupBy('activity', 'activity_id')->orderBy('activity')->get())->keyBy('activity_id');
+        $currentActivities = collect($query->groupBy('activity', 'activity_id')->orderBy('activity_divs')->orderBy('activity')->get())->keyBy('activity_id');
         $activity_ids = $currentActivities->pluck('activity_id');
         $this->activityNames = $currentActivities->pluck('activity', 'activity_id')->sort();
 
@@ -81,12 +82,13 @@ class CostStandardActivityReport
 
         $activityDivs = collect(\DB::table('master_shadows')->whereProjectId($this->project->id)
             ->wherePeriodId($this->period->id)->whereIn('activity_id', $activity_ids)
-            ->pluck('activity_divs', 'activity_id'))->map(function ($div) {
-            return json_decode($div, true);
-        });
+            ->orderBy('activity_divs')
+            ->pluck('activity_divs', 'activity_id'))
+            ->map(function ($div) {
+                return json_decode($div, true);
+            });
 
         $tree = [];
-
         foreach ($currentActivities as $id => $current) {
             $prevDiv = '';
             $previous = $previousActivities[$id] ?? [];
@@ -128,10 +130,9 @@ class CostStandardActivityReport
                 'previous_allowable' => $previous->previous_allowable ?? 0,
                 'previous_var' => $previous->previous_var ?? 0,
             ];
-
         }
 
-        return collect($tree)->sortByKeys();
+        return collect($tree);
     }
 
     protected function applyFilters($query)
@@ -261,7 +262,6 @@ class CostStandardActivityReport
             if ($parent) {
                 $sheet->getRowDimension($counter)->setOutlineLevel($outlineLevel)->setVisible(false)->setCollapsed(true);
             }
-
 
 
             ++$counter;

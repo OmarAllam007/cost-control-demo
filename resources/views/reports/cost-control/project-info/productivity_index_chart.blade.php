@@ -1,5 +1,5 @@
 <div class="card-group-item">
-    <h4 class="card-group-item-heading">Productivity Index</h4>
+    <h4 class="card-group-item-heading">Productivity Index Trend</h4>
 
     <div class="chart"
          id="cpiChart"

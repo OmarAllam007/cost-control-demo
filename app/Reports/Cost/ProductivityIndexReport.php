@@ -43,9 +43,11 @@ class ProductivityIndexReport
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
         $this->activities = MasterShadow::where('period_id', $this->period->id)
-            ->where('resource_type_id', 2)->where('to_date_qty', '>', 0)
+            ->where('resource_type_id', 2) //->where('to_date_qty', '>', 0)
             ->selectRaw("wbs_id, activity_id, activity, sum(budget_unit) as budget_unit, avg(progress) as progress")
             ->selectRaw("sum(allowable_qty) as allowable_qty")
+            ->where('resource_code', 'NOT LIKE', 'L.05.%')
+            ->where('resource_code', 'NOT LIKE', 'L.06.%')
             ->groupBy(['wbs_id', 'activity_id', 'activity'])
             ->get()->groupBy('wbs_id');
 
@@ -145,6 +147,7 @@ class ProductivityIndexReport
         $sheet->getStyle("C{$this->start}:C{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
         $sheet->getStyle("G{$this->start}:G{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
 
+        $sheet->setTitle('Productivity Index (Cost)');
         return $sheet;
     }
 

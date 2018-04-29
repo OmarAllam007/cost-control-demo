@@ -51,8 +51,12 @@
                                 </article>
                             @endforeach
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 report-group">
                             <h4>Cost Reports</h4>
+                            <p>
+                                <a href="#" class="select-all">Select All</a> /
+                                <a href="#" class="remove-all">Remove All</a>
+                            </p>
                             @foreach($roles[$role_id]->cost_reports as $report)
                                 <article class="checkbox">
                                     <label>
@@ -65,8 +69,12 @@
                                 </article>
                             @endforeach
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 report-group">
                             <h4>Budget Reports</h4>
+                            <p>
+                                <a href="#" class="select-all">Select All</a> /
+                                <a href="#" class="remove-all">Remove All</a>
+                            </p>
                             @foreach($roles[$role_id]->budget_reports as $report)
                                 <article class="checkbox">
                                     <label>
@@ -103,6 +111,16 @@
                     $(this).closest('.panel').find('.panel-body').removeClass('in');
                 }
             }).change();
+
+            $('.select-all').on('click', function(e) {
+                e.preventDefault();
+                $(e.currentTarget).closest('.report-group').find(':input').prop('checked', true);
+            });
+
+            $('.remove-all').on('click', function(e) {
+                e.preventDefault();
+                $(e.currentTarget).closest('.report-group').find(':input').prop('checked', false);
+            });
         });
     </script>
 @endsection

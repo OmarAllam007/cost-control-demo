@@ -1,5 +1,5 @@
 <section class="card-group-item">
-    <h4 class="card-group-item-heading" >CPI Trend Analysis</h4>
+    <h4 class="card-group-item-heading" >Cost Performance Index (CPI) Trend</h4>
 
     <div class="chart"
          id="cpiChart"

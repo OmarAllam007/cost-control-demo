@@ -5,7 +5,7 @@ import QtySurvey from './components/QtySurvey';
 import Alert from './components/Alert';
 import Wbs from './components/Wbs';
 import Resources from './components/Resources';
-import BreakdownTemplate from './components/BreakdownTemplate';
+import BreakdownTemplates from '../breakdown-templates/BreakdownTemplate.vue';
 import Productivity from './components/Productivity';
 import Revisions from './components/Revision'
 
@@ -68,7 +68,7 @@ window.app = new Vue({
         QtySurvey,
         Wbs,
         Resources,
-        BreakdownTemplate,
+        BreakdownTemplates,
         Productivity,
         Revisions
     }

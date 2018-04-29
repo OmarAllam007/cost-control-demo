@@ -10,6 +10,9 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Readers\LaravelExcelReader;
 use Maatwebsite\Excel\Writers\CellWriter;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
+use PHPExcel_Style_Color;
+use PHPExcel_Worksheet;
 
 class ThresholdReport
 {
@@ -30,6 +33,7 @@ class ThresholdReport
 
     /** @var int */
     private $row = 11;
+    private $start = 12;
 
     function __construct(Period $period)
     {
@@ -45,10 +49,10 @@ class ThresholdReport
 
         $this->activities = $this->applyFilters(
             MasterShadow::where('period_id', $this->period->id)
-                ->where('to_date_qty', '>', 0)
+//                ->where('to_date_qty', '>', 0)
                 ->selectRaw('wbs_id, activity, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
                 ->selectRaw('sum(allowable_ev_cost) - sum(to_date_cost) as variance')
-                ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')
+//                ->selectRaw('((sum(to_date_cost) - sum(allowable_ev_cost)) * 100 / sum(allowable_ev_cost)) as increase')
                 ->groupBy('wbs_id', 'activity')
                 ->orderBy('wbs_id', 'activity')
         )->get()->groupBy('wbs_id');
@@ -69,15 +73,20 @@ class ThresholdReport
             $level->subtree = $this->buildTree($level->id);
 
             $level->activities = $this->activities->get($level->id, collect())->filter(function($activity) {
+                $activity->increase = 0;
+                if ($activity->allowable_cost) {
+                    $activity->increase = - ($activity->variance / $activity->allowable_cost) * 100;
+                }
+
                 $activity->compare_variance = - $activity->variance;
                 if ($this->threshold >= 0) {
-                    $threshold = $activity->increase > $this->threshold;
+                    $threshold = $activity->increase >= $this->threshold;
                 } else {
                     $threshold = $activity->increase < $this->threshold;
                 }
 
                 if ($this->threshold_value >= 0) {
-                    $threshold_value = abs($activity->variance) > abs($this->threshold_value);
+                    $threshold_value = abs($activity->variance) >= abs($this->threshold_value);
                 } else {
                     $threshold_value = $activity->variance > abs($this->threshold_value);
                 }
@@ -102,19 +111,18 @@ class ThresholdReport
 
     function excel()
     {
-        return \Excel::load(storage_path('templates/cost-threshold.xlsx'), function(LaravelExcelReader $excel) {
-            $excel->sheet(0, function($sheet) {
-                $this->sheet($sheet);
-            });
+        return \Excel::create(slug($this->project->name) . '-cost_threshold', function(LaravelExcelWriter $excel) {
+            $excel->addExternalSheet($this->sheet());
 
-            $excel->setFilename(slug($this->project->name) . '-cost_threshold');
             $excel->export('xlsx');
         });
     }
 
-    function sheet(LaravelExcelWorksheet $sheet)
+    function sheet()
     {
         $this->run();
+
+        $sheet = \PHPExcel_IOFactory::load(storage_path('templates/cost-threshold.xlsx'))->getSheet(0);
 
         $sheet->setCellValue('A4', "Project: {$this->project->name}");
         $sheet->setCellValue('A5', "Issue Date: " . date('d M Y'));
@@ -125,30 +133,38 @@ class ThresholdReport
             $this->buildExcelLevel($sheet, $level);
         });
 
+        $sheet->getStyle("C{$this->start}:E{$this->row}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("F{$this->start}:F{$this->row}")->getNumberFormat()->setBuiltInFormatCode(10);
+
         $sheet->setShowSummaryBelow(false);
+
+        $sheet->setTitle('Threshold Report');
+
+        return $sheet;
     }
 
-    private function buildExcelLevel(LaravelExcelWorksheet $sheet, $level, $depth = 0)
+    private function buildExcelLevel($sheet, $level, $depth = 0)
     {
-        $sheet->row(++$this->row, [
+        /** @var PHPExcel_Worksheet $sheet */
+        ++$this->row;
+        $sheet->fromArray([
             $level->name, '', $level->allowable_cost, $level->to_date_cost, $level->variance, $level->increase / 100
-        ]);
+        ], null, "A{$this->row}", true);
 
         if ($depth) {
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel(min($depth, 7))
                 ->setCollapsed(true)->setVisible(false);
 
-            $sheet->cells("A{$this->row}", function(CellWriter $cells) use ($depth) {
-                $cells->setTextIndent(4 * $depth);
-            });
+            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * $depth);
         }
 
-        $sheet->cells("A{$this->row}:F{$this->row}", function (CellWriter $cells) {
-            $cells->setFont(['bold' => true])
-                ->setBackground('#d9edf7')
-                ->setBorder(false, 'thin', 'thin', false);
-        });
+        $background = new PHPExcel_Style_Color('d9edf7');
+        $sheet->getStyle("A{$this->row}:F{$this->row}")->getFont()->setBold(true);
+        $sheet->getStyle("A{$this->row}:F{$this->row}")->getBorders()->getAllBorders()->setBorderStyle('thin');
+        $sheet->getStyle("A{$this->row}:F{$this->row}")->getFill()
+            ->setFillType('solid')->setStartColor($background)->setEndColor($background);
+
 
         $level->subtree->each(function($sublevel) use ($sheet, $depth) {
             $this->buildExcelLevel($sheet, $sublevel, $depth + 1);
@@ -156,9 +172,10 @@ class ThresholdReport
 
         ++$depth;
         $level->activities->each(function($activity) use ($sheet, $depth) {
-            $sheet->row(++$this->row, [
+            ++$this->row;
+            $sheet->fromArray([
                 '', $activity->activity, $activity->allowable_cost, $activity->to_date_cost, $activity->variance, $activity->increase / 100
-            ]);
+            ], null, "A{$this->row}");
 
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel(min($depth, 7))

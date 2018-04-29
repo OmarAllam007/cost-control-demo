@@ -27,7 +27,8 @@ class Period extends Model
         'planned_cost', 'earned_value', 'actual_invoice_amount', 'planned_progress', 'planned_finish_date',
         'spi_index', 'actual_progress', 'change_order_amount', 'forecast_finish_date',
         'time_extension', 'time_elapsed', 'time_remaining', 'expected_duration', 'duration_variance',
-        'planned_value', 'actual_invoice_value',
+        'planned_value', 'actual_invoice_value', 'productivity_index',
+        'at_completion_optimistic', 'at_completion_likely', 'at_completion_pessimistic',
     ];
 
     protected $dates = ['created_at', 'update_at', 'start_date'];
@@ -59,7 +60,7 @@ class Period extends Model
         parent::boot();
 
         static::creating(function(Period $period) {
-            $open = $period->project->active_period;
+            $open = $period->project->open_period();
             if (!$open) {
                 $period->is_open= true;
             }
@@ -119,18 +120,18 @@ class Period extends Model
             return $this->attributes['time_remaining'];
         }
 
-        if ($this->expected_duration) {
-            return $this->expected_duration - $this->time_elapsed;
+        if ($this->actual_duration) {
+            return $this->actual_duration - $this->time_elapsed;
         }
 
         return '';
     }
 
-    function getActualProgressAttribute()
+    function getActualTimeProgressAttribute()
     {
-        if (!empty($this->attributes['actual_progress'])) {
-            return $this->attributes['actual_progress'];
-        }
+//        if (!empty($this->attributes['actual_progress'])) {
+//            return $this->attributes['actual_progress'];
+//        }
 
         if ($this->expected_duration) {
             return round(min(100,$this->time_elapsed * 100 / $this->expected_duration), 2);

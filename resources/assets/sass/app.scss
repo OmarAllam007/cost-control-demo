@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i,700,700i');
 @import "variables";
 $media: "screen" !default;
 
 @if $media == "print" {
   $body-bg: #ffffff;
-  $font-size-base: 10px;
+  $font-size-base: 12px;
   $line-height-base: 1.2;
   $text-color: #444;
 }
@@ -15,9 +15,12 @@ $media: "screen" !default;
 
 
 #main-panel {
-  margin-top: -20px;
+  margin-top: 50px;
   border-top: none;
   > .panel-heading {
+
+    background: #EFF8FF;
+
     h1, h2, h3, h4 {
       float: left;
       font-size: 150%;
@@ -25,8 +28,13 @@ $media: "screen" !default;
       vertical-align: middle;
       margin-top: 0;
       margin-bottom: 0;
+      font-weight: 600;
     }
   }
+}
+
+.navbar-nav>li>a {
+  font-weight: 600;
 }
 
 .panel-form {
@@ -100,6 +108,19 @@ ul.tree {
 .bg-black {
   background: #222;
   color: #fff;
+}
+
+.bg-grey-light {
+  background: #F1F5F8;
+}
+
+td.bg-grey-light, td.bg-grey-lighter,
+th.bg-grey-light, th.bg-grey-lighter{
+  border-bottom: 1px solid #F8FAFC;
+}
+
+.bg-grey-lighter {
+  background: #F8FAFC;
 }
 
 .autocomplete-panel {
@@ -594,9 +615,11 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   .card-title {
     margin: 0;
     padding: 10px;
-    font-size: 125%;
+    font-size: 150%;
+    font-weight: 600;
     line-height: 1.4;
-    background-color: #fff;
+    background-color: #EFF8FF;
+    color: #1C3D5A;
 
     &.blue {
       background-color: #3490DC;
@@ -644,22 +667,22 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
   .card-body {
     padding: 10px;
-    background-color: white;
+    background-color: #FFF;
   }
+  .card-row {
+    //margin-bottom: 10px;
+    //padding-bottom: 10px;
+    border-bottom: 1px solid #F1F5F8;
 
-  .table td, .table th {
-    background-color: #fff;
-
-    &.separator {
-      border: none;
-      background-color: transparent;
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
     }
   }
 
   .table {
     margin-bottom: 0;
-    font-size: 80%;
-
     .highlight td, .highlight th {
       background-color: #ffc;
 
@@ -793,7 +816,6 @@ dl.dl-margin{
   color: white;
 }
 .cost-summary-header{
-  text-align: center;
   background-color: #D9E1F2 !important;
   color: black;
 }
@@ -827,9 +849,8 @@ dl.dl-margin{
 
 .breakdown-resource {
   padding: 10px;
-  font-size: 12px;
   border-bottom: 1px solid #b8d0e0;
-
+  align-items: flex-start;
 
   &:hover, &:nth-child(odd):hover, &.active, &.highlight:hover {
     background-color: #fefef0;
@@ -850,6 +871,10 @@ dl.dl-margin{
     border-bottom: 1px solid #f4ed25;
   }
 
+  .actions {
+    margin-left: 10px;
+  }
+
   .actions .btn {
     display: block;
     margin-bottom: 5px;
@@ -868,6 +893,10 @@ dl.dl-margin{
 }
 
 
+.activity-section {
+  margin-bottom: 1px;
+}
+
 .breakdown-activity-header {
   padding: 5px 10px;
   background: $brand-primary;
@@ -879,6 +908,7 @@ dl.dl-margin{
 
   a {
     color: #f0f9ff;
+    display:block;
   }
 }
 
@@ -910,3 +940,42 @@ dl.dl-margin{
     font-weight: 700;
   }
 }
+
+.text-danger .fa:before {
+  color: $state-danger-text;
+}
+
+.text-success .fa:before {
+  color: $state-success-text;
+}
+
+
+.borderless {
+  border: none !important;
+}
+
+.border {
+  border: 1px solid #fefefe;
+}
+
+td.optimistic {
+  background: #E3FCEC;
+}
+
+td.most-liekly {
+  background: #FCFBEB;
+}
+
+td.pessimistic {
+  background-color: #FCEBEA;
+}
+
+.bg-grey {
+  background: #F1F5F8;
+}
+
+th.table-caption {
+  font-size: 114%;
+  font-weight: 600;
+}
+

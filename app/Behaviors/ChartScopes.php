@@ -48,9 +48,10 @@ trait ChartScopes
     {
         $query->join('periods as p', 'p.id', '=', 'master_shadows.period_id')
             ->where('global_period_id', '>=', 12)
-            ->selectRaw('p.id as p_id, p.name as p_name, sum(allowable_ev_cost) / sum(to_date_cost) as value')
-            ->groupBy('p.id', 'p.name')
-            ->latest('p.id')->take(6);
+            ->selectRaw('p.id as p_id, p.name as p_name, resource_type_id, sum(budget_cost) as budget_cost')
+            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
+            ->groupBy('p.id', 'p.name', 'resource_type_id')
+            ->latest('p.id');
     }
 
     function scopeChartFilter(Builder $query)

@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class GlobalPeriod extends Model
 {
-    protected $fillable = ['start_date', 'end_date', 'spi', 'actual_progress', 'planned_progress', 'planned_value', 'earned_value', 'actual_invoice_value',];
+    protected $fillable = [
+        'start_date', 'end_date',
+        'spi_index', 'productivity_index',
+        'actual_progress', 'planned_progress',
+        'planned_value', 'earned_value', 'actual_invoice_value'
+    ];
 
     protected $dates = ['start_date', 'end_date', 'created_at', 'updated_at'];
 

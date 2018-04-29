@@ -18,7 +18,7 @@
     @yield('css')
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
@@ -37,7 +37,10 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 @if (Auth::check())
                 <ul class="nav navbar-nav">
+                    @can ('dashboard')
                     <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                    @endcan
+
                     <li><a href="{{ url('/project') }}">Projects</a></li>
 
                     @can('read', 'std-activity')

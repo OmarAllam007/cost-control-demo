@@ -60,7 +60,7 @@
                     options.show();
                     options.filter(function() {
                         const txt = $(this).text().toLowerCase();
-                        return txt.indexOf(val);
+                        return txt.indexOf(val) < 0;
                     }).hide();
                 } else {
                     options.show();
