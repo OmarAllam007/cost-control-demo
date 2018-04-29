@@ -20,7 +20,8 @@ class BreakdownTemplateObserver
             BreakDownResourceShadow::where('template_id', $template->id)->update(['template' => $template->name]);
         } else {
             $project_template_ids = BreakdownTemplate::where('parent_template_id', $template->id)->pluck('id');
-            BreakdownTemplate::where('parent_template_id', $template->id)->update(['name' => $template->name, 'code' =>$template->code]);
+
+            BreakdownTemplate::whereIn('id', $project_template_ids)->update(['name' => $template->name, 'code' => $template->code]);
             BreakDownResourceShadow::whereIn('template_id', $project_template_ids)->update(['template' => $template->name]);
         }
     }
