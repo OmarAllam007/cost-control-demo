@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import _ from 'lodash';
 
 Vue.component('ResourceLog', {
     props: ['resource'],
@@ -18,6 +19,34 @@ Vue.component('ResourceLog', {
             let total = 0;
             this.resource.budget_resources.forEach(res => { total += res.budget_cost });
             return total;
+        },
+
+        actual_unit_price() {
+            if (!this.actual_qty) {
+                return 0;
+            }
+
+            return this.actual_cost / this.actual_qty;
+        },
+
+        actual_qty() {
+            return _.reduce(this.actual_resources, (total, r) => total += r.qty, 0);
+        },
+
+        actual_cost() {
+            return _.reduce(this.actual_resources, (total, r) => total += r.cost, 0);
+        },
+
+        actual_resources() {
+            return _.flatMap(this.resource.budget_resources, r => r.actual_resources);
+        },
+
+        qty_var() {
+            return this.budget_unit - this.actual_qty;
+        },
+
+        cost_var() {
+            return this.budget_cost - this.actual_cost;
         }
     }
 });

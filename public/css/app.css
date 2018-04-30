@@ -11314,7 +11314,7 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   border-bottom: none;
 }
 
-.card .table {
+.card > .table {
   margin-bottom: 0;
 }
 

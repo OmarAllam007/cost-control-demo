@@ -97,113 +97,124 @@
 
         <section class="data">
             <section class="logs" v-if="logs.length">
-                @verbatim
-                    <resource-log v-for="resource in filteredLogs" :resource="resource" inline-template>
-                        <article class="card">
-                            <div class="card-body">
-                                <h4>
-                                    {{ resource.name }}
-                                    <small>({{ resource.code }})</small>
-                                </h4>
 
-                                <div class="row mb-5">
-                                    <div class="col-sm-3">
-                                        <dl>
-                                            <dt>U.O.M</dt>
-                                            <dd v-text="first.measure_unit"></dd>
-                                        </dl>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <dl>
-                                            <dt>Unit Price</dt>
-                                            <dd>{{first.unit_price|number_format}}</dd>
-                                        </dl>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <dl>
-                                            <dt>∑ Budget Unit</dt>
-                                            <dd>{{budget_unit|number_format}}</dd>
-                                        </dl>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <dl>
-                                            <dt>∑ Amount</dt>
-                                            <dd>{{budget_cost|number_format}}</dd>
-                                        </dl>
-                                    </div>
-                                </div>
+                <resource-log v-for="resource in filteredLogs" :resource="resource" inline-template>
+                    <article class="card">
+                        <div class="card-body">
+                            <h4>
+                                <span v-text="resource.name"></span> &mdash;
+                                <span class="text-muted text-capitalize" v-text="resource.code"></span>
+                            </h4>
 
-                                <div class="row">
-                                    <article class="col-sm-3">
-                                        <table class="table table-striped table-condensed">
-                                            <thead>
-                                            <tr>
-                                                <th class="text-center table-caption" colspan="5">Budget</th>
-                                            </tr>
-                                            <tr>
-                                                <th>Budget Unit</th>
-                                                <th>Amount</th>
-                                                <th>Cost Account</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="budget_resource in resource.budget_resources">
-                                                <td>{{budget_resource.budget_unit|number_format}}</td>
-                                                <td>{{budget_resource.budget_cost|number_format}}</td>
-                                                <td v-text="budget_resource.cost_account"></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </article>
+                            <table class="table table-bordered table-condensed">
+                                <thead>
+                                <tr class="info">
+                                    <th class="text-center" colspan="4">Budget</th>
+                                    <th class="text-center" colspan="5">Actual</th>
+                                </tr>
+                                <tr class="info">
+                                    <th width="11%" class="text-center">Unit Price</th>
+                                    <th width="11%" class="text-center">Budget Unit</th>
+                                    <th width="11%" class="text-center">Amount</th>
+                                    <th width="11%" class="text-center">U.O.M</th>
 
-                                    <article class="col-sm-9 bl-1">
-                                        <table class="table table-striped table-condensed">
-                                            <thead>
-                                            <tr>
-                                                <th class="text-center table-caption" colspan="10">Actual</th>
-                                            </tr>
-                                            <tr>
-                                                <th>Resource ID</th>
-                                                <th>Resource Name</th>
-                                                <th>UOM</th>
-                                                <th>Unit Price</th>
-                                                <th>Qty</th>
-                                                <th>Amount</th>
-                                                <th>Date from store</th>
-                                                <th>Date uploaded</th>
-                                                <th>Reference</th>
-                                            </tr>
-                                            </thead>
+                                    <th width="11%" class="text-center">Equiv. Unit Price</th>
+                                    <th width="11%" class="text-center">Qty</th>
+                                    <th width="11%" class="text-center">Amount</th>
+                                    <th width="11%" class="text-center">Qty Var.</th>
+                                    <th width="11%" class="text-center">Cost Var.</th>
+                                </tr>
+                                </thead>
 
-                                            <tbody>
-                                            <tr v-for="actual_resource in resource.store_resources">
-                                                <td v-text="actual_resource.item_code"></td>
-                                                <td v-text="actual_resource.item_desc"></td>
-                                                <td v-text="actual_resource.measure_unit"></td>
-                                                <td>{{actual_resource.unit_price|number_format}}</td>
-                                                <td>{{actual_resource.qty|number_format}}</td>
-                                                <td>{{actual_resource.cost|number_format}}</td>
-                                                <td v-text="actual_resource.store_date"></td>
-                                                <td>
-                                                    <a class="in-iframe"
-                                                       :href="`/actual-batches/${actual_resource.batch_id}`"
-                                                       v-text="actual_resource.created_at">
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a :href="`/actual-batches/${actual_resource.batch_id}/download`"
-                                                       v-text="actual_resource.doc_no">
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </article>
-                                </div>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center" v-text="first.unit_price|number_format"></td>
+                                    <td class="text-center" v-text="budget_unit|number_format"></td>
+                                    <td class="text-center" v-text="budget_cost|number_format"></td>
+                                    <td class="text-center" v-text="first.measure_unit"></td>
+
+                                    <td class="text-center" v-text="actual_unit_price|number_format"></td>
+                                    <td class="text-center" v-text="actual_qty|number_format"></td>
+                                    <td class="text-center" v-text="actual_cost|number_format"></td>
+                                    <td class="text-center" :class="qty_var < 0? 'text-danger' : 'text-success'" v-text="qty_var|number_format"></td>
+                                    <td class="text-center" :class="cost_var < 0? 'text-danger' : 'text-success'" v-text="cost_var|number_format"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <article class="col-sm-3">
+                                    <table class="table table-striped table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center table-caption" colspan="5">Budget</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Budget Unit</th>
+                                            <th>Unit Price</th>
+                                            <th>Amount</th>
+                                            <th>Cost Account</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="budget_resource in resource.budget_resources">
+                                            <td v-text="budget_resource.budget_unit|number_format"></td>
+                                            <td v-text="budget_resource.unit_price|number_format"></td>
+                                            <td v-text="budget_resource.budget_cost|number_format"></td>
+                                            <td v-text="budget_resource.cost_account"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </article>
+
+                                <article class="col-sm-9 bl-1">
+                                    <table class="table table-striped table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center table-caption" colspan="10">Actual</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Resource ID</th>
+                                            <th>Resource Name</th>
+                                            <th>UOM</th>
+                                            <th>Unit Price</th>
+                                            <th>Qty</th>
+                                            <th>Amount</th>
+                                            <th>Date from store</th>
+                                            <th>Date uploaded</th>
+                                            <th>Reference</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr v-for="actual_resource in resource.store_resources">
+                                            <td v-text="actual_resource.item_code"></td>
+                                            <td v-text="actual_resource.item_desc"></td>
+                                            <td v-text="actual_resource.measure_unit"></td>
+                                            <td v-text="actual_resource.unit_price|number_format"></td>
+                                            <td v-text="actual_resource.qty|number_format"></td>
+                                            <td v-text="actual_resource.cost|number_format"></td>
+                                            <td v-text="actual_resource.store_date"></td>
+                                            <td>
+                                                <a class="in-iframe"
+                                                   :href="`/actual-batches/${actual_resource.batch_id}`"
+                                                   v-text="actual_resource.created_at">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a :href="`/actual-batches/${actual_resource.batch_id}/download`"
+                                                   v-text="actual_resource.doc_no">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </article>
                             </div>
-                        </article>
-                    </resource-log>
-                @endverbatim
+                        </div>
+                    </article>
+                </resource-log>
+
             </section>
 
             <section class="loading" v-if="loading"><i class="fa fa-spinner fa-spin fa-3x"></i></section>

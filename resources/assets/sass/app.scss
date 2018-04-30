@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i,700,700i');
 @import "variables";
+
 $media: "screen" !default;
 
 @if $media == "print" {
@@ -11,8 +12,6 @@ $media: "screen" !default;
 
 @import "../../../node_modules/bootstrap-sass-noprint/assets/stylesheets/bootstrap";
 @import "../../../node_modules/font-awesome/scss/font-awesome.scss";
-
-
 
 #main-panel {
   margin-top: 50px;
@@ -33,7 +32,7 @@ $media: "screen" !default;
   }
 }
 
-.navbar-nav>li>a {
+.navbar-nav > li > a {
   font-weight: 600;
 }
 
@@ -115,7 +114,7 @@ ul.tree {
 }
 
 td.bg-grey-light, td.bg-grey-lighter,
-th.bg-grey-light, th.bg-grey-lighter{
+th.bg-grey-light, th.bg-grey-lighter {
   border-bottom: 1px solid #F8FAFC;
 }
 
@@ -607,7 +606,7 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 }
 
 .card {
-  box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.08);
   background-color: $body-bg;
   margin-bottom: 15px;
   font-size: 90%;
@@ -658,7 +657,7 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
       background-color: #179fc0;
       color: #f5f5f5;
     }
-    &.dark-green{
+    &.dark-green {
       background-color: #E2EFD9;
       color: black;
       text-decoration: underline;
@@ -681,8 +680,11 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
     }
   }
 
-  .table {
+  > .table {
     margin-bottom: 0;
+  }
+
+  .table {
     .highlight td, .highlight th {
       background-color: #ffc;
 
@@ -748,7 +750,7 @@ dd {
   width: 30%;
   min-width: 30%;
   max-width: 30%;
-  background-color:#D9E1F2 !important;
+  background-color: #D9E1F2 !important;
   border-right: 2px solid gray !important;
 }
 
@@ -767,7 +769,7 @@ section.sm-card {
   height: 250px;
 }
 
-table.budget-info{
+table.budget-info {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
 }
 
@@ -777,12 +779,12 @@ table.budget-info > thead > tr > th {
 }
 
 table.budget-info > tbody > tr > th,
-table.budget-info > thead > tr > th:first-child{
+table.budget-info > thead > tr > th:first-child {
   color: #444;
-  background-color:  #D9E1F2 !important;
+  background-color: #D9E1F2 !important;
 }
 
-.card-group-item{
+.card-group-item {
   padding: 10px;
   margin-bottom: 15px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
@@ -798,28 +800,32 @@ table.budget-info > thead > tr > th:first-child{
   font-weight: 700;
   text-decoration: underline;
 }
-dl.dl-margin{
+
+dl.dl-margin {
   margin-top: 20px;
 }
 
-.row-height{
+.row-height {
   height: 37px;
 }
 
-.actual-data-cell{
+.actual-data-cell {
   background-color: #D9E1F2;
   border: 1px solid black;
 }
-.cost-summary-group{
+
+.cost-summary-group {
   text-align: center;
   background-color: #002060 !important;
   color: white;
 }
-.cost-summary-header{
+
+.cost-summary-header {
   background-color: #D9E1F2 !important;
   color: black;
 }
-.cost-summary-side{
+
+.cost-summary-side {
   background-color: #D9E1F2 !important;
 }
 
@@ -856,7 +862,6 @@ dl.dl-margin{
     background-color: #fefef0;
   }
 
-
   .tag {
     color: #9e9e9e;
     font-size: 90%;
@@ -887,11 +892,11 @@ dl.dl-margin{
   justify-content: space-between;
   align-items: center;
 }
+
 .vertical-scroll-pane {
   max-height: 500px;
   overflow-y: auto;
 }
-
 
 .activity-section {
   margin-bottom: 1px;
@@ -908,7 +913,7 @@ dl.dl-margin{
 
   a {
     color: #f0f9ff;
-    display:block;
+    display: block;
   }
 }
 
@@ -948,7 +953,6 @@ dl.dl-margin{
 .text-success .fa:before {
   color: $state-success-text;
 }
-
 
 .borderless {
   border: none !important;

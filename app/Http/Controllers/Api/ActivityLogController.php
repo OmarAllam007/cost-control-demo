@@ -17,7 +17,7 @@ class ActivityLogController extends Controller
     {
         $this->authorize('actual_resources', $wbs->project);
 
-        $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)->where('code', $code)->get();
+        $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)->with('actual_resources')->where('code', $code)->get();
         $resource_ids = $shadows->pluck('resource_id', 'resource_id');
 
         $store_resources = StoreResource::where('budget_code', $code)->whereIn('resource_id', $resource_ids)->get()->groupBY('resource_id');
@@ -29,7 +29,7 @@ class ActivityLogController extends Controller
             return [
                 'name' => $resource->resource_name, 'code' => $resource->resource_code,
                 'budget_resources' => $budget,
-                'store_resources' => $store_resources->get($id, collect())
+                'store_resources' => $store_resources->get($id, collect()),
             ];
         })->filter(function($resource) {
             return $resource['store_resources']->count() > 0;
