@@ -4,9 +4,16 @@
     <div class="display-flex">
         <h2 class="flex">{{$wbs->project->name}} &mdash; Activity Log</h2>
 
-        <a href="{{route('project.cost-control', $wbs->project)}}" class="btn btn-default btn-sm">
-            <i class="fa fa-chevron-left"></i> Back to Project
-        </a>
+        <div class="btn-tollbar">
+            <a href="{{route('activity-log.excel', [$wbs, $code])}}" class="btn btn-success btn-sm">
+                <i class="fa fa-cloud-download"></i> Export
+            </a>
+
+            <a href="{{route('project.cost-control', $wbs->project)}}" class="btn btn-default btn-sm">
+                <i class="fa fa-chevron-left"></i> Back to Project
+            </a>
+        </div>
+
     </div>
 @endsection
 
