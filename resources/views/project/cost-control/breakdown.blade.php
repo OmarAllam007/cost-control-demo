@@ -84,7 +84,7 @@
                 </div>
             </section>
 
-            <section v-if="show_breakdowns">
+            <section v-if="show_breakdowns" >
                 <div class="vertical-scroll-pane">
                     <section class="activity-section" v-for="activity in breakdowns">
                         <header class="display-flex breakdown-activity-header">
@@ -101,7 +101,7 @@
                             </div>
                         </header>
 
-                        <div :id="slug(activity.code)" class="collapse">
+                        <div :id="slug(activity.code)" class="collapse" style="padding: 10px 1px;">
                             @include('project.cost-control._breakdown_resource')
                         </div>
                     </section>

@@ -854,9 +854,7 @@ dl.dl-margin {
 }
 
 .breakdown-resource {
-  padding: 10px;
-  border-bottom: 1px solid #b8d0e0;
-  align-items: flex-start;
+  //border-bottom: 1px solid #b8d0e0;
 
   &:hover, &:nth-child(odd):hover, &.active, &.highlight:hover {
     background-color: #fefef0;
@@ -871,6 +869,10 @@ dl.dl-margin {
     background-color: $body-bg;
   }
 
+  &:nth-child(even) {
+    background-color: #fff;
+  }
+
   &.highlight {
     background-color: #ffc;
     border-bottom: 1px solid #f4ed25;
@@ -883,6 +885,11 @@ dl.dl-margin {
   .actions .btn {
     display: block;
     margin-bottom: 5px;
+  }
+
+  .card-body {
+    background: transparent;
+    align-items: flex-start;
   }
 }
 
