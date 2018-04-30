@@ -15,18 +15,27 @@
 @endsection
 
 @section('body')
-    <form action="" method="post" id="RollupForm">
-        {{csrf_field()}}
+    <form action="" method="post" id="RollupForm" class="row">
 
-        <wbs-tree :initial="{{$wbsTree}}" inline-template>
-            <ul class="wbs-tree list-unstyled" id="wbs-tree">
-                <wbs-level :initial="level" v-for="level in levels" depth="0"></wbs-level>
-            </ul>
-        </wbs-tree>
+        <section class="col-sm-3">
+            {{csrf_field()}}
 
-        <div class="form-group">
+            <wbs-tree :initial="{{$wbsTree}}" inline-template>
+                <ul class="wbs-tree list-unstyled br-1" id="wbs-tree">
+                    <wbs-level :initial="level" v-for="level in levels" depth="0"></wbs-level>
+                </ul>
+            </wbs-tree>
+        </section>
+
+        <section class="col-sm-9">
+
+
+
+        </section>
+
+        {{--<div class="form-group">
             <button class="btn btn-primary">Next <i class="fa fa-chevron-right"></i></button>
-        </div>
+        </div>--}}
     </form>
 @endsection
 

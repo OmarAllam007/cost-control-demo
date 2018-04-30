@@ -1,16 +1,17 @@
 <template>
     <li :class="`level-${depth}`">
-        <div class="wbs-item">
-            <strong>
-                <input type="radio" v-if="! level.children.length" @change="setSelected" name="wbs_level">
-                <a href="#children-{{level.id}}" class="open-level" @click.prevent="toggleChildren" >
-                    <span class="wbs-icon" v-if="level.children.length">
-                        <i class="fa" :class="show_children? 'fa-minus-square-o' : 'fa-plus-square-o'"></i>
-                    </span>
-                    {{level.name}}
-                    <small>({{level.code}})</small>
-                </a>
-            </strong>
+        <div class="wbs-item" :class="{active: selected}">
+            <a href="#children-{{level.id}}" class="open-level" @click.prevent="toggleChildren">
+                <span class="wbs-icon" v-if="level.children.length">
+                    <i class="fa" :class="show_children? 'fa-minus-square-o' : 'fa-plus-square-o'"></i>
+                </span>
+            </a>
+
+            <a :href="`#wbs-${level.id}`" @click.prevent="setSelected" :class="{semibold: level.children.length}">
+                {{level.name}}
+                <small>({{level.code}})</small>
+            </a>
+
         </div>
 
         <ul v-if="level.children.length" :class="{'collapse' : this.depth, 'in': show_children}">
@@ -29,6 +30,10 @@
         top: 5px;
         left: 5px;
     }
+
+    .semibold {
+        font-weight: 600;
+    }
 </style>
 
 <script>
@@ -46,6 +51,12 @@
                 search: '',
                 selected: false
             };
+        },
+
+        created() {
+            window.EventBus.$on('wbsChanged', level => {
+                this.selected = level.id === this.level.id;
+            });
         },
 
         computed: {
@@ -91,11 +102,7 @@
             },*/
 
             setSelected() {
-                this.selected = ! this.selected;
-
-                if (this.selected) {
-                    this.$emit('selected');
-                }
+                window.EventBus.$emit('wbsChanged', this.level);
             }
         }
     }

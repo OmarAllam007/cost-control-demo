@@ -2,13 +2,13 @@ var elixir = require('laravel-elixir');
 require('laravel-elixir-vue');
 
 elixir(function (mix) {
-    mix.sass('app.scss');
-    mix.sass('print.scss');
-    mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
+    // mix.sass('app.scss');
+    // mix.sass('print.scss');
+    // mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.webpack('cost-info-charts.js');
     // mix.sass('app.scss');
-    // mix.webpack('rollup/cost-account.js', 'public/js/rollup/cost-account.js');
+    mix.webpack('rollup/cost-account.js', 'public/js/rollup/cost-account.js');
     // mix.webpack('rollup/semi-cost-account.js', 'public/js/rollup/semi-cost-account.js');
     // mix.webpack('rollup/semi-activity.js', 'public/js/rollup/semi-activity.js');
     //
