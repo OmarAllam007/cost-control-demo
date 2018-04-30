@@ -128,6 +128,9 @@ class ActivityLogExport
         $sheet->getStyle("H{$start}:H{$maxRow}")->getBorders()->getRight()->setBorderStyle('medium');
     }
 
+    /**
+     * @param PHPExcel_Worksheet $sheet
+     */
     private function drivingResources($sheet)
     {
         $budget_driving = $this->budget_resources->filter(function($resource) {
@@ -149,6 +152,8 @@ class ActivityLogExport
             $this->buildResource($sheet, $budget_items, $store_items);
         }
 
+        $sheet->setSelectedCell("B{$this->start}");
+        $sheet->setShowSummaryBelow(false);
     }
 
     /**
@@ -160,25 +165,58 @@ class ActivityLogExport
     {
         $budget_row = $start = $this->row;
 
+        $first = $budget_items->first();
+        $budget_qty = $budget_items->sum('budget_unit');
+        $budget_cost = $budget_items->sum('budget_cost');
+        $sheet->fromArray([
+            $first->resource_code, $first->resource_name, $first->measure_unit,
+            $first->unit_price, $budget_qty, $budget_cost
+        ], null, "B{$budget_row}", true);
+
+        $actuals = $budget_items->pluck('actual_resources')->flatten();
+        $actual_qty = $actuals->sum('qty');
+        $actual_cost = $actuals->sum('cost');
+        $actual_unit_price = 0;
+        if ($actual_qty) {
+            $actual_unit_price = $actual_cost / $actual_qty;
+        }
+        $qty_var = $budget_qty - $actual_qty;
+        $cost_var = $budget_cost - $actual_cost;
+
+        $sheet->fromArray([
+            $actual_unit_price, $actual_qty, $actual_cost, $qty_var, $cost_var
+        ], null, "L{$budget_row}", true);
+
+        $sheet->getRowDimension($budget_row)->setOutlineLevel(0)->setCollapsed(false)->setVisible(true);
+
+        $sheet->getStyle("B{$budget_row}:S{$budget_row}")->applyFromArray([
+            'font' => ['bold' => true],
+            'fill' => ['type' => 'solid', 'startcolor' => ['rgb' => 'EFF8FF']]
+        ]);
+
         foreach ($budget_items as $budget_item) {
+            ++$budget_row;
             $sheet->fromArray([
                 $budget_item->resource_code, $budget_item->resource_name, $budget_item->measure_unit,
                 $budget_item->unit_price, $budget_item->budget_unit, $budget_item->budget_cost, $budget_item->cost_account,
             ], null, "B{$budget_row}", true);
-            ++$budget_row;
+
+            $sheet->getRowDimension($budget_row)->setOutlineLevel(1)->setCollapsed(true)->setVisible(false);
         }
 
         $store_row = $start;
         foreach ($store_items as $store_item) {
+            ++$store_row;
             $sheet->fromArray([
                 $store_item->item_code, $store_item->item_desc, $store_item->measure_unit,
                 $store_item->unit_price, $store_item->qty, $store_item->cost, null, null,
                 $store_item->store_date, $store_item->created_at, $store_item->doc_no
             ], null, "I{$store_row}", true);
-            ++$store_row;
+
+            $sheet->getRowDimension($store_row)->setOutlineLevel(1)->setCollapsed(true)->setVisible(false);
         }
 
-        $max_row = max($budget_row, $store_row) - 1;
+        $max_row = max($budget_row, $store_row);
         $sheet->getStyle("B{$start}:S{$max_row}")->getBorders()->getInside()->setBorderStyle('thin');
         $sheet->getStyle("B{$start}:H{$max_row}")->getBorders()->getOutline()->setBorderStyle('medium');
         $sheet->getStyle("I{$start}:S{$max_row}")->getBorders()->getOutline()->setBorderStyle('medium');

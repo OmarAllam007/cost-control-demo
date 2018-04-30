@@ -113,13 +113,13 @@
                         </h4>
 
                         <div class="card-body" :class="{highlight: important}">
-                            <table class="table table-bordered table-condensed">
+                            <table class="table table-bordered table-striped table-condensed">
                                 <thead>
                                 <tr class="info">
                                     <th class="text-center" colspan="4">Budget</th>
                                     <th class="text-center" colspan="5">Actual</th>
                                 </tr>
-                                <tr class="info">
+                                <tr>
                                     <th width="11%" class="text-center">Unit Price</th>
                                     <th width="11%" class="text-center">Budget Unit</th>
                                     <th width="11%" class="text-center">Amount</th>
@@ -148,10 +148,10 @@
                                 </tr>
                                 </tbody>
                             </table>
-
+                            <hr>
                             <div class="row">
                                 <article class="col-sm-3">
-                                    <table class="table table-striped table-condensed">
+                                    <table class="table table-striped table-condensed table-bordered table-hover">
                                         <thead>
                                         <tr>
                                             <th class="text-center table-caption" colspan="5">Budget</th>
@@ -175,7 +175,7 @@
                                 </article>
 
                                 <article class="col-sm-9 bl-1">
-                                    <table class="table table-striped table-condensed">
+                                    <table class="table table-striped table-condensed table-bordered table-hover">
                                         <thead>
                                         <tr>
                                             <th class="text-center table-caption" colspan="10">Actual</th>
