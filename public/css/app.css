@@ -11304,6 +11304,10 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   background-color: #FFF;
 }
 
+.card .card-body.highlight {
+  background-color: #FFE;
+}
+
 .card .card-row {
   border-bottom: 1px solid #F1F5F8;
 }

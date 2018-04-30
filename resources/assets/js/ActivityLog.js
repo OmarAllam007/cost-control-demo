@@ -47,6 +47,10 @@ Vue.component('ResourceLog', {
 
         cost_var() {
             return this.budget_cost - this.actual_cost;
+        },
+
+        important() {
+            return this.resource.budget_resources.filter(res => res.important).length;
         }
     }
 });

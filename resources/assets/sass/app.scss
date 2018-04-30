@@ -667,6 +667,10 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   .card-body {
     padding: 10px;
     background-color: #FFF;
+
+    &.highlight {
+      background-color: #FFE;
+    }
   }
   .card-row {
     //margin-bottom: 10px;

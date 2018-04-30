@@ -107,12 +107,12 @@
 
                 <resource-log v-for="resource in filteredLogs" :resource="resource" inline-template>
                     <article class="card">
-                        <div class="card-body">
-                            <h4>
-                                <span v-text="resource.name"></span> &mdash;
-                                <span class="text-muted text-capitalize" v-text="resource.code"></span>
-                            </h4>
+                        <h4 class="card-title">
+                            <span v-text="resource.name"></span> &mdash;
+                            <span class="text-muted text-capitalize" v-text="resource.code"></span>
+                        </h4>
 
+                        <div class="card-body" :class="{highlight: important}">
                             <table class="table table-bordered table-condensed">
                                 <thead>
                                 <tr class="info">

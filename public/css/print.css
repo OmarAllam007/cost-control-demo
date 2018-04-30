@@ -11304,6 +11304,10 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
   background-color: #FFF;
 }
 
+.card .card-body.highlight {
+  background-color: #FFE;
+}
+
 .card .card-row {
   border-bottom: 1px solid #F1F5F8;
 }
@@ -11480,12 +11484,6 @@ dl.dl-margin {
   color: #171a1c;
 }
 
-.breakdown-resource {
-  padding: 10px;
-  border-bottom: 1px solid #b8d0e0;
-  align-items: flex-start;
-}
-
 .breakdown-resource:hover, .breakdown-resource:nth-child(odd):hover, .breakdown-resource.active, .breakdown-resource.highlight:hover {
   background-color: #fefef0;
 }
@@ -11497,6 +11495,10 @@ dl.dl-margin {
 
 .breakdown-resource:nth-child(odd) {
   background-color: #ffffff;
+}
+
+.breakdown-resource:nth-child(even) {
+  background-color: #fff;
 }
 
 .breakdown-resource.highlight {
@@ -11511,6 +11513,11 @@ dl.dl-margin {
 .breakdown-resource .actions .btn {
   display: block;
   margin-bottom: 5px;
+}
+
+.breakdown-resource .card-body {
+  background: transparent;
+  align-items: flex-start;
 }
 
 .display-flex-c {
