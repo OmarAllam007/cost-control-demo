@@ -8,6 +8,7 @@
 
 namespace App\Behaviors;
 
+use App\BreakdownTemplate;
 use App\BreakdownVariable;
 use App\Productivity;
 use App\Resources;
@@ -19,8 +20,16 @@ use Make\Makers\Resource;
 
 trait CopyToProject
 {
-    function copyToProject($project_id, $parent_id = 0)
+    protected $template_map;
+
+    function copyToProject($project_id, $parent_id = 0, $template_map = null)
     {
+        if ($template_map) {
+            $this->template_map = $template_map;
+        } else {
+            $this->template_map = collect();
+        }
+
         $user_id = auth()->id() ?: 2;
         $attributes = $this->getAttributes();
         unset($attributes['id']);
@@ -46,8 +55,8 @@ trait CopyToProject
                 $this->copyBreakdown($breakdown, $project_id, $new_wbs_id);
             });
 
-        $this->children->each(function (WbsLevel $level) use ($project_id, $new_wbs_id) {
-            $level->copyToProject($project_id, $new_wbs_id);
+        $this->children->each(function (WbsLevel $level) use ($project_id, $new_wbs_id, $template_map) {
+            $level->copyToProject($project_id, $new_wbs_id, $template_map);
         });
     }
 
@@ -139,6 +148,10 @@ trait CopyToProject
     {
         $user_id = auth()->id() ?: 2;
 
+        if ($this->template_map->has($template->id)) {
+            return $this->template_map->get($template->id);
+        }
+
         $attributes = $template->getAttributes();
         unset($attributes['id']);
         $attributes['created_at'] = date('Y-m-d H:i:s');
@@ -168,7 +181,9 @@ trait CopyToProject
             $tpl_resource_mapping->put($resource->id, $new_resource_id);
         });
 
-        return [$new_template_id, $tpl_resource_mapping];
+        $this->template_map->put($template->id, $result = [$new_template_id, $tpl_resource_mapping]);
+
+        return $result;
     }
 
 
