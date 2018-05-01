@@ -1,7 +1,7 @@
 <template>
     <li :class="`level-${depth}`">
         <div class="wbs-item" :class="{active: selected}">
-            <a href="#children-{{level.id}}" class="open-level" @click.prevent="toggleChildren">
+            <a href="#children-{{level.id}}" class="open-level" @click.prevent="this.show_children = !this.show_children">
                 <span class="wbs-icon" v-if="level.children.length">
                     <i class="fa" :class="show_children? 'fa-minus-square-o' : 'fa-plus-square-o'"></i>
                 </span>
@@ -74,21 +74,21 @@
 
         methods: {
             toggleChildren() {
-                this.show_children = !this.show_children;
-
-                if (!this.activities.length) {
-                    this.loading = true;
-
-                    $.ajax({
-                        url: `/api/rollup/wbs/${this.level.id}`,
-                        dataType: 'json'
-                    }).then((data) => {
-                        this.activities = data;
-                        this.loading = false;
-                    }, () => {
-                        this.loading = false;
-                    });
-                }
+                // this.show_children = !this.show_children;
+                //
+                // if (!this.activities.length) {
+                //     this.loading = true;
+                //
+                //     $.ajax({
+                //         url: `/api/rollup/wbs/${this.level.id}`,
+                //         dataType: 'json'
+                //     }).then((data) => {
+                //         this.activities = data;
+                //         this.loading = false;
+                //     }, () => {
+                //         this.loading = false;
+                //     });
+                // }
             },
 
             /*checkAll(state = true) {

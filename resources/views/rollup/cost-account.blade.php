@@ -29,7 +29,7 @@
 
         <section class="col-sm-9">
 
-
+            <activity-list></activity-list>
 
         </section>
 

@@ -14,9 +14,11 @@ class WbsController extends Controller
     {
         $this->authorize('cost_owner', $wbsLevel->project);
 
-        $activities = BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
+        $activities = BreakDownResourceShadow::whereIn('wbs_id', $wbsLevel->getChildrenIds())
             ->where('is_rollup', false)->whereNull('rolled_up_at')
-            ->selectRaw('DISTINCT activity, activity_id, code')->get();
+            ->selectRaw('DISTINCT wbs_id, activity as name, activity_id, code')
+            ->orderBy('name')->orderBy('code')
+            ->paginate(10);
 
         return $activities;
     }
