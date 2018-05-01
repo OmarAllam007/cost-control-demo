@@ -14,11 +14,13 @@ class WbsController extends Controller
     {
         $this->authorize('cost_owner', $wbsLevel->project);
 
-        $activities = BreakDownResourceShadow::whereIn('wbs_id', $wbsLevel->getChildrenIds())
+        $baseQuery = BreakDownResourceShadow::whereIn('wbs_id', $wbsLevel->getChildrenIds())
             ->where('is_rollup', false)->whereNull('rolled_up_at')
             ->selectRaw('DISTINCT wbs_id, activity as name, activity_id, code')
-            ->orderBy('name')->orderBy('code')
-            ->paginate(10);
+            ->orderBy('name')->orderBy('code');
+
+        $activities = \DB::table(\DB::raw('(' . $baseQuery->toSql() . ') as data'))
+            ->mergeBindings($baseQuery->getQuery())->paginate(10);
 
         return $activities;
     }
