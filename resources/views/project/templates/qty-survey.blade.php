@@ -57,9 +57,8 @@
                                 {{csrf_field()}}{{method_field('delete')}}
                                 <a href="/survey/@{{quantity.id}}/edit" class="btn btn-sm btn-primary in-iframe"
                                    title="Edit Quantity Survey"><i class="fa fa-edit"></i> Edit</a>
-                                @can('budget_owner', $project)
-                                    <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>
-                                @endcan
+
+                                <button class="btn btn-sm btn-warning"><i class="fa fa-trash"></i> Delete</button>
                             </form>
                         @endcan
                     </td>
