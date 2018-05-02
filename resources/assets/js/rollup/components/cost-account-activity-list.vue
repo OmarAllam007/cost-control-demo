@@ -1,5 +1,6 @@
 <template>
     <section>
+        <section class="loading" v-show="loading"><i class="fa fa-spinner fa-spin fa-3x"></i></section>
         <section class="card-group" v-if="activities.length">
             <activity v-for="activity in activities" :initial="activity"></activity>
         </section>
@@ -23,8 +24,8 @@
         },
 
         created() {
-            window.EventBus.$on('wbsChanged', wbs => {
-                this.wbs_id = wbs.id;
+            window.EventBus.$watch('wbs', level => {
+                this.wbs_id = level.id;
             });
         },
 
@@ -32,6 +33,16 @@
             url() {
                 return `/api/rollup/wbs/${this.wbs_id}`;
             }
+        },
+
+        events: {
+            loadingStart() {
+                this.loading = true;
+            },
+
+            loadingDone() {
+                this.loading = false;
+            },
         }
 
 
@@ -39,5 +50,16 @@
 </script>
 
 <style scoped>
-
+    .loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 999;
+        background: rgba(255, 255, 255, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>

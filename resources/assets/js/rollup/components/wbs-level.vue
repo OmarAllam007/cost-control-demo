@@ -54,7 +54,7 @@
         },
 
         created() {
-            window.EventBus.$on('wbsChanged', level => {
+            window.EventBus.$watch('wbs', level => {
                 this.selected = level.id === this.level.id;
             });
         },
@@ -73,24 +73,6 @@
         },
 
         methods: {
-            toggleChildren() {
-                // this.show_children = !this.show_children;
-                //
-                // if (!this.activities.length) {
-                //     this.loading = true;
-                //
-                //     $.ajax({
-                //         url: `/api/rollup/wbs/${this.level.id}`,
-                //         dataType: 'json'
-                //     }).then((data) => {
-                //         this.activities = data;
-                //         this.loading = false;
-                //     }, () => {
-                //         this.loading = false;
-                //     });
-                // }
-            },
-
             /*checkAll(state = true) {
                 if (!this.hasActivityRollup) {
                     return false;
@@ -102,7 +84,7 @@
             },*/
 
             setSelected() {
-                window.EventBus.$emit('wbsChanged', this.level);
+                window.EventBus.wbs = this.level;
             }
         }
     }

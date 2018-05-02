@@ -5,7 +5,11 @@ import Activity from './components/cost-account-activity.vue';
 import ActivityList from './components/cost-account-activity-list.vue';
 import CostAccount from './components/cost-account.vue';
 
-window.EventBus = new Vue({});
+window.EventBus = new Vue({
+    data: {
+        wbs: {}
+    }
+});
 
 Vue.component('wbs-tree', WbsTree);
 Vue.component('wbs-level', WbsLevel);
