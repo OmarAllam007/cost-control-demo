@@ -274,8 +274,8 @@ class BreakdownResource extends Model
     public function updateShadow()
     {
         $formatter = new BreakdownResourceFormatter($this);
-        $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $this->id]);
-        $shadow->update($formatter->toArray());
+        $shadow = BreakDownResourceShadow::firstOrNew(['breakdown_resource_id' => $this->id]);
+        $shadow->fill($attrs = $formatter->toArray())->save();
     }
 
     function getDescriptorAttribute()
