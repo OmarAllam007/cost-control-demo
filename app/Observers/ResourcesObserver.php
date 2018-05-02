@@ -37,6 +37,13 @@ class ResourcesObserver
         }
     }
 
+    function updating(Resources $resource)
+    {
+        if (!$resource->project_id && $resource->isDirty('resource_type_id')) {
+            $resource->resource_code = $this->generateResourceCode($resource);
+        }
+    }
+
     function updated(Resources $resource)
     {
         if($resource->project_id) {
