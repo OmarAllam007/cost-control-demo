@@ -62,9 +62,9 @@ class PhysicalQtyParser
             $costIssues = new CostIssuesLog($this->batch);
             $costIssues->recordInvalid($this->errors['invalid']);
 
-            $this->errors['invalid']->each(function($row) {
-               $this->rows->forget($row['hash']);
-           });
+            $this->errors['invalid']->each(function ($row) {
+                $this->rows->forget($row['hash']);
+            });
         }
 
         $this->errors['resources'] = $this->physicalMapping->filter(function (Collection $group) {
@@ -96,11 +96,11 @@ class PhysicalQtyParser
 
         $query = BreakDownResourceShadow::whereProjectId($this->batch->project_id)
             ->whereCode($budget_activity)
-            ->when($budget_resources->count(), function($query) use ($budget_resources) {
+            ->when($budget_resources->count(), function ($query) use ($budget_resources) {
                 return $query->whereIn('resource_id', $budget_resources);
             })->when($rollup_resource, function ($query) use ($rollup_resource) {
                 return $query->where('id', $rollup_resource);
-            });
+            })->orderByRaw('coalesce(important, 0) DESC');
 
         $resource = $query->first();
 
@@ -136,10 +136,10 @@ class PhysicalQtyParser
     protected function loadResourceCodes()
     {
         $this->resourcesMap = Resources::where('project_id', $this->batch->project_id)
-            ->get(['resource_code', 'id'])->keyBy(function($resource) {
+            ->get(['resource_code', 'id'])->keyBy(function ($resource) {
                 return strtolower($resource->resource_code);
             })->map(function (Resources $resource) {
-               return collect([$resource->id]);
+                return collect([$resource->id]);
             });
 
         ResourceCode::where('project_id', $this->batch->project_id)
@@ -154,9 +154,9 @@ class PhysicalQtyParser
                 return $map;
             }, $this->resourcesMap);
 
-        $this->rollupResourcesMap = BreakDownResourceShadow::whereIsRollup(true)->get()->keyBy(function($resource) {
+        $this->rollupResourcesMap = BreakDownResourceShadow::whereIsRollup(true)->get()->keyBy(function ($resource) {
             return strtolower($resource->resource_code);
-        })->map(function($resource) {
+        })->map(function ($resource) {
             return $resource->id;
         });
     }
@@ -167,16 +167,17 @@ class PhysicalQtyParser
         if ($resource->rolled_up_at) {
             $breakdown_resource_id = $resource->rollupResource->breakdown_resource_id;
             if (!$this->physicalMapping->has($breakdown_resource_id)) {
-                $this->physicalMapping
-                    ->put($breakdown_resource_id, collect([
-                        'resource' => $resource->rollupResource, 'rows' => collect(), 'hash' => $resource->rollupResource->id
-                    ]));
+                $this->physicalMapping->put($breakdown_resource_id, collect([
+                    'resource' => $resource->rollupResource,
+                    'rows' => collect(),
+                    'hash' => $resource->rollupResource->id
+                ]));
             }
 
             $this->physicalMapping->get($breakdown_resource_id)->get('rows')->put($row['hash'], $row);
         }
 
-        if ($resource->important && $resource->rollupResource->isActivityRollup()) {
+        if (!$resource->rolled_up_at || ($resource->important && $resource->rollupResource->isActivityRollup())) {
             $breakdown_resource_id = $resource->breakdown_resource_id;
             if (!$this->physicalMapping->has($breakdown_resource_id)) {
                 $this->physicalMapping->put($breakdown_resource_id, collect([
@@ -197,7 +198,7 @@ class PhysicalQtyParser
             return false;
         }
 
-        return ! UnitAlias::whereUnitId($resource->unit_id)->pluck('name')->map(function($unit) {
+        return !UnitAlias::whereUnitId($resource->unit_id)->pluck('name')->map(function ($unit) {
             return strtolower(trim($unit));
         })->contains($storeUnit);
     }
