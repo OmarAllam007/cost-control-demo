@@ -88,7 +88,7 @@ class CostImporter
 
         foreach ($this->rows as $hash => $row) {
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
-            $query = BreakDownResourceShadow::where('code', $activityCode);
+            $query = BreakDownResourceShadow::where('code', $activityCode)->whereNull('rolled_up_at');
 
             $resource_code = trim(strtolower($row[7]));
             if ($this->resourcesMap->has($resource_code)) {
@@ -154,7 +154,9 @@ class CostImporter
         foreach ($this->rows as $hash => $row) {
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $query = BreakDownResourceShadow::where('code', $activityCode)
-                ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'");
+                ->whereNull('rolled_up_at')
+                ->whereRaw('coalesce(progress, 0) < 100')
+                ->whereRaw("coalesce(status, '') != 'closed'");
 
             $resource_code = trim(strtolower($row[7]));
             if ($this->resourcesMap->has($resource_code)) {
