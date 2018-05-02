@@ -44,8 +44,8 @@ trait CopyToProject
   select $new_wbs_id as wbs_id, item, description, type, unit_id, quantity, dry_ur, price_ur, arabic_description, now() as created_at, now() as updated_at, division_id, code, item_code, cost_account, kcc_qty, subcon, materials, manpower, $project_id as project_id, $user_id, $user_id
   from boqs where wbs_id = {$this->id}");
 
-        \DB::insert("insert into qty_surveys(cost_account, item_code, description, unit_id, budget_qty, eng_qty, deleted_at, created_at, updated_at, wbs_level_id, project_id, code, discipline, created_by, updated_by)
-    select cost_account, item_code, description, unit_id, budget_qty, eng_qty, deleted_at, now() as created_at, now() as updated_at, $new_wbs_id as wbs_level_id, $project_id as project_id, code, discipline, $user_id as created_by, $user_id as updated_by
+        \DB::insert("insert into qty_surveys(cost_account, item_code, description, unit_id, budget_qty, eng_qty, deleted_at, created_at, updated_at, wbs_level_id, project_id, qs_code, discipline, created_by, updated_by)
+    select cost_account, item_code, description, unit_id, budget_qty, eng_qty, deleted_at, now() as created_at, now() as updated_at, $new_wbs_id as wbs_level_id, $project_id as project_id, qs_code, discipline, $user_id as created_by, $user_id as updated_by
     from qty_surveys
     where wbs_level_id = {$this->id}");
 
