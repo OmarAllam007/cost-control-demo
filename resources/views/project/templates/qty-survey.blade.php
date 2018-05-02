@@ -72,7 +72,7 @@
             <i class="fa fa-info-circle"></i> No quantities found
         </div>
 
-        @can('budget_owner', $project)
+        @can('qty_survey', $project)
             <div class="modal fade" tabindex="-1" role="dialog" id="DeleteQsModal">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
