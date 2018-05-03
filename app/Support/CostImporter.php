@@ -67,16 +67,16 @@ class CostImporter
      */
     public function checkPhysicalQty()
     {
-       $parser = new PhysicalQtyParser($this->batch, $this->rows);
-       $errors = $parser->handle();
+        $parser = new PhysicalQtyParser($this->batch, $this->rows);
+        $errors = $parser->handle();
 
-       $this->cache();
+        $this->cache();
 
-       if ($errors['resources']->count()) {
-           return ['error' => 'physical_qty', 'errors' => $errors['resources'], 'batch' => $this->batch];
-       }
+        if ($errors['resources']->count()) {
+            return ['error' => 'physical_qty', 'errors' => $errors['resources'], 'batch' => $this->batch];
+        }
 
-       return $this->checkClosed();
+        return $this->checkClosed();
     }
 
     /**
@@ -87,6 +87,14 @@ class CostImporter
         $errors = collect();
 
         foreach ($this->rows as $hash => $row) {
+            if (isset($row['resource'])) {
+                $resource = $row['resource'];
+                if (strtolower($resource->status) == 'closed' || $resource->progress == 100) {
+                    $errors->push($resource);
+                }
+                continue;
+            }
+
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $query = BreakDownResourceShadow::where('code', $activityCode)->whereNull('rolled_up_at');
 
@@ -102,6 +110,7 @@ class CostImporter
             }
 
             $resources = $query->get();
+
             foreach ($resources as $resource) {
                 if (strtolower($resource->status) == 'closed' || $resource->progress == 100) {
                     $errors->push($resource);
@@ -152,6 +161,10 @@ class CostImporter
 
         $invalid = collect();
         foreach ($this->rows as $hash => $row) {
+            if (isset($row['resource'])) {
+                continue;
+            }
+
             $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
             $query = BreakDownResourceShadow::where('code', $activityCode)
                 ->whereNull('rolled_up_at')

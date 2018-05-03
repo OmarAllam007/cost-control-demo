@@ -91,8 +91,6 @@ class CostImportFixer
 //        $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
         $resourcesLog = collect();
         foreach ($data as $key => $qty) {
-
-
             $rows = $errors[$key]['rows'];
             $newResource = $rows->first();
 
