@@ -9,13 +9,13 @@
         </div>
 
         <div class="card-body" v-show="expanded">
-            <cost-account v-for="cost_account in filtered_cost_accounts" :initial="cost_account"></cost-account>
+            <cost-account v-for="cost_account in filtered_cost_accounts" :key="cost_account.code" :initial="cost_account"></cost-account>
         </div>
     </article>
 </template>
 
 <style>
-    input[type=search] {
+    .card-title > input[type=search] {
         width: 200px;
     }
 
@@ -51,9 +51,9 @@
                 }
 
                 const term = this.search.toLowerCase();
-                return this.cost_accounts.filter(
-                    cost_account => cost_account.code.toLowerCase().indexOf(term) >= 0
-                )
+                return this.cost_accounts.filter(cost_account => {
+                    return cost_account.code.toLowerCase().indexOf(term) >= 0 || cost_account.description.toLowerCase().indexOf(term) >= 0;
+                });
             }
         },
 

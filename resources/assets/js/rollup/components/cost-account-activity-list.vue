@@ -1,8 +1,18 @@
 <template>
     <section>
         <section class="loading" v-show="loading"><i class="fa fa-spinner fa-spin fa-3x"></i></section>
+
+        <section class="card" v-if="wbs_id">
+            <div class="card-body">
+                <input type="search" class="form-control input-sm" name="search" placeholder="Search for activities" v-model="search">
+            </div>
+        </section>
+
         <section class="card-group" v-if="activities.length">
-            <activity v-for="activity in activities" :initial="activity"></activity>
+            <div class="form-group">
+
+            </div>
+            <activity v-for="activity in activities" :initial="activity" :key="activity.code"></activity>
         </section>
         <div class="alert alert-info" v-else>
             <i class="fa fa-info-circle"></i>
@@ -15,12 +25,13 @@
 
 <script>
     import LaravelPagination from "../../LaravelPagination.vue";
+    import _ from 'lodash';
 
     export default {
         name: "ActivityList",
         components: {LaravelPagination},
         data() {
-            return {wbs_id: 0, activities: [], loading: false}
+            return {wbs_id: 0, activities: [], loading: false, search: '', term: ''}
         },
 
         created() {
@@ -31,8 +42,18 @@
 
         computed: {
             url() {
-                return `/api/rollup/wbs/${this.wbs_id}`;
+                if (!this.wbs_id) {
+                    return '';
+                }
+                
+                return `/api/rollup/wbs/${this.wbs_id}?term=${this.term}`;
             }
+        },
+
+        watch: {
+            search: _.debounce(function() {
+                this.term = this.search.toLowerCase();
+            }, 500)
         },
 
         events: {
@@ -41,6 +62,10 @@
             },
 
             loadingDone() {
+                this.loading = false;
+            },
+
+            loadingError() {
                 this.loading = false;
             },
         }

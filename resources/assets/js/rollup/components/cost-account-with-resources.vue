@@ -24,7 +24,7 @@
             <th>
                 <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`" :required="selected">
                     <option value="">Select Unit</option>
-                    <option v-for="unit in units" :selected="unit.id == qs_unit" :value="unit.id" v-text="unit.type"></option>
+                    <option v-for="unit in units" :selected="unit.id == qs_unit" :value="unit.id" v-text="unit.type" :key="unit.id"></option>
                 </select>
             </th>
             <th>{{total_budget_cost}}</th>
@@ -38,7 +38,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="resource in cost_account.resources" :class="resource.important? 'danger' : ''" @click="resource.selected = !resource.selected">
+        <tr v-for="resource in cost_account.resources" :class="resource.important? 'danger' : ''" @click="resource.selected = !resource.selected" :key="resource.id">
             <td class="text-center">
                 <input type="checkbox" :name="get_input_name(resource)"
                        :value="resource.id"

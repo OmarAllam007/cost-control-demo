@@ -27,7 +27,7 @@
             <th :class="invalid_measure_unit? 'has-error' : ''">
                 <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`" :required="selected">
                     <option value="">Select Unit</option>
-                    <option v-for="unit in units" :selected="unit.id == qs_unit" :value="unit.id" v-text="unit.type"></option>
+                    <option v-for="unit in units" :selected="unit.id == qs_unit" :value="unit.id" :key="unit.invalid_measure_unit" v-text="unit.type"></option>
                 </select>
             </th>
             <th v-text="total_budget_cost"></th>
@@ -42,7 +42,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="resource in cost_account.resources" :class="resource.important? 'highlight' : ''">
+        <tr v-for="resource in cost_account.resources" :key="resource.code" :class="resource.important? 'highlight' : ''">
             <td class="text-center"><i class="fa fa-asterisk" v-if="resource.important"></i></td>
             <td v-text="resource.code"></td>
             <td v-text="resource.name"></td>

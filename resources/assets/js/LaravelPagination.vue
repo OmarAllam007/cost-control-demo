@@ -6,7 +6,7 @@
         <li v-if="hasPrevious">
             <a href="#" @click.prevent="page--">&laquo;</a>
         </li>
-        <li v-for="p in range" :class="{active: page == p}">
+        <li v-for="p in range" :class="{active: page == p}" :key="p">
             <a href="#" @click.prevent="page = p" v-text="p"></a>
         </li>
         <li v-if="hasNext">
@@ -51,7 +51,7 @@
         },
 
         created() {
-            this.loadData();
+            if (this.url) this.loadData();
         },
 
         watch: {
@@ -98,7 +98,9 @@
                     this.$parent[this.property] = response.data;
                     this.totalPages = response.last_page;
 
-                    this.$dispatch('loadingDone');
+                    this.$dispatch('loadingDone', response);
+                }).error(response => {
+                    this.$dispatch('loadingError', response);
                 });
             }
         }
