@@ -160,9 +160,9 @@ class BreakdownResourceController extends Controller
             }
         }
 
-        if ($request->ajax()) {
-            $breakdowns = BreakDownResourceShadow::where('wbs_id', $target_wbs->id)->where('show_in_budget', 1)->get();
-            return ['ok' => true, 'breakdowns' => $breakdowns];
+        if ($request->wantsJson()) {
+//            $breakdowns = BreakDownResourceShadow::where('wbs_id', $target_wbs->id)->get();
+            return ['ok' => true];
         }
 
         return \Redirect::route('project.show', $source_wbs->project_id);
