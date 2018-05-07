@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 12/2/18
- * Time: 1:59 PM
- */
 
 namespace App\Support;
-
 
 use App\ActivityMap;
 use App\ActualBatch;
@@ -90,13 +83,24 @@ class PhysicalQtyParser
         $store_activity = trim(strtolower($row[0]));
         $budget_activity = $this->activityCodes->get($store_activity);
 
+        $rolledUpResource = BreakDownResourceShadow::where('code', $budget_activity)->where('is_rollup', true)->where('show_in_cost', true)->first();
+        if ($rolledUpResource) {
+            $this->mapResource($rolledUpResource, $row);
+            return true;
+        }
+
         $store_resource = trim(strtolower($row[7]));
-        $budget_resources = $this->resourcesMap->get($store_resource, collect());
+        $budget_resources = $this->resourcesMap->get($store_resource);
         $rollup_resource = $this->rollupResourcesMap->get($store_resource);
+
+        if (!$budget_resources && !$rollup_resource) {
+            $this->errors['invalid']->push($row);
+            return false;
+        }
 
         $query = BreakDownResourceShadow::whereProjectId($this->batch->project_id)
             ->whereCode($budget_activity)
-            ->when($budget_resources->count(), function ($query) use ($budget_resources) {
+            ->when($budget_resources, function ($query) use ($budget_resources) {
                 return $query->whereIn('resource_id', $budget_resources);
             })->when($rollup_resource, function ($query) use ($rollup_resource) {
                 return $query->where('id', $rollup_resource);

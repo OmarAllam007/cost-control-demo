@@ -139,6 +139,11 @@ class CostImporter
         }
 
         foreach ($this->rows as $row) {
+            $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+            if ($this->rolledUpResources->has($activityCode)) {
+                continue;
+            }
+
             $code = trim(strtolower($row[7]));
             if (!$this->resourcesMap->has($code) && !$this->rolledUpResources->has($code)) {
                 $errors['resources']->push($row);
