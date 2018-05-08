@@ -16,7 +16,7 @@ class WbsController extends Controller
         
         $baseQuery = BreakDownResourceShadow::whereIn('wbs_id', $wbsLevel->getChildrenIds())
             ->where('is_rollup', false)->whereNull('rolled_up_at')
-            ->selectRaw('DISTINCT wbs_id, activity as name, activity_id, code')
+            ->selectRaw('DISTINCT project_id, wbs_id, activity as name, activity_id, code')
             ->orderBy('name')->orderBy('code');
         
         $baseQuery->when(request('term'), function($query) {
@@ -27,7 +27,7 @@ class WbsController extends Controller
         });
         
         $activities = \DB::table(\DB::raw('(' . $baseQuery->toSql() . ') as data'))
-        ->mergeBindings($baseQuery->getQuery())->paginate(10);
+            ->mergeBindings($baseQuery->getQuery())->paginate(10);
         
         return $activities;
     }

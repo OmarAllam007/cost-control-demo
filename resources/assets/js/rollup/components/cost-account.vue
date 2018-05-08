@@ -67,13 +67,15 @@
             };
         },
 
-        created() {
-            window.EventBus.$on('wbsChanged');
-        },
-
         methods: {
             setChecked(state = true) {
                 this.selected = state;
+            }
+        },
+
+        watch: {
+            selected(state) {
+                this.$emit('state-changed', state);
             }
         },
 

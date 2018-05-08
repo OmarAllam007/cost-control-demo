@@ -24,7 +24,12 @@ class CostAccountRollupController extends Controller
         $rollup = new CostAccountRollup($project, $request->get('cost_account', []), $request->only('budget_unit', 'measure_unit', 'to_date_qty'));
         $status = $rollup->handle();
 
-        flash("$status Cost accounts have been rolled up", 'success');
+        $message = "$status Cost accounts have been rolled up";
+        if ($request->wantsJson()) {
+            return ['ok' => 'true', 'message' => $message];
+        }
+
+        flash($message, 'success');
         return redirect("/project/{$project->id}/rollup-semi-cost-account");
     }
 }

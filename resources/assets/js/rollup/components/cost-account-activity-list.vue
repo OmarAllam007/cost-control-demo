@@ -9,9 +9,6 @@
         </section>
 
         <section class="card-group" v-if="activities.length">
-            <div class="form-group">
-
-            </div>
             <activity v-for="activity in activities" :initial="activity" :key="activity.code"></activity>
         </section>
         <div class="alert alert-info" v-else>

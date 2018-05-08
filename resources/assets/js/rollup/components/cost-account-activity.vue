@@ -1,35 +1,70 @@
 <template>
     <article class="card cost-account-activity">
+        <div v-show="loading" class="loading"><i class="fa fa-3x fa-spinner fa-spin"></i></div>
         <div class="card-title display-flex">
             <h4 class="flex">
+                <input type="checkbox" title="Select All" v-model="select_all" value="1" />
+
                 <a href="#" @click.prevent="expanded = ! expanded">{{activity.name}} &mdash; {{activity.code}}</a>
             </h4>
 
-            <input type="search" v-model="search" placeholder="Type to search" class="form-control input-sm">
+            <div class="vw-300 display-flex">
+                <input type="search" v-model="search" placeholder="Type to search" class="form-control input-sm">
+                <button v-show="show_rollup_button" type="button" class="btn btn-sm btn-primary vml-1" @click="rollup"><i class="fa fa-compress"></i> Rollup</button>
+            </div>
         </div>
 
         <div class="card-body" v-show="expanded">
-            <cost-account v-for="cost_account in filtered_cost_accounts" :key="cost_account.code" :initial="cost_account"></cost-account>
+            <cost-account v-for="cost_account in filtered_cost_accounts" 
+                :key="cost_account.code"
+                :initial="cost_account"
+                @state-changed="update_selected"></cost-account>
         </div>
     </article>
 </template>
 
 <style>
-    .card-title > input[type=search] {
-        width: 200px;
+    .vml-1 {
+        margin-left: 0.5rem;
+    }
+
+    .vw-300 {
+        width: 300px;
     }
 
     .card h4 {
         margin: 0;
     }
+
+    .cost-account-activity {
+        position: relative;
+    }
+
+    .cost-account-activity .loading {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.7);
+    }
 </style>
 
 <script>
     export default {
+        name: 'CostAccountActivity',
+
         props: ['initial'],
 
         data() {
-            return { activity: this.initial, cost_accounts: [], expanded: false, loading: false, search: '' }
+            return { 
+                activity: this.initial, cost_accounts: [], 
+                expanded: false, loading: false, search: '', 
+                select_all: false, show_rollup_button: false 
+            };
         },
 
         created() {
@@ -57,9 +92,50 @@
             }
         },
 
-        methods: {
-            checkAll(state) {
+        watch: {
+            select_all(state) {
+                if (state) {
+                    this.expanded = true;
+                }
                 this.$children.forEach(child => child.setChecked(state));
+            }
+        },
+
+        methods: {
+            update_selected() {
+                const selected = this.$children.filter(child => { return child.selected; }).length;
+                this.show_rollup_button = selected > 0;
+                if (!selected) {
+                    this.select_all = false;
+                }
+            },
+
+            rollup() {
+                const _token = document.querySelector('meta[name=csrf-token]').content;
+                const cost_account = this.$children.filter(
+                    child => child.selected
+                ).map(
+                    child => child.cost_account.id
+                );
+
+                this.loading = true;
+                $.ajax({
+                    url: `/project/${this.activity.project_id}/rollup-cost-account`,
+                    dataType: 'json', method: 'post', 
+                    data: { _token, cost_account }
+                }).then(response => {
+                    this.cost_accounts = this.cost_accounts.filter(
+                        account => cost_account.indexOf(account.id) < 0
+                    );
+
+                    if (!this.cost_accounts.length) {
+                        this.$emit('remove-activity', this.activity);
+                    }
+                    
+                    this.loading = false;
+                },response => {
+                    this.loading = false;
+                });
             }
         }
     };
