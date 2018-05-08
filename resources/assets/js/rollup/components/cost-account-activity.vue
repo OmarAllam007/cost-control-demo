@@ -87,7 +87,8 @@
 
                 const term = this.search.toLowerCase();
                 return this.cost_accounts.filter(cost_account => {
-                    return cost_account.code.toLowerCase().indexOf(term) >= 0 || cost_account.description.toLowerCase().indexOf(term) >= 0;
+                    return cost_account.code.toLowerCase().indexOf(term) >= 0 || 
+                        cost_account.description.toLowerCase().indexOf(term) >= 0;
                 });
             }
         },
@@ -129,9 +130,9 @@
                     );
 
                     if (!this.cost_accounts.length) {
-                        this.$emit('remove-activity', this.activity);
+                        this.$emit('delete-activity', this.activity);
                     }
-                    
+
                     this.loading = false;
                 },response => {
                     this.loading = false;

@@ -9,11 +9,15 @@
         </section>
 
         <section class="card-group" v-if="activities.length">
-            <activity v-for="activity in activities" :initial="activity" :key="activity.code"></activity>
+            <activity 
+                @delete-activity="deleteActivity(activity)"  
+                v-for="activity in activities" 
+                :initial="activity" 
+                :key="activity.code"></activity>
         </section>
+
         <div class="alert alert-info" v-else>
-            <i class="fa fa-info-circle"></i>
-            No Activities Found
+            <i class="fa fa-info-circle"></i> No Activities Found
         </div>
 
         <laravel-pagination property="activities" :url="url"></laravel-pagination>
@@ -51,6 +55,14 @@
             search: _.debounce(function() {
                 this.term = this.search.toLowerCase();
             }, 500)
+        },
+
+        methods: {
+            deleteActivity(deleted) {
+                this.activities = this.activities.filter(activity => 
+                    activity.code !== deleted.code
+                );
+            }
         },
 
         events: {
