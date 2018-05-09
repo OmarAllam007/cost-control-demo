@@ -81,7 +81,7 @@ class SemiActivityRollup
             'updated_by' => $this->user_id, 'updated_at' => $this->now
         ]);
 
-        $this->project->shadows()->whereIn('id', $resources->pluck('id'))->update([
+        $this->project->shadows()->whereIn('breakdown_resource_id', $resources->pluck('id'))->update([
             'show_in_cost' => false, 'rolled_up_at' => $this->now,
             'rollup_resource_id' => $this->rollup_shadow->id,
             'updated_by' => $this->user_id, 'updated_at' => $this->now
@@ -111,12 +111,14 @@ class SemiActivityRollup
 
         $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
-            'resource_code' => $resource->code, 'resource_type_id' => 4,
+            'resource_code' => $resource->code . '.' . $cost_account_suffix,
+            'resource_type_id' => 4,
+            'cost_account' => $resource->code . '.' . $cost_account_suffix,
             'resource_name' => $resource->shadow->activity, 'resource_type' => '07.OTHERS',
             'activity_id' => $resource->shadow->activity_id, 'activity' => $resource->shadow->activity,
             'eng_qty' => 1, 'budget_qty' => 1, 'resource_qty' => 1, 'budget_unit' => 1,
-            'resource_waste' => 0, 'unit_price' => $total_cost, 'budget_cost' => $total_cost,
-            'measure_unit' => 'LS', 'unit_id' => 15, 'template' => 'Semi Activity Rollup',
+            'resource_waste' => 0, 'unit_price' => $unit_price, 'budget_cost' => $total_cost,
+            'measure_unit' => $measure_unit, 'unit_id' => 15, 'template' => 'Semi Activity Rollup',
             'breakdown_id' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
             'remarks' => 'Cost account rollup', 'productivity_ref' => '', 'productivity_output' => 0,
@@ -145,20 +147,14 @@ class SemiActivityRollup
 
     private function update_cost($code, $resource_ids)
     {
-        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resource_ids)->get();
+        $actual_resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->get();
 
         $period = $this->project->open_period();
         if (!$period) {
-            // If no open period select the last period in the project to apply
-            $period = $this->project->periods()->latest('id')->first();
-
-            // If there is no period at all in the project then ignore to date values as it is pointless
-            if (!$period) {
-                return $this->rollup_shadow;
-            }
+            return $this->rollup_shadow;
         }
 
-        $to_date_cost = $actual_resources->sum('cost');
+        $to_date_cost = $actual_resources->sum('to_date_cost');
         $to_date_qty = $this->extra['to_date_qty'][$code] ?? 0;
         $to_date_unit_price = 0;
 

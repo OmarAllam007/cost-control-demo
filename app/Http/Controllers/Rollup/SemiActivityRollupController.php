@@ -32,6 +32,10 @@ class SemiActivityRollupController extends Controller
 
         $status = $rollup->handle();
 
+        if ($request->wantsJson()) {
+            return ['ok' => true, 'count' => $status['activities']];
+        }
+
         flash("{$status['resources']} Resources in {$status['activities']} activities have been rolled up", 'success');
 
         return \Redirect::route('project.cost-control', $project);

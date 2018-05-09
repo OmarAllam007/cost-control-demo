@@ -15,23 +15,27 @@
 @endsection
 
 @section('body')
-    <form action="#" method="post" id="RollupForm">
-        {{csrf_field()}}
+    <form action="" method="post" id="RollupForm" class="row">
 
-        <div class="search-form row">
-            <div class="form-group col-sm-3">
-                <button type="button" @click="show_wbs_modal" class="btn btn-default btn-sm btn-block">
-                    <i class="fa fa-building-o"></i>
-                    @{{ wbs.code? wbs.code : 'Select WBS' }}
-                </button>
-            </div>
+        <section class="col-sm-3">
+            {{csrf_field()}}
 
-            <activity-list :wbs="wbs"></activity-list>
-        </div>
+            <wbs-tree :initial="{{$wbsTree}}" inline-template>
+                <ul class="wbs-tree list-unstyled br-1" id="wbs-tree">
+                    <wbs-level :initial="level" v-for="level in levels" depth="0"></wbs-level>
+                </ul>
+            </wbs-tree>
+        </section>
 
-        <wbs-modal :selected="wbs" :levels="{{$wbsTree}}"></wbs-modal>
+        <section class="col-sm-9">
 
-        <rollup-form :wbs="wbs" :code="activity_code"></rollup-form>
+            <activity-list></activity-list>
+
+        </section>
+
+        {{--<div class="form-group">
+            <button class="btn btn-primary">Next <i class="fa fa-chevron-right"></i></button>
+        </div>--}}
     </form>
 @endsection
 

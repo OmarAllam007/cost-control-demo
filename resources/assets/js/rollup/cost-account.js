@@ -2,7 +2,7 @@ import Vue from 'vue';
 import WbsTree from './components/WbsTree.vue';
 import WbsLevel from './components/wbs-level.vue';
 import Activity from './components/cost-account-activity.vue';
-import ActivityList from './components/cost-account-activity-list.vue';
+import ActivityList from './components/ActivityList.vue';
 import CostAccount from './components/cost-account.vue';
 
 window.EventBus = new Vue({
