@@ -266,13 +266,20 @@ class CostImporter
             ];
 
             if ($resource->is_rollup || !$resource->rolled_up_at) {
-                $this->actual_resources->push(ActualResources::create($attributes));
+                $actual_resource = ActualResources::create($attributes);
+                $this->actual_resources->push($actual_resource);
+                StoreResource::where('id', $hash)
+                    ->update([
+                        'budget_code' => $resource->code,
+                        'resource_id' => $resource->resource_id,
+                        'actual_resource_id' => $actual_resource->id
+                    ]);
             } else {
                 ImportantActualResource::create($attributes);
+                StoreResource::where('id', $hash)
+                    ->update(['budget_code' => $resource->code, 'resource_id' => $resource->resource_id]);
             }
 
-            StoreResource::where('id', $hash)
-                ->update(['budget_code' => $resource->code, 'resource_id' => $resource->resource_id]);
 
             if (!$resource->is_rollup) {
                 $resource_dict->push($resource->resource_id);

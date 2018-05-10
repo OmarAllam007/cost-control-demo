@@ -7,10 +7,12 @@ use App\ActualResources;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\CostIssue;
 use App\CostResource;
 use App\CostShadow;
 use App\Http\Controllers\Controller;
 use App\Project;
+use App\StoreResource;
 use App\WbsLevel;
 use App\WbsResource;
 use Illuminate\Database\Eloquent\Collection;
@@ -164,6 +166,10 @@ class CostController extends Controller
             ->get()->each(function (ActualResources $resource) {
                 $resource->delete();
             });
+
+        StoreResource::where('batch_id', $actual_batch->id)->delete();
+
+        CostIssue::where('batch_id', $actual_batch->id)->delete();
 
         $actual_batch->delete();
 

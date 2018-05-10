@@ -12,6 +12,7 @@ class CreateStoreResourcesTable extends Migration
             $table->unsignedInteger('project_id');
             $table->unsignedInteger('period_id');
             $table->unsignedInteger('batch_id');
+            $table->unsignedInteger('actual_resource_id')->nullable();
             $table->string('budget_code')->nullable();
             $table->unsignedInteger('resource_id')->nullable();
             $table->string('activity_code');
@@ -22,6 +23,7 @@ class CreateStoreResourcesTable extends Migration
             $table->float('unit_price', 12, 2);
             $table->float('qty', 12, 2);
             $table->float('cost', 12, 2);
+
             $table->text('doc_no')->nullable();
             $table->text('row_ids')->nullable();
             $table->timestamps();
