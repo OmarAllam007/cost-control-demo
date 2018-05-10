@@ -172,14 +172,24 @@
                 const resources = {};
                 resources[this.activity.code] = this.resources.filter(res => res.selected).map(res => res.id);
 
-                console.log(this._token);
+                const budget_units = {}, measure_units = {},
+                    to_date_qtys = {}, progress = {};
 
+
+                budget_units[this.activity.code] = this.budget_unit;
+                measure_units[this.activity.code] = this.measure_unit;
+                to_date_qtys[this.activity.code] = this.to_date_qty;
+                progress[this.activity.code] = this.progress;
+
+
+                // The API end point requires data to be in this shape 😩
                 const data = {
-                    _token: this.token, resources, budget_unit: this.budget_unit, measure_unit: this.measure_unit,
-                    to_date_qty: this.to_date_qty, progress: this.progress
+                    _token: this.token, resources,
+                    budget_unit: budget_units,
+                    measure_unit: measure_units,
+                    to_date_qty: to_date_qtys,
+                    progress: progress
                 };
-
-                console.log(data);
 
                 const url = `/project/${this.activity.project_id}/rollup-semi-activity`;
 

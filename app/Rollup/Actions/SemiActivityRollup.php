@@ -116,7 +116,7 @@ class SemiActivityRollup
             'cost_account' => $resource->code . '.' . $cost_account_suffix,
             'resource_name' => $resource->shadow->activity, 'resource_type' => '07.OTHERS',
             'activity_id' => $resource->shadow->activity_id, 'activity' => $resource->shadow->activity,
-            'eng_qty' => 1, 'budget_qty' => 1, 'resource_qty' => 1, 'budget_unit' => 1,
+            'eng_qty' => $budget_unit, 'budget_qty' => $budget_unit, 'resource_qty' => $budget_unit, 'budget_unit' => $budget_unit,
             'resource_waste' => 0, 'unit_price' => $unit_price, 'budget_cost' => $total_cost,
             'measure_unit' => $measure_unit, 'unit_id' => 15, 'template' => 'Semi Activity Rollup',
             'breakdown_id' => 0, 'wbs_id' => $resource->wbs_id,
