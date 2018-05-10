@@ -83,15 +83,27 @@ class PhysicalQtyParser
         $store_activity = trim(strtolower($row[0]));
         $budget_activity = $this->activityCodes->get($store_activity);
 
-        $rolledUpResource = BreakDownResourceShadow::where('code', $budget_activity)->where('is_rollup', true)->where('show_in_cost', true)->first();
-        if ($rolledUpResource) {
-            $this->mapResource($rolledUpResource, $row);
-            return true;
-        }
-
         $store_resource = trim(strtolower($row[7]));
         $budget_resources = $this->resourcesMap->get($store_resource);
         $rollup_resource = $this->rollupResourcesMap->get($store_resource);
+
+        // Check if we have activity rollup
+        $rolledUpResource = BreakDownResourceShadow::where('resource_code', $budget_activity)->where('is_rollup', true)->where('show_in_cost', true)->first();
+        if ($rolledUpResource) {
+            $this->mapResource($rolledUpResource, $row);
+
+            // Check if we have an important resource that can be mapped
+            if ($budget_resources) {
+                $query = BreakDownResourceShadow::whereProjectId($this->batch->project_id)
+                    ->whereCode($budget_activity)->whereIn('resource_id', $budget_resources)
+                    ->orderByRaw('coalesce(important, 0) DESC');
+
+                $resource = $query->first();
+                if ($resource) {
+                    $this->mapResource($resource, $row);
+                }
+            }
+        }
 
         if (!$budget_resources && !$rollup_resource) {
             $this->errors['invalid']->push($row);
