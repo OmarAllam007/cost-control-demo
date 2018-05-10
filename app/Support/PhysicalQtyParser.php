@@ -103,6 +103,8 @@ class PhysicalQtyParser
                     $this->mapResource($resource, $row);
                 }
             }
+
+            return true;
         }
 
         if (!$budget_resources && !$rollup_resource) {
