@@ -242,7 +242,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                 $allowable_cost = $allowable_qty * $to_date_unit_price;
                 $waste_index = 0;
                 if ($allowable_cost) {
-                    $waste_index = ($allowable_cost - $waste_var) * 100 / $allowable_cost;
+                    $waste_index = $waste_var * 100 / $allowable_cost;
                 }
 
                 $attributes = [
