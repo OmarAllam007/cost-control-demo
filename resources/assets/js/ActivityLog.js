@@ -30,17 +30,21 @@ Vue.component('ResourceLog', {
         },
 
         actual_qty() {
-            return this.resource.actual_resources.reduce((total, r) => total += r.qty, 0) +
-                this.resource.important_actual_resources.reduce((total, r) => total += r.qty, 0);
+            return this.actual_resources.reduce((total, r) => total += r.qty, 0) +
+                this.important_actual_resources.reduce((total, r) => total += r.qty, 0);
         },
 
         actual_cost() {
-            return this.resource.actual_resources.reduce((total, r) => total += r.cost, 0) +
-                this.resource.important_actual_resources.reduce((total, r) => total += r.cost, 0);
+            return this.actual_resources.reduce((total, r) => total += r.cost, 0) +
+                this.important_actual_resources.reduce((total, r) => total += r.cost, 0);
         },
 
         actual_resources() {
             return _.flatMap(this.resource.budget_resources, r => r.actual_resources);
+        },
+
+        important_actual_resources() {
+            return _.flatMap(this.resource.budget_resources, r => r.important_actual_resources);
         },
 
         qty_var() {

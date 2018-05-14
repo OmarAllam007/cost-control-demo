@@ -31,7 +31,7 @@ class ActivityLogController extends Controller
             return [
                 'name' => $resource->resource_name, 'code' => $resource->resource_code,
                 'budget_resources' => $budget,
-                'store_resources' => $store_resources->get($id, collect()),
+                'store_resources' => $store_resources->get($id, collect())
             ];
         })->filter(function($resource) {
             return $resource['store_resources']->count() > 0;
