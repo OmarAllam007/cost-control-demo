@@ -105,6 +105,11 @@ class BreakDownResourceShadow extends Model
         return $this->hasMany(ActualResources::class, 'breakdown_resource_id', 'breakdown_resource_id');
     }
 
+    function important_actual_resources()
+    {
+        return $this->hasMany(ImportantActualResource::class, 'breakdown_resource_id', 'breakdown_resource_id');
+    }
+
     function scopeSumFields(Builder $q, $group, $fields = [])
     {
         foreach ($fields as $field) {

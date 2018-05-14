@@ -30,11 +30,13 @@ Vue.component('ResourceLog', {
         },
 
         actual_qty() {
-            return _.reduce(this.actual_resources, (total, r) => total += r.qty, 0);
+            return this.resource.actual_resources.reduce((total, r) => total += r.qty, 0) +
+                this.resource.important_actual_resources.reduce((total, r) => total += r.qty, 0);
         },
 
         actual_cost() {
-            return _.reduce(this.actual_resources, (total, r) => total += r.cost, 0);
+            return this.resource.actual_resources.reduce((total, r) => total += r.cost, 0) +
+                this.resource.important_actual_resources.reduce((total, r) => total += r.cost, 0);
         },
 
         actual_resources() {
