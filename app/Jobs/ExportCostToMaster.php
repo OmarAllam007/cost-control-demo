@@ -23,9 +23,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use function microtime;
 
-class ExportCostToMaster extends Job // implements ShouldQueue
+class ExportCostToMaster extends Job implements ShouldQueue
 {
-//    use SerializesModels, InteractsWithQueue;
+    use SerializesModels, InteractsWithQueue;
 
     protected $project;
 
@@ -143,9 +143,9 @@ class ExportCostToMaster extends Job // implements ShouldQueue
                 \Log::info("Chunk has been buffered; project: {$this->project->id} memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4));
             });
 
-        if ($this->project->is_activity_rollup) {
-            $this->generateWasteIndex();
-        }
+
+        $this->generateWasteIndex();
+
 
         $this->period->update(['status' => Period::GENERATED]);
     }
@@ -220,6 +220,8 @@ class ExportCostToMaster extends Job // implements ShouldQueue
 
     private function generateWasteIndex()
     {
+        WasteIndex::where('period_id', $this->period->id)->delete();
+
         BreakDownResourceShadow::with(['actual_resources', 'important_actual_resources'])
             ->where('project_id', $this->project->id)
             ->where('resource_type_id', 3)
