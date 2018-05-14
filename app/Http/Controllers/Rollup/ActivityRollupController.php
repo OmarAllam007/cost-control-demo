@@ -24,6 +24,8 @@ class ActivityRollupController extends Controller
 
         $result = (new ActivityRollup($project, $codes))->handle();
 
+        $project->update(['is_activity_rollup' => true]);
+
         flash("$result activities have been rolled up", 'success');
 
         return \Redirect::route('project.cost-control', $project);

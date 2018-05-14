@@ -2,6 +2,7 @@
 
 namespace App\Reports\Cost;
 
+use App\BreakDownResourceShadow;
 use App\MasterShadow;
 use App\Period;
 use App\ResourceType;
