@@ -22,6 +22,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use function microtime;
+use function strtolower;
 
 class ExportCostToMaster extends Job implements ShouldQueue
 {
@@ -238,6 +239,10 @@ class ExportCostToMaster extends Job implements ShouldQueue
                 $to_date_unit_price = $to_date_cost / $to_date_qty;
 
                 $allowable_qty = $to_date_qty < $resource->budget_unit? $to_date_qty : $resource->budget_unit;
+                if ($resource->progress == 100 || strtolower($resource->status) == 'closed') {
+                    $allowable_qty = $resource->budget_unit;
+                }
+
                 $qty_var = $allowable_qty - $to_date_qty;
                 $waste_var = $qty_var * $to_date_unit_price;
                 $allowable_cost = $allowable_qty * $to_date_unit_price;
