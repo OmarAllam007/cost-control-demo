@@ -53,9 +53,6 @@ class ExportCostToMaster extends Job implements ShouldQueue
 
     public function handle()
     {
-        $this->generateWasteIndex();
-        return;
-
         MasterShadow::where('period_id', $this->period->id)->delete();
 
         BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1)
@@ -145,6 +142,8 @@ class ExportCostToMaster extends Job implements ShouldQueue
                 $time = microtime(true) - $start;
                 \Log::info("Chunk has been buffered; project: {$this->project->id} memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4));
             });
+
+        $this->generateWasteIndex();
 
         $this->period->update(['status' => Period::GENERATED]);
     }
