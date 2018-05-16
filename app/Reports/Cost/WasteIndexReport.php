@@ -53,7 +53,7 @@ class WasteIndexReport
         $this->types = ResourceType::all()->groupBy('parent_id');
 
         $query = WasteIndex::from('waste_indices as wi')
-            ->selectRaw('r.name, r.resource_type_id, sum(wi.to_date_qty) as to_date_qty')
+            ->selectRaw('r.name as resource_name, r.resource_type_id, sum(wi.to_date_qty) as to_date_qty')
             ->selectRaw('sum(wi.allowable_qty) as allowable_qty, avg(wi.to_date_unit_price) as to_date_unit_price')
             ->selectRaw('sum(qty_var) as qty_var, sum(waste_var) as to_date_cost_var, sum(waste_index) as pw_index')
             ->join('resources as r', 'wi.resource_id', '=', 'r.id')
@@ -129,7 +129,7 @@ class WasteIndexReport
             $term = "%$resource%";
             $query->where(function ($q) use ($term) {
                 $q->where('r.resource_code', 'like', $term)
-                    ->orWhere('r.resource_name', 'like', $term);
+                    ->orWhere('r.name', 'like', $term);
             });
         }
 
