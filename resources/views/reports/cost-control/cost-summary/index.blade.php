@@ -44,12 +44,12 @@
         <tr style="background: #C6F1E7">
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Base Line</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Todate Cost</th>
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">To Date Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Allowable (EV) Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Todate Cost Variance</th>
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">To Date Cost Variance</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Remaining Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">at Completion Cost Variance</th>
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">At Completion Cost</th>
+            <th class="col-xs-1" style="border: 2px solid black;text-align: center">At Completion Cost Variance</th>
             {{--<th class="col-xs-1" style="border: 2px solid black;text-align: center">Concern</th>--}}
         </tr>
 
@@ -175,6 +175,7 @@
             ->selectRaw('period_id, sum(completion_cost) completion_cost, sum(cost_var) as cost_var')
             ->selectRaw('SUM(CASE WHEN activity_id = 3060 THEN budget_cost END) as reserve')
             ->get();
+
         $trends_completion_cost_values = collect(['At Completion Cost']);
         $trends_completion_cost_var_values = collect(['At Completion Cost Variance']);
         $periods = collect();

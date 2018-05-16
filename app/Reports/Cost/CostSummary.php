@@ -38,7 +38,7 @@ class CostSummary
         /** @var Collection $general_activities */
         $general_activities = StdActivity::where('division_id', 779)->pluck('id');
         $fields = [
-            'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as ev',
+            'sum(budget_cost) budget_cost', 'sum(prev_cost) as previous_cost' ,'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as ev',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost',
             'sum(completion_cost) as completion_cost', 'sum(cost_var) as completion_cost_var'
         ];
