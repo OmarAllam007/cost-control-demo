@@ -42,6 +42,7 @@
             <td class="text-center">
                 <input type="checkbox" :name="get_input_name(resource)"
                        :value="resource.id"
+                       @change="$emit('state-changed')"
                        v-model="resource.selected"
                        v-if="!resource.important">
             </td>

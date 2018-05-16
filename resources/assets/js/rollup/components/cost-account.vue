@@ -10,6 +10,7 @@
             <th class="col-sm-1">Budget Cost</th>
             <th class="col-sm-1">To date Qty</th>
             <th class="col-sm-1">To date Cost</th>
+            <th class="col-sm-1">Progress</th>
         </tr>
 
         <tr class="info">
@@ -19,26 +20,36 @@
             <th v-text="cost_account.code"></th>
             <th v-text="cost_account.description"></th>
             <th :class="invalid_budget_qty? 'has-error' : ''">
-                <input class="form-control input-sm" type="text" :value="budget_qty"
+                <input class="form-control input-sm" type="text"
                        :name="`budget_unit[${cost_account.id}]`"
+                       v-model="budget_unit"
                        :required="selected"
                        placeholder="Budget Qty">
             </th>
             <th :class="invalid_measure_unit? 'has-error' : ''">
-                <select class="form-control input-sm" :name="`measure_unit[${cost_account.id}]`" :required="selected">
+                <select class="form-control input-sm" v-model="measure_unit" :name="`measure_unit[${cost_account.id}]`" :required="selected">
                     <option value="">Select Unit</option>
-                    <option v-for="unit in units" :selected="unit.id == qs_unit" :value="unit.id" :key="unit.invalid_measure_unit" v-text="unit.type"></option>
+                    <option v-for="unit in units" :value="unit.id" :key="unit.id" v-text="unit.type"></option>
                 </select>
             </th>
             <th v-text="total_budget_cost"></th>
             <th :class="invalid_to_date_qty">
                 <input class="form-control input-sm"
                        type="text"
+                       v-model="to_date_qty"
                        :name="`to_date_qty[${cost_account.id}]`"
                        :required="selected"
                        placeholder="To date Qty">
             </th>
             <th v-text="total_to_date_cost"></th>
+            <th>
+                <input class="form-control input-sm"
+                       type="text"
+                       v-model="progress"
+                       :name="`progress[${cost_account.id}]`"
+                       :required="selected"
+                       placeholder="Progress">
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -51,6 +62,7 @@
             <td>{{resource.budget_cost|number_format}}</td>
             <td>{{resource.to_date_qty|number_format}}</td>
             <td>{{resource.to_date_cost|number_format}}</td>
+            <td>{{resource.progress|number_format}}</td>
         </tr>
         </tbody>
     </table>
@@ -63,13 +75,23 @@
         data() {
             return {
                 cost_account: this.initial, units: window.units,
-                selected: false
+                selected: false, budget_unit: 1, to_date_qty: 1, measure_unit: 15, progress: 0
             };
+        },
+
+        created() {
+            this.budget_unit = this.budget_qty;
+            this.to_date_qty = 0;
+            this.measure_unit = this.qs_unit;
         },
 
         methods: {
             setChecked(state = true) {
                 this.selected = state;
+            },
+
+            collectData() {
+                return id;
             }
         },
 
