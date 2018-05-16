@@ -66,6 +66,7 @@ class QsSummaryReport
 
         $this->activities = StdActivity::with('division')->find($shadow_data->pluck('activity_id')->toArray())->keyBy('id');
         $this->boqs = Boq::with('unit')->find($shadow_data->pluck('boq_id')->toArray())->keyBy('id');
+        $this->surveys = Survey::with('unit')->find($shadow_data->pluck('survey_id')->toArray())->keyBy('id');
 
         $this->tree = $this->buildTree();
 
@@ -89,8 +90,8 @@ class QsSummaryReport
                     ->map(function ($activity) use ($info, $level) {
 
                         $items = $info->get($activity->id, collect())->map(function ($cost_account) {
-                            $cost_account->boq_description = $this->boqs->get($cost_account->boq_id)->description ?? '';
-                            $cost_account->unit_of_measure = $this->boqs->get($cost_account->boq_id)->unit->type ?? '';
+                            $cost_account->boq_description = $this->surveys->get($cost_account->survey_id)->description ?? '';
+                            $cost_account->unit_of_measure = $this->surveys->get($cost_account->survey_id)->unit->type ?? '';
                             return $cost_account;
                         });
 
