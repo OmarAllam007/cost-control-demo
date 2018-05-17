@@ -15,6 +15,7 @@ use App\Unit;
 use App\UnitAlias;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Support\Collection;
+use function json_decode;
 
 class CostImporter
 {
@@ -275,7 +276,7 @@ class CostImporter
                 $store_resource = StoreResource::find($hash);
                 $store_resource->update($store_resource);
                 if ($store_resource->row_ids) {
-                    StoreResource::whereIn('id', $store_resource->row_ids)->update($store_resource);
+                    StoreResource::whereIn('id', json_decode($store_resource->row_ids))->update($store_resource);
                 }
             } else {
                 ImportantActualResource::create($attributes);
