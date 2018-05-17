@@ -40,5 +40,7 @@ class ActivityLogController extends Controller
         })->filter(function($resource) {
             return $resource['store_resources']->count() > 0;
         })->values();
+
+        return $resourceLogs;
     }
 }
