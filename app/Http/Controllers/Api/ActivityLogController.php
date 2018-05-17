@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 
 class ActivityLogController extends Controller
 {
@@ -30,6 +31,7 @@ class ActivityLogController extends Controller
 
         $budget_resources = $shadows->groupBy('resource_id');
 
+        /** @var Collection $resourceLogs */
         $resourceLogs = $resource_ids->map(function($id) use ($budget_resources, $store_resources) {
             $budget = $budget_resources->get($id);
             $resource = $budget->first();
@@ -38,18 +40,23 @@ class ActivityLogController extends Controller
                 'budget_resources' => $budget, 'rollup' => false,
                 'store_resources' => $store_resources->get($id, collect())
             ];
-        })->filter(function($resource) {
-            return $resource['store_resources']->count() > 0;
-        })->values();
+        });
 
         // Rollup resources
         $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)
             ->with(['actual_resources'])->where('resource_id', 0)
-            ->where('code', $code)->each(function() {
-
+            ->where('code', $code)->each(function($resource) use ($resourceLogs) {
+                $budget_resources = BreakDownResourceShadow::where('rollup_resource_id', $resource->id)->get();
+                $store_resources = StoreResource::whereIn('actual_resource_id', $resource->actual_resources->pluck('id'))->whereNull('row_ids')->get();
+                $resourceLogs->push([
+                    'name' => $resource->resource_name, 'code' => $resource->resource_code,
+                    'budget_resources' => $budget_resources, 'store_resources' => $store_resources,
+                    'rollup' => true
+                ]);
             });
 
-
-        return $resourceLogs;
+        return $resourceLogs->filter(function($resource) {
+            return $resource['store_resources']->count() > 0;
+        })->values();
     }
 }
