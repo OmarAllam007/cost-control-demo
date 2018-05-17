@@ -19,6 +19,7 @@ class ActivityLogController extends Controller
 
         $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)
             ->with(['important_actual_resources', 'actual_resources'])
+            ->where('resource_id', '<>', 0)
             ->where('code', $code)->get();
 
         $resource_ids = $shadows->pluck('resource_id', 'resource_id');
@@ -29,17 +30,25 @@ class ActivityLogController extends Controller
 
         $budget_resources = $shadows->groupBy('resource_id');
 
-        $resourceLogs = $resource_ids->forget(0)->map(function($id) use ($budget_resources, $store_resources) {
+        $resourceLogs = $resource_ids->map(function($id) use ($budget_resources, $store_resources) {
             $budget = $budget_resources->get($id);
             $resource = $budget->first();
             return [
                 'name' => $resource->resource_name, 'code' => $resource->resource_code,
-                'budget_resources' => $budget,
+                'budget_resources' => $budget, 'rollup' => false,
                 'store_resources' => $store_resources->get($id, collect())
             ];
         })->filter(function($resource) {
             return $resource['store_resources']->count() > 0;
         })->values();
+
+        // Rollup resources
+        $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)
+            ->with(['actual_resources'])->where('resource_id', 0)
+            ->where('code', $code)->each(function() {
+
+            });
+
 
         return $resourceLogs;
     }
