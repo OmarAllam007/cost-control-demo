@@ -268,12 +268,15 @@ class CostImporter
             if ($resource->is_rollup || !$resource->rolled_up_at) {
                 $actual_resource = ActualResources::create($attributes);
                 $this->actual_resources->push($actual_resource);
-                StoreResource::where('id', $hash)
-                    ->update([
-                        'budget_code' => $resource->code,
-                        'resource_id' => $resource->resource_id,
-                        'actual_resource_id' => $actual_resource->id
-                    ]);
+                $attributes = [
+                    'budget_code' => $resource->code, 'resource_id' => $resource->resource_id,
+                    'actual_resource_id' => $actual_resource->id
+                ];
+                $store_resource = StoreResource::find($hash);
+                $store_resource->update($store_resource);
+                if ($store_resource->row_ids) {
+                    StoreResource::whereIn('id', $store_resource->row_ids)->update($store_resource);
+                }
             } else {
                 ImportantActualResource::create($attributes);
                 StoreResource::where('id', $hash)

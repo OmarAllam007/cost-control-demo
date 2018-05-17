@@ -20,12 +20,17 @@ class ActivityLogController extends Controller
         $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)
             ->with(['important_actual_resources', 'actual_resources'])
             ->where('code', $code)->get();
+
         $resource_ids = $shadows->pluck('resource_id', 'resource_id');
 
-        $store_resources = StoreResource::where('budget_code', $code)->whereIn('resource_id', $resource_ids)->get()->groupBY('resource_id');
+        $store_resources = StoreResource::whereNull('row_ids')
+            ->where('budget_code', $code)
+            ->whereIn('resource_id', $resource_ids)
+            ->get()->groupBY('resource_id');
+
         $budget_resources = $shadows->groupBy('resource_id');
 
-        return $resource_ids->map(function($id) use ($budget_resources, $store_resources) {
+        $resourceLogs = $resource_ids->forget(0)->map(function($id) use ($budget_resources, $store_resources) {
             $budget = $budget_resources->get($id);
             $resource = $budget->first();
             return [
