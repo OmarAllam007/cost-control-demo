@@ -43,20 +43,19 @@ class ActivityLogController extends Controller
         });
 
         // Rollup resources
-        $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)
+        $rollupLogs = BreakDownResourceShadow::where('wbs_id', $wbs->id)
             ->with(['actual_resources'])->where('resource_id', 0)
-            ->where('code', $code)->each(function($resource) use ($resourceLogs) {
+            ->where('code', $code)->get()->map(function($resource) use ($resourceLogs) {
                 $budget_resources = BreakDownResourceShadow::where('rollup_resource_id', $resource->id)->get();
-                $store_resources = StoreResource::whereIn('actual_resource_id', $resource->actual_resources->pluck('id'))->whereNull('row_ids')->get();
-                $resourceLogs->push([
+                $resource->actual_resources->dd();
+                $store_resources = StoreResource::whereIn('actual_resource_id', $resource->actual_resources->pluck('id'))->get();
+                return [
                     'name' => $resource->resource_name, 'code' => $resource->resource_code,
                     'budget_resources' => $budget_resources, 'store_resources' => $store_resources,
                     'rollup' => true
-                ]);
+                ];
             });
 
-        return $resourceLogs->filter(function($resource) {
-            return $resource['store_resources']->count() > 0;
-        })->values();
+        return $resourceLogs->merge($rollupLogs)->values();
     }
 }
