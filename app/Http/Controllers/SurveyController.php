@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Boq;
+use App\Breakdown;
+use App\BreakdownResource;
+use App\BreakDownResourceShadow;
 use App\Category;
 use App\Http\Requests\WipeRequest;
 use App\Import\QtySurvey\QtySurveyChecker;
@@ -15,6 +18,7 @@ use App\Survey;
 use App\Unit;
 use App\UnitAlias;
 use App\WbsLevel;
+use function config;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -66,6 +70,8 @@ class SurveyController extends Controller
             flash('You are not authorized to do this action');
             return \Redirect::route('project.index');
         }
+
+        $this->validate($request, config('validation.qty_survey'));
 
         $newSurvey = new Survey($request->all());
         $boq = Boq::forQs($newSurvey)->first();
@@ -125,8 +131,9 @@ class SurveyController extends Controller
         }
 
         $this->validate($request, config('validation.qty_survey'));
+
         $survey->syncVariables($request->get('variables'));
-        $survey->update($request->except('qs_code'));
+        $survey->update($request->all());
 
         flash('Quantity survey has been saved', 'success');
 
@@ -140,7 +147,18 @@ class SurveyController extends Controller
             return \Redirect::route('project.index');
         }
 
+        if ($request->get('delete_breakdowns')) {
+            Breakdown::whereIn('wbs_level_id', $survey->wbsLevel->getChildrenIds())
+                ->where('cost_account', $survey->cost_account)
+                ->each(function(Breakdown $breakdown) {
+                    BreakdownResource::where('breakdown_id', $breakdown->id)->delete();
+                    BreakDownResourceShadow::where('breakdown_id', $breakdown->id)->delete();
+                    $breakdown->variables()->delete();
+                    $breakdown->delete();
+                });
+        }
         $survey->delete();
+
 
         $msg = 'Quantity survey has been deleted';
         if ($request->ajax()) {

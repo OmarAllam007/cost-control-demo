@@ -88,8 +88,8 @@ class BreakdownResourceController extends Controller
     public function destroy(BreakdownResource $breakdown_resource, Request $request)
     {
         $breakdown_resource->load('breakdown.project');
-        BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->delete();
         $breakdown_resource->delete();
+//        BreakDownResourceShadow::where('breakdown_resource_id', $breakdown_resource->id)->delete();
 
         $msg = 'Resource has been deleted';
 
@@ -160,9 +160,9 @@ class BreakdownResourceController extends Controller
             }
         }
 
-        if ($request->ajax()) {
-            $breakdowns = BreakDownResourceShadow::where('wbs_id', $target_wbs->id)->get();
-            return ['ok' => true, 'breakdowns' => $breakdowns];
+        if ($request->wantsJson()) {
+//            $breakdowns = BreakDownResourceShadow::where('wbs_id', $target_wbs->id)->get();
+            return ['ok' => true];
         }
 
         return \Redirect::route('project.show', $source_wbs->project_id);

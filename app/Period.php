@@ -60,7 +60,7 @@ class Period extends Model
         parent::boot();
 
         static::creating(function(Period $period) {
-            $open = $period->project->active_period;
+            $open = $period->project->open_period();
             if (!$open) {
                 $period->is_open= true;
             }

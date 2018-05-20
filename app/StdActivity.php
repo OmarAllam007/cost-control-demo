@@ -83,4 +83,9 @@ class StdActivity extends Model
     {
         return $this->division_id == 779;
     }
+
+    function getPathAttribute()
+    {
+        return $this->division->path . ' » ' . $this->name;
+    }
 }

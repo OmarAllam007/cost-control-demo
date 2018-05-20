@@ -15,7 +15,7 @@ class GlobalPeriodsController extends Controller
 
     public function index()
     {
-        $globalPeriods = GlobalPeriod::paginate();
+        $globalPeriods = GlobalPeriod::latest('end_date')->paginate();
 
         return view('global-periods.index', compact('globalPeriods'));
     }

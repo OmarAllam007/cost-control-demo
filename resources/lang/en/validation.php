@@ -105,6 +105,7 @@ return [
     'no_children_on_leaf' => 'Cannot add resource type on a type with resources',
     'has_copy_permission' => "You don't have permission to copy to this project",
     'valid_equation' => 'Invalid equation syntax',
+    'cost_account_one_breakdown' => 'Cost account already have a breakdown',
 
     'custom' => [
         'code' => [

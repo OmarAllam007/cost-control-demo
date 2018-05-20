@@ -55,6 +55,7 @@ class TemplateResourceImpactController extends Controller
                     'equation' => $resource->equaiton, 'resource_waste' => $resource->resource_waste ?: 0,
                     'labor_count' => $resource->labor_count,
                     'remarks' => $resource->remarks, 'productivity_id' => $resource->productivity_id,
+                    'important' => $resource->important,
                 ]);
             });
 
@@ -127,6 +128,7 @@ class TemplateResourceImpactController extends Controller
                 $resource->labor_count = $new_template_resource->labor_count;
                 $resource->productivity_id = $new_template_resource->productivity_id;
                 $resource->remarks = $new_template_resource->remarks;
+                $resource->important = $new_template_resource->important;
 
                 $resource->save();
             });

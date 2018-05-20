@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActivityDivision;
 use App\Breakdown;
 use App\BreakdownTemplate;
 use App\Filter\BreakdownTemplateFilter;
@@ -9,6 +10,7 @@ use App\Jobs\ImportBreakdownTemplateJob;
 use App\Project;
 use App\StdActivity;
 use App\StdActivityResource;
+use App\Support\ActivityDivisionTree;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 
@@ -24,9 +26,11 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
-        $breakdownTemplates = $filter->filter()->paginate(75);
-        return view('breakdown-template.index', compact('breakdownTemplates'));
+//        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
+//        $breakdownTemplates = $filter->filter()->paginate(75);
+        $divisions = (new ActivityDivisionTree())->get();
+
+        return view('breakdown-template.index', compact('divisions'));
     }
 
     public function create()
@@ -41,22 +45,11 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-//        $wbsTree = WbsLevel::tree()->get();
-        $templates = [];
-        if (request('import') && $project_id) {
-            $projectTemplates = \App\BreakdownTemplate::where(compact('project_id'))
-                ->whereNotNull('parent_template_id')->pluck('parent_template_id','parent_template_id');
-
-            $templates = \App\BreakdownTemplate::orderBy('name')
-                ->whereNull('project_id')->whereNotIn('id', $projectTemplates)->pluck('name', 'id');
-        }
-
-        return view('breakdown-template.create', compact('templates'));
+        return view('breakdown-template.create');
     }
 
     public function store(Request $request)
     {
-        $template = '';
         if ($project_id = request('project_id')) {
             if (\Gate::denies('breakdown_templates', Project::find($project_id))) {
                 flash("You don't have access to this page");
@@ -67,31 +60,8 @@ class BreakdownTemplateController extends Controller
             return \Redirect::to('/');
         }
 
-        if ($request->project_id && request('import')) {
-            $parents = BreakdownTemplate::whereIn('id', $request->parent_template_id)->get();
-            $prev=[];
-            foreach ($parents as $parent) {
-                $previousTemp = BreakdownTemplate::where('parent_template_id',$parent->id)->where('project_id',$request->project_id)->first();
-                if($previousTemp){
-
-                }else{
-                    $resources = StdActivityResource::where('template_id', $parent->id)->get();
-                    $parent->parent_template_id = $parent->id;
-                    $parent->project_id = $request->project_id;
-                    unset($parent->id);
-                    $template = BreakdownTemplate::create($parent->toArray());
-                    foreach ($resources as $resource) {
-                        $resource->template_id = $template->id;
-                        StdActivityResource::create($resource->toArray());
-                    }
-                }
-            }
-            $project = Project::find($request->project_id);
-            return \Redirect::route('project.show',compact('project','prev'));
-        } else {
-            $this->validate($request, $this->rules);
-            $template = BreakdownTemplate::create($request->all());
-        }
+        $this->validate($request, $this->rules);
+        $template = BreakdownTemplate::create($request->all());
 
         flash('Breakdown template has been saved', 'success');
         return \Redirect::route('breakdown-template.show', $template);
@@ -149,27 +119,23 @@ class BreakdownTemplateController extends Controller
         return \Redirect::route('breakdown-template.show', $breakdown_template);
     }
 
-    public function destroy(BreakdownTemplate $breakdown_template)
+    public function destroy(BreakdownTemplate $breakdown_template, Request $request)
     {
         if ($breakdown_template->project) {
-            if (\Gate::denies('breakdown_templates', $breakdown_template->project)) {
-                flash("You don't have access to this page");
-                return \Redirect::to('/');
-            }
-        } else if (\Gate::denies('write', 'breakdown-template')) {
-            flash("You don't have access to this page");
-            return \Redirect::to('/');
+            $this->authorize('breakdown_templates', $breakdown_template->project);
+        } else {
+            $this->authorize('write', 'breakdown-template');
         }
 
         $breakdown_template->resources()->delete();
         $breakdown_template->delete();
-        flash('Breakdown template has been deleted', 'success');
 
-        $filter = new BreakdownTemplateFilter(BreakdownTemplate::whereNull('project_id'), session('filters.breakdown-template'));
-        $breakdownTemplates = $filter->filter()->paginate(50);
+        if ($request->wantsJson()) {
+            return ['ok' => true];
+        }
+
+        flash('Breakdown template has been deleted', 'success');
         return \Redirect::back();
-//        return view('breakdown-template.index', compact('breakdownTemplates'));
-//        return \Redirect::route('std-activity.show', $breakdown_template->activity);
     }
 
     function filters(Request $request)

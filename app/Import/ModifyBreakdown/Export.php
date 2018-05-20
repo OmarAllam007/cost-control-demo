@@ -4,16 +4,21 @@ namespace App\Import\ModifyBreakdown;
 
 
 use App\Project;
+use function array_reverse;
+use Illuminate\Support\Collection;
 
 class Export
 {
     /** @var Project */
     private $project;
+    /** @var Collection */
+    private $divisions;
 
     public function __construct(Project $project)
     {
         $this->project = $project;
         $this->counter = 1;
+        $this->divisions = collect();
     }
 
     public function handle()
@@ -22,7 +27,9 @@ class Export
         $sheet = $excel->getActiveSheet();
         $headers = [
             'App ID', 'WBS Code', 'Activity Code', 'Activity', 'Cost Account', 'Resource Name', 'Resource Code',
-            'Productivity Ref', 'Labour Count', 'Equation', 'Remarks', 'Important'
+            'Productivity Ref', 'Labour Count', 'Equation', 'Remarks', 'Important',
+            'Breakdown Template', 'Activity Division 1', 'Activity Division 2', 'Activity Division 3',
+            'Activity Division 4'
         ];
 
         $sheet->fromArray($headers, '', "A1", true);
@@ -46,10 +53,15 @@ class Export
                         $shadow->labors_count,          // I
                         $shadow->breakdown_resource->equation, // J
                         $shadow->remarks,                      // K
-                        $shadow->important? '*' : ''           // L
+                        $shadow->important? '*' : '',          // L,
+                        $shadow->template,                     // M
                     ];
 
                     $sheet->fromArray($row, '', "A{$this->counter}", true);
+
+                    $divisions = $this->getDivisions($shadow);
+
+                    $sheet->fromArray($divisions, '', "N{$this->counter}", true);
                 }
             });
 
@@ -65,7 +77,7 @@ class Export
      */
     private function setStyles($sheet)
     {
-        $sheet->getStyle('A1:L1')->applyFromArray([
+        $sheet->getStyle('A1:Q1')->applyFromArray([
             'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
             'fill' => [
                 'type' => 'solid',
@@ -84,19 +96,42 @@ class Export
         for ($row = 2; $row <= $this->counter; ++$row) {
             $color = $row % 2? 'BCDEFA' : 'EFF8FF';
 
-            $sheet->getStyle("B$row:L$row")->applyFromArray([
+            $sheet->getStyle("B$row:Q$row")->applyFromArray([
                 'fill' => ['type' => 'solid', 'startcolor' => ['rgb' => $color]]
             ]);
         }
 
         $sheet->freezePane('A2');
         foreach (range('A', 'L') as $c) {
-            if ($c != 'F') {
-                $sheet->getColumnDimension($c)->setAutoSize(true);
-            }
+            $sheet->getColumnDimension($c)->setAutoSize(true);
+        }
+
+        foreach (range('M', 'Q') as $c) {
+            $sheet->getColumnDimension($c)->setAutoSize(false)->setWidth(50);
         }
 
         $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(50);
-        $sheet->setAutoFilter("A1:L{$this->counter}");
+        $sheet->getColumnDimension('K')->setAutoSize(false)->setWidth(50);
+        $sheet->setAutoFilter("A1:Q{$this->counter}");
+    }
+
+    private function getDivisions($shadow)
+    {
+        if ($this->divisions->has($shadow->activity_id)) {
+            return $this->divisions->get($shadow->activity_id);
+        }
+
+        $parent = $shadow->std_activity->division;
+        $divisions = [];
+
+        while ($parent) {
+            $divisions[] = $parent->label;
+            $parent = $parent->parent;
+        }
+
+        $divisions = array_reverse($divisions);
+        $this->divisions->put($shadow->activity_id, $divisions);
+
+        return $divisions;
     }
 }

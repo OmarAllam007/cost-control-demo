@@ -12,14 +12,14 @@
                 <th colspan="2" class="text-center cost-summary-group">at Completion</th>
             </tr>
             <tr>
-                <th class="col-xs-1 cost-summary-header">Base Line</th>
-                <th class="col-xs-1 cost-summary-header">Previous Cost</th>
-                <th class="col-xs-1 cost-summary-header">Allowable (EV) Cost</th>
-                <th class="col-xs-1 cost-summary-header">To Date Cost</th>
-                <th class="col-xs-1 cost-summary-header">To Date Cost Variance</th>
-                <th class="col-xs-1 cost-summary-header">Remaining Cost</th>
-                <th class="col-xs-1 cost-summary-header">At Completion Cost</th>
-                <th class="col-xs-1 cost-summary-header">At Completion Cost Var +/-</th>
+                <th class="cost-summary-header">Base Line</th>
+                <th class="cost-summary-header">Previous Cost</th>
+                <th class="cost-summary-header">Allowable (EV) Cost</th>
+                <th class="cost-summary-header">To Date Cost</th>
+                <th class="cost-summary-header">To Date Cost Var +/-</th>
+                <th class="cost-summary-header">Remaining Cost</th>
+                <th class="cost-summary-header">At Completion Cost</th>
+                <th class="cost-summary-header">At Completion Cost Var +/-</th>
             </tr>
 
             </thead>
@@ -34,7 +34,7 @@
                     <td class="{{$type->to_date_var < 0? 'text-danger' : 'text-success'}}">{{number_format($type->to_date_var,2)}}</td>
                     <td>{{number_format($type->remaining_cost,2)}}</td>
                     <td>{{number_format($type->completion_cost,2)}}</td>
-                    <td class="{{$type->completion_cost_var < 0? 'text-danger' : 'text-success'}}">{{number_format($type->completion_var,2)}}</td>
+                    <td class="{{$type->completion_var < 0? 'text-danger' : 'text-success'}}">{{number_format($type->completion_var,2)}}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -45,14 +45,14 @@
                     $completion_var = $costSummary->sum('completion_var');
                 @endphp
                 <td class="cost-summary-side">Total</td>
-                <td class="text-right cost-summary-side">{{number_format($costSummary->sum('budget_cost'),2) }}</td>
-                <td class="text-right cost-summary-side">{{number_format($costSummary->sum('previous_cost'),2) }}</td>
-                <td class="text-right cost-summary-side">{{number_format($costSummary->sum('allowable_cost'),2) }}</td>
-                <td class="text-right cost-summary-side">{{number_format($costSummary->sum('to_date_cost'),2) }}</td>
-                <td class="text-right cost-summary-side {{$to_date_var < 0 ? 'text-danger' : 'text-success'}}">{{number_format($to_date_var,2) }}</td>
-                <td class="text-right cost-summary-side">{{number_format($costSummary->sum('remaining_cost'),2) }}</td>
-                <td class="text-right cost-summary-side">{{number_format($costSummary->sum('completion_cost'),2) }}</td>
-                <td class="text-right cost-summary-side {{$completion_var < 0 ? 'text-danger' : 'text-success'}}">{{number_format($completion_var,2) }}</td>
+                <td class="cost-summary-side">{{number_format($costSummary->sum('budget_cost'),2) }}</td>
+                <td class="cost-summary-side">{{number_format($costSummary->sum('previous_cost'),2) }}</td>
+                <td class="cost-summary-side">{{number_format($costSummary->sum('allowable_cost'),2) }}</td>
+                <td class="cost-summary-side">{{number_format($costSummary->sum('to_date_cost'),2) }}</td>
+                <td class="cost-summary-side {{$to_date_var < 0 ? 'text-danger' : 'text-success'}}">{{number_format($to_date_var,2) }}</td>
+                <td class="cost-summary-side">{{number_format($costSummary->sum('remaining_cost'),2) }}</td>
+                <td class="cost-summary-side">{{number_format($costSummary->sum('completion_cost'),2) }}</td>
+                <td class="cost-summary-side {{$completion_var < 0 ? 'text-danger' : 'text-success'}}">{{number_format($completion_var,2) }}</td>
             </tr>
             </tfoot>
         </table>

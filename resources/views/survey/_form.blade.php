@@ -43,6 +43,7 @@
         <div class="form-group {{$errors->first('qs_code', 'has-error')}}">
             {{Form::label('qs_code','Item Code (QS)')}}
             {{Form::text('qs_code',null,['class'=>'form-control'])}}
+            {!! $errors->first('qs_code', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group">
