@@ -26,7 +26,7 @@
             <ul id="import-link" class="dropdown-menu">
                 @if ($project->is_cost_ready)
                     @can('actual_resources', $project)
-                        <li><a href="{{route('actual-material.import', $project)}}">Resources</a></li>
+                        <li><a href="{{route('actual-material.import', $project)}}">Actual Resources</a></li>
                     @endcan
                 @endif
 

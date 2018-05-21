@@ -103,3 +103,14 @@ function translate_method($method)
 
     return $methods[$method] ?? 'updated';
 }
+
+/**
+ * Removes unwanted characters from string. It is used for Excel added extra chars
+ *
+ * @param $code
+ * @return string
+ */
+function code_trim($code)
+{
+    return preg_replace('/[^0-9a-z\.\-_]/i', '', $code);
+}

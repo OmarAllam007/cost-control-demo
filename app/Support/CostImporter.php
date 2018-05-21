@@ -13,9 +13,13 @@ use App\Resources;
 use App\StoreResource;
 use App\Unit;
 use App\UnitAlias;
+use function collect;
+use function explode;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Support\Collection;
 use function json_decode;
+use function mb_substr;
+use function preg_split;
 
 class CostImporter
 {
@@ -64,6 +68,38 @@ class CostImporter
     }
 
     /**
+     * #E01 - Check mapping
+     */
+    function checkMapping()
+    {
+        $errors = ['activity' => collect(), 'resources' => collect()];
+        foreach ($this->rows as $row) {
+            $code = code_trim(strtolower($row[0]));
+            if (!$this->activityCodes->has($code)) {
+                $errors['activity']->push($row);
+            }
+        }
+
+        foreach ($this->rows as $row) {
+            $activityCode = $this->activityCodes->get(code_trim(strtolower($row[0])));
+            if ($this->rolledUpResources->has($activityCode)) {
+                continue;
+            }
+
+            $code = strtolower(code_trim($row[7]));
+            if (!$this->resourcesMap->has($code) && !$this->rolledUpResources->has($code)) {
+                $errors['resources']->push($row);
+            }
+        }
+
+        if ($errors['activity']->count() || $errors['resources']->count()) {
+            return ['error' => 'mapping', 'errors' => $errors, 'batch' => $this->batch];
+        }
+
+        return $this->checkPhysicalQty();
+    }
+
+    /**
      * #E02 - Physical Qty
      */
     public function checkPhysicalQty()
@@ -96,10 +132,10 @@ class CostImporter
                 continue;
             }
 
-            $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+            $activityCode = $this->activityCodes->get(code_trim(strtolower($row[0])));
             $query = BreakDownResourceShadow::where('code', $activityCode)->whereNull('rolled_up_at');
 
-            $resource_code = trim(strtolower($row[7]));
+            $resource_code = code_trim(strtolower($row[7]));
             if ($this->resourcesMap->has($resource_code)) {
                 $resourceIds = $this->resourcesMap->get($resource_code);
                 $query->whereIn('resource_id', $resourceIds);
@@ -127,38 +163,6 @@ class CostImporter
     }
 
     /**
-     * #E01 - Check mapping
-     */
-    function checkMapping()
-    {
-        $errors = ['activity' => collect(), 'resources' => collect()];
-        foreach ($this->rows as $row) {
-            $code = trim(strtolower($row[0]));
-            if (!$this->activityCodes->has($code)) {
-                $errors['activity']->push($row);
-            }
-        }
-
-        foreach ($this->rows as $row) {
-            $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
-            if ($this->rolledUpResources->has($activityCode)) {
-                continue;
-            }
-
-            $code = trim(strtolower($row[7]));
-            if (!$this->resourcesMap->has($code) && !$this->rolledUpResources->has($code)) {
-                $errors['resources']->push($row);
-            }
-        }
-
-        if ($errors['activity']->count() || $errors['resources']->count()) {
-            return ['error' => 'mapping', 'errors' => $errors, 'batch' => $this->batch];
-        }
-
-        return $this->checkPhysicalQty();
-    }
-
-    /**
      * E04 - One resource on multiple cost accounts
      */
     public function checkMultipleCostAccounts()
@@ -171,13 +175,13 @@ class CostImporter
                 continue;
             }
 
-            $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+            $activityCode = $this->activityCodes->get(code_trim(strtolower($row[0])));
             $query = BreakDownResourceShadow::where('code', $activityCode)
                 ->whereNull('rolled_up_at')
                 ->whereRaw('coalesce(progress, 0) < 100')
                 ->whereRaw("coalesce(status, '') != 'closed'");
 
-            $resource_code = trim(strtolower($row[7]));
+            $resource_code = code_trim(strtolower($row[7]));
             if ($this->resourcesMap->has($resource_code)) {
                 $resourceIds = $this->resourcesMap->get($resource_code);
                 $query->whereIn('resource_id', $resourceIds);
@@ -235,10 +239,10 @@ class CostImporter
                 $resource = $row['resource'];
                 unset($row['resource']);
             } else {
-                $activityCode = $this->activityCodes->get(trim(strtolower($row[0])));
+                $activityCode = $this->activityCodes->get(code_trim(strtolower($row[0])));
                 $query = BreakDownResourceShadow::where('code', $activityCode)
                     ->whereRaw('coalesce(progress, 0) < 100')->whereRaw("coalesce(status, '') != 'closed'");
-                $resource_code = trim(strtolower($row[7]));
+                $resource_code = strtolower(code_trim($row[7]));
                 if ($this->resourcesMap->has($resource_code)) {
                     $resourceIds = $this->resourcesMap->get($resource_code);
                     $query->whereIn('resource_id', $resourceIds);
@@ -274,9 +278,9 @@ class CostImporter
                     'actual_resource_id' => $actual_resource->id
                 ];
                 $store_resource = StoreResource::find($hash);
-                $store_resource->update($store_resource);
+                $store_resource->update($attributes);
                 if ($store_resource->row_ids) {
-                    StoreResource::whereIn('id', json_decode($store_resource->row_ids))->update($store_resource);
+                    StoreResource::whereIn('id', json_decode($store_resource->row_ids))->update($attributes);
                 }
             } else {
                 ImportantActualResource::create($attributes);
@@ -351,13 +355,13 @@ class CostImporter
 
         BreakDownResourceShadow::where('project_id', $this->batch->project_id)
             ->selectRaw('DISTINCT code')->get()->each(function ($activity) {
-                $code = trim(strtolower($activity->code));
+                $code = code_trim(strtolower($activity->code));
                 $this->activityCodes->put($code, $code);
             });
 
         ActivityMap::where('project_id', $this->batch->project_id)->each(function ($mapping) {
-            $code = trim(strtolower($mapping->equiv_code));
-            $mappingCode = trim(strtolower($mapping->activity_code));
+            $code = code_trim(strtolower($mapping->equiv_code));
+            $mappingCode = code_trim(strtolower($mapping->activity_code));
             if ($this->activityCodes->has($mappingCode)) {
                 $this->activityCodes->put($code, $mappingCode);
             }
@@ -376,7 +380,7 @@ class CostImporter
         $this->resourcesMap = collect();
         Resources::where('project_id', $this->batch->project_id)
             ->get(['resource_code', 'id'])->each(function (Resources $resource) {
-                $code = trim(strtolower($resource->resource_code));
+                $code = code_trim(strtolower($resource->resource_code));
                 if ($this->resourcesMap->has($code)) {
                     $this->resourcesMap->get($code)->push($resource->id);
                 } else {
@@ -386,7 +390,7 @@ class CostImporter
 
         ResourceCode::where('project_id', $this->batch->project_id)
             ->get(['id', 'resource_id', 'code'])->each(function ($resource) {
-                $code = trim(strtolower($resource->code));
+                $code = code_trim(strtolower($resource->code));
                 if ($this->resourcesMap->has($code)) {
                     $this->resourcesMap->get($code)->push($resource->resource_id);
                 } else {
@@ -401,12 +405,12 @@ class CostImporter
         $this->unitsMap = collect();
 
         UnitAlias::all()->each(function (UnitAlias $alias) {
-            $code = trim(strtolower($alias->name));
+            $code = code_trim(strtolower($alias->name));
             $this->unitsMap->put($code, $alias->unit_id);
         });
 
         Unit::all()->each(function (Unit $unit) {
-            $code = trim(strtolower($unit->type));
+            $code = code_trim(strtolower($unit->type));
             $this->unitsMap->put($code, $unit->id);
         });
     }
@@ -459,10 +463,10 @@ class CostImporter
 
     private function getResources($row)
     {
-        $store_activity = trim(strtolower($row[0]));
+        $store_activity = code_trim(strtolower($row[0]));
         $budget_activity = $this->activityCodes->get($store_activity);
 
-        $store_resource = trim(strtolower($row[7]));
+        $store_resource = code_trim(strtolower($row[7]));
         $budget_resources = $this->resourcesMap->get($store_resource);
 
         $resources = BreakDownResourceShadow::whereProjectId($this->batch->project_id)
