@@ -55,7 +55,7 @@ class QsSummaryReport
     {
         /** @var Collection $shadow_data */
         $shadow_data = BreakDownResourceShadow::whereProjectId($this->project->id)
-            ->selectRaw('DISTINCT wbs_id, activity_id, cost_account, budget_qty, eng_qty, boq_id, survey_id')
+            ->selectRaw('DISTINCT wbs_id, activity_id, cost_account, budget_qty, eng_qty, survey_id')
             ->get();
 
         $this->info = $shadow_data->groupBy('wbs_id')->map(function (Collection $group) {
