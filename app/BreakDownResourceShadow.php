@@ -30,7 +30,7 @@ class BreakDownResourceShadow extends Model
         'breakdown_resource_id', 'code', 'project_id', 'wbs_id', 'breakdown_id', 'resource_id', 'template', 'activity', 'activity_id', 'cost_account',
         'eng_qty', 'budget_qty', 'resource_qty', 'resource_waste', 'resource_type', 'resource_type_id', 'resource_code', 'resource_name',
         'unit_price', 'measure_unit', 'budget_unit', 'budget_cost', 'boq_equivilant_rate', 'labors_count', 'productivity_output', 'productivity_ref', 'remarks', 'productivity_id', 'template_id', 'unit_id',
-        'progress', 'status', 'boq_id', 'boq_wbs_id', 'sap_code',
+        'progress', 'status', 'boq_id', 'boq_wbs_id', 'important', 'sap_code',
     ];
 
     public $update_cost = false;

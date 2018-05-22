@@ -13,7 +13,7 @@ class BreakdownResource extends Model
 {
     use HasChangeLog, RecordsUser;
 
-    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level_id', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_id', 'equation'];
+    protected $fillable = ['breakdown_id', 'std_activity_resource_id', 'wbs_level_id', 'budget_qty', 'eng_qty', 'resource_waste', 'labor_count', 'remarks', 'productivity_id', 'remarks', 'code', 'resource_qty', 'resource_id', 'equation', 'important'];
 
     protected $calculated_resource_qty;
 
@@ -274,8 +274,8 @@ class BreakdownResource extends Model
     public function updateShadow()
     {
         $formatter = new BreakdownResourceFormatter($this);
-        $shadow = BreakDownResourceShadow::firstOrCreate(['breakdown_resource_id' => $this->id]);
-        $shadow->update($formatter->toArray());
+        $shadow = BreakDownResourceShadow::firstOrNew(['breakdown_resource_id' => $this->id]);
+        $shadow->fill($attrs = $formatter->toArray())->save();
     }
 
     function getDescriptorAttribute()
