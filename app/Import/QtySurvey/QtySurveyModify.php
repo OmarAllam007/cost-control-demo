@@ -8,12 +8,11 @@
 
 namespace App\Import\QtySurvey;
 
+use App\BreakdownVariable;
 use App\Unit;
-use function collect;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use PHPExcel_IOFactory;
-use function strtolower;
+use function uniqid;
 
 class QtySurveyModify
 {
@@ -31,6 +30,9 @@ class QtySurveyModify
     /** @var Collection */
     private $failed;
 
+    /** @var integer */
+    private $success = 0;
+
     public function __construct($project, $file)
     {
         $this->project = $project;
@@ -46,14 +48,19 @@ class QtySurveyModify
     {
         $sheet = PHPExcel_IOFactory::load($this->file)->getSheet(0);
 
-
-
         $rows = $sheet->getRowIterator(2);
         foreach ($rows as $row) {
             $data = $this->getDataFromCells($row);
 
             $this->handleRow($data);
         }
+
+        $result = ['success' => $this->success];
+        if ($this->failed->count()) {
+            $result['failed'] = $this->createFailedExcel();
+        }
+
+        return $result;
     }
 
     function loadWbs()
@@ -69,7 +76,7 @@ class QtySurveyModify
     {
         $this->qty_surveys = $this->project->quantities
             ->groupBy('wbs_level_id')->map(function ($group) {
-                return $group->groupBy(function ($qs) {
+                return $group->keyBy(function ($qs) {
                     return strtolower($qs->cost_account);
                 });
             });
@@ -77,7 +84,7 @@ class QtySurveyModify
 
     private function getDataFromCells($row)
     {
-        $cells = $row->getCellsIterator();
+        $cells = $row->getCellIterator();
         $data = [];
         foreach ($cells as $col => $cell) {
             $data[$col] = $cell->getValue();
@@ -117,7 +124,9 @@ class QtySurveyModify
 
         $qty_survey->save();
 
-        $this->handleVariables($data);
+        $this->handleVariables($data, $qty_survey);
+        ++ $this->success;
+        return true;
     }
 
     private function loadUnits()
@@ -129,7 +138,36 @@ class QtySurveyModify
         });
     }
 
-    private function handleVariables($data)
+    private function handleVariables($data, $qty_survey)
     {
+        $start = ord('J');
+        $end = ord('S');
+
+        $order = 0;
+        for ($c = $start; $c <= $end; ++$c) {
+            ++ $order;
+            $cell = chr($c);
+            if (!isset($data[$cell]) || $data[$cell] === '') {
+                continue;
+            }
+
+            $variable = BreakdownVariable::firstOrNew(['qty_survey_id' => $qty_survey->id, 'display_order' => $order]);
+            $variable->value = $data[$cell];
+            $variable->save();
+        }
+    }
+
+    private function createFailedExcel()
+    {
+        $headers = [
+            'WPS Path', 'WBS Code', 'BOQ Item Code', 'QS Item Code', 'Cost Account',
+            'Description', 'Budget Quantity', 'Engineer Quantity', 'Unit',
+            'v1', 'v2', 'v3', 'v4',	'v5', 'v6', 'v7', 'v8', 'v9', 'v10', 'Error'
+        ];
+
+
+        $filename = 'qs-failed-' . uniqid() . '.xlsx';
+
+        return '/storage/' . $filename;
     }
 }

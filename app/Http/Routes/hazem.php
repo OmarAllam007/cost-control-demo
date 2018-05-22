@@ -92,7 +92,8 @@ Route::group(['prefix' => 'survey'], function () {
     Route::get('import/{project}', ['as' => 'survey.import', 'uses' => 'SurveyController@import']);
     Route::post('import/{project}', ['as' => 'survey.post-import', 'uses' => 'SurveyController@postImport']);
 
-    Route::get('modify/{project}', 'SurveyController@create');
+    Route::get('modify/{project}', 'Import\ImportSurveyController@edit')->name('survey.modify');
+    Route::put('modify/{project}', 'Import\ImportSurveyController@update');
 
     Route::get('fix-import/{code}', ['as' => 'survey.fix-import', 'uses' => 'SurveyController@fixImport']);
     Route::post('fix-import/{code}', ['as' => 'survey.post-fix-import', 'uses' => 'SurveyController@postFixImport']);
