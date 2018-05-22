@@ -69,8 +69,7 @@
                     <td class="text-center">
                         <input :title="`Select ${resource.name}`" type="checkbox" :name="get_input_name(resource)"
                                :value="resource.id"
-                               v-model="resource.selected"
-                               v-if="!resource.important">
+                               v-model="resource.selected">
                     </td>
                     <td v-text="resource.code"></td>
                     <td v-text="resource.name"></td>
