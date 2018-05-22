@@ -33,7 +33,7 @@ class ExportSurveyJob extends Job
 
         $sheet->fromArray([
             'WPS Path', 'WBS Code', 'BOQ Item Code', 'QS Item Code', 'Cost Account', 'Description', 'Budget Quantity', 'Engineer Quantity', 'Unit',
-            'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'
+            'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v10'
         ], null, "A1", true);
 
         foreach ($this->project->quantities as $qs) {
@@ -58,10 +58,10 @@ class ExportSurveyJob extends Job
         $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(50);
         $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(80);
 
-        $sheet->getStyle("A2:E{$counter}")->getNumberFormat()->setFormatCode('@');
-        $sheet->getStyle("F2:G{$counter}")->getNumberFormat()->setBuiltInFormatCode(40);
-        $sheet->getStyle("I2:P{$counter}")->getNumberFormat()->setBuiltInFormatCode(40);
-        $sheet->getStyle("A1:Q1")->applyFromArray([
+        $sheet->getStyle("A2:F{$counter}")->getNumberFormat()->setFormatCode('@');
+        $sheet->getStyle("G2:H{$counter}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("J2:S{$counter}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("A1:S1")->applyFromArray([
             'font' => ['bold' => true], 'fill' => [
                 'type' => 'solid', 'startcolor' => ['rgb' => 'BCDEFA']
             ]
