@@ -8,7 +8,9 @@
 
 namespace App\Import\QtySurvey;
 
+use App\BreakDownResourceShadow;
 use App\BreakdownVariable;
+use App\Survey;
 use App\Unit;
 use Illuminate\Support\Collection;
 use PHPExcel;
@@ -40,6 +42,8 @@ class QtySurveyModify
         $this->project = $project;
         $this->file = $file;
         $this->failed = collect();
+
+        Survey::flushEventListeners();
 
         $this->loadWbs();
         $this->loadQs();
@@ -157,6 +161,12 @@ class QtySurveyModify
             $variable->value = $data[$cell];
             $variable->save();
         }
+
+        BreakDownResourceShadow::with('breakdown_resource')->where('survey_id', $qty_survey->id)->get()->each(function($resource) use ($qty_survey) {
+            $resource->budget_qty = $qty_survey->budget_qty;
+            $resource->eng_qty = $qty_survey->eng_qty;
+            $resource->save();
+        });
     }
 
     private function createFailedExcel()
