@@ -11,7 +11,9 @@ namespace App\Import\QtySurvey;
 use App\BreakdownVariable;
 use App\Unit;
 use Illuminate\Support\Collection;
+use PHPExcel;
 use PHPExcel_IOFactory;
+use function storage_path;
 use function uniqid;
 
 class QtySurveyModify
@@ -165,9 +167,45 @@ class QtySurveyModify
             'v1', 'v2', 'v3', 'v4',	'v5', 'v6', 'v7', 'v8', 'v9', 'v10', 'Error'
         ];
 
+        $excel = new PHPExcel();
+        $sheet = $excel->getSheet(0);
+
+        $sheet->fromArray([
+            'WPS Path', 'WBS Code', 'BOQ Item Code', 'QS Item Code', 'Cost Account', 'Description', 'Budget Quantity', 'Engineer Quantity', 'Unit',
+            'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v10'
+        ], null, "A1", true);
+
+        $counter = 2;
+        $varFields = range('J', 'S');
+        foreach ($this->failed as $row) {
+            foreach ($varFields as $c) {
+                if (!isset($row[$c])) {
+                    $row[$c] = '';
+                }
+            }
+
+            $sheet->fromArray($row, null, "A{$counter}", true);
+            ++$counter;
+        }
+
+        $autoColumns = ['B', 'C', 'D', 'E', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+        foreach ($autoColumns as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+        $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(50);
+        $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(80);
+
+        $sheet->getStyle("A2:F{$counter}")->getNumberFormat()->setFormatCode('@');
+        $sheet->getStyle("G2:H{$counter}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("J2:S{$counter}")->getNumberFormat()->setBuiltInFormatCode(40);
+        $sheet->getStyle("A1:S1")->applyFromArray([
+            'font' => ['bold' => true], 'fill' => [
+                'type' => 'solid', 'startcolor' => ['rgb' => 'BCDEFA']
+            ]
+        ]);
 
         $filename = 'qs-failed-' . uniqid() . '.xlsx';
-
+        PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save(storage_path('app/public/' . $filename));
         return '/storage/' . $filename;
     }
 }
