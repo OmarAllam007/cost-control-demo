@@ -150,6 +150,10 @@
                     url: `/api/rollup/activity-resources/${this.activity.wbs_id}/${this.activity.code}`,
                     dataType: 'json'
                 }).then((data) => {
+                    if (!data.length) {
+                        this.$emit('delete-activity', this.activity);
+                    }
+
                     this.resources = data;
                     this.budget_unit = data.length ? data[0].budget_qty : 1;
                     this.measure_unit = data.length ? data[0].qs_unit : 1;
@@ -195,7 +199,8 @@
                 $.ajax({url, method: 'post', dataType: 'json', data}).then(
                     () => {
                         this.loading = false;
-                        this.$emit('delete-activity', this.activity);
+                        this.loadResources();
+                        // this.$emit('delete-activity', this.activity);
                     }, () => {
                         this.loading = false
                     }

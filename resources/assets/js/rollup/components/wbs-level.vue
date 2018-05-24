@@ -1,11 +1,12 @@
 <template>
     <li :class="`level-${depth}`">
         <div class="wbs-item" :class="{active: selected}">
-            <a href="#children-{{level.id}}" class="open-level" @click.prevent="this.show_children = !this.show_children">
+            <a v-if="level.children.length" href="#children-{{level.id}}" class="open-level" @click.prevent="this.show_children = !this.show_children">
                 <span class="wbs-icon" v-if="level.children.length">
                     <i class="fa" :class="show_children? 'fa-minus-square-o' : 'fa-plus-square-o'"></i>
                 </span>
             </a>
+            <span class="wbs-icon" v-else><i class="fa fa-caret-right"></i></span>
 
             <a :href="`#wbs-${level.id}`" @click.prevent="setSelected" :class="{semibold: level.children.length}">
                 {{level.name}}
