@@ -44,10 +44,11 @@ class ActivityLogController extends Controller
 
         // Rollup resources
         $rollupLogs = BreakDownResourceShadow::where('wbs_id', $wbs->id)
-            ->with(['actual_resources'])->where('resource_id', 0)
+            ->with(['actual_resources'])->where('is_rollup', true)
             ->where('code', $code)->get()->map(function($resource) use ($resourceLogs) {
                 $budget_resources = BreakDownResourceShadow::where('rollup_resource_id', $resource->id)->get();
                 $store_resources = StoreResource::whereIn('actual_resource_id', $resource->actual_resources->pluck('id'))->get();
+
                 return [
                     'name' => $resource->resource_name, 'code' => $resource->resource_code,
                     'budget_resources' => $budget_resources, 'store_resources' => $store_resources,
