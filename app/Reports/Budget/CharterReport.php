@@ -34,7 +34,7 @@ class CharterReport
 
     function run()
     {
-        $this->total = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
+        $this->total = BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->sum('budget_cost');
 
         $this->resource_types = BreakDownResourceShadow::where('project_id', $this->project->id)
             ->selectRaw('resource_type as type, sum(budget_cost) as budget_cost')
@@ -45,7 +45,7 @@ class CharterReport
             });
 
         $this->disciplines = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->selectRaw('a.discipline as discipline, sum(budget_cost) as budget_cost')
+            ->selectRaw('a.discipline as discipline, sum(budget_cost) as budget_cost')->budgetOnly()
             ->join('std_activities as a', 'activity_id', '=', 'a.id')
             ->groupBy('a.discipline')->orderBy('a.discipline')
             ->get()->map(function ($discipline) {
@@ -54,10 +54,12 @@ class CharterReport
             });
 
         $this->project->general_requirements = BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->budgetOnly()
             ->where('resource_type_id', 1)
             ->selectRaw('sum(budget_cost) as cost')->value('cost');
 
         $this->project->management_reserve = BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->budgetOnly()
             ->where('resource_type_id', 8)
             ->selectRaw('sum(budget_cost) as cost')->value('cost');
 

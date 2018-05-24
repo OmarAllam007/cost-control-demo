@@ -43,7 +43,7 @@ class ManPowerReport
     {
         $this->resources = BreakDownResourceShadow::from('break_down_resource_shadows as sh')
             ->where('sh.project_id', $this->project->id)
-            ->where('sh.resource_type_id', 2)
+            ->where('sh.resource_type_id', 2)->budgetOnly()
             ->selectRaw(
                 'r.resource_type_id, sh.resource_id, sh.resource_code, sh.resource_name, ' .
                 'sh.measure_unit, sum(sh.budget_unit) budget_unit, sum(sh.budget_cost) budget_cost'

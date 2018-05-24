@@ -29,7 +29,7 @@ class BudgetCostByResourceTypeReport
 
     function run()
     {
-        $costs = BreakDownResourceShadow::whereProjectId($this->project->id)->from('break_down_resource_shadows as sh')
+        $costs = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()->from('break_down_resource_shadows as sh')
             ->selectRaw('resource_type as resource_type, sum(budget_cost) as budget_cost')
             ->groupBy('resource_type')->orderBy('resource_type')
             ->get();

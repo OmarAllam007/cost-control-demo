@@ -40,10 +40,8 @@ class ProductivityReport
 
     function run()
     {
-        $this->productivity_info = BreakDownResourceShadow::query()
-            ->whereProjectId($this->project->id)
-            ->whereNotNull('productivity_id')
-            ->selectRaw('DISTINCT productivity_id')
+        $this->productivity_info = BreakDownResourceShadow::whereProjectId($this->project->id)
+            ->budgetOnly()->whereNotNull('productivity_id')->selectRaw('DISTINCT productivity_id')
             ->pluck('productivity_id');
 
         $this->productivities = Productivity::orderBy('description')
