@@ -51,7 +51,7 @@ class ActivityLogController extends Controller
                 return [
                     'name' => $resource->resource_name, 'code' => $resource->resource_code,
                     'budget_resources' => $budget_resources, 'store_resources' => $store_resources,
-                    'rollup' => true
+                    'rollup' => true, 'rollup_resource' => $resource
                 ];
             });
 
