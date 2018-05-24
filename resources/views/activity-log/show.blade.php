@@ -95,7 +95,7 @@
                     <article class="form-group col-sm-3">
                         <select id="PeriodId" class="form-control input-sm" v-model="resource_mode">
                             <option value="all">All Resources</option>
-                            <option value="important">Important Only</option>
+                            <option value="important">Driving Only</option>
                         </select>
                     </article>
                 </div>

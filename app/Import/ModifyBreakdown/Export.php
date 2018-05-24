@@ -27,7 +27,7 @@ class Export
         $sheet = $excel->getActiveSheet();
         $headers = [
             'App ID', 'WBS Code', 'Activity Code', 'Activity', 'Cost Account', 'Resource Name', 'Resource Code',
-            'Productivity Ref', 'Labour Count', 'Equation', 'Remarks', 'Important',
+            'Productivity Ref', 'Labour Count', 'Equation', 'Remarks', 'Driving',
             'Breakdown Template', 'Activity Division 1', 'Activity Division 2', 'Activity Division 3',
             'Activity Division 4'
         ];

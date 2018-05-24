@@ -134,7 +134,7 @@ class Import
     {
         $excel = new \PHPExcel();
         $sheet = $excel->getActiveSheet();
-        $this->headers['L'] = 'Validation Errors';
+        $this->headers['M'] = 'Validation Errors';
 
         $sheet->fromArray($this->headers, null, "A1", true);
         $counter = 2;
