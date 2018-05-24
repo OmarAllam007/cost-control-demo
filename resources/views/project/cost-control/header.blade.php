@@ -1,22 +1,23 @@
 <h2>{{ $project->name }}</h2>
 
 <nav class="btn-toolbar pull-right">
+    @can('actual_resources', $project)
+        <a href="#RollupModal" class="btn btn-sm btn-info btn-outline" data-toggle="modal">
+            <i class="fa fa-compress"></i> Rollup
+        </a>
+    @endcan
+
     <div class="btn-group">
         <button class="btn btn-outline btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-cloud-download"></i> Export <span class="caret"></span>
         </button>
 
         <ul class="dropdown-menu">
-            <li><a href="{{route('costshadow.export',$project)}}"><i class="fa fa-cube"></i> Current Period</a></li>
-            <li><a href="{{route('costshadow.export',$project)}}?perspective=budget"><i class="fa fa-cubes"></i> All Resources</a></li>
+            <li><a href="{{route('costshadow.export',$project)}}"><i class="fa fa-fw fa-cube"></i> Current Period</a></li>
+            <li><a href="{{route('costshadow.export',$project)}}?perspective=budget"><i class="fa fa-fw fa-cubes"></i> All Resources</a></li>
+            <li><a href="{{route('project.breakdown.export',$project)}}"><i class="fa fa-fw fa-bars"></i> Breakdown</a></li>
         </ul>
     </div>
-
-    @can('actual_resources', $project)
-        <a href="#RollupModal" class="btn btn-sm btn-info btn-outline" data-toggle="modal">
-            <i class="fa fa-compress"></i> Rollup
-        </a>
-    @endcan
 
     @if (can('activity_mapping', $project) || can('resource_mapping', $project) || ($project->is_cost_ready && can('actual_resources', $project)))
         <div class="btn-group">
