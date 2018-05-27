@@ -117,8 +117,10 @@ class EasyUploadJob extends ImportJob
         $breakdown = Breakdown::create([
             'project_id' => $this->project->id, 'wbs_level_id' => $level->id,
             'template_id' => $template->id, 'std_activity_id' => $template->std_activity_id,
-            'cost_account' => $cost_account
+            'cost_account' => $data[2]
         ]);
+
+        $breakdown->syncVariables($this->getVariables($data));
 
         $template->resources->each(function(StdActivityResource $resource) use ($breakdown) {
             $breakdown->resources()->create([
@@ -127,8 +129,6 @@ class EasyUploadJob extends ImportJob
                 'equation' => $resource->equation
             ]);
         });
-
-        $breakdown->syncVariables($this->getVariables($data));
 
         $this->success++;
     }
