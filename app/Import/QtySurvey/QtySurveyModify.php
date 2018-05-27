@@ -115,7 +115,7 @@ class QtySurveyModify
             $this->failed->push($data);
             return false;
         }
-        
+
         $unit = strtolower($data['I']);
         $unit_id = $this->units->get($unit);
         if (!$unit_id) {
@@ -131,15 +131,23 @@ class QtySurveyModify
         $qty_survey->save();
 
         $this->handleVariables($data, $qty_survey);
-        ++ $this->success;
+
+        BreakDownResourceShadow::with('breakdown_resource')
+            ->whereIn('wbs_id', $qty_survey->wbsLevel->getChildrenIds())
+            ->where('cost_account', $qty_survey->cost_account)
+            ->get()->each(function ($resource) use ($qty_survey) {
+                $resource->breakdown_resource->updateShadow();
+            });
+
+        ++$this->success;
         return true;
     }
 
     private function loadUnits()
     {
-        $this->units = Unit::select(['id', 'type'])->get()->keyBy(function($unit) {
+        $this->units = Unit::select(['id', 'type'])->get()->keyBy(function ($unit) {
             return strtolower($unit->type);
-        })->map(function($unit) {
+        })->map(function ($unit) {
             return $unit->id;
         });
     }
@@ -151,7 +159,7 @@ class QtySurveyModify
 
         $order = 0;
         for ($c = $start; $c <= $end; ++$c) {
-            ++ $order;
+            ++$order;
             $cell = chr($c);
             if (!isset($data[$cell]) || $data[$cell] === '') {
                 continue;
@@ -161,12 +169,6 @@ class QtySurveyModify
             $variable->value = $data[$cell];
             $variable->save();
         }
-
-        BreakDownResourceShadow::with('breakdown_resource')->where('survey_id', $qty_survey->id)->get()->each(function($resource) use ($qty_survey) {
-            $resource->budget_qty = $qty_survey->budget_qty;
-            $resource->eng_qty = $qty_survey->eng_qty;
-            $resource->save();
-        });
     }
 
     private function createFailedExcel()
@@ -174,7 +176,7 @@ class QtySurveyModify
         $headers = [
             'WPS Path', 'WBS Code', 'BOQ Item Code', 'QS Item Code', 'Cost Account',
             'Description', 'Budget Quantity', 'Engineer Quantity', 'Unit',
-            'v1', 'v2', 'v3', 'v4',	'v5', 'v6', 'v7', 'v8', 'v9', 'v10', 'Error'
+            'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v10', 'Error'
         ];
 
         $excel = new PHPExcel();
