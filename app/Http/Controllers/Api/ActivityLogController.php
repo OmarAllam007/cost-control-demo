@@ -21,6 +21,7 @@ class ActivityLogController extends Controller
         $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)
             ->with(['important_actual_resources', 'actual_resources'])
             ->where('resource_id', '<>', 0)
+            ->where('show_in_cost', 1)
             ->where('code', $code)->get();
 
         $resource_ids = $shadows->pluck('resource_id', 'resource_id');
