@@ -69,7 +69,7 @@
                                 </article>
                             @endforeach
                         </div>
-                        <div class="col-sm-4 report-group">
+                        {{--<div class="col-sm-4 report-group">
                             <h4>Budget Reports</h4>
                             <p>
                                 <a href="#" class="select-all">Select All</a> /
@@ -86,7 +86,7 @@
                                     </label>
                                 </article>
                             @endforeach
-                        </div>
+                        </div>--}}
                     </div>
                 </div>
             </div>
