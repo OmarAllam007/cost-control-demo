@@ -36,8 +36,9 @@
         </div>
 
         <div class="form-group {{$errors->first('item_code', 'has-error')}}">
-            {{Form::label('item_code','Item Code (BOQ)')}}
-            {{Form::text('item_code',null,['class'=>'form-control'])}}
+            {{ Form::label('item_code','Item Code (BOQ)') }}
+            {{ Form::text('item_code',null,['class'=>'form-control']) }}
+            {!! $errors->first('item_code', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('qs_code', 'has-error')}}">
