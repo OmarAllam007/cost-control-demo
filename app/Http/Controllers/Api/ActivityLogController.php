@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\StoreResource;
 use App\WbsLevel;
@@ -18,11 +19,19 @@ class ActivityLogController extends Controller
     {
         $this->authorize('actual_resources', $wbs->project);
 
+        $isActivityRollup = BreakDownResourceShadow::where('wbs_id', $wbs->id)
+            ->where('code', $code)->where('is_rollup', true)
+            ->whereRaw('code = resource_code')->exists();
+
         $shadows = BreakDownResourceShadow::where('wbs_id', $wbs->id)
-            ->with(['important_actual_resources', 'actual_resources'])
+            ->where('code', $code)
             ->where('resource_id', '<>', 0)
-            ->where('show_in_cost', 1)
-            ->where('code', $code)->get();
+            ->when($isActivityRollup, function($q) {
+                return $q->where('important', 1);
+            })->when(!$isActivityRollup, function($q) {
+                return $q->where('show_in_cost', 1);
+            })->with(['important_actual_resources', 'actual_resources'])
+            ->get();
 
         $resource_ids = $shadows->pluck('resource_id', 'resource_id');
 
