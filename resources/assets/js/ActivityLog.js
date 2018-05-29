@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import _ from 'lodash';
 import ResourceLog from './ResourceLog.vue';
 import RolledResourceLog from './RolledResourceLog.vue';
 
@@ -26,8 +25,12 @@ const app = new Vue({
                     log.code.toLowerCase().indexOf(term) > -1 ||
                     log.name.toLowerCase().indexOf(term) > -1;
             }).filter(log => {
-                return this.resource_mode === 'all' ||
-                    log.budget_resources.filter(res => res.important).length;
+                if (window.is_activity_rollup) {
+                    return (this.resource_mode === 'important' &&  !log.rollup) || (this.resource_mode !== 'important' &&  log.rollup);
+                } else {
+                    return this.resource_mode === 'all' ||
+                        log.budget_resources.filter(res => res.important).length;
+                }
             });
         }
     },

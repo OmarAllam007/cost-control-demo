@@ -42,8 +42,14 @@ class ActivityLogController extends Controller
             $status = 'In Progress';
         }
 
+        $is_activity_rollup = BreakDownResourceShadow::where('wbs_id', $wbs->id)
+            ->where('code', $code)->where('is_rollup', true)
+            ->whereRaw('code = resource_code')->exists();
+
         return view('activity-log.show', compact(
-            'wbs', 'code', 'periods', 'activity_name', 'budget_cost', 'first_upload', 'last_upload', 'actual_cost', 'status', 'variance'
+            'wbs', 'code', 'periods',
+            'activity_name', 'budget_cost', 'first_upload', 'last_upload',
+            'actual_cost', 'status', 'variance', 'is_activity_rollup'
         ));
     }
 

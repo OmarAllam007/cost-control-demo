@@ -153,6 +153,7 @@
     <script>
         var wbs_id = {{$wbs->id}};
         var code = "{{$code}}";
+        var is_activity_rollup = {{ $is_activity_rollup? 'true' : 'false'  }};
     </script>
 
     <script src="/js/activity-log.js"></script>
