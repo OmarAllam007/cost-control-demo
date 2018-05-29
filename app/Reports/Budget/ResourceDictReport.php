@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
+use PHPExcel_Worksheet;
 
 class ResourceDictReport
 {
@@ -133,12 +134,14 @@ class ResourceDictReport
         ]);
 
 //        $sheet->setAutoFilter();
+        /** @var $sheet PHPExcel_Worksheet */
         $sheet->freezeFirstRow();
         $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(80);
         $sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(20);
         $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(20);
         $sheet->setAutoSize(['B', 'C', 'D', 'G', 'H', 'I', 'J']);
         $sheet->setAutoSize(false);
+        $sheet->setShowSummaryBelow(false);
     }
 
     protected function buildExcel(LaravelExcelWorksheet $sheet, $division, $depth = 0)
