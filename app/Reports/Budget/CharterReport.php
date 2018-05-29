@@ -209,7 +209,7 @@ class CharterReport
             $this->row += 2;
 
             $sheet->mergeCells("A{$this->row}:G{$this->row}")
-                ->setCellValue('A{$this->row}', 'Project Brief')
+                ->setCellValue("A{$this->row}", 'Project Brief')
                 ->cells("A{$this->row}", $this->headerStyle);
 
             $description = wordwrap($this->project->description, 95);

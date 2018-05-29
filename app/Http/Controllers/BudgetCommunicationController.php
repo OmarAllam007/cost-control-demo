@@ -34,7 +34,7 @@ class BudgetCommunicationController extends Controller
 
         $schedule = CommunicationSchedule::create(['project_id' => $project->id, 'type' => 'Budget']);
         foreach ($request->schedule as $role_id => $data) {
-            if ($data['enabled']) {
+            if ($data['enabled'] && !empty($data['users']) && !empty($data['reports'])) {
                 $user_ids = array_filter($data['users']);
                 $report_ids = array_filter($data['reports']);
                 foreach ($user_ids as $user_id) {
