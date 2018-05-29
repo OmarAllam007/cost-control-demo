@@ -52,7 +52,9 @@ class BreakdownShadowObserver
     {
         //todo: needs further discussion on how to update Qty
         $budget_cost = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->sum('budget_cost');
-        BreakDownResourceShadow::where('id', $resource->rollup_resource_id)->update(compact('budget_cost'));
+        $important = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->where('important', 1)->exists();
+
+        BreakDownResourceShadow::where('id', $resource->rollup_resource_id)->update(compact('budget_cost', 'important'));
     }
 
 

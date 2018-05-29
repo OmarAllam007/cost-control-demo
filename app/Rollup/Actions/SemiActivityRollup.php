@@ -63,7 +63,8 @@ class SemiActivityRollup
     private function rollupActivity($code)
     {
         $resources = BreakdownResource::where('project_id', $this->project->id)
-            ->where(compact('code'))->where('important', 0)
+            ->where(compact('code'))
+//            ->where('important', 0)
             ->whereIn('id', $this->data->get($code))
             ->whereNull('rolled_up_at')
             ->where('is_rollup', 0)->get();
@@ -109,6 +110,8 @@ class SemiActivityRollup
             $cost_account_suffix = sprintf('%02d', $suffix);
         }
 
+        $important = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->where('important', 1)->exists();
+
         $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
             'resource_code' => $resource->code . '.' . $cost_account_suffix,
@@ -126,7 +129,7 @@ class SemiActivityRollup
             'code' => $this->rollup_resource->code, 'resource_id' => 0,
             'boq_id' => $resource->shadow->boq_id, 'survey_id' => $resource->shadow->survey_id,
             'boq_wbs_id' => $resource->shadow->boq->wbs_id ?? 0, 'survey_wbs_id' => $resource->shadow->qs_wbs_id ?? 0,
-            'updated_by' => $this->user_id, 'updated_at' => $this->now,
+            'important' => $important, 'updated_by' => $this->user_id, 'updated_at' => $this->now,
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true
         ]);
 
