@@ -39,7 +39,7 @@ class RevisedBoqReport
 
     function run()
     {
-        $this->original_boqs = Boq::selectRaw('wbs_id, cost_account, description, unit_id, (price_ur * quantity) as original_boq')
+        $this->original_boqs = Boq::selectRaw('wbs_id, cost_account, description, unit_id, (price_ur * quantity) as original_boq, quantity')
             ->where('project_id', $this->project->id)->with('unit')->get()
             ->groupBy('wbs_id')->map(function (Collection $group) {
                 return $group->keyBy('cost_account');
@@ -78,10 +78,12 @@ class RevisedBoqReport
                 $revised = $cost_account->revised_boq = $this->revised_boqs
                     ->get($cost_account->wbs_id, collect())->get(trim($cost_account->cost_account));
 
+                $cost_account->estimated_qty = $cost_account->quantity;
                 if ($revised) {
                     $cost_account->revised_boq = $revised->eng_qty * $revised->price_ur;
                     $cost_account->budget_qty = $revised->eng_qty;
                     $cost_account->price_ur = $revised->price_ur;
+
                 } else {
                     $cost_account->revised_boq = 0;
                     $cost_account->budget_qty = 0;
@@ -118,9 +120,9 @@ class RevisedBoqReport
     {
         $this->run();
 
-        $sheet->row($this->row, ['Description', 'Cost Account', 'Price U.R.', 'Unit of Measure', 'Original BOQ', 'Eng Qty', 'Revised BOQ']);
+        $sheet->row($this->row, ['Description', 'Cost Account', 'Price U.R.', 'Estimated Qty', 'Unit of Measure', 'Original BOQ', 'Eng Qty', 'Revised BOQ']);
 
-        $sheet->cells('A1:G1', function (CellWriter $cells) {
+        $sheet->cells('A1:H1', function (CellWriter $cells) {
             $cells->setFont(['bold' => true])->setBackground('#3f6caf')->setFontColor('#ffffff');
         });
 
@@ -132,19 +134,19 @@ class RevisedBoqReport
         $sheet->freezeFirstRow();
         $sheet->setColumnFormat([
             "B2:B{$this->row}" => '@',
-            "C2:C{$this->row}" => '#,##0.00',
-            "E2:G{$this->row}" => '#,##0.00',
+            "C2:D{$this->row}" => '#,##0.00',
+            "E2:H{$this->row}" => '#,##0.00',
         ]);
 
         $sheet->getColumnDimension('A')->setWidth(80);
-        $sheet->setAutoSize(['B', "C", "D", "E", "F", "G"]);
+        $sheet->setAutoSize(['B', "C", "D", "E", "F", "G", "H"]);
         $sheet->setAutoSize(false);
         $sheet->setShowSummaryBelow(false);
     }
 
     protected function buildSheet(LaravelExcelWorksheet $sheet, $level, $depth = 0)
     {
-        $sheet->row(++$this->row, [$level->name, '', '', '', $level->original_boq, '', $level->revised_boq]);
+        $sheet->row(++$this->row, [$level->name, '', '', '', '', $level->original_boq, '', $level->revised_boq]);
 
         if ($depth) {
             $sheet->getRowDimension($this->row)
@@ -163,7 +165,7 @@ class RevisedBoqReport
 
         $level->cost_accounts->each(function ($cost_account) use ($sheet, $depth) {
             $sheet->row(++$this->row, [
-                $cost_account->description, $cost_account->cost_account, $cost_account->price_ur,
+                $cost_account->description, $cost_account->cost_account, $cost_account->price_ur, $cost_account->quantity,
                 $cost_account->unit->type ?? '', $cost_account->original_boq,
                 $cost_account->budget_qty, $cost_account->revised_boq,
             ]);
