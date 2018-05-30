@@ -133,19 +133,11 @@
             },
 
             budget_unit() {
-                let total = 0;
-                this.resource.budget_resources.forEach(res => {
-                    total += res.budget_unit
-                });
-                return total;
+                return this.resource.rollup_resource.budget_unit;
             },
 
             budget_cost() {
-                let total = 0;
-                this.resource.budget_resources.forEach(res => {
-                    total += res.budget_cost
-                });
-                return total;
+                return this.resource.rollup_resource.budget_cost;
             },
 
             actual_unit_price() {
