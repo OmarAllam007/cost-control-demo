@@ -66,8 +66,9 @@ class SemiActivityRollup
             ->where(compact('code'))
 //            ->where('important', 0)
             ->whereIn('id', $this->data->get($code))
-            ->whereNull('rolled_up_at')
-            ->where('is_rollup', 0)->get();
+//            ->whereNull('rolled_up_at')
+//            ->where('is_rollup', 0)
+            ->get();
 
         if (!$resources->count()) {
             return false;
@@ -124,7 +125,7 @@ class SemiActivityRollup
             'measure_unit' => $measure_unit, 'unit_id' => 15, 'template' => 'Semi Activity Rollup',
             'breakdown_id' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
-            'remarks' => 'Cost account rollup', 'productivity_ref' => '', 'productivity_output' => 0,
+            'remarks' => 'Semi activity rollup', 'productivity_ref' => '', 'productivity_output' => 0,
             'labors_count' => 0, 'boq_equivilant_rate' => 1, 'productivity_id' => 0,
             'code' => $this->rollup_resource->code, 'resource_id' => 0,
             'boq_id' => $resource->shadow->boq_id, 'survey_id' => $resource->shadow->survey_id,
