@@ -3,7 +3,7 @@
 namespace App\Reports\Cost;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
-use App\CostConcerns;
+use App\CostConcern;
 use App\CostShadow;
 use App\Http\Controllers\CostConcernsController;
 use App\MasterShadow;

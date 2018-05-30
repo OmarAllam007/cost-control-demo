@@ -14,6 +14,7 @@ class CreateCostConcernsTable extends Migration
     {
         Schema::create('cost_concerns', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('user_id');
             $table->string('report_name');
             $table->text('data');
             $table->integer('project_id');
