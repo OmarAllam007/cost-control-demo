@@ -78,18 +78,18 @@ class SemiActivityRollup
 
         $this->createRollupShadow($resource, $code, $resources->pluck('id'));
 
-        BreakdownResource::whereIn('id', $resources->pluck('breakdown_resource_id'))->update([
+        BreakdownResource::whereIn('id', $resources->pluck('id'))->update([
             'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
             'updated_by' => $this->user_id, 'updated_at' => $this->now
         ]);
 
         $this->project->shadows()->whereIn('breakdown_resource_id', $resources->pluck('id'))->update([
-            'show_in_cost' => false, 'rolled_up_at' => $this->now,
+            'show_in_cost' => 0, 'rolled_up_at' => $this->now,
             'rollup_resource_id' => $this->rollup_shadow->id,
             'updated_by' => $this->user_id, 'updated_at' => $this->now
         ]);
 
-        return true;
+        return $resources->count();
     }
 
     private function createRollupShadow($resource, $code, $resource_ids)

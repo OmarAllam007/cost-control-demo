@@ -50,6 +50,8 @@ class ActivityLogController extends Controller
                 'budget_resources' => $budget, 'rollup' => false,
                 'store_resources' => $store_resources->get($id, collect())
             ];
+        })->filter(function ($log) {
+            return $log['store_resources']->count();
         });
 
         // Rollup resources
