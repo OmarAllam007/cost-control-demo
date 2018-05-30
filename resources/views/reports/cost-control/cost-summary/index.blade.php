@@ -34,6 +34,7 @@
     <table class="table table-condensed cost-summary-table">
         <thead>
         <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
+            <td></td>
             <th class="col-sm-2" rowspan="2" style="border: 2px solid black;text-align: center">Resource Type</th>
             <th style="border: 2px solid black;text-align: center">Budget</th>
             <th colspan="3" style="border: 2px solid black;text-align: center">Previous</th>
@@ -42,6 +43,7 @@
             <th colspan="3" style="text-align: center; border: 2px solid black;">At Completion</th>
         </tr>
         <tr style="background: #C6F1E7">
+            <td></td>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Base Line</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Cost</th>
             <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous (EV) Allowable</th>
@@ -63,6 +65,12 @@
                 $typeToDateData = $toDateData[$id] ?? [];
             @endphp
             <tr>
+                <td>
+                    <a  href="#" class="btn btn-primary btn-lg concern-btn" title="Add issue or concern"
+                        data-json="{{ json_encode(['Base Line' => $typeToDateData['budget_cost'], 'Previous Cost' => $typePreviousData['previous_cost'], 'Todate Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'Todate Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    </a>
+                </td>
                 <td style="border: 2px solid black;text-align: left">{{$value}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['budget_cost']??0,2) }}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typePreviousData['previous_cost']??0,2)}}</td>
@@ -74,13 +82,6 @@
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['remaining_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['completion_cost']??0,2)}}</td>
                 <td style="border: 2px solid black;text-align: center; @if(($typeToDateData['completion_cost_var']??0)<0) color: red; @endif">{{number_format($typeToDateData['completion_cost_var']??0,2)}}</td>
-                {{--<td>--}}
-                {{--<a  href="#" class="btn btn-primary btn-lg concern-btn"--}}
-                {{--title="{{$value['name']}}"--}}
-                {{--data-json="{{json_encode($value)}}">--}}
-                {{--<i class="fa fa-pencil-square-o " aria-hidden="true"></i>--}}
-                {{--</a>--}}
-                {{--</td>--}}
             </tr>
         @endforeach
         </tbody>
@@ -132,31 +133,7 @@
         </div>
     </div>
 
-    <div class="modal" id="ConcernModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <form action="" class="modal-content">
-                {{csrf_field()}} {{method_field('post')}}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                    <h4 class="modal-title">Add Concern</h4>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <label for="message-text" class="control-label">Comment:</label>
-                        <textarea class="form-control" id="mytextarea"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success apply_concern" data-dismiss="modal"><i class="fa fa-plus"></i>
-                            Add Concern
-                        </button>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </div>
-
+    @include('reports.partials.concerns-modal')
     {{--@if(count($concerns))--}}
     {{--@include('reports._cost_summery_concerns')--}}
     {{--@endif--}}

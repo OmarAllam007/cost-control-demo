@@ -32,10 +32,17 @@ class CostConcernsController extends Controller
         return back();
     }
 
-    function destroy(CostConcern $concern)
+    function destroy(CostConcern $concern, Request $request)
     {
         $this->authorize('cost_owner', $concern->project);
 
+        $concern->delete();
 
+        if ($request->wantsJson()) {
+            return ['ok' => 'true'];
+        }
+
+        flash('Issue has been deleted', 'info');
+        return back();
     }
 }
