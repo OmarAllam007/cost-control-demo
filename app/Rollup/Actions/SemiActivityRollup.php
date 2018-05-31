@@ -64,10 +64,7 @@ class SemiActivityRollup
     {
         $resources = BreakdownResource::where('project_id', $this->project->id)
             ->where(compact('code'))
-//            ->where('important', 0)
             ->whereIn('id', $this->data->get($code))
-//            ->whereNull('rolled_up_at')
-//            ->where('is_rollup', 0)
             ->get();
 
         if (!$resources->count()) {

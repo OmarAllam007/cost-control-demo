@@ -34,7 +34,7 @@ class SumActivity
 
     private function handleCode($code)
     {
-        BreakdownResource::where('wbs_id', $this->wbs->id)->where(compact('code'))
+        BreakdownResource::where(compact('code'))
             ->selectRaw('resource_id, count(*) as c')->groupBy('resource_id')->having('c', '>', 1)
             ->pluck('resource_id')->each(function ($resource_id) use ($code) {
                 $this->sumResources($code, $resource_id);
@@ -44,7 +44,7 @@ class SumActivity
     private function sumResources($code, $resource_id)
     {
         $resources = BreakdownResource::where(compact('resource_id', 'code'))
-            ->where('wbs_id', $this->wbs->id)
+//            ->where('wbs_id', $this->wbs->id)
             ->whereHas('shadow', function ($q) {
                 $q->where('show_in_budget', 1);
             })->with('shadow')->get();
@@ -91,9 +91,11 @@ class SumActivity
         $newResource = BreakdownResource::forceCreate([
             'breakdown_id' => 0, 'wbs_id' => $firstShadow->wbs_id, 'project_id' => $firstShadow->project_id,
             'resource_id' => $resource_id, 'budget_qty' => $budget_qty, 'eng_qty' => $eng_qty,
-            'important' => $important, 'labor_count' => $labor_count, 'remarks' => $remarks, 'resource_waste' => $firstShadow->resource_waste,
-            'equation' => $budget_unit, 'productivity_id' => 0,
-            'created_at' => $this->now, 'updated_at' => $this->now, 'created_by' => $this->user_id, 'updated_by' => $this->user_id
+            'important' => $important, 'labor_count' => $labor_count, 'remarks' => $remarks,
+            'resource_waste' => $firstShadow->resource_waste, 'equation' => $budget_unit,
+            'productivity_id' => 0, 'code' => $firstShadow->code,
+            'created_at' => $this->now, 'updated_at' => $this->now,
+            'created_by' => $this->user_id, 'updated_by' => $this->user_id
         ]);
 
         $newShadow = BreakDownResourceShadow::forceCreate([

@@ -14,7 +14,7 @@ class ActivityResourcesController extends Controller
         $this->authorize('cost_owner', $wbsLevel->project);
 
         return BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
-            ->canBeRolled()->costOnly()
+            ->costOnly()
             ->where('code', $code)->orderBy('resource_name')
             ->get()->map(function ($resource) {
                 return new RollupResourceFormatter($resource);
