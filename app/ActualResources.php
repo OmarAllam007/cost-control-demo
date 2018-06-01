@@ -8,14 +8,16 @@ use App\Observers\ActualResourceObserver;
 use function GuzzleHttp\json_decode;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ActualResources extends Model
 {
-    use HasChangeLog, RecordsUser;
+    use HasChangeLog, RecordsUser, SoftDeletes;
 
     protected $fillable = [
         'project_id', 'wbs_level_id', 'breakdown_resource_id', 'period_id', 'original_code',
-        'qty', 'unit_price', 'cost', 'unit_id', 'action_date', 'resource_id', 'batch_id', 'doc_no', 'original_data'
+        'qty', 'unit_price', 'cost', 'unit_id', 'action_date', 'resource_id', 'batch_id', 'doc_no', 'original_data',
+        'progress', 'status'
     ];
 
     protected $casts = ['original_data' => 'array'];

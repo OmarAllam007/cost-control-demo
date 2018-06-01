@@ -26,7 +26,7 @@ class Project extends Model
     protected $fillable = [
         'name', 'project_code', 'client_name', 'project_location', 'project_contract_value',
         'project_start_date', 'project_duration', 'original_finish_date', 'expected_finish_date',
-        'owner_id', 'cost_owner_id', 'description','assumptions', 'discipline_brief',
+        'owner_id', 'cost_owner_id', 'description', 'assumptions', 'discipline_brief',
         'project_contract_signed_value', 'project_contract_budget_value', 'change_order_amount',
         'tender_direct_cost', 'tender_indirect_cost', 'tender_risk', 'tender_initial_profit',
         'total_budget_cost', 'cost_threshold', 'consultant', 'project_type', 'contract_type', 'actual_start_date',
@@ -119,7 +119,7 @@ class Project extends Model
 
     function getDivisions()
     {
-        $divisions = $this->breakdowns()->with('wbs_level.parent', 'wbs_level.parent.parent','wbs_level.parent.parent.parent', 'std_activity.division')->get()->pluck('std_activity.division');
+        $divisions = $this->breakdowns()->with('wbs_level.parent', 'wbs_level.parent.parent', 'wbs_level.parent.parent.parent', 'std_activity.division')->get()->pluck('std_activity.division');
         $all = collect();
         $parents = collect();
         foreach ($divisions as $division) {
@@ -246,6 +246,16 @@ class Project extends Model
         return $this->hasMany(BudgetRevision::class);
     }
 
+    function getRevisedContractAmountAttribute()
+    {
+        return $this->project_contract_signed_value + $this->change_order_amount;
+    }
+
+    function roles()
+    {
+        return $this->hasMany(ProjectRole::class);
+    }
+
     public function getUsers()
     {
         /** @var Collection $project_users */
@@ -261,15 +271,5 @@ class Project extends Model
         }
 
         return $project_users->sortBy('name');
-    }
-
-    function getRevisedContractAmountAttribute()
-    {
-        return $this->project_contract_signed_value + $this->change_order_amount;
-    }
-
-    function roles()
-    {
-        return $this->hasMany(ProjectRole::class);
     }
 }

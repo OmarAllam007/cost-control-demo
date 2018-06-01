@@ -1,6 +1,7 @@
 import DeleteActivityModal from './delete-activity-modal';
 import DeleteResourceModal from './delete-resource-modal';
-import Pagination from './server-pagination';
+import BreakdownResource from './breakdown-resource';
+import Pagination from '../../LaravelPagination.vue';
 
 export default {
 
@@ -10,8 +11,7 @@ export default {
         let perspective = window.localStorage.cost_perspective;
 
         return {
-            breakdowns: [],
-            loading: false,
+            breakdowns: [], loading: false,
             wbs_id: 0, activity: '', resource_type: '', resource: '', cost_account: '',
             perspective, count: 0, first: 0, last: 99
         };
@@ -29,25 +29,17 @@ export default {
                 }
             });
             return url + urlTokens.join('&');
+        },
+
+        show_breakdowns() {
+            return Object.keys(this.breakdowns).length > 0;
         }
     },
     //</editor-fold>
 
     methods: {
-        loadBreakdowns(cache = true) {
-            this.$broadcast('reloadPage');
-            // if (this.wbs_id) {
-            //     this.loading = true;
-            //     $.ajax({
-            //         dataType: 'json', cache
-            //     }).success(response => {
-            //         this.loading = false;
-            //         this.breakdowns = response;
-            //     }).error(() => {
-            //         this.loading = false;
-            //         this.breakdowns = [];
-            //     });
-            // }
+        loadBreakdowns() {
+
         },
 
         deleteResource(resource) {
@@ -62,13 +54,13 @@ export default {
             this.loading = true;
             $.ajax({
                 url: '/api/cost/delete-wbs/' + this.wbs_id, method: 'delete', dataType: 'json',
-                data: { _method: 'delete', _token: document.querySelector('[name=csrf-token]').content }
+                data: {_method: 'delete', _token: document.querySelector('[name=csrf-token]').content}
             }).success(response => {
                 this.loading = false;
                 $('#DeleteWbsDataModal').modal('hide');
                 this.$broadcast('reloadPage');
                 this.$dispatch('request_alert', {
-                    type: response.ok? 'info' : 'error', message: response.message
+                    type: response.ok ? 'info' : 'error', message: response.message
                 });
             }).error(() => {
                 this.loading = false;
@@ -78,28 +70,82 @@ export default {
                 });
 
             });
+        },
+
+        sumResourcesOnCostAccount() {
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+            const url = `/api/rollup/summarize/${this.wbs_id}/cost-account`
+
+            this.loading = true;
+            $.ajax({
+                url, method: 'post', data: {_token}, dataType: 'json',
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            });
+        },
+
+        sumResourcesOnActivity() {
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+            const url = `/api/rollup/summarize/${this.wbs_id}/activity`
+
+            this.loading = true;
+            $.ajax({
+                url, method: 'post', data: {_token}, dataType: 'json',
+            }).then(() => {
+                this.loadBreakdowns();
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            });
+        },
+
+        doRollup(activity_code) {
+            const _token = document.querySelector('meta[name=csrf-token]').content;
+
+            this.loading = true;
+            $.ajax({
+                url: `/project/${this.project}/rollup-activity`,
+                data: { codes: [activity_code], _token },
+                dataType: 'json',
+                method: 'put'
+            }).then(response => {
+                if (response.ok) {
+                    this.loadBreakdowns();
+                }
+
+                this.$dispatch('request_alert', {
+                    type: response.ok ? 'info' : 'error', message: response.message
+                });
+
+                this.loading = false;
+            }, () => {
+                this.loading = false;
+            })
+        },
+
+        slug(str) {
+            return str.trim().replace(/[\s\W]+/g, '-').toLowerCase();
         }
     },
 
     events: {
         wbs_changed(params) {
-            if (this.wbs_id != params.selection) {
-                this.loading = true;
-                this.wbs_id = params.selection;
-            }
-        },
-
-        changingPage() {
-            this.loading = true;
-        },
-
-        pageChanged(data) {
-            this.breakdowns = data;
-            this.loading = false;
+            this.wbs_id = params.selection;
         },
 
         reload_breakdowns() {
             this.loadBreakdowns();
+        },
+
+        loadingStart() {
+            this.loading= true;
+        },
+
+        loadingDone() {
+            this.loading = false;
         }
     },
 
@@ -111,6 +157,12 @@ export default {
     },
 
     components: {
-        DeleteActivityModal, DeleteResourceModal, Pagination
+        BreakdownResource, DeleteActivityModal, DeleteResourceModal, Pagination
+    },
+
+    filters: {
+        number_format(val) {
+            return parseFloat(val.toFixed(2)).toLocaleString();
+        }
     }
 }

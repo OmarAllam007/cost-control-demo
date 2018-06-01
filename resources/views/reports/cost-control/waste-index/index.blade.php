@@ -77,6 +77,11 @@
             text-decoration: none;
             font-weight: 700;
         }
+
+        .table>tbody>tr.highlight>td, .table>tbody>tr.info.highlight>td{
+            background: #ffc;
+        }
+
         .w-400 {
             width: 400px;
             max-width: 400px;
@@ -139,6 +144,7 @@
 
             $('#resourcesTable').on('click', '.open-level',function (e) {
                 e.preventDefault();
+                e.stopPropagation();
 
                 let selector = '.' + this.dataset.target;
                 $(this).toggleClass('open').find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');
@@ -151,7 +157,7 @@
 
             const rows = $('#resourcesTable tr').click(function () {
                 rows.removeClass('highlight');
-                $(this).addClass('highlight').find('a').click();
+                $(this).addClass('highlight');
             });
         });
     </script>

@@ -19,6 +19,7 @@ class BreakDownResourceObserver
         $resource->project_id = $resource->breakdown->project_id;
         $resource->wbs_id = $resource->breakdown->wbs_level_id;
         $resource->important = $resource->resource->important;
+        $resource->sap_code = $resource->breakdown->sap_code;
     }
 
     function created(BreakdownResource $resource)

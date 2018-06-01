@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 class WbsLevelController extends Controller
 {
 
-    protected $rules = ['name' => 'required'];
+    protected $rules = ['name' => 'required', 'code' => 'required'];
 
     public function index()
     {

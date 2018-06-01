@@ -44,7 +44,7 @@ class ResourceDictReport
 
     function run()
     {
-        $this->resources_info = BreakDownResourceShadow::whereProjectId($this->project->id)
+        $this->resources_info = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()
             ->selectRaw('resource_id, sum(budget_unit) as budget_unit, sum(budget_cost) as budget_cost')
             ->groupBy('resource_id')
             ->orderBy('resource_code')->orderBy('resource_name')
@@ -58,7 +58,7 @@ class ResourceDictReport
         $this->divisions = ResourceType::orderBy('name')
             ->get()->groupBy('parent_id');
 
-        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');
+        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()->sum('budget_cost');
 
         $this->tree = $this->buildTree();
 

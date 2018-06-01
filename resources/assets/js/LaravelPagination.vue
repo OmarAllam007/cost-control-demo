@@ -6,7 +6,7 @@
         <li v-if="hasPrevious">
             <a href="#" @click.prevent="page--">&laquo;</a>
         </li>
-        <li v-for="p in range" :class="{active: page == p}">
+        <li v-for="p in range" :class="{active: page == p}" :key="p">
             <a href="#" @click.prevent="page = p" v-text="p"></a>
         </li>
         <li v-if="hasNext">
@@ -20,6 +20,8 @@
 <script>
     export default {
         props: ['url', 'property'],
+
+        name: 'LaravelPagination',
 
         data() {
             return {page: 1, totalPages: 1, cardinality: 8}
@@ -49,7 +51,7 @@
         },
 
         created() {
-            this.loadData();
+            if (this.url) this.loadData();
         },
 
         watch: {
@@ -81,16 +83,24 @@
                 if (url.indexOf('?') >= 0) {
                     separator = '&';
                 }
+
+                if (resetPage) {
+                    this.page = 1;
+                }
+
                 url += `${separator}page=${this.page}`;
+
+                this.$dispatch('loadingStart');
 
                 $.ajax({
                     url, dataType: 'json'
                 }).done(response => {
                     this.$parent[this.property] = response.data;
                     this.totalPages = response.last_page;
-                    if (resetPage) {
-                        this.page = 1;
-                    }
+
+                    this.$dispatch('loadingDone', response);
+                }).error(response => {
+                    this.$dispatch('loadingError', response);
                 });
             }
         }

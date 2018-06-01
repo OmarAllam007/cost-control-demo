@@ -30,7 +30,7 @@ class QtyAndCostReport
     function run()
     {
         $boqs = Boq::where('project_id', $this->project->id)->get(['id', 'type', 'quantity', 'dry_ur']);
-        $budgets = BreakDownResourceShadow::groupBy('boq_id')
+        $budgets = BreakDownResourceShadow::groupBy('boq_id')->budgetOnly()
             ->selectRaw('boq_id, sum(budget_cost) as cost, AVG(budget_qty) as budget_qty, count(DISTINCT wbs_id) as wbs_count')
             ->get()->keyBy('boq_id');
 
