@@ -44,6 +44,7 @@ class MigrateActualResources extends Command
                     'batch_id' => $resource->batch_id,
                     'budget_code' => $resource->breakdown_resource->code,
                     'resource_id' => $resource->breakdown_resource->resource_id,
+                    'actual_resource_id' => $resource->actual_resource_id,
                     'activity_code' => $original_data[0],
                     'store_date' => $original_data[1],
                     'item_desc' => $original_data[2],
