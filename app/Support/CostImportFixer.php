@@ -154,7 +154,7 @@ class CostImportFixer
         $distributionLog = collect();
 
         foreach ($errors as $error) {
-            $date =$error[1];
+            $date = $error[1];
             $resources = $error['resources']->keyBy('breakdown_resource_id');
             $logEntry = ['oldRow' => $this->rows->get($error['hash']), 'newRows' => []];
             $this->rows->forget($error['hash']);
@@ -171,7 +171,17 @@ class CostImportFixer
                         'resource' => $resource
                     ];
 
-                    $this->rows->push($newRow);
+                    $store_resource = StoreResource::forceCreate([
+                        'project_id' => $this->batch->project_id, 'period_id' => $this->batch->period_id,
+                        'batch_id' => $this->batch->id,
+                        'budget_code' => $resource->code, 'resource_id' => $resource->resource_id,
+                        'activity_code' => $error[0], 'store_date' => $date, 'item_code' => $error[7],
+                        'item_desc' => $error[2], 'measure_unit' => $resource->measure_unit,
+                        'unit_price' => $unit_price, 'qty' => $qty, 'cost' => $total, 'doc_no' => $error[8],
+                    ]);
+                    $newRow['id'] = $store_resource->id;
+
+                    $this->rows->put($newRow['id'], $newRow);
                     $logEntry['newRows'][] = $newRow;
                 }
             }
@@ -232,7 +242,7 @@ class CostImportFixer
 
             if (strtolower($value) == 'closed') {
                 $resource->progress = 100;
-            } elseif($resource->progress == 100) {
+            } elseif ($resource->progress == 100) {
                 $resource->status = 'Closed';
             }
 
