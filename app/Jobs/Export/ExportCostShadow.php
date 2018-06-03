@@ -92,8 +92,6 @@ class ExportCostShadow extends Job
                 ->mergeBindings($subquery->getQuery());
         }
 
-        dd($query->getQuery()->toSql());
-
         /** @var $query Builder */
         $query->with('actual_resources', 'boq')->chunk(2000, function ($shadows) {
             $time = microtime(1);
