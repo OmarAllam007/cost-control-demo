@@ -89,14 +89,14 @@ class ExportCostShadow extends Job
                 ->where('period_id', $this->period->id)->select('breakdown_resource_id');
 
             $query->whereRaw('breakdown_resource_id in (' . $subquery->toSql() . ')')
-                ->where('show_in_cost', 1)
                 ->mergeBindings($subquery->getQuery());
         }
-        /** @var $query Builder */
 
+        dd($query->getQuery()->toSql());
+
+        /** @var $query Builder */
         $query->with('actual_resources', 'boq')->chunk(2000, function ($shadows) {
             $time = microtime(1);
-
             foreach ($shadows as $costShadow) {
                 if ($costShadow instanceof MasterShadow) {
                     $levels = $costShadow['wbs'];

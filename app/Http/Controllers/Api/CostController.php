@@ -31,7 +31,7 @@ class CostController extends Controller
         $query = BreakDownResourceShadow::with('actual_resources')->whereIn('wbs_id', $wbs_level->getChildrenIds())->costOnly();
         if ($perspective != 'budget') {
             $query->whereRaw(
-                "breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = $period->id)"
+                "breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = $period->id and deleted_at is null)"
             );
         }
 
