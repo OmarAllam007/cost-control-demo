@@ -57,7 +57,7 @@
                         <span class="flex">{{$typeToDateData->type}}</span>
 
                         <a  href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
-                            data-json="{{ json_encode(['Base Line' => $typeToDateData['budget_cost'], 'Previous Cost' => $typeToDateData['previous_cost'], 'Todate Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'Todate Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
+                            data-data="{{ json_encode(['Type' => $typeToDateData->type, 'Base Line' => $typeToDateData['budget_cost'], 'Previous Cost' => $typeToDateData['previous_cost'], 'To Date Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'To Date Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
                             <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -79,9 +79,10 @@
                 <div class="display-flex">
                     <span class="flex">Total</span>
                     <a  href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
-                        data-json="{{ json_encode([
-                            'Base Line' => $toDateData->sum('budget_cost'), 'Previous Cost' => $toDateData->sum('previous_cost'),
-                            'To Date Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'Todate Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
+                        data-data="{{ json_encode([
+                            'Type' => 'Total', 'Base Line' => $toDateData->sum('budget_cost'), 'Previous Cost' => $toDateData->sum('previous_cost'),
+                            'To Date Cost' => $toDateData->sum('to_date_cost'), 'Allowable (EV) Cost' => $toDateData->sum('ev'), 'To Date Cost Variance' => $toDateData->sum('to_date_var'),
+                            'Remaining Cost' => $toDateData->sum('remaining_cost'), 'At Completion Cost' => $toDateData->sum('completion_cost'), 'At Completion Cost Variance' => $toDateData->sum('completion_cost_var')]) }}">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -97,9 +98,6 @@
         </tr>
         </tfoot>
     </table>
-
-
-    <input type="hidden" value="{{$project->id}}" id="project_id">
 
     <div class="row">
         <div class="col-md-6">
@@ -128,278 +126,36 @@
         </div>
     </div>
 
-    @include('reports.partials.concerns-modal')
+    @include('reports.partials.concerns-modal', ['report_name' => 'Cost Summary'])
     {{--@if(count($concerns))--}}
     {{--@include('reports._cost_summery_concerns')--}}
     {{--@endif--}}
 @endsection
 
 @section('javascript')
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
-    @php
-        //todo: Extract all this into view composer or controller
-        $to_date_values = collect(['To Date Cost']);
-        $budget_values = collect(['Budget Cost']);
-        $completion_values = collect(['At Completion']);
-        $allowable_values = collect(['Allowable Cost']);
-        $typeNames = collect();
-        foreach ($toDateData as $type) {
-            $to_date_values[] = $type->to_date_cost ?: 0;
-            $completion_values[] = $type->completion_cost ?: 0;
-            $allowable_values[] = $type->ev ?: 0;
-            $budget_values[] = $type->budget_cost ?: 0;
-            $typeNames[] = $type->type;
-        }
+   <script src="{{asset('js/d3.min.js')}}"></script>
+   <script src="{{asset('js/c3.min.js')}}"></script>
 
-        $costTrends = \App\MasterShadow::with('period')->orderBy('period_id')
-            ->where('project_id', $project->id)->groupBy('period_id')
-            ->selectRaw('period_id, sum(completion_cost) completion_cost, sum(cost_var) as cost_var')
-            ->selectRaw('SUM(CASE WHEN activity_id = 3060 THEN budget_cost END) as reserve')
-            ->get();
+   <script>
+       $(function() {
+           const concernsModal = $('#concerns-modal').on('bs.modal-shown', function() {
+               $(this).find('textarea').focus();
+           });
+           const dataField = concernsModal.find('#concern-data');
 
-        $trends_completion_cost_values = collect(['At Completion Cost']);
-        $trends_completion_cost_var_values = collect(['At Completion Cost Variance']);
-        $periods = collect();
-        foreach ($costTrends as $trend) {
-            $periods[] = $trend->period->name;
-            $trends_completion_cost_values[] = $trend->completion_cost - $trend->reserve;
-            $trends_completion_cost_var_values[] = $trend->cost_var + $trend->reserve;
-        }
-    @endphp
+           $('.concern-btn').on('click', function(e) {
+               e.preventDefault();
+               dataField.val(e.currentTarget.dataset.data);
+               concernsModal.modal();
+           });
+       });
+   </script>
 
-
-    <script>
-
-        var budget_cost_vs_completion_chart = c3.generate({
-            bindto: '#budget_cost_vs_completion_chart',
-            data: {
-                columns: [{!! $budget_values->values() !!}, {!! $completion_values->values() !!}],
-                type: 'bar'
-            },
-            bar: {
-                width: {ratio: .5}
-            },
-            transition: {duration: 100},
-            axis: {
-                x: {
-                    type: 'category',
-                    categories: {!! $typeNames !!}
-                },
-                y: {
-                    tick: {
-                        format: d3.format(",.2f")
-                    }
-                }
-            },
-            grid: {
-                x: {show: true},
-                y: {show: true}
-            }
-        });
-
-        var to_date_vs_allowable_chart = c3.generate({
-            bindto: '#to_date_vs_allowable_chart',
-            data: {
-                columns: [{!! $to_date_values->values() !!}, {!! $allowable_values->values() !!}],
-                type: 'bar'
-            },
-            bar: {
-                width: {ratio: .5}
-            },
-            transition: {
-                duration: 100
-            },
-            axis: {
-                x: {
-                    type: 'category',
-                    categories: {!! $typeNames !!}
-                },
-                y: {
-                    tick: {
-                        format: d3.format(",.2f")
-                    }
-                }
-            },
-            grid: {
-                x: {show: true},
-                y: {show: true}
-            }
-        });
-
-        var completion_cost_trend_chart = c3.generate({
-            bindto: '#completion_cost_trend_chart',
-            data: {
-                columns: [{!! $trends_completion_cost_values !!}],
-                type: 'line'
-            },
-            transition: {
-                duration: 100
-            },
-            axis: {
-                x: {
-                    type: 'category',
-                    categories: {!! $periods !!}
-                },
-                y: {
-                    tick: {
-                        format: d3.format(",.2f")
-                    }
-                },
-            },
-            grid: {
-                x: {show: true},
-                y: {show: true}
-            }
-        });
-
-        var completion_cost_var_trend_chart = c3.generate({
-            bindto: '#completion_cost_var_trend_chart',
-            data: {
-                columns: [{!! $trends_completion_cost_var_values !!}],
-                type: 'line'
-            },
-            transition: {
-                duration: 100
-            },
-            axis: {
-                x: {
-                    type: 'category',
-                    categories: {!! $periods !!}
-                },
-                y: {
-                    tick: {
-                        format: d3.format(",.2f")
-                    }
-                },
-            },
-            grid: {
-                x: {show: true},
-                y: {show: true}
-            }
-        });
-
-        {{--
-        var data = {};
-        var sites = [];
-        var chart2 = {};
-        var types = [];
-
-        $.each(chart_data, function (e, value) {
-            sites.push(e);
-            data[e] = value.at_comp_cost_var
-        });
-        $.each(second_chart, function (e, value) {
-            types.push(e);
-            chart2[e] = value.to_date_cost_var
-        });
-
-        var chart = c3.generate({
-            bindto: '#chart',
-            data: {
-                json: [data],
-                keys: {value: sites},
-                type: 'bar',
-            },
-            bar: {
-                width: {ratio: .25}
-            },
-            transition: {
-                duration: 100
-            },
-            axis: {
-                y: {
-                    label: {
-                        text: 'At Completion Variance',
-                        position: 'outer-middle',
-                    }
-                },
-                x: {
-                    label: {
-                        text: 'Resource Type',
-                        position: 'inner-top',
-                    },
-                }
-
-            }
-
-        });
-
-        var chart3 = c3.generate({
-            bindto: '#chart2',
-            data: {
-                json: [chart2],
-                keys: {value: types},
-                type: 'bar',
-            },
-            bar: {
-                width: {ratio: .5}
-            },
-            interaction: {
-                enabled: true
-            },
-            axis: {
-                y: {
-                    label: {
-                        text: 'To Date Cost Var',
-                        position: 'outer-middle',
-                    }
-                },
-                x: {
-                    label: {
-                        text: 'Resource Type',
-                        position: 'inner-top',
-                    }
-                }
-
-            }
-
-        });
-
-        $(function () {
-            var ConcernModal = $('#ConcernModal');
-            var ConcernModalForm = ConcernModal.find('form');
-            var title = ConcernModal.find('.modal-title');
-            var project_id = $('#project_id').val();
-
-
-            $('.concern-btn').on('click', function (e) {
-                e.preventDefault();
-                var data = ($(this).attr('data-json'));
-                ConcernModal.data('json', data).modal();
-
-            });
-
-            $('.apply_concern').on('click', function (e) {
-                e.preventDefault();
-                var report_name = 'Cost Summary Report';
-                var body = $('#mytextarea').val();
-                var data = ConcernModal.data('json');
-                if (body.length != 0) {
-                    $.ajax({
-                        url: '/concern/' + project_id,
-                        method: 'POST',
-                        data: {
-                            _token: $('meta[name="csrf-token"]').attr('content'),
-                            info: data,
-                            report_name: report_name,
-                            comment: body,
-                        },
-                    }).success((e) => {
-                        console.log('success')
-                    });
-                    ConcernModal.modal('hide');
-//                    location.reload();
-                }
-            })
-
-        })
---}}
-    </script>
+    @include('reports.cost-control.cost-summary._charts', ['report_name' => 'Cost Summary'])
 @endsection
 
 @section('css')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
+    <link href="{{asset('css/c3.min.css')}}" rel="stylesheet"/>
 
     <style>
         .mb-3 {
