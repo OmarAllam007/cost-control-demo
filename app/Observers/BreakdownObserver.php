@@ -29,12 +29,13 @@ class BreakdownObserver
                 ->orderBy('wbs_level_id', 'DESC')
                 ->first();
 
-//        $breakdown->cost_account = $qty_survey->cost_account;
             if ($qty_survey) {
                 $breakdown->qs_id = $qty_survey->id;
                 $breakdown->boq_id = $qty_survey->boq_id;
             }
         }
+
+        $breakdown->sap_code = $breakdown->wbs_level->sap_code . '.' . $breakdown->std_activity->sap_code_partial;
     }
 
 

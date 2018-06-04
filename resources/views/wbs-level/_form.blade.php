@@ -10,9 +10,14 @@
         <div class="form-group {{$errors->first('code', 'has-error')}}">
             {{ Form::label('code', 'Code', ['class' => 'control-label']) }}
             {{ Form::text('code', null, ['class' => 'form-control code-generator']) }}
-
+            {!! $errors->first('code', '<div class="help-block">:message</div>') !!}
         </div>
 
+        <div class="form-group {{$errors->first('sap_code', 'has-error')}}">
+            {{ Form::label('sap_code', 'SAP Code', ['class' => 'control-label']) }}
+            {{ Form::text('sap_code', null, ['class' => 'form-control code-generator']) }}
+            {!! $errors->first('sap_code', '<div class="help-block">:message</div>') !!}
+        </div>
 
         <div class="form-group {{$errors->first('project_id', 'has-error')}}">
             {{ Form::label('project_id', 'Project', ['class' => 'control-label']) }}
@@ -25,7 +30,7 @@
             {!! $errors->first('project_id', '<div class="help-block">:message</div>') !!}
         </div>
 
-        <div class="form-group {{$errors->first('wbs_id', 'has-error')}}">
+        <div class="form-group {{$errors->first('parent_id', 'has-error')}}">
             {{ Form::label('parent_id', 'Parent', ['class' => 'control-label']) }}
             <div class="hidden">
                 {{ Form::select('parent_id', App\WbsLevel::options(), null, ['class' => 'form-control']) }}
@@ -36,6 +41,7 @@
                 </a>
                 <a href="#" class="remove-tree-input" data-label="Select Wbs Level" data-target="#WBSModal"><span class="fa fa-times-cricle"></span></a>
             </p>
+            {!! $errors->first('parent_id', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group {{$errors->first('description', 'has-error')}}">
@@ -43,8 +49,6 @@
             {{ Form::textarea('description', null, ['class' => 'form-control']) }}
             {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
         </div>
-
-        <!-- Continue working on your fields here -->
 
         <div class="form-group">
             <button class="btn btn-success"><i class="fa fa-check"></i> Submit</button>

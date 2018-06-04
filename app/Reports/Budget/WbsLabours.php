@@ -38,7 +38,7 @@ class WbsLabours
     {
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
-        $query = BreakDownResourceShadow::where('project_id', $this->project->id)->where('resource_type_id', 2);
+        $query = BreakDownResourceShadow::where('project_id', $this->project->id)->where('resource_type_id', 2)->budgetOnly();
         $this->total = $query->sum('budget_cost');
 
         $this->resources = $query->selectRaw('wbs_id, resource_name, resource_code, sum(budget_unit) as budget_unit, avg(unit_price) as unit_price, sum(budget_cost) as cost')

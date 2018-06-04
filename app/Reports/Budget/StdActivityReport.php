@@ -46,7 +46,7 @@ class StdActivityReport
     function run()
     {
         $this->activity_info = BreakDownResourceShadow::whereProjectId($this->project->id)
-            ->selectRaw('activity_id, sum(budget_cost) as budget_cost')
+            ->selectRaw('activity_id, sum(budget_cost) as budget_cost')->budgetOnly()
             ->groupBy('activity_id')
             ->orderBy('activity')
             ->pluck('budget_cost', 'activity_id');
@@ -59,7 +59,7 @@ class StdActivityReport
         $this->divisions = ActivityDivision::orderBy('code')->orderBy('name')
             ->get()->groupBy('parent_id');
 
-        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');
+        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()->sum('budget_cost');
 
         $this->tree = $this->buildTree();
 

@@ -39,13 +39,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-
     public function boot()
     {
         \View::composer([
@@ -54,35 +47,22 @@ class AppServiceProvider extends ServiceProvider
         ], 'App\Http\ViewComposers\ResourcesComposer');
 
         \View::composer('project.tabs._boq', 'App\Http\ViewComposers\BoqComposer');
-        \View::composer(['project.show', 'project.tabs._wbs','wbs-level._modal','wbs-level.report', 'project.cost-control.wbs'], 'App\Http\ViewComposers\WbsComposer');
+
+        \View::composer([
+            'project.show', 'project.tabs._wbs','wbs-level._modal',
+            'wbs-level.report', 'project.cost-control.wbs',
+            'rollup.cost-account', 'rollup.semi-cost-account', 'rollup.semi-activity',
+        ], 'App\Http\ViewComposers\WbsComposer');
+
         \View::composer('csi-category.index', 'App\Http\ViewComposers\CsiCategoryComposer');
 
         $this->csiCategoryActions();
         $this->ProductivityActions();
-        $this->wbsActions();
-
-        Project::observe(GlobalReportObserver::class);
-        Productivity::observe(ProductivityObserver::class);
-        BreakdownResource::observe(BreakDownResourceObserver::class);
-        Resources::observe(ResourcesObserver::class);
-        ResourceType::observe(ResourceTypeObserver::class);
-        BreakdownTemplate::observe(BreakdownTemplateObserver::class);
-        Breakdown::observe(BreakdownObserver::class);
-        BreakDownResourceShadow::observe(BreakdownShadowObserver::class);
-        Survey::observe(QuantitySurveyObserver::class);
-//        StdActivityResource::observe(StandardActivityResourceObserver::class);
-        Survey::observe(QSObserver::class);
-        CostShadow::observe(CostShadowObserver::class);
-//        BreakdownVariable::observe(BreakdownVariableObserver::class);
-        BreakdownVariable::observe(BreakdownVariableObserver::class);
-        WbsLevel::observe(WbsObserver::class);
 
         if (PHP_SAPI == 'cli') {
             app()->instance('change_log', new ChangeLogger());
         }
     }
-
-
 
     public function csiCategoryActions()
     {
@@ -107,21 +87,6 @@ class AppServiceProvider extends ServiceProvider
         Productivity::deleted(function () {
             \Cache::forget('csi-tree');
             dispatch(new CacheCsiCategoryTree());
-        });
-    }
-
-    public function wbsActions()
-    {
-
-        WbsLevel::saved(function (WbsLevel $wbs) {
-            \Cache::forget('wbs-tree-' . $wbs->project_id);
-            dispatch(new CacheWBSTree(Project::find($wbs->project_id)));
-
-        });
-
-        WbsLevel::deleted(function (WbsLevel $wbs) {
-            \Cache::forget('wbs-tree-' . $wbs->project_id);
-            dispatch(new CacheWBSTree(Project::find($wbs->project_id)));
         });
     }
 

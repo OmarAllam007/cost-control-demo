@@ -36,9 +36,15 @@
         </div>
 
         <div class="form-group {{$errors->first('id_partial', 'has-error')}}">
-            {{ Form::label('id_partial', 'Partial ID', ['class' => 'control-label']) }}
+            {{ Form::label('id_partial', null, ['class' => 'control-label']) }}
             {{ Form::text('id_partial', null, ['class' => 'form-control']) }}
             {!! $errors->first('id_partial', '<div class="help-block">:message</div>') !!}
+        </div>
+
+        <div class="form-group {{$errors->first('sap_code_partial', 'has-error')}}">
+            {{ Form::label('sap_code_partial', null, ['class' => 'control-label']) }}
+            {{ Form::text('sap_code_partial', null, ['class' => 'form-control']) }}
+            {!! $errors->first('sap_code_partial', '<div class="help-block">:message</div>') !!}
         </div>
 
         <div class="form-group">

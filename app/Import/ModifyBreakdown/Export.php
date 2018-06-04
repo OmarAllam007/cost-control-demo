@@ -27,16 +27,14 @@ class Export
         $sheet = $excel->getActiveSheet();
         $headers = [
             'App ID', 'WBS Code', 'Activity Code', 'Activity', 'Cost Account', 'Resource Name', 'Resource Code',
-            'Productivity Ref', 'Labour Count', 'Equation', 'Remarks', 'Important',
+            'Productivity Ref', 'Labour Count', 'Equation', 'Remarks', 'Driving',
             'Breakdown Template', 'Activity Division 1', 'Activity Division 2', 'Activity Division 3',
             'Activity Division 4'
         ];
 
         $sheet->fromArray($headers, '', "A1", true);
 
-        $this->project->shadows()
-//            ->budgetOnly()
-            ->with(['breakdown_resource', 'wbs'])
+        $this->project->shadows()->budgetOnly()->with(['breakdown_resource', 'wbs'])
             ->chunk(1000, function ($shadows) use ($sheet) {
                 foreach ($shadows as $shadow) {
                     ++$this->counter;

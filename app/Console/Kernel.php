@@ -16,6 +16,7 @@ use App\Console\Commands\FixBudgetQty;
 use App\Console\Commands\FixModResources;
 use App\Console\Commands\FixProductivity;
 use App\Console\Commands\FixProjectProductivity;
+use App\Console\Commands\MigrateActualResources;
 use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
 use App\Console\Commands\RecalculateCost;
@@ -26,47 +27,16 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
     protected $commands = [
-        CostUpdateReminder::class,
-        CleanResourceTypes::class,
-//        FixBudgetQty::class,
-//        RebuildCostShadow::class,
-//        RebuildBudgetShadow::class,
-//        UpdateActivityCode::class,
-//        FixBreakdownVars::class,
-        ExportAllResources::class,
-//        RecalculateCost::class,
-//        FixModResources::class,
-//        AddBoqDisciplineToMasterShadow::class,
-//        AddBoqToMasterSahdow::class,
-//        AddBoqAndSurveyToBreakdownShadow::class,
-//        AddBoqAndSurveyToBreakdownShadowProject::class,
-//        FixProductivity::class,
-        FixProjectProductivity::class,
-        UpdateResourceTypesAndResources::class,
-        CreateRevisionsForCurrentProject::class,
-        CreateRevisions::class,
-        Commands\FixProductivityForDhahran::class,
-        Commands\DataCleaning::class,
-        Commands\CacheGlobalReport::class
+        Commands\CacheGlobalReport::class,
+        Commands\WbsSapCode::class,
+        Commands\StdActivitySapCode::class,
+        Commands\BreakdownSapCode::class,
+        MigrateActualResources::class,
     ];
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-
         $schedule->command('global-report-cache')->dailyAt('02:00');
     }
 }

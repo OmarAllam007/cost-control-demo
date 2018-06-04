@@ -57,7 +57,7 @@ class Import
 
     private function handleRows()
     {
-        $this->breakdownResources = BreakdownResource::where('project_id', $this->project->id)
+        $this->breakdownResources = BreakdownResource::budgetOnly()->where('project_id', $this->project->id)
             ->with('shadow')->find($this->rows->pluck('A')->toArray())->keyBy('id');
 
         $this->resources = Resources::whereNull('project_id')
@@ -134,7 +134,7 @@ class Import
     {
         $excel = new \PHPExcel();
         $sheet = $excel->getActiveSheet();
-        $this->headers['L'] = 'Validation Errors';
+        $this->headers['M'] = 'Validation Errors';
 
         $sheet->fromArray($this->headers, null, "A1", true);
         $counter = 2;

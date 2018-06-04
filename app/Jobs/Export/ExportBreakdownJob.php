@@ -4,6 +4,7 @@ namespace App\Jobs\Export;
 
 use App\Boq;
 use App\Jobs\Job;
+use App\Survey;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ExportBreakdownJob extends Job
@@ -28,25 +29,27 @@ class ExportBreakdownJob extends Job
             'Activity', 'Discipline',
             'Breakdown-Template', 'Cost Account', 'BOQ item Description',
             'Engineering Quantity', 'BudgetQuantity', 'Resource Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost',
-            'BOQ Equivalent Unit Rate', 'No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks'
+            'BOQ Equivalent Unit Rate', 'No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks',
+            'WBS-Level-1 SAP Code', 'WBS-Level-2  SAP Code', 'WBS-Level-3  SAP Code', 'WBS-Level-4  SAP Code', 'WBS-Level-5  SAP Code', 'WBS-Level-6  SAP Code', 'WBS-Level-7  SAP Code',
+            'Activity SAP Code', 'Driving Resource'
         ];
 
         $line = implode(",", array_map([$this, 'csv_quote'], $headers));
         $fh = fopen($filename, 'w');
         fwrite($fh, $line);
 
-        $shadows = $this->project->shadows()->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function ($shadows) use ($fh) {
+        $shadows = $this->project->shadows()->where('show_in_budget', 1)->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function ($shadows) use ($fh) {
             foreach ($shadows as $breakdown_resource) {
                 $discpline = $breakdown_resource->std_activity->discipline;
                 $division = $breakdown_resource->std_activity->division;
                 $level = $breakdown_resource->wbs;
                 $levels = [];
                 $divisions = [];
-                $levels[] = $level->name;
+                $levels[] = $level;
 
                 $parent = $level->parent;
                 while ($parent) {
-                    $levels[] = $parent->name;
+                    $levels[] = $parent;
                     $parent = $parent->parent;
                 };
                 $levels = array_reverse($levels);
@@ -59,16 +62,16 @@ class ExportBreakdownJob extends Job
                     $parentDiv = $parentDiv->parent;
                 }
                 $divisions = array_reverse($divisions);
-                $boq = Boq::costAccountOnWbs($breakdown_resource->wbs, $breakdown_resource->cost_account)->first();
+                $boq = Survey::costAccountOnWbs($breakdown_resource->wbs, $breakdown_resource->cost_account)->first();
                 $data = [
                     $breakdown_resource->id,
-                    isset($levels[0]) ? $levels[0] : '',
-                    isset($levels[1]) ? $levels[1] : '',
-                    isset($levels[2]) ? $levels[2] : '',
-                    isset($levels[3]) ? $levels[3] : '',
-                    isset($levels[4]) ? $levels[4] : '',
-                    isset($levels[5]) ? $levels[5] : '',
-                    isset($levels[6]) ? $levels[6] : '',
+                    isset($levels[0]) ? $levels[0]->name : '',
+                    isset($levels[1]) ? $levels[1]->name : '',
+                    isset($levels[2]) ? $levels[2]->name : '',
+                    isset($levels[3]) ? $levels[3]->name : '',
+                    isset($levels[4]) ? $levels[4]->name : '',
+                    isset($levels[5]) ? $levels[5]->name : '',
+                    isset($levels[6]) ? $levels[6]->name : '',
                     $level->code,
                     isset($divisions[0]) ? $divisions[0] : '',
                     isset($divisions[1]) ? $divisions[1] : '',
@@ -96,6 +99,15 @@ class ExportBreakdownJob extends Job
                     $breakdown_resource['productivity_output'],
                     $breakdown_resource['productivity_ref'],
                     $breakdown_resource['remarks'],
+                    isset($levels[0]) ? $levels[0]->sap_code : '',
+                    isset($levels[1]) ? $levels[1]->sap_code : '',
+                    isset($levels[2]) ? $levels[2]->sap_code : '',
+                    isset($levels[3]) ? $levels[3]->sap_code : '',
+                    isset($levels[4]) ? $levels[4]->sap_code : '',
+                    isset($levels[5]) ? $levels[5]->sap_code : '',
+                    isset($levels[6]) ? $levels[6]->sap_code : '',
+                    $breakdown_resource['sap_code'],
+                    $breakdown_resource['important']
                 ];
 
                 $line = PHP_EOL . implode(",", array_map([$this, 'csv_quote'], $data));

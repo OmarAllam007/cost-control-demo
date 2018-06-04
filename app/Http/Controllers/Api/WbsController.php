@@ -28,7 +28,7 @@ class WbsController extends Controller
 
     function breakdowns(WbsLevel $wbs_level)
     {
-        $resources = BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->orderBy('activity')->orderBy('cost_account')->get();
+        $resources = BreakDownResourceShadow::where('wbs_id', $wbs_level->id)->where('show_in_budget', 1)->orderBy('activity')->orderBy('cost_account')->get();
         return $resources;
     }
 

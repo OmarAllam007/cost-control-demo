@@ -2,9 +2,11 @@
 
 namespace App\Reports\Cost;
 
+use App\BreakDownResourceShadow;
 use App\MasterShadow;
 use App\Period;
 use App\ResourceType;
+use App\WasteIndex;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
@@ -50,17 +52,25 @@ class WasteIndexReport
     {
         $this->types = ResourceType::all()->groupBy('parent_id');
 
-        $query = MasterShadow::from('master_shadows as sh')
-            ->where('sh.period_id', $this->period->id)
-            ->where('sh.resource_type_id', 3)
-            ->where('to_date_qty', '>', 0)
-            ->join('resources as r', 'sh.resource_id', '=', 'r.id')
-            ->selectRaw('sh.resource_name, r.resource_type_id, sum(sh.to_date_qty) as to_date_qty')
-            ->selectRaw('sum(sh.allowable_qty) as allowable_qty, sum(sh.to_date_cost) / sum(sh.to_date_qty) as to_date_unit_price')
-            ->selectRaw('sum(to_date_cost) as to_date_cost')
-            ->selectRaw('sum(sh.allowable_ev_cost - to_date_cost) as to_date_cost_var')
-            ->selectRaw('sum(to_date_qty_var) as qty_var, sum(pw_index) as pw_index')
-            ->groupBy(['sh.resource_name', 'r.resource_type_id']);
+        $query = WasteIndex::from('waste_indices as wi')
+            ->selectRaw('r.name as resource_name, r.resource_type_id, sum(wi.to_date_qty) as to_date_qty')
+            ->selectRaw('sum(wi.allowable_qty) as allowable_qty, avg(wi.to_date_unit_price) as to_date_unit_price')
+            ->selectRaw('sum(qty_var) as qty_var, sum(waste_var) as to_date_cost_var, sum(waste_index) as pw_index')
+            ->join('resources as r', 'wi.resource_id', '=', 'r.id')
+            ->where('wi.period_id', $this->period->id)
+            ->groupBy(['r.name', 'r.resource_type_id']);
+
+//            MasterShadow::from('master_shadows as sh')
+//            ->where('sh.period_id', $this->period->id)
+//            ->where('sh.resource_type_id', 3)
+//            ->where('to_date_qty', '>', 0)
+//            ->join('resources as r', 'sh.resource_id', '=', 'r.id')
+//            ->selectRaw('sh.resource_name, r.resource_type_id, sum(sh.to_date_qty) as to_date_qty')
+//            ->selectRaw('sum(sh.allowable_qty) as allowable_qty, sum(sh.to_date_cost) / sum(sh.to_date_qty) as to_date_unit_price')
+//            ->selectRaw('sum(to_date_cost) as to_date_cost')
+//            ->selectRaw('sum(sh.allowable_ev_cost - to_date_cost) as to_date_cost_var')
+//            ->selectRaw('sum(to_date_qty_var) as qty_var, sum(pw_index) as pw_index')
+//            ->groupBy(['sh.resource_name', 'r.resource_type_id']);
 
         $this->applyFilters($query);
 
@@ -118,13 +128,13 @@ class WasteIndexReport
         if ($resource = request('resource')) {
             $term = "%$resource%";
             $query->where(function ($q) use ($term) {
-                $q->where('sh.resource_code', 'like', $term)
-                    ->orWhere('resource_name', 'like', $term);
+                $q->where('r.resource_code', 'like', $term)
+                    ->orWhere('r.name', 'like', $term);
             });
         }
 
         if (request('negative')) {
-            $query->where('qty_var', '<', 0);
+            $query->having('qty_var', '<', 0);
         }
     }
 

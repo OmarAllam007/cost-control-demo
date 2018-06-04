@@ -13,7 +13,6 @@ use App\Resources;
 use App\Survey;
 use App\WbsLevel;
 use Barryvdh\Debugbar\Middleware\Debugbar;
-use function dd;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -146,7 +145,8 @@ class BreakdownResourceController extends Controller
             $variables = $breakdown->variables->pluck('value', 'display_order');
             $newBreakdown->syncVariables($variables);
 
-            foreach ($breakdown->resources as $resource) {
+            $breakdownResources = $breakdown->resources()->where('show_in_budget', 1)->get();
+            foreach ($breakdownResources as $resource) {
                 $resourceData = $resource->getAttributes();
                 if ($newBreakdown->qty_survey) {
                     $resourceData['budget_qty'] = $newBreakdown->qty_survey->budget_qty;
@@ -170,7 +170,6 @@ class BreakdownResourceController extends Controller
 
     function deleteAllBreakdowns(Project $project)
     {
-
         BreakdownResource::whereIn('breakdown_id', $project->breakdowns()->pluck('id'))->delete();
         BreakDownResourceShadow::where('project_id', $project->id)->delete();
         return redirect()->back();

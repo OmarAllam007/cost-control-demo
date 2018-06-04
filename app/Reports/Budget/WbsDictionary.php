@@ -38,9 +38,9 @@ class WbsDictionary
     {
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
-        $this->total = BreakDownResourceShadow::where('project_id', $this->project->id)->sum('budget_cost');
+        $this->total = BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->sum('budget_cost');
 
-        $this->resources = BreakDownResourceShadow::where('project_id', $this->project->id)
+        $this->resources = BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()
             ->selectRaw('wbs_id, resource_name, resource_code, sum(budget_unit) as budget_unit, avg(unit_price) as unit_price, sum(budget_cost) as cost')
             ->groupBy(['wbs_id', 'resource_name', 'resource_code'])
             ->get()->map(function($resource) {

@@ -44,8 +44,9 @@ class BudgetCostDryCostByDisciplineReport
 
         /** @var Collection $budgetData */
         $budgetData = BreakDownResourceShadow::from('break_down_resource_shadows as sh')
-            ->where('sh.project_id', $project->id)
-            ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')->selectRaw("CASE WHEN a.discipline != '' THEN a.discipline ELSE 'General' END as type")
+            ->where('sh.project_id', $project->id)->budgetOnly()
+            ->join('std_activities as a', 'sh.activity_id', '=', 'a.id')
+            ->selectRaw("CASE WHEN a.discipline != '' THEN a.discipline ELSE 'General' END as type")
             ->selectRaw('sum(budget_cost) as budget_cost')
             ->groupBy(\DB::raw(1))->orderByRaw('1')
             ->get()->keyBy(function($row) {
