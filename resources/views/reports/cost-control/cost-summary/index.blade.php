@@ -2,10 +2,6 @@
 
 @section('title', 'Cost Summary Report | ' . $project->name)
 
-@section('css')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
-@endsection
-
 @section('header')
     <h2 id="report_name">{{$project->name}} &mdash; Cost Summary Report</h2>
 
@@ -23,36 +19,33 @@
 @endsection
 @section('body')
 
-    <div class="row" style="margin-bottom: 10px;">
-        <form action="" class="form-inline col-sm-6 col-md-4" method="get">
-            {{Form::select('period', \App\Period::where('project_id',$project->id)->readyForReporting()->pluck('name','id'), Session::get('period_id_'.$project->id),  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
-            {{Form::submit('Submit',['class'=>'form-control btn-success'],['class'=>'form-control btn-success'])}}
+    <div class="row mb-3">
+        <form action="" class="col-sm-6 col-md-4 display-flex" method="get">
+            {{Form::select('period', $periods, $period->id,  ['placeholder' => 'Choose a Period', 'class'=>'form-control flex mr-10'])}}
+            {{Form::submit('Submit', ['class'=>'btn btn-success'])}}
         </form>
-        <br>
     </div>
 
-    <table class="table table-condensed cost-summary-table">
+    <table class="table cost-summary-table">
         <thead>
-        <tr style="border: 2px solid black;background: #8ed3d8;color: #000;">
-            <td></td>
-            <th class="col-sm-2" rowspan="2" style="border: 2px solid black;text-align: center">Resource Type</th>
-            <th style="border: 2px solid black;text-align: center">Budget</th>
-            <th style="border: 2px solid black;text-align: center">Previous</th>
-            <th colspan="3" style="border: 2px solid black;text-align: center">To-Date</th>
-            <th colspan="1" style="border: 2px solid black; text-align: center">Remaining</th>
-            <th colspan="3" style="text-align: center; border: 2px solid black;">At Completion</th>
+        <tr class="bg-blue-light">
+            <th class="col-sm-2" rowspan="2">Resource Type</th>
+            <th class="text-center">Budget</th>
+            <th class="text-center">Previous</th>
+            <th class="text-center" colspan="3">To-Date</th>
+            <th class="text-center" colspan="1">Remaining</th>
+            <th class="text-center" colspan="3">At Completion</th>
         </tr>
-        <tr style="background: #C6F1E7">
-            <td></td>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Base Line</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Previous Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">To Date Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Allowable (EV) Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">To Date Cost Variance</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Remaining Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">At Completion Cost</th>
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">At Completion Cost Variance</th>
-            {{--<th class="col-xs-1" style="border: 2px solid black;text-align: center">Concern</th>--}}
+        <tr class="bg-blue-lighter">
+            <th class="col-xs-1">Base Line</th>
+            <th class="col-xs-1">Previous Cost</th>
+            <th class="col-xs-1">To Date Cost</th>
+            <th class="col-xs-1">Allowable (EV) Cost</th>
+            <th class="col-xs-1">To Date Cost Variance</th>
+            <th class="col-xs-1">Remaining Cost</th>
+            <th class="col-xs-1">At Completion Cost</th>
+            <th class="col-xs-1">At Completion Cost Variance</th>
+            {{--<th class="col-xs-1">Concern</th>--}}
         </tr>
 
         </thead>
@@ -60,35 +53,47 @@
         @foreach($toDateData as $typeToDateData)
             <tr>
                 <td>
-                    <a  href="#" class="btn btn-primary btn-lg concern-btn" title="Add issue or concern"
-                        data-json="{{ json_encode(['Base Line' => $typeToDateData['budget_cost'], 'Previous Cost' => $typePreviousData['previous_cost'], 'Todate Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'Todate Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
-                        <i class="fa fa-question-circle" aria-hidden="true"></i>
-                    </a>
+                    <div class="display-flex">
+                        <span class="flex">{{$typeToDateData->type}}</span>
+
+                        <a  href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
+                            data-json="{{ json_encode(['Base Line' => $typeToDateData['budget_cost'], 'Previous Cost' => $typeToDateData['previous_cost'], 'Todate Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'Todate Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </td>
-                <td style="border: 2px solid black;text-align: left">{{$typeToDateData->type}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['budget_cost']??0,2) }}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['previous_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['to_date_cost']??0, 2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['ev']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center; @if(($typeToDateData['to_date_var'] ?? 0) < 0) color: red; @endif">{{number_format($typeToDateData['to_date_var']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['remaining_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center">{{number_format($typeToDateData['completion_cost']??0,2)}}</td>
-                <td style="border: 2px solid black;text-align: center; @if(($typeToDateData['completion_cost_var']??0)<0) color: red; @endif">{{number_format($typeToDateData['completion_cost_var']??0,2)}}</td>
+                <td>{{number_format($typeToDateData['budget_cost']??0,2) }}</td>
+                <td>{{number_format($typeToDateData['previous_cost']??0,2)}}</td>
+                <td>{{number_format($typeToDateData['to_date_cost']??0, 2)}}</td>
+                <td>{{number_format($typeToDateData['ev']??0,2)}}</td>
+                <td class="{{$typeToDateData['to_date_var'] > 0? 'text-success' : 'text-danger' }}">{{number_format($typeToDateData['to_date_var']??0,2)}}</td>
+                <td>{{number_format($typeToDateData['remaining_cost']??0,2)}}</td>
+                <td>{{number_format($typeToDateData['completion_cost']??0,2)}}</td>
+                <td class="{{$typeToDateData['completion_cost_var'] > 0? 'text-success' : 'text-danger' }}">{{number_format($typeToDateData['completion_cost_var']??0,2)}}</td>
             </tr>
         @endforeach
         </tbody>
         <tfoot>
-        <tr style="background: #F0FFF3">
-            <th class="col-xs-1" style="border: 2px solid black;text-align: center">Total</th>
-            <td style="border: 2px solid black;text-align: center;">{{number_format($toDateData->sum('budget_cost'), 2)}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('previous_cost'), 2)}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('to_date_cost'), 2)}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('ev'), 2)}}</td>
-            <td style="border: 2px solid black;text-align: center;@if($toDateData->sum('to_date_var') <0) color: red; @endif">{{number_format($toDateData->sum('to_date_var'), 2)}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('remaining_cost'), 2)}}</td>
-            <td style="border: 2px solid black;text-align: center">{{number_format($toDateData->sum('completion_cost'), 2)}}</td>
-            <td style="border: 2px solid black;text-align: center; @if($toDateData->sum('completion_cost_var')<0) color: red; @endif">{{number_format($toDateData->sum('completion_cost_var'), 2)}}</td>
-
+        <tr class="bg-blue-light">
+            <th>
+                <div class="display-flex">
+                    <span class="flex">Total</span>
+                    <a  href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
+                        data-json="{{ json_encode([
+                            'Base Line' => $toDateData->sum('budget_cost'), 'Previous Cost' => $toDateData->sum('previous_cost'),
+                            'To Date Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'Todate Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </th>
+            <th>{{number_format($toDateData->sum('budget_cost'), 2)}}</th>
+            <th>{{number_format($toDateData->sum('previous_cost'), 2)}}</th>
+            <th>{{number_format($toDateData->sum('to_date_cost'), 2)}}</th>
+            <th>{{number_format($toDateData->sum('ev'), 2)}}</th>
+            <th class="{{$toDateData->sum('to_date_var') > 0? 'text-success' : 'text-danger' }}">{{number_format($toDateData->sum('to_date_var'), 2)}}</th>
+            <th>{{number_format($toDateData->sum('remaining_cost'), 2)}}</th>
+            <th>{{number_format($toDateData->sum('completion_cost'), 2)}}</th>
+            <th class="{{$toDateData->sum('completion_cost_var') > 0? 'text-success' : 'text-danger' }}">{{number_format($toDateData->sum('completion_cost_var'), 2)}}</th>
         </tr>
         </tfoot>
     </table>
@@ -391,4 +396,30 @@
         })
 --}}
     </script>
+@endsection
+
+@section('css')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet"/>
+
+    <style>
+        .mb-3 {
+            margin-bottom: 3rem;
+        }
+
+        table.table.cost-summary-table,
+        table.table.cost-summary-table>thead>tr>th,
+        table.table.cost-summary-table>tfoot>tr>th,
+        table.table.cost-summary-table>tbody>tr>td {
+            border: 2px solid #444;
+            line-height: 25px;
+        }
+
+        .concern-btn {
+            display: none;
+        }
+
+        tr:hover .concern-btn {
+            display: inline;
+        }
+    </style>
 @endsection

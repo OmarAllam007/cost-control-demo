@@ -35,6 +35,7 @@ class CostSummary
     function run()
     {
         $project = $this->project;
+        $period = $this->period;
         /** @var Collection $general_activities */
         $general_activities = StdActivity::where('division_id', 779)->pluck('id');
         $fields = [
@@ -61,7 +62,9 @@ class CostSummary
             }
         }
 
-        return compact('toDateData', 'project', 'resourceTypes');
+        $periods = $this->project->periods()->readyForReporting()->pluck('name', 'id');
+
+        return compact('toDateData', 'project', 'resourceTypes', 'period', 'periods');
     }
 
     function excel()
