@@ -156,5 +156,5 @@
         var is_activity_rollup = {{ $is_activity_rollup? 'true' : 'false'  }};
     </script>
 
-    <script src="/js/activity-log.js"></script>
+    <script src="{{asset('js/activity-log.js')}}"></script>
 @endsection

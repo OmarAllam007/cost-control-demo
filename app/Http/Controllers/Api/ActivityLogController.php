@@ -15,9 +15,11 @@ use Illuminate\Support\Collection;
 
 class ActivityLogController extends Controller
 {
-    function show(WbsLevel $wbs, $code)
+    function show(WbsLevel $wbs)
     {
         $this->authorize('actual_resources', $wbs->project);
+
+        $code = request('code');
 
         $isActivityRollup = BreakDownResourceShadow::where('wbs_id', $wbs->id)
             ->where('code', $code)->where('is_rollup', true)

@@ -6,12 +6,15 @@ use App\BreakDownResourceShadow;
 use App\Formatters\RollupResourceFormatter;
 use App\Http\Controllers\Controller;
 use App\WbsLevel;
+use function request;
 
 class ActivityResourcesController extends Controller
 {
-    function show(WbsLevel $wbsLevel, $code)
+    function show(WbsLevel $wbsLevel)
     {
         $this->authorize('cost_owner', $wbsLevel->project);
+
+        $code = request('code');
 
         return BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
             ->costOnly()

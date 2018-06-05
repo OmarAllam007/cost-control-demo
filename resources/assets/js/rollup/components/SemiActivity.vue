@@ -147,7 +147,7 @@
                 this.loading = true;
 
                 $.ajax({
-                    url: `/api/rollup/activity-resources/${this.activity.wbs_id}/${this.activity.code}`,
+                    url: `/api/rollup/activity-resources/${this.activity.wbs_id}?code=${this.activity.code}`,
                     dataType: 'json'
                 }).then((data) => {
                     if (!data.length) {
