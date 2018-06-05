@@ -5,18 +5,14 @@ namespace App\Http\Controllers;
 use App\BreakDownResourceShadow;
 use App\Export\ActivityLogExport;
 use App\WbsLevel;
-use function compact;
-use function func_get_args;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use const SORT_DESC;
 
 class ActivityLogController extends Controller
 {
-    function show(WbsLevel $wbs, $code)
+    function show(WbsLevel $wbs)
     {
         $this->authorize('actual_resources', $wbs->project);
+
+        $code = request('code');
 
         $periods = $wbs->project->periods()->latest('end_date')->get();
 

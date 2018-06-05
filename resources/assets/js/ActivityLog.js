@@ -45,7 +45,7 @@ const app = new Vue({
 
             $.ajax({
                 dataType: 'json',
-                url: `/api/activity-log/${this.wbs_id}/${this.code}`,
+                url: `/api/activity-log/${this.wbs_id}?code=${this.code}`,
             }).then(data => {
                 this.logs = data;
                 this.loading = false;
