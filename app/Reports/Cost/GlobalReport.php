@@ -122,6 +122,9 @@ class GlobalReport
             $schedule->expected_duration = $period->actual_duration;
             $schedule->forecast_finish = $period->forecast_finish_date ? Carbon::parse($period->forecast_finish_date)->format('d M Y') : '';
             $schedule->delay_variance = $period->duration_variance;
+            $schedule->planned_progress = $period->planned_progress;
+            $schedule->actual_progress = $period->actual_progress;
+            $schedule->spi_index = $period->spi_index;
 
             return $schedule;
         })->sortBy('project_name');
