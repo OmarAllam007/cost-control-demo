@@ -140,7 +140,20 @@
        $(function() {
            const concernsModal = $('#concerns-modal').on('bs.modal-shown', function() {
                $(this).find('textarea').focus();
+           }).on('.send-concern', function() {
+               $.ajax({
+                   url: concernsForm.action,
+                   data: concernsForm.serialize(),
+                   method: 'post'
+               }).then(function() {
+                   concernsModal.modal('hide');
+               }, function() {
+                    concernsModal.modal('hide');
+               });
            });
+
+           const concernsForm = concernsModal.find('form');
+
            const dataField = concernsModal.find('#concern-data');
 
            $('.concern-btn').on('click', function(e) {
@@ -148,6 +161,8 @@
                dataField.val(e.currentTarget.dataset.data);
                concernsModal.modal();
            });
+
+
        });
    </script>
 

@@ -10,9 +10,9 @@ class CostConcern extends Model
     protected $table = 'cost_concerns';
     protected $fillable = ['report_name', 'data', 'project_id', 'period_id', 'comment'];
 
-    protected $casts = [
-        'array' => ['data']
-    ];
+//    protected $casts = [
+//        'array' => ['data']
+//    ];
 
     function project()
     {

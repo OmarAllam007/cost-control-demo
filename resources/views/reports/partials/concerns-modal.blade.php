@@ -27,7 +27,7 @@
 
             <div class="modal-footer clearfix">
                 <div class="pull-right">
-                    <button class="btn btn-primary" data-dismiss="modal" id="ApplyConcern">
+                    <button class="btn btn-primary send-concern" data-dismiss="modal">
                         <i class="fa fa-check"></i> Add Concern
                     </button>
                     <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
