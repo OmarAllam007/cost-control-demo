@@ -95,7 +95,7 @@
                                     <i class="fa fa-compress"></i> Rollup
                                 </button>
 
-                                <a class="btn btn-info btn-sm" :href="'/activity-log/'+ activity.wbs_id + '/' + activity.code" target="_blank">
+                                <a class="btn btn-info btn-sm" :href="'/activity-log/'+ activity.wbs_id + '?code=' + activity.code" target="_blank">
                                     <i class="fa fa-history"></i> Activity Log
                                 </a>
                             </div>
