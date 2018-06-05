@@ -198,4 +198,27 @@ class Period extends Model
 
         return $this->expected_duration - $this->actual_duration;
     }
+
+    function getAllowableCostForReportsAttribute()
+    {
+        return MasterShadow::where('period_id', $this->id)->sum('allowable_ev_cost') + $this->to_date_management_reserve;
+    }
+
+    function getToDateCostForReportsAttribute()
+    {
+        return MasterShadow::where('period_id', $this->id)->sum('to_date_cost');
+    }
+
+    function getToDateManagementReserveAttribute()
+    {
+        if ($this->to_date_reserve) {
+            return $this->to_date_reserve;
+        }
+
+        $budget_cost = MasterShadow::where('period_id', $this->id)->sum('budget_cost');
+        $reserve_budget = MasterShadow::where('period_id', $this->id)->where('activity_id', 3060)->sum('budget_cost');
+        $net_budget = $budget_cost - $reserve_budget;
+        $progress = min(1, $this->to_date_cost_for_reports / $net_budget);
+        return $this->to_date_reserve = $progress * $reserve_budget;
+    }
 }

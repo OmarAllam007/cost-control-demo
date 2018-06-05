@@ -83,14 +83,14 @@
                         <td class="{{$project->delay_variance < 0? 'text-danger' : 'text-success'}}">
                             {{$project->delay_variance}}
                         </td>
-                        <td>{{$project->planned_progress}}</td>
-                        <td>{{$project->actual_progress}}</td>
-                        <td>{{$project->spi_index}}</td>
+                        <td>{{number_format($project->planned_progress, 2)}}%</td>
+                        <td>{{number_format($project->actual_progress, 2)}}%</td>
+                        <td>{{number_format($project->spi_index, 2)}}</td>
 
-                        <td>{{$project->allowable_cost}}</td>
-                        <td>{{$project->to_date_cost}}</td>
-                        <td>{{$project->variance}}</td>
-                        <td>{{$project->cpi}}</td>
+                        <td>{{number_format($project->allowable_cost, 2)}}</td>
+                        <td>{{number_format($project->to_date_cost, 2)}}</td>
+                        <td>{{number_format($project->variance, 2)}}</td>
+                        <td>{{number_format($project->cpi, 2)}}</td>
                     </tr>
                 @endforeach
             </tbody>

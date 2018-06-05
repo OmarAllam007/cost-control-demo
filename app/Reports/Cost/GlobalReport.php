@@ -2,20 +2,12 @@
 
 namespace App\Reports\Cost;
 
-use App\ActualRevenue;
-use App\BreakDownResourceShadow;
 use App\BudgetRevision;
 use App\GlobalPeriod;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
-use App\Revision\RevisionBreakdownResourceShadow;
 use Carbon\Carbon;
-use function collect;
-use function compact;
-use function dd;
-use function func_get_arg;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 
@@ -125,6 +117,13 @@ class GlobalReport
             $schedule->planned_progress = $period->planned_progress;
             $schedule->actual_progress = $period->actual_progress;
             $schedule->spi_index = $period->spi_index;
+            $schedule->allowable_cost = $period->allowable_cost_for_reports;
+            $schedule->to_date_cost = $period->to_date_cost_for_reports;
+            $schedule->variance = $schedule->allowable_cost - $schedule->to_date_cost;
+            $schedule->cpi = 0;
+            if ($schedule->to_date_cost) {
+                $schedule->cpi = $schedule->allowable_cost / $schedule->to_date_cost;
+            }
 
             return $schedule;
         })->sortBy('project_name');
