@@ -182,7 +182,6 @@ class PhysicalQtyParser
 
     private function mapResource($resource, $row)
     {
-        dd($resource);
         if ($resource->rolled_up_at) {
             $breakdown_resource_id = $resource->rollupResource->breakdown_resource_id;
             if (!$this->physicalMapping->has($breakdown_resource_id)) {
