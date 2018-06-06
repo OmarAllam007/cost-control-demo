@@ -1,11 +1,15 @@
 <template>
     <article class="card">
-        <h4 class="card-title">
-            <span v-text="resource.name"></span> &mdash;
-            <span class="text-muted text-capitalize" v-text="resource.code"></span>
+        <h4 class="card-title display-flex">
+            <span class="flex">
+                <span v-text="resource.name"></span> &mdash;
+                <span class="text-muted text-capitalize" v-text="resource.code"></span>
+            </span>
+
+            <span class="text-danger" title="Driving Resource" v-if="important"><i class="fa fa-asterisk"></i></span>
         </h4>
 
-        <div class="card-body">
+        <div class="card-body highlight">
             <table class="table table-bordered table-striped table-condensed">
                 <thead>
                 <tr class="info">
@@ -130,6 +134,10 @@
         computed: {
             first() {
                 return this.resource.rollup_resource;
+            },
+
+            important() {
+                return this.resource.rollup_resource.important;
             },
 
             budget_unit() {

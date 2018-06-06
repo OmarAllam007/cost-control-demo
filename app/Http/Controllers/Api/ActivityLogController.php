@@ -38,7 +38,7 @@ class ActivityLogController extends Controller
         $resource_ids = $shadows->pluck('resource_id', 'resource_id');
 
         $store_resources = StoreResource::where('budget_code', $code)
-            ->whereIn('resource_id', $resource_ids)
+            ->whereIn('resource_id', $resource_ids)->whereNull('row_ids')
             ->get()->groupBY('resource_id');
 
         $budget_resources = $shadows->groupBy('resource_id');
