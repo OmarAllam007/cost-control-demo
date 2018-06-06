@@ -5,7 +5,7 @@
         <h2 class="flex">{{$wbs->project->name}} &mdash; Activity Log</h2>
 
         <div class="btn-tollbar">
-            <a href="{{route('activity-log.excel', [$wbs, $code])}}" class="btn btn-success btn-sm">
+            <a href="{{route('activity-log.excel', [$wbs, 'code' => $code])}}" class="btn btn-success btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
 
