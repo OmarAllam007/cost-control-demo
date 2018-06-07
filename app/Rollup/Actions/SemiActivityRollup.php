@@ -86,6 +86,9 @@ class SemiActivityRollup
             'updated_by' => $this->user_id, 'updated_at' => $this->now
         ]);
 
+        $this->handleSummed($resources);
+        $this->handleRolled($resources);
+
         return $resources->count();
     }
 
@@ -180,5 +183,57 @@ class SemiActivityRollup
         ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
 
         return $this->rollup_shadow;
+    }
+
+    /**
+     * @param Collection $resources
+     */
+    private function handleSummed($resources)
+    {
+        $this->project->shadows()
+            ->whereIn('breakdown_resource_id', $resources->pluck('id'))
+            ->where('is_sum', true)->get()->each(function ($resource) {
+                $query = $this->project->shadows()->where('code', $this->rollup_shadow->code)
+                    ->where('resource_id', $resource->resource_id);
+
+                $query->update([
+                    'show_in_cost' => 0, 'rolled_up_at' => $this->now,
+                    'rollup_resource_id' => $this->rollup_shadow->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now, 'summed_at' => null
+                ]);
+
+                BreakdownResource::whereIn('id', $query->pluck('breakdown_resource_id'))->update([
+                    'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now
+                ]);
+
+                $resource->breakdown_resource->delete();
+                $resource->delete();
+            });
+    }
+
+    /**
+     * @param $resources
+     */
+    private function handleRolled($resources)
+    {
+        $this->project->shadows()
+            ->whereIn('breakdown_resource_id', $resources->pluck('id'))
+            ->where('is_rollup', true)->get()->each(function ($resource) {
+                $query = $this->project->shadows()->where('rollup_resource_id', $resource->id);
+                $query->update([
+                    'show_in_cost' => 0, 'rolled_up_at' => $this->now,
+                    'rollup_resource_id' => $this->rollup_shadow->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now
+                ]);
+
+                BreakdownResource::whereIn('id', $query->pluck('breakdown_resource_id'))->update([
+                    'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now
+                ]);
+
+                $resource->breakdown_resource->delete();
+                $resource->delete();
+            });;
     }
 }
