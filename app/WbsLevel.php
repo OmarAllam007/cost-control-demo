@@ -21,7 +21,7 @@ class WbsLevel extends Model
 //    use CachesQueries;
     use HasChangeLog, RecordsUser;
 
-    protected $fillable = ['name', 'project_id', 'parent_id', 'comments', 'code'];
+    protected $fillable = ['name', 'project_id', 'parent_id', 'comments', 'code', 'sap_code'];
 
     protected $dates = ['created_at', 'updated_at'];
 
