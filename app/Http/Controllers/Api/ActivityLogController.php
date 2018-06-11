@@ -47,10 +47,14 @@ class ActivityLogController extends Controller
         $resourceLogs = $resource_ids->map(function($id) use ($budget_resources, $store_resources) {
             $budget = $budget_resources->get($id);
             $resource = $budget->first();
+            $allowable = $budget_resources->sum('allowable_ev_cost');
+            $cost = $budget_resources->sum('to_date_cost');
+            $variance = $allowable - $cost;
             return [
                 'name' => $resource->resource_name, 'code' => $resource->resource_code,
                 'budget_resources' => $budget, 'rollup' => false,
-                'store_resources' => $store_resources->get($id, collect())
+                'store_resources' => $store_resources->get($id, collect()),
+                'allowable' => $allowable, 'cost' => $cost, 'variance' => $variance
             ];
         })->filter(function ($log) {
             return $log['store_resources']->count();
@@ -68,7 +72,8 @@ class ActivityLogController extends Controller
                     'name' => $resource->resource_name, 'code' => $resource->resource_code,
                     'budget_resources' => $budget_resources, 'store_resources' => $store_resources,
                     'actual_resources' => $resource->actual_resources,
-                    'rollup' => true, 'rollup_resource' => $resource
+                    'rollup' => true, 'rollup_resource' => $resource,
+                    'allowable' => $resource->allowable_ev_cost, 'cost' => $resource->to_date_cost, 'variance' => $resource->cost_var
                 ];
             });
 
