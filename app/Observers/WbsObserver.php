@@ -26,7 +26,7 @@ class WbsObserver
 
                 $level->sap_code = $level->parent->sap_code . '.' . sprintf('%02d', $partial);
             } else {
-                $level->sap_code = $level->parent->sap_code;
+                $level->sap_code = $level->project->code;
             }
         }
     }
