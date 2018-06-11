@@ -169,11 +169,11 @@
             },
 
             qty_var() {
-                return this.budget_unit - this.actual_qty;
+                return this.resource.qty_var;
             },
 
             cost_var() {
-                return this.budget_cost - this.actual_cost;
+                return this.resource.cost_var;
             },
 
             important() {
