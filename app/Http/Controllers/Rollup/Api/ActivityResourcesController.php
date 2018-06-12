@@ -16,11 +16,18 @@ class ActivityResourcesController extends Controller
 
         $code = request('code');
 
-        return BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
+        $resources = BreakDownResourceShadow::where('wbs_id', $wbsLevel->id)
             ->costOnly()
             ->where('code', $code)->orderBy('resource_name')
             ->get()->map(function ($resource) {
                 return new RollupResourceFormatter($resource);
             });
+
+        $max_code = BreakdownResourceShadow::where('project_id', $wbsLevel->project_id)
+            ->where('code', $code)->where('is_rollup', true)->max('resource_code');
+        $next_rollup_code = (collect(explode('.', $max_code))->last()?:0) + 1;
+        $next_rollup_code = sprintf('%02d', $next_rollup_code);
+
+        return compact('resources', 'next_rollup_code');
     }
 }
