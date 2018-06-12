@@ -44,7 +44,7 @@ class ActivityLogExport
         $resource_ids = $this->budget_resources->pluck('resource_id', 'resource_id');
 
         $this->store_resources = StoreResource::where('budget_code', $this->code)
-            ->whereIn('resource_id', $resource_ids)
+            ->whereIn('resource_id', $resource_ids)->whereNull('row_ids')
             ->get();
 
         $this->activity_name = $this->budget_resources->first()->activity;
