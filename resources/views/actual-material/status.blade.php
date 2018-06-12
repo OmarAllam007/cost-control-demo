@@ -49,7 +49,7 @@
                         <td>
                             <div class="input-group">
                                 {{
-                                    Form::text("progress[{$resource->breakdown_resource_id}]", $resource->calculateProgress(),
+                                    Form::text("progress[{$resource->breakdown_resource_id}]", $resource->progress,
                                         ['class' => 'form-control input-sm progress-val', 'data-init' => $resource->calculateProgress()])
                                 }}
                                 <span class="input-group-addon">%</span>

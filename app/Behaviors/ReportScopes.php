@@ -4,6 +4,7 @@ namespace App\Behaviors;
 
 
 use App\Period;
+use App\StdActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
@@ -107,8 +108,10 @@ trait ReportScopes
 
     function scopeDashboardSummary($query, $period)
     {
+        $general_activities = StdActivity::where('division_id', 779)->pluck('id')->implode(', ');
+
         return $query->where('period_id', $period->id)
-            ->selectRaw("(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'")
+            ->selectRaw("(CASE WHEN activity_id IN ($general_activities) THEN 'INDIRECT' WHEN activity_id = 3060 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'")
             ->selectRaw('SUM(prev_cost) AS previous_cost')
             ->selectRaw('SUM(allowable_ev_cost) AS allowable_cost, SUM(budget_cost) AS budget_cost')
             ->selectRaw('SUM(to_date_cost) AS to_date_cost, SUM(remaining_cost) AS remaining_cost')

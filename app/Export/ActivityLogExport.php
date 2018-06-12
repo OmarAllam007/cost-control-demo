@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 05/04/2018
- * Time: 2:49 PM
- */
 
 namespace App\Export;
-
 
 use App\BreakDownResourceShadow;
 use App\StoreResource;
@@ -37,6 +30,7 @@ class ActivityLogExport
     private $actual_cost;
     private $budget_cost;
     private $variance;
+    private $allowable_cost;
 
     public function __construct(WbsLevel $wbs, $code)
     {
@@ -50,13 +44,14 @@ class ActivityLogExport
         $resource_ids = $this->budget_resources->pluck('resource_id', 'resource_id');
 
         $this->store_resources = StoreResource::where('budget_code', $this->code)
-            ->whereIn('resource_id', $resource_ids)
+            ->whereIn('resource_id', $resource_ids)->whereNull('row_ids')
             ->get();
 
         $this->activity_name = $this->budget_resources->first()->activity;
         $this->budget_cost = $this->budget_resources->sum('budget_cost');
         $this->actual_cost = $this->budget_resources->sum('to_date_cost');
-        $this->variance = $this->budget_cost - $this->actual_cost;
+        $this->allowable_cost = $this->budget_resources->sum('allowable_ev_cost');
+        $this->variance = $this->allowable_cost - $this->actual_cost;
         $average = $this->budget_resources->avg('progress');
         if ($average > 0 && $average < 100) {
             $this->status = 'In Progress';
@@ -135,13 +130,13 @@ class ActivityLogExport
     {
         $budget_driving = $this->budget_resources->filter(function($resource) {
             return $resource->important;
-        })->groupBy('resource_id');
+        })->groupBy('breakdown_resource_id');
 
         $resource_ids = $budget_driving->keys();
 
         $store_driving = $this->store_resources->filter(function($resource) use ($resource_ids) {
-            return $resource_ids->contains($resource->resource_id);
-        })->groupBy('resource_id');
+            return $resource_ids->contains($resource->breakdown_resource_id);
+        })->groupBy('breakdown_resource_id');
 
         $this->start = 8;
         $this->row = 8;

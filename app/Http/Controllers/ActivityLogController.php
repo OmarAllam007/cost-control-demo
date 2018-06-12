@@ -49,11 +49,14 @@ class ActivityLogController extends Controller
         ));
     }
 
-    function excel(WbsLevel $wbs, $code)
+    function excel(WbsLevel $wbs)
     {
         $this->authorize('actual_resources', $wbs->project);
 
+        $code=request('code');
+
         $export = new ActivityLogExport($wbs, $code);
+
         return $export->download();
     }
 }

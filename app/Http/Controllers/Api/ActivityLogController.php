@@ -38,7 +38,7 @@ class ActivityLogController extends Controller
         $resource_ids = $shadows->pluck('resource_id', 'resource_id');
 
         $store_resources = StoreResource::where('budget_code', $code)
-            ->whereIn('resource_id', $resource_ids)
+            ->whereIn('resource_id', $resource_ids)->whereNull('row_ids')
             ->get()->groupBY('resource_id');
 
         $budget_resources = $shadows->groupBy('resource_id');
@@ -47,10 +47,16 @@ class ActivityLogController extends Controller
         $resourceLogs = $resource_ids->map(function($id) use ($budget_resources, $store_resources) {
             $budget = $budget_resources->get($id);
             $resource = $budget->first();
+            $allowable = $budget_resources->flatten()->sum('allowable_ev_cost');
+            $cost = $budget_resources->flatten()->sum('to_date_cost');
+            $variance = $budget_resources->flatten()->sum('allowable_var');
+            $qty_var = $budget_resources->flatten()->sum('to_date_qty_var');
             return [
                 'name' => $resource->resource_name, 'code' => $resource->resource_code,
                 'budget_resources' => $budget, 'rollup' => false,
-                'store_resources' => $store_resources->get($id, collect())
+                'store_resources' => $store_resources->get($id, collect()),
+                'allowable' => $allowable, 'cost' => $cost, 'cost_var' => $variance,
+                'qty_var' => $qty_var
             ];
         })->filter(function ($log) {
             return $log['store_resources']->count();
@@ -68,7 +74,9 @@ class ActivityLogController extends Controller
                     'name' => $resource->resource_name, 'code' => $resource->resource_code,
                     'budget_resources' => $budget_resources, 'store_resources' => $store_resources,
                     'actual_resources' => $resource->actual_resources,
-                    'rollup' => true, 'rollup_resource' => $resource
+                    'rollup' => true, 'rollup_resource' => $resource,
+                    'allowable' => $resource->allowable_ev_cost, 'cost' => $resource->to_date_cost, 'cost_var' => $resource->allowable_var,
+                    'allowable_qty' => $resource->allowable_qty, 'qty_var'  => $resource->to_date_qty_var
                 ];
             });
 

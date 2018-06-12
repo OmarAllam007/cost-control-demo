@@ -91,11 +91,7 @@
                             <h5 class="flex"><a data-toggle="collapse" :href="'#' + slug(activity.code)" v-text="activity.activity + ' (' + activity.code + ')'"></a></h5>
 
                             <div class="btn-toolbar">
-                                <button class="btn btn-default btn-sm" @click="doRollup(activity.code)">
-                                    <i class="fa fa-compress"></i> Rollup
-                                </button>
-
-                                <a class="btn btn-info btn-sm" :href="'/activity-log/'+ activity.wbs_id + '/' + activity.code" target="_blank">
+                                <a class="btn btn-info btn-sm" :href="'/activity-log/'+ activity.wbs_id + '?code=' + activity.code" target="_blank">
                                     <i class="fa fa-history"></i> Activity Log
                                 </a>
                             </div>

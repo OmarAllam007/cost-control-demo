@@ -31,9 +31,21 @@
                 </tr>
                 <tr class="info">
                     <th class="text-center">&nbsp;</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th><input type="text" class="form-control input-sm"
+                               v-model="resource_code"
+                               :name="`resource_code[${activity.code}]`"
+                               placeholder="Resource Code"
+                               :required="selected"></th>
+                    <th><input type="text" class="form-control input-sm"
+                               v-model="resource_name"
+                               :name="`resource_name[${activity.code}]`"
+                               placeholder="Resource Name"
+                               :required="selected"></th>
+                    <th><input type="text" class="form-control input-sm"
+                               v-model="remarks"
+                               :name="`remarks[${activity.code}]`"
+                               placeholder="Remarks"
+                               ></th>
                     <th>
                         <input type="text" class="form-control input-sm"
                                v-model="budget_unit"
@@ -126,7 +138,6 @@
 
 
         data() {
-
             return {
                 activity: this.initial,
                 resources: [],
@@ -134,6 +145,7 @@
                 units: window.units,
                 expanded: false,
                 budget_unit: 0, measure_unit: 0, to_date_qty: 0, progress: 0,
+                resource_code: this.initial.code + '.' + this.initial.next_rollup_code, resource_name: this.initial.name, remarks: 'Semi Activity Rollup',
                 token: document.querySelector('meta[name=csrf-token]').content
             };
         },
@@ -150,13 +162,17 @@
                     url: `/api/rollup/activity-resources/${this.activity.wbs_id}?code=${this.activity.code}`,
                     dataType: 'json'
                 }).then((data) => {
-                    if (!data.length) {
+                    if (!data.resources.length) {
                         this.$emit('delete-activity', this.activity);
                     }
 
-                    this.resources = data;
-                    this.budget_unit = data.length ? data[0].budget_qty : 1;
-                    this.measure_unit = data.length ? data[0].qs_unit : 1;
+                    this.resources = data.resources;
+                    this.budget_unit = data.resources.length ? data.resources[0].budget_qty : 1;
+                    this.measure_unit = data.resources.length ? data.resources[0].qs_unit : 1;
+
+                    this.resource_code = this.initial.code + '.' + data.next_rollup_code;
+                    this.resource_name = this.initial.name;
+                    this.remarks = '';
 
                     this.loading = false;
                 }, () => {
@@ -176,13 +192,16 @@
                 resources[this.activity.code] = this.resources.filter(res => res.selected).map(res => res.id);
 
                 const budget_units = {}, measure_units = {},
-                    to_date_qtys = {}, progress = {};
-
+                    to_date_qtys = {}, progress = {},
+                    resource_codes = {}, resource_names = {}, remarks=[];
 
                 budget_units[this.activity.code] = this.budget_unit;
                 measure_units[this.activity.code] = this.measure_unit;
                 to_date_qtys[this.activity.code] = this.to_date_qty;
                 progress[this.activity.code] = this.progress;
+                resource_codes[this.activity.code] = this.resource_code;
+                resource_names[this.activity.code] = this.resource_name;
+                remarks[this.activity.code] = this.remarks;
 
 
                 // The API end point requires data to be in this shape 😩
@@ -191,7 +210,7 @@
                     budget_unit: budget_units,
                     measure_unit: measure_units,
                     to_date_qty: to_date_qtys,
-                    progress: progress
+                    progress: progress, resource_codes, resource_names, remarks
                 };
 
                 const url = `/project/${this.activity.project_id}/rollup-semi-activity`;

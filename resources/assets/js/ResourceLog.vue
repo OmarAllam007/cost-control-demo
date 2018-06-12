@@ -1,11 +1,15 @@
 <template>
     <article class="card">
-        <h4 class="card-title">
-            <span v-text="resource.name"></span> &mdash;
-            <span class="text-muted text-capitalize" v-text="resource.code"></span>
+        <h4 class="card-title display-flex">
+            <span class="flex">
+                <span v-text="resource.name"></span> &mdash;
+                <span class="text-muted text-capitalize" v-text="resource.code"></span>
+            </span>
+
+            <span class="text-danger" title="Driving Resource" v-if="important"><i class="fa fa-asterisk"></i></span>
         </h4>
 
-        <div class="card-body" :class="{highlight: important}">
+        <div class="card-body">
             <table class="table table-bordered table-striped table-condensed">
                 <thead>
                 <tr class="info">
@@ -165,11 +169,11 @@
             },
 
             qty_var() {
-                return this.budget_unit - this.actual_qty;
+                return this.resource.qty_var;
             },
 
             cost_var() {
-                return this.budget_cost - this.actual_cost;
+                return this.resource.cost_var;
             },
 
             important() {

@@ -121,7 +121,7 @@ trait CostAttributes
             return 0;
         }
 
-        if ($this->isGeneral() || $this->isActivityRollup()) {
+        if ($this->isGeneral() || $this->isActivityRollup() || $this->unit_id == 15) {
             return $this->calculated['allowable_ev_cost'] = $this->progress_value * $this->budget_cost;
         }
 
@@ -197,7 +197,7 @@ trait CostAttributes
             return ($this->budget_cost - $this->allowable_ev_cost) / $this->cpi;
         }
 
-        if ($this->is_rollup && !$this->isCostAccountRollup()) {
+        if ($this->isGeneral() || $this->isActivityRollup() || $this->unit_id == 15) {
             if (!$this->to_date_cost) {
                 return $this->budget_cost;
             }

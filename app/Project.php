@@ -33,6 +33,7 @@ class Project extends Model
     ];
 
     protected $dates = ['created_at', 'updated_at'];
+    protected $has_rollup;
 
     function getWbsTreeAttribute()
     {
@@ -271,5 +272,14 @@ class Project extends Model
         }
 
         return $project_users->sortBy('name');
+    }
+
+    function hasRollup()
+    {
+        if (is_null($this->has_rollup)) {
+            $this->has_rollup = BreakDownResourceShadow::where('project_id', $this->id)->where('is_rollup', true)->exists();
+        }
+
+        return $this->has_rollup;
     }
 }
