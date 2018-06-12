@@ -15,7 +15,7 @@ class AddImportantToBreakdownResources extends Migration
     public function down()
     {
         Schema::table('breakdown_resources', function (Blueprint $table) {
-//            $table->dropColumn('important');
+            $table->dropColumn('important');
         });
     }
 }

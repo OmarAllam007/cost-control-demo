@@ -32,11 +32,12 @@ class HighPriorityMaterialsReport
         $resources = $this->project->resources()->whereRaw("coalesce(top_material) != ''")->orderBy('name')->get();
 
         $shadows = BreakDownResourceShadow::whereIn('resource_id', $resources->pluck('id')->unique())
+            ->budgetOnly()
             ->selectRaw('resource_id, sum(budget_unit) as budget_unit, sum(budget_cost) as budget_cost')
             ->groupBy('resource_id')
             ->get()->keyBy('resource_id');
 
-        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');
+        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()->sum('budget_cost');
 
         $this->tree = $resources->map(function ($resource) use ($shadows) {
             $resource->budget_unit = $shadows->get($resource->id)->budget_unit ?? 0;

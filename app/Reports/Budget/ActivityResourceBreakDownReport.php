@@ -50,7 +50,7 @@ class ActivityResourceBreakDownReport
 
     function run()
     {
-        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');
+        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()->sum('budget_cost');
 
         $this->wbs_levels = collect(\DB::table('wbs_levels')
             ->where('project_id', $this->project->id)

@@ -31,14 +31,14 @@ class ExportBreakdownJob extends Job
             'Engineering Quantity', 'BudgetQuantity', 'Resource Quantity', 'Resource Waste', 'Resource Type', 'Resource Code', 'Resource Name', 'Price - Unit', 'Unit Of Measure', 'Budget Unit', 'Budget Cost',
             'BOQ Equivalent Unit Rate', 'No. Of Labors', 'Productivity (Unit/Day)', 'Productivity Reference', 'Remarks',
             'WBS-Level-1 SAP Code', 'WBS-Level-2  SAP Code', 'WBS-Level-3  SAP Code', 'WBS-Level-4  SAP Code', 'WBS-Level-5  SAP Code', 'WBS-Level-6  SAP Code', 'WBS-Level-7  SAP Code',
-            'Activity SAP Code',
+            'Activity SAP Code', 'Driving Resource'
         ];
 
         $line = implode(",", array_map([$this, 'csv_quote'], $headers));
         $fh = fopen($filename, 'w');
         fwrite($fh, $line);
 
-        $shadows = $this->project->shadows()->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function ($shadows) use ($fh) {
+        $shadows = $this->project->shadows()->where('show_in_budget', 1)->with('std_activity', 'std_activity.division.parent.parent.parent', 'wbs', 'wbs.parent.parent.parent')->chunk(20000, function ($shadows) use ($fh) {
             foreach ($shadows as $breakdown_resource) {
                 $discpline = $breakdown_resource->std_activity->discipline;
                 $division = $breakdown_resource->std_activity->division;
@@ -107,6 +107,7 @@ class ExportBreakdownJob extends Job
                     isset($levels[5]) ? $levels[5]->sap_code : '',
                     isset($levels[6]) ? $levels[6]->sap_code : '',
                     $breakdown_resource['sap_code'],
+                    $breakdown_resource['important']
                 ];
 
                 $line = PHP_EOL . implode(",", array_map([$this, 'csv_quote'], $data));

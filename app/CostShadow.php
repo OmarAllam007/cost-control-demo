@@ -84,9 +84,11 @@ class CostShadow extends Model
         return $query;
     }
 
-    function recalculate($keepRemaining)
+    function recalculate()
     {
-        return (new CostShadowCalculator($this, $keepRemaining))->update();
+        $budget_shadow = BreakDownResourceShadow::where('breakdown_resource_id', $this->breakdown_resource_id)->first();
+        $budget_shadow->appendFields();
+        $this->fill($budget_shadow->getAttributes())->save();
     }
 
     function getProgressAttribute()

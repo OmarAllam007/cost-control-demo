@@ -12,6 +12,7 @@ use App\Project;
 use App\Resources;
 use App\ResourceType;
 use App\StdActivity;
+use App\WasteIndex;
 use App\WbsLevel;
 use App\WbsResource;
 use Carbon\Carbon;
@@ -21,6 +22,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use function microtime;
+use function strtolower;
 
 class ExportCostToMaster extends Job implements ShouldQueue
 {
@@ -54,8 +56,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
     {
         MasterShadow::where('period_id', $this->period->id)->delete();
 
-        BreakDownResourceShadow::where('project_id', $this->project->id)
-//            ->where('show_in_cost', 1)
+        BreakDownResourceShadow::where('project_id', $this->project->id)->where('show_in_cost', 1)
             ->chunk(800, function ($shadows) {
                 $start = microtime(1);
                 $records = [];
@@ -96,7 +97,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'resource_qty' => $costShadow['resource_qty'], 'waste' => $costShadow['resource_waste'],
                         'resource_divs' => json_encode($this->getResourceDivisions($resource)),
                         'resource_code' => $costShadow['resource_code'],
-                        'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material,
+                        'resource_name' => $costShadow['resource_name'], 'top_material' => $resource->top_material ?? 0,
                         'unit_price' => $costShadow['unit_price'], 'measure_unit' => $costShadow['measure_unit'],
                         'budget_unit' => $costShadow['budget_unit'], 'budget_cost' => $costShadow['budget_cost'],
                         'boq_equivilant_rate' => $costShadow['boq_equivilant_rate'], 'budget_unit_rate' => $costShadow['budget_unit_rate'],
@@ -142,6 +143,8 @@ class ExportCostToMaster extends Job implements ShouldQueue
                 $time = microtime(true) - $start;
                 \Log::info("Chunk has been buffered; project: {$this->project->id} memory ({$this->project->id}): " . round(memory_get_usage() / (1024 * 1024), 2) . ', Time: ' . round($time, 4));
             });
+
+        $this->generateWasteIndex();
 
         $this->period->update(['status' => Period::GENERATED]);
     }
@@ -212,5 +215,57 @@ class ExportCostToMaster extends Job implements ShouldQueue
         }
 
         return $this->cache['boqs'][$boqCode] = null;
+    }
+
+    private function generateWasteIndex()
+    {
+        WasteIndex::where('period_id', $this->period->id)->delete();
+
+        BreakDownResourceShadow::with(['actual_resources', 'important_actual_resources'])
+            ->where('project_id', $this->project->id)
+            ->where('resource_type_id', 3)
+            ->when($this->project->is_activity_rollup, function ($q) {
+                return $q->where('important', true);
+            })->each(function (BreakDownResourceShadow $resource) {
+                $resource->setCalculationPeriod($this->period);
+
+                $to_date_qty = $resource->actual_resources->sum('qty') + $resource->important_actual_resources->sum('qty');
+                if (!$to_date_qty) {
+                    return true;
+                }
+
+                $to_date_cost = $resource->actual_resources->sum('cost') + $resource->important_actual_resources->sum('cost');
+                $to_date_unit_price = 0;
+                $to_date_unit_price = $to_date_cost / $to_date_qty;
+
+                $allowable_qty = $to_date_qty < $resource->budget_unit? $to_date_qty : $resource->budget_unit;
+                if ($resource->progress == 100 || strtolower($resource->status) == 'closed') {
+                    $allowable_qty = $resource->budget_unit;
+                }
+
+                $qty_var = $allowable_qty - $to_date_qty;
+                $waste_var = $qty_var * $to_date_unit_price;
+                $allowable_cost = $allowable_qty * $to_date_unit_price;
+                $waste_index = 0;
+                if ($allowable_cost) {
+                    $waste_index = $waste_var * 100 / $allowable_cost;
+                }
+
+                $attributes = [
+                    'project_id' => $this->project->id,
+                    'period_id' => $this->period->id,
+                    'breakdown_resource_id' => $resource->breakdown_resource_id,
+                    'resource_id' => $resource->resource_id,
+                    'resource_type_id' => $resource->resource->resource_type_id,
+                    'to_date_qty' => $to_date_qty,
+                    'to_date_unit_price' => $to_date_unit_price,
+                    'allowable_qty' => $allowable_qty,
+                    'qty_var' => $qty_var,
+                    'waste_var' => $waste_var,
+                    'waste_index' => $waste_index,
+                ];
+
+                WasteIndex::forceCreate($attributes);
+            });
     }
 }

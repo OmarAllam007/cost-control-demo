@@ -112,6 +112,9 @@ class ActivityMapController extends Controller
     }
 
     function exportActivityMapping(Project $project){
-        $this->dispatch(new ExportActivityMapping($project));
+        $file = $this->dispatchNow(new ExportActivityMapping($project));
+
+        return response()->download($file, slug($project->name) . "-activity_mapping.xlsx")
+            ->deleteFileAfterSend(true);
     }
 }

@@ -1,5 +1,5 @@
-<form action="" class="panel panel-default">
-    <div class="panel-body">
+<form action="" class="card">
+    <div class="card-body clearfix">
         <div class="col-sm-2 form-group">
             {{Form::label('period', null, ['class' => 'control-label'])}}
             {{Form::select('period', \App\Period::where('project_id',$project->id)->readyForReporting()->pluck('name','id'), Session::get('period_id_'.$project->id),  ['placeholder' => 'Choose a Period','class'=>'form-control padding'])}}
@@ -17,7 +17,7 @@
 
         <div class="col-sm-2 checkbox">
             <label style="margin-top: 25px;">
-                <input type="checkbox" name="negative" id="negative">
+                <input type="checkbox" name="negative" id="negative" {{request()->exists('negative')? 'checked' : ''}}>
                 Negative variance
             </label>
         </div>

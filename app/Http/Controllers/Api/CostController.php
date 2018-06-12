@@ -7,30 +7,31 @@ use App\ActualResources;
 use App\Breakdown;
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\CostIssue;
 use App\CostResource;
 use App\CostShadow;
 use App\Http\Controllers\Controller;
 use App\Project;
+use App\StoreResource;
 use App\WbsLevel;
 use App\WbsResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Fluent;
 
 
 class CostController extends Controller
 {
     function breakdowns(WbsLevel $wbs_level, Request $request)
     {
-        set_time_limit(180);
-
         $period = $wbs_level->project->open_period();
 
         $perspective = $request->get('perspective');
 
-        $query = BreakDownResourceShadow::with('actual_resources')->whereIn('wbs_id', $wbs_level->getChildrenIds());
+        $query = BreakDownResourceShadow::with('actual_resources')->whereIn('wbs_id', $wbs_level->getChildrenIds())->costOnly();
         if ($perspective != 'budget') {
             $query->whereRaw(
-                "breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = $period->id)"
+                "breakdown_resource_id in (select breakdown_resource_id from actual_resources where period_id = $period->id and deleted_at is null)"
             );
         }
 
@@ -52,14 +53,33 @@ class CostController extends Controller
             });
         }
 
-        $rows = $query->paginate(100);
+        $query->orderBy('activity')->orderBy('code');
 
-        $rows->each(function (BreakDownResourceShadow $resource) {
-            $resource->appendFields();
-        });
+        $page = request('page', 1);
+        $perPage = 100;
+        $total = $query->count();
+        $last_page = ceil($total / $perPage);
 
+        $rows = $query->forPage($page, $perPage)->get()
+            ->reduce(function (\Illuminate\Support\Collection $collection, $resource) {
+                $resource->appendFields();
 
-        return $rows;
+                $code = $resource->code;
+                $activity = $resource->activity;
+                if (!$collection->has($code)) {
+                    $collection->put($code, new Fluent([
+                        'code' => $code,
+                        'activity' => $activity,
+                        'wbs_id' => $resource->wbs_id,
+                        'resources' => collect()
+                    ]));
+                }
+
+                $collection->get($code)->resources->push($resource);
+                return $collection;
+            }, collect());
+
+        return ['total' => $total, 'current_page' => $page, 'perPage' => $perPage, 'last_page' => $last_page, 'data' => $rows];
     }
 
     function activityLog(WbsLevel $wbs_level, Request $request)
@@ -146,6 +166,10 @@ class CostController extends Controller
             ->get()->each(function (ActualResources $resource) {
                 $resource->delete();
             });
+
+        StoreResource::where('batch_id', $actual_batch->id)->delete();
+
+        CostIssue::where('batch_id', $actual_batch->id)->delete();
 
         $actual_batch->delete();
 

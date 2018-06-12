@@ -10,6 +10,8 @@ use App\MasterShadow;
 use App\Period;
 use App\Project;
 use App\ResourceType;
+use App\StdActivity;
+use Illuminate\Support\Collection;
 
 class CostSummary
 {
@@ -32,27 +34,34 @@ class CostSummary
 
     function run()
     {
-        $resourceTypes = ResourceType::where('parent_id', 0)->orderBy('name')->pluck('name', 'id');
-
-        $previousPeriod = $this->project->periods()->where('id', '<', $this->period->id)->latest()->first();
-        if ($previousPeriod) {
-            $previousData = MasterShadow::where('period_id', '=', $previousPeriod->id)
-                ->selectRaw('resource_type_id, sum(to_date_cost) as previous_cost, sum(allowable_ev_cost) as previous_allowable, sum(allowable_var) as previous_var')
-                ->groupBy('resource_type_id')->get()->keyBy('resource_type_id');
-        } else {
-            $previousData = collect();
-        }
-
+        $project = $this->project;
+        /** @var Collection $general_activities */
+        $general_activities = StdActivity::where('division_id', 779)->pluck('id');
         $fields = [
-            'resource_type_id', 'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as ev',
-            'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
-            'sum(cost_var) as completion_cost_var'
+            'sum(budget_cost) budget_cost', 'sum(prev_cost) as previous_cost' ,'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as ev',
+            'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost',
+            'sum(completion_cost) as completion_cost', 'sum(cost_var) as completion_cost_var'
         ];
 
-        $toDateData = MasterShadow::where('period_id', $this->period->id)->selectRaw(implode(', ', $fields))->groupBy('resource_type_id')->get()->keyBy('resource_type_id');
-        $project = $this->project;
+        $toDateData = MasterShadow::where('period_id', $this->period->id)
+            ->selectRaw('(CASE WHEN activity_id IN (' . $general_activities->implode(', ') . ") THEN 'INDIRECT COST' WHEN activity_id = 3060 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT COST' END) as type")
+            ->selectRaw(implode(', ', $fields))
+            ->groupBy('type')
+            ->orderBy('type')
+            ->get()->keyBy('type');
 
-        return compact('previousData', 'toDateData', 'project', 'resourceTypes');
+        if ($toDateData->has('MANAGEMENT RESERVE')) {
+            $reserve = $toDateData->get('MANAGEMENT RESERVE');
+            if ($reserve->budget_cost) {
+                $reserve->completion_cost = $reserve->remaining_cost = 0;
+                $reserve->completion_cost_var = $reserve->budget_cost;
+
+                $progress = min(1, $toDateData->sum('to_date_cost') / ($toDateData->sum('budget_cost') - $reserve->budget_cost));
+                $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
+            }
+        }
+
+        return compact('toDateData', 'project', 'resourceTypes');
     }
 
     function excel()
@@ -73,10 +82,8 @@ class CostSummary
     function sheet()
     {
         $data = $this->run();
-        $previousData = $data['previousData'];
         $toDateData = $data['toDateData'];
         $project = $this->project;
-        $resourceTypes = $data['resourceTypes'];
 
         $excel = \PHPExcel_IOFactory::load(storage_path('templates/cost-summary.xlsx'));
         $sheet = $excel->getSheet(0);
@@ -98,20 +105,15 @@ class CostSummary
         $drawing->setName('Logo')->setImageResource($logo)
             ->setRenderingFunction(\PHPExcel_Worksheet_MemoryDrawing::RENDERING_PNG)
             ->setMimeType(\PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_PNG)
-            ->setCoordinates('J2')->setWorksheet($sheet);
+            ->setCoordinates('H2')->setWorksheet($sheet);
 
         $start = 11;
         $counter = $start;
-        foreach ($resourceTypes as $id => $value) {
-            $typePreviousData = $previousData[$id] ?? [];
-            $typeToDateData = $toDateData[$id] ?? [];
-
+        foreach ($toDateData as $typeToDateData) {
             $row = [
-                $value,
+                $typeToDateData['type'],
                 $typeToDateData['budget_cost'] ?? '0.00',
-                $typePreviousData['previous_cost'] ?? '0.00',
-                $typePreviousData['previous_allowable'] ?? '0.00',
-                $typePreviousData['previous_var'] ?? '0.00',
+                $typeToDateData['previous_cost'] ?? '0.00',
                 $typeToDateData['to_date_cost'] ?? '0.00',
                 $typeToDateData['ev'] ?? '0.00',
                 $typeToDateData['to_date_var'] ?? '0.00',
@@ -120,16 +122,14 @@ class CostSummary
                 $typeToDateData['completion_cost_var'] ?? '0.00',
             ];
 
-            $sheet->fromArray($row, '', "A{$counter}");
+            $sheet->fromArray($row, null, "A{$counter}", true);
             ++$counter;
         }
 
         $row = [
             "Totals",
             $toDateData->sum('budget_cost'),
-            $previousData->sum('previous_cost'),
-            $previousData->sum('previous_allowable'),
-            $previousData->sum('previous_var'),
+            $toDateData->sum('previous_cost'),
             $toDateData->sum('to_date_cost'),
             $toDateData->sum('ev'),
             $toDateData->sum('to_date_var'),
@@ -137,18 +137,18 @@ class CostSummary
             $toDateData->sum('completion_cost'),
             $toDateData->sum('completion_cost_var'),
         ];
-        $sheet->fromArray($row, '', "A{$counter}");
+        $sheet->fromArray($row, null, "A{$counter}", true);
         $sheet->setCellValue("A{$counter}", "Total");
 
         $sheet->getStyle("A{$start}:A{$counter}")->getFont()->setBold(true);
-        $totalsStyles = $sheet->getStyle("A{$counter}:K{$counter}");
+        $totalsStyles = $sheet->getStyle("A{$counter}:I{$counter}");
         $totalsStyles->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)->setStartColor(new \PHPExcel_Style_Color('DAEEF3'));
         $totalsStyles->getFont()->setBold(true);
 
-        $sheet->getStyle("B{$start}:K{$counter}")->getNumberFormat()->setFormatCode('_(#,##0.00_);_(\(#,##0.00\);_("-"??_);_(@_)');
-        $sheet->getStyle("E{$start}:E{$counter}")->setConditionalStyles([$varCondition]);
-        $sheet->getStyle("H{$start}:H{$counter}")->setConditionalStyles([$varCondition]);
-        $sheet->getStyle("K{$start}:K{$counter}")->setConditionalStyles([$varCondition]);
+        $sheet->getStyle("B{$start}:I{$counter}")->getNumberFormat()->getBuiltInFormatCode(38); //->setFormatCode('_(#,##0.00_);_(\(#,##0.00\);_("-"??_);_(@_)');
+//        $sheet->getStyle("E{$start}:E{$counter}")->setConditionalStyles([$varCondition]);
+//        $sheet->getStyle("H{$start}:H{$counter}")->setConditionalStyles([$varCondition]);
+//        $sheet->getStyle("K{$start}:K{$counter}")->setConditionalStyles([$varCondition]);
 
 
         //<editor-fold defaultstate="collapsed desc="Budget Cost VS Completion Cost Chart">
@@ -165,7 +165,7 @@ class CostSummary
 
         $budgetVsCompletionLabels = [
             new \PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!B" . ($start - 1), NULL, 1),
-            new \PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!J" . ($start - 1), NULL, 1),
+            new \PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!H" . ($start - 1), NULL, 1),
         ];
 
         $budgetVsCompletionTitle = new \PHPExcel_Chart_Title('Budget Cost vs At Completion');
@@ -186,19 +186,19 @@ class CostSummary
             $budgetVsCompletionPlot, true, '0', null, null
         );
 
-        $budgetVsCompletionChart->setTopLeftCell("A" . ($counter + 5))->setBottomRightCell('F' . ($counter + 25));
+        $budgetVsCompletionChart->setTopLeftCell("A" . ($counter + 5))->setBottomRightCell('E' . ($counter + 25));
         $sheet->addChart($budgetVsCompletionChart);
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed desc="To Date Vs Allowable Chart">
         $todateVsAllowableValues = [
-            new \PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!F$start:F$end"),
-            new \PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!G$start:G$end"),
+            new \PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!D$start:D$end"),
+            new \PHPExcel_Chart_DataSeriesValues('Number', "'{$sheet->getTitle()}'!E$start:E$end"),
         ];
 
         $todateVsAllowableLabels = [
-            new \PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!F" . ($start - 1), NULL, 1),
-            new \PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!G" . ($start - 1), NULL, 1),
+            new \PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!D" . ($start - 1), NULL, 1),
+            new \PHPExcel_Chart_DataSeriesValues('String', "'{$sheet->getTitle()}'!E" . ($start - 1), NULL, 1),
         ];
 
         $todateVsAllowableTitle = new \PHPExcel_Chart_Title('To Date vs Allowable');
@@ -219,7 +219,7 @@ class CostSummary
             $todateVsAllowablePlot, true, '0', null, null
         );
 
-        $todateVsAllowableChart->setTopLeftCell("G" . ($counter + 5))->setBottomRightCell('L' . ($counter + 25));
+        $todateVsAllowableChart->setTopLeftCell("F" . ($counter + 5))->setBottomRightCell('J' . ($counter + 25));
         $sheet->addChart($todateVsAllowableChart);
         //</editor-fold>
 

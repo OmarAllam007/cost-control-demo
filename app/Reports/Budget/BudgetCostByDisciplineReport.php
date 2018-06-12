@@ -29,7 +29,7 @@ class BudgetCostByDisciplineReport
 
     function run()
     {
-        $costs = BreakDownResourceShadow::whereProjectId($this->project->id)->from('break_down_resource_shadows as sh')
+        $costs = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()->from('break_down_resource_shadows as sh')
             ->leftJoin('std_activities as stda', 'sh.activity_id' , '=' ,'stda.id')
             ->selectRaw('stda.discipline as discipline, sum(budget_cost) as budget_cost')
             ->groupBy('stda.discipline')->orderBy('stda.discipline')

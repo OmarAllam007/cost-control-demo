@@ -47,7 +47,13 @@ class AppServiceProvider extends ServiceProvider
         ], 'App\Http\ViewComposers\ResourcesComposer');
 
         \View::composer('project.tabs._boq', 'App\Http\ViewComposers\BoqComposer');
-        \View::composer(['project.show', 'project.tabs._wbs','wbs-level._modal','wbs-level.report', 'project.cost-control.wbs'], 'App\Http\ViewComposers\WbsComposer');
+
+        \View::composer([
+            'project.show', 'project.tabs._wbs','wbs-level._modal',
+            'wbs-level.report', 'project.cost-control.wbs',
+            'rollup.cost-account', 'rollup.semi-cost-account', 'rollup.semi-activity',
+        ], 'App\Http\ViewComposers\WbsComposer');
+
         \View::composer('csi-category.index', 'App\Http\ViewComposers\CsiCategoryComposer');
 
         $this->csiCategoryActions();

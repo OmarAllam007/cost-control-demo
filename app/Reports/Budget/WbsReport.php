@@ -40,7 +40,7 @@ class WbsReport
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
         $this->costs = BreakDownResourceShadow::whereProjectId($this->project->id)
-                ->selectRaw('wbs_id, sum(budget_cost) as cost')
+                ->selectRaw('wbs_id, sum(budget_cost) as cost')->budgetOnly()
                 ->groupBy('wbs_id')->pluck('cost', 'wbs_id');
 
         $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');

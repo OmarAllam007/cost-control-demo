@@ -110,7 +110,7 @@
 @section('css')
     <link rel="stylesheet" href="/css/c3.min.css">
     <style>
-        .horizontal-scroll {
+        .horizontal-scroll{
             overflow-x: auto;
             min-width: 300px;
             justify-content: flex-start;

@@ -16,6 +16,7 @@ use App\Console\Commands\FixBudgetQty;
 use App\Console\Commands\FixModResources;
 use App\Console\Commands\FixProductivity;
 use App\Console\Commands\FixProjectProductivity;
+use App\Console\Commands\MigrateActualResources;
 use App\Console\Commands\RebuildCostShadow;
 use App\Console\Commands\RebuildBudgetShadow;
 use App\Console\Commands\RecalculateCost;
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         Commands\WbsSapCode::class,
         Commands\StdActivitySapCode::class,
         Commands\BreakdownSapCode::class,
+        MigrateActualResources::class,
     ];
 
     protected function schedule(Schedule $schedule)

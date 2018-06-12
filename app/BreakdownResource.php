@@ -8,6 +8,8 @@ use App\Filter\BreakdownFilter;
 use App\Formatters\BreakdownResourceFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use PhpParser\Parser;
+use PhpParser\ParserFactory;
 
 class BreakdownResource extends Model
 {
@@ -112,23 +114,28 @@ class BreakdownResource extends Model
                 $variables["V{$variable->display_order}"] = $variable->value ?: 0;
             }
         }
+
         extract($variables);
         $result = 0;
+
         try {
+            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
             $equation = '$result = ' . $this->equation . ';';
-//            if (!check_syntax($equation)) {
-//                \Log::warning($this->toJSON());
-//                return $this->calculated_resource_qty = 0;
-//            }
+            $code = '<?php ' . $equation;
+
+            $result = $parser->parse($code);
+            if (!$result) {
+                return $this->calculated_resource_qty = 0.0;
+            }
+
             $eval = @eval($equation);
             if ($eval === false || !$result || $result == INF || is_nan($result)) {
-                $result = 0;
+                $this->calculated_resource_qty = $result = 0.0;
             }
 
             return $this->calculated_resource_qty = $result;
         } catch (\Exception $e) {
-            \Log::warning($this);
-            return $this->calculated_resource_qty = 0;
+            return $this->calculated_resource_qty = 0.0;
         }
     }
 
@@ -281,5 +288,10 @@ class BreakdownResource extends Model
     function getDescriptorAttribute()
     {
         return $this->shadow->descriptor;
+    }
+
+    function scopeBudgetOnly($query)
+    {
+        return $query->whereNull('rolled_up_at')->where('is_rollup', 0);
     }
 }

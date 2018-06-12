@@ -172,6 +172,7 @@ $config = [
         App\Providers\ValidationProvider::class,
         App\Providers\CollectionMacrosServiceProvider::class,
         App\Providers\ResourceRulesProvider::class,
+        App\Providers\BladeServiceProvider::class,
         App\Providers\ObserversProvider::class,
     ],
 

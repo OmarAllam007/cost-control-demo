@@ -140,7 +140,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
     {
         $this->breakdownResourceMap = RevisionBreakdownResource::whereRaw('breakdown_id in (select id from revision_breakdowns where project_id = ?)', [$this->project->id])->pluck('id', 'breakdown_resource_id');
         \DB::table('revision_breakdown_resource_shadows')->where('revision_id', $this->revision->id)->delete();
-        BreakDownResourceShadow::where('project_id', $this->project->id)->chunk(950, function (Collection $collection) {
+        BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->chunk(950, function (Collection $collection) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
             $new = $collection->map(function (BreakDownResourceShadow $r) use ($now) {
                 $attributes = $r->getAttributes();

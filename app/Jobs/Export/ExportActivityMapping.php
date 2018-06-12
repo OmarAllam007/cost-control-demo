@@ -37,10 +37,15 @@ class ExportActivityMapping extends Job
             $rowCount++;
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - ActivityMapping.xlsx"');
-        header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save('php://output');
+        $filename = storage_path("app/activity-map-{$this->project->id}.xlsx");
+        \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007')->save($filename);
+
+        return $filename;
+
+//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//        header('Content-Disposition: attachment;filename="' . $this->project->name . ' - ActivityMapping.xlsx"');
+//        header('Cache-Control: max-age=0');
+//        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+//        $objWriter->save('php://output');
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
 use Maatwebsite\Excel\Writers\CellWriter;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
+use PHPExcel_Worksheet;
 
 class ResourceDictReport
 {
@@ -43,7 +44,7 @@ class ResourceDictReport
 
     function run()
     {
-        $this->resources_info = BreakDownResourceShadow::whereProjectId($this->project->id)
+        $this->resources_info = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()
             ->selectRaw('resource_id, sum(budget_unit) as budget_unit, sum(budget_cost) as budget_cost')
             ->groupBy('resource_id')
             ->orderBy('resource_code')->orderBy('resource_name')
@@ -57,7 +58,7 @@ class ResourceDictReport
         $this->divisions = ResourceType::orderBy('name')
             ->get()->groupBy('parent_id');
 
-        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->sum('budget_cost');
+        $this->total = BreakDownResourceShadow::whereProjectId($this->project->id)->budgetOnly()->sum('budget_cost');
 
         $this->tree = $this->buildTree();
 
@@ -133,12 +134,14 @@ class ResourceDictReport
         ]);
 
 //        $sheet->setAutoFilter();
+        /** @var $sheet PHPExcel_Worksheet */
         $sheet->freezeFirstRow();
         $sheet->getColumnDimension('A')->setAutoSize(false)->setWidth(80);
         $sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(20);
         $sheet->getColumnDimension('F')->setAutoSize(false)->setWidth(20);
         $sheet->setAutoSize(['B', 'C', 'D', 'G', 'H', 'I', 'J']);
         $sheet->setAutoSize(false);
+        $sheet->setShowSummaryBelow(false);
     }
 
     protected function buildExcel(LaravelExcelWorksheet $sheet, $division, $depth = 0)

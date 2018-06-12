@@ -61,7 +61,7 @@
 
         <div class="form-group checkbox">
             <label>
-                {{Form::checkbox('important', 1)}} Mark resource as important
+                {{Form::checkbox('important', 1)}} Mark as driving resource
             </label>
         </div>
 

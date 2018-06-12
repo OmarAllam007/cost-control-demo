@@ -4,8 +4,10 @@ namespace App\Support;
 
 use App\ActivityMap;
 use App\ActualBatch;
+use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
+use App\StoreResource;
 use Illuminate\Support\Collection;
 
 class CostImportFixer
@@ -89,8 +91,6 @@ class CostImportFixer
 //        $resources = BreakDownResourceShadow::whereIn('id', array_keys($data))->get()->keyBy('id');
         $resourcesLog = collect();
         foreach ($data as $key => $qty) {
-            $hash = str_random(6);
-
             $rows = $errors[$key]['rows'];
             $newResource = $rows->first();
 
@@ -99,9 +99,22 @@ class CostImportFixer
             $newResource[5] = $newResource[6] / $qty;
             $newResource[8] = $rows->pluck(8)->unique()->implode(', ');
 
-            $resource = $errors[$key]['resource'];
 
-            $this->rows->put($hash, $newResource);
+            $resource = $errors[$key]['resource'];
+            if ($resource->is_rollup || ($resource->rollup_resource_id && $resource->important)) {
+                $newResource['resource'] = $resource;
+            }
+
+            $row_id = StoreResource::create([
+                'project_id' => $this->batch->project->id, 'period_id' => $this->batch->period->id, 'batch_id' => $this->batch->id,
+                'activity_code' => $newResource[0], 'store_date' => $newResource[1], 'item_desc' => $newResource[2],
+                'measure_unit' => $newResource[3], 'qty' => $newResource[4], 'unit_price' => $newResource[5], 'cost' => $newResource[6],
+                'item_code' => $newResource[7], 'doc_no' => $newResource[8], 'row_ids' => $rows->pluck('hash')
+            ])->id;
+
+            $newResource['hash'] = $row_id;
+
+            $this->rows->put($row_id, $newResource);
             $resourcesLog->push(compact('resource', 'rows', 'newResource'));
         }
 
@@ -141,7 +154,7 @@ class CostImportFixer
         $distributionLog = collect();
 
         foreach ($errors as $error) {
-            $date =$error[1];
+            $date = $error[1];
             $resources = $error['resources']->keyBy('breakdown_resource_id');
             $logEntry = ['oldRow' => $this->rows->get($error['hash']), 'newRows' => []];
             $this->rows->forget($error['hash']);
@@ -154,10 +167,21 @@ class CostImportFixer
                     $newRow = [
                         $resource->code, $date, $resource->resource_name, $resource->measure_unit,
                         $qty, $unit_price, $total, $resource->resource_code, $error[8] ?? '',
+                        'original_row_id' => $error['hash'],
                         'resource' => $resource
                     ];
 
-                    $this->rows->push($newRow);
+                    $store_resource = StoreResource::forceCreate([
+                        'project_id' => $this->batch->project_id, 'period_id' => $this->batch->period_id,
+                        'batch_id' => $this->batch->id,
+                        'budget_code' => $resource->code, 'resource_id' => $resource->resource_id,
+                        'activity_code' => $error[0], 'store_date' => $date, 'item_code' => $error[7],
+                        'item_desc' => $error[2], 'measure_unit' => $resource->measure_unit,
+                        'unit_price' => $unit_price, 'qty' => $qty, 'cost' => $total, 'doc_no' => $error[8],
+                    ]);
+                    $newRow['id'] = $store_resource->id;
+
+                    $this->rows->put($newRow['id'], $newRow);
                     $logEntry['newRows'][] = $newRow;
                 }
             }
@@ -189,6 +213,10 @@ class CostImportFixer
             }
             unset($resource->cost);
             $resource->update($data);
+            $resource->actual_resources()
+                ->orderBy('id', 'desc')->first()
+                ->update(['progress' => $resource->progress, 'status' => $resource->status]);
+
 //            $cost = CostShadow::where('breakdown_resource_id', $id)->where('period_id', $this->batch->period_id)->first();
             $log = ['resource' => $resource, 'remaining_qty' => $resource->remaining_qty, 'to_date_qty' => $resource->to_date_qty];
             $progressLog->push($log);
@@ -214,11 +242,17 @@ class CostImportFixer
 
             if (strtolower($value) == 'closed') {
                 $resource->progress = 100;
-            } elseif($resource->progress == 100) {
+            } elseif ($resource->progress == 100) {
                 $resource->status = 'Closed';
             }
 
+            /** @var BreakDownResourceShadow $resource */
             $resource->save();
+
+            $resource->actual_resources()
+                ->orderBy('id', 'desc')->first()
+                ->update(['progress' => $resource->progress, 'status' => $resource->status]);
+
 //            $cost = BreakDownResourceShadow::where('breakdown_resource_id', $id)->first();
             $log = ['resource' => $resource, 'remaining_qty' => $resource->remaining_qty, 'to_date_qty' => $resource->to_date_qty];
             unset($resource->cost, $resource->imported_cost);

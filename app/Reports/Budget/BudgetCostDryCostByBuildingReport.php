@@ -52,7 +52,7 @@ class BudgetCostDryCostByBuildingReport
         $this->wbs_levels = $this->project->wbs_levels->sortBy('name')->groupBy('parent_id');
 
         $this->budget_costs = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->selectRaw('boq_wbs_id as wbs_id, sum(budget_cost) as cost')
+            ->budgetOnly()->selectRaw('boq_wbs_id as wbs_id, sum(budget_cost) as cost')
             ->groupBy('boq_wbs_id')->get()->keyBy('wbs_id');
 
         $this->boqs = Boq::whereProjectId($this->project->id)
