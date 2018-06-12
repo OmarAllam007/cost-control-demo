@@ -10,6 +10,7 @@ use App\Project;
 use App\WbsLevel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use function response;
 
 class WbsLevelController extends Controller
 {
@@ -160,8 +161,11 @@ class WbsLevelController extends Controller
 
     public function exportWbsLevels(Project $project)
     {
+
         if (\Gate::allows('budget', $project) || \Gate::allows('cost_control', $project)) {
-            return $this->dispatch(new WbsLevelExportJob($project));
+            $file = $this->dispatch(new WbsLevelExportJob($project));
+            return response()->download($file, 'wbs_' . slug($project->name) . '.xlsx')
+                ->deleteFileAfterSend(true);
         }
 
         flash('You are not authorized to do this action');
