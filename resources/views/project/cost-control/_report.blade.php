@@ -18,13 +18,21 @@
             </div>
 
             <div class="form-group">
-                <a href="{{route('cost.boq_report',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary btn-block">BOQ</a>
+                @if ($project->hasRollup())
+                    <a href="#" disabled class="btn btn-primary btn-block">BOQ</a>
+                @else
+                    <a href="{{route('cost.boq_report',$project)}}" target="_blank"
+                       class="hvr-float-shadow btn btn-primary btn-block">BOQ</a>
+                @endif
             </div>
 
             <div class="form-group">
-                <a href="{{route('cost.overdraft',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary btn-block">Overdraft</a>
+                @if ($project->hasRollup())
+                    <a href="#" disabled class="btn btn-primary btn-block">Overdraft</a>
+                @else
+                    <a href="{{route('cost.overdraft',$project)}}" target="_blank"
+                       class="hvr-float-shadow btn btn-primary btn-block">Overdraft</a>
+                @endif
             </div>
 
             <div class="form-group">
