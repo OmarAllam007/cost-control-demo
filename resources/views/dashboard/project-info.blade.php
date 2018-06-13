@@ -52,7 +52,7 @@
 
 
         <h4 class="card-title card-group-item-heading" style="text-decoration: underline">Projects Information</h4>
-        <table class="table table-condensed table-bordered">
+        <table class="table table-condensed table-bordered table-striped">
             <thead>
             <tr class="bg-primary">
                 <th>Project</th>
@@ -85,12 +85,12 @@
                         </td>
                         <td>{{number_format($project->planned_progress, 2)}}%</td>
                         <td>{{number_format($project->actual_progress, 2)}}%</td>
-                        <td>{{number_format($project->spi_index, 2)}}</td>
+                        <td class="{{$project->spi_index < 0 ? 'text-danger' : 'text-success'}}">{{number_format($project->spi_index, 2)}}</td>
 
                         <td>{{number_format($project->allowable_cost, 2)}}</td>
                         <td>{{number_format($project->to_date_cost, 2)}}</td>
                         <td class="{{$project->variance < 0 ? 'text-danger' : 'text-success'}}">{{number_format($project->variance, 2)}}</td>
-                        <td>{{number_format($project->cpi, 2)}}</td>
+                        <td class="{{$project->cpi < 0 ? 'text-danger' : 'text-success'}}">{{number_format($project->cpi, 2)}}</td>
                     </tr>
                 @endforeach
             </tbody>
