@@ -51,7 +51,7 @@
 
 
 
-        <h4 class="card-title card-group-item-heading" style="text-decoration: underline">Project Schedule</h4>
+        <h4 class="card-title card-group-item-heading" style="text-decoration: underline">Projects Information</h4>
         <table class="table table-condensed table-bordered">
             <thead>
             <tr class="bg-primary">
@@ -67,7 +67,7 @@
 
                 <th>Allowable Cost</th>
                 <th>Actual cost to date</th>
-                <th>Var</th>
+                <th>Variance</th>
                 <th>CPI</th>
             </tr>
             </thead>
@@ -89,7 +89,7 @@
 
                         <td>{{number_format($project->allowable_cost, 2)}}</td>
                         <td>{{number_format($project->to_date_cost, 2)}}</td>
-                        <td>{{number_format($project->variance, 2)}}</td>
+                        <td class="{{$project->variance < 0 ? 'text-danger' : 'text-success'}}">{{number_format($project->variance, 2)}}</td>
                         <td>{{number_format($project->cpi, 2)}}</td>
                     </tr>
                 @endforeach
