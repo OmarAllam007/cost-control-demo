@@ -2,20 +2,13 @@
 
 namespace App\Reports\Cost;
 
-use App\ActualRevenue;
-use App\BreakDownResourceShadow;
 use App\BudgetRevision;
 use App\GlobalPeriod;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
-use App\Revision\RevisionBreakdownResourceShadow;
+use App\StdActivity;
 use Carbon\Carbon;
-use function collect;
-use function compact;
-use function dd;
-use function func_get_arg;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 
@@ -75,9 +68,9 @@ class GlobalReport
             ->pluck('id');
 
         $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(6)->where('end_date', '>=', '2017-10-01')->get()->keyBy('id');
-        $this->trend_period_ids = Period::whereIn('global_period_id',
-            $this->trend_global_periods->pluck('id')
-        )->selectRaw('max(id) as id, project_id, global_period_id')->groupBy(['project_id', 'global_period_id'])->pluck('id');
+        $this->trend_period_ids = Period::whereIn('global_period_id', $this->trend_global_periods->pluck('id'))
+            ->selectRaw('max(id) as id, project_id, global_period_id')
+            ->groupBy(['project_id', 'global_period_id'])->pluck('id');
 
         $this->periods = Period::with('project')->find($this->last_period_ids->toArray());
         $this->projects = $this->periods->pluck('project');
@@ -122,6 +115,16 @@ class GlobalReport
             $schedule->expected_duration = $period->actual_duration;
             $schedule->forecast_finish = $period->forecast_finish_date ? Carbon::parse($period->forecast_finish_date)->format('d M Y') : '';
             $schedule->delay_variance = $period->duration_variance;
+            $schedule->planned_progress = $period->planned_progress;
+            $schedule->actual_progress = $period->actual_progress;
+            $schedule->spi_index = $period->spi_index;
+            $schedule->allowable_cost = $period->allowable_cost_for_reports;
+            $schedule->to_date_cost = $period->to_date_cost_for_reports;
+            $schedule->variance = $schedule->allowable_cost - $schedule->to_date_cost;
+            $schedule->cpi = 0;
+            if ($schedule->to_date_cost) {
+                $schedule->cpi = $schedule->allowable_cost / $schedule->to_date_cost;
+            }
 
             return $schedule;
         })->sortBy('project_name');
@@ -287,8 +290,10 @@ class GlobalReport
 
     private function cost_summary()
     {
+        $general_activities = StdActivity::where('division_id', 779)->pluck('id')->implode(',');
+
         $fields = [
-            "project_id, (CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
+            "project_id, (CASE WHEN activity_id in ($general_activities) THEN 'INDIRECT' WHEN activity_id = 3060 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'",
             'sum(budget_cost) budget_cost', 'sum(to_date_cost) as to_date_cost', 'sum(allowable_ev_cost) as allowable_cost',
             'sum(allowable_var) as to_date_var', 'sum(remaining_cost) as remaining_cost', 'sum(completion_cost) as completion_cost',
             'sum(cost_var) as completion_cost_var', 'sum(prev_cost) as previous_cost',
@@ -298,7 +303,7 @@ class GlobalReport
 
         $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
             ->selectRaw(implode(', ', $fields))
-            ->groupBy('type')->get()
+            ->groupBy('project_id')->groupBy('type')->get()
             ->groupBy('project_id')->map(function($group) {
                 return $group->keyBy('type');
             })->map(function($project) {
