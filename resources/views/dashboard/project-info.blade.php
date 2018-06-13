@@ -52,7 +52,7 @@
 
 
         <h4 class="card-title card-group-item-heading" style="text-decoration: underline">Projects Information</h4>
-        <table class="table table-condensed table-bordered">
+        <table class="table table-condensed table-bordered table-striped">
             <thead>
             <tr class="bg-primary">
                 <th>Project</th>
