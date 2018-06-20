@@ -60,18 +60,28 @@ class ActivityLog
             $resource = $budget->first();
             $allowable = $budget_resources->flatten()->sum('allowable_ev_cost');
             $cost = $budget_resources->flatten()->sum('to_date_cost');
+            $budget_cost = $budget_resources->flatten()->sum('budget_cost');
             $variance = $budget_resources->flatten()->sum('allowable_var');
+            $actual_qty = $budget_resources->flatten()->sum('to_date_qty');
+            $actual_cost = $budget_resources->flatten()->sum('to_date_cost');
+            $actual_unit_price = 0;
+            if ($actual_qty) {
+                $actual_unit_price = $actual_cost / $actual_qty;
+            }
             $qty_var = $budget_resources->flatten()->sum('to_date_qty_var');
             $important = $budget_resources->flatten()->filter(function($resource) {
                 return $resource->important;
             })->count();
+            $budget_qty = $budget->sum('budget_unit');
 
             return [
                 'name' => $resource->resource_name, 'code' => $resource->resource_code,
-                'budget_resources' => $budget, 'rollup' => false,
-                'store_resources' => $store_resources->get($id, collect()),
+                'budget_resources' => $budget, 'rollup' => false, 'budget_qty' => $budget_qty,
+                'store_resources' => $store_resources->get($id, collect()), 'budget_cost' => $budget_cost,
                 'allowable' => $allowable, 'cost' => $cost, 'cost_var' => $variance,
-                'qty_var' => $qty_var, 'important' => $important > 0
+                'qty_var' => $qty_var, 'important' => $important > 0, 'measure_unit' => $resource->measure_unit,
+                'unit_price' => $resource->unit_price, 'actual_qty' => $actual_qty, 'actual_cost' => $actual_cost,
+                'actual_unit_price' => $actual_unit_price
             ];
         })->filter(function ($log) {
             return $log['store_resources']->count();
@@ -101,10 +111,14 @@ class ActivityLog
                 return [
                     'name' => $resource->resource_name, 'code' => $resource->resource_code,
                     'budget_resources' => $budget_resources, 'store_resources' => $store_resources,
-                    'actual_resources' => $resource->actual_resources,
+                    'actual_resources' => $resource->actual_resources, 'budget_qty' => $resource->budget_unit,
+                    'budget_cost' => $resource->budget_cost, 'measure_unit' => $resource->measure_unit,
                     'rollup' => true, 'rollup_resource' => $resource, 'important' => $important > 0,
                     'allowable' => $resource->allowable_ev_cost, 'cost' => $resource->to_date_cost, 'cost_var' => $resource->allowable_var,
-                    'allowable_qty' => $resource->allowable_qty, 'qty_var' => $resource->to_date_qty_var
+                    'allowable_qty' => $resource->allowable_qty, 'qty_var' => $resource->to_date_qty_var,
+                    'unit_price' => $resource->unit_price,
+                    'actual_qty' => $resource->to_date_qty, 'actual_cost' => $resource->to_date_cost,
+                    'actual_unit_price' => $resource->to_date_unit_price
                 ];
             });
         return $rollupLogs;
