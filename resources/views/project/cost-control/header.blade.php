@@ -15,7 +15,7 @@
         <ul class="dropdown-menu">
             <li><a href="{{route('costshadow.export',$project)}}"><i class="fa fa-fw fa-cube"></i> Current Period</a></li>
             <li><a href="{{route('costshadow.export',$project)}}?perspective=budget"><i class="fa fa-fw fa-cubes"></i> All Resources</a></li>
-            <li><a href="{{route('project.breakdown.export',$project)}}"><i class="fa fa-fw fa-bars"></i> Breakdown</a></li>
+            <li><a href="{{route('break_down.export',$project)}}"><i class="fa fa-fw fa-bars"></i> Breakdown</a></li>
         </ul>
     </div>
 

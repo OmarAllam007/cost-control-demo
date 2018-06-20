@@ -122,7 +122,7 @@ class SemiActivityRollup
             'activity_id' => $resource->shadow->activity_id, 'activity' => $resource->shadow->activity,
             'eng_qty' => $budget_unit, 'budget_qty' => $budget_unit, 'resource_qty' => $budget_unit, 'budget_unit' => $budget_unit,
             'resource_waste' => 0, 'unit_price' => $unit_price, 'budget_cost' => $total_cost,
-            'measure_unit' => $measure_unit, 'unit_id' => 15, 'template' => 'Semi Activity Rollup',
+            'measure_unit' => $measure_unit, 'unit_id' => $unit_id, 'template' => 'Semi Activity Rollup',
             'breakdown_id' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
             'remarks' => 'Semi activity rollup', 'productivity_ref' => '', 'productivity_output' => 0,
