@@ -6,6 +6,7 @@ namespace App\Reports\Budget;
 use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Project;
+use App\Survey;
 use App\WbsLevel;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
@@ -31,6 +32,8 @@ class BoqPriceListReport
 
     /** @var int */
     protected $row = 1;
+    /** @var Collection */
+    private $qty_surveys;
 
     public function __construct(Project $project)
     {
@@ -43,28 +46,38 @@ class BoqPriceListReport
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
         $raw_cost_accounts = BreakDownResourceShadow::where('project_id', $this->project->id)
-            ->selectRaw('wbs_id, boq_id, resource_type, budget_qty, sum(boq_equivilant_rate) as budget_cost')
-            ->groupBy(['wbs_id', 'boq_id', 'resource_type', 'budget_qty'])->get();
+            ->selectRaw('wbs_id, boq_id, survey_id, cost_account, resource_type, budget_qty, sum(boq_equivilant_rate) as budget_cost')
+            ->groupBy(['wbs_id', 'boq_id', 'survey_id', 'cost_account', 'resource_type', 'budget_qty'])->get();
+
+        $this->qty_surveys = Survey::with('unit')->where('project_id', $this->project->id)->get()->keyBy('id');
 
         $this->boqs = Boq::with('unit')
             ->find($raw_cost_accounts->pluck('boq_id')->unique()->toArray())
             ->keyBy('id');
 
-        $this->cost_accounts = $raw_cost_accounts->groupBy('wbs_id')->map(function (Collection $surveys) {
-            return $surveys->groupBy('boq_id')->map(function (Collection $resource_types, $boq_id) {
+        $this->cost_accounts = $raw_cost_accounts->groupBy('wbs_id')->map(function (Collection $boqs) {
+            return $boqs->groupBy('boq_id')->map(function ($surveys, $boq_id) {
+                $cost_accounts = $surveys->groupBy('survey_id')->map(function (Collection $resource_types, $survey_id) {
+                    $qs = $this->qty_surveys->get($survey_id);
+                    $first = $resource_types->first();
+                    return collect([
+                        'description' => $qs->description ?? '',
+                        'unit_of_measure' => $qs->unit->type ?? '',
+                        'budget_qty' => $first->budget_qty ?? 0,
+                        'cost_account' => $first->cost_account,
+                        'types' => $resource_types->map(function ($type) {
+                            $type->resource_type = strtolower($type->resource_type);
+                            return $type;
+                        })->pluck('budget_cost', 'resource_type'),
+                        'grand_total' => $resource_types->sum('budget_cost'),
+                    ]);
+                });
+
                 $boq = $this->boqs->get($boq_id);
-                $first = $resource_types->first();
-                return collect([
-                    'description' => $boq->description ?? '',
-                    'unit_of_measure' => $boq->unit->type ?? '',
-                    'budget_qty' => $first->budget_qty ?? 0,
-                    'cost_account' => $boq->cost_account ?? '',
-                    'types' => $resource_types->map(function ($type) {
-                        $type->resource_type = strtolower($type->resource_type);
-                        return $type;
-                    })->pluck('budget_cost', 'resource_type'),
-                    'grand_total' => $resource_types->sum('budget_cost'),
-                ]);
+                return [
+                    'description' => $boq->description ?? '', 'cost_account' => $boq->cost_account ?? '',
+                    'surveys' => $cost_accounts, 'id' => $boq_id,
+                ];
             });
         });
 
@@ -124,28 +137,40 @@ class BoqPriceListReport
                 ->setCollapsed(true)->setVisible(false);
         }
 
-        ++ $depth;
+        ++$depth;
 
         $level->subtree->each(function (WbsLevel $level) use ($sheet, $depth) {
             $this->buildExcel($sheet, $level, $depth);
         });
 
-        $level->cost_accounts->sortBy('description')->each(function ($cost_account) use ($sheet, $depth) {
+        $level->cost_accounts->sortBy('description')->each(function ($boq) use ($sheet, $depth) {
             ++$this->row;
-            $description = $cost_account['description'];
-            $sheet->row($this->row, [
-                $description, $cost_account['cost_account'], $cost_account['budget_qty'], $cost_account['unit_of_measure'],
-                $cost_account['types']['01.general requirment'] ?? 0, $cost_account['types']['02.labors'] ?? 0,
-                $cost_account['types']['03.material'] ?? 0, $cost_account['types']['04.subcontractors'] ?? 0,
-                $cost_account['types']['05.equipment'] ?? 0, $cost_account['types']['06.scaffolding'] ?? 0,
-                $cost_account['types']['07.others'] ?? 0,
-                $cost_account['grand_total'],
-            ]);
-            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * $depth);
-
+            $sheet->row($this->row, [$boq['description'], $boq['cost_account']]);
             $sheet->getRowDimension($this->row)
                 ->setOutlineLevel(min($depth + 1, 7))
                 ->setCollapsed(true)->setVisible(false);
+
+            $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * ($depth + 1));
+            $sheet->getStyle("A{$this->row}")->getFont()->setBold(true);
+
+            foreach ($boq['surveys'] as $cost_account) {
+                ++$this->row;
+                $sheet->row($this->row, [
+                    $cost_account['description'], $cost_account['cost_account'], $cost_account['budget_qty'], $cost_account['unit_of_measure'],
+                    $cost_account['types']['01.general requirment'] ?? 0, $cost_account['types']['02.labors'] ?? 0,
+                    $cost_account['types']['03.material'] ?? 0, $cost_account['types']['04.subcontractors'] ?? 0,
+                    $cost_account['types']['05.equipment'] ?? 0, $cost_account['types']['06.scaffolding'] ?? 0,
+                    $cost_account['types']['07.others'] ?? 0,
+                    $cost_account['grand_total'],
+                ]);
+                $sheet->getStyle("A{$this->row}")->getAlignment()->setIndent(4 * ($depth + 2));
+
+
+                $sheet->getRowDimension($this->row)
+                    ->setOutlineLevel(min($depth + 2, 7))
+                    ->setCollapsed(true)->setVisible(false);
+            }
+
         });
     }
 
@@ -153,7 +178,7 @@ class BoqPriceListReport
     {
         /** @var LaravelExcelWorksheet $sheet */
         $this->run();
-        
+
         $sheet->row(1, [
             'Item', 'Cost Account', 'Budget Qty', 'U.O.M', 'General Requirement', 'Labours', 'Material',
             'Subcontractors', 'Equipment', 'Scaffolding', 'Others', 'Grand Total'
@@ -170,7 +195,7 @@ class BoqPriceListReport
 
         $sheet->setAutoSize(false);
         $sheet->getColumnDimension('A')->setWidth(90)->setAutoSize(false);
-        foreach(range('B', 'L') as $col) {
+        foreach (range('B', 'L') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
         $sheet->setColumnFormat(["B2:B{$this->row}" => '@']);
