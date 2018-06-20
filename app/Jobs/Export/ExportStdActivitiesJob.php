@@ -104,7 +104,7 @@ class ExportStdActivitiesJob extends ImportJob
     /**
      * @param $sheet
      */
-    private function applyStyle($sheet): void
+    private function applyStyle($sheet)
     {
         $styleArray = [
             'font' => ['bold' => true, 'color' => ['rgb' => 'F8F8FF']],
