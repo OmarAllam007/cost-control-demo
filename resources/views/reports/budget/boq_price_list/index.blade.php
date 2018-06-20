@@ -159,5 +159,17 @@
         .level-4 .level-label {
             padding-left: 80px;
         }
+
+        .level-5 .level-label {
+            padding-left: 100px;
+        }
+
+        .level-6 .level-label {
+            padding-left: 110px;
+        }
+
+        .level-7 .level-label {
+            padding-left: 120px;
+        }
     </style>
 @endsection
