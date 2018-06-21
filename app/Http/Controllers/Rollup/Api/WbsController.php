@@ -39,7 +39,7 @@ class WbsController extends Controller
             'data' => $pagination->map(function($activity) {
                 $max_code = BreakdownResourceShadow::where('project_id', $activity->project_id)
                     ->where('code', $activity->code)->where('is_rollup', true)->max('resource_code');
-                $next_rollup_code = (collect(explode('.', $max_code))->last()?:0) + 1;
+                $next_rollup_code = intval(collect(explode('.', $max_code))->last()) + 1;
                 $activity->next_rollup_code = sprintf('%02d', $next_rollup_code);
                 return $activity;
             })
