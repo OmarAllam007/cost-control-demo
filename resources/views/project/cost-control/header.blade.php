@@ -24,10 +24,11 @@
             <a href="#import-links" class="btn btn-outline btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
             </a>
-            <ul id="import-link" class="dropdown-menu">
+            <ul id="import-link" class="dropdown-menu dropdown-menu-right">
                 @if ($project->is_cost_ready)
                     @can('actual_resources', $project)
                         <li><a href="{{route('actual-material.import', $project)}}">Actual Resources</a></li>
+                        <li><a href="{{route('project.update-progress', $project)}}">Update Progress</a></li>
                     @endcan
                 @endif
 

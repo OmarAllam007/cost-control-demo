@@ -304,3 +304,6 @@ Route::get('api/activity-log/{wbs}', 'Api\ActivityLogController@show');
 
 Route::get('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@create')->name('breakdown-template.import-to-project');
 Route::post('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@store');
+
+Route::get('project/{project}/update-progress', 'UpdateProgressController@edit')->name('project.update-progress');
+Route::put('project/{project}/update-progress', 'UpdateProgressController@update');
