@@ -113,12 +113,23 @@ class SemiActivityRollup
 
         $important = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->where('important', 1)->exists();
 
+        $resource_code = $this->extra['resource_codes'][$code] ?? $resource->code . '.' . $cost_account_suffix;
+        $resource_name = $this->extra['resource_names'][$code] ?? $resource->shadow->activity;
+        $types = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->pluck('resource_type', 'resource_type_id');
+        if ($types->count() == 1) {
+            $resource_type = $types->values()->first();
+            $resource_type_id = $types->keys()->first();
+        } else {
+            $resource_type = '04.Subcontractors';
+            $resource_type_id = 4;
+        }
+
         $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
-            'resource_code' => $resource->code . '.' . $cost_account_suffix,
-            'resource_type_id' => 4,
+            'resource_code' => $resource_code,
+            'resource_type_id' => $resource_type_id,
             'cost_account' => $resource->code . '.' . $cost_account_suffix,
-            'resource_name' => $resource->shadow->activity, 'resource_type' => '07.OTHERS',
+            'resource_name' => $resource_name, 'resource_type' => $resource_type,
             'activity_id' => $resource->shadow->activity_id, 'activity' => $resource->shadow->activity,
             'eng_qty' => $budget_unit, 'budget_qty' => $budget_unit, 'resource_qty' => $budget_unit, 'budget_unit' => $budget_unit,
             'resource_waste' => 0, 'unit_price' => $unit_price, 'budget_cost' => $total_cost,
