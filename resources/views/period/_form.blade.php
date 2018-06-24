@@ -32,6 +32,14 @@
                     </div>
                 </div>
 
+                <div class="form-group form-group-sm {{ $errors->first('potential_change_order_amount', 'has-error') }}">
+                    {{ Form::label('potential_change_order_amount', 'Potential Change Order Amount', ['class' => 'control-label col-sm-3']) }}
+                    <div class="col-sm-9">
+                        {{ Form::text('potential_change_order_amount', null, ['class' => 'form-control']) }}
+                        {!! $errors->first('potential_change_order_amount', '<div class="help-block">:message</div>') !!}
+                    </div>
+                </div>
+
                 <div class="form-group form-group-sm {{ $errors->first('time_extension', 'has-error') }}">
                     {{ Form::label('time_extension', "Total Time Extension", ['class' => 'control-label col-sm-3']) }}
                     <div class="col-sm-9">
