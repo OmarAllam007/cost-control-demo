@@ -292,6 +292,8 @@ class BreakdownResource extends Model
 
     function scopeBudgetOnly($query)
     {
-        return $query->whereNull('rolled_up_at')->where('is_rollup', 0);
+        return $query->whereHas('shadow', function($q) {
+            return $q->where('show_in_budget', 1);
+        });
     }
 }
