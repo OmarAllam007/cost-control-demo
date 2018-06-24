@@ -11,27 +11,15 @@ use App\Period;
 use App\Project;
 use App\Reports\Budget\ProfitabilityIndexReport;
 use App\Revision\RevisionBreakdownResourceShadow;
-use function basename;
 use Carbon\Carbon;
-use function dd;
-use function env;
-use function escapeshellarg;
-use function escapeshellcmd;
-use function file_exists;
-use function file_put_contents;
-use function flash;
 use FontLib\TrueType\Collection;
 use Illuminate\Support\Fluent;
-use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_Excel2007;
 use PHPExcel_Style_Color;
 use PHPExcel_Writer_Excel2007;
-use function request;
+use PHPExcel;
 use Response;
-use function storage_path;
-use function str_random;
-use function unlink;
 
 class ProjectInfo
 {

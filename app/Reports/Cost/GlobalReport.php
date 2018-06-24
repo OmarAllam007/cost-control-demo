@@ -97,6 +97,7 @@ class GlobalReport
     {
         $contracts_total = $this->projects->sum('project_contract_signed_value');
         $change_orders = $this->periods->sum('change_order_amount');
+        $potential_change_orders = $this->periods->sum('potential_change_order_amount');
 
         $revised = $contracts_total + $change_orders;
 //        $budget_total = BreakDownResourceShadow::sum('budget_cost');
@@ -129,7 +130,7 @@ class GlobalReport
             return $schedule;
         })->sortBy('project_name');
 
-        return compact('contracts_total', 'change_orders', 'revised', 'profit', 'profitability', 'finish_date', 'schedules');
+        return compact('contracts_total', 'change_orders', 'potential_change_orders', 'revised', 'profit', 'profitability', 'finish_date', 'schedules');
     }
 
 
