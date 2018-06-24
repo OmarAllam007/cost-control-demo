@@ -145,7 +145,7 @@ class PhysicalQtyParser
         ActivityMap::where('project_id', $this->batch->project_id)->each(function ($mapping) {
             $code = code_trim(strtolower($mapping->equiv_code));
             $mappingCode = code_trim(strtolower($mapping->activity_code));
-            if ($this->activityCodes->has($mappingCode)) {
+            if (!$this->activityCodes->has($mappingCode)) {
                 $this->activityCodes->put($code, $mappingCode);
             }
         });

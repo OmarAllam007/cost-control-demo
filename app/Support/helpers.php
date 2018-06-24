@@ -112,5 +112,7 @@ function translate_method($method)
  */
 function code_trim($code)
 {
-    return preg_replace('/[^0-9a-z\.\-_\/]/i', '', $code);
+    $code = preg_replace('/^[^0-9a-z\.\-_\/]/i', '', $code);
+    $code = preg_replace('/[^0-9a-z\.\-_\/]$/i', '', $code);
+    return $code;
 }
