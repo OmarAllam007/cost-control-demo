@@ -58,18 +58,18 @@ class ActivityLog
         $this->resourceLogs = $resource_ids->map(function($id) use ($budget_resources, $store_resources) {
             $budget = $budget_resources->get($id);
             $resource = $budget->first();
-            $allowable = $budget_resources->flatten()->sum('allowable_ev_cost');
-            $cost = $budget_resources->flatten()->sum('to_date_cost');
-            $budget_cost = $budget_resources->flatten()->sum('budget_cost');
-            $variance = $budget_resources->flatten()->sum('allowable_var');
-            $actual_qty = $budget_resources->flatten()->sum('to_date_qty');
-            $actual_cost = $budget_resources->flatten()->sum('to_date_cost');
+            $allowable = $budget->sum('allowable_ev_cost');
+            $cost = $budget->sum('to_date_cost');
+            $budget_cost = $budget->sum('budget_cost');
+            $variance = $budget->sum('allowable_var');
+            $actual_qty = $budget->sum('to_date_qty');
+            $actual_cost = $budget->sum('to_date_cost');
             $actual_unit_price = 0;
             if ($actual_qty) {
                 $actual_unit_price = $actual_cost / $actual_qty;
             }
-            $qty_var = $budget_resources->flatten()->sum('to_date_qty_var');
-            $important = $budget_resources->flatten()->filter(function($resource) {
+            $qty_var = $budget->sum('to_date_qty_var');
+            $important = $budget->filter(function($resource) {
                 return $resource->important;
             })->count();
             $budget_qty = $budget->sum('budget_unit');
