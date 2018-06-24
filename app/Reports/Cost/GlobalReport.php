@@ -238,9 +238,9 @@ class GlobalReport
             ->where('p.global_period_id', $this->period->id)
             ->groupBy(['master_shadows.project_id','projects.name', 'projects.project_code'])
             ->get()->map(function ($period) {
-                $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->reserve));
-                $reserve = $progress * $period->reserve;
-                $period->allowable_cost += $period->reserve;
+//                $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->reserve));
+//                $reserve = $progress * $period->reserve;
+                $period->allowable_cost = $this->projects_summary->get($period->project_id)->sum('allowable_cost');
                 $period->cpi = $period->allowable_cost / $period->to_date_cost;
 
                 $period->variance = $period->allowable_cost - $period->to_date_cost;
@@ -251,6 +251,7 @@ class GlobalReport
                 } else {
                     $period->eac_contract_amount = $period->project->eac_contract_amount;
                 }
+
                 return $period;
             })->sortBy('cpi');
 
@@ -301,12 +302,12 @@ class GlobalReport
             'sum(completion_cost_pessimistic) as completion_cost_pessimistic',
         ];
 
-        $this->cost_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
+        $this->projects_summary = MasterShadow::whereIn('period_id', $this->last_period_ids)
             ->selectRaw(implode(', ', $fields))
             ->groupBy('project_id')->groupBy('type')->get()
-            ->groupBy('project_id')->map(function($group) {
+            ->groupBy('project_id')->map(function ($group) {
                 return $group->keyBy('type');
-            })->map(function($project) {
+            })->map(function ($project) {
                 $reserve = $project->get('MANAGEMENT RESERVE');
                 if ($reserve->budget_cost) {
                     $reserve->completion_cost = $reserve->remaining_cost = 0;
@@ -316,7 +317,9 @@ class GlobalReport
                     $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
                 }
                 return $project;
-            })->reduce(function($summary, $project) {
+            });
+
+        $this->cost_summary = $this->projects_summary->reduce(function($summary, $project) {
                 $types = ['DIRECT', "INDIRECT", 'MANAGEMENT RESERVE'];
                 $fields = [
                     'budget_cost', 'to_date_cost', 'allowable_cost', 'to_date_var',
@@ -337,8 +340,6 @@ class GlobalReport
 
                 return $summary;
             }, collect());
-
-
 
         if ($this->cost_summary->has('MANAGEMENT RESERVE')) {
             $reserve = $this->cost_summary->get('MANAGEMENT RESERVE');

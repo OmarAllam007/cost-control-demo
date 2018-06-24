@@ -86,8 +86,10 @@ class ProjectInfo
                 $allowable_cost = $items->sum('allowable_cost');
                 $to_date_cost = $items->sum('to_date_cost');
                 $reserve = $items->get(8, new Fluent());
+
                 $budget_cost = $items->sum('budget_cost') - $reserve->budget_cost;
-                $to_date_reserve = $reserve->budget_cost * $to_date_cost / $budget_cost;
+                $progress = min($to_date_cost / $budget_cost, 1);
+                $to_date_reserve = $reserve->budget_cost * $progress;
                 $allowable_cost += $to_date_reserve;
 
                 $item = new Fluent();
@@ -473,7 +475,8 @@ class ProjectInfo
             $reserve->completion_var_optimistic = $reserve->budget_cost;
             $reserve->completion_var_pessimistic = $reserve->budget_cost;
 
-            $progress = min(1, $this->costSummary->sum('to_date_cost') / $this->costSummary->sum('budget_cost'));
+            $budget_cost = $this->costSummary->sum('budget_cost') - $reserve->budget_cost;
+            $progress = min(1, $this->costSummary->sum('to_date_cost') / $budget_cost);
             $reserve->to_date_var = $reserve->allowable_cost = $progress * $reserve->budget_cost;
         }
 
