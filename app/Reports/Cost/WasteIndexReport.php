@@ -56,8 +56,11 @@ class WasteIndexReport
             ->selectRaw('r.name as resource_name, r.resource_type_id, sum(wi.to_date_qty) as to_date_qty')
             ->selectRaw('sum(wi.allowable_qty) as allowable_qty, avg(wi.to_date_unit_price) as to_date_unit_price')
             ->selectRaw('sum(qty_var) as qty_var, sum(waste_var) as to_date_cost_var, sum(waste_index) as pw_index')
-            ->join('resources as r', 'wi.resource_id', '=', 'r.id')
             ->where('wi.period_id', $this->period->id)
+            ->when($this->project->hasRollup(), function($q) {
+                return $q->whereRaw("breakdown_resource_id in (select breakdown_resource_id from break_down_resource_shadows where project_id = {$this->project->id})");
+            })
+            ->join('resources as r', 'wi.resource_id', '=', 'r.id')
             ->groupBy(['r.name', 'r.resource_type_id']);
 
 //            MasterShadow::from('master_shadows as sh')
