@@ -48,7 +48,10 @@ class ActualMaterialController extends Controller
             return \Redirect::route('project.budget', $project);
         }
 
-        $this->validate($request, ['file' => 'required|file|mimes:xls,xlsx']);
+        $this->validate($request, [
+            'file' => 'required|file|mimes:xls,xlsx',
+            'description' => 'required'
+        ]);
 
         /** @var UploadedFile $file */
         $file = $request->file('file');
