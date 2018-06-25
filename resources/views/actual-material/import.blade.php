@@ -19,7 +19,7 @@
 
             <div class="form-group {{$errors->first('description', 'has-error')}}">
                 {{Form::label('description', null, ['class' => 'control-label'])}}
-                {{Form::text('description', ['class' => 'form-control', 'rows' => 3])}}
+                {{Form::textarea('description', null, ['class' => 'form-control', 'rows' => 3])}}
                 {!! $errors->first('description', '<div class="help-block">:message</div>') !!}
             </div>
 
