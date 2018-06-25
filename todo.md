@@ -1,7 +1,7 @@
 # Rollup
 ### Reports
 - [ ] Variance Analysis Report : Budget unit price for rolled resources is not correct
-- [ ] For Level 2 & 3, in waste report should show only driving resources
+- [x] For Level 2 & 3, in waste report should show only driving resources
 
 ### Rollup
 - [ ] Edit remarks manually is not working

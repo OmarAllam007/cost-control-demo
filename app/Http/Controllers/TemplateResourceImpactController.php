@@ -205,6 +205,7 @@ class TemplateResourceImpactController extends Controller
 
                 $new_resource = new BreakdownResource(['breakdown_id' => $breakdown->id]);
                 $new_resource->equation = $template_resource->equation;
+                $new_resource->template_resource = $template_resource;
                 $new_resource->resource = $resource;
                 $new_resource->budget_qty = $new_resource->qty_survey->budget_qty ?? 0;
                 $new_resource->eng_qty = $new_resource->qty_survey->eng_qty ?? 0;
