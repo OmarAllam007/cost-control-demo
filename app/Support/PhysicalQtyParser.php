@@ -8,6 +8,7 @@ use App\BreakDownResourceShadow;
 use App\ResourceCode;
 use App\Resources;
 use App\UnitAlias;
+use function dd;
 use Illuminate\Support\Collection;
 
 class PhysicalQtyParser
@@ -145,7 +146,9 @@ class PhysicalQtyParser
         ActivityMap::where('project_id', $this->batch->project_id)->each(function ($mapping) {
             $code = trim(strtolower($mapping->equiv_code));
             $mappingCode = trim(strtolower($mapping->activity_code));
-            if (!$this->activityCodes->has($mappingCode)) {
+
+            // If activity is found in the project, add the equivalent code
+            if ($this->activityCodes->has($mappingCode)) {
                 $this->activityCodes->put($code, $mappingCode);
             }
         });
