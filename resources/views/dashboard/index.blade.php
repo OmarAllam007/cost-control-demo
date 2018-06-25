@@ -46,7 +46,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$cpi_trend->pluck('name')}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'CPI Index',
+                                    'label' => '',
                                     'data' =>$cpi_trend->pluck('cpi_index'),//$cpi_trend->pluck('cpi_index')
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
@@ -67,7 +67,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$spi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'SPI Index',
+                                    'label' => '',
                                     'data' => $spi_trend->values(),//$spi_trend->values()
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
@@ -90,7 +90,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$waste_index_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'Material Consumption Index',
+                                    'label' => '',
                                     'data' => $waste_index_trend->values(),
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
@@ -110,7 +110,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$pi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'Productivity Index',
+                                    'label' => '',
                                     'data' => $pi_trend->values(),
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'

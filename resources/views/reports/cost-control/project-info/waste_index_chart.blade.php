@@ -6,7 +6,7 @@
          data-type="line"
          data-labels="{{$wasteIndexTrend->pluck('name')}}"
          data-datasets="[{{json_encode([
-                                'label' => 'Waste Index', 'data' => $wasteIndexTrend->pluck('value'),
+                                'label' => '', 'data' => $wasteIndexTrend->pluck('value'),
                                 'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                 'borderColor' => 'rgba(0, 32, 96, 0.9)'
                             ])}}]"
