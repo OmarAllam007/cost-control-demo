@@ -50,8 +50,12 @@ class ActivityLogExport
         $this->resource_logs = $activityLog->handle();
         $this->store_resources = $this->resource_logs->pluck('store_resources')->flatten();
         $this->budget_resources = $this->resource_logs->pluck('budget_resources')->flatten();
-        $this->first_upload_date = $this->store_resources->min('created_at');
-        $this->last_upload_date = $this->store_resources->max('created_at');
+        $this->budget_cost = $this->budget_resources->sum('budget_cost');
+        $this->actual_cost = $this->budget_resources->sum('to_date_cost');
+        $this->allowable_cost = $this->budget_resources->sum('allowable_ev_cost');
+        $this->variance = $this->allowable_cost - $this->actual_cost;
+        $this->first_upload_date = $this->store_resources->min('created_at')->format('d M Y H:i');
+        $this->last_upload_date = $this->store_resources->max('created_at')->format('d M Y H:i');
 
         /*$this->budget_resources = BreakDownResourceShadow::with('actual_resources')->where('wbs_id', $this->wbs->id)->where('code', $this->code)->get();
         $resource_ids = $this->budget_resources->pluck('resource_id', 'resource_id');
@@ -61,10 +65,7 @@ class ActivityLogExport
             ->get();
 
 
-        $this->budget_cost = $this->budget_resources->sum('budget_cost');
-        $this->actual_cost = $this->budget_resources->sum('to_date_cost');
-        $this->allowable_cost = $this->budget_resources->sum('allowable_ev_cost');
-        $this->variance = $this->allowable_cost - $this->actual_cost;*/
+        */
     }
 
     function download()
@@ -131,6 +132,17 @@ class ActivityLogExport
      */
     private function drivingResources($sheet)
     {
+        $sheet->setCellValue('C2', $this->activity_name);
+        $sheet->setCellValue('C3', $this->code);
+        $sheet->setCellValue('C4', $this->status);
+
+        $sheet->setCellValue('H2', $this->budget_cost);
+        $sheet->setCellValue('H3', $this->actual_cost);
+        $sheet->setCellValue('H4', $this->variance);
+
+        $sheet->setCellValue('P2', $this->first_upload_date);
+        $sheet->setCellValue('P3', $this->last_upload_date);
+
         $driving_resources = $this->resource_logs->filter(function($resource) {
             return $resource['important'];
         });
