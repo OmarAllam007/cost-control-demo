@@ -5,6 +5,7 @@
                 <table class="table table-striped table-hover table-condensed" v-if="batches.length">
                     <thead>
                     <tr>
+                        <th>Description</th>
                         <th>Uploaded By</th>
                         <th>Uploaded At</th>
                         <th>Period</th>
@@ -15,6 +16,7 @@
 
                     <tbody>
                     <tr v-for="batch in batches">
+                        <td>{{batch.description}}</td>
                         <td>{{batch.uploaded_by}}</td>
                         <td>{{batch.uploaded_at}}</td>
                         <td>{{batch.period_name}}</td>

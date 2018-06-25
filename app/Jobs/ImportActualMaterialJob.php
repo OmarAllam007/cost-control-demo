@@ -27,12 +27,14 @@ class ImportActualMaterialJob extends ImportJob
 
     /** @var Period */
     private $period;
+    private $description;
 
-    public function __construct(Project $project, $file)
+    public function __construct(Project $project, $file, $description)
     {
         $this->project = $project;
         $this->period = $this->project->open_period();
         $this->file = $file;
+        $this->description = $description;
     }
 
     public function handle()
@@ -46,7 +48,13 @@ class ImportActualMaterialJob extends ImportJob
 
 
         $material = collect();
-        $batch = ActualBatch::create(['type' => 'material', 'user_id' => \Auth::id(), 'file' => $this->file, 'project_id' => $this->project->id, 'period_id' => $this->period->id]);
+        $batch = ActualBatch::create([
+            'type' => 'material', 'user_id' => \Auth::id(),
+            'file' => $this->file,
+            'project_id' => $this->project->id,
+            'period_id' => $this->period->id,
+            'description' => $this->description,
+        ]);
 
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();

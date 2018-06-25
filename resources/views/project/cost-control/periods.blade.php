@@ -16,6 +16,7 @@
             <tr>
                 <th>Name</th>
                 <th>Start Date</th>
+                <th>End Date</th>
                 <th>Open</th>
                 <th>Actions</th>
             </tr>
@@ -24,7 +25,8 @@
                 <tbody>
                 <tr>
                     <td>{{$period->name}}</td>
-                    <td>{{$period->start_date->format('d/m/Y')}}</td>
+                    <td>{{$period->start_date->format('d M Y')}}</td>
+                    <td>{{$period->end_date->format('d M Y')}}</td>
                     <td class="text-{{$period->is_open? 'success' : 'muted'}}"><i
                                 class="fa fa-{{$period->is_open? 'check' : 'close'}}"></i></td>
                     <td>
