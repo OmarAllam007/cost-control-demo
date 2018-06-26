@@ -103,16 +103,14 @@ class ActivityLog
             ->where('code', $this->code)->get()->map(function ($resource) {
                 $budget_resources = BreakDownResourceShadow::where('rollup_resource_id', $resource->id)->get();
 
-                // Get store resources for current element
-                // and
-                $breakdown_resource_ids = $budget_resources->pluck('breakdown_resource_id')->prepend($resource->breakdown_resource_id);
-                $store_resources = StoreResource::whereIn('breakdown_resource_id', $breakdown_resource_ids)->whereNull('row_ids')->get();
-                    // if the activity is rolled up on activity level, exclude important resources
-                    // because its data will be duplicated in this context
-//                    ->when($resource->project->is_activity_rollup, function ($q) use ($budget_resources) {
-//                        return $q->whereNotIn('breakdown_resource_id',
-//                            $budget_resources->where('important', false)->pluck('breakdown_resource_id'));
-//                    })
+                $store_resources = StoreResource::where('budget_code', $resource->code)
+                    ->when(!$resource->isActivityRollup(), function ($q) use ($budget_resources, $resource) {
+                        $resource_ids = $budget_resources->pluck('resource_id');
+                        $q->where(function ($q) use ($resource_ids, $resource) {
+                            $q->where('breakdown_resource_id', $resource->breakdown_resource_id)
+                                ->orWhereIn('resource_id', $resource_ids);
+                        });
+                    })->whereNull('row_ids')->get();
 
                 $important = $budget_resources->filter(function ($resource) {
                     return $resource->important;
