@@ -39,9 +39,9 @@ class ActivityLog
         $shadows = BreakDownResourceShadow::where('wbs_id', $this->wbs->id)
             ->where('code', $this->code)
             ->where('resource_id', '<>', 0)
-            ->when($isActivityRollup, function($q) {
+            ->when($isActivityRollup, function ($q) {
                 return $q->where('important', 1);
-            })->when(!$isActivityRollup, function($q) {
+            })->when(!$isActivityRollup, function ($q) {
                 return $q->where('show_in_cost', 1);
             })->with(['important_actual_resources', 'actual_resources'])
             ->get();
@@ -55,7 +55,7 @@ class ActivityLog
         $budget_resources = $shadows->groupBy('resource_id');
 
         /** @var Collection $resourceLogs */
-        $this->resourceLogs = $resource_ids->map(function($id) use ($budget_resources, $store_resources) {
+        $this->resourceLogs = $resource_ids->map(function ($id) use ($budget_resources, $store_resources) {
             $budget = $budget_resources->get($id);
             $resource = $budget->first();
             $allowable = $budget->sum('allowable_ev_cost');
@@ -69,7 +69,7 @@ class ActivityLog
                 $actual_unit_price = $actual_cost / $actual_qty;
             }
             $qty_var = $budget->sum('to_date_qty_var');
-            $important = $budget->filter(function($resource) {
+            $important = $budget->filter(function ($resource) {
                 return $resource->important;
             })->count();
             $budget_qty = $budget->sum('budget_unit');
@@ -102,10 +102,19 @@ class ActivityLog
             ->with(['actual_resources'])->where('is_rollup', true)
             ->where('code', $this->code)->get()->map(function ($resource) {
                 $budget_resources = BreakDownResourceShadow::where('rollup_resource_id', $resource->id)->get();
-                $store_resources = StoreResource::whereIn('breakdown_resource_id', $budget_resources->pluck('breakdown_resource_id'))
-                    ->whereNull('row_ids')->get();
 
-                $important = $budget_resources->filter(function($resource) {
+                // Get store resources for current element
+                // and
+                $breakdown_resource_ids = $budget_resources->pluck('breakdown_resource_id')->prepend($resource->breakdown_resource_id);
+                $store_resources = StoreResource::whereIn('breakdown_resource_id', $breakdown_resource_ids)->whereNull('row_ids')->get();
+                    // if the activity is rolled up on activity level, exclude important resources
+                    // because its data will be duplicated in this context
+//                    ->when($resource->project->is_activity_rollup, function ($q) use ($budget_resources) {
+//                        return $q->whereNotIn('breakdown_resource_id',
+//                            $budget_resources->where('important', false)->pluck('breakdown_resource_id'));
+//                    })
+
+                $important = $budget_resources->filter(function ($resource) {
                     return $resource->important;
                 })->count();
 
@@ -115,7 +124,8 @@ class ActivityLog
                     'actual_resources' => $resource->actual_resources, 'budget_qty' => $resource->budget_unit,
                     'budget_cost' => $resource->budget_cost, 'measure_unit' => $resource->measure_unit,
                     'rollup' => true, 'rollup_resource' => $resource, 'important' => $important > 0,
-                    'allowable' => $resource->allowable_ev_cost, 'cost' => $resource->to_date_cost, 'cost_var' => $resource->allowable_var,
+                    'allowable' => $resource->allowable_ev_cost, 'cost' => $resource->to_date_cost,
+                    'cost_var' => $resource->allowable_var,
                     'allowable_qty' => $resource->allowable_qty, 'qty_var' => $resource->to_date_qty_var,
                     'unit_price' => $resource->unit_price,
                     'actual_qty' => $resource->to_date_qty, 'actual_cost' => $resource->to_date_cost,
