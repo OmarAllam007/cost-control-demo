@@ -27,7 +27,7 @@ class SemiActivityRollupController extends Controller
     {
         $this->authorize('cost_owner', $project);
 
-        $extra = $request->only(['budget_unit', 'measure_unit', 'to_date_qty', 'progress', 'resource_names', 'resource_codes']);
+        $extra = $request->only(['budget_unit', 'measure_unit', 'to_date_qty', 'progress', 'resource_names', 'resource_codes', 'remarks']);
         $rollup = new SemiActivityRollup($project, $request->get('resources', []), $extra);
 
         $status = $rollup->handle();

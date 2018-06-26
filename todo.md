@@ -9,7 +9,7 @@
 ### Activity Log
 - [x] In Export, some Activity data is not shown
 - [x] Actual resources before rolling up is not shown
-- [ ] In activity Level: new upload data is not shown in driving resources tab
+- [x] In activity Level: new upload data is not shown in driving resources tab
 
 ### Data upload
 - [x] Fix C32 upload errors
