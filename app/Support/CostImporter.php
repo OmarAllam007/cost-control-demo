@@ -286,8 +286,16 @@ class CostImporter
                 }
             } else {
                 ImportantActualResource::create($attributes);
-                StoreResource::where('id', $hash)
-                    ->update(['budget_code' => $resource->code, 'resource_id' => $resource->resource_id]);
+                $store_resource = StoreResource::find($hash);
+                $attributes = [
+                    'budget_code' => $resource->code, 'resource_id' => $resource->resource_id,
+                    'breakdown_resource_id' => $resource->breakdown_resource_id
+                ];
+                $store_resource->update($attributes);
+
+                if ($store_resource->row_ids) {
+                    StoreResource::whereIn('id', json_decode($store_resource->row_ids))->update($attributes);
+                }
             }
 
 
