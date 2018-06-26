@@ -58,7 +58,9 @@ class ActualMaterialController extends Controller
         $file->move(storage_path('batches'), $filename = uniqid() . '.' . $file->clientExtension());
         $filename = storage_path('batches') . '/' . $filename;
 
-        $result = $this->dispatch(new ImportActualMaterialJob($project, $filename));
+        $result = $this->dispatch(
+            new ImportActualMaterialJob($project, $filename, $request->get('description'))
+        );
 
         return $this->redirect($result);
     }
