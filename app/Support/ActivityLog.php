@@ -102,8 +102,9 @@ class ActivityLog
             ->with(['actual_resources'])->where('is_rollup', true)
             ->where('code', $this->code)->get()->map(function ($resource) {
                 $budget_resources = BreakDownResourceShadow::where('rollup_resource_id', $resource->id)->get();
-                $store_resources = StoreResource::whereIn('actual_resource_id', $resource->actual_resources->pluck('id'))
+                $store_resources = StoreResource::whereIn('breakdown_resource_id', $budget_resources->pluck('breakdown_resource_id'))
                     ->whereNull('row_ids')->get();
+
                 $important = $budget_resources->filter(function($resource) {
                     return $resource->important;
                 })->count();
