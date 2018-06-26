@@ -100,6 +100,7 @@ class SemiActivityRollup
         $unit_id = $this->extra['measure_unit'][$code] ?? 15;
         $measure_unit = $this->unit_cache->get($unit_id);
         $unit_price = $total_cost / $budget_unit;
+        $remarks = $this->extra['remarks'][$resource->code] ?? 'Semi Activity rollup';
 
         $cost_account_suffix = '01';
         $latest_activity = BreakDownResourceShadow::where(compact('code'))
@@ -136,7 +137,7 @@ class SemiActivityRollup
             'measure_unit' => $measure_unit, 'unit_id' => $unit_id, 'template' => 'Semi Activity Rollup',
             'breakdown_id' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
-            'remarks' => 'Semi activity rollup', 'productivity_ref' => '', 'productivity_output' => 0,
+            'remarks' => $remarks, 'productivity_ref' => '', 'productivity_output' => 0,
             'labors_count' => 0, 'boq_equivilant_rate' => 1, 'productivity_id' => 0,
             'code' => $this->rollup_resource->code, 'resource_id' => 0,
             'boq_id' => $resource->shadow->boq_id, 'survey_id' => $resource->shadow->survey_id,
@@ -150,9 +151,11 @@ class SemiActivityRollup
 
     private function createRollupResource($resource)
     {
+        $remarks = $this->extra['remarks'][$resource->code] ?? 'Semi Activity rollup';
+
         return $this->rollup_resource = BreakdownResource::forceCreate([
             'breakdown_id' => 0, 'resource_id' => 0, 'std_activity_resource_id' => 0,
-            'productivity_id' => 0, 'budget_qty' => 1, 'eng_qty' => 1, 'remarks' => 'Semi Activity rollup',
+            'productivity_id' => 0, 'budget_qty' => 1, 'eng_qty' => 1, 'remarks' => $remarks,
             'resource_qty' => 1, 'equation' => 1, 'labor_count' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'code' => $resource->code, 'is_rollup' => true,
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
