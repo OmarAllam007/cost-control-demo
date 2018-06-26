@@ -1,4 +1,12 @@
-<h2>{{ $project->name }}</h2>
+<h2>
+    {{ $project->name }}
+
+    @if ($project->is_activity_rollup)
+        <small class="label label-default">Activity</small>
+    @elseif ($project->hasRollup())
+        <small class="label label-default">Semi Activity</small>
+    @endif
+</h2>
 
 <nav class="btn-toolbar pull-right">
     @can('actual_resources', $project)
