@@ -4,11 +4,11 @@
 - [x] For Level 2 & 3, in waste report should show only driving resources
 
 ### Rollup
-- [ ] Edit remarks manually is not working
+- [x] Edit remarks manually is not working
 
 ### Activity Log
 - [x] In Export, some Activity data is not shown
-- [ ] Actual resources before rolling up is not shown
+- [x] Actual resources before rolling up is not shown
 - [ ] In activity Level: new upload data is not shown in driving resources tab
 
 ### Data upload

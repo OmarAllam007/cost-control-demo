@@ -275,7 +275,8 @@ class CostImporter
                 $this->actual_resources->push($actual_resource);
                 $attributes = [
                     'budget_code' => $resource->code, 'resource_id' => $resource->resource_id,
-                    'actual_resource_id' => $actual_resource->id
+                    'actual_resource_id' => $actual_resource->id,
+                    'breakdown_resource_id' => $actual_resource->breakdown_resource_id,
                 ];
 
                 $store_resource = StoreResource::find($hash);
