@@ -27,7 +27,14 @@
                             <div class="card-body collapse" id="{{slug($groupName ?: 'not-assigned')}}">
                                 @foreach($projects as $project)
                                     <div class="card-row display-flex">
-                                        <h4 class="flex">{{$project->name}}</h4>
+                                        <h4 class="flex">
+                                            {{$project->name}}
+                                            @if ($project->is_activity_rollup)
+                                                <small class="label label-default">Activity</small>
+                                            @elseif ($project->hasRollup())
+                                                <small class="label label-default">Semi Activity</small>
+                                            @endif
+                                        </h4>
 
                                         <div class="">
                                             @can('budget', $project)
@@ -54,19 +61,24 @@
 
                                             @can('modify', $project)
                                                 <div class="dropdown" style="display: inline-block">
-                                                    <button class="btn btn-default btn-sm dropdown-toggle" data-target="{{slug($groupName ?: 'not-assigned')}}-menu"
+                                                    <button class="btn btn-default btn-sm dropdown-toggle"
+                                                            data-target="{{slug($groupName ?: 'not-assigned')}}-menu"
                                                             data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i>
                                                     </button>
 
-                                                    <ul class="dropdown-menu" id="{{slug($groupName ?: 'not-assigned')}}-menu">
+                                                    <ul class="dropdown-menu"
+                                                        id="{{slug($groupName ?: 'not-assigned')}}-menu">
                                                         <li><a href="{{ route('project.edit', $project) }} "><i
                                                                         class="fa fa-edit"></i> Edit</a></li>
                                                         <li><a
-                                                               href="{{ route('project.duplicate', $project) }} "><i
+                                                                    href="{{ route('project.duplicate', $project) }} "><i
                                                                         class="fa fa-copy"></i>
                                                                 Duplicate</a></li>
-                                                        <li><a href="{{route('project.destroy', $project)}}" class="delete-btn text-danger"
-                                                               title="Delete - {{$project->name}}"><i class="fa fa-trash-o"></i> <span class="text-danger">Delete </span></a></li>
+                                                        <li><a href="{{route('project.destroy', $project)}}"
+                                                               class="delete-btn text-danger"
+                                                               title="Delete - {{$project->name}}"><i
+                                                                        class="fa fa-trash-o"></i> <span
+                                                                        class="text-danger">Delete </span></a></li>
                                                     </ul>
                                                 </div>
 
@@ -84,7 +96,7 @@
 
                 @endforeach
             </div>
-            
+
             <div class="col-sm-4 text-center">
                 <img src="{{asset('images/kcc.png')}}" alt="logo">
             </div>
