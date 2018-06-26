@@ -193,7 +193,7 @@
 
                 const budget_units = {}, measure_units = {},
                     to_date_qtys = {}, progress = {},
-                    resource_codes = {}, resource_names = {}, remarks=[];
+                    resource_codes = {}, resource_names = {}, remarks={};
 
                 budget_units[this.activity.code] = this.budget_unit;
                 measure_units[this.activity.code] = this.measure_unit;
@@ -205,17 +205,23 @@
 
 
                 // The API end point requires data to be in this shape 😩
-                const data = {
-                    _token: this.token, resources,
-                    budget_unit: budget_units,
-                    measure_unit: measure_units,
-                    to_date_qty: to_date_qtys,
-                    progress: progress, resource_codes, resource_names, remarks
-                };
+                // const data = ;
 
                 const url = `/project/${this.activity.project_id}/rollup-semi-activity`;
 
-                $.ajax({url, method: 'post', dataType: 'json', data}).then(
+                $.ajax({
+                    url,
+                    method: 'post',
+                    dataType: 'json',
+                    data: {
+                            _token: this.token, resources,
+                            remarks,
+                            budget_unit: budget_units,
+                            measure_unit: measure_units,
+                            to_date_qty: to_date_qtys,
+                            progress: progress, resource_codes, resource_names
+                    }
+                }).then(
                     () => {
                         this.loading = false;
                         this.loadResources();
