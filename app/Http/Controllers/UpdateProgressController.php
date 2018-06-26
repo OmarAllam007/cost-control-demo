@@ -12,6 +12,21 @@ class UpdateProgressController extends Controller
 {
     /**
      * @param Project $project
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    function show(Project $project)
+    {
+        $this->authorize('actual_resources', $project);
+
+        $exporter = new \App\Export\ProjectProgressExport($project);
+        $file = $exporter->handle();
+
+        return response()->download($file, slug($project->name) . '_progress.xlsx')->deleteFileAfterSend(true);
+    }
+
+    /**
+     * @param Project $project
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
