@@ -16,3 +16,7 @@
 - [x] Add description cell for upload data to be added manually while importing sheet and to be shown in data upload as a column 
 - [ ] In Activity Level, separate physical quantity for driving than other resources, same like we made in E.02
 - [ ] Percentage in E.05 is not reflected in E.06
+
+### Import progress
+- [ ] Make E.05 & E.06 appear after uploading to check which resource to apply progress on
+- [ ] Remove Resource column from upload sheet
