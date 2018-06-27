@@ -181,7 +181,7 @@ class SemiActivityRollup
         }
 
         $progress = min(100, $this->extra['progress'][$code] ?? 0);
-        if (!$to_date_qty) {
+        if (!$to_date_cost) {
             $progress = 0;
         }
 
