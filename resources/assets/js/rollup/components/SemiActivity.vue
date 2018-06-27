@@ -206,6 +206,8 @@
                     this.errors.progress = true;
                     this.error_messages.push("Progress is required");
                 }
+
+                return this.error_messages.length === 0;
             },
 
             loadResources() {
