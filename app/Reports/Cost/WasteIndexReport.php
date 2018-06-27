@@ -54,7 +54,7 @@ class WasteIndexReport
 
         $query = WasteIndex::from('waste_indices as wi')
             ->selectRaw('r.id as resource_id, r.name as resource_name, r.resource_type_id, sum(wi.to_date_qty) as to_date_qty')
-            ->selectRaw('sum(wi.allowable_qty) as allowable_qty, sum(to_date_unit_price * to_date_qty) / sum(to_date_qty) as to_date_unit_price')
+            ->selectRaw('sum(wi.allowable_qty) as allowable_qty, sum(to_date_unit_price * to_date_qty) as to_date_cost ,sum(to_date_unit_price * to_date_qty) / sum(to_date_qty) as to_date_unit_price')
             ->selectRaw('sum(qty_var) as qty_var, sum(waste_var) as to_date_cost_var, sum(waste_index) as pw_index')
             ->where('wi.period_id', $this->period->id)
             ->when($this->project->hasRollup(), function($q) {
@@ -175,10 +175,9 @@ class WasteIndexReport
         $sheet->setCellValue('A5', "Issue Date: " . date('d M Y'));
         $sheet->setCellValue('A6', "Period: {$this->period->name}");
 
-
         $sheet->setCellValue("F{$this->row}", $this->tree->sum('allowable_cost'));
         $sheet->setCellValue("G{$this->row}", $this->tree->sum('to_date_cost'));
-        $sheet->setCellValue("H{$this->row}", $this->tree->sum('to_date_cost_var'));
+        $sheet->setCellValue("H{$this->row}", $this->tree->sum('variance'));
         $sheet->setCellValue("I{$this->row}", $this->total_pw_index / 100);
 
         $this->tree->each(function($type) use ($sheet) {
