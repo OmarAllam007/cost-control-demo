@@ -229,7 +229,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
             })->each(function (BreakDownResourceShadow $resource) {
                 $resource->setCalculationPeriod($this->period);
 
-                $to_date_qty = $resource->actual_resources->sum('qty') + $resource->important_actual_resources->sum('qty');
+                $to_date_qty = $resource->actual_resources()->withTrashed()->sum('qty') + $resource->important_actual_resources->sum('qty');
                 if (!$to_date_qty) {
                     return true;
                 }
