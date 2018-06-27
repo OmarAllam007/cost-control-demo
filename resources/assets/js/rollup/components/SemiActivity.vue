@@ -71,7 +71,7 @@
                     <th v-text="total_to_date_cost"></th>
                     <th>
                         <input type="text" class="form-control input-sm" :name="`progress[${activity.code}]`"
-                               v-model="progress" placeholder="Progress" :required="selected">
+                               v-model="progress" placeholder="Progress" :required="selected" :readonly="!parseFloat(to_date_qty)">
                     </th>
                 </tr>
                 </thead>
@@ -238,6 +238,11 @@
                 this.resources.filter(resource => !resource.important).forEach(resource => {
                     resource.selected = checked;
                 });
+            },
+            to_date_qty() {
+                if (parseFloat(this.to_date_qty) == 0) {
+                    this.progress = 0;
+                }
             }
         },
 
