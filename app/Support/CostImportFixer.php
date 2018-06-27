@@ -202,8 +202,9 @@ class CostImportFixer
         $resources = $result['errors']->keyBy('breakdown_resource_id');
 
         $progressLog = collect();
+
         foreach ($progress as $id => $value) {
-            $resource = $resources->get('id');
+            $resource = $resources->get($id);
             if (!$resource) {
                 continue;
             }
