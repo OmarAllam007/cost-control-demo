@@ -106,7 +106,7 @@ class ActivityLog
                 $store_resources = StoreResource::where('budget_code', $resource->code)
                     ->when(!$resource->isActivityRollup(), function ($q) use ($budget_resources, $resource) {
                         $resource_ids = $budget_resources->pluck('resource_id');
-                        $q->where(function ($q) use ($resource_ids, $resource) {
+                        return $q->where(function ($q) use ($resource_ids, $resource) {
                             $q->where('breakdown_resource_id', $resource->breakdown_resource_id)
                                 ->orWhereIn('resource_id', $resource_ids);
                         });

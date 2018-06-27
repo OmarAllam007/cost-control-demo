@@ -181,6 +181,10 @@ class SemiActivityRollup
         }
 
         $progress = min(100, $this->extra['progress'][$code] ?? 0);
+        if (!$to_date_cost) {
+            $progress = 0;
+        }
+
         $status = 'Not Started';
         if ($progress) {
             $status = $progress < 100 ? 'In Progress' : 'Closed';

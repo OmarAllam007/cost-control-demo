@@ -31,22 +31,26 @@
                 </tr>
                 <tr class="info">
                     <th class="text-center">&nbsp;</th>
-                    <th><input type="text" class="form-control input-sm"
+                    <th :class="{'has-error': errors.resource_code}">
+                        <input type="text" class="form-control input-sm"
                                v-model="resource_code"
                                :name="`resource_code[${activity.code}]`"
                                placeholder="Resource Code"
-                               :required="selected"></th>
-                    <th><input type="text" class="form-control input-sm"
+                               :required="selected">
+                    </th>
+                    <th  :class="{'has-error': errors.resource_name}">
+                        <input type="text" class="form-control input-sm"
                                v-model="resource_name"
                                :name="`resource_name[${activity.code}]`"
                                placeholder="Resource Name"
-                               :required="selected"></th>
+                               :required="selected">
+                    </th>
                     <th><input type="text" class="form-control input-sm"
                                v-model="remarks"
                                :name="`remarks[${activity.code}]`"
                                placeholder="Remarks"
                                ></th>
-                    <th>
+                    <th :class="{'has-error': errors.budget_unit}">
                         <input type="text" class="form-control input-sm"
                                v-model="budget_unit"
                                :name="`budget_unit[${activity.code}]`"
@@ -54,7 +58,7 @@
                                :value="budget_qty" :required="selected">
                     </th>
 
-                    <th>
+                    <th :class="{'has-error': errors.measure_unit}">
                         <select class="form-control input-sm"
                                 v-model="measure_unit" :name="`measure_unit[${activity.code}]`"
                                 :required="selected" title="Select unit of measure">
@@ -64,12 +68,12 @@
                         </select>
                     </th>
                     <th v-text="total_budget_cost"></th>
-                    <th>
+                    <th :class="{'has-error': errors.to_date_qty}">
                         <input type="text" class="form-control input-sm" :name="`to_date_qty[${activity.code}]`"
                                v-model="to_date_qty" placeholder="To date qty" :required="selected">
                     </th>
                     <th v-text="total_to_date_cost"></th>
-                    <th>
+                    <th :class="{'has-error': errors.progress}">
                         <input type="text" class="form-control input-sm" :name="`progress[${activity.code}]`"
                                v-model="progress" placeholder="Progress" :required="selected">
                     </th>
@@ -146,7 +150,7 @@
                 expanded: false,
                 budget_unit: 0, measure_unit: 0, to_date_qty: 0, progress: 0,
                 resource_code: this.initial.code + '.' + this.initial.next_rollup_code, resource_name: this.initial.name, remarks: 'Semi Activity Rollup',
-                token: document.querySelector('meta[name=csrf-token]').content
+                token: document.querySelector('meta[name=csrf-token]').content, errors: {}
             };
         },
 
@@ -186,6 +190,10 @@
             },
 
             doRollup() {
+                if (!this.validate()) {
+
+                }
+
                 this.loading = true;
 
                 const resources = {};
