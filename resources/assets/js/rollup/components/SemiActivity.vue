@@ -176,7 +176,7 @@
                 }
 
                 this.resources.forEach(resource => {
-                    if (resource.code === this.resource_code) {
+                    if (resource.code == this.resource_code) {
                         this.errors.resource_code = true;
                         this.error_messages.push("Resource code already found");
                     }
@@ -202,9 +202,19 @@
                     this.error_messages.push("To date qty is required");
                 }
 
+                if (this.total_to_date_cost == 0 && parseFloat(this.to_date_qty) > 0) {
+                    this.errors.to_date_qty = true;
+                    this.error_messages.push("No actual cost to update to date qty");
+                }
+
                 if (this.total_to_date_cost > 0 && parseFloat(this.progress) <= 0) {
                     this.errors.progress = true;
                     this.error_messages.push("Progress is required");
+                }
+
+                if (this.total_to_date_cost == 0 && parseFloat(this.progress) > 0) {
+                    this.errors.progress = true;
+                    this.error_messages.push("No actual cost to update progress");
                 }
 
                 return this.error_messages.length === 0;
