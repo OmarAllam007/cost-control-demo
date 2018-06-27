@@ -10,13 +10,13 @@
 @section('body')
 
     {{Form::open()}}
-
     @foreach($resources as $activity => $activityResources)
         <article class="panel panel-default activity-panel">
             <div class="panel-heading">
                 <h4 class="panel-title ">{{$activity}}</h4>
                 {{Form::select('', config('app.cost_status')->prepend('Select Status', ''), null, ['class' => 'form-control input-sm select-all'])}}
             </div>
+
 
             <table class="table table-condensed table-bordered table-striped">
                 <thead>
@@ -50,7 +50,7 @@
                             <div class="input-group">
                                 {{
                                     Form::text("progress[{$resource->breakdown_resource_id}]", $resource->progress,
-                                        ['class' => 'form-control input-sm progress-val', 'data-init' => $resource->calculateProgress()])
+                                        ['class' => 'form-control input-sm progress-val', 'data-init' => $resource->progress])
                                 }}
                                 <span class="input-group-addon">%</span>
                             </div>
