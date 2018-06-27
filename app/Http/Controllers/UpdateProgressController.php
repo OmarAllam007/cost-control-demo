@@ -30,7 +30,7 @@ class UpdateProgressController extends Controller
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    function edit(Project $project)
+    function create(Project $project)
     {
         $this->authorize('actual_resources', $project);
 
@@ -43,7 +43,7 @@ class UpdateProgressController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    function update(Project $project, Request $request)
+    function store(Project $project, Request $request)
     {
         $this->authorize('actual_resources', $project);
 
@@ -58,5 +58,15 @@ class UpdateProgressController extends Controller
 
         flash("{$result['success']} Records have been imported", 'success');
         return redirect()->route('project.cost-control', $project);
+    }
+
+    function edit()
+    {
+
+    }
+
+    function update()
+    {
+
     }
 }

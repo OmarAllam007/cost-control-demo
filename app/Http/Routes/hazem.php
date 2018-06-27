@@ -306,5 +306,7 @@ Route::get('breakdown-template/import-to-project/{project}', 'ImportTemplateToPr
 Route::post('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@store');
 
 Route::get('project/{project}/export-progress', 'UpdateProgressController@show')->name('project.export-progress');
-Route::get('project/{project}/update-progress', 'UpdateProgressController@edit')->name('project.update-progress');
-Route::put('project/{project}/update-progress', 'UpdateProgressController@update');
+Route::get('project/{project}/update-progress', 'UpdateProgressController@create')->name('project.update-progress');
+Route::put('project/{project}/update-progress', 'UpdateProgressController@store');
+Route::get('project/{project}/modify-progress', 'UpdateProgressController@edit')->name('project.modify-progress');
+Route::put('project/{project}/modify-progress', 'UpdateProgressController@update');

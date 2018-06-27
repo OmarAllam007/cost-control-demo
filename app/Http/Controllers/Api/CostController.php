@@ -144,7 +144,7 @@ class CostController extends Controller
         $counter = ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
             ->where('period_id', $breakdown_resource->breakdown->project->open_period()->id)
             ->get()->map(function (ActualResources $resource) {
-                return $resource->delete();
+                return $resource->forceDelete();
             })->filter()->count();
 
         if ($counter) {
@@ -164,7 +164,7 @@ class CostController extends Controller
 
         ActualResources::where('batch_id', $actual_batch->id)
             ->get()->each(function (ActualResources $resource) {
-                $resource->delete();
+                $resource->forceDelete();
             });
 
         StoreResource::where('batch_id', $actual_batch->id)->delete();
@@ -188,7 +188,7 @@ class CostController extends Controller
             ->where('period_id', $breakdown->project->open_period()->id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
-                    $resource->delete();
+                    $resource->forceDelete();
                 });
             });
 
@@ -205,7 +205,7 @@ class CostController extends Controller
             ->where('period_id', $wbs_level->project->open_period()->id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
-                    $resource->delete();
+                    $resource->forceDelete();
                 });
             });
 
@@ -222,7 +222,7 @@ class CostController extends Controller
             ->where('period_id', $project->open_period()->id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
-                    $resource->delete();
+                    $resource->forceDelete();
                 });
             });
 
