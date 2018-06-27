@@ -1,6 +1,7 @@
 <template>
     <section class="card semi-activity" :class="`level-${depth}`">
 
+
         <div class="card-title display-flex">
             <h4 class="flex">
                 <a href="#" @click.prevent="expanded = ! expanded">
@@ -15,6 +16,12 @@
         </div>
 
         <div class="card-body" v-show="expanded">
+            <div class="alert alert-danger" v-if="error_messages.length">
+                <ul>
+                    <li v-for="msg in error_messages">{{msg}}</li>
+                </ul>
+            </div>
+
             <table v-if="resources.length" class="table table-bordered table-condensed table-hover table-striped">
                 <thead>
                 <tr>
@@ -150,7 +157,7 @@
                 expanded: false,
                 budget_unit: 0, measure_unit: 0, to_date_qty: 0, progress: 0,
                 resource_code: this.initial.code + '.' + this.initial.next_rollup_code, resource_name: this.initial.name, remarks: 'Semi Activity Rollup',
-                token: document.querySelector('meta[name=csrf-token]').content, errors: {}
+                token: document.querySelector('meta[name=csrf-token]').content, errors: {}, error_messages: []
             };
         },
 
@@ -159,6 +166,48 @@
         },
 
         methods: {
+            validate() {
+                this.errors = {};
+                this.error_messages = [];
+
+                if (!this.resource_code) {
+                    this.errors.resource_code = true;
+                    this.error_messages.push("Resource code is required");
+                }
+
+                this.resources.forEach(resource => {
+                    if (resource.code === this.resource_code) {
+                        this.errors.resource_code = true;
+                        this.error_messages.push("Resource code already found");
+                    }
+                });
+
+                if (!this.resource_name) {
+                    this.errors.resource_name = true;
+                    this.error_messages.push("Resource name is required");
+                }
+
+                if (!this.budget_unit || !parseFloat(this.budget_unit)) {
+                    this.errors.budget_unit = true;
+                    this.error_messages.push("Budget unit is required");
+                }
+
+                if (!this.measure_unit) {
+                    this.errors.measure_unit = true;
+                    this.error_messages.push("Unit of measure is required");
+                }
+
+                if (this.total_to_date_cost > 0 && parseFloat(this.to_date_qty) <= 0) {
+                    this.errors.to_date_qty = true;
+                    this.error_messages.push("To date qty is required");
+                }
+
+                if (this.total_to_date_cost > 0 && parseFloat(this.progress) <= 0) {
+                    this.errors.progress = true;
+                    this.error_messages.push("Progress is required");
+                }
+            },
+
             loadResources() {
                 this.loading = true;
 
@@ -191,7 +240,7 @@
 
             doRollup() {
                 if (!this.validate()) {
-
+                    return false;
                 }
 
                 this.loading = true;
