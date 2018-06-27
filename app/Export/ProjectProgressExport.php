@@ -7,9 +7,6 @@ use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Style_NumberFormat;
 use PHPExcel_Worksheet;
-use function range;
-use function storage_path;
-use function uniqid;
 
 class ProjectProgressExport
 {
