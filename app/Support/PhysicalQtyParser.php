@@ -88,8 +88,11 @@ class PhysicalQtyParser
         $budget_resources = $this->resourcesMap->get($store_resource);
         $rollup_resource = $this->rollupResourcesMap->get($store_resource);
 
-        // Check if we have activity rollup
-        $rolledUpResource = BreakDownResourceShadow::where('resource_code', $budget_activity)->where('is_rollup', true)->where('show_in_cost', true)->first();
+        // Check if we have activity rollup, where activity_code = resource_code
+        $rolledUpResource = BreakDownResourceShadow::where('project_id', $this->batch->project_id)
+            ->where('code', $budget_activity)->where('resource_code', $budget_activity)
+            ->where('is_rollup', true)->where('show_in_cost', true)->first();
+
         if ($rolledUpResource) {
             $this->mapResource($rolledUpResource, $row);
 
@@ -119,6 +122,8 @@ class PhysicalQtyParser
                 return $query->whereIn('resource_id', $budget_resources);
             })->when($rollup_resource, function ($query) use ($rollup_resource) {
                 return $query->where('id', $rollup_resource);
+            })->when(!empty($row['9']), function($q) use ($row) {
+                return $q->where('cost_account', $row['9']);
             })->orderByRaw('coalesce(important, 0) DESC');
 
         $resource = $query->first();
