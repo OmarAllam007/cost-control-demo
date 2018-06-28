@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\ActualResources;
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\Export\ActivityLogExport;
 use App\WbsLevel;
+use Carbon\Carbon;
 
 class ActivityLogController extends Controller
 {
@@ -19,15 +22,19 @@ class ActivityLogController extends Controller
         $shadows = BreakDownResourceShadow::with('actual_resources')
             ->where('wbs_id', $wbs->id)
             ->where('code', $code)
+            ->where('show_in_cost', 1)
             ->get();
+
+        $breakdown_resources_ids = BreakdownResource::where('wbs_id', $wbs->id)->where('code', $code)->pluck('id');
 
         $activity_name = $shadows->first()->activity;
         $budget_cost = $shadows->sum('budget_cost');
         $actual_resources = $shadows->pluck('actual_resources')->flatten(1);
-        $first_upload = $actual_resources->min('created_at');
-        $last_upload = $actual_resources->max('created_at');
+        $first_upload = Carbon::parse(ActualResources::whereIn('breakdown_resource_id', $breakdown_resources_ids)->min('created_at'));
+        $last_upload = Carbon::parse(ActualResources::whereIn('breakdown_resource_id', $breakdown_resources_ids)->max('created_at'));
         $actual_cost = $actual_resources->sum('cost');
-        $variance = $budget_cost - $actual_cost;
+        $allowable_cost = $shadows->sum('allowable_cost');
+        $variance = $allowable_cost - $actual_cost;
 
         $progress = $shadows->avg('progress');
         if ($progress == 0) {
