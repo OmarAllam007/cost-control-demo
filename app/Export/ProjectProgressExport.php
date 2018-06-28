@@ -33,6 +33,7 @@ class ProjectProgressExport
 
         $activities = $this->project->shadows()->with('wbs')
             ->selectRaw('wbs_id, code, activity, avg(progress) as progress')
+            ->where('show_in_cost', 1)
             ->groupBy(['wbs_id', 'code', 'activity'])
             ->get();
 

@@ -3,13 +3,10 @@ namespace App\Jobs;
 
 use App\BreakDownResourceShadow;
 use App\Project;
-use function array_values;
-use function basename;
-use function compact;
-use function floatval;
 use PHPExcel_IOFactory;
 use PHPExcel_Worksheet_Row;
-use function storage_path;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 class UpdateProjectProgress extends Job
 {
@@ -25,6 +22,9 @@ class UpdateProjectProgress extends Job
     /** @var int */
     private $success;
 
+    /** @var Collection */
+    private $wbs_codes;
+
     /**
      * @param Project $project
      * @param string $file
@@ -34,7 +34,7 @@ class UpdateProjectProgress extends Job
         $this->project = $project;
         $this->file = $file;
         $this->failed = collect();
-        $this->success = 0;
+        $this->loadWbs();
     }
 
     /**
@@ -46,34 +46,42 @@ class UpdateProjectProgress extends Job
         $sheet = $excel->getSheet();
 
         $rows = $sheet->getRowIterator(2);
+        $records = collect();
         foreach ($rows as $row) {
             $data = $this->parseRow($row);
 
-            dd($row);
-            
-            // $resource = $this->project->shadows()->where('code', $data['A'])->where('resource_code', $data['B'])->first();
-            // if (!$resource) {
-            //     $data['D'] = 'Resource not found';
-            //     $this->failed->push($data);
-            //     continue;
-            // }
+            $wbs_code = strtolower($data['A']);
+            $code = $data['B'];
+            $progress = floatval($data['D']);
 
-            // $progress = floatval($data['C']);
-            // $status = 'In progress';
-            // if ($progress == 0) {
-            //     $status = 'Not Started';
-            // } elseif ($progress == 100) {
-            //     $status = 'Closed';
-            // }
+            $wbs_id = $this->wbs_codes->get($wbs_code);
+            if (!$wbs_id) {
+                $data['E'] = 'WBS not found';
+                $this->failed->push($data);
+                continue;
+            }
 
-            // $resource->update(compact('progress', 'status'));
+            $resources = BreakDownResourceShadow::where(compact('wbs_id', 'code'))->where('show_in_cost', 1)->get();
+            if (!$resources->count()) {
+                $data['E'] = 'Invalid activity code';
+                $this->failed->push($data);
+                continue;
+            }
+
+            $activity = new Fluent(compact('code', 'progress', 'resources'));
+            $records->put($code, $activity);
+           
             ++ $this->success;
         }
 
-        $result = ['success' => $this->success, 'failed' => ''];
+        
+
+        $result = compact('records');
         if ($this->failed->count()) {
             $result['failed'] = $this->createFailedExcel();
         }
+
+        \Cache::put("update_progress_{$this->project->id}", $result, 3600);
 
         return $result;
     }
@@ -105,7 +113,7 @@ class UpdateProjectProgress extends Job
         $count = 2;
 
         $sheet->fromArray([
-            "Activity Code", "Resource Code", "Progress", "Error"
+            "WBS Code", "Activity Code", "Activity", "Progress", "Error"
         ], null, "A1", true);
 
         foreach ($this->failed as $row) {
@@ -116,5 +124,13 @@ class UpdateProjectProgress extends Job
         $filename = storage_path('app/public/update_progress_failed_' . date('YmdHis') . '.xlsx');
         PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
         return '/storage/' . basename($filename);
+    }
+
+    private function loadWbs()
+    {
+        $this->wbs_codes = $this->project->wbs_levels()->select(['id', 'code'])->get()->map(function($level) {
+            $level->code = strtolower($level->code);
+            return $level;
+        })->pluck('id', 'code');
     }
 }

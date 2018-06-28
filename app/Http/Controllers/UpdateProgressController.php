@@ -68,13 +68,13 @@ class UpdateProgressController extends Controller
     function edit(Project $project)
     {
         $this->authorize('actual_resources', $project);
-        if (!\Session::has('update_progress_' . $project->id)) {
-            $this->flash('Please upload progress file');
-            redirect()->route('project.update-progress', $project);
+        if (!\Cache::has('update_progress_' . $project->id)) {
+            flash('Please upload progress file');
+            return redirect()->route('project.update-progress', $project);
         }
 
         $activityProgress = \Cache::get("update_progress_{$project->id}");
-        return view('project.modify-progress', compact($activityProgress));
+        return view('project.modify-progress', compact('activityProgress', 'project'));
     }
 
     /**
@@ -86,9 +86,9 @@ class UpdateProgressController extends Controller
     {
         $this->authorize('actual_resources', $project);
 
-        $this->validate($request, ['progress.*' => 'gt:0,lte:100']);
+        $this->validate($request, ['progress.*' => 'gt:0|lte:100']);
 
-        foreach ($request['progress'] as $id => $progress) {
+        foreach ($request->get('progress') as $id => $progress) {
             $status = 'In Progress';
             if ($progress == 100) {
                 $status = 'Closed';
@@ -96,5 +96,9 @@ class UpdateProgressController extends Controller
 
             $project->shadows()->where('id', $id)->update(['progress' => $progress, 'status' => $status]);
         }
+
+        \Cache::forget("update_progress_{$project->id}");
+        flash('Progress has been updated', 'success');
+        return redirect()->route('project.cost-control', $project);
     }
 }
