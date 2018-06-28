@@ -10,7 +10,7 @@ class ActualBatch extends Model
 {
     use HasChangeLog, RecordsUser;
 
-    protected $fillable = ['user_id', 'type', 'file', 'project_id', 'period_id'];
+    protected $fillable = ['user_id', 'type', 'file', 'project_id', 'period_id', 'description'];
 
     protected $appends = ['uploaded_by', 'uploaded_at', 'period_name'];
 
