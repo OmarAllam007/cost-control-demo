@@ -3,6 +3,7 @@
 namespace App\Behaviors;
 
 use App\ActualResources;
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\CostResource;
 use App\CostShadow;
@@ -704,6 +705,16 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
         }
 
         $period_id = $this->getCalculationPeriod()->id;
+        if ($this->is_rollup) {
+            $breakdown_resource_ids = BreakdownResource::where('project_id', $this->project_id)
+                ->where('rollup_resource_id', $this->breakdown_resource_id)->pluck('id');
+
+            $breakdown_resource_ids->prepend($this->breakdown_resource_id);
+
+            return $this->attributes['prev_cost'] = ActualResources::whereIn('breakdown_resource_id', $breakdown_resource_ids)
+                ->where('period_id', '<', $period_id)->sum('cost');
+        }
+
         if (!$this->ignore_cost) {
             if (isset($this->cost->prev_cost) && $this->cost->period_id == $period_id) {
                 return $this->cost->prev_cost;

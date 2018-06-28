@@ -48,22 +48,25 @@ class UpdateProjectProgress extends Job
         $rows = $sheet->getRowIterator(2);
         foreach ($rows as $row) {
             $data = $this->parseRow($row);
-            $resource = $this->project->shadows()->where('code', $data['A'])->where('resource_code', $data['B'])->first();
-            if (!$resource) {
-                $data['D'] = 'Resource not found';
-                $this->failed->push($data);
-                continue;
-            }
 
-            $progress = floatval($data['C']);
-            $status = 'In progress';
-            if ($progress == 0) {
-                $status = 'Not Started';
-            } elseif ($progress == 100) {
-                $status = 'Closed';
-            }
+            dd($row);
+            
+            // $resource = $this->project->shadows()->where('code', $data['A'])->where('resource_code', $data['B'])->first();
+            // if (!$resource) {
+            //     $data['D'] = 'Resource not found';
+            //     $this->failed->push($data);
+            //     continue;
+            // }
 
-            $resource->update(compact('progress', 'status'));
+            // $progress = floatval($data['C']);
+            // $status = 'In progress';
+            // if ($progress == 0) {
+            //     $status = 'Not Started';
+            // } elseif ($progress == 100) {
+            //     $status = 'Closed';
+            // }
+
+            // $resource->update(compact('progress', 'status'));
             ++ $this->success;
         }
 
