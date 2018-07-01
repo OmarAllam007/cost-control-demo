@@ -29,12 +29,12 @@ class ActivityLogController extends Controller
 
         $activity_name = $shadows->first()->activity;
         $budget_cost = $shadows->sum('budget_cost');
-        $actual_resources = $shadows->pluck('actual_resources')->flatten(1);
+//        $actual_resources = $shadows->pluck('actual_resources')->flatten(1);
         $first_upload = Carbon::parse(ActualResources::whereIn('breakdown_resource_id', $breakdown_resources_ids)->min('created_at'));
         $last_upload = Carbon::parse(ActualResources::whereIn('breakdown_resource_id', $breakdown_resources_ids)->max('created_at'));
-        $actual_cost = $actual_resources->sum('cost');
+        $actual_cost = $shadows->sum('to_date_cost');
         $allowable_cost = $shadows->sum('allowable_cost');
-        $variance = $allowable_cost - $actual_cost;
+        $variance = $shadows->sum('allowable_var');
 
         $progress = $shadows->avg('progress');
         if ($progress == 0) {
