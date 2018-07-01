@@ -115,7 +115,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         $this->qtySurveyMap = RevisionQtySurvey::where('project_id', $this->project->id)->pluck('id', 'qty_survey_id');
 
         \DB::table('revision_breakdown_resources')->where('revision_id', $this->revision->id)->delete();
-        BreakdownResource::whereRaw('breakdown_id in (select id from breakdowns where project_id = ?)', [$this->project->id])->chunk(950, function (Collection $resources) {
+        BreakdownResource::whereRaw('breakdown_id in (select id from breakdowns where project_id = ?)', [$this->project->id])->budgetOnly()->chunk(950, function (Collection $resources) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
             $newResources = $resources->map(function (BreakdownResource $r) use ($now) {
                 $attributes = $r->getAttributes();
