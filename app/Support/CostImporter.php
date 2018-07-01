@@ -427,9 +427,14 @@ class CostImporter
 
     protected function cache()
     {
-        $this->preProcess();
+//        $this->preProcess();
 
         $key = 'batch_' . $this->batch->id;
+        $this->rows = $this->rows->map(function($row, $hash) {
+            $row['hash'] = $hash;
+            return $row;
+        });
+
         \Cache::put($key, ['batch' => $this->batch, 'rows' => $this->rows, 'actual_resources' => $this->actual_resources], 1440);
     }
 
@@ -458,6 +463,7 @@ class CostImporter
                             } else {
                                 $first[5] = 0;
                             }
+                            $first[8] = $entries->pluck(8)->implode(', ');
 
                             $newRows->put($first['hash'], $first);
                         }
