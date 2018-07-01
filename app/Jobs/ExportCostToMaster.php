@@ -256,7 +256,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     'period_id' => $this->period->id,
                     'breakdown_resource_id' => $resource->breakdown_resource_id,
                     'resource_id' => $resource->resource_id,
-                    'resource_type_id' => $resource->resource->resource_type_id,
+                    'resource_type_id' => $resource->resource->resource_type_id ?? $resource->resource_type_id,
                     'to_date_qty' => $to_date_qty,
                     'to_date_unit_price' => $to_date_unit_price,
                     'allowable_qty' => $allowable_qty,

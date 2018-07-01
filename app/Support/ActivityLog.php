@@ -103,7 +103,7 @@ class ActivityLog
             ->where('code', $this->code)->get()->map(function ($resource) {
                 $budget_resources = BreakDownResourceShadow::where('rollup_resource_id', $resource->id)->get();
 
-                $store_resources = StoreResource::where('budget_code', $resource->code)
+                $store_resources = StoreResource::where('project_id', $resource->project_id)->where('budget_code', $resource->code)
                     ->when(!$resource->isActivityRollup(), function ($q) use ($budget_resources, $resource) {
                         $resource_ids = $budget_resources->pluck('resource_id');
                         return $q->where(function ($q) use ($resource_ids, $resource) {
