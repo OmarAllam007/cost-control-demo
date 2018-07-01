@@ -77,7 +77,7 @@
                     <div class="col-sm-4">
                         <dl>
                             <dt>Variance</dt>
-                            <dd>{{number_format($variance, 2)}}</dd>
+                            <dd class="{{$variance < 0? 'text-danger' : 'text-success'}}">{{number_format($variance, 2)}}</dd>
                         </dl>
                     </div>
                 </div>

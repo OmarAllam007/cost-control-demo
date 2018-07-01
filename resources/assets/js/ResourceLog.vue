@@ -32,16 +32,16 @@
 
                 <tbody>
                 <tr>
-                    <td class="text-center" v-text="first.unit_price|number_format"></td>
-                    <td class="text-center" v-text="budget_unit|number_format"></td>
-                    <td class="text-center" v-text="budget_cost|number_format"></td>
-                    <td class="text-center" v-text="first.measure_unit"></td>
+                    <td class="text-center" v-text="resource.unit_price|number_format"></td>
+                    <td class="text-center" v-text="resource.budget_qty|number_format"></td>
+                    <td class="text-center" v-text="resource.budget_cost|number_format"></td>
+                    <td class="text-center" v-text="resource.measure_unit"></td>
 
-                    <td class="text-center" v-text="actual_unit_price|number_format"></td>
-                    <td class="text-center" v-text="actual_qty|number_format"></td>
-                    <td class="text-center" v-text="actual_cost|number_format"></td>
-                    <td class="text-center" :class="qty_var < 0? 'text-danger' : 'text-success'" v-text="qty_var|number_format"></td>
-                    <td class="text-center" :class="cost_var < 0? 'text-danger' : 'text-success'" v-text="cost_var|number_format"></td>
+                    <td class="text-center" v-text="resource.actual_unit_price|number_format"></td>
+                    <td class="text-center" v-text="resource.actual_qty|number_format"></td>
+                    <td class="text-center" v-text="resource.actual_cost|number_format"></td>
+                    <td class="text-center" :class="resource.qty_var < 0? 'text-danger' : 'text-success'" v-text="resource.qty_var|number_format"></td>
+                    <td class="text-center" :class="cost_var < 0? 'text-danger' : 'text-success'" v-text="resource.cost_var|number_format"></td>
                 </tr>
                 </tbody>
             </table>

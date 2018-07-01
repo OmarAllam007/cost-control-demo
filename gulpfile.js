@@ -8,10 +8,10 @@ elixir(function (mix) {
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.webpack('cost-info-charts.js');
     // mix.webpack('rollup/cost-account.js', 'public/js/rollup/cost-account.js');
-    mix.webpack('rollup/semi-activity.js', 'public/js/rollup/semi-activity.js');
+    // mix.webpack('rollup/semi-activity.js', 'public/js/rollup/semi-activity.js');
     // mix.webpack('rollup/semi-cost-account.js', 'public/js/rollup/semi-cost-account.js');
     //
-    // mix.webpack('ActivityLog.js', 'public/js/activity-log.js');
+    mix.webpack('ActivityLog.js', 'public/js/activity-log.js');
     // mix.scripts([
     //     'breakdown/load-templates.js',
     //     'breakdown/load-resources.js',
