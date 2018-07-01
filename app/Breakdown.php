@@ -22,6 +22,8 @@ class Breakdown extends Model
 
     protected $cached_qty_survey;
 
+    protected $cached_boq;
+
     function resources()
     {
         return $this->hasMany(BreakdownResource::class, 'breakdown_id');
@@ -97,10 +99,10 @@ class Breakdown extends Model
     function getBoqAttribute()
     {
         if (!$this->cached_boq) {
-            $this->cached_boq = Boq::where('cost_account', $this->cost_account)->where('wbs_level_id', $this->wbs_level_id)->first();
+            $this->cached_boq = Boq::where('cost_account', $this->cost_account)->where('wbs_id', $this->wbs_level_id)->first();
             if (!$this->cached_boq) {
                 $parents = $this->wbs_level->getParentIds();
-                $this->cached_boq = Survey::where('cost_account', $this->cost_account)->whereIn('wbs_level_id', $parents)->first();
+                $this->cached_boq = Boq::where('cost_account', $this->cost_account)->whereIn('wbs_id', $parents)->first();
             }
         }
 
