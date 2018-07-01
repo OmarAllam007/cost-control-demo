@@ -117,7 +117,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
 
         \DB::table('revision_breakdown_resources')->where('revision_id', $this->revision->id)->delete();
         $columns = \Schema::getColumnListing('revision_breakdown_resources');
-        BreakdownResource::whereRaw('breakdown_id in (select id from breakdowns where project_id = ?)', [$this->project->id])->budgetOnly()->chunk(950, function (Collection $resources, $columns) {
+        BreakdownResource::whereRaw('breakdown_id in (select id from breakdowns where project_id = ?)', [$this->project->id])->budgetOnly()->chunk(950, function (Collection $resources) use ($columns) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
             $newResources = $resources->map(function (BreakdownResource $r) use ($now, $columns) {
                 $attributes = $r->getAttributes();
@@ -144,7 +144,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         $this->breakdownResourceMap = RevisionBreakdownResource::whereRaw('breakdown_id in (select id from revision_breakdowns where project_id = ?)', [$this->project->id])->pluck('id', 'breakdown_resource_id');
         \DB::table('revision_breakdown_resource_shadows')->where('revision_id', $this->revision->id)->delete();
         $columns = \Schema::getColumnListing('revision_breakdown_resource_shadows');
-        BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->chunk(950, function (Collection $collection, $columns) {
+        BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->chunk(950, function (Collection $collection) use ($columns) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
             $new = $collection->map(function (BreakDownResourceShadow $r) use ($now, $columns) {
                 $attributes = $r->getAttributes();
