@@ -14,6 +14,7 @@ use App\Revision\RevisionProductivity;
 use App\Revision\RevisionQtySurvey;
 use App\Revision\RevisionResource;
 use App\User;
+use function array_only;
 use Carbon\Carbon;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\SerializesModels;
@@ -115,9 +116,10 @@ class CreateRevisionForProject extends Job implements ShouldQueue
         $this->qtySurveyMap = RevisionQtySurvey::where('project_id', $this->project->id)->pluck('id', 'qty_survey_id');
 
         \DB::table('revision_breakdown_resources')->where('revision_id', $this->revision->id)->delete();
-        BreakdownResource::whereRaw('breakdown_id in (select id from breakdowns where project_id = ?)', [$this->project->id])->budgetOnly()->chunk(950, function (Collection $resources) {
+        $columns = \Schema::getColumnListing('revision_breakdown_resources');
+        BreakdownResource::whereRaw('breakdown_id in (select id from breakdowns where project_id = ?)', [$this->project->id])->budgetOnly()->chunk(950, function (Collection $resources, $columns) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
-            $newResources = $resources->map(function (BreakdownResource $r) use ($now) {
+            $newResources = $resources->map(function (BreakdownResource $r) use ($now, $columns) {
                 $attributes = $r->getAttributes();
                 $attributes['revision_id'] = $this->revision->id;
                 $attributes['breakdown_resource_id'] = $attributes['id'];
@@ -127,7 +129,8 @@ class CreateRevisionForProject extends Job implements ShouldQueue
                 $attributes['created_by'] = $attributes['updated_by'] = $this->user->id;
                 $attributes['created_at'] = $attributes['updated_at'] = $now;
                 unset($attributes['id']);
-                return $attributes;
+
+                return array_only($attributes, $columns);
             });
 
             \DB::transaction(function () use ($newResources) {
@@ -140,9 +143,10 @@ class CreateRevisionForProject extends Job implements ShouldQueue
     {
         $this->breakdownResourceMap = RevisionBreakdownResource::whereRaw('breakdown_id in (select id from revision_breakdowns where project_id = ?)', [$this->project->id])->pluck('id', 'breakdown_resource_id');
         \DB::table('revision_breakdown_resource_shadows')->where('revision_id', $this->revision->id)->delete();
-        BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->chunk(950, function (Collection $collection) {
+        $columns = \Schema::getColumnListing('revision_breakdown_resource_shadows');
+        BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->chunk(950, function (Collection $collection, $columns) {
             $now = Carbon::now()->format('Y-m-d H:i:s');
-            $new = $collection->map(function (BreakDownResourceShadow $r) use ($now) {
+            $new = $collection->map(function (BreakDownResourceShadow $r) use ($now, $columns) {
                 $attributes = $r->getAttributes();
                 $attributes['revision_id'] = $this->revision->id;
                 $attributes['breakdown_id'] = $this->breakdownMap->get($attributes['breakdown_id']);
@@ -155,7 +159,7 @@ class CreateRevisionForProject extends Job implements ShouldQueue
                 $attributes['created_by'] = $attributes['updated_by'] = $this->user->id;
                 $attributes['created_at'] = $attributes['updated_at'] = $now;
                 unset($attributes['id']);
-                return $attributes;
+                return array_only($attributes, $columns);
             });
 
             \DB::transaction(function () use ($new) {
