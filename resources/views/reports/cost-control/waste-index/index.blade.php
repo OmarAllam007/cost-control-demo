@@ -4,7 +4,7 @@
 
 @section('header')
     <div class="display-flex">
-        <h2 class="flex">{{$project->name}} &mdash; Waste Index</h2>
+        <h2 class="flex">{{$project->name}} &mdash; Material Waste Index</h2>
 
         <div class="text-right">
 
