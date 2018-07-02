@@ -94,7 +94,7 @@
 
             <div class="form-group">
                 <a href="{{route('project.waste-index-report', $project)}}"
-                   class="hvr-float-shadow btn btn-block btn-primary btn-block" target="_blank">Waste Index</a>
+                   class="hvr-float-shadow btn btn-block btn-primary btn-block" target="_blank">Material Waste Index</a>
             </div>
 
             <div class="form-group">
