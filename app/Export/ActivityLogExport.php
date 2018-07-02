@@ -48,12 +48,15 @@ class ActivityLogExport
         $this->status = $this->getStatus();
         $activityLog = new ActivityLog($this->wbs, $this->code);
         $this->resource_logs = $activityLog->handle();
+        $costResources = BreakDownResourceShadow::with('actual_resources')
+            ->where('wbs_id', $this->wbs->id)->where('code', $this->code)
+            ->where('show_in_cost', 1)->get();
         $this->store_resources = $this->resource_logs->pluck('store_resources')->flatten();
         $this->budget_resources = $this->resource_logs->pluck('budget_resources')->flatten();
-        $this->budget_cost = $this->budget_resources->sum('budget_cost');
-        $this->actual_cost = $this->budget_resources->sum('to_date_cost');
-        $this->allowable_cost = $this->budget_resources->sum('allowable_ev_cost');
-        $this->variance = $this->allowable_cost - $this->actual_cost;
+        $this->budget_cost = $costResources->sum('budget_cost');
+        $this->actual_cost = $costResources->sum('to_date_cost');
+        $this->allowable_cost = $costResources->sum('allowable_ev_cost');
+        $this->variance = $costResources->sum('allowable_var');
         $this->first_upload_date = $this->store_resources->min('created_at')->format('d M Y H:i');
         $this->last_upload_date = $this->store_resources->max('created_at')->format('d M Y H:i');
 
