@@ -97,13 +97,16 @@ class CostImportFixer
             $rows = $errors[$key]['rows'];
             $newResource = $rows->first();
 
+            $resource = $errors[$key]['resource'];
+
             $newResource[4] = $qty;
             $newResource[6] = $rows->sum(6);
             $newResource[5] = $newResource[6] / $qty;
             $newResource[8] = $rows->pluck(8)->unique()->implode(', ');
+            $newResource[2] = $resource->resource_name;
+            $newResource[7] = $resource->resource_code;
 
 
-            $resource = $errors[$key]['resource'];
             if ($resource->is_rollup || ($resource->rollup_resource_id && $resource->important)) {
                 $newResource['resource'] = $resource;
             }
