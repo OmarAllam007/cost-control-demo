@@ -5,7 +5,7 @@
                 <table class="table table-striped table-hover table-condensed" v-if="batches.length">
                     <thead>
                     <tr>
-                        <th>Description</th>
+                        <th class="col-sm-4">Description</th>
                         <th>Uploaded By</th>
                         <th>Uploaded At</th>
                         <th>Period</th>
