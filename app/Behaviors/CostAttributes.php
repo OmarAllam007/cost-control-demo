@@ -222,7 +222,7 @@ trait CostAttributes
 
         $conditions = ['project_id' => $this->project_id];
 
-        $resource = Resources::find($this->resource_id);
+//        $resource = Resources::find($this->resource_id);
 
         if (!$this->unit_price) {
             return $this->calculated['remaining_unit_price'] = 0;

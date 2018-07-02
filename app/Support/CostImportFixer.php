@@ -8,7 +8,10 @@ use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
 use App\StoreResource;
+use function collect;
+use Illuminate\Session\Store;
 use Illuminate\Support\Collection;
+use function json_decode;
 
 class CostImportFixer
 {
@@ -105,11 +108,18 @@ class CostImportFixer
                 $newResource['resource'] = $resource;
             }
 
+            $row_ids = $rows->pluck('hash');
+            foreach($rows as $row){
+                if (!empty($row['row_ids'])) {
+                    $row_ids = $row_ids->merge(collect(json_decode($row['row_ids'])));
+                }
+            }
+
             $row_id = StoreResource::create([
                 'project_id' => $this->batch->project->id, 'period_id' => $this->batch->period->id, 'batch_id' => $this->batch->id,
                 'activity_code' => $newResource[0], 'store_date' => $newResource[1], 'item_desc' => $newResource[2],
                 'measure_unit' => $newResource[3], 'qty' => $newResource[4], 'unit_price' => $newResource[5], 'cost' => $newResource[6],
-                'item_code' => $newResource[7], 'doc_no' => $newResource[8], 'row_ids' => $rows->pluck('hash')
+                'item_code' => $newResource[7], 'doc_no' => $newResource[8], 'row_ids' => $row_ids
             ])->id;
 
             $newResource['hash'] = $row_id;
