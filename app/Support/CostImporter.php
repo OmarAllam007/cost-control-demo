@@ -16,8 +16,10 @@ use App\UnitAlias;
 use function collect;
 use function explode;
 use function GuzzleHttp\Psr7\str;
+use Illuminate\Session\Store;
 use Illuminate\Support\Collection;
 use function json_decode;
+use function json_encode;
 use function mb_substr;
 use function preg_split;
 
@@ -427,13 +429,13 @@ class CostImporter
 
     protected function cache()
     {
-//        $this->preProcess();
+        $this->preProcess();
 
         $key = 'batch_' . $this->batch->id;
-        $this->rows = $this->rows->map(function($row, $hash) {
-            $row['hash'] = $hash;
-            return $row;
-        });
+//        $this->rows = $this->rows->map(function($row, $hash) {
+//            $row['hash'] = $hash;
+//            return $row;
+//        });
 
         \Cache::put($key, ['batch' => $this->batch, 'rows' => $this->rows, 'actual_resources' => $this->actual_resources], 1440);
     }
@@ -441,6 +443,7 @@ class CostImporter
     protected function preProcess()
     {
         $newRows = collect();
+
         $this->rows->map(function ($data, $hash) {
             $data['hash'] = $hash;
             return $data;
@@ -465,9 +468,19 @@ class CostImporter
                             }
                             $first[8] = $entries->pluck(8)->implode(', ');
 
+                            if ($entries->count() > 1) {
+                                $first['row_ids'] = json_encode($entries->pluck('hash'));
+                                $hash = StoreResource::forceCreate($attrs = [
+                                    'project_id' => $this->batch->project_id, 'period_id' => $this->batch->period_id, 'batch_id' => $this->batch->id,
+                                    'activity_code' => $first[0], 'store_date' => $first[1], 'item_code' => $first[7],
+                                    'item_desc' => $first[2], 'measure_unit' => $first[3], 'unit_price' => $first[5], 'qty' => $first[4], 'cost' => $first[6],
+                                    'doc_no' => $first[8], 'row_ids' => json_encode($entries->pluck('hash'))
+                                ])->id;
+                                $first['hash'] = $hash;
+                            }
+
                             $newRows->put($first['hash'], $first);
                         }
-
                     });
                 });
             });
