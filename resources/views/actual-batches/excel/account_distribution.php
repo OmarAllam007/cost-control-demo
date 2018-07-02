@@ -65,11 +65,11 @@ foreach ($activities as $name => $data) {
         foreach ($newRows as $row) {
 
             $sheet->fromArray([
-                $firstRow['resource']['cost_account'],
-                $firstRow['resource']['budget_unit'],
-                $firstRow[4],
-                $firstRow[5],
-                $firstRow[6],
+                $row['resource']['cost_account'],
+                $row['resource']['budget_unit'],
+                $row[4],
+                $row[5],
+                $row[6],
             ], '', "F$counter");
 
             ++$counter;
@@ -80,7 +80,7 @@ foreach ($activities as $name => $data) {
             ->getBorders()->getBottom()->setBorderStyle('thin');
     }
 
-    $counter += 2;
+    $counter += 4;
 }
 
 foreach (range('A', 'I') as $column) {
