@@ -25,6 +25,11 @@ class BreakdownResource extends Model
 
 //    public $original_resource = 0;
 
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     function breakdown()
     {
         return $this->belongsTo(Breakdown::class);

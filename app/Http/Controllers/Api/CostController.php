@@ -137,12 +137,12 @@ class CostController extends Controller
 
     function deleteResource(BreakdownResource $breakdown_resource)
     {
-        if (cannot('actual_resources', $breakdown_resource->breakdown->project)) {
+        if (cannot('actual_resources', $breakdown_resource->project)) {
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
 
         $counter = ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
-            ->where('period_id', $breakdown_resource->breakdown->project->open_period()->id)
+            ->where('period_id', $breakdown_resource->project->open_period()->id)
             ->get()->map(function (ActualResources $resource) {
                 return $resource->forceDelete();
             })->filter()->count();
