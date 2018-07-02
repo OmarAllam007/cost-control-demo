@@ -76,9 +76,9 @@ class Breakdown extends Model
 
     function getQtySurveyAttribute()
     {
-        if ($this->qs) {
-            return $this->qs;
-        }
+//        if ($this->qs) {
+//            return $this->qs;
+//        }
 
         if ($this->cached_qty_survey) {
             return $this->cached_qty_survey;
