@@ -1,7 +1,8 @@
 <breakdown-resource inline-template v-for="resource in activity.resources"
                     :activity="activity" :resource="resource"
                     :class="resource.is_rollup? 'highlight' : '' "
-                    @show_delete_resource="deleteResource(resource)">
+                    @show_delete_resource="deleteResource(resource)"
+                    @show_delete_activity="deleteActivity(resource)">
 
     <article class="card breakdown-resource">
         <div class="card-body display-flex">

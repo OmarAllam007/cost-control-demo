@@ -51,7 +51,7 @@ export default {
         },
 
         deleteActivity(resource) {
-            this.$broadcast('show_delete_activity', resource);
+            this.$emit('delete_activity', resource);
         },
 
         deleteWbsCurrent() {

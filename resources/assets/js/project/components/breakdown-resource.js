@@ -8,6 +8,10 @@ export default {
     methods: {
         deleteResource() {
             this.$emit('show_delete_resource', this.resource);
+        },
+
+        deleteActivity() {
+            this.$emit('show_delete_activity', this.resource);
         }
     },
 

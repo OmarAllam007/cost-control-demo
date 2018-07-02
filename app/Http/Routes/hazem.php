@@ -29,7 +29,7 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('batches/{project}', 'Api\CostController@batches');
 
         Route::delete('/delete-resource/{breakdown_resource}', 'Api\CostController@deleteResource');
-        Route::delete('/delete-activity/{breakdown}', 'Api\CostController@deleteActivity');
+        Route::delete('/delete-activity/{wbs}', 'Api\CostController@deleteActivity');
         Route::delete('/delete-wbs/{wbs_level}', 'Api\CostController@deleteWbs');
         Route::delete('/delete-current/{project}', 'Api\CostController@deleteProject');
         Route::delete('/delete-batch/{actual_batch}', 'Api\CostController@deleteBatch');
