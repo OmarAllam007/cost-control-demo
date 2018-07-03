@@ -200,7 +200,7 @@ Route::get('/summary', function() {
 Route::get('project/{project}/dashboard', 'CostReportsController@dashboard');
 Route::post('project/{project}/charts', 'CostReportsController@chart');
 
-Route::post('/concern/{project}','CostConcernsController@addConcernReport')->name('concerns.store');
+Route::post('/concern/{project}','CostConcernsController@store')->name('concerns.store');
 
 Route::get('/project/{project}/issue-files', 'CostIssueFilesController@index');
 Route::get('/project/{project}/issue-files/create', 'CostIssueFilesController@create');

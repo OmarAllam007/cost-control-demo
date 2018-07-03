@@ -57,7 +57,7 @@
                         <span class="flex">{{$typeToDateData->type}}</span>
 
                         <a  href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
-                            data-data="{{ json_encode(['Type' => $typeToDateData->type, 'Base Line' => $typeToDateData['budget_cost'], 'Previous Cost' => $typeToDateData['previous_cost'], 'To Date Cost' => $typeToDateData['to_date_cost'], 'Allowable (EV) Cost' => $typeToDateData['ev'], 'To Date Cost Variance' => $typeToDateData['to_date_var'], 'Remaining Cost' => $typeToDateData['remaining_cost'], 'At Completion Cost' => $typeToDateData['completion_cost'], 'At Completion Cost Variance' => $typeToDateData['completion_cost_var']]) }}">
+                            data-data="{{ json_encode(['Resource Type' => $typeToDateData->type, 'Base Line' => number_format($typeToDateData['budget_cost'], 2), 'Previous Cost' => number_format($typeToDateData['previous_cost'], 2), 'To Date Cost' => number_format($typeToDateData['to_date_cost'], 2), 'Allowable (EV) Cost' => number_format($typeToDateData['ev'], 2), 'To Date Cost Variance' => number_format($typeToDateData['to_date_var'], 2), 'Remaining Cost' => number_format($typeToDateData['remaining_cost'], 2), 'At Completion Cost' => number_format($typeToDateData['completion_cost'], 2), 'At Completion Cost Variance' => number_format($typeToDateData['completion_cost_var'], 2)]) }}">
                             <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -80,9 +80,9 @@
                     <span class="flex">Total</span>
                     <a  href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
                         data-data="{{ json_encode([
-                            'Type' => 'Total', 'Base Line' => $toDateData->sum('budget_cost'), 'Previous Cost' => $toDateData->sum('previous_cost'),
-                            'To Date Cost' => $toDateData->sum('to_date_cost'), 'Allowable (EV) Cost' => $toDateData->sum('ev'), 'To Date Cost Variance' => $toDateData->sum('to_date_var'),
-                            'Remaining Cost' => $toDateData->sum('remaining_cost'), 'At Completion Cost' => $toDateData->sum('completion_cost'), 'At Completion Cost Variance' => $toDateData->sum('completion_cost_var')]) }}">
+                            'Type' => 'Total', 'Base Line' => number_format($toDateData->sum('budget_cost'), 2), 'Previous Cost' => number_format($toDateData->sum('previous_cost'), 2),
+                            'To Date Cost' => number_format($toDateData->sum('to_date_cost'), 2), 'Allowable (EV) Cost' => number_format($toDateData->sum('ev'), 2), 'To Date Cost Variance' => number_format($toDateData->sum('to_date_var'), 2),
+                            'Remaining Cost' => number_format($toDateData->sum('remaining_cost'), 2), 'At Completion Cost' => number_format($toDateData->sum('completion_cost'), 2), 'At Completion Cost Variance' => number_format($toDateData->sum('completion_cost_var'), 2)]) }}">
                         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -140,15 +140,21 @@
        $(function() {
            const concernsModal = $('#concerns-modal').on('bs.modal-shown', function() {
                $(this).find('textarea').focus();
-           }).on('.send-concern', function() {
+           }).on('click', '.send-concern', function(e) {
+               e.preventDefault();
+               $(this).find('i').removeClass('fa-check').addClass('fa-spinner fa-spin').end().prop('disabled', true);
                $.ajax({
-                   url: concernsForm.action,
+                   url: concernsForm.attr('action'),
                    data: concernsForm.serialize(),
+                   dataType: 'json',
                    method: 'post'
-               }).then(function() {
+               }).then(() => {
                    concernsModal.modal('hide');
-               }, function() {
-                    concernsModal.modal('hide');
+                   concernsForm.find('textarea').val('');
+                   $(this).find('i').addClass('fa-check').removeClass('fa-spinner fa-spin').end().prop('disabled', false);
+               }, () => {
+                   $(this).find('i').addClass('fa-check').removeClass('fa-spinner fa-spin').end().prop('disabled', false);
+                    // concernsModal.modal('hide');
                });
            });
 
@@ -159,6 +165,19 @@
            $('.concern-btn').on('click', function(e) {
                e.preventDefault();
                dataField.val(e.currentTarget.dataset.data);
+               const data = JSON.parse(e.currentTarget.dataset.data);
+               const header = concernsModal.find('thead tr');
+               const body = concernsModal.find('tbody tr');
+
+               header.find('th').remove();
+               body.find('td').remove();
+
+               for (const key in data) {
+                   const value = data[key];
+                   header.append($('<th>').text(key));
+                   body.append($('<td>').text(value));
+               }
+
                concernsModal.modal();
            });
 

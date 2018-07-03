@@ -9,7 +9,7 @@
 
             <div class="modal-body">
                 <input type="hidden" name="period_id" value="" id="concern-period">
-                <input type="hidden" name="report" value="{{$report_name}}">
+                <input type="hidden" name="report_name" value="{{$report_name}}">
 
                 <h4>
                     {{$project->name}} &mdash; {{$period->name}}
@@ -17,6 +17,17 @@
                         / {{$report_name}}
                     @endif
                 </h4>
+
+                <section class="scrollpane">
+                    <table class="table table-bordered table-striped" style="width: auto;">
+                        <thead>
+                        <tr></tr>
+                        </thead>
+                        <tbody>
+                        <tr></tr>
+                        </tbody>
+                    </table>
+                </section>
 
                 <div class="form-group">
                     <label for="comment" class="control-label">Comment</label>
@@ -27,7 +38,7 @@
 
             <div class="modal-footer clearfix">
                 <div class="pull-right">
-                    <button class="btn btn-primary send-concern" data-dismiss="modal">
+                    <button class="btn btn-primary send-concern">
                         <i class="fa fa-check"></i> Add Concern
                     </button>
                     <button class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
