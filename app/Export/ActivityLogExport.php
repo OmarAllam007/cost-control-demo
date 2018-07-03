@@ -51,7 +51,7 @@ class ActivityLogExport
         $costResources = BreakDownResourceShadow::with('actual_resources')
             ->where('wbs_id', $this->wbs->id)->where('code', $this->code)
             ->where('show_in_cost', 1)->get();
-        $this->store_resources = $this->resource_logs->pluck('store_resources')->flatten();
+        $this->store_resources = $this->resource_logs->pluck('store_resources')->flatten()->unique();
         $this->budget_resources = $this->resource_logs->pluck('budget_resources')->flatten();
         $this->budget_cost = $costResources->sum('budget_cost');
         $this->actual_cost = $costResources->sum('to_date_cost');
