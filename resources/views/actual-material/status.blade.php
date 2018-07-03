@@ -14,6 +14,8 @@
         <article class="panel panel-default activity-panel">
             <div class="panel-heading">
                 <h4 class="panel-title ">{{$activity}}</h4>
+
+                <input type="text" class="form-control input-sm mr-10 activity-progress" placeholder="Progress">
                 {{Form::select('', config('app.cost_status')->prepend('Select Status', ''), null, ['class' => 'form-control input-sm select-all'])}}
             </div>
 
@@ -50,7 +52,7 @@
                             <div class="input-group">
                                 {{
                                     Form::text("progress[{$resource->breakdown_resource_id}]", $resource->progress,
-                                        ['class' => 'form-control input-sm progress-val', 'data-init' => $resource->progress])
+                                        ['class' => 'form-control input-sm progress-val', 'data-init' => $resource->calculateProgress()])
                                 }}
                                 <span class="input-group-addon">%</span>
                             </div>
@@ -92,8 +94,12 @@
                 if ($(this).val().toLowerCase() === 'closed') {
                     progressField.val(100);
                 } else {
-                    progressField.val(progressField.data('init'));
+                    progressField.val(parseFloat(progressField.data('init')).toFixed(2));
                 }
+            });
+
+            $('.activity-progress').on('change', function() {
+                $(this).closest('.panel').find('.progress-val').val(this.value).change();
             });
 
             $('.progress-val').on('change', function() {

@@ -113,6 +113,7 @@
             $('.include').change(function () {
                 var table = $(this).closest('table');
                 recalculateQty(table);
+                updateTotals(table);
             });
 
             $('.qty').change(function () {
@@ -172,14 +173,14 @@
                 var totalQty = 0, totalAmount = 0;
                 table.find('tbody tr').each(function () {
                     var _this = $(this);
-                    if (_this.find('.include').prop('checked')) {
+
                         var qty = parseFloat(_this.find('.qty').val()) || 0;
                         var unit_price = parseFloat(_this.find('.unit-price-cell').data('value'));
                         var total = qty * unit_price;
-                        _this.find('.total-cell').data('value', total).text(parseFloat(total.toFixed(4)).toLocaleString(formatOptions));
+                        _this.find('.total-cell').data('value', parseFloat(total.toFixed(4))).text(parseFloat(total.toFixed(4)).toLocaleString(formatOptions));
                         totalQty += qty;
                         totalAmount += total;
-                    }
+
                 });
 
                 table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount).toLocaleString(formatOptions));
