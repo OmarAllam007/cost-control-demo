@@ -163,8 +163,12 @@ class ActivityLogExport
         $this->start = 8;
         $this->row = 8;
         foreach ($driving_resources as $resource_log) {
+            if($resource_log['rollup'] && $resource_log['rollup_resource']->isActivityRollup()) {
+                continue;
+            }
             $this->buildResource($sheet, $resource_log);
         }
+
 
         $sheet->setSelectedCell("B{$this->start}");
         $sheet->setShowSummaryBelow(false);
