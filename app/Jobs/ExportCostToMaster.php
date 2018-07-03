@@ -227,6 +227,10 @@ class ExportCostToMaster extends Job implements ShouldQueue
             ->when($this->project->is_activity_rollup, function ($q) {
                 return $q->where('important', true);
             })->each(function (BreakDownResourceShadow $resource) {
+                if ($resource->is_rollup) {
+                    return true;
+                }
+
                 $resource->setCalculationPeriod($this->period);
 
                 $to_date_qty = $resource->actual_resources()->withTrashed()->sum('qty') + $resource->important_actual_resources->sum('qty');
@@ -234,7 +238,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     return true;
                 }
 
-                $to_date_cost = $resource->actual_resources->sum('cost') + $resource->important_actual_resources->sum('cost');
+                $to_date_cost = $resource->actual_resources()->withTrashed()->sum('cost') + $resource->important_actual_resources->sum('cost');
                 $to_date_unit_price = 0;
                 $to_date_unit_price = $to_date_cost / $to_date_qty;
 
