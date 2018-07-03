@@ -11,6 +11,7 @@ use App\Jobs\Modify\ModifyPublicStdActivitiesJob;
 use App\Project;
 use App\StdActivity;
 use Illuminate\Http\Request;
+use function response;
 
 class StdActivityController extends Controller
 {
@@ -176,7 +177,8 @@ class StdActivityController extends Controller
             return \Redirect::to('/');
         }
 
-        $this->dispatch(new ExportStdActivitiesJob());
+        $file = $this->dispatch(new ExportStdActivitiesJob());
+        return response()->download($file, 'std_activities.xlsx')->deleteFileAfterSend(true);
     }
 
     function modifyAllActivities()

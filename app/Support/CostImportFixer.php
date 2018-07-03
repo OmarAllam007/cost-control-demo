@@ -8,7 +8,10 @@ use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\ResourceCode;
 use App\StoreResource;
+use function collect;
+use Illuminate\Session\Store;
 use Illuminate\Support\Collection;
+use function json_decode;
 
 class CostImportFixer
 {
@@ -94,22 +97,32 @@ class CostImportFixer
             $rows = $errors[$key]['rows'];
             $newResource = $rows->first();
 
+            $resource = $errors[$key]['resource'];
+
             $newResource[4] = $qty;
             $newResource[6] = $rows->sum(6);
             $newResource[5] = $newResource[6] / $qty;
             $newResource[8] = $rows->pluck(8)->unique()->implode(', ');
+            $newResource[2] = $resource->resource_name;
+            $newResource[7] = $resource->resource_code;
 
 
-            $resource = $errors[$key]['resource'];
             if ($resource->is_rollup || ($resource->rollup_resource_id && $resource->important)) {
                 $newResource['resource'] = $resource;
+            }
+
+            $row_ids = $rows->pluck('hash');
+            foreach($rows as $row){
+                if (!empty($row['row_ids'])) {
+                    $row_ids = $row_ids->merge(collect(json_decode($row['row_ids'])));
+                }
             }
 
             $row_id = StoreResource::create([
                 'project_id' => $this->batch->project->id, 'period_id' => $this->batch->period->id, 'batch_id' => $this->batch->id,
                 'activity_code' => $newResource[0], 'store_date' => $newResource[1], 'item_desc' => $newResource[2],
                 'measure_unit' => $newResource[3], 'qty' => $newResource[4], 'unit_price' => $newResource[5], 'cost' => $newResource[6],
-                'item_code' => $newResource[7], 'doc_no' => $newResource[8], 'row_ids' => $rows->pluck('hash')
+                'item_code' => $newResource[7], 'doc_no' => $newResource[8], 'row_ids' => $row_ids
             ])->id;
 
             $newResource['hash'] = $row_id;
@@ -154,7 +167,7 @@ class CostImportFixer
         $distributionLog = collect();
 
         foreach ($errors as $error) {
-            $date =$error[1];
+            $date = $error[1];
             $resources = $error['resources']->keyBy('breakdown_resource_id');
             $logEntry = ['oldRow' => $this->rows->get($error['hash']), 'newRows' => []];
             $this->rows->forget($error['hash']);
@@ -171,7 +184,17 @@ class CostImportFixer
                         'resource' => $resource
                     ];
 
-                    $this->rows->push($newRow);
+                    $store_resource = StoreResource::forceCreate([
+                        'project_id' => $this->batch->project_id, 'period_id' => $this->batch->period_id,
+                        'batch_id' => $this->batch->id,
+                        'budget_code' => $resource->code, 'resource_id' => $resource->resource_id,
+                        'activity_code' => $error[0], 'store_date' => $date, 'item_code' => $error[7],
+                        'item_desc' => $error[2], 'measure_unit' => $resource->measure_unit,
+                        'unit_price' => $unit_price, 'qty' => $qty, 'cost' => $total, 'doc_no' => $error[8],
+                    ]);
+                    $newRow['id'] = $store_resource->id;
+
+                    $this->rows->put($newRow['id'], $newRow);
                     $logEntry['newRows'][] = $newRow;
                 }
             }
@@ -192,8 +215,9 @@ class CostImportFixer
         $resources = $result['errors']->keyBy('breakdown_resource_id');
 
         $progressLog = collect();
+
         foreach ($progress as $id => $value) {
-            $resource = $resources->get('id');
+            $resource = $resources->get($id);
             if (!$resource) {
                 continue;
             }
@@ -232,7 +256,7 @@ class CostImportFixer
 
             if (strtolower($value) == 'closed') {
                 $resource->progress = 100;
-            } elseif($resource->progress == 100) {
+            } elseif ($resource->progress == 100) {
                 $resource->status = 'Closed';
             }
 

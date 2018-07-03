@@ -20,6 +20,10 @@ export default {
     //<editor-fold defaultstate="collapsed" desc="Computed properties">
     computed: {
         url() {
+            if (!this.wbs_id) {
+                return '';
+            }
+
             let url = '/api/cost/breakdowns/' + this.wbs_id + '?' + (this.perspective ? `perspective=${this.perspective}&` : '')
             const urlTokens = [];
             const filters = ['activity', 'resource_type', 'resource', 'cost_account'];
@@ -39,15 +43,15 @@ export default {
 
     methods: {
         loadBreakdowns() {
-
+            this.$emit('reload');
         },
 
         deleteResource(resource) {
-            this.$broadcast('show_delete_resource', resource);
+            this.$emit('delete_resource', resource);
         },
 
         deleteActivity(resource) {
-            this.$broadcast('show_delete_activity', resource);
+            this.$emit('delete_activity', resource);
         },
 
         deleteWbsCurrent() {
@@ -134,10 +138,6 @@ export default {
     events: {
         wbs_changed(params) {
             this.wbs_id = params.selection;
-        },
-
-        reload_breakdowns() {
-            this.loadBreakdowns();
         },
 
         loadingStart() {

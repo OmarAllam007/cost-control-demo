@@ -12,6 +12,7 @@ class CreateStoreResourcesTable extends Migration
             $table->unsignedInteger('project_id');
             $table->unsignedInteger('period_id');
             $table->unsignedInteger('batch_id');
+            $table->unsignedInteger('breakdown_resource_id')->nullable();
             $table->unsignedInteger('actual_resource_id')->nullable();
             $table->string('budget_code')->nullable();
             $table->unsignedInteger('resource_id')->nullable();

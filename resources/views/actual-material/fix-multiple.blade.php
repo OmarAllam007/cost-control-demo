@@ -64,7 +64,7 @@
                             <td>{{$res->remarks}}</td>
                             <td>{{number_format($res->qty_to_date, 2) }}</td>
                             <td>
-                                {{Form::text("resource[{$res->breakdown_resource_id}][qty]", $qty = $totalQty? round($res->budget_unit * $resource[4]/$totalQty, 2) : 0, ['class' => 'form-control input-sm qty'])}}
+                                {{Form::text("resource[{$res->breakdown_resource_id}][qty]", $qty = $totalQty? round($res->budget_unit * $resource[4]/$totalQty, 6) : 0, ['class' => 'form-control input-sm qty'])}}
                             </td>
                             <td class="unit-price-cell" data-value="{{$resource[5]}}">{{ number_format($resource[5], 2) }}</td>
                             <td class="total-cell" data-value="{{$amount = $qty * $resource[5]}}">{{ number_format($amount, 2) }}</td>
@@ -113,6 +113,7 @@
             $('.include').change(function () {
                 var table = $(this).closest('table');
                 recalculateQty(table);
+                updateTotals(table);
             });
 
             $('.qty').change(function () {
@@ -172,14 +173,14 @@
                 var totalQty = 0, totalAmount = 0;
                 table.find('tbody tr').each(function () {
                     var _this = $(this);
-                    if (_this.find('.include').prop('checked')) {
+
                         var qty = parseFloat(_this.find('.qty').val()) || 0;
                         var unit_price = parseFloat(_this.find('.unit-price-cell').data('value'));
                         var total = qty * unit_price;
-                        _this.find('.total-cell').data('value', total).text(parseFloat(total.toFixed(4)).toLocaleString(formatOptions));
+                        _this.find('.total-cell').data('value', parseFloat(total.toFixed(4))).text(parseFloat(total.toFixed(4)).toLocaleString(formatOptions));
                         totalQty += qty;
                         totalAmount += total;
-                    }
+
                 });
 
                 table.find('.total-amount-cell').data('value', totalAmount).text(parseFloat(totalAmount).toLocaleString(formatOptions));

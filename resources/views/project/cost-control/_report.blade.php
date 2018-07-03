@@ -18,13 +18,21 @@
             </div>
 
             <div class="form-group">
-                <a href="{{route('cost.boq_report',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary btn-block">BOQ</a>
+                @if ($project->hasRollup())
+                    <a href="#" disabled class="btn btn-primary btn-block">BOQ</a>
+                @else
+                    <a href="{{route('cost.boq_report',$project)}}" target="_blank"
+                       class="hvr-float-shadow btn btn-primary btn-block">BOQ</a>
+                @endif
             </div>
 
             <div class="form-group">
-                <a href="{{route('cost.overdraft',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary btn-block">Overdraft</a>
+                @if ($project->hasRollup())
+                    <a href="#" disabled class="btn btn-primary btn-block">Overdraft</a>
+                @else
+                    <a href="{{route('cost.overdraft',$project)}}" target="_blank"
+                       class="hvr-float-shadow btn btn-primary btn-block">Overdraft</a>
+                @endif
             </div>
 
             <div class="form-group">
@@ -59,15 +67,25 @@
                    class="hvr-float-shadow btn btn-primary btn-block">Activity</a>
             </div>
 
-            <div class="form-group">
-                <a href="{{route('cost.resource_code_report',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary btn-block">Resource Dictionary</a>
-            </div>
+            @if ($project->is_activity_rollup)
+                <div class="form-group">
+                    <a href="#" class="btn btn-primary btn-block" disabled>Resource Dictionary</a>
+                </div>
 
-            <div class="form-group">
-                <a href="{{route('cost.variance',$project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary btn-block">Variance Analysis</a>
-            </div>
+                <div class="form-group">
+                    <a href="#" class="btn btn-primary btn-block" disabled>Variance Analysis</a>
+                </div>
+            @else
+                <div class="form-group">
+                    <a href="{{route('cost.resource_code_report',$project)}}" target="_blank"
+                       class="hvr-float-shadow btn btn-primary btn-block">Resource Dictionary</a>
+                </div>
+
+                <div class="form-group">
+                    <a href="{{route('cost.variance',$project)}}" target="_blank"
+                       class="hvr-float-shadow btn btn-primary btn-block">Variance Analysis</a>
+                </div>
+            @endif
 
             <div class="form-group">
                 <a href="{{route('productivity-report.import',$project)}}" target="_blank"
@@ -76,7 +94,7 @@
 
             <div class="form-group">
                 <a href="{{route('project.waste-index-report', $project)}}"
-                   class="hvr-float-shadow btn btn-block btn-primary btn-block" target="_blank">Waste Index</a>
+                   class="hvr-float-shadow btn btn-block btn-primary btn-block" target="_blank">Material Consumption Index</a>
             </div>
 
             <div class="form-group">

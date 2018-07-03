@@ -31,7 +31,6 @@ class ModifyPublicStdActivitiesJob extends ImportJob
         $excel = $loader->load($this->file);
 
         $rows = $excel->getSheet(0)->getRowIterator(2);
-        $displayOrder = 6;
         foreach ($rows as $row) {
             $cells = $row->getCellIterator();
             $data = $this->getDataFromCells($cells);
@@ -39,24 +38,23 @@ class ModifyPublicStdActivitiesJob extends ImportJob
                 continue;
             }
             $std_Activity = StdActivity::where('code', $data[0])->first();
-            $division_id = ActivityDivision::where('name',$data[2])->first()->id;
+//            $division_id = ActivityDivision::where('name',$data[2])->first()->id;
             if ($std_Activity) {
                 $item = [
                     'name' => $data[1],
-                    'division_id' => $division_id,
-                    'discipline' => $data[3],
-                    'work_package_name' => $data[4],
-                    'id_partial' => $data[5],
+//                    'division_id' => $division_id,
+                    'discipline' => $data[7],
+                    'work_package_name' => $data[8],
+                    'id_partial' => $data[9],
                 ];
                 $std_Activity->update($item);
+                $displayOrder = 10;
                 foreach ($std_Activity->variables->sortBy('display_order') as $variable) {
                     $variable->label = $data[$displayOrder];
                     $variable->update();
-                    $displayOrder++;
+                    ++$displayOrder;
                 }
-
             }
-            $displayOrder = 6;
         }
 
     }

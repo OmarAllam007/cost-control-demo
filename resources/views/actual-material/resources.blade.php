@@ -70,6 +70,11 @@
                         </tr>
 
                         @php $counter++; @endphp
+                        @if ($counter == count($resource['rows']) && $resource['resource']->isActivityRollup() && count($activityData) > 1)
+                            <tr class="highlight">
+                                <th colspan="11">Driving Resources</th>
+                            </tr>
+                        @endif
                     @endforeach
                 @endforeach
                 </tbody>

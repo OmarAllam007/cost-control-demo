@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Rollup\Api;
 
+use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\WbsLevel;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class WbsController extends Controller
 {
@@ -25,10 +27,22 @@ class WbsController extends Controller
                 $q->where('code', 'like', $term)->orWhere('activity', 'like', $term);
             });
         });
-        
-        $activities = \DB::table(\DB::raw('(' . $baseQuery->toSql() . ') as data'))
-            ->mergeBindings($baseQuery->getQuery())->paginate(10);
-        
-        return $activities;
+
+        /** @var LengthAwarePaginator $activity */
+        $pagination = \DB::table(\DB::raw('(' . $baseQuery->toSql() . ') as data'))
+            ->mergeBindings($baseQuery->getQuery())->paginate(15);
+
+        return [
+            'lastPage' => $pagination->lastPage(),
+            'perPage' => $pagination->perPage(),
+            'total' => $pagination->currentPage(),
+            'data' => $pagination->map(function($activity) {
+                $max_code = BreakdownResourceShadow::where('project_id', $activity->project_id)
+                    ->where('code', $activity->code)->where('is_rollup', true)->max('resource_code');
+                $next_rollup_code = intval(collect(explode('.', $max_code))->last()) + 1;
+                $activity->next_rollup_code = sprintf('%02d', $next_rollup_code);
+                return $activity;
+            })
+        ];
     }
 }

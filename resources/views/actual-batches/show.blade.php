@@ -11,6 +11,9 @@
 @section('body')
 
     <div class="row">
+        <div class="col-sm-12">
+            {!! nl2br(e($batch->description)) !!}
+        </div>
 
         <div class="col-sm-4">
             <strong>Uploaded By: </strong>{{$batch->user->name}}

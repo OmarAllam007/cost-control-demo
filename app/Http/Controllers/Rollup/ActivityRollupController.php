@@ -24,7 +24,8 @@ class ActivityRollupController extends Controller
 
         $result = (new ActivityRollup($project, $codes))->handle();
 
-        $project->update(['is_activity_rollup' => true]);
+        $project->is_activity_rollup = 1;
+        $project->save();
 
         flash("$result activities have been rolled up", 'success');
 

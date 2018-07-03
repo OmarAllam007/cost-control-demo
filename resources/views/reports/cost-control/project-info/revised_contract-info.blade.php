@@ -11,15 +11,8 @@
 
             <article class="col-xs-4">
                 <dl>
-                    <dt>Time Extension</dt>
-                    <dd>{{$period->time_extension ?: '0'}} <small>(Days)</small></dd>
-                </dl>
-            </article>
-
-            <article class="col-xs-4">
-                <dl>
-                    <dt>Planned Start Date</dt>
-                    <dd>{{$project->project_start_date? \Carbon\Carbon::parse($project->project_start_date)->format('d M Y') : ''}}</dd>
+                    <dt>Potential Change Order</dt>
+                    <dd>{{number_format($period->potential_change_order_amount, 2)}}</dd>
                 </dl>
             </article>
 
@@ -35,6 +28,13 @@
                             <span class="text-success"><i class="fa fa-arrow-circle-up"></i></span>
                         @endif
                     </dd>
+                </dl>
+            </article>
+
+            <article class="col-xs-4">
+                <dl>
+                    <dt>Time Extension</dt>
+                    <dd>{{$period->time_extension ?: '0'}} <small>(Days)</small></dd>
                 </dl>
             </article>
 

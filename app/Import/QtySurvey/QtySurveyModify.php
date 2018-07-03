@@ -136,7 +136,9 @@ class QtySurveyModify
             ->whereIn('wbs_id', $qty_survey->wbsLevel->getChildrenIds())
             ->where('cost_account', $qty_survey->cost_account)
             ->get()->each(function ($resource) use ($qty_survey) {
-                $resource->breakdown_resource->updateShadow();
+                $resource->breakdown_resource->budget_qty = $qty_survey->budget_qty;
+                $resource->breakdown_resource->eng_qty = $qty_survey->eng_qty;
+                $resource->breakdown_resource->save();
             });
 
         ++$this->success;

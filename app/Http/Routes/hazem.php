@@ -29,7 +29,7 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('batches/{project}', 'Api\CostController@batches');
 
         Route::delete('/delete-resource/{breakdown_resource}', 'Api\CostController@deleteResource');
-        Route::delete('/delete-activity/{breakdown}', 'Api\CostController@deleteActivity');
+        Route::delete('/delete-activity/{wbs}', 'Api\CostController@deleteActivity');
         Route::delete('/delete-wbs/{wbs_level}', 'Api\CostController@deleteWbs');
         Route::delete('/delete-current/{project}', 'Api\CostController@deleteProject');
         Route::delete('/delete-batch/{actual_batch}', 'Api\CostController@deleteBatch');
@@ -284,7 +284,7 @@ Route::post('project/{project}/rollup-semi-activity', 'Rollup\SemiActivityRollup
 Route::group(['prefix' => '/api/rollup/'], function () {
     Route::get('wbs/{wbsLevel}', 'Rollup\Api\WbsController@show');
     Route::get('activities/{wbsLevel}/{activity_id}', 'Rollup\Api\ActivityController@show');
-    Route::get('activity-resources/{wbsLevel}/{code}', 'Rollup\Api\ActivityResourcesController@show');
+    Route::get('activity-resources/{wbsLevel}', 'Rollup\Api\ActivityResourcesController@show');
     Route::get('cost-account/{wbsLevel}/{breakdown_id}', 'Rollup\Api\CostAccountController@show');
 
     Route::post('summarize/{wbs}/cost-account', 'Rollup\Api\CostAccountSumController@store');
@@ -298,9 +298,15 @@ Route::get('/project/{project}/modify-breakdown/export', 'ModifyBreakdownControl
 Route::get('/dashboard/send', 'DashboardController@send');
 Route::post('/dashboard/send', 'DashboardController@postSend');
 
-Route::get('activity-log/{wbs}/{code}', 'ActivityLogController@show')->name('activity-log.show');
-Route::get('activity-log/{wbs}/{code}/excel', 'ActivityLogController@excel')->name('activity-log.excel');
-Route::get('/api/activity-log/{wbs}/{code}', 'Api\ActivityLogController@show');
+Route::get('activity-log/{wbs}', 'ActivityLogController@show')->name('activity-log.show');
+Route::get('activity-log/{wbs}/excel', 'ActivityLogController@excel')->name('activity-log.excel');
+Route::get('api/activity-log/{wbs}', 'Api\ActivityLogController@show');
 
 Route::get('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@create')->name('breakdown-template.import-to-project');
 Route::post('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@store');
+
+Route::get('project/{project}/export-progress', 'UpdateProgressController@show')->name('project.export-progress');
+Route::get('project/{project}/update-progress', 'UpdateProgressController@create')->name('project.update-progress');
+Route::put('project/{project}/update-progress', 'UpdateProgressController@store');
+Route::get('project/{project}/modify-progress', 'UpdateProgressController@edit')->name('project.modify-progress');
+Route::put('project/{project}/modify-progress', 'UpdateProgressController@update');

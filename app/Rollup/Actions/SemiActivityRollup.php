@@ -86,6 +86,9 @@ class SemiActivityRollup
             'updated_by' => $this->user_id, 'updated_at' => $this->now
         ]);
 
+        $this->handleSummed($resources);
+        $this->handleRolled($resources);
+
         return $resources->count();
     }
 
@@ -97,6 +100,7 @@ class SemiActivityRollup
         $unit_id = $this->extra['measure_unit'][$code] ?? 15;
         $measure_unit = $this->unit_cache->get($unit_id);
         $unit_price = $total_cost / $budget_unit;
+        $remarks = $this->extra['remarks'][$resource->code] ?? 'Semi Activity rollup';
 
         $cost_account_suffix = '01';
         $latest_activity = BreakDownResourceShadow::where(compact('code'))
@@ -110,19 +114,30 @@ class SemiActivityRollup
 
         $important = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->where('important', 1)->exists();
 
+        $resource_code = $this->extra['resource_codes'][$code] ?? $resource->code . '.' . $cost_account_suffix;
+        $resource_name = $this->extra['resource_names'][$code] ?? $resource->shadow->activity;
+        $types = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->pluck('resource_type', 'resource_type_id');
+        if ($types->count() == 1) {
+            $resource_type = $types->values()->first();
+            $resource_type_id = $types->keys()->first();
+        } else {
+            $resource_type = '04.Subcontractors';
+            $resource_type_id = 4;
+        }
+
         $this->rollup_shadow = BreakDownResourceShadow::forceCreate([
             'breakdown_resource_id' => $this->rollup_resource->id, 'template_id' => 0,
-            'resource_code' => $resource->code . '.' . $cost_account_suffix,
-            'resource_type_id' => 4,
+            'resource_code' => $resource_code,
+            'resource_type_id' => $resource_type_id,
             'cost_account' => $resource->code . '.' . $cost_account_suffix,
-            'resource_name' => $resource->shadow->activity, 'resource_type' => '07.OTHERS',
+            'resource_name' => $resource_name, 'resource_type' => $resource_type,
             'activity_id' => $resource->shadow->activity_id, 'activity' => $resource->shadow->activity,
             'eng_qty' => $budget_unit, 'budget_qty' => $budget_unit, 'resource_qty' => $budget_unit, 'budget_unit' => $budget_unit,
             'resource_waste' => 0, 'unit_price' => $unit_price, 'budget_cost' => $total_cost,
-            'measure_unit' => $measure_unit, 'unit_id' => 15, 'template' => 'Semi Activity Rollup',
+            'measure_unit' => $measure_unit, 'unit_id' => $unit_id, 'template' => 'Semi Activity Rollup',
             'breakdown_id' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'show_in_budget' => false, 'show_in_cost' => true,
-            'remarks' => 'Semi activity rollup', 'productivity_ref' => '', 'productivity_output' => 0,
+            'remarks' => $remarks, 'productivity_ref' => '', 'productivity_output' => 0,
             'labors_count' => 0, 'boq_equivilant_rate' => 1, 'productivity_id' => 0,
             'code' => $this->rollup_resource->code, 'resource_id' => 0,
             'boq_id' => $resource->shadow->boq_id, 'survey_id' => $resource->shadow->survey_id,
@@ -136,9 +151,11 @@ class SemiActivityRollup
 
     private function createRollupResource($resource)
     {
+        $remarks = $this->extra['remarks'][$resource->code] ?? 'Semi Activity rollup';
+
         return $this->rollup_resource = BreakdownResource::forceCreate([
             'breakdown_id' => 0, 'resource_id' => 0, 'std_activity_resource_id' => 0,
-            'productivity_id' => 0, 'budget_qty' => 1, 'eng_qty' => 1, 'remarks' => 'Semi Activity rollup',
+            'productivity_id' => 0, 'budget_qty' => 1, 'eng_qty' => 1, 'remarks' => $remarks,
             'resource_qty' => 1, 'equation' => 1, 'labor_count' => 0, 'wbs_id' => $resource->wbs_id,
             'project_id' => $resource->project_id, 'code' => $resource->code, 'is_rollup' => true,
             'updated_by' => $this->user_id, 'updated_at' => $this->now,
@@ -164,6 +181,10 @@ class SemiActivityRollup
         }
 
         $progress = min(100, $this->extra['progress'][$code] ?? 0);
+        if (!$to_date_cost) {
+            $progress = 0;
+        }
+
         $status = 'Not Started';
         if ($progress) {
             $status = $progress < 100 ? 'In Progress' : 'Closed';
@@ -180,5 +201,57 @@ class SemiActivityRollup
         ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
 
         return $this->rollup_shadow;
+    }
+
+    /**
+     * @param Collection $resources
+     */
+    private function handleSummed($resources)
+    {
+        $this->project->shadows()
+            ->whereIn('breakdown_resource_id', $resources->pluck('id'))
+            ->where('is_sum', true)->get()->each(function ($resource) {
+                $query = $this->project->shadows()->where('code', $this->rollup_shadow->code)
+                    ->where('resource_id', $resource->resource_id);
+
+                $query->update([
+                    'show_in_cost' => 0, 'rolled_up_at' => $this->now,
+                    'rollup_resource_id' => $this->rollup_shadow->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now, 'summed_at' => null
+                ]);
+
+                BreakdownResource::whereIn('id', $query->pluck('breakdown_resource_id'))->update([
+                    'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now
+                ]);
+
+                $resource->breakdown_resource->delete();
+                $resource->delete();
+            });
+    }
+
+    /**
+     * @param $resources
+     */
+    private function handleRolled($resources)
+    {
+        $this->project->shadows()
+            ->whereIn('breakdown_resource_id', $resources->pluck('id'))
+            ->where('is_rollup', true)->get()->each(function ($resource) {
+                $query = $this->project->shadows()->where('rollup_resource_id', $resource->id);
+                $query->update([
+                    'show_in_cost' => 0, 'rolled_up_at' => $this->now,
+                    'rollup_resource_id' => $this->rollup_shadow->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now
+                ]);
+
+                BreakdownResource::whereIn('id', $query->pluck('breakdown_resource_id'))->update([
+                    'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
+                    'updated_by' => $this->user_id, 'updated_at' => $this->now
+                ]);
+
+                $resource->breakdown_resource->delete();
+                $resource->delete();
+            });;
     }
 }

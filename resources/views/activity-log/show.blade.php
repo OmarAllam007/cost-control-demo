@@ -5,7 +5,7 @@
         <h2 class="flex">{{$wbs->project->name}} &mdash; Activity Log</h2>
 
         <div class="btn-tollbar">
-            <a href="{{route('activity-log.excel', [$wbs, $code])}}" class="btn btn-success btn-sm">
+            <a href="{{route('activity-log.excel', [$wbs, 'code' => $code])}}" class="btn btn-success btn-sm">
                 <i class="fa fa-cloud-download"></i> Export
             </a>
 
@@ -39,7 +39,7 @@
                     <div class="col-sm-4">
                         <dl>
                             <dt>First Upload Date</dt>
-                            <dd>{{$first_upload->format('d M Y')}}</dd>
+                            <dd>{{$first_upload? $first_upload->format('d M Y') : 'N/A'}}</dd>
                         </dl>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                     <div class="col-sm-4">
                         <dl>
                             <dt>Last Upload Date</dt>
-                            <dd>{{$last_upload->format('d M Y')}}</dd>
+                            <dd>{{$last_upload? $last_upload->format('d M Y') : 'N/A'}}</dd>
                         </dl>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                     <div class="col-sm-4">
                         <dl>
                             <dt>Variance</dt>
-                            <dd>{{number_format($variance, 2)}}</dd>
+                            <dd class="{{$variance < 0? 'text-danger' : 'text-success'}}">{{number_format($variance, 2)}}</dd>
                         </dl>
                     </div>
                 </div>
@@ -112,6 +112,10 @@
             </section>
 
             <section class="loading" v-if="loading"><i class="fa fa-spinner fa-spin fa-3x"></i></section>
+
+            <div class="alert alert-info" v-if="!loading && !logs.length">
+                <i class="fa fa-info-circle"></i> No information found
+            </div>
         </section>
     </div>
 @endsection
@@ -156,5 +160,5 @@
         var is_activity_rollup = {{ $is_activity_rollup? 'true' : 'false'  }};
     </script>
 
-    <script src="/js/activity-log.js"></script>
+    <script src="{{asset('js/activity-log.js')}}"></script>
 @endsection

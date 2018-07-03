@@ -52,6 +52,10 @@
 
         created() {
             if (this.url) this.loadData();
+
+            this.$parent.$on('reload', () => {
+                this.loadData();
+            });
         },
 
         watch: {

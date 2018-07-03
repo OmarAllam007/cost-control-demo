@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 05/04/2018
- * Time: 2:49 PM
- */
 
 namespace App\Export;
 
-
 use App\BreakDownResourceShadow;
 use App\StoreResource;
+use App\Support\ActivityLog;
 use App\WbsLevel;
 use function collect;
 use Illuminate\Support\Collection;
@@ -37,6 +31,10 @@ class ActivityLogExport
     private $actual_cost;
     private $budget_cost;
     private $variance;
+    private $allowable_cost;
+    private $status = '';
+    /** @var Collection */
+    private $resource_logs;
 
     public function __construct(WbsLevel $wbs, $code)
     {
@@ -44,38 +42,42 @@ class ActivityLogExport
         $this->code = $code;
     }
 
-    function run()
+    function handle()
     {
-        $this->budget_resources = BreakDownResourceShadow::with('actual_resources')->where('wbs_id', $this->wbs->id)->where('code', $this->code)->get();
+        $this->activity_name = BreakDownResourceShadow::where('wbs_id', $this->wbs->id)->where('code', $this->code)->value('activity');
+        $this->status = $this->getStatus();
+        $activityLog = new ActivityLog($this->wbs, $this->code);
+        $this->resource_logs = $activityLog->handle();
+        $costResources = BreakDownResourceShadow::with('actual_resources')
+            ->where('wbs_id', $this->wbs->id)->where('code', $this->code)
+            ->where('show_in_cost', 1)->get();
+        $this->store_resources = $this->resource_logs->pluck('store_resources')->flatten();
+        $this->budget_resources = $this->resource_logs->pluck('budget_resources')->flatten();
+        $this->budget_cost = $costResources->sum('budget_cost');
+        $this->actual_cost = $costResources->sum('to_date_cost');
+        $this->allowable_cost = $costResources->sum('allowable_ev_cost');
+        $this->variance = $costResources->sum('allowable_var');
+        $this->first_upload_date = $this->store_resources->min('created_at')->format('d M Y H:i');
+        $this->last_upload_date = $this->store_resources->max('created_at')->format('d M Y H:i');
+
+        /*$this->budget_resources = BreakDownResourceShadow::with('actual_resources')->where('wbs_id', $this->wbs->id)->where('code', $this->code)->get();
         $resource_ids = $this->budget_resources->pluck('resource_id', 'resource_id');
 
         $this->store_resources = StoreResource::where('budget_code', $this->code)
-            ->whereIn('resource_id', $resource_ids)
+            ->whereIn('resource_id', $resource_ids)->whereNull('row_ids')
             ->get();
 
-        $this->activity_name = $this->budget_resources->first()->activity;
-        $this->budget_cost = $this->budget_resources->sum('budget_cost');
-        $this->actual_cost = $this->budget_resources->sum('to_date_cost');
-        $this->variance = $this->budget_cost - $this->actual_cost;
-        $average = $this->budget_resources->avg('progress');
-        if ($average > 0 && $average < 100) {
-            $this->status = 'In Progress';
-        } elseif ($average == 100) {
-            $this->status = 'Closed';
-        } else {
-            $this->status = 'Not Started';
-        }
 
-        $this->first_upload_date = $this->store_resources->min('created_at');
-        $this->last_upload_date = $this->store_resources->max('created_at');
+        */
     }
 
     function download()
     {
-        $this->run();
+        $this->handle();
 
         $excel = PHPExcel_IOFactory::load(storage_path('templates/activity-log.xlsx'));
         $sheet = $excel->getSheet(1);
+
         $this->allResources($sheet);
 
         $sheet = $excel->getSheet(0);
@@ -133,23 +135,35 @@ class ActivityLogExport
      */
     private function drivingResources($sheet)
     {
-        $budget_driving = $this->budget_resources->filter(function($resource) {
+        $sheet->setCellValue('C2', $this->activity_name);
+        $sheet->setCellValue('C3', $this->code);
+        $sheet->setCellValue('C4', $this->status);
+
+        $sheet->setCellValue('H2', $this->budget_cost);
+        $sheet->setCellValue('H3', $this->actual_cost);
+        $sheet->setCellValue('H4', $this->variance);
+
+        $sheet->setCellValue('P2', $this->first_upload_date);
+        $sheet->setCellValue('P3', $this->last_upload_date);
+
+        $driving_resources = $this->resource_logs->filter(function($resource) {
+            return $resource['important'];
+        });
+
+        /*$budget_driving = $this->budget_resources->filter(function($resource) {
             return $resource->important;
-        })->groupBy('resource_id');
+        })->groupBy('breakdown_resource_id');
 
         $resource_ids = $budget_driving->keys();
 
         $store_driving = $this->store_resources->filter(function($resource) use ($resource_ids) {
-            return $resource_ids->contains($resource->resource_id);
-        })->groupBy('resource_id');
+            return $resource_ids->contains($resource->breakdown_resource_id);
+        })->groupBy('breakdown_resource_id');*/
 
         $this->start = 8;
         $this->row = 8;
-        foreach ($resource_ids as $id) {
-            $budget_items = $budget_driving->get($id);
-            $store_items = $store_driving->get($id, collect());
-
-            $this->buildResource($sheet, $budget_items, $store_items);
+        foreach ($driving_resources as $resource_log) {
+            $this->buildResource($sheet, $resource_log);
         }
 
         $sheet->setSelectedCell("B{$this->start}");
@@ -158,33 +172,24 @@ class ActivityLogExport
 
     /**
      * @param PHPExcel_Worksheet $sheet
-     * @param Collection         $budget_items
-     * @param Collection         $store_items
+     * @param $resource_log
+     * @throws
      */
-    private function buildResource($sheet, $budget_items, $store_items)
+    private function buildResource($sheet, $resource_log)
     {
-        $budget_row = $start = $this->row;
 
-        $first = $budget_items->first();
-        $budget_qty = $budget_items->sum('budget_unit');
-        $budget_cost = $budget_items->sum('budget_cost');
+        $budget_items = $resource_log['budget_resources'];
+        $store_items = $resource_log['store_resources'];
+
+        $budget_row = $start = $this->row;
         $sheet->fromArray([
-            $first->resource_code, $first->resource_name, $first->measure_unit,
-            $first->unit_price, $budget_qty, $budget_cost
+            $resource_log['code'], $resource_log['name'], $resource_log['measure_unit'],
+            $resource_log['unit_price'], $resource_log['budget_qty'], $resource_log['budget_cost']
         ], null, "B{$budget_row}", true);
 
-        $actuals = $budget_items->pluck('actual_resources')->flatten();
-        $actual_qty = $actuals->sum('qty');
-        $actual_cost = $actuals->sum('cost');
-        $actual_unit_price = 0;
-        if ($actual_qty) {
-            $actual_unit_price = $actual_cost / $actual_qty;
-        }
-        $qty_var = $budget_qty - $actual_qty;
-        $cost_var = $budget_cost - $actual_cost;
-
         $sheet->fromArray([
-            $actual_unit_price, $actual_qty, $actual_cost, $qty_var, $cost_var
+            $resource_log['actual_unit_price'], $resource_log['actual_qty'], $resource_log['cost'],
+            $resource_log['qty_var'], $resource_log['cost_var']
         ], null, "L{$budget_row}", true);
 
         $sheet->getRowDimension($budget_row)->setOutlineLevel(0)->setCollapsed(false)->setVisible(true);
@@ -222,5 +227,18 @@ class ActivityLogExport
         $sheet->getStyle("I{$start}:S{$max_row}")->getBorders()->getOutline()->setBorderStyle('medium');
 
         $this->row = ++$max_row;
+    }
+
+    private function getStatus()
+    {
+        $average = BreakDownResourceShadow::where('wbs_id', $this->wbs->id)->where('code', $this->code)->avg('progress');
+
+        if ($average > 0 && $average < 100) {
+            return 'In Progress';
+        } elseif ($average == 100) {
+            return 'Closed';
+        }
+
+        return 'Not Started';
     }
 }

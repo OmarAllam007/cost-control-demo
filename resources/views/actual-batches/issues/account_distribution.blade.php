@@ -53,8 +53,8 @@
                                 $rowSpan = count($newRows);
                             @endphp
                             <tr>
-                                <td rowspan="{{$rowSpan}}">{{$oldRow[2]}}</td>
                                 <td rowspan="{{$rowSpan}}">{{$oldRow[7]}}</td>
+                                <td rowspan="{{$rowSpan}}">{{$oldRow[2]}}</td>
                                 <td rowspan="{{$rowSpan}}">{{number_format($oldRow[4], 2)}}</td>
                                 <td rowspan="{{$rowSpan}}">{{number_format($oldRow[5], 2)}}</td>
                                 <td rowspan="{{$rowSpan}}">{{number_format($oldRow[6], 2)}}</td>

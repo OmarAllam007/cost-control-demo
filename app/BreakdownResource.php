@@ -25,6 +25,11 @@ class BreakdownResource extends Model
 
 //    public $original_resource = 0;
 
+    function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     function breakdown()
     {
         return $this->belongsTo(Breakdown::class);
@@ -292,6 +297,8 @@ class BreakdownResource extends Model
 
     function scopeBudgetOnly($query)
     {
-        return $query->whereNull('rolled_up_at')->where('is_rollup', 0);
+        return $query->whereHas('shadow', function($q) {
+            return $q->where('show_in_budget', 1);
+        });
     }
 }

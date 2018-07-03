@@ -79,7 +79,7 @@ class VarianceAnalysisReport
                 'cost_unit_price_var' => $disciplines->sum('cost_unit_price_var'),
                 'cost_qty_var' => $disciplines->sum('cost_qty_var')
             ];
-        });
+        })->sortByKeys();
 
         return $tree;
     }

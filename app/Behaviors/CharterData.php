@@ -27,7 +27,7 @@ trait CharterData
 
     function getDirectBudgetCostAttribute()
     {
-        return $this->shadows()->whereNotIn('resource_type_id', [1, 8])->sum('budget_cost');
+        return $this->shadows()->budgetOnly()->whereNotIn('resource_type_id', [1, 8])->sum('budget_cost');
     }
 
     function getGeneralRequirementCostAttribute()
@@ -37,12 +37,12 @@ trait CharterData
 
     function getManagementReserveCostAttribute()
     {
-        return $this->shadows()->where('resource_type_id', 8)->sum('budget_cost');
+        return $this->shadows()->budgetOnly()->where('resource_type_id', 8)->sum('budget_cost');
     }
 
     function getBudgetCostAttribute()
     {
-        return $this->shadows()->sum('budget_cost');
+        return $this->shadows()->budgetOnly()->sum('budget_cost');
     }
 
     function getEacContractAmountAttribute()
