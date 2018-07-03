@@ -11617,6 +11617,16 @@ th.table-caption {
   font-weight: 600;
 }
 
+.concern-btn {
+  visibility: hidden;
+}
+
+@media screen {
+  tr:hover .concern-btn {
+    visibility: visible;
+  }
+}
+
 @media print {
   table {
     width: 100%;

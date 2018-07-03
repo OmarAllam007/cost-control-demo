@@ -1,4 +1,4 @@
-<div class="modal" id="concerns-modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="concerns-modal" tabindex="-1" role="dialog">
     <form action="{{route('concerns.store', $project)}}" method="post" class="modal-dialog modal-lg">
         <div class="modal-content">
             {{csrf_field()}}
@@ -47,3 +47,50 @@
         </div>
     </form>
 </div>
+
+<script>
+    $(function() {
+        const concernsModal = $('#concerns-modal').on('bs.modal-shown', function() {
+            $(this).find('textarea').focus();
+        }).on('click', '.send-concern', function(e) {
+            e.preventDefault();
+            $(this).find('i').removeClass('fa-check').addClass('fa-spinner fa-spin').end().prop('disabled', true);
+            $.ajax({
+                url: concernsForm.attr('action'),
+                data: concernsForm.serialize(),
+                dataType: 'json',
+                method: 'post'
+            }).then(() => {
+                concernsModal.modal('hide');
+                concernsForm.find('textarea').val('');
+                $(this).find('i').addClass('fa-check').removeClass('fa-spinner fa-spin').end().prop('disabled', false);
+            }, () => {
+                $(this).find('i').addClass('fa-check').removeClass('fa-spinner fa-spin').end().prop('disabled', false);
+                // concernsModal.modal('hide');
+            });
+        });
+
+        const concernsForm = concernsModal.find('form');
+
+        const dataField = concernsModal.find('#concern-data');
+
+        $('.concern-btn').on('click', function(e) {
+            e.preventDefault();
+            dataField.val(e.currentTarget.dataset.data);
+            const data = JSON.parse(e.currentTarget.dataset.data);
+            const header = concernsModal.find('thead tr');
+            const body = concernsModal.find('tbody tr');
+
+            header.find('th').remove();
+            body.find('td').remove();
+
+            for (const key in data) {
+                const value = data[key];
+                header.append($('<th>').text(key));
+                body.append($('<td>').text(value));
+            }
+
+            concernsModal.modal();
+        });
+    });
+</script>
