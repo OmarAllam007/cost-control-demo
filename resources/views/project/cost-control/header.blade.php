@@ -25,6 +25,8 @@
             <li><a href="{{route('costshadow.export',$project)}}?perspective=budget"><i class="fa fa-fw fa-cubes"></i> All Resources</a></li>
             <li><a href="{{route('break_down.export',$project)}}"><i class="fa fa-fw fa-bars"></i> Breakdown</a></li>
             <li><a href="{{route('project.export-progress',$project)}}"><i class="fa fa-fw fa-arrow-circle-o-right"></i> Progress</a></li>
+            <li><a href="{{route('activity_mapping.export',$project)}}"><i class="fa fa-fw fa-cloud-download"></i> Activity Mapping</a></li>
+            <li><a href="{{route('resource_mapping.export',$project)}}"><i class="fa fa-fw fa-cloud-download"></i> Resource Mapping</a></li>
         </ul>
     </div>
 
