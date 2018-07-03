@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CostConcern extends Model
 {
-    protected $table = 'cost_concerns';
+//    protected $table = 'cost_concerns';
     protected $fillable = ['report_name', 'data', 'project_id', 'period_id', 'comment'];
 
 //    protected $casts = [
