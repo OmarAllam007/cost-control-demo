@@ -188,5 +188,5 @@
         });
     </script>
 
-    @include('reports.partials.concerns-modal', ['report_name' => 'Resource Dictionary'])
+    @include('reports.partials.concerns-modal', ['report_name' => 'Productivity Index'])
 @append
