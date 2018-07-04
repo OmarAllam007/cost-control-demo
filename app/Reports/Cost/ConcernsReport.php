@@ -90,13 +90,7 @@ class ConcernsReport
             foreach ($group as $concern) {
                 $concernStart = $counter;
                 $data = json_decode($concern->data, true);
-                $count = count($data);
-                $last_cell = chr($a_ord + $count - 1);
-                $sheet->mergeCells("A{$counter}:{$last_cell}{$counter}");
-                $sheet->getCell("A{$counter}")->setValue($concern->comment);
-                $sheet->getStyle("A{$counter}:{$last_cell}{$counter}")->getAlignment()->setWrapText(true);
 
-                ++$counter;
                 $next = $counter + 1;
                 $col = 'A';
                 foreach ($data as $key => $value) {
@@ -112,14 +106,21 @@ class ConcernsReport
 
                 $last_col = chr(ord($col) - 1);
 
-                $sheet->getStyle("A{$concernStart}:{$last_col}{$next}")
-                    ->getBorders()->getOutline()->setBorderStyle('medium');
+                $counter += 2;
 
-                ++$concernStart;
+                $count = count($data);
+                $sheet->mergeCells("A{$counter}:{$last_col}{$counter}");
+                $sheet->getCell("A{$counter}")->setValue($concern->comment);
+                $sheet->getStyle("A{$counter}:{$last_col}{$counter}")->getAlignment()->setWrapText(true);
+
                 $sheet->getStyle("A{$concernStart}:{$last_col}{$next}")
                     ->getBorders()->getInside()->setBorderStyle('thin');
+                $sheet->getStyle("A{$concernStart}:{$last_col}{$next}")
+                    ->getBorders()->getOutline()->setBorderStyle('thin');
+                $sheet->getStyle("A{$concernStart}:{$last_col}{$counter}")
+                    ->getBorders()->getOutline()->setBorderStyle('medium');
 
-                $counter += 4;
+                $counter += 3;
             }
 
             ++$counter;

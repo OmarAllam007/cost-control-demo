@@ -26,10 +26,6 @@
 
         @foreach($group as $concern)
             <article class="panel panel-default">
-                <div class="panel-body">
-                    {!! nl2br(e($concern->comment)) !!}
-                </div>
-
                 @php
                     $data = json_decode($concern->data, true);
                 @endphp
@@ -50,6 +46,10 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <div class="panel-body">
+                    {!! nl2br(e($concern->comment)) !!}
+                </div>
             </article>
         @endforeach
     @endforeach
