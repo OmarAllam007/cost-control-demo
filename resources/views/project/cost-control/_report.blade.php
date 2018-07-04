@@ -42,7 +42,7 @@
 
             <div class="form-group">
                 <a href="{{route('project.concerns-report', $project)}}" target="_blank"
-                   class="hvr-float-shadow btn btn-primary btn-block">Issues</a>
+                   class="hvr-float-shadow btn btn-primary btn-block">Issues &amp; Concerns Report</a>
             </div>
 
             <div class="form-group">

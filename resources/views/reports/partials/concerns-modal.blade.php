@@ -8,7 +8,7 @@
             </div>
 
             <div class="modal-body">
-                <input type="hidden" name="period_id" value="" id="concern-period">
+                <input type="hidden" name="period_id" value="{{$period->id}}" id="concern-period">
                 <input type="hidden" name="report_name" value="{{$report_name}}">
 
                 <h4>
