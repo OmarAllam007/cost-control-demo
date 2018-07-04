@@ -18,7 +18,7 @@
                     @endif
                 </h4>
 
-                <section class="scrollpane">
+                <section class="scrollpane" style="margin-bottom: 2rem">
                     <table class="table table-bordered table-striped" style="width: auto;">
                         <thead>
                         <tr></tr>

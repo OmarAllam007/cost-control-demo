@@ -43,7 +43,27 @@
                 <th class="col-xs-1">Cost Variance</th>
             </tr>
             <tr>
-                <th class="col-xs-2">Total</th>
+                <th class="col-xs-2">
+                    <div class="display-flex">
+                        <span class="flex">Total</span>
+                        <a href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
+                           data-data="{{json_encode([
+                            'Activity' => 'Total',
+                            'Budget Cost' => number_format($currentTotals['budget_cost']??0,2) ,
+                            'Previous Cost' => number_format($previousTotals['previous_cost']??0,2),
+                            'Previous Allowable' => number_format($previousTotals['previous_allowable']??0,2),
+                            'Previous Var' => number_format($previousTotals['previous_var']??0,2),
+                            'To Date Cost' => number_format($currentTotals['to_date_cost']?? 0,2),
+                            'Allowable (EV) Cost' => number_format($currentTotals['to_date_allowable']??0,2),
+                            'To Date Variance' => number_format($currentTotals['to_date_var']??0,2),
+                            'Remaining Cost' => number_format($currentTotals['remaining']??0,2),
+                            'At Completion Cost' => number_format($currentTotals['at_completion_cost']??0,2),
+                            'Cost Variance' => number_format($currentTotals->cost_var??0,2),
+                           ]) }}">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </th>
                 <th class="col-xs-1">{{number_format($currentTotals['budget_cost']??0,2) }}</th>
                 <th class="col-xs-1">{{number_format($previousTotals['previous_cost']??0,2)}}</th>
                 <th class="col-xs-1">{{number_format($previousTotals['previous_allowable']??0,2)}}</th>
@@ -175,4 +195,6 @@
             });
         });
     </script>
+
+    @include('reports.partials.concerns-modal', ['report_name' => 'Standard Activity'])
 @append
