@@ -19,7 +19,7 @@
             </div>
 
         <div class="col-xs-{{$print? 12 : 6}}">
-            <h4 class="card-group-item-heading">Physical performance</h4>
+            <h4 class="card-group-item-heading">Physical Performance</h4>
             <div class="chart"
                  id="progressChart"
                  data-type="horizontalBar"
