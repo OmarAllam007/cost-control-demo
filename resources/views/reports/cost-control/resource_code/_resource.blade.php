@@ -8,7 +8,7 @@
 
             <a href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
                data-data="{{json_encode([
-                            'Resource' => $name,
+                            'Resource' => $resource->resource_name,
                             'Budget U.Price' => number_format($resource->budget_qty? $resource->budget_cost / $resource->budget_qty : 0, 2),
                             'Budget Qty' => number_format($resource->budget_qty, 2),
                             'Budget Cost' => number_format($resource->budget_cost, 2),
