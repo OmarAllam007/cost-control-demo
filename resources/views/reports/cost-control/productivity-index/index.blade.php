@@ -34,7 +34,24 @@
                     <th class="w-150">P.I.</th>
                 </tr>
                 <tr class="bg-primary">
-                    <th class="w-400">Total</th>
+                    <th class="w-400">
+                        <div class="display-flex">
+                            <span class="flex">Total</span>
+
+                            <a href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
+                               data-data="{{json_encode([
+                                    'Total' => 'Total',
+                                    'Budget Unit' => number_format($tree->sum('budget_unit'), 2),
+                                    'Sum of Earned Mandays' => number_format($tree->sum('allowable_qty'), 2),
+                                    'Sum of Actual Mandays' => number_format($tree->sum('actual_man_days'), 2),
+                                    'Sum of Variance' => number_format($tree->sum('variance'), 2),
+                                    'P.I.' => number_format($average_pi, 2)
+                                ]) }}">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                    </th>
                     <th class="w-150">{{number_format($tree->sum('budget_unit'), 2)}}</th>
                     <th class="w-150"></th>
                     <th class="w-150">{{number_format($tree->sum('allowable_qty'), 2)}}</th>
@@ -170,4 +187,6 @@
             });
         });
     </script>
+
+    @include('reports.partials.concerns-modal', ['report_name' => 'Resource Dictionary'])
 @append
