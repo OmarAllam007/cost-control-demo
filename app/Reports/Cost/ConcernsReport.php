@@ -34,7 +34,17 @@ class ConcernsReport
 
     function excel()
     {
+        $excel = new \PHPExcel();
 
+        $excel->removeSheetByIndex(0);
+        $excel->addExternalSheet($this->sheet());
+        $filename = storage_path('app/cost-summary-' . uniqid() . '.xlsx');
+        $writer = new \PHPExcel_Writer_Excel2007($excel);
+
+        $writer->save($filename);
+
+        $name = slug($this->project->name) . '_' . slug($this->period->name) . '_issues_concerns.xlsx';
+        return \Response::download($filename, $name)->deleteFileAfterSend(true);
     }
 
     function sheet()
