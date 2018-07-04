@@ -207,5 +207,5 @@
         });
     </script>
 
-    @include('reports.partials.concerns-modal', ['report_name' => 'Cost Summary'])
+    @include('reports.partials.concerns-modal', ['report_name' => 'Resource Dictionary'])
 @endsection
