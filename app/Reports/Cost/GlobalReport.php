@@ -40,6 +40,8 @@ class GlobalReport
 
     /** @var Collection */
     private $cost_summary;
+    /** @var Collection */
+    private $projects_summary;
 
     function __construct(GlobalPeriod $period)
     {
@@ -236,7 +238,7 @@ class GlobalReport
             ->select(['master_shadows.project_id', 'projects.name', 'projects.project_code'])
             ->selectRaw('sum(budget_cost) as budget_cost, sum(allowable_ev_cost) as allowable_cost, sum(to_date_cost) as to_date_cost')
             ->selectRaw('sum(completion_cost) as completion_cost, SUM(CASE WHEN resource_type_id = 8 THEN budget_cost END) as reserve')
-            ->where('p.global_period_id', $this->period->id)
+            ->whereIn('period_id', $this->last_period_ids)
             ->groupBy(['master_shadows.project_id','projects.name', 'projects.project_code'])
             ->get()->map(function ($period) {
 //                $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->reserve));
