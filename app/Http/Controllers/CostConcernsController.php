@@ -18,9 +18,8 @@ class CostConcernsController extends Controller
     {
         $this->authorize('reports', $project);
 
-        $attributes = $request->only('report_name', 'data', 'comment');
+        $attributes = $request->only('report_name', 'data', 'comment', 'period_id');
         $attributes['project_id'] = $project->id;
-        $attributes['period_id'] = $project->open_period()->id;
 
         CostConcern::create($attributes);
 
