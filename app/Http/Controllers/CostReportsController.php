@@ -198,6 +198,9 @@ class CostReportsController extends Controller
         $period = Period::find($period_id);
 
         $report = new ConcernsReport($period);
+        if ($request->exists('excel')) {
+            return $report->excel();
+        }
 
         return view('reports.cost-control.concerns-report.index', $report->run());
     }

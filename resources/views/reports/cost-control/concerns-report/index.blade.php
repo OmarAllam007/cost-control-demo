@@ -36,7 +36,7 @@
 
                 <table class="table table-bordered table-striped">
                     <thead>
-                    <tr>
+                    <tr class="bg-primary">
                         @foreach($data as $key => $value)
                             <th>{{$key}}</th>
                         @endforeach
