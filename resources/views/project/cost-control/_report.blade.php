@@ -41,7 +41,7 @@
             </div>
 
             <div class="form-group">
-                <a href="/project/{{$project->id}}/issue-files" target="_blank"
+                <a href="{{route('project.concerns-report', $project)}}" target="_blank"
                    class="hvr-float-shadow btn btn-primary btn-block">Issues</a>
             </div>
 
