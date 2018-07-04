@@ -135,9 +135,8 @@
 @section('javascript')
    <script src="{{asset('js/d3.min.js')}}"></script>
    <script src="{{asset('js/c3.min.js')}}"></script>
-
    @include('reports.partials.concerns-modal', ['report_name' => 'Cost Summary'])
-    @include('reports.cost-control.cost-summary._charts', ['report_name' => 'Cost Summary'])
+   @include('reports.cost-control.cost-summary._charts', ['report_name' => 'Cost Summary'])
 @endsection
 
 @section('css')

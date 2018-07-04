@@ -184,4 +184,6 @@
             });
         });
     </script>
+
+    @include('reports.partials.concerns-modal', ['report_name' => 'Variance Analysis'])
 @endsection
