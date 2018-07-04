@@ -1,58 +1,22 @@
-# KPS Reports
-## General
-* Back button returns to budget
+# Rollup
+### Reports
+- [x] Variance Analysis Report : Budget unit price for rolled resources is not correct
+- [x] For Level 2 & 3, in waste report should show only driving resources
 
+### Rollup
+- [x] Edit remarks manually is not working
 
-## _Resource Dict_
-* _Slow_
-* _Filters_
-	* _Status_
-	* _Resource type, Resource Code/Name_
-	* _BOQ Discipline (Filter only not in hierarchy)_
-	* _Top resource or other_
-	* _Cost/Var (plus or negative)_
-* _Freeze table headers_
-* Export??
-* _Hierarchy as of sent sheet_
+### Activity Log
+- [x] In Export, some Activity data is not shown
+- [x] Actual resources before rolling up is not shown
+- [x] In activity Level: new upload data is not shown in driving resources tab
 
+### Data upload
+- [x] Fix C32 upload errors
+- [x] Add description cell for upload data to be added manually while importing sheet and to be shown in data upload as a column 
+- [ ] In Activity Level, separate physical quantity for driving than other resources, same like we made in E.02
+- [ ] Percentage in E.05 is not reflected in E.06
 
-## Std Activity
-* _Sum is not correct_
-* _Hierarchy:_
-	* _Activity Division_
-	* _Std Activity_
-* _Filters_
-	* _Division_
-	* _Activity_
-	* _Negative var_
-	* _Status_
-* _Bordered tables_
-* Charts
-
-
-## Activity
-* _Same as Std Activity report but replace divisions by WBS_
-
-
-## Var Analysis
-* _Same hierarchy as resource dict._ 
-* _Add previous price/unit_
-* _If no current price/unit = 0_
-* _to date var is for price/unit_
-
-
-## Boq
-* _Unit/price will not be summed_
-* _Filters_
-	* _WBS_
-	* _Cost Account_
-	* _Status_
-
-
-## Overdraft
-* Physical revenue = physical unit (over all resources in BOQ) * BOQ unit rate
-* Sum (budget cost over cost account)
-* Sum (to date cost over cost account)
-* Actual Qty -> Imported by cost account
-* Physic. Unit Excl Price Var -> to date Qty * budget price/unit
-* 
+### Import progress
+- [ ] Make E.05 & E.06 appear after uploading to check which resource to apply progress on
+- [ ] Remove Resource column from upload sheet

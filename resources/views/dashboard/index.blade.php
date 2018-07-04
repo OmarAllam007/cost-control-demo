@@ -46,7 +46,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$cpi_trend->pluck('name')}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'CPI Index',
+                                    'label' => '',
                                     'data' =>$cpi_trend->pluck('cpi_index'),//$cpi_trend->pluck('cpi_index')
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
@@ -67,7 +67,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$spi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'SPI Index',
+                                    'label' => '',
                                     'data' => $spi_trend->values(),//$spi_trend->values()
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
@@ -90,7 +90,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$waste_index_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'Material Consumption Index',
+                                    'label' => '',
                                     'data' => $waste_index_trend->values(),
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
@@ -110,7 +110,7 @@
                                  data-formatter="number_3"
                                  data-labels="{{$pi_trend->keys()}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'Productivity Index',
+                                    'label' => '',
                                     'data' => $pi_trend->values(),
                                     'backgroundColor' => 'rgba(217, 225, 242, 0.6)',
                                     'borderColor' => 'rgba(0, 32, 96, 0.9)'
@@ -154,7 +154,7 @@
                                  data-formatter="percent"
                                  data-labels="{{json_encode(['Actual', 'Planned'])}}"
                                  data-datasets="[{{ json_encode([
-                                    'label' => 'Progress',
+                                    'label' => '',
                                     'data' =>$cost_info['progress'],//
                                     'backgroundColor' => ['rgba(38,89,137,.6)', 'rgba(214,117,53,.6)'],
                                 ]) }}]"
@@ -177,7 +177,7 @@
                              data-type="horizontalBar"
                              data-labels="{{collect(['Planned Value', 'Earned Value', 'Actual Invoice Value'])}}"
                              data-datasets="[{{json_encode([
-                                'label' => 'Revenue Statement',
+                                'label' => '',
                                 'data' => $revenue_statement,
                                 'backgroundColor' => ['rgba(65,108,182,0.6)', 'rgba(104,160,72,0.6)', "rgba(214,117,53,.7)"],
                                    'borderColor' => '#5B9BD5',

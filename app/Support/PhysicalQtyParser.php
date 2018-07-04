@@ -8,6 +8,7 @@ use App\BreakDownResourceShadow;
 use App\ResourceCode;
 use App\Resources;
 use App\UnitAlias;
+use function dd;
 use Illuminate\Support\Collection;
 
 class PhysicalQtyParser
@@ -80,15 +81,18 @@ class PhysicalQtyParser
 
     function handlePhysicalQty($row)
     {
-        $store_activity = code_trim(strtolower($row[0]));
+        $store_activity = trim(strtolower($row[0]));
         $budget_activity = $this->activityCodes->get($store_activity);
 
-        $store_resource = code_trim(strtolower($row[7]));
+        $store_resource = trim(strtolower($row[7]));
         $budget_resources = $this->resourcesMap->get($store_resource);
         $rollup_resource = $this->rollupResourcesMap->get($store_resource);
 
-        // Check if we have activity rollup
-        $rolledUpResource = BreakDownResourceShadow::where('resource_code', $budget_activity)->where('is_rollup', true)->where('show_in_cost', true)->first();
+        // Check if we have activity rollup, where activity_code = resource_code
+        $rolledUpResource = BreakDownResourceShadow::where('project_id', $this->batch->project_id)
+            ->where('code', $budget_activity)->where('resource_code', $budget_activity)
+            ->where('is_rollup', true)->where('show_in_cost', true)->first();
+
         if ($rolledUpResource) {
             $this->mapResource($rolledUpResource, $row);
 
@@ -118,6 +122,8 @@ class PhysicalQtyParser
                 return $query->whereIn('resource_id', $budget_resources);
             })->when($rollup_resource, function ($query) use ($rollup_resource) {
                 return $query->where('id', $rollup_resource);
+            })->when(!empty($row['9']), function($q) use ($row) {
+                return $q->where('cost_account', $row['9']);
             })->orderByRaw('coalesce(important, 0) DESC');
 
         $resource = $query->first();
@@ -138,13 +144,15 @@ class PhysicalQtyParser
 
         BreakDownResourceShadow::where('project_id', $this->batch->project_id)
             ->selectRaw('DISTINCT code')->each(function ($activity) {
-                $code = code_trim(strtolower($activity->code));
+                $code = trim(strtolower($activity->code));
                 $this->activityCodes->put($code, $code);
             });
 
         ActivityMap::where('project_id', $this->batch->project_id)->each(function ($mapping) {
-            $code = code_trim(strtolower($mapping->equiv_code));
-            $mappingCode = code_trim(strtolower($mapping->activity_code));
+            $code = trim(strtolower($mapping->equiv_code));
+            $mappingCode = trim(strtolower($mapping->activity_code));
+
+            // If activity is found in the project, add the equivalent code
             if ($this->activityCodes->has($mappingCode)) {
                 $this->activityCodes->put($code, $mappingCode);
             }
@@ -162,7 +170,7 @@ class PhysicalQtyParser
 
         ResourceCode::where('project_id', $this->batch->project_id)
             ->get(['id', 'resource_id', 'code'])->reduce(function (Collection $map, $resource) {
-                $code = code_trim(strtolower($resource->code));
+                $code = trim(strtolower($resource->code));
                 if ($map->has($code)) {
                     $map->get($code)->push($resource->resource_id);
                 } else {
@@ -209,15 +217,15 @@ class PhysicalQtyParser
 
     private function checkUnitOfMeasure($resource, $row)
     {
-        $storeUnit = strtolower(code_trim($row[3]));
-        $budgetUnit = strtolower(code_trim($resource->measure_unit));
+        $storeUnit = strtolower(trim($row[3]));
+        $budgetUnit = strtolower(trim($resource->measure_unit));
 
         if ($storeUnit == $budgetUnit) {
             return false;
         }
 
         return !UnitAlias::whereUnitId($resource->unit_id)->pluck('name')->map(function ($unit) {
-            return strtolower(code_trim($unit));
+            return strtolower(trim($unit));
         })->contains($storeUnit);
     }
 }

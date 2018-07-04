@@ -32,18 +32,18 @@
 
                 <tbody>
                 <tr>
-                    <td class="text-center" v-text="first.unit_price|number_format"></td>
-                    <td class="text-center" v-text="budget_unit|number_format"></td>
-                    <td class="text-center" v-text="budget_cost|number_format"></td>
-                    <td class="text-center" v-text="first.measure_unit"></td>
+                    <td class="text-center" v-text="resource.unit_price|number_format"></td>
+                    <td class="text-center" v-text="resource.budget_qty|number_format"></td>
+                    <td class="text-center" v-text="resource.budget_cost|number_format"></td>
+                    <td class="text-center" v-text="resource.measure_unit"></td>
 
-                    <td class="text-center" v-text="actual_unit_price|number_format"></td>
-                    <td class="text-center" v-text="actual_qty|number_format"></td>
-                    <td class="text-center" v-text="actual_cost|number_format"></td>
-                    <td class="text-center" :class="qty_var < 0? 'text-danger' : 'text-success'"
-                        v-text="qty_var|number_format"></td>
+                    <td class="text-center" v-text="resource.actual_unit_price|number_format"></td>
+                    <td class="text-center" v-text="resource.actual_qty|number_format"></td>
+                    <td class="text-center" v-text="resource.actual_cost|number_format"></td>
+                    <td class="text-center" :class="resource.qty_var < 0? 'text-danger' : 'text-success'"
+                        v-text="resource.qty_var|number_format"></td>
                     <td class="text-center" :class="cost_var < 0? 'text-danger' : 'text-success'"
-                        v-text="cost_var|number_format"></td>
+                        v-text="resource.cost_var|number_format"></td>
                 </tr>
                 </tbody>
             </table>
@@ -53,9 +53,10 @@
                     <table class="table table-striped table-condensed table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th class="text-center table-caption" colspan="7">Budget</th>
+                            <th class="text-center table-caption" colspan="8">Budget</th>
                         </tr>
                         <tr>
+                            <th class="text-center text-danger"><i class="fa fa-asterisk"></i></th>
                             <th>Code</th>
                             <th>Name</th>
                             <th>U.O.M</th>
@@ -67,6 +68,9 @@
                         </thead>
                         <tbody>
                         <tr v-for="budget_resource in resource.budget_resources">
+                            <td class="text-center">
+                               <span v-if="budget_resource.important" class="text-danger"><i class="fa fa-asterisk"></i></span>
+                            </td>
                             <td v-text="budget_resource.resource_code"></td>
                             <td v-text="budget_resource.resource_name"></td>
                             <td v-text="budget_resource.measure_unit"></td>

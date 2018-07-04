@@ -16,11 +16,11 @@ window.number_format2 = function (num) {
 
 window.number_format3 = function (num) {
     return window.number_format(num, 3);
-}
+};
 
 window.percent = function (num) {
     return window.number_format(num, 2) + '%';
-}
+};
 
 Chart.defaults.global.plugins.datalabels.align = 'center';
 Chart.defaults.global.plugins.datalabels.anchor = 'center';
@@ -73,7 +73,11 @@ document.querySelectorAll('.chart').forEach((item) => {
 
     if (item.dataset.animate !== undefined) {
         options.animation= {duration: 0};
-        console.log(options);
+    }
+
+    const show_legend = data.datasets.filter(set => !!set.label).length;
+    if (!show_legend) {
+        options.legend = {display: false};
     }
 
     const chart = new Chart(canvas, {

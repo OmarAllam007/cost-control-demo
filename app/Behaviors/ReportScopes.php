@@ -4,6 +4,7 @@ namespace App\Behaviors;
 
 
 use App\Period;
+use App\StdActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
@@ -31,7 +32,7 @@ trait ReportScopes
     public function scopeVarAnalysisReport(Builder $query)
     {
         $query->selectRaw(
-            'resource_name, resource_type_id, trim(boq_discipline) as boq_discipline, trim(rt.name) as resource_type, avg(unit_price) as budget_unit_price,'.
+            'resource_code, resource_name, resource_type_id, act.discipline as boq_discipline, trim(rt.name) as resource_type, avg(unit_price) as budget_unit_price,'.
             '(CASE WHEN sum(prev_qty) = 0 THEN 0 ELSE sum(prev_cost) / sum(prev_qty) END) as prev_unit_price, ' .
             '(CASE WHEN sum(curr_qty) = 0 THEN 0 ELSE sum(curr_cost) / sum(curr_qty) END) AS curr_unit_price,' .
             '(CASE WHEN sum(to_date_qty) = 0 THEN 0 ELSE sum(to_date_cost) / sum(to_date_qty) END) AS to_date_unit_price,' .
@@ -40,8 +41,9 @@ trait ReportScopes
         );
 
         $query->join('resource_types as rt', 'resource_type_id', '=', 'rt.id');
+        $query->join('std_activities as act', 'activity_id', '=', 'act.id');
 
-        $query->groupBy(['resource_name', 'resource_type_id', 'boq_discipline', 'resource_type'])->orderByRaw('3, 4, 1');
+        $query->groupBy(['resource_code', 'resource_name', 'resource_type_id', 'boq_discipline', 'resource_type'])->orderByRaw('4, 5, 2');
         return $query;
     }
 
@@ -107,8 +109,10 @@ trait ReportScopes
 
     function scopeDashboardSummary($query, $period)
     {
+        $general_activities = StdActivity::where('division_id', 779)->pluck('id')->implode(', ');
+
         return $query->where('period_id', $period->id)
-            ->selectRaw("(CASE WHEN resource_type_id = 1 THEN 'INDIRECT' WHEN resource_type_id = 8 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'")
+            ->selectRaw("(CASE WHEN activity_id IN ($general_activities) THEN 'INDIRECT' WHEN activity_id = 3060 THEN 'MANAGEMENT RESERVE' ELSE 'DIRECT' END) AS 'type'")
             ->selectRaw('SUM(prev_cost) AS previous_cost')
             ->selectRaw('SUM(allowable_ev_cost) AS allowable_cost, SUM(budget_cost) AS budget_cost')
             ->selectRaw('SUM(to_date_cost) AS to_date_cost, SUM(remaining_cost) AS remaining_cost')

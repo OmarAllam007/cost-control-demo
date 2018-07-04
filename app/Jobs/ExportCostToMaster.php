@@ -227,14 +227,18 @@ class ExportCostToMaster extends Job implements ShouldQueue
             ->when($this->project->is_activity_rollup, function ($q) {
                 return $q->where('important', true);
             })->each(function (BreakDownResourceShadow $resource) {
+                if ($resource->is_rollup) {
+                    return true;
+                }
+
                 $resource->setCalculationPeriod($this->period);
 
-                $to_date_qty = $resource->actual_resources->sum('qty') + $resource->important_actual_resources->sum('qty');
+                $to_date_qty = $resource->actual_resources()->withTrashed()->sum('qty') + $resource->important_actual_resources->sum('qty');
                 if (!$to_date_qty) {
                     return true;
                 }
 
-                $to_date_cost = $resource->actual_resources->sum('cost') + $resource->important_actual_resources->sum('cost');
+                $to_date_cost = $resource->actual_resources()->withTrashed()->sum('cost') + $resource->important_actual_resources->sum('cost');
                 $to_date_unit_price = 0;
                 $to_date_unit_price = $to_date_cost / $to_date_qty;
 
@@ -256,7 +260,7 @@ class ExportCostToMaster extends Job implements ShouldQueue
                     'period_id' => $this->period->id,
                     'breakdown_resource_id' => $resource->breakdown_resource_id,
                     'resource_id' => $resource->resource_id,
-                    'resource_type_id' => $resource->resource->resource_type_id,
+                    'resource_type_id' => $resource->resource->resource_type_id ?? $resource->resource_type_id,
                     'to_date_qty' => $to_date_qty,
                     'to_date_unit_price' => $to_date_unit_price,
                     'allowable_qty' => $allowable_qty,

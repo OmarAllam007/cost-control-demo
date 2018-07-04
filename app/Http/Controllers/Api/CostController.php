@@ -137,14 +137,14 @@ class CostController extends Controller
 
     function deleteResource(BreakdownResource $breakdown_resource)
     {
-        if (cannot('actual_resources', $breakdown_resource->breakdown->project)) {
+        if (cannot('actual_resources', $breakdown_resource->project)) {
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
 
         $counter = ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
-            ->where('period_id', $breakdown_resource->breakdown->project->open_period()->id)
+            ->where('period_id', $breakdown_resource->project->open_period()->id)
             ->get()->map(function (ActualResources $resource) {
-                return $resource->delete();
+                return $resource->forceDelete();
             })->filter()->count();
 
         if ($counter) {
@@ -164,7 +164,7 @@ class CostController extends Controller
 
         ActualResources::where('batch_id', $actual_batch->id)
             ->get()->each(function (ActualResources $resource) {
-                $resource->delete();
+                $resource->forceDelete();
             });
 
         StoreResource::where('batch_id', $actual_batch->id)->delete();
@@ -176,19 +176,23 @@ class CostController extends Controller
         return ['ok' => true, 'message' => 'Resources data has been deleted'];
     }
 
-    function deleteActivity(Breakdown $breakdown)
+    function deleteActivity(WbsLevel $wbs)
     {
-        if (cannot('actual_resources', $breakdown->project)) {
+        if (cannot('actual_resources', $wbs->project)) {
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
 
-        $resourceIds = $breakdown->resources->pluck('id');
+        $code = request('code');
+
+        $resourceIds = $wbs->project->shadows()
+            ->whereIn('wbs_id', $wbs->getChildrenIds())
+            ->where('code', $code)->pluck('breakdown_resource_id');
 
         ActualResources::whereIn('breakdown_resource_id', $resourceIds)
-            ->where('period_id', $breakdown->project->open_period()->id)
+            ->where('period_id', $wbs->project->open_period()->id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
-                    $resource->delete();
+                    $resource->forceDelete();
                 });
             });
 
@@ -205,7 +209,7 @@ class CostController extends Controller
             ->where('period_id', $wbs_level->project->open_period()->id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
-                    $resource->delete();
+                    $resource->forceDelete();
                 });
             });
 
@@ -222,7 +226,7 @@ class CostController extends Controller
             ->where('period_id', $project->open_period()->id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
-                    $resource->delete();
+                    $resource->forceDelete();
                 });
             });
 

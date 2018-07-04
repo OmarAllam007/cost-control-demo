@@ -29,7 +29,7 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('batches/{project}', 'Api\CostController@batches');
 
         Route::delete('/delete-resource/{breakdown_resource}', 'Api\CostController@deleteResource');
-        Route::delete('/delete-activity/{breakdown}', 'Api\CostController@deleteActivity');
+        Route::delete('/delete-activity/{wbs}', 'Api\CostController@deleteActivity');
         Route::delete('/delete-wbs/{wbs_level}', 'Api\CostController@deleteWbs');
         Route::delete('/delete-current/{project}', 'Api\CostController@deleteProject');
         Route::delete('/delete-batch/{actual_batch}', 'Api\CostController@deleteBatch');
@@ -304,3 +304,9 @@ Route::get('api/activity-log/{wbs}', 'Api\ActivityLogController@show');
 
 Route::get('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@create')->name('breakdown-template.import-to-project');
 Route::post('breakdown-template/import-to-project/{project}', 'ImportTemplateToProjectController@store');
+
+Route::get('project/{project}/export-progress', 'UpdateProgressController@show')->name('project.export-progress');
+Route::get('project/{project}/update-progress', 'UpdateProgressController@create')->name('project.update-progress');
+Route::put('project/{project}/update-progress', 'UpdateProgressController@store');
+Route::get('project/{project}/modify-progress', 'UpdateProgressController@edit')->name('project.modify-progress');
+Route::put('project/{project}/modify-progress', 'UpdateProgressController@update');

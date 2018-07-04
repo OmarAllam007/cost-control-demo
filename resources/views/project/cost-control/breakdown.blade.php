@@ -112,7 +112,7 @@
             </div>
 
             @can('delete_resources', $project)
-                <delete-resource-modal inline-template>
+                <delete-resource-modal  @reload_breakdowns="loadBreakdowns()" inline-template>
                     <form class="modal fade" tabindex="-1" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -139,7 +139,7 @@
                     </form>
                 </delete-resource-modal>
 
-                <delete-activity-modal inline-template>
+                <delete-activity-modal @reload_breakdowns="loadBreakdowns()" inline-template>
                     <form class="modal fade" tabindex="-1" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">

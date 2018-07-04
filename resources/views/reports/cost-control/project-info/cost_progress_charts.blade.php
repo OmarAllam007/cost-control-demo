@@ -26,7 +26,7 @@
                  data-formatter="percent"
                  data-labels="{{json_encode(['Actual Progress', 'Planned Progress'])}}"
                  data-datasets="[{{ json_encode([
-                                'label' => 'Progress Percentage', 'data' => [$period->actual_progress, $period->planned_progress],//[$period->actual_progress, $period->planned_progress]
+                                'label' => '', 'data' => [$period->actual_progress, $period->planned_progress],//[$period->actual_progress, $period->planned_progress]
                                 'backgroundColor' => ['rgba(38,89,137,.6)', 'rgba(214,117,53,.6)'],
                                 'borderColor' => 'rgba(217, 225, 242, 0.6)'
                             ]) }}]"

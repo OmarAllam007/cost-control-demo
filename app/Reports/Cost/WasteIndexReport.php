@@ -53,12 +53,15 @@ class WasteIndexReport
         $this->types = ResourceType::all()->groupBy('parent_id');
 
         $query = WasteIndex::from('waste_indices as wi')
-            ->selectRaw('r.name as resource_name, r.resource_type_id, sum(wi.to_date_qty) as to_date_qty')
-            ->selectRaw('sum(wi.allowable_qty) as allowable_qty, avg(wi.to_date_unit_price) as to_date_unit_price')
+            ->selectRaw('r.id as resource_id, r.name as resource_name, r.resource_type_id, sum(wi.to_date_qty) as to_date_qty')
+            ->selectRaw('sum(wi.allowable_qty) as allowable_qty, sum(to_date_unit_price * to_date_qty) as to_date_cost ,sum(to_date_unit_price * to_date_qty) / sum(to_date_qty) as to_date_unit_price')
             ->selectRaw('sum(qty_var) as qty_var, sum(waste_var) as to_date_cost_var, sum(waste_index) as pw_index')
-            ->join('resources as r', 'wi.resource_id', '=', 'r.id')
             ->where('wi.period_id', $this->period->id)
-            ->groupBy(['r.name', 'r.resource_type_id']);
+            ->when($this->project->hasRollup(), function($q) {
+                return $q->whereRaw("breakdown_resource_id in (select breakdown_resource_id from break_down_resource_shadows where project_id = {$this->project->id} and important)");
+            })
+            ->join('resources as r', 'wi.resource_id', '=', 'r.id')
+            ->groupBy(['r.id', 'r.name', 'r.resource_type_id']);
 
 //            MasterShadow::from('master_shadows as sh')
 //            ->where('sh.period_id', $this->period->id)
@@ -172,10 +175,9 @@ class WasteIndexReport
         $sheet->setCellValue('A5', "Issue Date: " . date('d M Y'));
         $sheet->setCellValue('A6', "Period: {$this->period->name}");
 
-
         $sheet->setCellValue("F{$this->row}", $this->tree->sum('allowable_cost'));
         $sheet->setCellValue("G{$this->row}", $this->tree->sum('to_date_cost'));
-        $sheet->setCellValue("H{$this->row}", $this->tree->sum('to_date_cost_var'));
+        $sheet->setCellValue("H{$this->row}", $this->tree->sum('variance'));
         $sheet->setCellValue("I{$this->row}", $this->total_pw_index / 100);
 
         $this->tree->each(function($type) use ($sheet) {

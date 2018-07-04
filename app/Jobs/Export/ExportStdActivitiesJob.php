@@ -3,82 +3,124 @@
 namespace App\Jobs\Export;
 
 use App\Jobs\ImportJob;
-use App\Jobs\Job;
-use App\StdActivity;
+use App\Support\ActivityDivisionTree;
+use function array_merge;
+use function array_pad;
+use function array_reverse;
+use function array_splice;
+use function count;
+use PHPExcel_Worksheet;
+use SplStack;
+use function storage_path;
+use function uniqid;
 
 
 class ExportStdActivitiesJob extends ImportJob
 {
+    private $row = 1;
+    /** @var SplStack */
+    private $divisionStack;
+
+    public function __construct()
+    {
+        $this->divisionStack = new SplStack();
+    }
 
     /**
-     *
+     * @throws \PHPExcel_Exception
      */
     public function handle()
     {
-        set_time_limit(600);
-        $col = 0;
         $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
-        /** @var \PHPExcel $active_sheet */
-        $active_sheet = $objPHPExcel->getActiveSheet();
-        $active_sheet->fromArray(['Code', 'Name', 'Division', 'Discipline', 'Work Package Name'
-            , 'Partial ID'], 'A1');
-        $rowCount = 2;
-        $varnumber = 1;
-        $activities = StdActivity::all();
-        $data = [];
-        foreach ($activities as $activity) {
-            $active_sheet->setCellValueByColumnAndRow($col, $rowCount, $activity->code);
-            $col++;
-            $active_sheet->setCellValueByColumnAndRow($col, $rowCount, $activity->name);
-            $col++;
-            $active_sheet->setCellValueByColumnAndRow($col, $rowCount, $activity->division->name);
-            $col++;
-            $active_sheet->setCellValueByColumnAndRow($col, $rowCount, $activity->discipline);
-            $col++;
-            $active_sheet->setCellValueByColumnAndRow($col, $rowCount, $activity->work_package_name);
-            $col++;
-            $active_sheet->setCellValueByColumnAndRow($col, $rowCount, $activity->id_partial);
-            $col++;
 
-            if (count($activity->variables)) {
-                foreach ($activity->variables as $variable) {
+        $sheet = $objPHPExcel->getSheet();
+        $sheet->fromArray([
+            'Code', 'Name', 'Division', 'Sub Division 1', 'Sub Division 2', 'Sub Division 3', 'Sub Division 4',
+            'Discipline', 'Work Package Name', 'Partial ID', '$v1', '$v2', '$v3', '$v4', '$v5', '$v6', '$v7', '$v8',
+            '$v9', '$v10'
+        ], null,'A1', true);
 
-                    $active_sheet->setCellValueByColumnAndRow($col, 1, '$var' . $varnumber);
-                    $active_sheet->setCellValueByColumnAndRow($col, $rowCount, $variable->label);
-                    $col++;
-                    $varnumber++;
-                }
-            }
-            $varnumber = 1;
-            $col = 0;
-            $rowCount++;
-
+        $divisionCache = new ActivityDivisionTree();
+        $divisions = $divisionCache->get();
+        foreach ($divisions as $division) {
+            $this->buildDivision($sheet, $division);
         }
 
-        $styleArray = array(
-            'font' => array(
-                'bold' => true,
-                'color' => array('rgb' => 'F8F8FF'),
-                'size' => 15,
-                'name' => 'Verdana',
+        $this->applyStyle($sheet);
 
-            ));
-        $active_sheet->getStyle('A1:' . $active_sheet->getHighestDataColumn() . $varnumber)
-            ->getFill()
-            ->setFillType(\PHPExcel_Style_Fill::FILL_SOLID)
-            ->getStartColor()
-            ->setARGB('1C86EE');
-
-
-        $objPHPExcel->getActiveSheet()->getStyle('A1:' . $active_sheet->getHighestDataColumn() . $varnumber)->applyFromArray($styleArray);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="All-StdActivities.xlsx"');
-        header('Cache-Control: max-age=0');
         $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save('php://output');
+        $filename = storage_path('app/std_activities_' . uniqid() . '.xlsx');
+        $objWriter->save($filename);
+        return $filename;
+    }
 
+    /**
+     * @param $sheet PHPExcel_Worksheet
+     * @param $division
+     * @param $depth
+     * @throws \PHPExcel_Exception
+     */
+    private function buildDivision($sheet, $division, $depth = 0)
+    {
+        while ($this->divisionStack->count() > $depth) {
+            $this->divisionStack->pop();
+        }
 
+        $this->divisionStack->push($division->label);
+
+        foreach ($division->activities->sortBy('code') as $activity) {
+            ++$this->row;
+            $data = [$activity->code, $activity->name];
+            $data = array_merge($data, $this->getDivisions());
+            $data = array_merge($data, [$activity->discipline, $activity->work_package_name, $activity->id_partial]);
+            $sheet->fromArray($data, null, "A{$this->row}", true);
+
+            if ($activity->variables->count()) {
+                $sheet->fromArray($activity->variables->pluck('label')->toArray(), null,"K{$this->row}", true);
+            }
+        }
+
+        foreach ($division->subtree as $subdivision) {
+            $this->buildDivision($sheet, $subdivision, $depth + 1);
+        }
+    }
+
+    private function getDivisions()
+    {
+        $divisions = [];
+        foreach ($this->divisionStack as $division) {
+            $divisions[] = $division;
+        }
+
+        $divisions = array_reverse($divisions);
+
+        if (count($divisions) > 5) {
+            return array_splice($divisions, 0, 5);
+        }
+
+        return array_pad($divisions, 5, '');
+    }
+
+    /**
+     * @param $sheet
+     */
+    private function applyStyle($sheet)
+    {
+        $styleArray = [
+            'font' => ['bold' => true, 'color' => ['rgb' => 'F8F8FF']],
+            'fill' => ['type' => 'solid', 'startcolor' => ['rgb' => '1C86EE']]
+        ];
+
+        $col = $sheet->getHighestColumn();
+
+        foreach (range('A', $col) as $c) {
+            $sheet->getColumnDimension($c)->setAutoSize(true);
+        }
+
+        $sheet->getStyle("A1:{$col}{$this->row}")->getNumberFormat()->setFormatCode('@');
+
+        $sheet->getStyle("A1:{$col}1")->applyFromArray($styleArray);
+        $sheet->setAutoFilter("A1:J{$this->row}");
     }
 
 }
