@@ -145,7 +145,7 @@
 
                 <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Time Performance</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Physical Performance</h4>
 
                         <div class="card-body">
                             <div class="chart"
