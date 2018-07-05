@@ -92,6 +92,37 @@ class ExportBudget
             ->selectRaw('activity_id, activity, code, sap_code, sum(budget_cost) as budget_cost')
             ->groupBy(['activity_id', 'activity', 'code', 'sap_code'])->get();
 
+        $divisions = $shadows->map(function($shadow) {
+            return $shadow->std_activity->division->root;
+        })->unique()->each(function($division) use ($wbs) {
+            $activities = StdActivity::whereIn('division_id', $division->getChildrenIds())->pluck('id');
+            $shadows = $this->project->shadows()->where('wbs_id', $wbs->id)->with('std_activity')
+                ->whereIn('activity_id', $activities)
+                ->selectRaw('activity_id, activity, code, sap_code, sum(budget_cost) as budget_cost')
+                ->groupBy(['activity_id', 'activity', 'code', 'sap_code'])->get();
+            $budget_cost = $shadows->sum('budget_cost');
+
+            $code = '.' . str_replace('.', '', $division->code);
+            $this->sheet->fromArray([$wbs->code, $wbs->code . $code, $wbs->sap_code . $code], null, "A{$this->counter}");
+            $this->sheet->fromArray($this->wbs_path->slice(0, 7)->toArray(), null, "D{$this->counter}");
+            $this->sheet->setCellValue("K{$this->counter}", $division->name);
+            $this->sheet->setCellValue("L{$this->counter}", $division->name);
+            $this->sheet->setCellValue("N{$this->counter}", $budget_cost);
+            ++$this->counter;
+
+            foreach ($shadows as $shadow) {
+                $this->sheet->fromArray([$wbs->code, $shadow->code, $shadow->sap_code], null, "A{$this->counter}");
+                $this->sheet->fromArray($this->wbs_path->slice(0, 7)->toArray(), null, "D{$this->counter}");
+                $this->sheet->fromArray([
+                    $shadow->activity, $division->name, $shadow->activity, round($shadow->budget_cost, 2)
+                ], null, "K{$this->counter}");
+
+                ++$this->counter;
+            }
+        });
+
+
+
         foreach ($shadows as $shadow) {
 
             if (!$this->division_cache->has($shadow->std_activity->division_id)) {
@@ -100,23 +131,7 @@ class ExportBudget
 
             $division = $this->division_cache->get($shadow->std_activity->division_id);
 
-            $activities = StdActivity::whereIn('division_id', $division->getChildrenIds())->pluck('id');
-            $budget_cost = BreakDownResourceShadow::where('wbs_id', $wbs->id)->whereIn('activity_id', $activities)->sum('budget_cost');
 
-            $this->sheet->fromArray([$wbs->code, $wbs->code . $division->partial_id, $wbs->sap_code . $division->sap_prtial_id], null, "A{$this->counter}");
-            $this->sheet->fromArray($this->wbs_path->slice(0, 7)->toArray(), null, "D{$this->counter}");
-            $this->sheet->setCellValue("K{$this->counter}", $division->name);
-            $this->sheet->setCellValue("L{$this->counter}", $division->name);
-            $this->sheet->setCellValue("N{$this->counter}", $budget_cost);
-            ++$this->counter;
-
-            $this->sheet->fromArray([$wbs->code, $shadow->code, $shadow->sap_code], null, "A{$this->counter}");
-            $this->sheet->fromArray($this->wbs_path->slice(0, 7)->toArray(), null, "D{$this->counter}");
-            $this->sheet->fromArray([
-                $shadow->activity, $division->name, $shadow->activity, round($shadow->budget_cost, 2)
-            ], null, "K{$this->counter}");
-
-            ++$this->counter;
         }
     }
 }
