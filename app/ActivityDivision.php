@@ -61,7 +61,7 @@ class ActivityDivision extends Model
             $parent_ids[] = $parent->id;
         }
 
-        return $parents;
+        return $parent;
     }
 
     function isGeneral()
