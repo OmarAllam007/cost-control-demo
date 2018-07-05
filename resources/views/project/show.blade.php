@@ -35,9 +35,13 @@
                     <i class="fa fa-cloud-download"></i> Export <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
+                    <li><a href="{{route('wbs-level.export', $project)}}">WBS</a></li>
+                    <li class="divider"></li>
                     <li><a href="{{route('boq.export', $project)}}">BOQ</a></li>
                     <li><a href="{{route('survey.export', $project)}}">Qty Survey</a></li>
                     <li><a href="{{route('break_down.export', $project)}}">Breakdown</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{route('project.export-sap-budget', $project)}}">Export for SAP</a></li>
                 </ul>
             </div>
 
@@ -53,6 +57,7 @@
                     <li><a href="{{route('survey.modify', $project)}}">Modify Qty Survey</a></li>
                     @can('budget_owner', $project)
                     <li class="divider"></li>
+                    <li><a href="{{route('wbs-level.import', $project)}}" class="in-iframe" title="Import Breakdown">Import WBS</a></li>
                     <li><a href="{{route('easy-upload', $project)}}" class="in-iframe" title="Import Breakdown">Import Breakdown</a></li>
                     <li><a href="{{route('project.breakdown.import', $project)}}">Modify Breakdown</a></li>
                     @endcan
