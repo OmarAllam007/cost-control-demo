@@ -397,7 +397,9 @@ class ProjectInfo
         $revision0['indirect_cost'] = $revision0['general_requirements'];
         $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'] - $revision0['management_reserve'];
 
-        $latest = BudgetRevision::where('project_id', $this->project->id)->where('is_generated', 1)->latest()->first();
+        $latest = BudgetRevision::where('project_id', $this->project->id)
+            ->where('global_period_id', $this->period->global_period_id)
+            ->where('is_generated', 1)->latest()->first();
 
         $revision1 = [];
 
