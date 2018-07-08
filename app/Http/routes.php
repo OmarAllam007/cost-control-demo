@@ -14,6 +14,8 @@ Route::get('/', function () {
     return \Redirect::route('project.index');
 });
 
+Route::get('home', 'HomeController@index')->name('home');
+
 Route::auth();
 Route::get('auth/google', 'Auth\AuthController@googleRedirect');
 Route::get('auth/google/continue', 'Auth\AuthController@googleHandle');
