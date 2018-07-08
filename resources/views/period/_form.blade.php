@@ -175,7 +175,7 @@
                 </article>
             </fieldset>
 
-            <fieldset>
+            {{--<fieldset>
                 <legend>Indirect At Completion</legend>
 
                 <article class="form-group {{$errors->first('at_completion_optimistic', 'has-error')}}">
@@ -202,7 +202,7 @@
                     </div>
                 </article>
 
-            </fieldset>
+            </fieldset>--}}
         @endif
         <hr>
 
