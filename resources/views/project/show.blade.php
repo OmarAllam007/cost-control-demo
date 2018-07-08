@@ -50,14 +50,15 @@
                     <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="{{route('boq.import', $project)}}" class="in-iframe" title="Import BOQ">Import BOQ</a></li>
-                    <li><a href="{{route('survey.import', $project)}}" class="in-iframe" title="Import Quantity Survey">Import Qty Survey</a></li>
+                    <li><a href="{{route('wbs-level.import', $project)}}" class="in-iframe" title="Import Breakdown">Import WBS</a></li>
                     <li class="divider"></li>
+                    <li><a href="{{route('boq.import', $project)}}" class="in-iframe" title="Import BOQ">Import BOQ</a></li>
                     <li><a href="{{route('boq.modify', $project)}}">Modify Boq</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{{route('survey.import', $project)}}" class="in-iframe" title="Import Quantity Survey">Import Qty Survey</a></li>
                     <li><a href="{{route('survey.modify', $project)}}">Modify Qty Survey</a></li>
                     @can('budget_owner', $project)
                     <li class="divider"></li>
-                    <li><a href="{{route('wbs-level.import', $project)}}" class="in-iframe" title="Import Breakdown">Import WBS</a></li>
                     <li><a href="{{route('easy-upload', $project)}}" class="in-iframe" title="Import Breakdown">Import Breakdown</a></li>
                     <li><a href="{{route('project.breakdown.import', $project)}}">Modify Breakdown</a></li>
                     @endcan
