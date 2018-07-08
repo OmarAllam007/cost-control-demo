@@ -86,12 +86,14 @@ class UpdateProgressController extends Controller
     {
         $this->authorize('actual_resources', $project);
 
-        $this->validate($request, ['progress.*' => 'gt:0|lte:100']);
+        $this->validate($request, ['progress.*' => 'gte:0|lte:100']);
 
         foreach ($request->get('progress') as $id => $progress) {
             $status = 'In Progress';
             if ($progress == 100) {
                 $status = 'Closed';
+            } elseif ($progress == 0) {
+                $status = 'Not Started';
             }
 
             $project->shadows()->where('id', $id)->update(['progress' => $progress, 'status' => $status]);
