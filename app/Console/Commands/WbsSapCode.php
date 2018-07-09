@@ -31,7 +31,7 @@ class WbsSapCode extends Command
 
     function addCode(WbsLevel $level) {
         if ($level->parent) {
-            if (in_array($level>id, $this->skip)) {
+            if (in_array($level->id, $this->skip)) {
                 return true;
             }
             $maxCode = $level->parent->children()->max('sap_code');
