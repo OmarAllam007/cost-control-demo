@@ -78,6 +78,10 @@ trait CostAttributes
             return $this->attributes['to_date_qty'];
         }
 
+        if ($this->unit_id == 15 && $this->completion_cost) {
+            return $this->attributes['to_date_qty'] = $this->to_date_cost / $this->completion_cost;
+        }
+
         $actual_qty =  ActualResources::when($this->important && $this->rolled_up_at, function($q) {
             return $q->withTrashed();
         })->where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
