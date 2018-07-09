@@ -111,7 +111,7 @@ class ActivityRollup
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true
         ]);
 
-        return $this->update_cost($resource->code);
+        return $this->update_progress($resource->code);
     }
 
     private function createRollupResource($resource)
@@ -126,14 +126,14 @@ class ActivityRollup
         ]);
     }
 
-    private function update_cost($code)
+    private function update_progress($code)
     {
         $breakdown_resources = $this->breakdown_resources->get($code);
 
         $period = $this->project->open_period();
-        if (!$period) {
-            return $this->rollup_shadow;
-        }
+//        if (!$period) {
+//            return $this->rollup_shadow;
+//        }
 
 //        $actual_resources = ActualResources::whereIn('breakdown_resource_id', $resource_ids)->get();
         // Update actual resource data based on to date quantity
@@ -156,16 +156,16 @@ class ActivityRollup
             $to_date_unit_price = $to_date_cost / $to_date_qty;
         }
 
-        ActualResources::forceCreate([
+       /* ActualResources::forceCreate([
             'project_id' => $this->project->id, 'wbs_level_id' => $this->rollup_shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
             'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
             'unit_id' => $this->rollup_shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $this->rollup_shadow->resource_id,
             'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
-        ]);
+        ]);*/
 
         $this->rollup_shadow->update(compact('progress', 'status'));
 
-        ActualResources::whereIn('breakdown_resource_id', $breakdown_resources->pluck('id'))->where('period_id', $period->id)->delete();
+//        ActualResources::whereIn('breakdown_resource_id', $breakdown_resources->pluck('id'))->where('period_id', $period->id)->delete();
 
         return $this->rollup_shadow;
     }
