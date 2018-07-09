@@ -146,7 +146,7 @@ class SemiActivityRollup
             'created_by' => $this->user_id, 'created_at' => $this->now, 'is_rollup' => true
         ]);
 
-        return $this->update_cost($code, $resource_ids);
+        return $this->update_progress($code, $resource_ids);
     }
 
     private function createRollupResource($resource)
@@ -163,7 +163,7 @@ class SemiActivityRollup
         ]);
     }
 
-    private function update_cost($code, $resource_ids)
+    private function update_progress($code, $resource_ids)
     {
         $actual_resources = BreakDownResourceShadow::whereIn('breakdown_resource_id', $resource_ids)->get();
 
