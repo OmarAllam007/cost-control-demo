@@ -10,10 +10,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/', function () {
-    return \Redirect::route('project.index');
-});
 
+
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('home', 'HomeController@index')->name('home');
 
 Route::auth();
