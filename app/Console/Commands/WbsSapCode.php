@@ -42,7 +42,7 @@ class WbsSapCode extends Command
 
             $level->sap_code = $level->parent->sap_code . '.' . sprintf('%02d', $partial);
         } else {
-            if (in_array($level>id, $this->skip)) {
+            if (in_array($level->id, $this->skip)) {
                 return true;
             }
             $level->sap_code = $level->project->project_code;
