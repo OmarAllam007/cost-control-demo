@@ -11,10 +11,22 @@ namespace App\Observers;
 
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\Jobs\CacheCsiCategoryTree;
 use App\Productivity;
 
 class ProductivityObserver
 {
+    function saved()
+    {
+        \Cache::forget('csi-tree');
+        dispatch(new CacheCsiCategoryTree());
+    }
+
+    function deleted()
+    {
+        \Cache::forget('csi-tree');
+        dispatch(new CacheCsiCategoryTree());
+    }
 
     function updating(Productivity $productivity)
     {
