@@ -132,7 +132,7 @@ class StdActivityController extends Controller
 
         $file = $request->file('file');
 
-        $status = $this->dispatch(new ActivityImportJob($file->path()));
+        $status = $this->dispatchNow(new ActivityImportJob($file->path()));
         if ($status['dublicated']) {
             $dublicatedKey = 'std-dublicated';
             if(\Cache::has('std-dublicated')){
@@ -177,7 +177,7 @@ class StdActivityController extends Controller
             return \Redirect::to('/');
         }
 
-        $file = $this->dispatch(new ExportStdActivitiesJob());
+        $file = $this->dispatchNow(new ExportStdActivitiesJob());
         return response()->download($file, 'std_activities.xlsx')->deleteFileAfterSend(true);
     }
 
@@ -199,7 +199,7 @@ class StdActivityController extends Controller
         }
 
         $file = $request->file('file');
-        $this->dispatch(new ModifyPublicStdActivitiesJob($file));
+        $this->dispatchNow(new ModifyPublicStdActivitiesJob($file));
 
         return redirect()->back();
 
@@ -211,6 +211,6 @@ class StdActivityController extends Controller
     }
 
     function exportStdActivityBudgetReport(Project $project){
-        $this->dispatch(new ExportStdActivity($project));
+        $this->dispatchNow(new ExportStdActivity($project));
     }
 }

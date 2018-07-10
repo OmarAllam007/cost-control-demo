@@ -20,7 +20,7 @@ class ResourcesCache
 //
 //        return $resourcesTree;
 
-        return dispatch(new CacheResourcesTree());
+        return dispatch_now(new CacheResourcesTree());
 
     }
 

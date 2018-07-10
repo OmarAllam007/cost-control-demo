@@ -29,7 +29,7 @@ class ProjectProductivityController extends Controller
 
         $this->validate($request, ['file' => 'required|file|mimes:xls,xlsx']);
 
-        $result = $this->dispatch(new ModifyProjectProductivityJob($project, $request->file('file')));
+        $result = $this->dispatchNow(new ModifyProjectProductivityJob($project, $request->file('file')));
 
         flash("{$result['count']} productivity has been updated", 'success');
 

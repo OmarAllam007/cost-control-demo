@@ -79,9 +79,6 @@ class WbsImportJob extends Job
             }
         }
 
-        \Cache::forget('wbs-tree-' . $this->project->id);
-        \Cache::add('wbs-tree-' . $this->project->id, dispatch(new CacheWBSTree($this->project)), 7 * 24 * 60);
-
         return $count;
     }
 }

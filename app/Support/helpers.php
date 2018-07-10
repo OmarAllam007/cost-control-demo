@@ -56,10 +56,10 @@ function check_syntax($equation)
     return false;
 }
 
-function optional($object)
+/*function optional($object)
 {
     return new \App\Support\Optional($object);
-}
+}*/
 
 if (! function_exists('report')) {
     /**

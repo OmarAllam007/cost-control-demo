@@ -172,7 +172,7 @@ class BreakdownTemplateController extends Controller
 //        ]);
 
         $file = $request->file('file');
-        $count = $this->dispatch(new ImportBreakdownTemplateJob($file->path()));
+        $count = $this->dispatchNow(new ImportBreakdownTemplateJob($file->path()));
 
 
         flash($count.' Breakdown templates imported successfully', 'success');

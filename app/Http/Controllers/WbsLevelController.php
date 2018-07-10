@@ -117,7 +117,6 @@ class WbsLevelController extends Controller
         }
         
         $wbs_level->deleteRecursive();
-        $this->dispatch(new CacheWBSTreeInQueue($wbs_level->project));
 
         $msg = 'WBS level has been deleted';
         if ($request->ajax()) {
@@ -151,7 +150,7 @@ class WbsLevelController extends Controller
 
         $file = $request->file('file');
 
-        $count = $this->dispatch(new WbsImportJob($project, $file->path()));
+        $count = $this->dispatchNow(new WbsImportJob($project, $file->path()));
 
         flash($count . 'WBS has been imported', 'success');
 //        return redirect()->to(route('project.show', $project) . '#wbs-structure');
@@ -161,7 +160,7 @@ class WbsLevelController extends Controller
     public function exportWbsLevels(Project $project)
     {
         if (\Gate::allows('budget', $project) || \Gate::allows('cost_control', $project)) {
-            return $this->dispatch(new WbsLevelExportJob($project));
+            return $this->dispatchNow(new WbsLevelExportJob($project));
         }
 
         flash('You are not authorized to do this action');

@@ -168,7 +168,7 @@ class ProductivityController extends Controller
 
         $file = $request->file('file');
 
-        $status = $this->dispatch(new ProductivityImportJob($file->path()));
+        $status = $this->dispatchNow(new ProductivityImportJob($file->path()));
         if ($status['failed']->count()) {
             $key = 'prod_' . time();
             \Cache::add($key, $status, 180);
@@ -301,7 +301,7 @@ class ProductivityController extends Controller
             return \Redirect::to('/');
         }
 
-        $filename = $this->dispatch(new ExportProductivityJob($project));
+        $filename = $this->dispatchNow(new ExportProductivityJob($project));
         return \Response::download($filename, slug($project->name) . '_productivity.xlsx', [
             'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8'
         ])->deleteFileAfterSend(true);
@@ -325,7 +325,7 @@ class ProductivityController extends Controller
             return \Redirect::to('/');
         }
 
-        $this->dispatch(new ExportPublicProductivitiesJob());
+        $this->dispatchNow(new ExportPublicProductivitiesJob());
     }
 
     function modifyAllProductivities()
@@ -346,7 +346,7 @@ class ProductivityController extends Controller
         }
 
         $file = $request->file('file');
-        $this->dispatch(new ModifyPublicProductivitiesJob($file));
+        $this->dispatchNow(new ModifyPublicProductivitiesJob($file));
         return redirect()->action('ProductivityController@index');
     }
 
@@ -417,7 +417,7 @@ class ProductivityController extends Controller
     }
 
     function exportProductivityReport(Project $project){
-        $this->dispatch(new ExportProductivityJob($project));
+        $this->dispatchNow(new ExportProductivityJob($project));
     }
 
 

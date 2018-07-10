@@ -217,7 +217,7 @@ class ResourcesController extends Controller
 
         $file = $request->file('file');
 
-        $status = $this->dispatch(new ResourcesImportJob($file->path(), $project));
+        $status = $this->dispatchNow(new ResourcesImportJob($file->path(), $project));
 
         if ($status['units']->count()) {
             $key = 'res_units_' . time();
@@ -312,8 +312,6 @@ class ResourcesController extends Controller
                 }
             }
 
-            $this->dispatch(new CacheResourcesTree());
-
             if ($status['failed']) {
                 return view('resources.import-failed', compact('status'));
             }
@@ -391,7 +389,7 @@ class ResourcesController extends Controller
             return \Redirect::to('/');
         }
 
-        return $this->dispatch(new ExportResourcesJob($project));
+        return $this->dispatchNow(new ExportResourcesJob($project));
     }
     function exportCostResources(Project $project)
     {
@@ -400,7 +398,7 @@ class ResourcesController extends Controller
             return \Redirect::to('/');
         }
 
-        return $this->dispatch(new ExportCostResources($project));
+        return $this->dispatchNow(new ExportCostResources($project));
 
     }
 
@@ -457,7 +455,7 @@ class ResourcesController extends Controller
 
         $file = $request->file('file');
 
-        $result = $this->dispatch(new ImportResourceCodesJob($file->path(), $project_id));
+        $result = $this->dispatchNow(new ImportResourceCodesJob($file->path(), $project_id));
 
         if ($result['failed']->count()) {
             $key = 'res_codes_' . time();
@@ -544,7 +542,7 @@ class ResourcesController extends Controller
             return \Redirect::to('/');
         }
 
-        return $this->dispatch(new ExportPublicResourcesJob());
+        return $this->dispatchNow(new ExportPublicResourcesJob());
     }
 
     public function modifyAllResources()
@@ -580,7 +578,7 @@ class ResourcesController extends Controller
         }
 
         $file = $request->file('file');
-        $this->dispatch(new ModifyPublicResourcesJob($file, $project_id));
+        $this->dispatchNow(new ModifyPublicResourcesJob($file, $project_id));
 
         flash('Modified resources have been imported', 'success');
         if ($project_id) {
@@ -598,6 +596,6 @@ class ResourcesController extends Controller
     }
 
     function exportResourceMapping(Project $project){
-        $this->dispatch(new ExportResourcesMapping($project));
+        $this->dispatchNow(new ExportResourcesMapping($project));
     }
 }

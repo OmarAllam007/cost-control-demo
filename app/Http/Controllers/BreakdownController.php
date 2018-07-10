@@ -98,14 +98,14 @@ class BreakdownController extends Controller
 
     function exportBreakdown(Project $project)
     {
-        $file = $this->dispatch(new ExportBreakdownJob($project));
+        $file = $this->dispatchNow(new ExportBreakdownJob($project));
         $response = \Response::download($file, slug($project->name) . '-breakdown.csv', ['ContentType' => 'text/csv']);
         return $response;
     }
 
     function printAll(Project $project)
     {
-        $this->dispatch(new PrintAllJob($project));
+        $this->dispatchNow(new PrintAllJob($project));
     }
 
 

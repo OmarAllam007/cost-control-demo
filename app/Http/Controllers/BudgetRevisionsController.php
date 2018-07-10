@@ -68,7 +68,7 @@ class BudgetRevisionsController extends Controller
     }
 
     function export(Project $project, BudgetRevision $revision) {
-        $file = dispatch(new ExportRevisionJob($revision));
+        $file = $this->dispatchNow(new ExportRevisionJob($revision));
 
         return \Response::download($file)->deleteFileAfterSend(true);
     }

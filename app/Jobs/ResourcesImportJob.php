@@ -101,9 +101,6 @@ class ResourcesImportJob extends ImportJob
         }
 
         $status['result_file'] = $this->createResultExcel($resultRows);
-
-        dispatch(new CacheResourcesInQueue());
-
         return $status;
     }
 

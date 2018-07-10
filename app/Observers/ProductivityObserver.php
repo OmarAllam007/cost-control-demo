@@ -16,18 +16,6 @@ use App\Productivity;
 
 class ProductivityObserver
 {
-    function saved()
-    {
-        \Cache::forget('csi-tree');
-        dispatch(new CacheCsiCategoryTree());
-    }
-
-    function deleted()
-    {
-        \Cache::forget('csi-tree');
-        dispatch(new CacheCsiCategoryTree());
-    }
-
     function updating(Productivity $productivity)
     {
         $productivity->after_reduction = ($productivity->reduction_factor * $productivity->daily_output) + $productivity->daily_output;
