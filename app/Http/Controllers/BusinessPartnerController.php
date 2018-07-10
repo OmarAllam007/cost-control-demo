@@ -103,7 +103,7 @@ class BusinessPartnerController extends Controller
         }
 
         $data = $request->only(['name', 'type']);
-        \Session::set('filters.partners', $data);
+        \Session::put('filters.partners', $data);
         return \Redirect::back();
     }
     function wipe(WipeRequest $request)

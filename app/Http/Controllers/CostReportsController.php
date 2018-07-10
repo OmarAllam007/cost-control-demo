@@ -64,18 +64,18 @@ class CostReportsController extends Controller
         if ($request->period_id) {
             if (\Session::has('period_id' . $project->id . $project->id)) {
                 \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
+                \Session::put('period_id' . $project->id, $request->period_id);
                 $chosen_period_id = $request->period_id;
             } else {
                 $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
+                \Session::put('period_id' . $project->id, $request->period_id);
             }
         } else {
             if (\Session::has('period_id' . $project->id)) {
                 $chosen_period_id = \Session::get('period_id' . $project->id);;
             } else {
                 $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
+                \Session::put('period_id' . $project->id, $request->period_id);
             }
         }
         $importantMaterials = new SignificantMaterials();
@@ -195,18 +195,18 @@ class CostReportsController extends Controller
         if ($request->period_id) {
             if (\Session::has('period_id' . $project->id)) {
                 \Session::forget('period_id' . $project->id);
-                \Session::set('period_id' . $project->id, $request->period_id);
+                \Session::put('period_id' . $project->id, $request->period_id);
                 $chosen_period_id = $request->period_id;
             } else {
                 $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
+                \Session::put('period_id' . $project->id, $request->period_id);
             }
         } else {
             if (\Session::has('period_id' . $project->id)) {
                 $chosen_period_id = \Session::get('period_id' . $project->id);;
             } else {
                 $chosen_period_id = $project->getMaxPeriod();
-                \Session::set('period_id' . $project->id, $request->period_id);
+                \Session::put('period_id' . $project->id, $request->period_id);
             }
         }
         $variance = new IssuesReport();
@@ -216,9 +216,9 @@ class CostReportsController extends Controller
     protected function getPeriod(Project $project, Request $request) : int
     {
         if ($request->period) {
-            \Session::set('period_id_' . $project->id, $request->period);
+            \Session::put('period_id_' . $project->id, $request->period);
         } elseif (!$request->session()->get('period_id_' . $project->id)) {
-            \Session::set('period_id_' . $project->id, $project->getMaxPeriod());
+            \Session::put('period_id_' . $project->id, $project->getMaxPeriod());
         }
 
         $chosen_period_id = \Session::get('period_id_' . $project->id);

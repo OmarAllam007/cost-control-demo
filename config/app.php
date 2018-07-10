@@ -178,6 +178,7 @@ return [
         App\Providers\BladeServiceProvider::class,
         App\Providers\ObserversProvider::class,
         App\Providers\ViewComposersProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
     ],
 
     /*

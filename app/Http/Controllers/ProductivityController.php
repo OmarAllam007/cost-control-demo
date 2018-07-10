@@ -233,7 +233,7 @@ class ProductivityController extends Controller
     public function filter(Request $request)
     {
         $data = $request->only(['csi_category_id', 'code', 'description', 'source']);
-        \Session::set('filters.productivity', $data);
+        \Session::put('filters.productivity', $data);
         return \Redirect::back();
     }
 

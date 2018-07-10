@@ -146,7 +146,7 @@ class BreakdownTemplateController extends Controller
         }
 
         $data = $request->only(['name', 'resource_id']);
-        \Session::set('filters.breakdown-template', $data);
+        \Session::put('filters.breakdown-template', $data);
         return \Redirect::back();
     }
 

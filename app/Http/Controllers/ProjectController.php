@@ -118,7 +118,7 @@ class ProjectController extends Controller
     function filters(Request $request, Project $project)
     {
         $data = $request->all();
-        \Session::set('filters.breakdown.' . $project->id, $data);
+        \Session::put('filters.breakdown.' . $project->id, $data);
 
         return back();
     }

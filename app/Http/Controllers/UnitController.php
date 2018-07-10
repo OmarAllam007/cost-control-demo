@@ -103,7 +103,7 @@ class UnitController extends Controller
         }
 
         $data = $request->only('type');
-        \Session::set('filters.unit',$data);
+        \Session::put('filters.unit',$data);
         return \Redirect::back();
     }
 

@@ -153,7 +153,7 @@ class StdActivityController extends Controller
         }
 
         $data = $request->only(['name', 'division_id']);
-        \Session::set('filters.std-activity', $data);
+        \Session::put('filters.std-activity', $data);
 
         return \Redirect::back();
     }

@@ -379,7 +379,7 @@ class ResourcesController extends Controller
         }
 
         $data = $request->only(['name', 'unit', 'resource_type_id', 'resource_code']);
-        \Session::set('filters.resources', $data);
+        \Session::put('filters.resources', $data);
 
         return \Redirect::route('resources.index');
     }
