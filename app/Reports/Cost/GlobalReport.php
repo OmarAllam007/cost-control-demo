@@ -399,7 +399,7 @@ class GlobalReport
 
     function spi_trend()
     {
-        return $this->trend_global_periods->sortBy('id')->pluck('spi_index', 'name');
+        return $this->trend_global_periods->sortBy('end_date')->pluck('spi_index', 'name')->filter();
     }
 
     function waste_index_trend()
@@ -429,7 +429,7 @@ class GlobalReport
 
     function productivity_index_trend()
     {
-        return GlobalPeriod::latest('end_date')->where('id', '>=', 12)->take(6)->get()->sortBy('end_date')->pluck('productivity_index', 'name');
+        return GlobalPeriod::latest('end_date')->where('id', '>=', 12)->take(6)->get()->sortBy('end_date')->pluck('productivity_index', 'name')->filter();
 
 //        $global_period_ids = $periods->pluck('id');
 //        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
