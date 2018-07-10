@@ -69,13 +69,14 @@ class GlobalReport
             ->groupBy('project_id')
             ->pluck('id');
 
-        $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(6)->where('end_date', '>=', '2017-10-01')->get()->keyBy('id');
-        $this->trend_period_ids = Period::whereIn('global_period_id', $this->trend_global_periods->pluck('id'))
-            ->selectRaw('max(id) as id, project_id, global_period_id')
-            ->groupBy(['project_id', 'global_period_id'])->pluck('id');
-
         $this->periods = Period::with('project')->find($this->last_period_ids->toArray());
         $this->projects = $this->periods->pluck('project');
+
+        $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(6)->where('end_date', '>=', '2017-10-01')->get()->keyBy('id');
+        $this->trend_period_ids = Period::whereIn('global_period_id', $this->trend_global_periods->pluck('id'))
+            ->whereIn('project_id', $this->projects->pluck('id'))
+            ->selectRaw('max(id) as id, project_id, global_period_id')
+            ->groupBy(['project_id', 'global_period_id'])->pluck('id');
 
         return [
             'cost_summary' => $this->cost_summary(),
@@ -378,16 +379,20 @@ class GlobalReport
     {
         return $this->cpi_trend = MasterShadow::from('master_shadows as sh')
             ->selectRaw('p.global_period_id, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
-            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(CASE WHEN resource_type_id = 8 THEN budget_cost END) as total_reserve')
+            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(CASE WHEN activity_id = 3060 THEN budget_cost END) as total_reserve')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->whereIn('sh.period_id', $this->trend_period_ids)
-            ->groupBy('p.global_period_id')
+            ->groupBy('sh.period_id')
             ->orderBy('p.global_period_id')
             ->get()->map(function ($period) {
                 $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->total_reserve));
                 $reserve = $period->total_reserve * $progress;
-                $period->cpi_index = round(($period->allowable_cost + $reserve) / $period->to_date_cost, 3);
-                $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
+                $period->allowable_cost += $reserve;
+                return $period;
+            })->groupBy('global_period_id')->map(function($group, $period_id) {
+                $period = new Fluent;
+                $period->cpi_index = round($group->sum('allowable_cost') / $group->sum('to_date_cost'), 3);
+                $period->name = $this->trend_global_periods->get($period_id)->name;
                 return $period;
             });
     }
