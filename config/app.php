@@ -151,6 +151,7 @@ $config = [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Illuminate\Notifications\NotificationServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -159,8 +160,8 @@ $config = [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Make\MakeServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
-        Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
         \Maatwebsite\Excel\ExcelServiceProvider::class,
+
 
         /*
          * Application Service Providers...

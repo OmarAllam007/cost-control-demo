@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Gate;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -22,29 +23,29 @@ class AuthServiceProvider extends ServiceProvider
      * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
      * @return void
      */
-    public function boot(GateContract $gate)
+    public function boot()
     {
-        $this->registerPolicies($gate);
+        $this->registerPolicies();
 
-        $gate->before(function ($user) {
+        Gate::before(function ($user) {
             if ($user->is_admin) {
                 return true;
             }
         });
 
-        $gate->define('admin', function ($user) {
+        Gate::define('admin', function ($user) {
             return $user->is_admin;
         });
 
-        $gate->define('read', 'App\Policies\DataPolicy@read');
-        $gate->define('write', 'App\Policies\DataPolicy@write');
-        $gate->define('delete', 'App\Policies\DataPolicy@delete');
+        Gate::define('read', 'App\Policies\DataPolicy@read');
+        Gate::define('write', 'App\Policies\DataPolicy@write');
+        Gate::define('delete', 'App\Policies\DataPolicy@delete');
 
-        $gate->define('dashboard', function($user) {
+        Gate::define('dashboard', function($user) {
             return $user->id == 54;
         });
 
-        $gate->define('wipe', function($user) {
+        Gate::define('wipe', function($user) {
             return in_array(\Auth::user()->email, [
                 'hazem.mohamed@alkifah.com',
                 'karim.elsharkawy@alkifah.com',
