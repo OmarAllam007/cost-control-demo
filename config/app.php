@@ -1,6 +1,6 @@
 <?php
 
-$config = [
+return [
 
     'name' => 'KPS',
 
@@ -114,6 +114,8 @@ $config = [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'debug_bar' => env('DEBUG_BAR', false),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -175,6 +177,7 @@ $config = [
         App\Providers\ResourceRulesProvider::class,
         App\Providers\BladeServiceProvider::class,
         App\Providers\ObserversProvider::class,
+        App\Providers\ViewComposersProvider::class,
     ],
 
     /*
@@ -189,7 +192,6 @@ $config = [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -222,7 +224,6 @@ $config = [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => \Collective\Html\FormFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'Lava' => \Khill\Lavacharts\Laravel\LavachartsFacade::class,
         'Excel' => \Maatwebsite\Excel\Facades\Excel::class,
     ],
 
@@ -232,14 +233,7 @@ $config = [
 //      'Civil Work'=>'Civil Work','Arch Work'=>'Arch Work'
     ],
 
-    'cost_status'=> collect([
+    'cost_status'=> [
         'In Progress' => 'In Progress', 'Closed' => 'Closed'
-    ])
+    ]
 ];
-
-if ($config['env'] == 'local') {
-    $config['providers'][] = \Barryvdh\Debugbar\ServiceProvider::class;
-    $config['aliases']['DebugBar'] = Barryvdh\Debugbar\Facade::class;
-}
-
-return $config;

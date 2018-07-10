@@ -1,8 +1,6 @@
 <?php
 
-Route::get('/', function () {
-    return \Redirect::route('project.index');
-});
+Route::get('/', 'ProjectController@index')->middleware('auth');
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
@@ -200,12 +198,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/blank', 'BlankController@index');
     Route::get('dashboard', 'DashboardController@index');
-
-    Route::get('/summary', function () {
-        return App\CostShadow::joinBudget('budget.resource_type')->sumFields([
-            'cost.to_date_cost', 'cost.allowable_ev_cost', 'budget.budget_cost'
-        ])->get();
-    });
 
     Route::get('project/{project}/dashboard', 'CostReportsController@dashboard');
     Route::post('project/{project}/charts', 'CostReportsController@chart');
