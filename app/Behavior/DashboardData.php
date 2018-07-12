@@ -151,7 +151,7 @@ trait DashboardData
 
     function getPlannedValueAttribute()
     {
-        if (!empty($this->attributes['planned_value'])) {
+        if (!empty($this->attributes['planned_value']) && $this->attributes['planned_value'] != 0) {
             return $this->attributes['planned_value'];
         }
 
@@ -161,7 +161,7 @@ trait DashboardData
 
     function getEarnedValueAttribute()
     {
-        if ($this->attributes['earned_value']) {
+        if (!empty($this->attributes['earned_value']) && $this->attributes['earned_value'] != 0) {
             return $this->attributes['earned_value'];
         }
 
