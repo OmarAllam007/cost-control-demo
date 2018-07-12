@@ -6,7 +6,7 @@
         <div class="chart"
              id="wasteIndexChart"
              data-type="horizontalBar"
-             data-labels="{{collect(['Planned Value', 'Earned Value', 'Actual Invoice Value'])}}"
+             data-labels="{{collect(['Planned Value (PV)', 'Earned Value (EV)', 'Actual Invoice Value'])}}"
              data-datasets="[{{json_encode([
                                 'label' => '',
                                 'data' => [$period->planned_value, $period->earned_value, $period->actual_invoice_value],

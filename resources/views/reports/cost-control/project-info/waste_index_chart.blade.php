@@ -1,5 +1,5 @@
 <div class="card-group-item">
-    <h4 class="card-group-item-heading">Material Consumption Index Trend</h4>
+    <h4 class="card-group-item-heading">Material Consumption Index (MCI) Trend</h4>
 
     <div class="chart"
          id="wasteIndexChart"
