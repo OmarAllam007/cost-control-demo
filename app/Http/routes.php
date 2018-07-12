@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,9 +10,9 @@
 |
 */
 
-
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
+Route::get('budget', 'BudgetController@index')->name('home.budget');
 
 Route::auth();
 Route::get('auth/google', 'Auth\AuthController@googleRedirect');

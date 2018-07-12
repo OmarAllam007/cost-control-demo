@@ -37,6 +37,8 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 @if (Auth::check())
                 <ul class="nav navbar-nav">
+                    <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+
                     @can ('dashboard')
                     <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                     @endcan
