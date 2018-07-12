@@ -3,92 +3,100 @@
 namespace App\Jobs\Export;
 
 use App\Jobs\Job;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Support\WBSTree;
+use function array_reverse;
+use Illuminate\Support\Collection;
+use PHPExcel_IOFactory;
+use PHPExcel_Style_Color;
+use PHPExcel_Worksheet;
+use SplStack;
+use function storage_path;
 
 class WbsLevelExportJob extends Job
 {
-
-
     public $project;
+
+    /** @var Collection */
+    protected $tree;
+
+    protected $row = 1;
+
+    /** @var SplStack */
+    protected $stack;
+
     public function __construct($project)
     {
         $this->project = $project;
     }
 
-
+    /**
+     * @return string
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Writer_Exception
+     */
     public function handle()
     {
+        $excel = new \PHPExcel();
+        $sheet = $excel->getActiveSheet();
+        $sheet->fromArray([
+            'Code', 'SAP Code', 'WBS Level 1', 'WBS Level 2', 'Wbs Level 3',
+            'Wbs Level 4', 'Wbs Level 5', 'Wbs Level 6', 'Wbs Level 7',
+            'Wbs Level 8', 'Wbs Level 9', 'Wbs Level 10',]);
 
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->getActiveSheet()
-            ->getStyle('A1:D1')
-            ->applyFromArray(
-                array(
-                    'fill' => array(
-                        'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                        'color' => array('rgb' => 'FFFFCC')
-                    )
-                )
-            );
-        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'WBS-LEVEL 1');
-        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'WBS-LEVEL 2');
-        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'WBS-LEVEL 3');
-        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'WBS-LEVEL 4');
-        $rowCount = 2;
-        foreach ($this->project->wbs_tree as $level) {
+        $this->tree = (new WBSTree($this->project))->get();
 
-            $objPHPExcel->getActiveSheet()
-                ->getStyle('A'.$rowCount.':D'.$rowCount)
-                ->applyFromArray(
-                    array(
-                        'fill' => array(
-                            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                            'color' => array('rgb' => 'CCE5FF')
-                        )
-                    )
-                );
-            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $level->name);
-            $rowCount++;
-            if ($level->children && $level->children->count()) {
-                foreach ($level->children as $children) {
-                    $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $children->name);
-                    $objPHPExcel->getActiveSheet()
-                        ->getStyle('B'.$rowCount.':D'.$rowCount)
-                        ->applyFromArray(
-                            array(
-                                'fill' => array(
-                                    'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                                    'color' => array('rgb' => 'FFE5CC')
-                                )
-                            )
-                        );
-                    $rowCount++;
-                    if ($children->children && $children->children->count()) {
-                        foreach ($children->children as $child) {
-                            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $child->name);
-                            $rowCount++;
-                            if ($child->children && $child->children->count()) {
-                                foreach ($child->children as $child) {
-                                    $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $child->name);
-                                    $rowCount++;
-                                }
-                            }
-                        }
-                    }
+        $this->stack = new SplStack();
 
-                }
-            }
-
+        foreach ($this->tree as $level) {
+            $this->addLevel($sheet, $level);
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$this->project->name.' - WBS Levels.xls"');
-        header('Cache-Control: max-age=0');
-        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
-        $objWriter->save('php://output');
-        exit;
+        $sheet->setAutoFilter("A1:L{$this->row}");
+        foreach (range('A', 'L') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+            $sheet->getStyle("{$col}1:{$col}{$this->row}");
+        }
+        $sheet->getStyle("A1:L1")->getFill()
+            ->setFillType('solid')
+            ->setStartColor(new PHPExcel_Style_Color('3490DC'));
+        $sheet->getStyle("A1:L1")->getFont()
+            ->setBold(true)
+            ->setColor(new PHPExcel_Style_Color('EFF8FF'));
+
+        $filename = storage_path('app/wbs_level_' . $this->project->id . '.xlsx');
+        PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save($filename);
+        return $filename;
+    }
+
+    /**
+     * @param $sheet PHPExcel_Worksheet
+     * @param $level
+     * @param int $depth
+     * @throws \PHPExcel_Exception
+     */
+    private function addLevel($sheet, $level, $depth = 0)
+    {
+        ++$this->row;
+
+        while($depth < $this->stack->count()) {
+            $this->stack->pop();
+        }
+
+        $this->stack->push($level->name);
+
+        $row = [];
+        foreach ($this->stack as $name) {
+            $row[] = $name;
+        }
+
+        $row[] = $level->sap_code;
+        $row[] = $level->code;
+
+        $sheet->fromArray(array_reverse($row), null, "A{$this->row}", true);
+
+        foreach ($level->subtree as $sublevel) {
+            $this->addLevel($sheet, $sublevel, $depth + 1);
+        }
     }
 }

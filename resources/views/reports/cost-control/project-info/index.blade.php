@@ -1,8 +1,5 @@
 @php $print = $print ?? request()->exists('print') @endphp
 @extends('layouts.' . ($print? 'print' : 'app'))
-@if(request('all'))
-    @include('reports.all._budget_cost_by_break_down')
-@endif
 
 @section('title', 'Project Dashboard')
 

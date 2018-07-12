@@ -32,27 +32,45 @@
                     </div>
                 </div>
 
-                {{--    <div class="form-group form-group-sm {{ $errors->first('time_extension', 'has-error') }}">
-                        {{ Form::label('time_extension', "Total Time Extension", ['class' => 'control-label col-sm-3']) }}
-                        <div class="col-sm-9">
-                            <div class="input-group">
-                                {{ Form::text('time_extension', null, ['class' => 'form-control', 'disabled']) }}
-                                <span class="input-group-addon">Days</span>
-                            </div>
-                            {!! $errors->first('time_extension', '<div class="help-block">:message</div>') !!}
-                        </div>
+                <div class="form-group form-group-sm {{ $errors->first('potential_change_order_amount', 'has-error') }}">
+                    {{ Form::label('potential_change_order_amount', 'Potential Change Order Amount', ['class' => 'control-label col-sm-3']) }}
+                    <div class="col-sm-9">
+                        {{ Form::text('potential_change_order_amount', null, ['class' => 'form-control']) }}
+                        {!! $errors->first('potential_change_order_amount', '<div class="help-block">:message</div>') !!}
                     </div>
+                </div>
 
-                    <div class="form-group form-group-sm {{ $errors->first('expected_duration', 'has-error') }}">
-                        {{ Form::label('expected_duration', 'Total duration', ['class' => 'control-label col-sm-3']) }}
-                        <div class="col-sm-9">
-                            <div class="input-group">
-                                {{ Form::text('expected_duration', $period->project_duration, ['class' => 'form-control', 'disabled']) }}
-                                <span class="input-group-addon">Days</span>
-                            </div>
-                            {!! $errors->first('expected_duration', '<div class="help-block">:message</div>') !!}
-                        </div>
-                    </div>--}}
+                {{--  <div class="form-group form-group-sm {{ $errors->first('time_extension', 'has-error') }}">
+                      {{ Form::label('time_extension', "Total Time Extension", ['class' => 'control-label col-sm-3']) }}
+                      <div class="col-sm-9">
+                          <div class="input-group">
+                              {{ Form::text('time_extension', null, ['class' => 'form-control', 'disabled']) }}
+                              <span class="input-group-addon">Days</span>
+                          </div>
+                          {!! $errors->first('time_extension', '<div class="help-block">:message</div>') !!}
+                      </div>
+                  </div>
+                      <div class="form-group form-group-sm {{ $errors->first('time_extension', 'has-error') }}">
+                          {{ Form::label('time_extension', "Total Time Extension", ['class' => 'control-label col-sm-3']) }}
+                          <div class="col-sm-9">
+                              <div class="input-group">
+                                  {{ Form::text('time_extension', null, ['class' => 'form-control', 'disabled']) }}
+                                  <span class="input-group-addon">Days</span>
+                              </div>
+                              {!! $errors->first('time_extension', '<div class="help-block">:message</div>') !!}
+                          </div>
+                      </div>
+
+                      <div class="form-group form-group-sm {{ $errors->first('expected_duration', 'has-error') }}">
+                          {{ Form::label('expected_duration', 'Total duration', ['class' => 'control-label col-sm-3']) }}
+                          <div class="col-sm-9">
+                              <div class="input-group">
+                                  {{ Form::text('expected_duration', $period->project_duration, ['class' => 'form-control', 'disabled']) }}
+                                  <span class="input-group-addon">Days</span>
+                              </div>
+                              {!! $errors->first('expected_duration', '<div class="help-block">:message</div>') !!}
+                          </div>
+                      </div>--}}
 
 
                 {{--change_order_amount--}}

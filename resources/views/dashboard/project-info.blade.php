@@ -43,8 +43,8 @@
 
             <div class="flex">
                 <dl>
-                    <dt>Expected Finish Date</dt>
-                    <dd>{{$contracts_info['finish_date']->format('d M Y') ?? ''}}</dd>
+                    <dt>Potential Change Orders</dt>
+                    <dd>{{number_format($contracts_info['potential_change_orders'], 2)}}</dd>
                 </dl>
             </div>
         </div>
