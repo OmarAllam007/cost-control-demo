@@ -90,7 +90,7 @@ class ProjectInfo
             ->where('status', Period::GENERATED)
             ->where('global_period_id', '>=', 12)
             ->take(6)
-            ->latest('id')->get(['name', 'spi_index'])->reverse();
+            ->latest('id')->get(['project_id', 'name', 'spi_index'])->reverse();
 
         $cost = MasterShadow::where('period_id', $this->period->id)
             ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();

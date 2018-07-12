@@ -79,6 +79,7 @@ class GlobalReport
             ->groupBy(['project_id', 'global_period_id'])->pluck('id');
 
         return [
+            'revenue_statement' => $this->revenue_statement(),
             'cost_summary' => $this->cost_summary(),
             'cost_info' => $this->cost_info(),
             'period' => $this->period,
@@ -91,7 +92,6 @@ class GlobalReport
             'spi_trend' => $this->spi_trend(),
             'waste_index_trend' => $this->waste_index_trend(),
             'pi_trend' => $this->productivity_index_trend(),
-            'revenue_statement' => $this->revenue_statement(),
             'completionValues' => $this->completionValues
         ];
     }
@@ -275,8 +275,9 @@ class GlobalReport
         $to_date = $this->cost_summary->sum('to_date_cost');
 
 //        $actual_progress = round($to_date * 100 / $total_budget, 2);
-        $actual_progress = round($this->period->actual_progress, 2);
-        $planned_progress = round($this->period->planned_progress ?: 0, 2);
+        $contract_value = $this->projects->sum('revised_contract_amount');
+        $actual_progress = $this->earned_value * 100 / $contract_value;  //round($this->period->actual_progress, 2);
+        $planned_progress = $this->planned_value * 100 / $contract_value; //round($this->period->planned_progress ?: 0, 2);
 
         $progress = [$actual_progress, $planned_progress];
 
@@ -287,8 +288,13 @@ class GlobalReport
             $eac_profitability = $eac_profit * 100 / $total_eac;
         }
 
+        $spi_index = 0;
+        if ($this->planned_value) {
+            $spi_index = $this->earned_value / $this->planned_value;
+        }
+
         return compact(
-            'allowable_cost', 'to_date_cost', 'variance', 'cpi',
+            'allowable_cost', 'to_date_cost', 'variance', 'cpi', 'spi_index',
             'highest_risk', 'lowest_risk', 'pw_index', 'progress', 'eac_profit', 'eac_profitability'
         );
     }
@@ -461,7 +467,9 @@ class GlobalReport
     function revenue_statement()
     {
         return [
-            $this->period->planned_value, $this->period->earned_value, $this->period->actual_invoice_value
+            $this->planned_value = $this->periods->sum('planned_value'),
+            $this->earned_value = $this->periods->sum('earned_value'),
+            $this->actual_invoice_value = $this->periods->sum('actual_invoice_value'),
         ];
 //        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
 //        $global_period_ids = $periods->pluck('id');
