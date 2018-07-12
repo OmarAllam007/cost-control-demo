@@ -5,16 +5,16 @@
         <div class="row">
             <article class="col-xs-4">
                 <dl>
-                    <dt>Actual Cost</dt>
+                    <dt>Actual Cost (AC)</dt>
                     <dd>{{number_format($costInfo['actual_cost'], 2)}}</dd>
                 </dl>
                 <dl>
-                    <dt>Allowable Cost</dt>
+                    <dt>Allowable Cost (EV)</dt>
                     <dd>{{number_format($costInfo['allowable_cost'], 2)}}</dd>
                 </dl>
 
                 <dl>
-                    <dt>CPI</dt>
+                    <dt>Cost Performance Index (CPI)</dt>
                     <dd>
                         <div class="display-flex">
                             <span class="flex {{$costInfo['cpi'] > 1? 'text-success': 'text-danger'}}">{{number_format($costInfo['cpi'], 3)}}</span>
@@ -69,7 +69,7 @@
                 </dl>
 
                 <dl>
-                    <dt>Progress (Time)</dt>
+                    <dt>Time Progress</dt>
                     <dd>{{$period->actual_time_progress}}%</dd>
                 </dl>
             </article>
@@ -85,7 +85,7 @@
                 </dl>
 
                 <dl>
-                    <dt>SPI</dt>
+                    <dt>Schedule Performance Index (SPI)</dt>
                     <dd>
                         <div class="display-flex">
                             <span class="display-flex {{$period->spi_index >= 1 ? 'text-success' : 'text-danger'}}">{{number_format($period->spi_index, 3)}}</span>
@@ -97,7 +97,7 @@
                 </dl>
 
                 <dl>
-                    <dt>MCI</dt>
+                    <dt>Material Consumption Index (MCI)</dt>
                     <dd>
                         <div class="display-flex">
                             <span class="flex {{$costInfo['waste_index'] < 4.75 ? 'text-success' : 'text-danger'}}">

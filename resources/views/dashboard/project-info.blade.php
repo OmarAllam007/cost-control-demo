@@ -20,7 +20,7 @@
 
             <div class="flex">
                 <dl>
-                    <dt>Rev. Contracts</dt>
+                    <dt>Revised Contracts Value</dt>
                     <dd>{{number_format($contracts_info['revised'], 2)}}</dd>
                 </dl>
             </div>

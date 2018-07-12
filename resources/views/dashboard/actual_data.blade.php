@@ -6,14 +6,14 @@
 
             <div class="flex mr-10">
                 <dl>
-                    <dt>Actual Cost</dt>
+                    <dt>Actual Cost (AC)</dt>
                     <dd>{{number_format($cost_info['to_date_cost'], 2)}}</dd>
                 </dl>
             </div>
 
             <div class="flex  mr-10">
                 <dl>
-                    <dt>Allowable Cost</dt>
+                    <dt>Allowable Cost (EV)</dt>
                     <dd>{{number_format($cost_info['allowable_cost'], 2)}}</dd>
                 </dl>
             </div>
