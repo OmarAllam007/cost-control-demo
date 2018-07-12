@@ -62,9 +62,8 @@
                 <dl>
                     <dt>Schedule Performance Index (SPI)</dt>
                     <dd class="display-flex">
-                        @php $spi_index = $spi_trend->get($period->name) @endphp
-                        <span class="flex {{$spi_index<1?'text-danger' : 'text-success'}}">{{number_format($spi_index, 2)}}</span>
-                        @if ($spi_trend->last() >= 1)
+                        <span class="flex {{$cost_info['spi_index']<1?'text-danger' : 'text-success'}}">{{number_format($cost_info['spi_index'], 2)}}</span>
+                        @if ($cost_info['spi_index'] >= 1)
                             <span class="text-success"><i class="fa fa-circle"></i></span>
                         @else
                             <span class="text-danger"><i class="fa fa-circle"></i></span>
