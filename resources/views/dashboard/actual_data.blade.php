@@ -35,7 +35,7 @@
 
             <div class="flex mr-10">
                 <dl>
-                    <dt>CPI</dt>
+                    <dt>Cost Performance Index (CPI)</dt>
                     <dd class="display-flex">
                         <span class="flex {{$cost_info['cpi']>=1? 'text-success' : 'text-danger'}}">{{number_format($cost_info['cpi'], 4)}}</span>
                         @if ($cost_info['cpi'] >= 1)
@@ -49,7 +49,7 @@
 
             <div class="flex  mr-10">
                 <dl>
-                    <dt>MCI</dt>
+                    <dt>Material Consumption Index (MCI)</dt>
                     <dd class="display-flex">
                         <span class="flex {{$cost_info['pw_index'] > 4.75? 'text-danger' : 'text-success'}}">{{number_format($cost_info['pw_index'], 2)}}%</span>
                         <span class="{{$cost_info['pw_index'] > 4.75? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
@@ -60,7 +60,7 @@
 
             <div class="flex">
                 <dl>
-                    <dt>SPI</dt>
+                    <dt>Schedule Performance Index (SPI)</dt>
                     <dd class="display-flex">
                         @php $spi_index = $spi_trend->get($period->name) @endphp
                         <span class="flex {{$spi_index<1?'text-danger' : 'text-success'}}">{{number_format($spi_index, 2)}}</span>
