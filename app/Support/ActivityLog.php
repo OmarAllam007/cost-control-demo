@@ -50,6 +50,7 @@ class ActivityLog
 
         $store_resources = StoreResource::where('budget_code', $this->code)
             ->whereIn('resource_id', $resource_ids)->whereNull('row_ids')
+            ->latest('store_date')
             ->get()->groupBY('resource_id');
 
         $budget_resources = $shadows->groupBy('resource_id');
@@ -110,7 +111,7 @@ class ActivityLog
                             $q->where('breakdown_resource_id', $resource->breakdown_resource_id)
                                 ->orWhereIn('resource_id', $resource_ids);
                         });
-                    })->whereNull('row_ids')->get();
+                    })->whereNull('row_ids')->latest('store_date')->get();
 
                 $important = $budget_resources->filter(function ($resource) {
                     return $resource->important;
