@@ -14,7 +14,7 @@ class CreatePeriodsTable extends Migration
     {
         Schema::create('periods', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('project_id')->unsigned();d
+            $table->integer('project_id')->unsigned();
             $table->string('name');
             $table->string('start_date');
             $table->string('end_date')->nullable();

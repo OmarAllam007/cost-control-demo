@@ -13,11 +13,11 @@ class UpdateBudgetRevisions extends Migration
     public function up()
     {
         Schema::table('budget_revisions', function (Blueprint $table) {
-            $table->float('original_contract_amount', 18,2);
-            $table->float('change_order_amount', 18,2);
+            $table->float('original_contract_amount', 18,2)->nullable();
+            $table->float('change_order_amount', 18,2)->nullable();
         });
 
-        \DB::statement('ALTER TABLE budget_revisions ADD COLUMN revised_contract_amount float(18,2) AS (original_contract_amount + change_order_amount)');
+        \DB::statement('ALTER TABLE budget_revisions ADD COLUMN revised_contract_amount float(18,2) AS (original_contract_amount + change_order_amount) stored');
     }
 
     /**
