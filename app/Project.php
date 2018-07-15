@@ -30,6 +30,7 @@ class Project extends Model
         'project_contract_signed_value', 'project_contract_budget_value', 'change_order_amount',
         'tender_direct_cost', 'tender_indirect_cost', 'tender_risk', 'tender_initial_profit',
         'total_budget_cost', 'cost_threshold', 'consultant', 'project_type', 'contract_type', 'actual_start_date',
+        'sw_area', 'sw_cost', 'building_area', 'building_cost'
     ];
 
     protected $dates = ['created_at', 'updated_at'];
