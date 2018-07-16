@@ -15,5 +15,6 @@ class CacheProjects extends Command
     public function handle()
     {
         Cache::put('projects_for_budget', (new \App\Support\BudgetProjects())->run(), 10);
+        Cache::put('projects_for_cost_control', (new \App\Support\CostControlProjects())->run(), 10);
     }
 }

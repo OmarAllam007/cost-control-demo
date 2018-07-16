@@ -1,17 +1,20 @@
 @extends('layouts.app')
 @section('header')
-    <h2>Projects</h2>
-    @if (Auth::user()->is_admin)
-        <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right">
+
+    <div class="display-flex">
+        <h2 class="flex">Master Data &mdash; Projects</h2>
+        <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> Add Project
         </a>
-    @endif
+    </div>
 @stop
 
 @section('body')
 
     @if ($projectGroups->count())
+        <table class="table">
 
+        </table>
         <div class="row">
             <div class=" col-sm-8">
                 @foreach($projectGroups as $groupName => $projects)
@@ -95,10 +98,6 @@
                     @endif
 
                 @endforeach
-            </div>
-
-            <div class="col-sm-4 text-center">
-                <img src="{{asset('images/kcc.png')}}" alt="logo">
             </div>
         </div>
 
