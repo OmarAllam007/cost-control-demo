@@ -33,7 +33,7 @@
                 @foreach($group as $project)
                     <tr class="{{slug($client ?: 'Not Assigned')}} collapse">
                         <td>
-                            <a class="project-label" href="{{route('project.budget', $project)}}">
+                            <a class="project-label" href="{{route('project.cost-control', $project)}}">
                                 {{$project->name}}
                             </a>
 
