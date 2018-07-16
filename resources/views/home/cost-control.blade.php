@@ -8,7 +8,7 @@
 
 @section('body')
     @if ($projectGroups->count())
-        <table class="table">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th class="col-sm-6">Project</th>

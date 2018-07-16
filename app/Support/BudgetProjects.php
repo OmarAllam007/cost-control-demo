@@ -27,8 +27,15 @@ class BudgetProjects
             ->selectRaw('projects.*, (select sum(budget_cost) from break_down_resource_shadows sh where sh.project_id = projects.id and show_in_budget = 1) as latest_budget_cost')
             ->get()->map(function (Project $project) {
                 $revision = $project->revisions()->oldest('id')->first();
-                $project->original_budget_cost = RevisionBreakdownResourceShadow::query()
-                    ->where('project_id', $project->id)->sum('budget_cost');
+                $project->original_budget_cost = 0;
+
+                if ($revision) {
+                    $project->original_budget_cost = RevisionBreakdownResourceShadow::query()
+                        ->where('project_id', $project->id)
+                        ->where('revision_id', $revision->id)
+                        ->sum('budget_cost');
+                }
+
                 return $project;
             });
     }

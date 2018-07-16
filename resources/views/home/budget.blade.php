@@ -8,7 +8,7 @@
 
 @section('body')
     @if ($projectGroups->count())
-        <table class="table">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th class="col-sm-6">Project</th>
@@ -27,7 +27,7 @@
                         </a>
                     </td>
                     <td>&nbsp;</td>
-                    <td>{{number_format($group->sum('latest_budget_cost'), 2)}}</td>
+                    <td>{{number_format($group->sum('original_budget_cost'), 2)}}</td>
                     <td>{{number_format($group->sum('latest_budget_cost'), 2)}}</td>
                 </tr>
                 @foreach($group as $project)
@@ -38,7 +38,7 @@
                         </a>
                     </td>
                     <td>{{$project->project_type}}</td>
-                    <td>{{number_format($project->latest_budget_cost, 2)}}</td>
+                    <td>{{number_format($project->original_budget_cost, 2)}}</td>
                     <td>{{number_format($project->latest_budget_cost, 2)}}</td>
                 </tr>
             @endforeach

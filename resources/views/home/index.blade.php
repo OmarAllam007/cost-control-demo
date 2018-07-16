@@ -18,6 +18,14 @@
             background: url("{{asset('images/login-bg.jpg')}}");
             background-size: cover;
         }
+        
+        h2 {
+            color: #444;
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
 
         #app {
             display: flex;
@@ -31,7 +39,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 40px;
         }
 
         .content {
@@ -94,6 +102,7 @@
 <div id="app">
     <div class="topbar">
         <div class="container">
+
             <div class="col-md-10 col-md-offset-1 col-sm-12 display-flex">
                 <div class="logo-line">
                     <img src="{{asset('images/kcc-logo.png')}}" alt="" width="150">
@@ -112,8 +121,9 @@
 
     </div>
     <div class="container flex main-area">
-        <main class="col-md-10 col-md-offset-1 col-sm-12 content">
 
+        <main class="col-md-10 col-md-offset-1 col-sm-12 content">
+            <h2 class="text-center text-primary">AlKifah Project System</h2>
             <section class="icons row">
                 <article class="col-sm-4 col-xs-6 col-md-3">
                     <a href="{{url('/dashboard')}}">
