@@ -16,4 +16,9 @@ class HomeController extends Controller
     {
         return view('home.index');
     }
+
+    function acknowledgement()
+    {
+        return view('home.acknowledgement');
+    }
 }
