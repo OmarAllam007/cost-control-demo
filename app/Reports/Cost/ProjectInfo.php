@@ -64,7 +64,7 @@ class ProjectInfo
                 return $p;
             });
 
-        $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id)->value;
+        $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id, new Fluent)->value ?: 0;
 
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
