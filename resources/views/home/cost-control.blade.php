@@ -95,6 +95,10 @@
             display: inline-block;
             padding-left: 20px;
         }
+
+        .projects-table {
+            font-size: 1.2em;
+        }
     </style>
 
 @endsection

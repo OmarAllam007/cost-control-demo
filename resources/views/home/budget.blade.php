@@ -8,7 +8,7 @@
 
 @section('body')
     @if ($projectGroups->count())
-        <table class="table table-hover">
+        <table class="table table-hover projects-table">
             <thead>
             <tr>
                 <th class="col-sm-6">Project</th>
@@ -91,6 +91,10 @@
             display: inline-block;
             padding-left: 20px;
         }
+
+        .projects-table {
+            font-size: 1.2em;
+        }
     </style>
 
 @endsection
@@ -111,4 +115,3 @@
         })
     </script>
 @endsection
-
