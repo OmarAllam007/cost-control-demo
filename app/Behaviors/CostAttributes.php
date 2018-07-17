@@ -74,12 +74,12 @@ trait CostAttributes
 
     function getToDateQtyAttribute()
     {
-        if (!empty($this->attributes['to_date_qty'])) {
-            return $this->attributes['to_date_qty'];
+        if (!empty($this->calculated['to_date_qty'])) {
+            return $this->calculated['to_date_qty'];
         }
 
         if ($this->unit_id == 15 && $this->completion_cost) {
-            return $this->attributes['to_date_qty'] = $this->to_date_cost / $this->completion_cost;
+            return $this->calculated['to_date_qty'] = $this->to_date_cost / $this->completion_cost;
         }
 
         $actual_qty =  ActualResources::when($this->important && $this->rolled_up_at, function($q) {
@@ -88,13 +88,13 @@ trait CostAttributes
 
          $actual_qty += ImportantActualResource::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
 
-         return $actual_qty;
+         return $this->calculated['to_date_qty'] = $actual_qty;
     }
 
     function getToDateCostAttribute()
     {
-        if (!empty($this->attributes['to_date_cost'])) {
-            return $this->attributes['to_date_cost'];
+        if (!empty($this->calculated['to_date_cost'])) {
+            return $this->calculated['to_date_cost'];
         }
 
         $breakdown_resources = BreakdownResource::query()
@@ -110,7 +110,7 @@ trait CostAttributes
 
         $actual_cost += ImportantActualResource::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('cost');
 
-        return $actual_cost;
+        return $this->calculated['to_date_cost'] = $actual_cost;
     }
 
     function getToDateUnitPriceAttribute()
