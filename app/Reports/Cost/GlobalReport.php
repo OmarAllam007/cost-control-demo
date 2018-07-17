@@ -408,7 +408,8 @@ class GlobalReport
     {
 //        return $this->trend_global_periods->sortBy('end_date')->pluck('spi_index', 'name')->filter();
         return $this->trend_global_periods->keyBy('name')->map(function($period) {
-            $periods = $period->periods()->readyForReporting()->selectRaw('max(id) as id, project_id, planned_progress, actual_progress')->groupBy(['project_id', 'planned_progress', 'actual_progress'])->get();
+            $period_ids = $period->periods()->readyForReporting()->selectRaw('max(id) as id, project_id')->groupBy('project_id')->pluck('id');
+            $periods = Period::find($period_ids->toArray());
 
             $planned_value = $periods->sum('planned_value');
             $earned_value = $periods->sum('earned_value');
@@ -418,7 +419,7 @@ class GlobalReport
             }
 
             return $earned_value / $planned_value;
-        })->filter()->reverse();
+        })->dd()->filter()->reverse();
     }
 
     function waste_index_trend()
