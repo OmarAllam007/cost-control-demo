@@ -3,7 +3,7 @@
 @section('title', 'Cost Control')
 
 @section('header')
-    <h2>Cost Control</h2>
+    <h2>Reports</h2>
 @stop
 
 @section('body')
@@ -66,4 +66,3 @@
         })
     </script>
 @endsection
-

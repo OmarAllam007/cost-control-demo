@@ -14,8 +14,11 @@ Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
 Route::get('acknowledgement', 'HomeController@acknowledgement')->name('home.acknowledgement');
 Route::get('budget', 'BudgetController@index')->name('home.budget');
+Route::get('reports', 'HomeController@reports')->name('home.reports');
 Route::get('cost-control', 'CostControlController@index')->name('home.cost-control');
 Route::get('coming-soon', 'HomeController@comingSoon')->name('home.coming-soon');
+
+Route::get('project/{project}/reports', 'ProjectReportsController@show')->name('project.reports');
 
 Route::auth();
 Route::get('auth/google', 'Auth\AuthController@googleRedirect');

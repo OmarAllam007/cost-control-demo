@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Project;
+use App\ProjectUser;
+use Cache;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -29,6 +32,22 @@ class HomeController extends Controller
 
     function reports()
     {
-        return view('home.reports');
+        $projects = Cache::remember('projects_for_cost_control', 15, function () {
+            return (new \App\Support\CostControlProjects())->run();
+        });
+
+        $project_ids = Project::when(!auth()->user()->is_admin, function ($q) {
+            $projects = ProjectUser::where('user_id', auth()->id())->where('reports', 1)->pluck('project_id');
+            $q->whereIn('id', $projects)
+                ->orWhere('owner_id', auth()->id())
+                ->where('cost_owner_id', auth()->id());
+            return $q;
+        })->pluck('id');
+
+        $projectGroups = $projects->filter(function ($project) use ($project_ids) {
+            return $project_ids->contains($project->id);
+        })->groupBy('client_name');
+
+        return view('home.reports', compact('projectGroups'));
     }
 }
