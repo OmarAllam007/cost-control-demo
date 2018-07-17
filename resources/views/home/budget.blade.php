@@ -8,7 +8,7 @@
 
 @section('body')
     @if ($projectGroups->count())
-        <table class="table table-hover projects-table">
+        <table class="table table-hover projects-table table-bordered">
             <thead>
             <tr>
                 <th class="col-sm-6">Project</th>
@@ -77,36 +77,9 @@
     @endif
 @endsection
 
-@section('css')
-    <style>
-        a.card-title {
-            display: block;
-        }
-
-        .card-body {
-            overflow-y: auto;
-        }
-
-        .project-label {
-            display: inline-block;
-            padding-left: 20px;
-        }
-
-        .projects-table {
-            font-size: 1.2em;
-        }
-    </style>
-
-@endsection
-
 @section('javascript')
     <script>
         $(function () {
-/*
-            const cards = $('.card-body');
-            let maxh = cards.toArray().reduce((max, item) => Math.max(max, $(item).height()), 0);
-            cards.height(maxh);
-*/
             $('.group-label').click(function(e) {
                 e.preventDefault();
                 $(this).find('.fa').toggleClass('fa-plus-square-o fa-minus-square-o');

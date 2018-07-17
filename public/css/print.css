@@ -11617,6 +11617,15 @@ th.table-caption {
   font-weight: 600;
 }
 
+.project-label {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+.projects-table a {
+  font-size: 1.2em;
+}
+
 @media print {
   table {
     width: 100%;
