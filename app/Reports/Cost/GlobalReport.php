@@ -419,7 +419,7 @@ class GlobalReport
             }
 
             return $earned_value / $planned_value;
-        })->dd()->filter()->reverse();
+        })->filter()->reverse();
     }
 
     function waste_index_trend()
