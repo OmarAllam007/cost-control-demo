@@ -24,9 +24,9 @@ use Illuminate\Support\Collection;
 use function microtime;
 use function strtolower;
 
-class ExportCostToMaster extends Job // implements ShouldQueue
+class ExportCostToMaster extends Job implements ShouldQueue
 {
-//    use SerializesModels, InteractsWithQueue;
+    use SerializesModels, InteractsWithQueue;
 
     protected $project;
 
