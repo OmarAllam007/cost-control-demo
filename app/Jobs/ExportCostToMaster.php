@@ -24,9 +24,9 @@ use Illuminate\Support\Collection;
 use function microtime;
 use function strtolower;
 
-class ExportCostToMaster extends Job implements ShouldQueue
+class ExportCostToMaster extends Job // implements ShouldQueue
 {
-    use SerializesModels, InteractsWithQueue;
+//    use SerializesModels, InteractsWithQueue;
 
     protected $project;
 
@@ -109,26 +109,26 @@ class ExportCostToMaster extends Job implements ShouldQueue
                         'curr_qty' => $costShadow['curr_qty'], 'curr_cost' => $costShadow['curr_cost'],
                         'to_date_unit_price' => $costShadow['to_date_unit_price'], 'to_date_qty' => $costShadow['to_date_qty'],
                         'to_date_cost' => $costShadow['to_date_cost'], 'allowable_ev_cost' => $costShadow['allowable_ev_cost'],
-                        'allowable_var' => $costShadow['allowable_var'], 'remaining_unit_price' => $costShadow['remaining_unit_price'],
-                        'remaining_qty' => $costShadow['remaining_qty'], 'remaining_cost' => $costShadow['remaining_cost'],
-                        'bl_allowable_cost' => $costShadow['bl_allowable_cost'], 'bl_allowable_var' => $costShadow['bl_allowable_var'],
-                        'completion_unit_price' => $costShadow['completion_unit_price'], 'completion_qty' => $costShadow['completion_qty'],
-                        'completion_cost' => $costShadow['completion_cost'], 'unit_price_var' => $costShadow['unit_price_var'],
-                        'qty_var' => $costShadow['qty_var'], 'cost_var' => $costShadow['cost_var'], 'physical_unit' => $costShadow['physical_unit'],
-                        'cost_variance_to_date_due_unit_price' => $costShadow['cost_variance_to_date_due_unit_price'], 'allowable_qty' => $costShadow['allowable_qty'],
-                        'cost_variance_remaining_due_unit_price' => $costShadow['cost_variance_remaining_due_unit_price'],
-                        'cost_variance_completion_due_unit_price' => $costShadow['cost_variance_completion_due_unit_price'],
-                        'cost_variance_completion_due_qty' => $costShadow['cost_variance_completion_due_qty'],
-                        'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
-                        'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
-                        'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
-                        'created_at' => $now, 'updated_at' => $now,
-                        'completion_cost_optimistic' => $costShadow['completion_cost_optimistic'],
-                        'completion_cost_likely' => $costShadow['completion_cost_likely'],
-                        'completion_cost_pessimistic' => $costShadow['completion_cost_pessimistic'],
-                        'completion_var_optimistic' => $costShadow['completion_var_optimistic'],
-                        'completion_var_likely' => $costShadow['completion_var_likely'],
-                        'completion_var_pessimistic' => $costShadow['completion_var_pessimistic'],
+//                        'allowable_var' => $costShadow['allowable_var'], 'remaining_unit_price' => $costShadow['remaining_unit_price'],
+//                        'remaining_qty' => $costShadow['remaining_qty'], 'remaining_cost' => $costShadow['remaining_cost'],
+//                        'bl_allowable_cost' => $costShadow['bl_allowable_cost'], 'bl_allowable_var' => $costShadow['bl_allowable_var'],
+//                        'completion_unit_price' => $costShadow['completion_unit_price'], 'completion_qty' => $costShadow['completion_qty'],
+//                        'completion_cost' => $costShadow['completion_cost'], 'unit_price_var' => $costShadow['unit_price_var'],
+//                        'qty_var' => $costShadow['qty_var'], 'cost_var' => $costShadow['cost_var'], 'physical_unit' => $costShadow['physical_unit'],
+//                        'cost_variance_to_date_due_unit_price' => $costShadow['cost_variance_to_date_due_unit_price'], 'allowable_qty' => $costShadow['allowable_qty'],
+//                        'cost_variance_remaining_due_unit_price' => $costShadow['cost_variance_remaining_due_unit_price'],
+//                        'cost_variance_completion_due_unit_price' => $costShadow['cost_variance_completion_due_unit_price'],
+//                        'cost_variance_completion_due_qty' => $costShadow['cost_variance_completion_due_qty'],
+//                        'cost_variance_to_date_due_qty' => $costShadow['cost_variance_to_date_due_qty'],
+//                        'boq_discipline' => $boqDiscipline, 'boq_id' => $boq_id, 'boq_wbs_id' => $boq_wbs_id,
+//                        'to_date_price_var' => $costShadow['to_date_price_var'], 'to_date_qty_var' => $costShadow['to_date_qty_var'],
+//                        'created_at' => $now, 'updated_at' => $now,
+//                        'completion_cost_optimistic' => $costShadow['completion_cost_optimistic'],
+//                        'completion_cost_likely' => $costShadow['completion_cost_likely'],
+//                        'completion_cost_pessimistic' => $costShadow['completion_cost_pessimistic'],
+//                        'completion_var_optimistic' => $costShadow['completion_var_optimistic'],
+//                        'completion_var_likely' => $costShadow['completion_var_likely'],
+//                        'completion_var_pessimistic' => $costShadow['completion_var_pessimistic'],
                         //'pw_index' => $costShadow['pw_index']
                     ];
                 }
