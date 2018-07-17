@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Subcontractors')
+@section('title', 'Coming Soon')
 
 @section('header')
-    <h2>Subcontractors</h2>
+    <h2>Coming Soon</h2>
 @endsection
 
 @section('body')

@@ -15,7 +15,7 @@ Route::get('home', 'HomeController@index')->name('home');
 Route::get('acknowledgement', 'HomeController@acknowledgement')->name('home.acknowledgement');
 Route::get('budget', 'BudgetController@index')->name('home.budget');
 Route::get('cost-control', 'CostControlController@index')->name('home.cost-control');
-Route::get('subcontractors', 'SubcontractorController@index')->name('home.subcontractors');
+Route::get('coming-soon', 'HomeController@comingSoon')->name('home.coming-soon');
 
 Route::auth();
 Route::get('auth/google', 'Auth\AuthController@googleRedirect');

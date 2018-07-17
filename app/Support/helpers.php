@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 
@@ -115,4 +116,11 @@ function code_trim($code)
     $code = preg_replace('/^[^0-9a-z\.\-_\/]/i', '', $code);
     $code = preg_replace('/[^0-9a-z\.\-_\/]$/i', '', $code);
     return $code;
+}
+
+if (!function_exists('dispatch_now')) {
+    function dispatch_now($job)
+    {
+        return app(Dispatcher::class)->dispatchNow($job);
+    }
 }

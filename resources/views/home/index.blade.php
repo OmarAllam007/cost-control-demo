@@ -126,11 +126,25 @@
             <h2 class="text-center text-primary">AlKifah Project System</h2>
             <section class="icons row">
                 <article class="col-sm-4 col-xs-6 col-md-3">
+                    <a href="{{url('/master-data')}}">
+                        <img src="{{asset('images/icons/masterdata.svg')}}" alt="" width="64">
+                        <span>Master Data</span>
+                    </a>
+                </article>
+
+                <article class="col-sm-4 col-xs-6 col-md-3">
+                    <a href="{{url('/reports')}}">
+                        <img src="{{asset('images/icons/reports.svg')}}" alt="" width="64">
+                        <span>Reports</span>
+                    </a>
+                </article>
+
+                {{--<article class="col-sm-4 col-xs-6 col-md-3">
                     <a href="{{url('/dashboard')}}">
                         <img src="{{asset('images/icons/dashboard.svg')}}" alt="" width="64">
                         <span>Dashboard</span>
                     </a>
-                </article>
+                </article>--}}
 
 
                 <article class="col-sm-4 col-xs-6 col-md-3">
@@ -148,23 +162,23 @@
                 </article>
 
                 <article class="col-sm-4 col-xs-6 col-md-3">
-                    <a href="{{url('/subcontractors')}}">
+                    <a href="{{url('/coming-soon')}}">
                         <img src="{{asset('images/icons/subcontractors.svg')}}" alt="" width="64">
                         <span>Subcontractors Management</span>
                     </a>
                 </article>
 
                 <article class="col-sm-4 col-xs-6 col-md-3">
-                    <a href="{{url('/users')}}">
-                        <img src="{{asset('images/icons/users.svg')}}" alt="" width="64">
-                        <span>Users</span>
+                    <a href="{{url('/coming-soon')}}">
+                        <img src="{{asset('images/icons/manpower.svg')}}" alt="" width="64">
+                        <span>HR Management</span>
                     </a>
                 </article>
 
                 <article class="col-sm-4 col-xs-6 col-md-3">
-                    <a href="{{url('/master-data')}}">
-                        <img src="{{asset('images/icons/masterdata.svg')}}" alt="" width="64">
-                        <span>Master Data</span>
+                    <a href="{{url('/coming-soon')}}">
+                        <img src="{{asset('images/icons/bill.svg')}}" alt="" width="64">
+                        <span>Client Invoices</span>
                     </a>
                 </article>
 
@@ -174,12 +188,17 @@
                         <span>Acknowledgement</span>
                     </a>
                 </article>
-                <article class="col-sm-4 col-xs-6 col-md-3">
-                    <a href="{{url('/reports')}}">
-                        <img src="{{asset('images/icons/reports.svg')}}" alt="" width="64">
-                        <span>Reports</span>
+                {{--<article class="col-sm-4 col-xs-6 col-md-3">
+                    <a href="{{url('/users')}}">
+                        <img src="{{asset('images/icons/users.svg')}}" alt="" width="64">
+                        <span>Users</span>
                     </a>
-                </article>
+                </article>--}}
+
+
+
+
+
             </section>
         </main>
 

@@ -21,4 +21,14 @@ class HomeController extends Controller
     {
         return view('home.acknowledgement');
     }
+
+    function comingSoon()
+    {
+        return view('home.coming-soon');
+    }
+
+    function reports()
+    {
+        return view('home.reports');
+    }
 }
