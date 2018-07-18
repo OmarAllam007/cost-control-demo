@@ -35,7 +35,7 @@
                 <div class="col-sm-6">
                     <article class="media">
                         <div class="media-left">
-                            <img class="img-circle" src="{{asset('images/user-image.svg')}}" width="56" height="56" alt="">
+                            <img class="img-circle" src="{{asset('images/kareem.jpg')}}" width="56" height="56" alt="">
                         </div>
                         <div class="media-right">
                             <h4>Eng. Karim Elsharkawy</h4>
