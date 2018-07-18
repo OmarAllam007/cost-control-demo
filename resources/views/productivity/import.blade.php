@@ -6,7 +6,7 @@
     <a href="{{route('productivity.index')}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-right"></i> Back</a>
 @endsection
 
-@section('body')
+@section('content')
 
     <div class="row">
         <div class="col-md-6 col-sm-9">

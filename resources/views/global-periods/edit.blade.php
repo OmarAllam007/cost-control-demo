@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <div class="display-flex">
@@ -7,7 +7,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
 
     {{ Form::model($global_period, ['route' => ['global-periods.update', $global_period], 'method' => 'patch']) }}
 

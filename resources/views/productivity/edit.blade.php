@@ -10,7 +10,7 @@
     </h2>
 @stop
 
-@section('content')
+@section(request()->exists('iframe') ? 'body' : 'content')
     {{ Form::model($productivity, ['url' => route('productivity.update', $productivity) . (request()->exists('iframe')? '?iframe' : '')]) }}
 
         {{ method_field('patch') }}

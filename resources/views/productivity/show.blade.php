@@ -11,7 +11,7 @@
 </form>
 @stop
 
-@section('body')
+@section('content')
 
     <div class="form-group clearfix">
         <table class="table table-condensed">

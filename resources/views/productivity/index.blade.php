@@ -41,7 +41,7 @@
     </div>
 @stop
 
-@section('body')
+@section('content')
     @if(count(request('dublicate')))
         <div class="container" id="notify" style="">
             @foreach(request('dublicate') as $item)
