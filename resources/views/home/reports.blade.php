@@ -18,7 +18,7 @@
     @if ($projectGroups->count())
         <table class="table table-bordered table-hover projects-table">
             <thead>
-            <tr>
+            <tr class="bg-primary">
                 <th class="col-sm-6">Project</th>
 
                 <th class="col-sm-3">Budget Cost</th>

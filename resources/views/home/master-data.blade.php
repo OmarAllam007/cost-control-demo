@@ -13,8 +13,7 @@
 
                     @can('read', 'std-activity')
                         <li>
-                            <a href="#std-divisions-menu" class="sub-menu-toggle" data-toggle="collapse"><i
-                                        class="fa fa-caret-right"></i> <strong>Std Divisions</strong></a>
+                            <a href="#std-divisions-menu" class="sub-menu-toggle" data-toggle="collapse"><i class="fa fa-caret-right"></i> <strong>Std Divisions</strong></a>
                             <ul class="list-unstyled collapse in menu" id="std-divisions-menu">
                                 <li><a href="{{route('activity-division.index')}}">Divisions</a></li>
                                 <li><a href="{{route('std-activity.index')}}">Standard Activities</a></li>

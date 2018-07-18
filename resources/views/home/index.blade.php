@@ -101,7 +101,7 @@
 <body>
 <div id="app">
     <div class="topbar">
-        <div class="container">
+        <div class="container-fluid">
 
             <div class="col-md-10 col-md-offset-1 col-sm-12 display-flex">
                 <div class="logo-line">
@@ -120,7 +120,7 @@
         </div>
 
     </div>
-    <div class="container flex main-area">
+    <div class="container-fluid flex main-area">
 
         <main class="col-md-10 col-md-offset-1 col-sm-12 content">
             <h2 class="text-center text-primary">AlKifah Project System</h2>
@@ -171,7 +171,7 @@
                 <article class="col-sm-4 col-xs-6 col-md-3">
                     <a href="{{url('/coming-soon')}}">
                         <img src="{{asset('images/icons/manpower.svg')}}" alt="" width="64">
-                        <span>HR Management</span>
+                        <span>Manpower Management</span>
                     </a>
                 </article>
 
@@ -204,9 +204,8 @@
 
         <footer class="col-md-10 col-md-offset-1 col-sm-12">
             <div class="footer display-flex">
-                <div>Copyright &copy; <a href="http://www.alkifah.com.sa">Al-Kifah Holding</a> {{date('Y')}}</div>
+                <div class="text-danger">Copyright &copy; AlKifah Contracting {{date('Y')}}</div>
                 <img src="{{asset('images/kcc-logo.png')}}" alt="" height="50">
-
             </div>
         </footer>
     </div>
