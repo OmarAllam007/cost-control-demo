@@ -93,7 +93,7 @@
         }
 
         footer {
-            padding: 15px 0;
+            padding: 15px 0 5px;
             margin-top: auto;
         }
     </style>
@@ -105,7 +105,7 @@
 
             <div class="col-md-10 col-md-offset-1 col-sm-12 display-flex">
                 <div class="logo-line">
-                    <img src="{{asset('images/kcc-logo.png')}}" alt="" width="150">
+                    <img src="{{asset('images/kps-logo.png')}}" alt="" width="150">
                 </div>
 
                 <div class="user-area">
@@ -203,8 +203,10 @@
         </main>
 
         <footer class="col-md-10 col-md-offset-1 col-sm-12">
-            <div class="footer">
-                Copyright &copy; <a href="http://www.alkifah.com.sa">Al-Kifah Holding</a> {{date('Y')}}
+            <div class="footer display-flex">
+                <div>Copyright &copy; <a href="http://www.alkifah.com.sa">Al-Kifah Holding</a> {{date('Y')}}</div>
+                <img src="{{asset('images/kcc-logo.png')}}" alt="" height="50">
+
             </div>
         </footer>
     </div>

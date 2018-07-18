@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
 <h2>Productivity</h2>

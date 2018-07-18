@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2 class="panel-title">Import Productivity</h2>

@@ -1,4 +1,4 @@
-@extends(request()->exists('iframe') ? 'layouts.iframe' : 'layouts.app')
+@extends(request()->exists('iframe') ? 'layouts.iframe' : 'home.master-data')
 
 @section('header')
     <h2>
@@ -10,7 +10,7 @@
     </h2>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($productivity, ['url' => route('productivity.update', $productivity) . (request()->exists('iframe')? '?iframe' : '')]) }}
 
         {{ method_field('patch') }}
