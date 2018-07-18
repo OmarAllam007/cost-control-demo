@@ -1003,3 +1003,23 @@ th.table-caption {
 .projects-table a {
   font-size: 1.2em;
 }
+
+.masterdata-tree {
+  li a {
+    padding: 10px;
+    display: block;
+    
+    &:hover {
+      background: #f5f5f5;
+      text-decoration: none;
+    }
+  }
+
+  .menu {
+    padding-left: 20px;
+  }
+}
+
+.pr-5 {
+  padding-right: 5px;
+}

@@ -11626,6 +11626,24 @@ th.table-caption {
   font-size: 1.2em;
 }
 
+.masterdata-tree li a {
+  padding: 10px;
+  display: block;
+}
+
+.masterdata-tree li a:hover {
+  background: #f5f5f5;
+  text-decoration: none;
+}
+
+.masterdata-tree .menu {
+  padding-left: 20px;
+}
+
+.pr-5 {
+  padding-right: 5px;
+}
+
 @media print {
   table {
     width: 100%;

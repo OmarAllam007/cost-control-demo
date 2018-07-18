@@ -15,6 +15,7 @@ Route::get('home', 'HomeController@index')->name('home');
 Route::get('acknowledgement', 'HomeController@acknowledgement')->name('home.acknowledgement');
 Route::get('budget', 'BudgetController@index')->name('home.budget');
 Route::get('reports', 'HomeController@reports')->name('home.reports');
+Route::get('master-data', 'HomeController@masterData')->name('home.master-data');
 Route::get('cost-control', 'CostControlController@index')->name('home.cost-control');
 Route::get('coming-soon', 'HomeController@comingSoon')->name('home.coming-soon');
 

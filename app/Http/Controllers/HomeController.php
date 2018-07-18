@@ -50,4 +50,9 @@ class HomeController extends Controller
 
         return view('home.reports', compact('projectGroups'));
     }
+
+    function masterData()
+    {
+        return view('home.master-data');
+    }
 }
