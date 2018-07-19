@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Standard Activity</h2>
     <a href="{{URL::previous()}}" class="btn btn-sm btn-default pull-right"><i class="fa fa-arrow-left"></i> Back </a>
 @stop
 
-@section('body')
+@section('content')
     <table class="table table-condensed table-striped">
         <thead>
 

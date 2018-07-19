@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>
@@ -15,7 +15,7 @@
     @endif
 @stop
 
-@section('body')
+@section('content')
     {{ Form::open(['route' => ['resources.store','project'=>request('project')]]) }}
 
         @include('resources._form', ['override' => false, 'resources' => new \App\Resources()])

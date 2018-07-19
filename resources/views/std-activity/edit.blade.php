@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Edit Std activity</h2>
@@ -12,7 +12,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($std_activity, ['route' => ['std-activity.update', $std_activity]]) }}
 
         {{ method_field('patch') }}

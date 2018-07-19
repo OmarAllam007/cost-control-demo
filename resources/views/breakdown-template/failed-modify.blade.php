@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends($project? 'layouts.app' : 'home.master-data')
 
 @section('title', 'Breakdown template failed import')
 
@@ -24,7 +24,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
     <main class="row">
         <article class="col-sm-9 col-md-6">
             <div class="alert alert-info">

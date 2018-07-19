@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('title', 'Communication Plan')
 
@@ -10,7 +10,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
 
     {{Form::model($role, ['url' => route('roles.update', $role)])}}
 

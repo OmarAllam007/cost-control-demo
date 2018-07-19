@@ -1,4 +1,4 @@
-@extends('layouts.' . (request('iframe')? 'iframe' : 'app'))
+@extends((request('iframe')? 'iframe' : 'home.master-data'))
 
 @section('header')
     <h2>Add template</h2>
@@ -10,8 +10,6 @@
             <a href="{{ route('std-activity.show', request('activity')) }}" class="btn btn-sm btn-default pull-right"><i class="fa fa-chevron-left"></i> Back to activity</a>
         @endif
     </div>
-
-
 @stop
 
 @section('body')

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Lato:400,600,700");
+@import url("https://fonts.googleapis.com/css?family=poppins:400,600,700");
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -1305,11 +1305,11 @@ html {
 }
 
 body {
-  font-family: "Lato", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 12px;
   line-height: 1.4;
   color: #636b6f;
-  background-color: #F8FAFC;
+  background-color: #f1f3f4;
 }
 
 input,
@@ -1357,7 +1357,7 @@ img {
 .img-thumbnail {
   padding: 4px;
   line-height: 1.4;
-  background-color: #F8FAFC;
+  background-color: #f1f3f4;
   border: 1px solid #ddd;
   border-radius: 4px;
   transition: all 0.2s ease-in-out;
@@ -2664,7 +2664,7 @@ th {
 }
 
 .table .table {
-  background-color: #F8FAFC;
+  background-color: #f1f3f4;
 }
 
 .table-condensed > thead > tr > th,
@@ -4571,7 +4571,7 @@ tbody.collapse.in {
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
   color: #555555;
-  background-color: #F8FAFC;
+  background-color: #f1f3f4;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
   cursor: default;
@@ -4658,7 +4658,7 @@ tbody.collapse.in {
   .nav-tabs.nav-justified > .active > a:hover,
   .nav-tabs-justified > .active > a:focus,
   .nav-tabs.nav-justified > .active > a:focus {
-    border-bottom-color: #F8FAFC;
+    border-bottom-color: #f1f3f4;
   }
 }
 
@@ -5068,7 +5068,7 @@ tbody.collapse.in {
 
 .navbar-default {
   background-color: #1C3D5A;
-  border-color: #d4e1ed;
+  border-color: #d4dbde;
 }
 
 .navbar-default .navbar-brand {
@@ -5117,7 +5117,7 @@ tbody.collapse.in {
 
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
-  border-color: #d4e1ed;
+  border-color: #d4dbde;
 }
 
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
@@ -5638,7 +5638,7 @@ a.badge:hover, a.badge:focus {
   padding: 4px;
   margin-bottom: 16px;
   line-height: 1.4;
-  background-color: #F8FAFC;
+  background-color: #f1f3f4;
   border: 1px solid #ddd;
   border-radius: 4px;
   transition: border 0.2s ease-in-out;
@@ -5904,7 +5904,7 @@ a.thumbnail.active {
   padding: 10px 15px;
   margin-bottom: -1px;
   background-color: #fff;
-  border: 1px solid #d4e1ed;
+  border: 1px solid #d4dbde;
 }
 
 .list-group-item:first-child {
@@ -6160,7 +6160,7 @@ button.list-group-item-danger.active:focus {
 .panel-footer {
   padding: 10px 15px;
   background-color: #f5f5f5;
-  border-top: 1px solid #d4e1ed;
+  border-top: 1px solid #d4dbde;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
@@ -6381,7 +6381,7 @@ button.list-group-item-danger.active:focus {
 
 .panel-group .panel-heading + .panel-collapse > .panel-body,
 .panel-group .panel-heading + .panel-collapse > .list-group {
-  border-top: 1px solid #d4e1ed;
+  border-top: 1px solid #d4dbde;
 }
 
 .panel-group .panel-footer {
@@ -6389,21 +6389,21 @@ button.list-group-item-danger.active:focus {
 }
 
 .panel-group .panel-footer + .panel-collapse .panel-body {
-  border-bottom: 1px solid #d4e1ed;
+  border-bottom: 1px solid #d4dbde;
 }
 
 .panel-default {
-  border-color: #d4e1ed;
+  border-color: #d4dbde;
 }
 
 .panel-default > .panel-heading {
   color: #333333;
   background-color: #fff;
-  border-color: #d4e1ed;
+  border-color: #d4dbde;
 }
 
 .panel-default > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: #d4e1ed;
+  border-top-color: #d4dbde;
 }
 
 .panel-default > .panel-heading .badge {
@@ -6412,7 +6412,7 @@ button.list-group-item-danger.active:focus {
 }
 
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: #d4e1ed;
+  border-bottom-color: #d4dbde;
 }
 
 .panel-primary {
@@ -6767,7 +6767,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: "Lato", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -6901,7 +6901,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Lato", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -10603,8 +10603,7 @@ button.close {
 }
 
 #main-panel {
-  margin-top: 50px;
-  border-top: none;
+  border-radius: 0;
 }
 
 #main-panel > .panel-heading {
@@ -11239,7 +11238,7 @@ table.table > tbody > tr > td.v-top, table.table > tbody > tr > th.v-top, table.
 
 .card {
   box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.08);
-  background-color: #F8FAFC;
+  background-color: #f1f3f4;
   margin-bottom: 15px;
   font-size: 90%;
 }
@@ -11494,7 +11493,7 @@ dl.dl-margin {
 }
 
 .breakdown-resource:nth-child(odd) {
-  background-color: #F8FAFC;
+  background-color: #f1f3f4;
 }
 
 .breakdown-resource:nth-child(even) {
@@ -11615,6 +11614,33 @@ td.pessimistic {
 th.table-caption {
   font-size: 114%;
   font-weight: 600;
+}
+
+.project-label {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+.projects-table a {
+  font-size: 1.2em;
+}
+
+.masterdata-tree li a {
+  padding: 10px;
+  display: block;
+}
+
+.masterdata-tree li a:hover {
+  background: #f5f5f5;
+  text-decoration: none;
+}
+
+.masterdata-tree .menu {
+  padding-left: 20px;
+}
+
+.pr-5 {
+  padding-right: 5px;
 }
 
 /*# sourceMappingURL=app.css.map */

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Edit Business partner</h2>
@@ -12,7 +12,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($business_partner, ['route' => ['business-partner.update', $business_partner]]) }}
 
         {{ method_field('patch') }}

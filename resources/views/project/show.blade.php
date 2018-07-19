@@ -20,7 +20,7 @@
             @endcan
         @endcan
 
-        <a href="{{ route('project.index')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
+        <a href="{{ route('home.budget')}}" class="btn btn-sm btn-default"><i class="fa fa-chevron-left"></i> Back</a>
     </div>
 
 

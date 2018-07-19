@@ -58,7 +58,6 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('cost_activity/{project}',['uses'=>'CostReportsController@activityReport','as'=>'cost.activity_report']);
     Route::get('cost_resource_dictionary/{project}',['uses'=>'CostReportsController@resourceDictionaryReport','as'=>'cost.dictionary']);
     Route::get('variance_analysis/{project}',['uses'=>'CostReportsController@varianceAnalysisReport','as'=>'cost.variance']);
-    Route::get('reports/{project}', ['as' => 'project.reports', 'uses' => 'ReportController@getReports']);
     Route::get('wbs_report/{project}', ['as' => 'wbs.report', 'uses' => 'ReportController@wbsReport']);
     Route::get('productivity_report/{project}', ['as' => 'productivity.report', 'uses' => 'ReportController@productivityReport']);
     Route::get('standard_activity_report/{project}', ['as' => 'stdActivity.report', 'uses' => 'ReportController@stdActivityReport']);

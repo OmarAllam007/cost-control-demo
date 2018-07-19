@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
 <h2>Productivity</h2>
@@ -11,7 +11,7 @@
 </form>
 @stop
 
-@section('body')
+@section('content')
 
     <div class="form-group clearfix">
         <table class="table table-condensed">

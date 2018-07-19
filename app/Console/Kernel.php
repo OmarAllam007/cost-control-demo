@@ -32,11 +32,13 @@ class Kernel extends ConsoleKernel
         Commands\WbsSapCode::class,
         Commands\StdActivitySapCode::class,
         Commands\BreakdownSapCode::class,
+        Commands\CacheProjects::class,
         MigrateActualResources::class,
     ];
 
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('global-report-cache')->dailyAt('02:00');
+        $schedule->command('projects:cache')->everyTenMinutes();
     }
 }

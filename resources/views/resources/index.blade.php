@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('home.master-data')
+
 @section('header')
     <div class="display-flex">
         <h2 class="flex">Resources</h2>
@@ -42,7 +43,7 @@
     </div>
 @stop
 
-@section('body')
+@section('content')
     @if(count(request('dublicate')))
         <div class="container" id="notify" style="">
             @foreach(request('dublicate') as $item)
