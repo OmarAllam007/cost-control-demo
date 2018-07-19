@@ -8,47 +8,25 @@
 
 @section('body')
     @if ($projectGroups->count())
-        <table class="table table-hover projects-table table-bordered">
-            <thead>
-            <tr class="bg-primary">
-                <th class="col-sm-6">Project</th>
+        @foreach($projectGroups as $groupName => $projects)
+            @if ($projects->count())
+                <article class="card">
+                    <h3 class="card-title">
+                        <a href="#{{slug($groupName ?: 'not-assigned')}}"
+                           data-toggle="collapse">{{$groupName?: 'Not Assigned'}}</a>
+                    </h3>
 
-                <th class="col-sm-3">Budget Cost</th>
-                <th class="col-sm-3">To Date Cost</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($projectGroups as $client => $group)
-                <tr class="bg-blue-lightest">
-                    <td class="col-sm-6">
-                        <a href="#" data-target=".{{slug($client ?: 'Not Assigned')}}" class="group-label">
-                            <i class="fa fa-plus-square-o"></i>
-                            <strong>{{$client ?: 'Not Assigned'}}</strong>
-                        </a>
-                    </td>
+                    <div class="card-body collapse" id="{{slug($groupName ?: 'not-assigned')}}">
+                        @foreach($projects as $project)
+                            <div class="card-row display-flex">
+                                <h4 class="flex"><a href="{{route('project.cost-control', $project)}}">{{$project->name}}</a></h4>
+                            </div>
+                        @endforeach
+                    </div>
+                </article>
 
-                    <td>{{number_format($group->sum('latest_budget_cost'), 2)}}</td>
-                    <td>{{number_format($group->sum('to_date_cost'), 2)}}</td>
-                </tr>
-                @foreach($group as $project)
-                    <tr class="{{slug($client ?: 'Not Assigned')}} collapse">
-                        <td>
-                            <a class="project-label" href="{{route('project.cost-control', $project)}}">
-                                {{$project->name}}
-                            </a>
-
-                            @if($project->rollup_level)
-                                <span class="label label-info">{{$project->rollup_level}}</span>
-                            @endif
-                        </td>
-
-                        <td>{{number_format($project->latest_budget_cost, 2)}}</td>
-                        <td>{{number_format($project->to_date_cost, 2)}}</td>
-                    </tr>
-                @endforeach
-            @endforeach
-            </tbody>
-        </table>
+            @endif
+        @endforeach
     @else
         <div class="alert alert-info">No projects found</div>
     @endif
