@@ -70,7 +70,7 @@
                     <article class="media">
                         <div class="media-left">
                             <img class="img-circle"
-                                 src="https://lh3.googleusercontent.com/2XfDdjLvouTVkz7qD_Rhx9gfJQEXJS1PK7BtM8h8EpSMJkBiGMnb68zYtC6uIKPUMkKXEI4gbvar=s400-rw-no"
+                                 src="https://lh3.googleusercontent.com/WDO8-rwvL_bFjzSfTK_tF-KpgPEIjnmhwr7lOOYFX7a0BXsuqmIauuURsI9LpeC5KocInhUDO1boiQ=s2304-rw-no"
                                  width="56" height="56" alt="">
                         </div>
                         <div class="media-right">
