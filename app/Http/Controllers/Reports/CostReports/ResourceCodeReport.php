@@ -323,7 +323,7 @@ class ResourceCodeReport
             }
         }
 
-        $resources = $disciplineData->get('');
+        $resources = $disciplineData->get('', []);
         foreach ($resources as $resource) {
             ++$counter;
             $counter = $this->addExcelResource($sheet, $resource, $counter);
