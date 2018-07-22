@@ -49,12 +49,15 @@ trait DashboardData
             return  $this->chached_eac_profit;
         }
 
-        return $this->chached_eac_profit = $this->project->eac_contract_amount - $this->at_completion_cost;
+        $reserve = MasterShadow::where('period_id', $this->id)->where('activity_id', 3060)->value('budget_cost');
+
+        $completion_cost = $this->at_completion_cost - $reserve;
+        return $this->chached_eac_profit = $this->contract_value - $completion_cost;
     }
 
     function getEacProfitabilityIndexAttribute()
     {
-        return $this->eac_profit * 100 / $this->project->eac_contract_amount;
+        return $this->eac_profit * 100 / $this->contract_value;
     }
 
     function getActualDurationAttribute()
