@@ -61,7 +61,7 @@ trait ReportScopes
     function scopeCurrentActivityReport(Builder $query, Period $period)
     {
         $query->forPeriod($period);
-        $fields = ['wbs_id', 'activity', 'resource_name'];
+        $fields = ['wbs_id', 'activity', 'activity_id', 'resource_name'];
         $query->groupBy($fields);
         $query->select($fields)->selectRaw(
             'sum(budget_cost) as budget_cost, sum(to_date_cost) to_date_cost, sum(to_date_qty) to_date_qty, sum(allowable_ev_cost) to_date_allowable,'.
