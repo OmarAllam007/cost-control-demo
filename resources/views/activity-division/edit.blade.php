@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Edit Division</h2>
@@ -12,7 +12,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($activity_division, ['route' => ['activity-division.update', $activity_division]]) }}
 
         {{ method_field('patch') }}

@@ -1,4 +1,5 @@
 <section id="ReportsArea" class="project-tab row">
+    @if (empty($skipButtons))
     <div class="col-sm-12">
         <div class="form-group pull-right">
             <a href="{{route('break_down.printall',$project)}}?print=1&all=1" target="_blank" class="btn btn-primary">
@@ -12,6 +13,7 @@
             @endcan
         </div>
     </div>
+    @endif
 
     <div class="col-sm-4">
         <a href="{{route('project.budget-checklist', $project)}}" class="btn btn-success btn-block">BUDGET CHECK LIST</a>

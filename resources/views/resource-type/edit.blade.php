@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Edit Resource type</h2>
@@ -12,7 +12,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($resource_type, ['route' => ['resource-type.update', $resource_type]]) }}
 
         {{ method_field('patch') }}

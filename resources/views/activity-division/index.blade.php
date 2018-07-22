@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Activity Divisions</h2>
@@ -8,7 +8,7 @@
     {{--<a href="{{ route('division.import') }} " class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Upload project</a>--}}
 @stop
 
-@section('body')
+@section('content')
     @if ($activityDivisions->total())
         <ul class="list-unstyled tree">
             @foreach($activityDivisions->sort() as $division)

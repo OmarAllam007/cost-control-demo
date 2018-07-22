@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Edit template</h2>
@@ -13,7 +13,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($breakdown_template, ['route' => ['breakdown-template.update', $breakdown_template]]) }}
 
         {{ method_field('patch') }}

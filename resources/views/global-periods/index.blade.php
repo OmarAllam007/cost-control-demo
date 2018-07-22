@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <div class="display-flex">
@@ -7,7 +7,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
 
     @if ($globalPeriods->total())
     <table class="table table-condensed table-striped">
