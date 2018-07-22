@@ -58,7 +58,25 @@ class ResourceCodeReport
     {
         $query = MasterShadow::forPeriod($this->period)->resourceDictReport();
 
-        $resourceData = $this->applyFilters($query)->get();
+        $resourceData = $this->applyFilters($query)->get()->keyBy('resource_id');
+        $resourceData->where('resource_type_id', 8)->each(function ($resource) {
+            $budget_cost = MasterShadow::where('period_id', $this->period->id)->where('activity_id', '<>', 3060)->sum('budget_cost');
+            $to_date_cost = MasterShadow::where('period_id', $this->period->id)->where('activity_id', '<>', 3060)->sum('to_date_cost');
+            $progress = min(100, $to_date_cost / $budget_cost);
+            $reserve = $resource->budget_cost;
+            $to_date_allowable = $progress * $reserve;
+
+            $resource->budget_cost = $reserve;
+            $resource->to_date_cost = 0;
+            $resource->to_date_allowable = $to_date_allowable;
+            $resource->to_date_var = $to_date_allowable;
+            $resource->prev_cost = 0;
+            $resource->prev_allowable = 0;
+            $resource->prev_cost_var = 0;
+            $resource->remaining_cost = 0;
+            $resource->at_completion_cost = 0;
+            $resource->cost_var = $reserve;
+        });
 
         $tree = $resourceData->groupBy('resource_type')->map(function ($typeGroup) {
             return $typeGroup->groupBy('boq_discipline')->map(function ($disciplineGroup) {
