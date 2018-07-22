@@ -395,7 +395,7 @@ class ProjectInfo
                 ->where('resource_type_id', 8)->sum('budget_cost');
             $revision0['eac_contract_amount'] = $this->project->eac_contract_amount;
             $revision0['profit'] = $this->project->planned_profit_amount;
-            $revision1['profitability_index'] = $this->project->planned_profitability;
+            $revision0['profitability_index'] = $this->project->planned_profitability;
         }
 
         $revision0['indirect_cost'] = $revision0['general_requirements'];
@@ -403,7 +403,7 @@ class ProjectInfo
 
         $latest = BudgetRevision::where('project_id', $this->project->id)
             ->where('global_period_id', $this->period->global_period_id)
-            ->where('is_generated', 1)->latest()->first();
+            ->latest('id')->first();
 
         $revision1 = [];
 
