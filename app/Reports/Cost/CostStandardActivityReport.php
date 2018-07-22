@@ -8,6 +8,7 @@ use App\Period;
 use App\Project;
 use App\StdActivity;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 class CostStandardActivityReport
 {
@@ -22,6 +23,8 @@ class CostStandardActivityReport
 
     /** @var Collection */
     protected $activityNames;
+    /** @var Collection */
+    private $currentActivities;
 
     function __construct(Period $period)
     {
@@ -40,12 +43,23 @@ class CostStandardActivityReport
             $previousTotals = ['previous_cost' => 0, 'previous_allowable' => 0, 'previous_var' => 0];
         }
 
-        $currentTotals = MasterShadow::whereProjectId($this->project->id)->wherePeriodId($this->period->id)->selectRaw(
-            'sum(to_date_cost) to_date_cost, sum(allowable_ev_cost) to_date_allowable, sum(allowable_var) as to_date_var,'
-            . 'sum(remaining_cost) as remaining, sum(completion_cost) at_completion_cost, sum(cost_var) cost_var, sum(budget_cost) budget_cost'
-        )->first();
+//        $currentTotals = MasterShadow::whereProjectId($this->project->id)->wherePeriodId($this->period->id)->selectRaw(
+//            'sum(to_date_cost) to_date_cost, sum(allowable_ev_cost) to_date_allowable, sum(allowable_var) as to_date_var,'
+//            . 'sum(remaining_cost) as remaining, sum(completion_cost) at_completion_cost, sum(cost_var) cost_var, sum(budget_cost) budget_cost'
+//        )->first();
 
         $tree = $this->buildTree();
+
+        $currentTotals = new Fluent([
+            'to_date_cost' => $this->currentActivities->sum('to_date_cost'),
+            'to_date_allowable' => $this->currentActivities->sum('to_date_allowable'),
+            'to_date_var' => $this->currentActivities->sum('to_date_var'),
+            'remaining' => $this->currentActivities->sum('remaining'),
+            'at_completion_cost' => $this->currentActivities->sum('completion_cost'),
+            'cost_var' => $this->currentActivities->sum('completion_var'),
+            'budget_cost' => $this->currentActivities->sum('budget_cost'),
+        ]);
+
 
         $periods = $this->project->periods()->readyForReporting()->pluck('name', 'id');
         $activityNames = $this->activityNames;
@@ -68,9 +82,25 @@ class CostStandardActivityReport
 
         $this->applyFilters($query);
 
-        $currentActivities = collect($query->groupBy('activity', 'activity_id')->orderBy('activity_divs')->orderBy('activity')->get())->keyBy('activity_id');
-        $activity_ids = $currentActivities->pluck('activity_id');
-        $this->activityNames = $currentActivities->pluck('activity', 'activity_id')->sort();
+        $this->currentActivities = collect($query->groupBy('activity', 'activity_id')->orderBy('activity_divs')->orderBy('activity')->get())->keyBy('activity_id');
+        $reserve = $this->currentActivities->get(3060);
+        if ($reserve) {
+            $activities = $this->currentActivities->except(3060);
+            $budget = $activities->sum('budget_cost');
+            $to_date = $activities->sum('to_date_cost');
+            $progress = $to_date / $budget;
+            $reserve->to_date_allowable = $reserve->budget_cost * $progress;
+            $reserve->to_date_cost = 0.0;
+            $reserve->to_date_var = $reserve->budget_cost * $progress;
+            $reserve->remaining_cost = 0;
+            $reserve->completion_cost = 0;
+            $reserve->completion_var = $reserve->budget_cost;
+
+            $this->currentActivities->put(3060, $reserve);
+        }
+
+        $activity_ids = $this->currentActivities->pluck('activity_id');
+        $this->activityNames = $this->currentActivities->pluck('activity', 'activity_id')->sort();
 
         if ($this->previousPeriod) {
             $previousActivities = collect(\DB::table('master_shadows')->whereProjectId($this->project->id)->wherePeriodId($this->previousPeriod->id)->selectRaw(
@@ -89,7 +119,7 @@ class CostStandardActivityReport
             });
 
         $tree = [];
-        foreach ($currentActivities as $id => $current) {
+        foreach ($this->currentActivities as $id => $current) {
             $prevDiv = '';
             $previous = $previousActivities[$id] ?? [];
             foreach ($activityDivs[$id] as $index => $div) {
