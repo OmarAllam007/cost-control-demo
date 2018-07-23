@@ -21,7 +21,7 @@ class Optional
     public function __get($name)
     {
         if (!is_null($this->obj) && is_object($this->obj)) {
-            return $this->$name;
+            return $this->obj->$name;
         }
 
         return null;
