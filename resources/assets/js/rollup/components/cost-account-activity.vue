@@ -128,6 +128,11 @@
                     child => child.selected
                 );
 
+                const valid = cost_accounts.every(cost_account => cost_account.validate());
+                if (!valid) {
+                    return true;
+                }
+
                 const ids = cost_accounts.map(child => child.cost_account.id);
 
                 const budget_unit = cost_accounts.reduce((items, child) => {

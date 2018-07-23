@@ -21,7 +21,10 @@ class CostAccountRollupController extends Controller
     {
         $this->authorize('cost_owner', $project);
 
-        $rollup = new CostAccountRollup($project, $request->get('cost_account', []), $request->only('budget_unit', 'measure_unit', 'to_date_qty'));
+        $rollup = new CostAccountRollup($project,
+            $request->get('cost_account', []),
+            $request->only('budget_unit', 'measure_unit', 'to_date_qty', 'progress'));
+
         $status = $rollup->handle();
 
         $message = "$status Cost accounts have been rolled up";
