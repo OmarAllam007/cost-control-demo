@@ -9,10 +9,10 @@
   "type": "project",
   "require": {
     "php": ">=7.0",
-    "laravel/framework": "5.5.*",
+    "laravel/framework": "5.6.*",
     "laravel/tinker": "~1.0",
     "filp/whoops": "~2.2",
-    "laravelcollective/html": "^5.5",
+    "laravelcollective/html": "^5.6",
     "barryvdh/laravel-ide-helper": "^2.4",
     "phpoffice/phpexcel": "^1.8",
     "laravel/socialite": "^3.0",
