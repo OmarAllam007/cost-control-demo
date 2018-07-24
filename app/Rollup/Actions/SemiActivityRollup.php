@@ -199,7 +199,7 @@ class SemiActivityRollup
             'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
         ]);
 
-        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
+//        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
 
         return $this->rollup_shadow;
     }
