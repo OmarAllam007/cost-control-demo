@@ -63,6 +63,7 @@ class QuantitySurveyObserver
     {
         $ids = BreakDownResourceShadow::whereIn('wbs_id', $qs->wbsLevel->getChildrenIds())
             ->where('cost_account', $qs->cost_account)
+            ->where('show_in_budget', 1)
             ->pluck('breakdown_resource_id');
 
         BreakdownResource::whereIn('id', $ids)->get()
