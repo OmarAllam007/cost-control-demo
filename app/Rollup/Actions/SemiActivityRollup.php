@@ -192,22 +192,14 @@ class SemiActivityRollup
             return $this->rollup_shadow;
         }
 
-        $current_qty = $actual_resources->where('period_id', '=', $period->id)->sum('qty');
-        $current_cost = $actual_resources->where('period_id', '=', $period->id)->sum('cost');
-        $current_unit_price = $to_date_unit_price;
-        if ($current_qty) {
-            $current_unit_price = $current_cost / $current_qty;
-        }
-
-        /*ActualResources::forceCreate([
+        ActualResources::forceCreate([
             'project_id' => $this->project->id, 'wbs_level_id' => $this->rollup_shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
-            'qty' => $current_qty, 'cost' => $current_cost, 'unit_price' => $current_unit_price,
+            'qty' => $to_date_qty, 'cost' => 0, 'unit_price' => 0,
             'unit_id' => $this->rollup_shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $this->rollup_shadow->resource_id,
             'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
         ]);
 
         ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
-        */
 
         return $this->rollup_shadow;
     }
