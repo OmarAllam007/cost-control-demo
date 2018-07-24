@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/', 'ProjectController@index')->middleware('auth');
+Route::get('/', 'HomeController@index')->middleware('auth');
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
@@ -8,6 +8,16 @@ Route::get('auth/google', 'Auth\AuthController@googleRedirect');
 Route::get('auth/google/continue', 'Auth\AuthController@googleHandle');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('home', 'HomeController@index')->name('home');
+    Route::get('acknowledgement', 'HomeController@acknowledgement')->name('home.acknowledgement');
+    Route::get('budget', 'BudgetController@index')->name('home.budget');
+    Route::get('reports', 'HomeController@reports')->name('home.reports');
+    Route::get('master-data', 'HomeController@masterData')->name('home.master-data');
+    Route::get('cost-control', 'CostControlController@index')->name('home.cost-control');
+    Route::get('coming-soon', 'HomeController@comingSoon')->name('home.coming-soon');
+
+    Route::get('project/{project}/reports', 'ProjectReportsController@show')->name('project.reports');
+    
     Route::group(['prefix' => 'api'], function () {
         Route::get('breakdown-template', 'Api\BreakdownTemplateController@index');
         Route::get('breakdown-template/template/{project}', 'Api\BreakdownTemplateController@templates');
