@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Std activity - {{$std_activity->name}}</h2>
@@ -21,7 +21,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     <table class="table table-condensed">
         <tbody>
         <tr>

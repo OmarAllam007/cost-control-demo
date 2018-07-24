@@ -19,7 +19,7 @@ class StdActivitySapCode extends Command
 
     public function handle()
     {
-        StdActivity::each(function($activity) {
+        StdActivity::get()->each(function($activity) {
             $part1 = substr($activity->id_partial, 0, 2);
             $part2 = substr($activity->id_partial, -2);
 

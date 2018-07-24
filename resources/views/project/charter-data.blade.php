@@ -55,12 +55,12 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                {{--<div class="form-group">
                     {{Form::label('project_duration', 'Project Duration', ['class' => 'control-label col-sm-4'])}}
                     <div class="col-sm-8">
                         {{Form::text('project_duration', null, ['class' => 'form-control', 'disabled'])}}
                     </div>
-                </div>
+                </div>--}}
 
                 <div class="form-group">
                     {{Form::label('project_start_date', 'Planned Start Date', ['class' => 'control-label col-sm-4'])}}
@@ -91,7 +91,7 @@
                 </div>
             </fieldset>
 
-            <fieldset class="form-horizontal">
+            <fieldset class="form-horizontal mt-20">
                 <legend>Tender</legend>
 
                 <div class="form-group">
@@ -125,27 +125,65 @@
         </section>
 
         <section class="col-sm-6">
-            <fieldset>
+            <fieldset class="form-horizontal">
                 <legend>Brief</legend>
                 <div class="form-group">
-                    {{Form::label('description', 'Project Brief', ['class' => 'control-label'])}}
-                    {{Form::textarea('description', null, ['rows' => 3, 'class' => 'form-control'])}}
+                    {{Form::label('description', 'Project Brief', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::textarea('description', null, ['rows' => 5, 'class' => 'form-control'])}}
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    {{Form::label('discipline_brief', 'Discipline Brief', ['class' => 'control-label'])}}
-                    {{Form::textarea('discipline_brief', null, ['rows' => 5, 'class' => 'form-control'])}}
+                    {{Form::label('discipline_brief', 'Discipline Brief', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::textarea('discipline_brief', null, ['rows' => 5, 'class' => 'form-control'])}}
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    {{Form::label('assumptions', 'Assumptions', ['class' => 'control-label'])}}
-                    {{Form::textarea('assumptions', null, ['rows' => 5, 'class' => 'form-control'])}}
+                    {{Form::label('assumptions', 'Assumptions', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::textarea('assumptions', null, ['rows' => 5, 'class' => 'form-control'])}}
+                    </div>
                 </div>
+            </fieldset>
+
+            <fieldset class="form-horizontal mt-20">
+                <legend>Built Up Area</legend>
+
+                <article class="form-group">
+                    {{Form::label('sw_area', 'Site Work Area', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('sw_area', null, ['class' => 'form-control'])}}
+                    </div>
+                </article>
+
+                <article class="form-group">
+                    {{Form::label('sw_cost', 'Site Work Cost', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('sw_cost', null, ['class' => 'form-control'])}}
+                    </div>
+                </article>
+
+                <article class="form-group">
+                    {{Form::label('building_area', 'Building Area', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('building_area', null, ['class' => 'form-control'])}}
+                    </div>
+                </article>
+
+                <article class="form-group">
+                    {{Form::label('building_cost', 'Building Cost', ['class' => 'control-label col-sm-4'])}}
+                    <div class="col-sm-8">
+                        {{Form::text('building_cost', null, ['class' => 'form-control'])}}
+                    </div>
+                </article>
             </fieldset>
         </section>
     </div>
 
-    <div class="form-group text-center">
+    <div class="form-group text-center mt-20">
         <button class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
     </div>
 

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Users</h2>
@@ -7,7 +7,7 @@
     </div>
 @stop
 
-@section('body')
+@section('content')
     @if ($users->total())
         <table class="table table-condensed table-striped table-fixed">
             <thead>

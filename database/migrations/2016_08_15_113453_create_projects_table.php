@@ -27,6 +27,8 @@ class CreateProjectsTable extends Migration
             $table->text('indirect_cost_general',15,2)->nullable();
             $table->text('total_budget_cost',15,2)->nullable();
             $table->boolean('is_activity_rollup')->nullable();
+            $table->double('sw_area', 18, 6)->nullable();
+            $table->double('sw_cost', 18, 6)->nullable();
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->softDeletes();

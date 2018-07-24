@@ -12,6 +12,7 @@ namespace App\Observers;
 use App\ActualResources;
 use App\BreakDownResourceShadow;
 use App\CostShadow;
+use App\StoreResource;
 use App\WbsResource;
 
 class ActualResourceObserver
@@ -36,6 +37,8 @@ class ActualResourceObserver
         } else {
             $budget->update(['progress' => 0, 'status' => 'Not Started']);
         }
+
+        StoreResource::where('actual_resource_id', $resource->id)->delete();
     }
 
     protected function updateShadow(ActualResources $resource)

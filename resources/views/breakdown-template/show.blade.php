@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends($breakdown_template->project ? 'layouts.app' : 'home.master-data')
 
 @section('header')
     <div class="display-flex">

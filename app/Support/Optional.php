@@ -20,8 +20,8 @@ class Optional
 
     public function __get($name)
     {
-        if (is_object($this->obj)) {
-            return $this->$name;
+        if (!is_null($this->obj) && is_object($this->obj)) {
+            return $this->obj->$name;
         }
 
         return null;
@@ -29,7 +29,7 @@ class Optional
 
     public function __call($name, $arguments)
     {
-        if (is_object($this->obj) && method_exists($this->obj, $name)) {
+        if (!is_null($this->obj) && is_object($this->obj)) {
             return call_user_func_array([$this->obj, $name], $arguments);
         }
 

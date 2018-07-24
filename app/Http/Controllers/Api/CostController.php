@@ -11,6 +11,8 @@ use App\CostIssue;
 use App\CostResource;
 use App\CostShadow;
 use App\Http\Controllers\Controller;
+use App\Import\ModifyBreakdown\Import;
+use App\ImportantActualResource;
 use App\Project;
 use App\StoreResource;
 use App\WbsLevel;
@@ -141,17 +143,20 @@ class CostController extends Controller
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
 
-        $counter = ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
-            ->where('period_id', $breakdown_resource->project->open_period()->id)
+        $period_id = $breakdown_resource->project->open_period()->id;
+        ActualResources::where('breakdown_resource_id', $breakdown_resource->id)
+            ->where('period_id', $period_id)
             ->get()->map(function (ActualResources $resource) {
                 return $resource->forceDelete();
             })->filter()->count();
 
-        if ($counter) {
-            return ['ok' => true, 'message' => 'Resource data has been deleted'];
-        } else {
-            return ['ok' => false, 'message' => 'Could not delete resource'];
-        }
+        ImportantActualResource::where('period_id', $period_id)
+            ->whereRaw(
+                "(breakdown_resource_id = {$breakdown_resource->id} or " .
+                "breakdown_resource_id in (select id from breakdown_resources where " .
+                "rollup_resource_id = {$breakdown_resource->id}))"
+            )->delete();
+        return ['ok' => true, 'message' => 'Resource data has been deleted'];
     }
 
     function deleteBatch(ActualBatch $actual_batch)
@@ -168,7 +173,7 @@ class CostController extends Controller
             });
 
         StoreResource::where('batch_id', $actual_batch->id)->delete();
-
+        ImportantActualResource::where('batch_id', $actual_batch->id)->delete();
         CostIssue::where('batch_id', $actual_batch->id)->delete();
 
         $actual_batch->delete();
@@ -196,6 +201,10 @@ class CostController extends Controller
                 });
             });
 
+        ImportantActualResource::query()
+            ->whereIn('breakdown_resource_id', $resourceIds)
+            ->where('period_id', $wbs->project->open_period()->id)->delete();
+
         return ['ok' => true, 'message' => 'Activity data has been deleted'];
     }
 
@@ -205,13 +214,20 @@ class CostController extends Controller
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
 
-        ActualResources::whereIn('wbs_level_id', $wbs_level->getChildrenIds())
-            ->where('period_id', $wbs_level->project->open_period()->id)
+        $breakdown_resource_ids = BreakdownResource::whereIn('wbs_id', $wbs_level->getChildrenIds())->pluck('id');
+
+        $period_id = $wbs_level->project->open_period()->id;
+        ActualResources::whereIn('breakdown_resource_id', $wbs_level->getChildrenIds())
+            ->where('period_id', $period_id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
                     $resource->forceDelete();
                 });
             });
+
+        ImportantActualResource::query()
+            ->whereIn('breakdown_resource_id', $breakdown_resource_ids)
+            ->where('period_id', $period_id)->delete();
 
         return ['ok' => true, 'message' => 'WBS current data has been deleted'];
     }
@@ -222,13 +238,18 @@ class CostController extends Controller
             return ['ok' => false, 'message' => 'You are not authorized to do this action'];
         }
 
-        ActualResources::whereIn('wbs_level_id', $project->id)
-            ->where('period_id', $project->open_period()->id)
+        $period_id = $project->open_period()->id;
+        ActualResources::where('project_id', $project->id)
+            ->where('period_id', $period_id)
             ->chunkById(1000, function (Collection $resources) {
                 $resources->each(function (ActualResources $resource) {
                     $resource->forceDelete();
                 });
             });
+
+        ImportantActualResource::query()
+            ->where('project_id', $project->id)
+            ->where('period_id', $period_id)->delete();
 
         return ['ok' => true, 'message' => 'Project current data has been deleted'];
     }

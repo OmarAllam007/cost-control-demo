@@ -36,7 +36,7 @@ class CharterReport
     {
         $this->total = BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()->sum('budget_cost');
 
-        $this->resource_types = BreakDownResourceShadow::where('project_id', $this->project->id)
+        $this->resource_types = BreakDownResourceShadow::where('project_id', $this->project->id)->budgetOnly()
             ->selectRaw('resource_type as type, sum(budget_cost) as budget_cost')
             ->groupBy('resource_type')->orderBy('resource_type')
             ->get()->map(function ($type) {

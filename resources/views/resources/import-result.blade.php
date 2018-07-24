@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <div class="display-flex">
@@ -15,7 +15,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
     <div class="alert alert-info">
         {{$status['success']}} resources have been imported successfully.
     </div>

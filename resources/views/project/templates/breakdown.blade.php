@@ -100,6 +100,7 @@
                         <th style="min-width: 150px; max-width: 150px;" class="bg-info">Productivity (Unit/Day)</th>
                         <th style="min-width: 150px; max-width: 150px;" class="bg-blue">Productivity Ref</th>
                         <th style="min-width: 150px; max-width: 150px;" class="bg-green">Remarks</th>
+                        <th style="min-width: 300px; max-width: 300px;" class="bg-blue">SAP ID</th>
                     </tr>
                     </thead>
                 </table>
@@ -165,6 +166,7 @@
                         <td style="min-width: 150px; max-width: 150px;"
                             class="bg-blue">@{{ breakdown.productivity_ref }}</td>
                         <td style="min-width: 150px; max-width: 150px;" class="bg-green">@{{ breakdown.remarks }}</td>
+                        <th style="min-width: 300px; max-width: 300px;" class="bg-blue">@{{ breakdown.sap_code }}</th>
                     </tr>
                     </tbody>
                 </table>

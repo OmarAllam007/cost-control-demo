@@ -47,6 +47,10 @@
         </table>
 
         <div class="row">
+            <div class="col-md-12">
+                <h4 class="card-group-item-heading">At Completion Forecasting Probability</h4>
+            </div>
+
             <div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
 
                 <table class="table table-bordered">

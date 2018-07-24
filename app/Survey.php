@@ -85,7 +85,7 @@ class Survey extends Model
         // Make sure those breakdowns exist.
         $breakdown_ids = Breakdown::whereIn('id', $breakdown_ids)->pluck('id');
 
-        $resources = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->get();
+        $resources = BreakdownResource::whereIn('breakdown_id', $breakdown_ids)->where('is_rollup', false)->get();
         /** @var BreakdownResource $resource */
         foreach ($resources as $resource) {
             $resource->updateShadow();

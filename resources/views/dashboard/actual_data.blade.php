@@ -6,14 +6,14 @@
 
             <div class="flex mr-10">
                 <dl>
-                    <dt>Actual Cost</dt>
+                    <dt>Actual Cost (AC)</dt>
                     <dd>{{number_format($cost_info['to_date_cost'], 2)}}</dd>
                 </dl>
             </div>
 
             <div class="flex  mr-10">
                 <dl>
-                    <dt>Allowable Cost</dt>
+                    <dt>Allowable Cost (EV)</dt>
                     <dd>{{number_format($cost_info['allowable_cost'], 2)}}</dd>
                 </dl>
             </div>
@@ -35,7 +35,7 @@
 
             <div class="flex mr-10">
                 <dl>
-                    <dt>CPI</dt>
+                    <dt>Cost Performance Index (CPI)</dt>
                     <dd class="display-flex">
                         <span class="flex {{$cost_info['cpi']>=1? 'text-success' : 'text-danger'}}">{{number_format($cost_info['cpi'], 4)}}</span>
                         @if ($cost_info['cpi'] >= 1)
@@ -49,7 +49,7 @@
 
             <div class="flex  mr-10">
                 <dl>
-                    <dt>MCI</dt>
+                    <dt>Material Consumption Index (MCI)</dt>
                     <dd class="display-flex">
                         <span class="flex {{$cost_info['pw_index'] > 4.75? 'text-danger' : 'text-success'}}">{{number_format($cost_info['pw_index'], 2)}}%</span>
                         <span class="{{$cost_info['pw_index'] > 4.75? 'text-danger' : 'text-success'}}"><i class="fa fa-circle"></i></span>
@@ -60,11 +60,10 @@
 
             <div class="flex">
                 <dl>
-                    <dt>SPI</dt>
+                    <dt>Schedule Performance Index (SPI)</dt>
                     <dd class="display-flex">
-                        @php $spi_index = $spi_trend->get($period->name) @endphp
-                        <span class="flex {{$spi_index<1?'text-danger' : 'text-success'}}">{{number_format($spi_index, 2)}}</span>
-                        @if ($spi_trend->last() >= 1)
+                        <span class="flex {{$cost_info['spi_index']<1?'text-danger' : 'text-success'}}">{{number_format($cost_info['spi_index'], 2)}}</span>
+                        @if ($cost_info['spi_index'] >= 1)
                             <span class="text-success"><i class="fa fa-circle"></i></span>
                         @else
                             <span class="text-danger"><i class="fa fa-circle"></i></span>

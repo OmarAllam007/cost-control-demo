@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Business partner</h2>
@@ -12,7 +12,7 @@
     </div>
 @stop
 
-@section('body')
+@section('content')
     @include('business-partner._filters')
     @if ($businessPartners->total())
         <table class="table table-condensed table-striped">

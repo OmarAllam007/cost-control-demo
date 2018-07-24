@@ -14,7 +14,10 @@
                 @foreach($type->db_resources as $resource)
                         <li class="radio">
                             <label>
-                                <input type="radio" value="{{$resource['id']}}" name="resource_id" v-model="resource_id" @change="setResource({{json_encode($resource)}})">
+                                <input type="radio" value="{{$resource['id']}}"
+                                       name="resource_id" v-model="resource_id"
+                                       {{$resource['id'] == $value ? 'checked' : ''}}
+                                       @change="setResource({{json_encode($resource)}})">
                                 <span class="resource-name">{{$resource['name'] }}</span>
                             </label>
                         </li>

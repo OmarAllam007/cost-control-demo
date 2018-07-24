@@ -69,15 +69,17 @@ class GlobalReport
             ->groupBy('project_id')
             ->pluck('id');
 
-        $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(6)->where('end_date', '>=', '2017-10-01')->get()->keyBy('id');
-        $this->trend_period_ids = Period::whereIn('global_period_id', $this->trend_global_periods->pluck('id'))
-            ->selectRaw('max(id) as id, project_id, global_period_id')
-            ->groupBy(['project_id', 'global_period_id'])->pluck('id');
-
         $this->periods = Period::with('project')->find($this->last_period_ids->toArray());
         $this->projects = $this->periods->pluck('project');
 
+        $this->trend_global_periods = GlobalPeriod::latest('end_date')->take(6)->where('end_date', '>=', '2017-10-01')->get()->keyBy('id');
+        $this->trend_period_ids = Period::whereIn('global_period_id', $this->trend_global_periods->pluck('id'))
+            ->whereIn('project_id', $this->projects->pluck('id'))
+            ->selectRaw('max(id) as id, project_id, global_period_id')
+            ->groupBy(['project_id', 'global_period_id'])->pluck('id');
+
         return [
+            'revenue_statement' => $this->revenue_statement(),
             'cost_summary' => $this->cost_summary(),
             'cost_info' => $this->cost_info(),
             'period' => $this->period,
@@ -90,7 +92,6 @@ class GlobalReport
             'spi_trend' => $this->spi_trend(),
             'waste_index_trend' => $this->waste_index_trend(),
             'pi_trend' => $this->productivity_index_trend(),
-            'revenue_statement' => $this->revenue_statement(),
             'completionValues' => $this->completionValues
         ];
     }
@@ -274,8 +275,9 @@ class GlobalReport
         $to_date = $this->cost_summary->sum('to_date_cost');
 
 //        $actual_progress = round($to_date * 100 / $total_budget, 2);
-        $actual_progress = round($this->period->actual_progress, 2);
-        $planned_progress = round($this->period->planned_progress ?: 0, 2);
+        $contract_value = $this->projects->sum('revised_contract_amount');
+        $actual_progress = $this->earned_value * 100 / $contract_value;  //round($this->period->actual_progress, 2);
+        $planned_progress = $this->planned_value * 100 / $contract_value; //round($this->period->planned_progress ?: 0, 2);
 
         $progress = [$actual_progress, $planned_progress];
 
@@ -286,8 +288,13 @@ class GlobalReport
             $eac_profitability = $eac_profit * 100 / $total_eac;
         }
 
+        $spi_index = 0;
+        if ($this->planned_value) {
+            $spi_index = $this->earned_value / $this->planned_value;
+        }
+
         return compact(
-            'allowable_cost', 'to_date_cost', 'variance', 'cpi',
+            'allowable_cost', 'to_date_cost', 'variance', 'cpi', 'spi_index',
             'highest_risk', 'lowest_risk', 'pw_index', 'progress', 'eac_profit', 'eac_profitability'
         );
     }
@@ -379,23 +386,40 @@ class GlobalReport
     {
         return $this->cpi_trend = MasterShadow::from('master_shadows as sh')
             ->selectRaw('p.global_period_id, sum(budget_cost) as budget_cost, sum(to_date_cost) as to_date_cost')
-            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(CASE WHEN resource_type_id = 8 THEN budget_cost END) as total_reserve')
+            ->selectRaw('sum(allowable_ev_cost) as allowable_cost, sum(CASE WHEN activity_id = 3060 THEN budget_cost END) as total_reserve')
             ->join('periods as p', 'sh.period_id', '=', 'p.id')
             ->whereIn('sh.period_id', $this->trend_period_ids)
-            ->groupBy('p.global_period_id')
+            ->groupBy('sh.period_id')
             ->orderBy('p.global_period_id')
             ->get()->map(function ($period) {
                 $progress = min(1, $period->to_date_cost / ($period->budget_cost - $period->total_reserve));
                 $reserve = $period->total_reserve * $progress;
-                $period->cpi_index = round(($period->allowable_cost + $reserve) / $period->to_date_cost, 3);
-                $period->name = $this->trend_global_periods->get($period->global_period_id)->name;
+                $period->allowable_cost += $reserve;
+                return $period;
+            })->groupBy('global_period_id')->map(function($group, $period_id) {
+                $period = new Fluent;
+                $period->cpi_index = round($group->sum('allowable_cost') / $group->sum('to_date_cost'), 3);
+                $period->name = $this->trend_global_periods->get($period_id)->name;
                 return $period;
             });
     }
 
     function spi_trend()
     {
-        return $this->trend_global_periods->sortBy('id')->pluck('spi_index', 'name');
+//        return $this->trend_global_periods->sortBy('end_date')->pluck('spi_index', 'name')->filter();
+        return $this->trend_global_periods->keyBy('name')->map(function($period) {
+            $period_ids = $period->periods()->readyForReporting()->selectRaw('max(id) as id, project_id')->groupBy('project_id')->pluck('id');
+            $periods = Period::find($period_ids->toArray());
+
+            $planned_value = $periods->sum('planned_value');
+            $earned_value = $periods->sum('earned_value');
+
+            if (!$planned_value) {
+                return 0;
+            }
+
+            return $earned_value / $planned_value;
+        })->filter()->reverse();
     }
 
     function waste_index_trend()
@@ -425,7 +449,7 @@ class GlobalReport
 
     function productivity_index_trend()
     {
-        return GlobalPeriod::latest('end_date')->where('id', '>=', 12)->take(6)->get()->sortBy('end_date')->pluck('productivity_index', 'name');
+        return GlobalPeriod::latest('end_date')->where('id', '>=', 12)->take(6)->get()->sortBy('end_date')->pluck('productivity_index', 'name')->filter();
 
 //        $global_period_ids = $periods->pluck('id');
 //        $period_ids = Period::whereIn('global_period_id', $global_period_ids)->readyForReporting()->pluck('id');
@@ -456,7 +480,9 @@ class GlobalReport
     function revenue_statement()
     {
         return [
-            $this->period->planned_value, $this->period->earned_value, $this->period->actual_invoice_value
+            $this->planned_value = $this->periods->sum('planned_value'),
+            $this->earned_value = $this->periods->sum('earned_value'),
+            $this->actual_invoice_value = $this->periods->sum('actual_invoice_value'),
         ];
 //        $periods = GlobalPeriod::latest()->take(12)->get()->keyBy('id');
 //        $global_period_ids = $periods->pluck('id');

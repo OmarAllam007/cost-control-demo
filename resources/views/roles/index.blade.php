@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('title', 'Communication Plan')
 
@@ -10,7 +10,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
     @if ($roles->total())
     <table class="table table-condensed table-striped" id="rolesTable">
         <thead>
