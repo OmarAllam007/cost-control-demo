@@ -249,6 +249,14 @@ trait CostAttributes
             return $this->calculated['remaining_unit_price'] = 0;
         }
 
+        if ($this->is_rollup) {
+            if ($this->to_date_qty) {
+                return $this->calculated['remaining_unit_price'] = $this->to_date_unit_price;
+            } else {
+                return $this->calculated['remaining_unit_price'] = $this->unit_price;
+            }
+        }
+
         if ($this->isMaterial()) {
             // For material we calculate over resource in all activities
             $conditions['resource_id'] = $this->resource_id;
