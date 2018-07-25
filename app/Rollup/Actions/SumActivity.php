@@ -35,7 +35,11 @@ class SumActivity
     private function handleCode($code)
     {
         BreakdownResource::where(compact('code'))
-            ->selectRaw('resource_id, count(*) as c')->groupBy('resource_id')->having('c', '>', 1)
+            ->selectRaw('resource_id, count(*) as c')
+            ->whereHas('shadow', function ($q) {
+                $q->where('show_in_budget', 1);
+            })
+            ->groupBy('resource_id')->having('c', '>', 1)
             ->pluck('resource_id')->each(function ($resource_id) use ($code) {
                 $this->sumResources($code, $resource_id);
             });
@@ -57,6 +61,7 @@ class SumActivity
         }
 
         $shadows = $resources->pluck('shadow');
+
         $firstShadow = $shadows->first();
 
         $remarks = $resources->pluck('remarks')->unique()->implode(', ');

@@ -51,7 +51,11 @@ class SumCostAccount
     private function handleBreakdown(Breakdown $breakdown)
     {
         $breakdown->resources()
-            ->selectRaw('resource_id, count(*) as repetition')->groupBy('resource_id')
+            ->selectRaw('resource_id, count(*) as repetition')
+            ->whereHas('shadow', function ($q) {
+                $q->where('show_in_budget', 1);
+            })
+            ->groupBy('resource_id')
             ->having('repetition', '>', 1)->get()
             ->each(function ($resource) use ($breakdown) {
                 $this->sumResources($breakdown, $resource->resource_id);
