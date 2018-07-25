@@ -222,6 +222,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesController@update');
     Route::delete('/project/{project}/issue-files/{cost_issue_file}', 'CostIssueFilesController@destroy');
 
+    Route::get('/project/{project}/budget_for_sap', 'Sap\\ExportBudgetController@show')->name('project.export-sap-budget');
+
     Route::get('/project/{project}/actual-revenue', 'ActualRevenueController@import');
     Route::post('/project/{project}/actual-revenue', 'ActualRevenueController@postImport');
 
