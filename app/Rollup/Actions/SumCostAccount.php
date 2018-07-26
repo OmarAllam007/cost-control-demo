@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hazem
- * Date: 07/03/2018
- * Time: 10:40 AM
- */
 
 namespace App\Rollup\Actions;
-
 
 use App\ActualResources;
 use App\Breakdown;
@@ -139,10 +132,10 @@ class SumCostAccount
         ]);
 
         BreakDownResourceShadow::whereIn('id', $shadows->pluck('id'))->update([
-            'show_in_budget' => 1, 'show_in_cost' => 0, 'summed_at' => $this->now
+            'show_in_budget' => 1, 'show_in_cost' => 0, 'summed_at' => $this->now, 'sum_resource_id' => $newShadow->id
         ]);
 
-        $period = $this->wbs->project->open_period();
+        /*$period = $this->wbs->project->open_period();
         if ($period) {
             $query = ActualResources::where('period_id', $period->id)->whereIn('breakdown_resource_id', $resources->pluck('id'));
             $actuals = $query->get();
@@ -166,6 +159,6 @@ class SumCostAccount
                 $query->delete();
             }
 
-        }
+        }*/
     }
 }

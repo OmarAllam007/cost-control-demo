@@ -126,10 +126,10 @@ class SumActivity
         ]);
 
         BreakDownResourceShadow::whereIn('id', $shadows->pluck('id'))->update([
-            'show_in_budget' => 1, 'show_in_cost' => 0, 'summed_at' => $this->now
+            'show_in_budget' => 1, 'show_in_cost' => 0, 'summed_at' => $this->now, 'sum_resource_id' => $newShadow->id
         ]);
 
-        $period = $this->wbs->project->open_period();
+        /*$period = $this->wbs->project->open_period();
         if ($period) {
             $query = ActualResources::where('period_id', $period->id)->whereIn('breakdown_resource_id', $resources->pluck('id'));
             $actuals = $query->get();
@@ -153,6 +153,6 @@ class SumActivity
                 $query->delete();
             }
 
-        }
+        }*/
     }
 }
