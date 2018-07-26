@@ -73,6 +73,7 @@ class ActivityReport
                     $to_date_allowable = $progress * $reserve;
 
                     $activity = [
+                        'name' => $activityCurrent->first()->activity,
                         'budget_cost' => $reserve,
                         'to_date_cost' => 0,
                         'to_date_allowable' => $to_date_allowable,
@@ -86,7 +87,9 @@ class ActivityReport
                         'resources' => $activityCurrent
                     ];
                 } else {
+
                     $activity = [
+                        'name' => $activityCurrent->first()->activity,
                         'budget_cost' => $activityCurrent->sum('budget_cost'),
                         'to_date_cost' => $activityCurrent->sum('to_date_cost'),
                         'to_date_allowable' => $activityCurrent->sum('to_date_allowable'),
@@ -100,8 +103,6 @@ class ActivityReport
                         'resources' => $activityCurrent
                     ];
                 }
-
-                $tree[$key]['activities'][$activity_id] = $activity;
 
                 foreach ($wbsData[$wbs_id] as $wbsLevel) {
                     $lastKey = $key;
@@ -135,6 +136,8 @@ class ActivityReport
                     $resource->prev_cost_var = $previous->prev_cost_var;
                     return $resource;
                 });
+
+                $tree[$key]['activities'][$activity_id] = $activity;
             }
 
         }

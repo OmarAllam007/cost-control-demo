@@ -1,5 +1,5 @@
 <tr class="activity level-{{$depth}} {{slug($key)}} {{$depth > 1? 'hidden' : ''}}">
-    <td><a href="#" class="open-level" data-target="{{slug($key .'-'.$name)}}"><i class="fa fa-plus-square-o"></i> {{$name}}</a></td>
+    <td><a href="#" class="open-level" data-target="{{slug($key .'-'.$name)}}"><i class="fa fa-plus-square-o"></i> {{$activity['name']}}</a></td>
     <td>{{number_format($activity['budget_cost'], 2)}}</td>
 
     <td>{{number_format($activity['prev_cost'], 2)}}</td>
