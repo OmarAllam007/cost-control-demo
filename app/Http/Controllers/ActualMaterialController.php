@@ -58,7 +58,7 @@ class ActualMaterialController extends Controller
         $file->move(storage_path('batches'), $filename = uniqid() . '.' . $file->clientExtension());
         $filename = storage_path('batches') . '/' . $filename;
 
-        $result = $this->dispatch(
+        $result = $this->dispatchNow(
             new ImportActualMaterialJob($project, $filename, $request->get('description'))
         );
 
@@ -76,14 +76,14 @@ class ActualMaterialController extends Controller
             $unprivileged = false;
             if ($data['activity']->count() && cannot('activity_mapping', $actual_batch->project)) {
                 $issuesLog->recordActivityMappingUnPrivileged($data['activity']);
-                $this->dispatch(new SendMappingErrorNotification($actual_batch->project, $data, 'activity'));
+                $this->dispatchNow(new SendMappingErrorNotification($actual_batch->project, $data, 'activity'));
                 $data['activity'] = collect();
                 $unprivileged = true;
             }
 
             if ($data['resources']->count() && cannot('resource_mapping', $actual_batch->project)) {
                 $issuesLog->recordResourceMappingUnPrivileged($data['resources']);
-                $this->dispatch(new SendMappingErrorNotification($actual_batch->project, $data, 'resources'));
+                $this->dispatchNow(new SendMappingErrorNotification($actual_batch->project, $data, 'resources'));
                 $data['resources'] = collect();
                 $unprivileged = true;
             }
@@ -226,7 +226,7 @@ class ActualMaterialController extends Controller
         $this->validate($request, ['status.*' => 'required', 'progress.*' => 'required|gt:0'], ['required' => 'This field is required']);
         $result = (new CostImportFixer($actual_batch))->fixStatus($request->only('status', 'progress'));
 
-        $this->dispatch(new NotifyCostOwnerForUpload($actual_batch));
+        $this->dispatchNow(new NotifyCostOwnerForUpload($actual_batch));
 
         return $this->redirect($result);
     }
@@ -238,7 +238,7 @@ class ActualMaterialController extends Controller
             return \Redirect::to('/');
         }
 
-        $content = $this->dispatch(new ExportCostShadow($project, $request->get('perspective', '')));
+        $content = $this->dispatchNow(new ExportCostShadow($project, $request->get('perspective', '')));
         return new Response($content, 200, [
             'Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename=' . slug($project->name) . '_actual_cost.csv'
         ]);
@@ -265,7 +265,7 @@ class ActualMaterialController extends Controller
                    return \Redirect::route('actual-material.status', $key);
                case 'no_resources':
                    flash('No resources has been imported. Please check uploaded data', 'warning');
-                   $this->dispatch(new NotifyCostOwnerForUpload($batch));
+                   $this->dispatchNow(new NotifyCostOwnerForUpload($batch));
                    return redirect()->route('project.cost-control', $batch->project);
            }
        } else {

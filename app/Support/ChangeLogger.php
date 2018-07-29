@@ -23,7 +23,7 @@ class ChangeLogger
     function __construct()
     {
         $this->request = request();
-        if (!$this->request->isMethodSafe() && $this->request->user()) {
+        if (!$this->request->isMethodSafe(false) && $this->request->user()) {
             $this->initiateRequest();
         }
     }

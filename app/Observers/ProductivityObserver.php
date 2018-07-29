@@ -11,11 +11,11 @@ namespace App\Observers;
 
 use App\BreakdownResource;
 use App\BreakDownResourceShadow;
+use App\Jobs\CacheCsiCategoryTree;
 use App\Productivity;
 
 class ProductivityObserver
 {
-
     function updating(Productivity $productivity)
     {
         $productivity->after_reduction = ($productivity->reduction_factor * $productivity->daily_output) + $productivity->daily_output;

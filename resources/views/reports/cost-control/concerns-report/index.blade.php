@@ -1,6 +1,6 @@
 @extends('layouts.' . (request('print')? 'print' : 'app'))
 
-@section('title', 'Issues &amp; Concerns | ' . $project->name)
+@section('title', 'Issues & Concerns | ' . $project->name)
 
 @section('header')
     <h2 id="report_name">{{$project->name}} &mdash; Issues &amp; Concerns</h2>

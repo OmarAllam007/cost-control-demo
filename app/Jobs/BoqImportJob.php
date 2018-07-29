@@ -83,7 +83,7 @@ class BoqImportJob extends ImportJob
         }
 
         \Cache::forget('boq-' . $this->project_id);
-        \Cache::add('boq-' . $this->project_id, dispatch(new CacheBoqTree($this->project)), 7 * 24 * 60);
+        \Cache::add('boq-' . $this->project_id, dispatch_now(new CacheBoqTree($this->project)), 7 * 24 * 60);
 
         unlink($this->file);
         return $status;

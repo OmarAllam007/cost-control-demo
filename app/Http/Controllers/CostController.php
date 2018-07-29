@@ -119,7 +119,7 @@ class CostController extends Controller
         $file = $request->file('file');
         $filename = $file->move(storage_path('batches'), uniqid() . '.' . $file->clientExtension());
 
-        $result = $this->dispatch(new ImportOldDatasheet($project, $filename));
+        $result = $this->dispatchNow(new ImportOldDatasheet($project, $filename));
 
         flash($result['success'] . ' records have been imported', 'info');
         return \Redirect::route('project.cost-control', $project);

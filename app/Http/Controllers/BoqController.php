@@ -237,7 +237,7 @@ class BoqController extends Controller
             return \Redirect::route('project.index');
         }
         
-        $this->dispatch(new ExportBoqJob($project));
+        $this->dispatchNow(new ExportBoqJob($project));
     }
 
     function wipe(WipeRequest $request, Project $project)
@@ -263,7 +263,7 @@ class BoqController extends Controller
 
         $file = $request->file('file');
 
-        $counter = $this->dispatch(new ModifyProjectBoq($file,$project));
+        $counter = $this->dispatchNow(new ModifyProjectBoq($file,$project));
 
         flash("$counter Records have been updated", 'success');
 

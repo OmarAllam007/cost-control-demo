@@ -39,7 +39,7 @@ class EasyUploadController extends Controller
 
         $file = $request->file('file');
 
-        $status = dispatch(new EasyUploadJob($project, $file->path()));
+        $status = $this->dispatchNow(new EasyUploadJob($project, $file->path()));
 
         if ($status['failed']) {
             return view('easy-upload.failed', compact('project', 'status'));

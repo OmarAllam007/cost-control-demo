@@ -8,6 +8,7 @@ use App\BreakDownResourceShadow;
 use App\Formatters\BreakdownResourceFormatter;
 use App\Jobs\CacheWBSTree;
 use App\Project;
+use App\Support\WBSTree;
 use App\Survey;
 use App\WbsLevel;
 use Illuminate\Http\Request;
@@ -20,9 +21,7 @@ class WbsController extends Controller
 {
     function index(Project $project)
     {
-        $wbsTree = \Cache::remember('wbs-tree-' . $project->id, 7 * 24 * 60, function () use ($project) {
-            return dispatch(new CacheWBSTree($project));
-        });
+        $wbsTree = (new WBSTree($project))->get();
         return $wbsTree;
     }
 
@@ -77,7 +76,7 @@ class WbsController extends Controller
 
 
         $wbsTree = collect(\Cache::remember('wbs-tree-' . $project, 7 * 24 * 60, function () use ($project) {
-            return dispatch(new CacheWBSTree(Project::find($project)));
+            return dispatch_now(new CacheWBSTree(Project::find($project)));
         }))->map([$this, 'appendActivities']);
 
         return $wbsTree;

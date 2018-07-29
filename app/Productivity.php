@@ -181,20 +181,6 @@ class Productivity extends Model
         return $errors;
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        /*static::created(function ($prod) {
-            if (!$prod->project_id) {
-                \Cache::forget('csi-tree');
-                \Cache::remember('csi-tree', 7 * 24 * 60, function () {
-                    return dispatch(new CacheCsiCategoryTree());
-                });
-            }
-        });*/
-    }
-
     function getDescriptorAttribute()
     {
         return $this->description . " ({$this->csi_code})";

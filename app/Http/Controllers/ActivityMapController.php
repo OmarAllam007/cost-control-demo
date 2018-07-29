@@ -34,7 +34,7 @@ class ActivityMapController extends Controller
 
         $file = $request->file('file');
 
-        $result = $this->dispatch(new ImportActivityMapsJob($project, $file->path()));
+        $result = $this->dispatchNow(new ImportActivityMapsJob($project, $file->path()));
 
         if ($result['failed']->count()) {
             $key = 'activity_map_' . time();
