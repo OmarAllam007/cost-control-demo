@@ -64,7 +64,7 @@ class ProjectInfo
                 return $p;
             });
 
-        $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id)->value;
+        $this->wasteIndex = $this->wasteIndexTrend->get($this->period->id, new Fluent)->value ?: 0;
 
         $this->productivityIndexTrend = $this->getProductivityIndexTrend();
 
@@ -90,7 +90,11 @@ class ProjectInfo
             ->where('status', Period::GENERATED)
             ->where('global_period_id', '>=', 12)
             ->take(6)
-            ->latest('id')->get(['name', 'spi_index'])->reverse();
+            ->latest('id')->get()->map(function($period) {
+                return new Fluent(['project_id' => $period->project_id, 'name'=>$period->name, 'spi_index' => $period->spi_index]);
+            })->filter(function($period) {
+                return $period->spi_index;
+            })->reverse();
 
         $cost = MasterShadow::where('period_id', $this->period->id)
             ->selectRaw('sum(to_date_cost) actual_cost, sum(remaining_cost) remaining_cost')->first();
@@ -391,13 +395,15 @@ class ProjectInfo
                 ->where('resource_type_id', 8)->sum('budget_cost');
             $revision0['eac_contract_amount'] = $this->project->eac_contract_amount;
             $revision0['profit'] = $this->project->planned_profit_amount;
-            $revision1['profitability_index'] = $this->project->planned_profitability;
+            $revision0['profitability_index'] = $this->project->planned_profitability;
         }
 
         $revision0['indirect_cost'] = $revision0['general_requirements'];
         $revision0['direct_cost'] = $revision0['budget_cost'] - $revision0['indirect_cost'] - $revision0['management_reserve'];
 
-        $latest = BudgetRevision::where('project_id', $this->project->id)->where('is_generated', 1)->latest()->first();
+        $latest = BudgetRevision::where('project_id', $this->project->id)
+            ->where('global_period_id', $this->period->global_period_id)
+            ->latest('id')->first();
 
         $revision1 = [];
 

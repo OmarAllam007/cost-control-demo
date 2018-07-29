@@ -15,6 +15,7 @@ class AddSumFields extends Migration
         Schema::table('break_down_resource_shadows', function (Blueprint $table) {
             $table->boolean('is_sum')->default(0);
             $table->datetime('summed_at')->nullable();
+            $table->unsignedInteger('sum_resource_id')->nullable();
         });
     }
 

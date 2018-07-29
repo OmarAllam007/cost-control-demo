@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Import Standard Activity</h2>
@@ -7,7 +7,7 @@
     </a>
 @endsection
 
-@section('body')
+@section('content')
     <div class="row">
         <div class="col-md-6 col-sm-9">
 

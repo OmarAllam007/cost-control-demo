@@ -8,7 +8,7 @@ use Illuminate\Database\Query\JoinClause;
 
 trait CharterData
 {
-    protected $cached_eac_contract_amount = null;
+//    protected $cached_eac_contract_amount = null;
 
     function getTenderTotalCostAttribute()
     {
@@ -42,7 +42,11 @@ trait CharterData
 
     function getBudgetCostAttribute()
     {
-        return $this->shadows()->budgetOnly()->sum('budget_cost');
+        if (!is_null($this->cached_budget_cost)) {
+            return $this->cached_budget_cost;
+        }
+
+        return $this->cached_budget_cost = $this->shadows()->budgetOnly()->sum('budget_cost');
     }
 
     function getEacContractAmountAttribute()
@@ -92,5 +96,45 @@ trait CharterData
 
         return '';
     }
+
+    function getSwCostPerM2Attribute()
+    {
+        if (!$this->sw_area) {
+            return 0;
+        }
+
+        return $this->sw_cost / $this->sw_area;
+    }
+
+    function getBuildingCostPerM2Attribute()
+    {
+        if (!$this->building_area) {
+            return 0;
+        }
+
+        return $this->building_cost / $this->building_area;
+    }
+
+    function getBuiltPricePerM2Attribute()
+    {
+        $total_area = $this->sw_area + $this->building_area;
+        if (!$total_area) {
+            return 0;
+        }
+
+        return $this->eac_contract_amount  / $total_area;
+    }
+
+    function getTotalBuiltCostPerM2Attribute()
+    {
+        $total_area = $this->sw_area + $this->building_area;
+        if (!$total_area) {
+            return 0;
+        }
+
+        return $this->budget_cost  / $total_area;
+    }
+
+
 
 }

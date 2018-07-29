@@ -81,7 +81,7 @@
             <section class="row">
                 <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item chart-style">
-                        <h4 class="card-title card-group-item-heading">Material Consumption Index Trend</h4>
+                        <h4 class="card-title card-group-item-heading">Material Consumption Index (MCI) Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
@@ -101,7 +101,7 @@
                 </div>
                 <div class="col-md-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index Trend</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Productivity Index (PI) Trend</h4>
 
                         <div class="card-body">
                             <div class="chart"
@@ -145,7 +145,7 @@
 
                 <div class="col-sm-{{$print? 12 : 6}}">
                     <section class="card-group-item">
-                        <h4 class="card-title dark-cyan card-group-item-heading">Time Performance</h4>
+                        <h4 class="card-title dark-cyan card-group-item-heading">Physical Performance</h4>
 
                         <div class="card-body">
                             <div class="chart"
@@ -175,13 +175,13 @@
                         <div class="chart"
                              id="wasteIndexChart"
                              data-type="horizontalBar"
-                             data-labels="{{collect(['Planned Value', 'Earned Value', 'Actual Invoice Value'])}}"
+                             data-labels="{{collect(['Planned Value (PV)', 'Earned Value (EV)', 'Actual Invoice Value'])}}"
                              data-datasets="[{{json_encode([
                                 'label' => '',
                                 'data' => $revenue_statement,
                                 'backgroundColor' => ['rgba(65,108,182,0.6)', 'rgba(104,160,72,0.6)', "rgba(214,117,53,.7)"],
                                    'borderColor' => '#5B9BD5',
-                                'datalabels' => ['align' => 'center']
+                                'datalabels' => ['align' => 'right']
                             ])}}]"
                              style="height: 200px"></div>
                     </div>

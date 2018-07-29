@@ -12,101 +12,40 @@
         @endif
         {{config('app.name')}} &mdash; {{ title_case(app()->environment()) }}
     </title>
+    <style>
+        html,body {
+            min-height: 100%;
+        }
+    </style>
     <link rel="stylesheet" href="{{asset('/css/app.css')}}">
     {{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">--}}
+
     @yield('head')
     @yield('css')
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{config('app.name')}}
+<div id="app">
+    <div class="container-fluid">
+        <div class="display-flex">
+            <div class="logo-line">
+                <a href="/">
+                    <img src="{{asset('images/kps-logo.png')}}" alt="" width="125">
                 </a>
             </div>
 
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                @if (Auth::check())
-                <ul class="nav navbar-nav">
-                    @can ('dashboard')
-                    <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                    @endcan
+            <div class="user-area">
+                <strong>
 
-                    <li><a href="{{ url('/project') }}">Projects</a></li>
+                    {{auth()->user()->name}},
 
-                    @can('read', 'std-activity')
-                    <li>
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Standard Activity <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{route('activity-division.index')}}">Divisions</a></li>
-                            <li><a href="{{route('std-activity.index')}}">Standard Activities</a></li>
-                            <li><a href="{{route('breakdown-template.index')}}">Breakdown Templates</a></li>
-                        </ul>
-                    </li>
-                    @endcan
-                    @can('read', 'resources')
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{route('resource-type.index')}}">Resource Types</a></li>
-                            <li><a href="{{route('resources.index')}}">Resources</a></li>
-                            <li><a href="{{route('business-partner.index')}}">Business Partners</a></li>
-                            <li><a href="{{route('unit.index')}}">Units of measure</a></li>
-                        </ul>
-                    </li>
-                    @endcan
-
-                    @can('read', 'productivity')
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle btnhover"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Productivity<span class="caret"></span></a>
-                        <ul class="dropdown-menu ">
-                            <li><a href="{{route('csi-category.index')}}">CSI Category</a></li>
-                            <li><a href="{{route('productivity.index')}}">Productivity</a></li>
-
-                        </ul>
-                    {{--<li><a href="{{route('productivity.report')}}">Reports</a></li>--}}
-
-                    </li>
-                    @endcan
-
-                    @if (Auth::user()->is_admin)
-                        <li><a href="{{route('roles.index')}}">Communication Plan</a></li>
-                        <li><a href="{{route('users.index')}}">Users</a></li>
-                        <li><a href="{{route('global-periods.index')}}">Periods</a></li>
-                    @endif
-
-                </ul>
-
-                @endif
-
-                <ul class="nav navbar-nav navbar-right">
-                    @if (Auth::check())
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <i class="fa fa-user"></i> {{ Auth::user()->name }} <span class="caret "></span>
-                        </a>
-
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                        </ul>
-                    </li>
-                    @endif
-                </ul>
+                    <a href="{{url('/logout')}}">Logout</a>
+                </strong>
             </div>
         </div>
-    </nav>
+    </div>
 
     <div class="main">
-        <div class="panel panel-default" id="main-panel">
+        <div class="panel panel-default flex" id="main-panel" >
             <div class="panel-heading clearfix">
                 @yield('header')
             </div>
@@ -119,7 +58,16 @@
                 @yield('body')    
             </div>
         </div>
+
+        <footer class="container-fluid">
+            <div class="footer display-flex">
+                <div class="text-danger">Copyright &copy; AlKifah Contracting {{date('Y')}}</div>
+                <img src="{{asset('images/kcc-logo.png')}}" alt="" height="50">
+            </div>
+        </footer>
     </div>
+</div>
+
 
     <script src="{{asset('/js/bootstrap.js')}}"></script>
     @yield('javascript')

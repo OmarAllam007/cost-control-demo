@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Edit User</h2>
@@ -12,7 +12,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($user, ['route' => ['users.update', $user]]) }}
 
     {{ method_field('PATCH') }}

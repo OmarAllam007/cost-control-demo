@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -10,15 +9,25 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/', function () {
-    return \Redirect::route('project.index');
-});
+
+Route::get('/', 'HomeController@index');
 
 Route::auth();
 Route::get('auth/google', 'Auth\AuthController@googleRedirect');
 Route::get('auth/google/continue', 'Auth\AuthController@googleHandle');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('home', 'HomeController@index')->name('home');
+    Route::get('acknowledgement', 'HomeController@acknowledgement')->name('home.acknowledgement');
+    Route::get('budget', 'BudgetController@index')->name('home.budget');
+    Route::get('reports', 'HomeController@reports')->name('home.reports');
+    Route::get('master-data', 'HomeController@masterData')->name('home.master-data');
+    Route::get('cost-control', 'CostControlController@index')->name('home.cost-control');
+    Route::get('coming-soon', 'HomeController@comingSoon')->name('home.coming-soon');
+
+    Route::get('project/{project}/reports', 'ProjectReportsController@show')->name('project.reports');
+
+
     require __DIR__ . '/Routes/hazem.php';
     require __DIR__ . '/Routes/omar.php';
 

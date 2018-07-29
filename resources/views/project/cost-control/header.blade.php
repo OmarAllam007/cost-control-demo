@@ -63,7 +63,7 @@
     @endif
 
 
-    <a href="{{ route('project.index') }}" class="btn btn-default btn-sm">
+    <a href="{{ route('home.cost-control') }}" class="btn btn-default btn-sm">
         <i class="fa fa-chevron-left"></i> Back
     </a>
 </nav>

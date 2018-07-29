@@ -1,7 +1,7 @@
 <tr class="activity level-{{$depth}} {{slug($key)}} {{$depth > 1? 'hidden' : ''}}">
     <td>
         <div class="display-flex">
-            <a href="#" class="open-level flex" data-target="{{slug($key .'-'.$name)}}"><i class="fa fa-plus-square-o"></i> {{$name}}</a>
+            <a href="#" class="open-level flex" data-target="{{slug($key .'-'.$name)}}"><i class="fa fa-plus-square-o"></i> {{$activity['name']}}</a>
             <a href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
                data-data="{{json_encode([
                             'Activity' => $level['parent'] . $level['name'] . ' / ' . $name,

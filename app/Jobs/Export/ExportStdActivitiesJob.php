@@ -36,7 +36,7 @@ class ExportStdActivitiesJob extends ImportJob
         $sheet = $objPHPExcel->getSheet();
         $sheet->fromArray([
             'Code', 'Name', 'Division', 'Sub Division 1', 'Sub Division 2', 'Sub Division 3', 'Sub Division 4',
-            'Discipline', 'Work Package Name', 'Partial ID', '$v1', '$v2', '$v3', '$v4', '$v5', '$v6', '$v7', '$v8',
+            'Discipline', 'Work Package Name', 'Partial ID', "SAP Partial ID", '$v1', '$v2', '$v3', '$v4', '$v5', '$v6', '$v7', '$v8',
             '$v9', '$v10'
         ], null,'A1', true);
 
@@ -72,11 +72,11 @@ class ExportStdActivitiesJob extends ImportJob
             ++$this->row;
             $data = [$activity->code, $activity->name];
             $data = array_merge($data, $this->getDivisions());
-            $data = array_merge($data, [$activity->discipline, $activity->work_package_name, $activity->id_partial]);
+            $data = array_merge($data, [$activity->discipline, $activity->work_package_name, $activity->id_partial, $activity->sap_code_partial]);
             $sheet->fromArray($data, null, "A{$this->row}", true);
 
             if ($activity->variables->count()) {
-                $sheet->fromArray($activity->variables->pluck('label')->toArray(), null,"K{$this->row}", true);
+                $sheet->fromArray($activity->variables->pluck('label')->toArray(), null,"L{$this->row}", true);
             }
         }
 

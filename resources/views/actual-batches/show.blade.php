@@ -11,18 +11,22 @@
 @section('body')
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 mb-1">
             {!! nl2br(e($batch->description)) !!}
         </div>
 
-        <div class="col-sm-4">
+        <div class="col-sm-3 mb-1">
             <strong>Uploaded By: </strong>{{$batch->user->name}}
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3 mb-1">
             <strong>Uploaded at: </strong>{{$batch->created_at->format('d/m/Y H:i')}}
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3 mb-1">
             <strong><i class="fa fa-download"></i> <a href="{{'/actual-batches/' . $batch->id . '/download'}}">Download</a></strong>
+        </div>
+
+        <div class="col-sm-3 mb-1">
+            <strong>Total Cost: {{number_format($total_cost, 2)}}</strong>
         </div>
     </div>
 

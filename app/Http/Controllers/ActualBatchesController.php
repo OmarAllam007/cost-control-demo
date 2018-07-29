@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ActualBatch;
+use App\ActualResources;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -12,7 +13,9 @@ class ActualBatchesController extends Controller
 {
     function show(ActualBatch $actual_batch)
     {
-        return view('actual-batches.show', ['batch' => $actual_batch]);
+        $total_cost = ActualResources::where('batch_id', $actual_batch->id)->sum('cost');
+
+        return view('actual-batches.show', ['batch' => $actual_batch, 'total_cost' => $total_cost]);
     }
 
     function download(ActualBatch $actual_batch)

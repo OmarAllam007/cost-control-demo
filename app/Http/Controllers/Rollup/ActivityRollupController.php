@@ -20,7 +20,7 @@ class ActivityRollupController extends Controller
             return back();
         }
 
-        $codes = $project->shadows()->selectRaw('distinct code')->pluck('code');
+        $codes = $project->shadows()->selectRaw('distinct code')->where('show_in_budget', 1)->pluck('code');
 
         $result = (new ActivityRollup($project, $codes))->handle();
 

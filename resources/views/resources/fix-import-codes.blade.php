@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>
@@ -16,7 +16,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
     <div class="row">
         <div class="col-sm-9">
 

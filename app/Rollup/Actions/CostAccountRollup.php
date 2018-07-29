@@ -73,9 +73,12 @@ class CostAccountRollup
 
     private function rollupBreakdown($breakdown)
     {
-        $this->createRollupShadow($breakdown);
-
+        $this->createRollupResource($breakdown);
         $breakdown->resources()->where('id', '<>', $this->rollup_resource->id)->where('is_rollup')->delete();
+
+        $this->createRollupShadow($breakdown);
+        $breakdown->shadows()->where('id', '<>', $this->rollup_shadow->id)->where('is_rollup')->delete();
+        $breakdown->shadows()->where('id', '<>', $this->rollup_shadow->id)->where('is_sum')->delete();
 
         $breakdown->resources()->where('id', '<>', $this->rollup_resource->id)->update([
             'rolled_up_at' => $this->now, 'rollup_resource_id' => $this->rollup_resource->id,
@@ -111,7 +114,7 @@ class CostAccountRollup
 
     private function createRollupShadow($breakdown)
     {
-        $this->createRollupResource($breakdown);
+//        $this->createRollupResource($breakdown);
 
         $shadows = BreakDownResourceShadow::with('breakdown_resource')
             ->where('breakdown_id', $breakdown->id)
@@ -168,10 +171,10 @@ class CostAccountRollup
         $to_date_cost = $actual_resources->sum('cost');
         $to_date_qty = $this->extra['to_date_qty'][$breakdown->id] ?? 0;
         $to_date_unit_price = 0;
-        $progress = 0;
+        $progress = $this->extra['progress'][$breakdown->id] ?? 0;
         $status = 'Not Started';
 
-        if ($to_date_qty) {
+        if (!$progress && $to_date_qty) {
             $to_date_unit_price = $to_date_cost / $to_date_qty;
             $progress = min(100, $to_date_qty * 100 / $this->rollup_shadow->budget_unit);
             $status = $progress < 100 ? 'In Progress' : 'Closed';
@@ -179,14 +182,14 @@ class CostAccountRollup
 
         ActualResources::forceCreate([
             'project_id' => $this->project->id, 'wbs_level_id' => $this->rollup_shadow->wbs_id, 'breakdown_resource_id' => $this->rollup_resource->id,
-            'qty' => $to_date_qty, 'cost' => $to_date_cost, 'unit_price' => $to_date_unit_price,
+            'qty' => $to_date_qty, 'cost' => 0, 'unit_price' => 0,
             'unit_id' => $this->rollup_shadow->unit_id, 'action_date' => $this->now, 'resource_id' => $this->rollup_shadow->resource_id,
             'user_id' => auth()->id(), 'batch_id' => 0, 'period_id' => $period->id, 'progress' => $progress, 'status' => $status,
         ]);
 
         $this->rollup_shadow->update(compact('progress', 'status'));
 
-        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
+//        ActualResources::whereIn('id', $actual_resources->pluck('id'))->where('period_id', $period->id)->delete();
 
         return $this->rollup_shadow;
     }

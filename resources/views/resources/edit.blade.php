@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Edit Resources</h2>
@@ -22,7 +22,7 @@
     </form>
 @stop
 
-@section('body')
+@section('content')
     {{ Form::model($resources, ['route' => ['resources.update', 'resources'=>$resources,'project_id'=>request('project_id')], 'method' => 'PATCH']) }}
 
     @include('resources._form', ['override' => $resources->project_id])

@@ -14,8 +14,11 @@
                     </div>
                     <section>
                         <ul class="list-unstyled tree">
+                            @php
+                                $resource = optional(App\Resources::find(Form::getValueAttribute('resource_id')));
+                            @endphp
                             @foreach($resourcesTree as $type)
-                                @include('resources._recursive_resource_input', ['type' => $type, 'value' => Form::getValueAttribute('resource_id')])
+                                @include('resources._recursive_resource_input', ['type' => $type, 'value' => $resource->resource_id])
                             @endforeach
                         </ul>
                     </section>

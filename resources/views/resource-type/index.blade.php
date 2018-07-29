@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('title', 'Resource Types')
 
@@ -11,7 +11,7 @@
     </div>
 @stop
 
-@section('body')
+@section('content')
     @if ($resource_types->count())
 
         <ul class="list-unstyled tree">

@@ -50,7 +50,7 @@ class ActivityReport
         }
 
         $currentData = $this->applyFilters(MasterShadow::currentActivityReport($this->period))->get()->groupBy('wbs_id')->map(function ($group) {
-            return $group->groupBy('activity');
+            return $group->groupBy('activity_id');
         });
 
         $wbsData = MasterShadow::forPeriod($this->period)->orderBy('wbs')->pluck('wbs', 'wbs_id')->map(function ($wbs) {
@@ -60,9 +60,49 @@ class ActivityReport
 
         $tree = [];
         foreach ($currentData as $wbs_id => $wbsGroup) {
-            foreach ($wbsGroup as $activity => $activityCurrent) {
+            foreach ($wbsGroup as $activity_id => $activityCurrent) {
                 $key = '';
-                $activityPrevious = ($previousData[$wbs_id][$activity] ?? collect())->keyBy('resource_name');
+                $activityPrevious = ($previousData[$wbs_id][$activity_id] ?? collect())->keyBy('resource_name');
+
+                // Management reserve
+                if ($activity_id == 3060) {
+                    $budget_cost = MasterShadow::where('period_id', $this->period->id)->where('activity_id', '<>', 3060)->sum('budget_cost');
+                    $to_date_cost = MasterShadow::where('period_id', $this->period->id)->where('activity_id', '<>', 3060)->sum('to_date_cost');
+                    $progress = min(100, $to_date_cost / $budget_cost);
+                    $reserve = $activityCurrent->sum('budget_cost');
+                    $to_date_allowable = $progress * $reserve;
+
+                    $activity = [
+                        'name' => $activityCurrent->first()->activity,
+                        'budget_cost' => $reserve,
+                        'to_date_cost' => 0,
+                        'to_date_allowable' => $to_date_allowable,
+                        'to_date_var' => $to_date_allowable,
+                        'prev_cost' => 0,
+                        'prev_allowable' => 0,
+                        'prev_cost_var' => 0,
+                        'remaining_cost' => 0,
+                        'completion_cost' => 0,
+                        'completion_var' => $reserve,
+                        'resources' => $activityCurrent
+                    ];
+                } else {
+
+                    $activity = [
+                        'name' => $activityCurrent->first()->activity,
+                        'budget_cost' => $activityCurrent->sum('budget_cost'),
+                        'to_date_cost' => $activityCurrent->sum('to_date_cost'),
+                        'to_date_allowable' => $activityCurrent->sum('to_date_allowable'),
+                        'to_date_var' => $activityCurrent->sum('to_date_var'),
+                        'prev_cost' => $activityPrevious->sum('prev_cost'),
+                        'prev_allowable' => $activityPrevious->sum('prev_allowable'),
+                        'prev_cost_var' => $activityPrevious->sum('prev_cost_var'),
+                        'remaining_cost' => $activityCurrent->sum('remaining_cost'),
+                        'completion_cost' => $activityCurrent->sum('completion_cost'),
+                        'completion_var' => $activityCurrent->sum('completion_var'),
+                        'resources' => $activityCurrent
+                    ];
+                }
 
                 foreach ($wbsData[$wbs_id] as $wbsLevel) {
                     $lastKey = $key;
@@ -77,16 +117,16 @@ class ActivityReport
 
                     $tree[$key]['parent'] = $lastKey;
                     $tree[$key]['name'] = $wbsLevel;
-                    $tree[$key]['budget_cost'] += $activityCurrent->sum('budget_cost');
-                    $tree[$key]['to_date_cost'] += $activityCurrent->sum('to_date_cost');
-                    $tree[$key]['to_date_allowable'] += $activityCurrent->sum('to_date_allowable');
-                    $tree[$key]['to_date_var'] += $activityCurrent->sum('to_date_var');
-                    $tree[$key]['prev_cost'] += $activityPrevious->sum('prev_cost');
-                    $tree[$key]['prev_allowable'] += $activityPrevious->sum('prev_allowable');
-                    $tree[$key]['prev_cost_var'] += $activityPrevious->sum('prev_cost_var');
-                    $tree[$key]['remaining_cost'] += $activityCurrent->sum('remaining_cost');
-                    $tree[$key]['completion_cost'] += $activityCurrent->sum('completion_cost');
-                    $tree[$key]['completion_var'] += $activityCurrent->sum('completion_var');
+                    $tree[$key]['budget_cost'] += $activity['budget_cost'];
+                    $tree[$key]['to_date_cost'] += $activity['to_date_cost'];
+                    $tree[$key]['to_date_allowable'] += $activity['to_date_allowable'];
+                    $tree[$key]['to_date_var'] += $activity['to_date_var'];
+                    $tree[$key]['prev_cost'] += $activity['prev_cost'];
+                    $tree[$key]['prev_allowable'] += $activity['prev_allowable'];
+                    $tree[$key]['prev_cost_var'] += $activity['prev_cost_var'];
+                    $tree[$key]['remaining_cost'] += $activity['remaining_cost'];
+                    $tree[$key]['completion_cost'] += $activity['completion_cost'];
+                    $tree[$key]['completion_var'] += $activity['completion_var'];
                 }
 
                 $activityCurrent = $activityCurrent->map(function ($resource) use ($activityPrevious) {
@@ -97,19 +137,7 @@ class ActivityReport
                     return $resource;
                 });
 
-                $tree[$key]['activities'][$activity] = [
-                    'budget_cost' => $activityCurrent->sum('budget_cost'),
-                    'to_date_cost' => $activityCurrent->sum('to_date_cost'),
-                    'to_date_allowable' => $activityCurrent->sum('to_date_allowable'),
-                    'to_date_var' => $activityCurrent->sum('to_date_var'),
-                    'prev_cost' => $activityPrevious->sum('prev_cost'),
-                    'prev_allowable' => $activityPrevious->sum('prev_allowable'),
-                    'prev_cost_var' => $activityPrevious->sum('prev_cost_var'),
-                    'remaining_cost' => $activityCurrent->sum('remaining_cost'),
-                    'completion_cost' => $activityCurrent->sum('completion_cost'),
-                    'completion_var' => $activityCurrent->sum('completion_var'),
-                    'resources' => $activityCurrent
-                ];
+                $tree[$key]['activities'][$activity_id] = $activity;
             }
 
         }
@@ -255,7 +283,7 @@ class ActivityReport
             if (!empty($level['activities'])) {
                 foreach ($level['activities'] as $name => $activity) {
                     $sheet->fromArray($arr = [
-                        str_repeat('    ', $outlineLevel + 1) . $name,
+                        str_repeat('    ', $outlineLevel + 1) . $activity['name'],
                         $activity['budget_cost'] ?: '0.00',
                         $activity['prev_cost'] ?: '0.00',
                         $activity['prev_allowable'] ?: '0.00',

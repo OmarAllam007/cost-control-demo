@@ -121,6 +121,25 @@
             <td>{{number_format($project->budget_cost, 2)}}</td>
         </tr>
 
+        <tr class="bg-blue-lighter">
+            <th>Site Work Cost / M<sup>2</sup></th>
+            <td>{{number_format($project->sw_cost_per_m2, 2)}}</td>
+        </tr>
+
+        <tr class="bg-blue-lighter">
+            <th>Building Cost / M<sup>2</sup></th>
+            <td>{{number_format($project->building_cost_per_m2, 2)}}</td>
+        </tr>
+
+        <tr class="bg-blue-lighter">
+            <th>Built up area cost / M<sup>2</sup></th>
+            <td>{{number_format($project->total_built_cost_per_m2, 2)}}</td>
+        </tr>
+        <tr class="bg-blue-light">
+            <th>Built up area price / M<sup>2</sup></th>
+            <td>{{number_format($project->built_price_per_m2, 2)}}</td>
+        </tr>
+
         {{-- Profit --}}
         <tr class="bg-blue-light">
             <th>EAC Contract Amount</th>

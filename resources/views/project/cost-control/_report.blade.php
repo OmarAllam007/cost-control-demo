@@ -1,9 +1,11 @@
 <section id="CostControlReports" class="project-tab">
 
+    @if (empty($skipButtons))
     <div class="form-group clearfix">
         <a class="btn btn-primary pull-right" href="{{route('communication.cost', $project)}}"><i
                     class="fa fa-send"></i> Send Reports</a>
     </div>
+    @endif
 
     <div class="row">
         <div class="col-xs-6">

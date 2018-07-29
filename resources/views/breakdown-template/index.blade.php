@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Breakdown templates</h2>
@@ -27,7 +27,7 @@
     @endcan
 @stop
 
-@section('body')
+@section('content')
 <div id="breakdownTemplates">
     <breakdown-templates :can_edit="{{can('write', 'breakdown-template')}}" :divisions="{{$divisions}}"></breakdown-templates>
 </div>

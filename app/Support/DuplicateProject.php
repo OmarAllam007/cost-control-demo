@@ -54,10 +54,13 @@ class DuplicateProject
         $this->breakdownResourcesMap = collect();
     }
 
+    /**
+     * @param $newName
+     * @return int|mixed
+     * @throws \Throwable
+     */
     function duplicate($newName)
     {
-        set_time_limit(1800);
-
         $start = microtime(1);
         $attributes = $this->project->getAttributes();
         $attributes['name'] = $newName;
@@ -65,14 +68,38 @@ class DuplicateProject
         $this->newProject = Project::create($attributes);
         $this->id = $this->newProject->id;
 
-        $this->duplicateWBS();
-        $this->duplicateResources();
-        $this->duplicateBreakdownTemplates();
-        $this->duplicateProductivity();
-        $this->duplicateBOQ();
-        $this->duplicateQS();
-        $this->duplicateBreakdown();
-        $this->duplicateShadow();
+        \DB::transaction(function () {
+            \Log::info("Copying WBS - {$this->id}");
+            $this->duplicateWBS();
+        });
+
+        \DB::transaction(function () {
+            \Log::info("Copying Resources - {$this->id}");
+            $this->duplicateResources();
+            \Log::info("Copying Templates - {$this->id}");
+            $this->duplicateBreakdownTemplates();
+        });
+
+        \DB::transaction(function () {
+            \Log::info("Copying Productivity - {$this->id}");
+            $this->duplicateProductivity();
+        });
+
+        \DB::transaction(function () {
+            \Log::info("Copying BOQ - {$this->id}");
+            $this->duplicateBOQ();
+            \Log::info("Copying QS - {$this->id}");
+            $this->duplicateQS();
+        });
+
+        \DB::transaction(function () {
+            \Log::info("Copying Breakdown - {$this->id}");
+            $this->duplicateBreakdown();
+
+            \Log::info("Copying Shadows - {$this->id}");
+            $this->duplicateShadow();
+        });
+
         \Log::info(round(microtime(1) - $start, 4) . 's');
         return $this->id;
     }
@@ -117,12 +144,14 @@ class DuplicateProject
 
     protected function duplicateProductivity()
     {
-        return $this->productivityMap = Productivity::where('project_id', $this->project->id)->get()->keyBy('id')->each(function (Productivity $productivity) {
+        Productivity::flushEventListeners();
+        return $this->productivityMap = Productivity::where('project_id', $this->project->id)->get()->keyBy('id')->map(function (Productivity $productivity) {
             $attributes = $productivity->getAttributes();
             $attributes['project_id'] = $this->id;
             unset($attributes['id'], $attributes['created_at'], $attributes['updated_at']);
-
-            return Productivity::create($attributes)->id;
+            $t = microtime(1);
+            $id = Productivity::forceCreate($attributes)->id;
+            return $id;
         });
     }
 
@@ -159,6 +188,7 @@ class DuplicateProject
                 $newBreakdown = Breakdown::create($attributes);
                 $breakdown->resources->each(function (BreakdownResource $resource) use ($newBreakdown) {
                     $attributes = $resource->getAttributes();
+                    $attributes['project_id'] = $this->id;
                     unset($attributes['id'], $attributes['created_at'], $attributes['updated_at']);
                     if ($this->stdActivityResourcesMap->has($resource->std_activity_resource_id)) {
                         $attributes['std_activity_resource_id'] = $this->stdActivityResourcesMap->get($resource->std_activity_resource_id);

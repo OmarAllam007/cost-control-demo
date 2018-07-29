@@ -132,7 +132,6 @@
 
         .horizontal-scroll {
             overflow-x: auto;
-            width: 1870px;
         }
 
         .vertical-scroll {

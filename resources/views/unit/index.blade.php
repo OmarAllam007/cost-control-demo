@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Unit</h2>
@@ -16,7 +16,7 @@
     </div>
 @stop
 
-@section('body')
+@section('content')
     @include('unit._filters')
     @if ($units->total())
         <table class="table table-condensed table-striped table-fixed">

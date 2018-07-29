@@ -1,106 +1,47 @@
-@extends('layouts.app')
+@extends('home.master-data')
 @section('header')
-    <h2>Projects</h2>
-    @if (Auth::user()->is_admin)
-        <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary pull-right">
+
+    <div class="display-flex">
+        <h2 class="flex">Master Data &mdash; Projects</h2>
+        <a href="{{ route('project.create') }} " class="btn btn-sm btn-primary">
             <i class="fa fa-plus"></i> Add Project
         </a>
-    @endif
+    </div>
 @stop
 
-@section('body')
+@section('content')
 
     @if ($projectGroups->count())
-
-        <div class="row">
-            <div class=" col-sm-8">
-                @foreach($projectGroups as $groupName => $projects)
-                    @if ($projects->count())
-                        <article class="card">
+        @foreach($projectGroups as $groupName => $projects)
+            @if ($projects->count())
+                <article class="card">
 
 
-                            <h3 class="card-title">
-                                <a href="#{{slug($groupName ?: 'not-assigned')}}"
-                                   data-toggle="collapse">{{$groupName?: 'Not Assigned'}}</a>
-                            </h3>
+                    <h3 class="card-title">
+                        <a href="#{{slug($groupName ?: 'not-assigned')}}"
+                           data-toggle="collapse">{{$groupName?: 'Not Assigned'}}</a>
+                    </h3>
 
-                            <div class="card-body collapse" id="{{slug($groupName ?: 'not-assigned')}}">
-                                @foreach($projects as $project)
-                                    <div class="card-row display-flex">
-                                        <h4 class="flex">
-                                            {{$project->name}}
-                                            @if ($project->is_activity_rollup)
-                                                <small class="label label-default">Activity</small>
-                                            @elseif ($project->hasRollup())
-                                                <small class="label label-default">Semi Activity</small>
-                                            @endif
-                                        </h4>
+                    <div class="card-body collapse" id="{{slug($groupName ?: 'not-assigned')}}">
+                        @foreach($projects as $project)
+                            <div class="card-row display-flex">
+                                <h4 class="flex">{{$project->name}}</h4>
 
-                                        <div class="">
-                                            @can('budget', $project)
-                                                <a class="btn btn-sm btn-info"
-                                                   href="{{ route('project.budget', $project) }}">Budget</a>
-                                            @else
-                                                @can('reports', $project)
-                                                    <a class="btn btn-sm btn-info"
-                                                       href="{{ route('project.budget', $project) }}">Budget</a>
-                                                @endcan
-                                            @endcan
-
-                                            @can('cost_control', $project)
-                                                <a class="btn btn-sm btn-violet"
-                                                   href="{{ route('project.cost-control', $project) }}">Cost
-                                                    Control</a>
-                                            @else
-                                                @can('reports', $project)
-                                                    <a class="btn btn-sm btn-violet"
-                                                       href="{{ route('project.cost-control', $project) }}">Cost
-                                                        Control</a>
-                                                @endcan
-                                            @endcan
-
-                                            @can('modify', $project)
-                                                <div class="dropdown" style="display: inline-block">
-                                                    <button class="btn btn-default btn-sm dropdown-toggle"
-                                                            data-target="{{slug($groupName ?: 'not-assigned')}}-menu"
-                                                            data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i>
-                                                    </button>
-
-                                                    <ul class="dropdown-menu"
-                                                        id="{{slug($groupName ?: 'not-assigned')}}-menu">
-                                                        <li><a href="{{ route('project.edit', $project) }} "><i
-                                                                        class="fa fa-edit"></i> Edit</a></li>
-                                                        <li><a
-                                                                    href="{{ route('project.duplicate', $project) }} "><i
-                                                                        class="fa fa-copy"></i>
-                                                                Duplicate</a></li>
-                                                        <li><a href="{{route('project.destroy', $project)}}"
-                                                               class="delete-btn text-danger"
-                                                               title="Delete - {{$project->name}}"><i
-                                                                        class="fa fa-trash-o"></i> <span
-                                                                        class="text-danger">Delete </span></a></li>
-                                                    </ul>
-                                                </div>
-
-
-
-                                            @endcan
-                                        </div>
-
-                                    </div>
-                                @endforeach
+                                <div class="">
+                                    @can('modify', $project)
+                                        <a class="btn btn-primary btn-sm" href="{{ route('project.edit', $project) }} "><i class="fa fa-edit"></i> Edit</a>
+                                        <a class="btn btn-primary btn-sm" href="{{ route('project.duplicate', $project) }} "><i class="fa fa-copy"></i> Duplicate</a>
+                                        <a class="btn btn-danger btn-sm delete-btn" href="{{route('project.destroy', $project)}}"  title="Delete - {{$project->name}}"><i class="fa fa-trash-o"></i> Delete</a>
+                                    @endcan
+                                </div>
                             </div>
-                        </article>
+                        @endforeach
+                    </div>
+                </article>
 
-                    @endif
+            @endif
+        @endforeach
 
-                @endforeach
-            </div>
-
-            <div class="col-sm-4 text-center">
-                <img src="{{asset('images/kcc.png')}}" alt="logo">
-            </div>
-        </div>
 
 
         @can('modify', $project)

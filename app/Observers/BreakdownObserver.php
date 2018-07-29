@@ -44,6 +44,8 @@ class BreakdownObserver
         if ($breakdown->isDirty('cost-account')) {
             $breakdown->variables()->update(['qty_survey_id' => $breakdown->qty_survey->id]);
         }
+
+        $breakdown->sap_code = $breakdown->wbs_level->sap_code . '.' . $breakdown->std_activity->sap_code_partial;
     }
 
     function updated(Breakdown $breakdown)

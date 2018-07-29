@@ -100,7 +100,7 @@
                     url, dataType: 'json'
                 }).done(response => {
                     this.$parent[this.property] = response.data;
-                    this.totalPages = response.last_page;
+                    this.totalPages = response.lastPage;
 
                     this.$dispatch('loadingDone', response);
                 }).error(response => {

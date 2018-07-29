@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <div class="display-flex">
@@ -7,7 +7,7 @@
     </div>
 @endsection
 
-@section('body')
+@section('content')
 
     {{Form::open(['route' => 'global-periods.store'])}}
         @include('global-periods.form', ['global_period' => new App\GlobalPeriod()])
