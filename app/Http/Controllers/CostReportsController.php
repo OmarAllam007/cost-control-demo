@@ -6,6 +6,7 @@ use App\Boq;
 use App\BreakDownResourceShadow;
 use App\Reports\Cost\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
+use App\Reports\Cost\ConcernsReport;
 use App\Reports\Cost\CostStandardActivityReport;
 use App\Reports\Cost\CostSummary;
 use App\Http\Controllers\Reports\CostReports\IssuesReport;
@@ -190,27 +191,17 @@ class CostReportsController extends Controller
         return view('reports.cost-control.variance_analysis.index', $data);
     }
 
-    function issuesReport(Project $project, Request $request)
+    function concernsReport(Project $project, Request $request)
     {
-        if ($request->period_id) {
-            if (\Session::has('period_id' . $project->id)) {
-                \Session::forget('period_id' . $project->id);
-                \Session::put('period_id' . $project->id, $request->period_id);
-                $chosen_period_id = $request->period_id;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::put('period_id' . $project->id, $request->period_id);
-            }
-        } else {
-            if (\Session::has('period_id' . $project->id)) {
-                $chosen_period_id = \Session::get('period_id' . $project->id);;
-            } else {
-                $chosen_period_id = $project->getMaxPeriod();
-                \Session::put('period_id' . $project->id, $request->period_id);
-            }
+        $period_id = $this->getPeriod($project, $request);
+        $period = Period::find($period_id);
+
+        $report = new ConcernsReport($period);
+        if ($request->exists('excel')) {
+            return $report->excel();
         }
-        $variance = new IssuesReport();
-        return $variance->getIssuesReport($project, $chosen_period_id);
+
+        return view('reports.cost-control.concerns-report.index', $report->run());
     }
 
     protected function getPeriod(Project $project, Request $request) : int

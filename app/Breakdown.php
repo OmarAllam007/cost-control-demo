@@ -124,7 +124,7 @@ class Breakdown extends Model
         if ($variables && $this->qty_survey) {
             $variableNames = $this->std_activity->variables->pluck('label', 'display_order');
             foreach ($variables as $index => $value) {
-                $var = BreakdownVariable::where('qty_survey_id', $this->qty_survey->id)->where('display_order', $index)->first();
+                $var = BreakdownVariable::where('breakdown_id', $this->id)->where('display_order', $index)->first();
                 if ($var) {
                     $var->update([
                         'value' => $value,

@@ -52,6 +52,8 @@ trait CostAttributes
     /** @var CostShadow */
     protected $latestCost = null;
 
+    protected $related_actual_resources;
+
     protected function getLatestCost()
     {
         if ($this->latestCost) {
@@ -82,11 +84,14 @@ trait CostAttributes
             return $this->calculated['to_date_qty'] = $this->to_date_cost / $this->completion_cost;
         }
 
-        $actual_qty =  ActualResources::when($this->important && $this->rolled_up_at, function($q) {
-            return $q->withTrashed();
-        })->where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
-
-         $actual_qty += ImportantActualResource::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
+        if ($this->is_sum) {
+            $actual_qty = $this->related_actual_resources()->sum('qty');
+        } else {
+            $actual_qty =  $this->related_actual_resources()
+                ->where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
+                
+             $actual_qty += ImportantActualResource::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('qty');
+        }
 
          return $this->calculated['to_date_qty'] = $actual_qty;
     }
@@ -97,18 +102,11 @@ trait CostAttributes
             return $this->calculated['to_date_cost'];
         }
 
-        $breakdown_resources = BreakdownResource::query()
-            ->where('project_id', $this->project_id)
-            ->where('code', $this->code)
-            ->where('rollup_resource_id', $this->breakdown_resource_id)->pluck('id');
+        $actual_cost =  $this->related_actual_resources()->sum('cost');
 
-        $breakdown_resources->prepend($this->breakdown_resource_id);
-
-        $actual_cost =  ActualResources::when($this->important && $this->rolled_up_at, function($q) {
-            return $q->withTrashed();
-        })->whereIn('breakdown_resource_id', $breakdown_resources)->sum('cost');
-
-        $actual_cost += ImportantActualResource::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('cost');
+        if ($this->important && $this->rolled_up_at) {
+            $actual_cost += ImportantActualResource::where('breakdown_resource_id', $this->breakdown_resource_id)->sum('cost');
+        }
 
         return $this->calculated['to_date_cost'] = $actual_cost;
     }
@@ -664,19 +662,23 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->calculated['curr_qty'];
         }
 
+        $related_resources = $this->related_actual_resources();
+        if (!$this->is_sum) {
+            $related_resources = $related_resources->where('breakdown_resource_id', $this->breakdown_resource_id);
+        }
+
 //        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['curr_qty'] = $this->actual_resources->where('period_id', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['curr_qty'] = $related_resources->where('period_id', $period_id)->sum('qty') ?: 0;
     }
 
     public function getCurrCostAttribute()
     {
-        $period_id = $this->getCalculationPeriod()->id;
         if (!empty($this->attributes['curr_cost'])) {
             return $this->attributes['curr_cost'];
         }
 
         if (!$this->ignore_cost) {
-            if (isset($this->cost->curr_cost) && $this->cost->period_id == $period_id) {
+            if (isset($this->cost->curr_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
                 return $this->cost->curr_cost;
             }
         }
@@ -685,11 +687,7 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->calculated['curr_cost'];
         }
 
-//        return $this->calculated['curr_cost'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('cost') ?: 0;
-        $breakdown_resources = BreakdownResource::where('project_id', $this->project_id)->where('code', $this->code)
-            ->where('rollup_resource_id', $this->breakdown_resource_id)->pluck('id');
-        $breakdown_resources->prepend($this->breakdown_resource_id);
-        return $this->calculated['curr_cost'] = ActualResources::whereIn('breakdown_resource_id', $breakdown_resources)->where('period_id', $period_id)->sum('cost');
+        return $this->calculated['curr_cost'] = $this->related_actual_resources()->where('period_id', $this->getCalculationPeriod()->id)->sum('cost');
     }
 
     public function getCurrUnitPriceAttribute()
@@ -713,13 +711,12 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
 
     public function getPrevQtyAttribute()
     {
-        $period_id = $this->getCalculationPeriod()->id;
         if (!empty($this->attributes['prev_qty'])) {
             return $this->attributes['prev_qty'];
         }
 
         if (!$this->ignore_cost) {
-            if (isset($this->cost->prev_qty) && $this->cost->period_id == $period_id) {
+            if (isset($this->cost->prev_qty) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
                 return $this->cost->prev_qty;
             }
         }
@@ -728,10 +725,14 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->calculated['prev_qty'];
         }
 
-//        return $this->calculated['prev_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', '<', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['prev_qty'] = $this->actual_resources->filter(function ($r) use ($period_id) {
-            return $r->period_id < $period_id;
-        })->sum('qty') ?: 0;
+        $related_resources = $this->related_actual_resources();   
+        if (!$this->is_sum) {
+            $related_resources = $related_resources->where('breakdown_resource_id', $this->breakdown_resource_id);
+        }
+
+        return $this->calculated['prev_qty'] = $related_resources->filter(function($resource) {
+                    return $resource->period_id < $this->getCalculationPeriod()->id;
+                })->sum('qty');
     }
 
     public function getPrevCostAttribute()
@@ -740,19 +741,8 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->attributes['prev_cost'];
         }
 
-        $period_id = $this->getCalculationPeriod()->id;
-        if ($this->is_rollup) {
-            $breakdown_resource_ids = BreakdownResource::where('project_id', $this->project_id)
-                ->where('rollup_resource_id', $this->breakdown_resource_id)->pluck('id');
-
-            $breakdown_resource_ids->prepend($this->breakdown_resource_id);
-
-            return $this->attributes['prev_cost'] = ActualResources::whereIn('breakdown_resource_id', $breakdown_resource_ids)
-                ->where('period_id', '<', $period_id)->sum('cost');
-        }
-
         if (!$this->ignore_cost) {
-            if (isset($this->cost->prev_cost) && $this->cost->period_id == $period_id) {
+            if (isset($this->cost->prev_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
                 return $this->cost->prev_cost;
             }
         }
@@ -761,9 +751,9 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->calculated['prev_cost'];
         }
 
-        return $this->calculated['prev_cost'] = $this->actual_resources->filter(function ($r) use ($period_id) {
-            return $r->period_id < $period_id;
-        })->sum('cost') ?: 0;
+        return $this->calculated['prev_cost'] = $this->related_actual_resources()->filter(function($resource) {
+            return $resource->period_id < $this->getCalculationPeriod()->id;
+        })->sum('cost');
     }
 
     public function getPrevUnitPriceAttribute()
@@ -788,5 +778,34 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     function isMaterial()
     {
         return $this->resource_type_id == 3;
+    }
+
+    function related_actual_resources()
+    {
+        if ($this->related_actual_resources) {
+            return $this->related_actual_resources;
+        }
+
+        $breakdown_resources = collect();
+
+        if ($this->is_rollup) {
+            $breakdown_resources = BreakdownResource::query()
+                ->where('project_id', $this->project_id)
+                ->where('code', $this->code)
+                ->where('rollup_resource_id', $this->breakdown_resource_id)->pluck('id');
+        } elseif ($this->is_sum) {
+            $breakdown_resources = BreakDownResourceShadow::query()
+                ->where('project_id', $this->project_id)
+                ->where('code', $this->code)
+                ->where('resource_id', $this->resource_id)
+                ->where('is_sum', 0)
+                ->pluck('breakdown_resource_id');
+        }
+
+        $breakdown_resources->prepend($this->breakdown_resource_id);
+
+        return $this->related_actual_resources = ActualResources::when($this->important && $this->rolled_up_at, function($q) {
+            return $q->withTrashed();
+        })->whereIn('breakdown_resource_id', $breakdown_resources)->get();
     }
 }
