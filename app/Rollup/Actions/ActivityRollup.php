@@ -58,7 +58,7 @@ class ActivityRollup
 
     private function rollupActivity($code)
     {
-        $breakdown_resources = $this->breakdown_resources->get($code);
+        $breakdown_resources = $this->breakdown_resources->get($code, collect());
         $hasRollup = $breakdown_resources->where('is_rollup', 1)->count();
 
         if ($hasRollup) {
