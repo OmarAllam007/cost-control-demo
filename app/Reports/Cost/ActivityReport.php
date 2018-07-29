@@ -283,7 +283,7 @@ class ActivityReport
             if (!empty($level['activities'])) {
                 foreach ($level['activities'] as $name => $activity) {
                     $sheet->fromArray($arr = [
-                        str_repeat('    ', $outlineLevel + 1) . $name,
+                        str_repeat('    ', $outlineLevel + 1) . $activity['name'],
                         $activity['budget_cost'] ?: '0.00',
                         $activity['prev_cost'] ?: '0.00',
                         $activity['prev_allowable'] ?: '0.00',
