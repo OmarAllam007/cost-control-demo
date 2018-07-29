@@ -23,7 +23,7 @@
 
     <div class="horizontal-scroll">
         <section class="table-header">
-            <table class="table table-bordered table-condensed">
+            <table class="table table-bordered">
                 <thead>
                 <tr class="bg-primary">
                     <th class="w-400">Resource</th>
@@ -35,7 +35,17 @@
                     <th class="w-150">Waste Percentage %</th>
                 </tr>
                 <tr class="{{$total_variance > 0? 'success' : 'warning'}}">
-                    <th class="w-400">Total</th>
+                    <th class="w-400">
+                        <div class="display-flex">
+                            <span class="flex">Total</span>
+
+                            <a  href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
+                                data-data="{{ json_encode(['Type' => 'Total', 'Cost Variance - (Waste)' => number_format($total_variance, 2),  'Waste Percentage %' => number_format($total_pw_index, 2) . '%']) }}">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                    </th>
                     <th class="w-150"></th>
                     <th class="w-150"></th>
                     <th class="w-150"></th>
@@ -48,7 +58,7 @@
         </section>
 
         <section class="vertical-scroll">
-            <table class="table table-bordered table-condensed" id="resourcesTable">
+            <table class="table table-bordered" id="resourcesTable">
                 <tbody>
                 @foreach($tree as $type)
                     @include('reports.cost-control.waste-index.type', ['depth' => 0])
@@ -161,4 +171,6 @@
             });
         });
     </script>
+
+    @include('reports.partials.concerns-modal', ['report_name' => 'Material Consumption Index'])
 @append

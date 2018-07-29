@@ -106,7 +106,7 @@ class ActivityReport
 
                 foreach ($wbsData[$wbs_id] as $wbsLevel) {
                     $lastKey = $key;
-                    $key .= $wbsLevel;
+                    $key .= $wbsLevel . ' / ';
                     if (!isset($tree[$key])) {
                         $tree[$key] = [
                             'budget_cost' => 0, 'to_date_cost' => 0, 'to_date_allowable' => 0, 'to_date_var' => 0,
