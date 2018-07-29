@@ -73,6 +73,7 @@ class ActivityReport
                     $to_date_allowable = $progress * $reserve;
 
                     $activity = [
+                        'name' => $activityCurrent->first()->activity,
                         'budget_cost' => $reserve,
                         'to_date_cost' => 0,
                         'to_date_allowable' => $to_date_allowable,
@@ -86,7 +87,9 @@ class ActivityReport
                         'resources' => $activityCurrent
                     ];
                 } else {
+
                     $activity = [
+                        'name' => $activityCurrent->first()->activity,
                         'budget_cost' => $activityCurrent->sum('budget_cost'),
                         'to_date_cost' => $activityCurrent->sum('to_date_cost'),
                         'to_date_allowable' => $activityCurrent->sum('to_date_allowable'),
@@ -101,11 +104,9 @@ class ActivityReport
                     ];
                 }
 
-                $tree[$key]['activities'][$activity_id] = $activity;
-
                 foreach ($wbsData[$wbs_id] as $wbsLevel) {
                     $lastKey = $key;
-                    $key .= $wbsLevel;
+                    $key .= $wbsLevel . ' / ';
                     if (!isset($tree[$key])) {
                         $tree[$key] = [
                             'budget_cost' => 0, 'to_date_cost' => 0, 'to_date_allowable' => 0, 'to_date_var' => 0,
@@ -135,6 +136,8 @@ class ActivityReport
                     $resource->prev_cost_var = $previous->prev_cost_var;
                     return $resource;
                 });
+
+                $tree[$key]['activities'][$activity_id] = $activity;
             }
 
         }
@@ -280,7 +283,7 @@ class ActivityReport
             if (!empty($level['activities'])) {
                 foreach ($level['activities'] as $name => $activity) {
                     $sheet->fromArray($arr = [
-                        str_repeat('    ', $outlineLevel + 1) . $name,
+                        str_repeat('    ', $outlineLevel + 1) . $activity['name'],
                         $activity['budget_cost'] ?: '0.00',
                         $activity['prev_cost'] ?: '0.00',
                         $activity['prev_allowable'] ?: '0.00',

@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\Reports\CostReports;
 
 
-use App\CostConcerns;
+use App\CostConcern;
 use App\Period;
 
 class IssuesReport

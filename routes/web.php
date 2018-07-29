@@ -212,7 +212,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('project/{project}/dashboard', 'CostReportsController@dashboard');
     Route::post('project/{project}/charts', 'CostReportsController@chart');
 
-    Route::post('/concern/{project}', 'CostConcernsController@addConcernReport');
+    Route::post('/concern/{project}','CostConcernsController@store')->name('concerns.store');
+    Route::get('project/{project}/concerns-report','CostReportsController@concernsReport')->name('project.concerns-report');
 
     Route::get('/project/{project}/issue-files', 'CostIssueFilesController@index');
     Route::get('/project/{project}/issue-files/create', 'CostIssueFilesController@create');
@@ -513,5 +514,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('productivity', 'ProductivityController');
     Route::resource('category', 'CategoryController');
     Route::resource('category', 'CategoryController');
+
+    Route::get('/project/{project}/budget_for_sap', 'Sap\\ExportBudgetController@show')->name('project.export-sap-budget');
 });
 
