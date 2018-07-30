@@ -91,21 +91,21 @@ class BreakdownController extends Controller
     function filters(Request $request, Project $project)
     {
         $data = $request->except('_token');
-        \Session::set('filters.breakdown.' . $project->id, $data);
+        \Session::put('filters.breakdown.' . $project->id, $data);
 
         return \Redirect::to(route('project.show', $project) . '#breakdown');
     }
 
     function exportBreakdown(Project $project)
     {
-        $file = $this->dispatch(new ExportBreakdownJob($project));
+        $file = $this->dispatchNow(new ExportBreakdownJob($project));
         $response = \Response::download($file, slug($project->name) . '-breakdown.csv', ['ContentType' => 'text/csv']);
         return $response;
     }
 
     function printAll(Project $project)
     {
-        $this->dispatch(new PrintAllJob($project));
+        $this->dispatchNow(new PrintAllJob($project));
     }
 
 

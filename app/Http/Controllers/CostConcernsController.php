@@ -2,54 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\CostConcerns;
-use App\CostResource;
+use App\CostConcern;
 use App\Project;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-
 class CostConcernsController extends Controller
 {
-    protected $project;
-    function addConcernReport($project, Request $request)
-    {
-        $this->project = $project;
-        $info = $request->info;
-        $report_name = $request->report_name;
-        $comment = $request->comment;
-        $project_id = $project;
-        $period_id = Project::find($project_id)->getMaxPeriod();
 
-        CostConcerns::create(['project_id' => $project_id, 'period_id' => $period_id
-            , 'comment' => $comment, 'data' => $info, 'report_name' => $report_name
-        ]);
+    function create(Project $project)
+    {
+
     }
 
-    function getConcernReport($project,$report_name)
+    function store(Project $project, Request $request)
     {
-        $concerns_data = [];
-        if ($report_name == 'Cost Summary Report') {
-            $concerns = CostConcerns::where('report_name', $report_name)->where('project_id', $project->id)->get();
-            foreach ($concerns as $concern) {
-                $name = json_decode($concern->data);
-                if (!isset($concerns_data[$name->name]['comments'][$concern->comment])) {
-                    $concerns_data[$name->name]['comments'][$concern->comment] = $concern->comment;
-                }
+        $this->authorize('reports', $project);
 
-            }
-        }
-        if ($report_name == 'Standard Activity') {
-            $concerns = CostConcerns::where('report_name', $report_name)->where('project_id', $project->id)->get();
-            foreach ($concerns as $concern) {
-                $name = json_decode($concern->data);
-                if (!isset($concerns_data[$name->name]['comments'][$concern->comment])) {
-                    $concerns_data[$name->name]['comments'][$concern->comment] = $concern->comment;
-                }
+        $attributes = $request->only('report_name', 'data', 'comment', 'period_id');
+        $attributes['project_id'] = $project->id;
 
-            }
+        CostConcern::create($attributes);
+
+        if ($request->wantsJson()) {
+            return ['ok' => 'true'];
         }
 
-        return $concerns_data;
+        flash('Issue has been saved', 'info');
+        return back();
+    }
+
+    function destroy(CostConcern $concern, Request $request)
+    {
+        $this->authorize('cost_owner', $concern->project);
+
+        $concern->delete();
+
+        if ($request->wantsJson()) {
+            return ['ok' => 'true'];
+        }
+
+        flash('Issue has been deleted', 'info');
+        return back();
     }
 }

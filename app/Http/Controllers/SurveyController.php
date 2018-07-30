@@ -329,7 +329,7 @@ class SurveyController extends Controller
             return \Redirect::route('project.index');
         }
 
-        $file = $this->dispatch(new ExportSurveyJob($project));
+        $file = $this->dispatchNow(new ExportSurveyJob($project));
 
         return \Response::download($file, slug($project->name).'-survey.xlsx')->deleteFileAfterSend(true);
     }

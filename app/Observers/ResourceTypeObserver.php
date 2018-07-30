@@ -21,18 +21,6 @@ class ResourceTypeObserver
         }
     }
 
-    function saved()
-    {
-
-        dispatch(new CacheResourcesTree());
-    }
-
-    function deleted()
-    {
-        \Cache::forget('resources-tree');
-        dispatch(new CacheResourcesTree());
-    }
-
     protected function generateCode($type)
     {
         $lastType = ResourceType::where('parent_id', $type->parent_id)->max('code');

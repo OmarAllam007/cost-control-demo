@@ -108,7 +108,7 @@ class BoqImport
         }
 
         \Cache::forget('boq-' . $this->project->id);
-        \Cache::add('boq-' . $this->project->id, dispatch(new CacheBoqTree($this->project)), 7 * 24 * 60);
+        \Cache::add('boq-' . $this->project->id, dispatch_now(new CacheBoqTree($this->project)), 7 * 24 * 60);
 
         //TODO: Save imported file
 

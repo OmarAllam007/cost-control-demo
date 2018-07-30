@@ -45,7 +45,29 @@
             <th>Cost Variance</th>
         </tr>
         <tr>
-            <th>Total</th>
+            <th>
+                <div class="display-flex">
+                    <span class="flex">Total</span>
+
+                    <a href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
+                       data-data="{{json_encode([
+                            'Total' => 'Total',
+                            'Base Line' => number_format($tree->where('parent', '')->sum('budget_cost'), 2),
+                            'Previous Cost' => number_format($tree->where('parent', '')->sum('prev_cost'), 2),
+                            'Previous Allowable' => number_format($tree->where('parent', '')->sum('prev_allowable'), 2),
+                            'Previous Var' => number_format($tree->where('parent', '')->sum('prev_cost_var'), 2),
+                            'To Date Cost' => number_format($tree->where('parent', '')->sum('to_date_cost'), 2),
+                            'Allowable (EV) Cost' => number_format($tree->where('parent', '')->sum('to_date_allowable'), 2),
+                            'To Date Cost Var' => number_format($tree->where('parent', '')->sum('to_date_var'), 2),
+                            'Remaining Cost' => number_format($tree->where('parent', '')->sum('remaining_cost'), 2),
+                            'At Completion Cost' => number_format($tree->where('parent', '')->sum('completion_cost'), 2),
+                            'Cost Variance' => number_format($tree->where('parent', '')->sum('completion_var'), 2),
+                           ]) }}">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+            </th>
 
             <th>{{number_format($tree->where('parent', '')->sum('budget_cost'), 2)}}</th>
 
@@ -184,7 +206,6 @@
                 if (!_self.hasClass('open')) {
                     closeRows(rows);
                 }
-                console.log(target);
 
                 return false;
             }).on('click', 'tbody tr', function () {
@@ -197,4 +218,6 @@
             });
         });
     </script>
+
+    @include('reports.partials.concerns-modal', ['report_name' => 'Activity'])
 @append

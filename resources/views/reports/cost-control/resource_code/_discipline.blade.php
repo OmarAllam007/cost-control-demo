@@ -19,7 +19,26 @@ $totals = $disciplineData->reduce(function($totals, $topMaterial) {
 @endphp
 
 <tr class="{{slug($name)}} discipline info hidden">
-    <td class="resource-cell right-border"><strong><a href="#"  data-target=".{{trim(slug($name) . '-' . slug($discipline))}}"><i class="fa fa-plus-square-o"></i> {{title_case($discipline)}} </a></strong></td>
+    <td class="resource-cell right-border">
+        <div class="display-flex">
+            <strong class="flex"><a href="#"  data-target=".{{trim(slug($name) . '-' . slug($discipline))}}"><i class="fa fa-plus-square-o"></i> {{title_case($discipline)}} </a></strong>
+            <a href="#" class="btn btn-warning btn-xs concern-btn" title="Add issue or concern"
+               data-data="{{json_encode([
+                            'Discipline' => "$name / $discipline",
+                            'Budget Cost' => number_format($totals['budget_cost'],2) ,
+                            'Previous Cost' => number_format($totals['prev_cost'],2),
+                            'Current Cost' => number_format($totals['curr_cost'],2),
+                            'To Date Cost' => number_format($totals['to_date_cost'], 2),
+                            'Allowable Cost' => number_format($totals['to_date_allowable'], 2),
+                            'To Date Cost Var' => number_format($totals['to_date_cost_var'], 2),
+                            'Remaining Cost' => number_format($totals['remaining_cost'], 2),
+                            'At Completion Cost' => number_format($totals['at_completion_cost'], 2),
+                            'At Completion Cost Var' => number_format($totals['cost_var'], 2),
+                           ]) }}">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </a>
+        </div>
+    </td>
 
     <td class="number-cell">&nbsp;</td>
     <td class="number-cell">&nbsp;</td>

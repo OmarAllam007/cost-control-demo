@@ -173,4 +173,6 @@
             });
         });
     </script>
+
+    @include('reports.partials.concerns-modal', ['report_name' => 'Threshold Report'])
 @append

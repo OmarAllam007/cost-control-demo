@@ -5,6 +5,7 @@ namespace App;
 use App\Behaviors\HasChangeLog;
 use App\Behaviors\HasOptions;
 use App\Behaviors\Tree;
+use App\Jobs\CacheCsiCategoryTree;
 use Illuminate\Database\Eloquent\Model;
 
 class CsiCategory extends Model
@@ -20,5 +21,18 @@ class CsiCategory extends Model
     public function productivity()
     {
         return $this->hasMany(Productivity::class,'csi_category_id');
+    }
+
+    static function boot()
+    {
+        self::saved(function() {
+            \Cache::forget('csi-tree');
+            dispatch(new CacheCsiCategoryTree());
+        });
+
+        self::deleted(function() {
+            \Cache::forget('csi-tree');
+            dispatch(new CacheCsiCategoryTree());
+        });
     }
 }

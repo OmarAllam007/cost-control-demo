@@ -31,11 +31,6 @@ class WbsObserver
         }
     }
 
-    function created(WbsLevel $wbs)
-    {
-        dispatch(new CacheWBSTreeInQueue($wbs->project));
-    }
-
     function updating(WbsLevel $wbs)
     {
         $this->updateCode = $wbs->isDirty('code');
@@ -44,7 +39,6 @@ class WbsObserver
 
     function updated(WbsLevel $wbs)
     {
-        dispatch(new CacheWBSTreeInQueue($wbs->project));
         if ($this->updateCode) {
             $exists = ActivityMap::where('activity_code', $this->old_code)->where('project_id', $wbs->project)->exists();
             if (!$exists) {

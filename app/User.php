@@ -6,10 +6,11 @@ use App\Behaviors\HasChangeLog;
 use App\Behaviors\RecordsUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasChangeLog, RecordsUser;
+    use HasChangeLog, RecordsUser, Notifiable;
 
     /**
      * The attributes that are mass assignable.

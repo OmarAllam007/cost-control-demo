@@ -28,7 +28,7 @@ class ActualRevenueController extends Controller
         $this->validate($request, ['period_id' => 'required', 'file' => 'required|file|mimes:xls,xlsx|max:1024']);
         $file = $request->file('file');
 
-        $count = $this->dispatch(new ImportActualRevenue($file->path(), $request->input('period_id')));
+        $count = $this->dispatchNow(new ImportActualRevenue($file->path(), $request->input('period_id')));
 
         flash("$count rows has been imported", 'info');
         return redirect()->back();

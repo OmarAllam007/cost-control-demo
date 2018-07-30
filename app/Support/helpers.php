@@ -10,9 +10,11 @@ function flash($message, $type = 'danger')
     Session::flash('flash-type', $type);
 }
 
-function __($id, $parameters = [], $domain = 'messages', $locale = null)
-{
-    return trans($id, $parameters, $domain, $locale);
+if (!function_exists('__')) {
+    function __($id, $parameters = [], $domain = 'messages', $locale = null)
+    {
+        return trans($id, $parameters, $domain, $locale);
+    }
 }
 
 function slug($value='')
@@ -55,10 +57,10 @@ function check_syntax($equation)
     return false;
 }
 
-function optional($object)
+/*function optional($object)
 {
     return new \App\Support\Optional($object);
-}
+}*/
 
 if (! function_exists('report')) {
     /**

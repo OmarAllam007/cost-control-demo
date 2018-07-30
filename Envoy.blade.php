@@ -3,11 +3,15 @@
 @task('deploy', ['on' => 'web'])
     cd cost-control
     git pull origin master
+    php artisan route:cache
+    php artisan config:cache
 @endtask
 
 @task('deploy-dev', ['on' => 'dev'])
     cd cost-control
     git pull origin develop
+    php artisan route:cache
+    php artisan config:cache
 @endtask
 
 @task('migrate')
@@ -19,6 +23,8 @@
 @task('cache:clear')
     cd cost-control
     php artisan cache:clear
+    php artisan config:clear
+    php artisan route:clear
 @endtask
 
 @task('composer')

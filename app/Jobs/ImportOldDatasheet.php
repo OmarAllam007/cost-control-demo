@@ -85,7 +85,7 @@ class ImportOldDatasheet extends ImportJob // implements ShouldQueue
 
         fclose($fh);
 
-        dispatch(new UpdateResourceDictJob($this->project));
+        dispatch_now(new UpdateResourceDictJob($this->project));
 
         return compact('success', 'failed');
     }
