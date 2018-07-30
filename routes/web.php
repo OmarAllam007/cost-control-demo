@@ -517,5 +517,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('category', 'CategoryController');
 
     Route::get('/project/{project}/budget_for_sap', 'Sap\\ExportBudgetController@show')->name('project.export-sap-budget');
+
+    Route::get('/project/{project}/change-request', 'BudgetChangeRequestController@index')->name('project.change-request');
+    Route::get('/project/{project}/change-request/create', 'BudgetChangeRequestController@create')->name('project.change-request.create');
+    Route::get('/project/{project}/change-request/{changeRequest}', 'BudgetChangeRequestController@show')->name('project.change-request.show');
+    Route::patch('/project/{project}/change-request/{changeRequest}', 'BudgetChangeRequestController@update')->name('project.change-request.update');
+    Route::post('/project/{project}/change-request', 'BudgetChangeRequestController@store')->name('project.change-request.store');
 });
 
