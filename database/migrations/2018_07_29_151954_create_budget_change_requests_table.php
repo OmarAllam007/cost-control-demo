@@ -19,6 +19,7 @@ class CreateBudgetChangeRequestsTable extends Migration
             $table->text('close_note')->nullable();
             $table->boolean('closed')->default(0);
             $table->dateTime('closed_at')->nullable();
+            $table->unsignedInteger('assigned_to')->nullable();
             $table->unsignedInteger('closed_by')->nullable();
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');
