@@ -77,8 +77,8 @@
         <div class="fixed-table-container-inner">
             <table class="table table-bordered table-hover resources-table" id="resourcesTable">
                 <tbody>
-                @foreach($tree as $name => $typeData)
-                    @include('reports.cost-control.resource_code._type')
+                @foreach($tree as $type_id => $type)
+                    @include('reports.cost-control.resource_code._type', ['depth' => 0])
                 @endforeach
                 </tbody>
             </table>
@@ -168,6 +168,30 @@
 
         .top-material td, .top-material td a, .bg-primary a {
             color: #fff;
+        }
+
+        .level-1 td.level-label, .level-1 th.level-label {
+            padding-left: 30px;
+        }
+
+        .level-2 td.level-label, .level-2 th.level-label {
+            padding-left: 60px;
+        }
+
+        .level-3 td.level-label, .level-3 th.level-label {
+            padding-left: 90px;
+        }
+
+        .level-4 td.level-label, .level-4 th.level-label {
+            padding-left: 120px;
+        }
+
+        .level-5 td.level-label, .level-5 th.level-label {
+            padding-left: 140px;
+        }
+
+        .level-6 td.level-label, .level-6 th.level-label {
+            padding-left: 140px;
         }
     </style>
 @endsection

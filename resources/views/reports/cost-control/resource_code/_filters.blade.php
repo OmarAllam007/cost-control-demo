@@ -21,21 +21,8 @@
                         @php $type = strtolower(request('type')) @endphp
                         <select name="type" id="type" class="form-control">
                             <option value="">[All Types]</option>
-                            @foreach($types as $name)
-                                <option value="{{$name}}" {{strtolower($name) == $type? 'selected' : ''}}>{{$name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <label for="discipline">Discipline</label>
-                        @php $discipline = strtolower(request('discipline')) @endphp
-                        <select name="discipline" id="discipline" class="form-control">
-                            <option value="">[All Disciplines]</option>
-                            @foreach($disciplines as $name)
-                                <option value="{{$name}}" {{strtolower($name) == $discipline? 'selected' : ''}}>{{$name}}</option>
+                            @foreach($types as $id => $name)
+                                <option value="{{$id}}" {{$id == $type? 'selected' : ''}}>{{$name}}</option>
                             @endforeach
                         </select>
                     </div>

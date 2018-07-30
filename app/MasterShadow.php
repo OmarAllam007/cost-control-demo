@@ -37,7 +37,7 @@ class MasterShadow extends Model
 
     public function scopeForPeriod(Builder $query, Period $period)
     {
-        return $query->wherePeriodId($period->id)->whereProjectId($period->project_id);
+        return $query->wherePeriodId($period->id)->where('master_shadows.project_id', $period->project_id);
     }
 
     function resource()

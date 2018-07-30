@@ -34,7 +34,7 @@ class CollectionMacrosServiceProvider extends ServiceProvider
             return $newCollection;
         });
 
-        Collection::macro('dump', function() {
+        /*Collection::macro('dump', function() {
             dump($this);
             return $this;
         });
@@ -42,7 +42,7 @@ class CollectionMacrosServiceProvider extends ServiceProvider
         Collection::macro('dd', function() {
             dd($this);
             return $this;
-        });
+        });*/
     }
 
     /**

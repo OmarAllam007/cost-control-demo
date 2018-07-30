@@ -4,22 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Boq;
 use App\BreakDownResourceShadow;
-use App\Reports\Cost\ActivityReport;
 use App\Http\Controllers\Reports\CostReports\BoqReport;
-use App\Reports\Cost\ConcernsReport;
-use App\Reports\Cost\CostStandardActivityReport;
-use App\Reports\Cost\CostSummary;
-use App\Http\Controllers\Reports\CostReports\IssuesReport;
 use App\Http\Controllers\Reports\CostReports\OverdraftReport;
-use App\Http\Controllers\Reports\CostReports\ResourceCodeReport;
 use App\Http\Controllers\Reports\CostReports\ResourceDictionaryReport;
 use App\Http\Controllers\Reports\CostReports\SignificantMaterials;
 use App\Http\Controllers\Reports\CostReports\VarianceAnalysisReport;
 use App\MasterShadow;
 use App\Period;
 use App\Project;
+use App\Reports\Cost\ActivityReport;
+use App\Reports\Cost\ConcernsReport;
+use App\Reports\Cost\CostStandardActivityReport;
+use App\Reports\Cost\CostSummary;
 use App\Reports\Cost\ProductivityIndexReport;
 use App\Reports\Cost\ProjectInfo;
+use App\Reports\Cost\ResourceDictReport;
 use App\Reports\Cost\ThresholdReport;
 use App\Reports\Cost\WasteIndexReport;
 use Illuminate\Http\Request;
@@ -122,14 +121,14 @@ class CostReportsController extends Controller
         $period_id = $this->getPeriod($project, $request);
         $period = $project->periods()->find($period_id);
 
-        $resourceCodeReport = new ResourceCodeReport($period);
+        $report = new ResourceDictReport($period);
 
 
         if ($request->exists('excel')) {
-            return $resourceCodeReport->excel();
+            return $report->excel();
         }
 
-        $data = $resourceCodeReport->run();
+        $data = $report->run();
         return view('reports.cost-control.resource_code.index', $data);
     }
 

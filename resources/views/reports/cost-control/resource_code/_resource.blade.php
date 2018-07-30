@@ -1,6 +1,5 @@
-@php $to_date_var = $resource->to_date_allowable - $resource->to_date_cost; @endphp
-<tr class="{{$class}} {{$slug}} hidden">
-    <td class="resource-cell right-border">
+<tr class="type-{{$resource->resource_type_id}} level-{{$depth}} {{$resource->top_material? 'top-material-resource' : ''}} hidden">
+    <td class="resource-cell right-border level-label">
         <div class="display-flex">
             <span class="flex">
                 <i class="fa fa-caret-right"></i> {{$resource->resource_name}}
@@ -24,7 +23,7 @@
                             'To Date Qty Var' => number_format($resource->to_date_allowable_qty - $resource->to_date_qty, 2),
                             'To Date Cost' => number_format($resource->to_date_cost, 2),
                             'To Date Allowable Cost' => number_format($resource->to_date_allowable, 2),
-                            'To Date Cost Var' => number_format($to_date_var, 2),
+                            'To Date Cost Var' => number_format($resource->to_date_var, 2),
                             'Remaining U.Price' => number_format($resource->remaining_qty? $resource->remaining_cost / $resource->remaining_qty : 0, 2),
                             'Remaining Qty' => number_format($resource->remaining_qty, 2),
                             'Remaining Cost' => number_format($resource->remaining_cost, 2),
@@ -59,7 +58,7 @@
     <td class="number-cell">{{number_format($resource->to_date_allowable_qty - $resource->to_date_qty, 2)}}</td>
     <td class="number-cell">{{number_format($resource->to_date_cost, 2)}}</td>
     <td class="number-cell">{{number_format($resource->to_date_allowable, 2)}}</td>
-    <td class="number-cell right-border {{$to_date_var < 0? 'text-danger' : 'text-success'}}">{{number_format($to_date_var, 2)}}</td>
+    <td class="number-cell right-border {{$resource->to_date_var < 0? 'text-danger' : 'text-success'}}">{{number_format($resource->to_date_var, 2)}}</td>
 
     <td class="number-cell">{{number_format($resource->remaining_qty? $resource->remaining_cost / $resource->remaining_qty : 0, 2)}}</td>
     <td class="number-cell">{{number_format($resource->remaining_qty, 2)}}</td>

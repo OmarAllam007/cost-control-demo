@@ -12,13 +12,18 @@ class ResourceTypesTree
 
     private $current_type;
 
+    private $include_resources = true;
+
     /** @return Collection */
     function get()
     {
-        $this->resource_types = ResourceType::where('archived', 0)
-            ->get()
-            ->load('db_resources')
-            ->groupBy('parent_id');
+        $resource_types = ResourceType::where('archived', 0)->orderBy('name')->get();
+
+        if ($this->include_resources) {
+            $resource_types = $resource_types->load('db_resources');
+        }
+
+        $this->resource_types = $resource_types->groupBy('parent_id');
 
         return $this->tree()->keyBy('id');
     }
@@ -31,11 +36,21 @@ class ResourceTypesTree
             }
 
             $type->subtree = $this->tree($type->id);
-            $type->db_resources->map(function($resource) {
-                $resource->root_type = $this->current_type->name;
-                return $resource;
-            });
+
+            if ($this->include_resources) {
+                $type->db_resources->map(function($resource) {
+                    $resource->root_type = $this->current_type->name;
+                    return $resource;
+                });
+            }
+
             return $type;
         });
+    }
+
+    function setIncludeResources($value = true)
+    {
+        $this->include_resources = $value;
+        return $this;
     }
 }
