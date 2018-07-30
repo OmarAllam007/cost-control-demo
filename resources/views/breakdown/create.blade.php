@@ -2,7 +2,7 @@
 
 @section('header')
 <h2 class="panel-title">Add Breakdown</h2>
-<a href="{{route('project.show', request('project_id'))}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
+<a href="{{route('project.show', request('project'))}}" class="btn btn-default btn-sm pull-right"><i class="fa fa-chevron-left"></i> Back</a>
 @endsection
 
 @section('body')
