@@ -61,7 +61,7 @@ class ResourcesController extends Controller
 
         $units_drop = Unit::options();
         $partners = BusinessPartner::options();
-        $resource_types = ResourceType::lists('name', 'id')->all();
+        $resource_types = ResourceType::pluck('name', 'id')->all();
         $edit = false;
 
         return view('resources.create', compact('partners', 'resource_types', 'units_drop', 'edit'));
@@ -122,7 +122,7 @@ class ResourcesController extends Controller
         }
 
         $partners = BusinessPartner::options();
-        $resource_types = ResourceType::lists('name', 'id')->all();
+        $resource_types = ResourceType::pluck('name', 'id')->all();
         $units_drop = Unit::options();
         $edit = true;
 
