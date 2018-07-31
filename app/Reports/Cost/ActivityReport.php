@@ -53,10 +53,7 @@ class ActivityReport
             return $group->groupBy('activity_id');
         });
 
-        $wbsData = MasterShadow::forPeriod($this->period)->orderBy('wbs')->pluck('wbs', 'wbs_id')->map(function ($wbs) {
-            return json_decode($wbs, true);
-        });
-
+        $wbsData = MasterShadow::forPeriod($this->period)->orderBy('wbs')->pluck('wbs', 'wbs_id');
 
         $tree = [];
         foreach ($currentData as $wbs_id => $wbsGroup) {
