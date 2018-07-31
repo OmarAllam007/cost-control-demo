@@ -18,7 +18,7 @@
 @section('content')
     {{ Form::open(['route' => ['resources.store','project'=>request('project')]]) }}
 
-        @include('resources._form', ['override' => false, 'resources' => new \App\Resources()])
+        @include('resources._form', ['override' => false, 'resource' => new \App\Resources()])
 
     {{ Form::close() }}
 @stop

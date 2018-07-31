@@ -108,10 +108,10 @@ class ResourcesController extends Controller
         return view('resources.show', compact('resource'));
     }
 
-    public function edit(Resources $resources)
+    public function edit(Resources $resource)
     {
-        if ($resources->project_id) {
-            $project = Project::find($resources->project_id);
+        if ($resource->project_id) {
+            $project = Project::find($resource->project_id);
             if (\Gate::denies('resources', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
@@ -126,7 +126,7 @@ class ResourcesController extends Controller
         $units_drop = Unit::options();
         $edit = true;
 
-        return view('resources.edit', compact('resources', 'partners', 'resource_types', 'units_drop', 'edit'));
+        return view('resources.edit', compact('resource', 'partners', 'resource_types', 'units_drop', 'edit'));
     }
 
     public function update(Resources $resources, Request $request)
