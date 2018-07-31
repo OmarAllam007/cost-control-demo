@@ -9,7 +9,7 @@
                 $type = App\ResourceType::with('parent')->find($type_id);
             @endphp
 
-            @if ($resources->project_id)
+            @if ($resource->project_id)
                 <input class="form-control" disabled value="{{$type->path ?? 'Type not found'}}">
             @else
                 <div class="btn-group btn-group-sm btn-group-block">
@@ -24,7 +24,7 @@
         <article class="form-group {{$errors->first('name', 'has-error')}}">
             {{ Form::label('name', 'Name', ['class' => 'control-label']) }}
             @if(!empty($override))
-                {{ Form::text('name', $resources->name, ['class' => 'form-control', 'readonly' => $resources->project_id]) }}
+                {{ Form::text('name', $resource->name, ['class' => 'form-control', 'readonly' => $resource->project_id]) }}
             @else
                 {{ Form::text('name', null, ['class' => 'form-control']) }}
                 {!! $errors->first('name', '<div class="help-block">:message</div>') !!}
@@ -33,7 +33,7 @@
 
         <article class="form-group {{$errors->first('unit', 'has-error')}}">
             {{ Form::label('unit', 'Unit Of Measure', ['class' => 'control-label']) }}
-            {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control', 'disabled' => $resources->project_id]) }}
+            {{ Form::select('unit', App\Unit::options(),null, ['class' => 'form-control', 'disabled' => $resource->project_id]) }}
             {!! $errors->first('unit', '<div class="help-block">:message</div>') !!}
         </article>
 
@@ -64,10 +64,10 @@
             {!! $errors->first('business_partner_id', '<div class="help-block">:message</div>') !!}
         </article>
 
-        @if ($resources->project_id)
+        @if ($resource->project_id)
         <article class="form-group">
             <label for="top-material" class="control-label">Top material</label>
-            <input name="top_material" value="{{old('top_material', $resources->top_material) }}" class="form-control" id="top-material">
+            <input name="top_material" value="{{old('top_material', $resource->top_material) }}" class="form-control" id="top-material">
         </article>
         @endif
     </div>
@@ -100,7 +100,7 @@
 </div>
 
 @section('javascript')
-    @if (isset($resources))
+    @if (isset($resource))
         <script src="{{asset('/js/resource-codes.js')}}"></script>
     @endif
     <script src="{{asset('/js/tree-select.js')}}"></script>
