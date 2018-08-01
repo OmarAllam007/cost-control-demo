@@ -60,7 +60,7 @@
                     <td class="col-xs-1">@{{resource.waste}}</td>
                     <td class="col-xs-2">
                         @can('resources', $project)
-                            <a href="/resources/@{{resource.id}}/edit" class="btn btn-primary btn-sm">
+                            <a href="/resources/@{{resource.id}}/edit" class="btn btn-primary btn-sm in-iframe" title="Edit Resource">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
                         @endcan
