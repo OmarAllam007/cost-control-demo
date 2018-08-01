@@ -129,10 +129,10 @@ class ResourcesController extends Controller
         return view('resources.edit', compact('resource', 'partners', 'resource_types', 'units_drop', 'edit'));
     }
 
-    public function update(Resources $resources, Request $request)
+    public function update(Resources $resource, Request $request)
     {
-        if ($resources->project_id) {
-            $project = Project::find($resources->project_id);
+        if ($resource->project_id) {
+            $project = Project::find($resource->project_id);
             if (\Gate::denies('resources', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
@@ -144,26 +144,29 @@ class ResourcesController extends Controller
 
         $this->validate($request, array_only($this->rules, ['rate', 'waste']));
 
-        if ($resources->project_id) {
+        if ($resource->project_id) {
             $attributes = $request->only(['rate', 'waste', 'reference', 'business_partner_id', 'top_material']);
         } else {
             $attributes = $request->except('resource_code');
         }
 
-        $resources->update($attributes);
-        $resources->syncCodes($request->get('codes'));
+        $resource->update($attributes);
+        $resource->syncCodes($request->get('codes'));
 
         flash('Resource has been saved', 'success');
-        if ($resources->project_id) {
-            return \Redirect::route('project.show', $resources->project_id);
+        if ($request->exists('iframe')) {
+            return redirect('/blank?reload=resources');
+        }
+        if ($resource->project_id) {
+            return \Redirect::route('project.show', $resource->project_id);
         }
         return \Redirect::route('resources.index');
     }
 
-    public function destroy(Resources $resources)
+    public function destroy(Resources $resource)
     {
-        if ($resources->project_id) {
-            $project = Project::find($resources->project_id);
+        if ($resource->project_id) {
+            $project = Project::find($resource->project_id);
             if (\Gate::denies('resources', $project)) {
                 flash("You don't have access to this page");
                 return \Redirect::to('/');
@@ -173,7 +176,7 @@ class ResourcesController extends Controller
             return \Redirect::to('/');
         }
 
-        $resources->delete();
+        $resource->delete();
 
 
         flash('Resources has been deleted', 'success');

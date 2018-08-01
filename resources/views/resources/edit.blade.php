@@ -1,4 +1,4 @@
-@extends('home.master-data')
+@extends(request()->exists('iframe')? 'layouts.iframe' : 'home.master-data')
 
 @section('header')
     <h2>Edit Resources</h2>
@@ -22,8 +22,8 @@
     </form>
 @stop
 
-@section('content')
-    {{ Form::model($resource, ['route' => ['resources.update', 'resources' => $resource,'project_id'=>request('project_id')], 'method' => 'PATCH']) }}
+@section(request()->exists('iframe')? 'body' : 'content')
+    {{ Form::model($resource, ['route' => ['resources.update', 'resources' => $resource,'project_id'=>request('project_id'), 'iframe' => request()->exists('iframe') ?: null], 'method' => 'PATCH']) }}
 
     @include('resources._form', ['override' => $resource->project_id])
 

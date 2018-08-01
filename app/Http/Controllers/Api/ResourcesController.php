@@ -17,6 +17,7 @@ class ResourcesController extends Controller
                 return $resource->morphToJSON();
             });
     }
+
     function Resources(Project $project)
     {
         return Resources::with('units')->with('types')->where('project_id', $project->id)->get()->map(function (Resources $resource){
