@@ -236,5 +236,7 @@ return [
 
     'cost_status'=> [
         'In Progress' => 'In Progress', 'Closed' => 'Closed'
-    ]
+    ],
+
+    'chrome_path' => env('CHROME_PATH', '/usr/bin/chromium-browser')
 ];

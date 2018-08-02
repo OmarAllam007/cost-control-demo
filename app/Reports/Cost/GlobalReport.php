@@ -514,7 +514,7 @@ class GlobalReport
 
     function createPdf()
     {
-        if (!env('CHROME_PATH')) {
+        if (!config('app.chrome_path')) {
             return false;
         }
 
