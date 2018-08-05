@@ -12,19 +12,14 @@ class ImportBreakdownTemplateJob extends ImportJob
 {
     protected $file;
     protected $count;
-    /**
-     * @var Collection
-     */
+
+    /** @var Collection */
     protected $activities;
 
-    /**
-     * @var Collection
-     */
+    /** @var Collection */
     protected $templates;
 
-    /**
-     * @var Collection
-     */
+    /** @var Collection */
     protected $resources;
 
     function __construct($file)
@@ -50,25 +45,25 @@ class ImportBreakdownTemplateJob extends ImportJob
             if (!array_filter($data)) {
                 continue;
             }
+
             $activity = $this->getActivity($data[0]);
             if (!$activity) {
                 continue;
             }
 
-
-
             $template = $this->getTemplate($data[2], $activity);
             if (!$template) {
                 continue;
             }
+
             $resource_id = $this->getResource(trim($data[3]));
             if ($resource_id) {
                 $template->resources()->create([
                     'resource_id' => $resource_id,
-                    'equation' => isset($data[5]) ? $data[5] : '',
-                    'labor_count' => isset($data[6]) ? $data[6] : '',
-                    'productivity_id' => $data[7] ? $this->getProductivity($data[7]) : 0,
-                    'remarks' => isset($data[8]) ? $data[8] : ''
+                    'equation' => $data[5] ?? '',
+                    'labor_count' => $data[6] ?? 0,
+                    'productivity_id' => $this->getProductivity($data[7] ?? 0),
+                    'remarks' => $data[8] ?? ''
                 ]);
             }
         }
@@ -117,10 +112,13 @@ class ImportBreakdownTemplateJob extends ImportJob
 
     protected function getProductivity($ref)
     {
+        if (!$ref) return null;
+
         $productivity = Productivity::where('csi_code', $ref)->first();
         if ($productivity) {
             return $productivity->id;
         }
+
         return 0;
     }
 
