@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends($project? 'layouts.app' : 'home.master-data')
 
 @section('title', '')
 
@@ -19,9 +19,9 @@
     </div>
 @endsection
 
-@section('body')
+@section($project? 'body' : 'content')
 <div class="row">
-    <form action="" method="post" class="col-sm-9 col-md-6" enctype="multipart/form-data">
+    <form action="" method="post" class="col-sm-9" enctype="multipart/form-data">
         {{ csrf_field() }}
         {{ method_field('put') }}
         

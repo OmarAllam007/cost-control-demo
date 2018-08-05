@@ -14,7 +14,7 @@ class BreakdownTemplateImporter
     private $rules = [
         'resource_id' => 'required|valid_resource', 
         'equation' => 'required',
-        'productivity_id' => 'sometimes|valid_productivity'
+        'productivity_id' => 'nullable|valid_productivity'
     ];
 
     private $messages = [
@@ -143,6 +143,8 @@ class BreakdownTemplateImporter
 
     private function getProductivity($code)
     {
+        if (!$code) return null;
+
         $code = strtolower($code);
         $productivity = $this->productivity->get($code);
 
