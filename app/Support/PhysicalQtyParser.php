@@ -203,6 +203,10 @@ class PhysicalQtyParser
             $this->physicalMapping->get($breakdown_resource_id)->get('rows')->put($row['hash'], $row);
         }
 
+        if ($resource->summed_at) {
+
+        }
+
         if (!$resource->rolled_up_at || ($resource->important && $resource->rollupResource->isActivityRollup())) {
             $breakdown_resource_id = $resource->breakdown_resource_id;
             if (!$this->physicalMapping->has($breakdown_resource_id)) {

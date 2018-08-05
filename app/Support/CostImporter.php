@@ -321,6 +321,10 @@ class CostImporter
 
     function checkProgress()
     {
+        if (!$this->actual_resources) {
+            $this->actual_resources = ActualResources::where('batch_id', $this->batch->id)->get();
+        }
+
         if ($this->actual_resources->count()) {
             $breakdown_resource_ids = $this->actual_resources->pluck('breakdown_resource_id');
         } else {
