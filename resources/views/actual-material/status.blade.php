@@ -16,7 +16,7 @@
                 <h4 class="panel-title ">{{$activity}}</h4>
 
                 <input type="text" class="form-control input-sm mr-10 activity-progress" placeholder="Progress">
-                {{Form::select('', config('app.cost_status')->prepend('Select Status', ''), null, ['class' => 'form-control input-sm select-all'])}}
+                {{Form::select('', collect(config('app.cost_status'))->prepend('Select Status', ''), null, ['class' => 'form-control input-sm select-all'])}}
             </div>
 
 
