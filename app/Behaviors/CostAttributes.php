@@ -649,13 +649,8 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     {
         $period_id = $this->getCalculationPeriod()->id;
         if (!empty($this->attributes['curr_qty'])) {
-            return $this->attributes['curr_qty'];
-        }
 
-        if (!$this->ignore_cost) {
-            if (isset($this->cost->curr_qty) && $this->cost->period_id == $period_id) {
-                return $this->cost->curr_qty;
-            }
+            return $this->attributes['curr_qty'];
         }
 
         if (isset($this->calculated['curr_qty'])) {
@@ -677,12 +672,6 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->attributes['curr_cost'];
         }
 
-        if (!$this->ignore_cost) {
-            if (isset($this->cost->curr_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-                return $this->cost->curr_cost;
-            }
-        }
-
         if (isset($this->calculated['curr_cost'])) {
             return $this->calculated['curr_cost'];
         }
@@ -696,12 +685,6 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->attributes['curr_unit_price'];
         }
 
-        if (!$this->ignore_cost) {
-            if (isset($this->cost->curr_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-                return $this->cost->curr_unit_price;
-            }
-        }
-
         if ($this->curr_qty) {
             return $this->curr_cost / $this->curr_qty;
         }
@@ -713,12 +696,6 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     {
         if (!empty($this->attributes['prev_qty'])) {
             return $this->attributes['prev_qty'];
-        }
-
-        if (!$this->ignore_cost) {
-            if (isset($this->cost->prev_qty) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-                return $this->cost->prev_qty;
-            }
         }
 
         if (isset($this->calculated['prev_qty'])) {
@@ -741,12 +718,6 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->attributes['prev_cost'];
         }
 
-        if (!$this->ignore_cost) {
-            if (isset($this->cost->prev_cost) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-                return $this->cost->prev_cost;
-            }
-        }
-
         if (isset($this->calculated['prev_cost'])) {
             return $this->calculated['prev_cost'];
         }
@@ -760,12 +731,6 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
     {
         if (!empty($this->attributes['prev_unit_price'])) {
             return $this->attributes['prev_unit_price'];
-        }
-
-        if (!$this->ignore_cost) {
-            if (isset($this->cost->prev_unit_price) && $this->cost->period_id == $this->getCalculationPeriod()->id) {
-                return $this->cost->prev_unit_price;
-            }
         }
 
         if ($this->prev_qty) {
