@@ -43,7 +43,7 @@ class ActivityReport
         $previousPeriod = $this->period->project->periods()->where('id', '<', $this->period->id)->orderBy('id', "DESC")->first();
         if ($previousPeriod) {
             $previousData = MasterShadow::previousActivityReport($previousPeriod)->get()->groupBy('wbs_id')->map(function ($group) {
-                return $group->groupBy('activity');
+                return $group->groupBy('activity_id');
             });
         } else {
             $previousData = [];
