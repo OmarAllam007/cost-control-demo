@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('home.master-data')
 
 @section('header')
     <h2>Csi category</h2>
@@ -9,15 +9,14 @@
 @stop
 
 
-@section('body')
-    @if ($categories->total())
+@section('content')
+    @if ($categories->count())
         <ul class="list-unstyled tree">
-            @foreach($categoryTree as $category)
+            @foreach($categories as $category)
                 @include('productivity._recursive')
             @endforeach
         </ul>
 
-        {{ $categories->links() }}
         <div class="modal fade" tabindex="-1" role="dialog" id="WipeAlert">
             <form class="modal-dialog" action="{{route('csi-category.wipe')}}" method="post">
                 {{csrf_field()}}
