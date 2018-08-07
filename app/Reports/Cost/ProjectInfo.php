@@ -499,7 +499,7 @@ class ProjectInfo
         $filename = storage_path('app/public/' . $str_random . '.html');
         file_put_contents($filename, $content);
 
-        $chrome = escapeshellcmd(env('CHROME_PATH'));
+        $chrome = escapeshellcmd(config('app.chrome_path'));
         $filepath = url('/storage/' . basename($filename));
         $output_file = storage_path('app/' . $str_random . '.pdf');
 
