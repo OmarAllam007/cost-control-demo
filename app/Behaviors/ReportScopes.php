@@ -50,7 +50,7 @@ trait ReportScopes
     function scopePreviousActivityReport(Builder $query, Period $period)
     {
         $query->forPeriod($period);
-        $fields = ['wbs_id', 'activity', 'resource_name'];
+        $fields = ['wbs_id', 'activity', 'resource_name', 'activity_id'];
         $query->groupBy($fields);
         $query->select($fields)->selectRaw(
             'sum(to_date_cost) prev_cost, sum(allowable_ev_cost) prev_allowable, sum(allowable_var) prev_cost_var'
