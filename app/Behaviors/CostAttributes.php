@@ -657,13 +657,21 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->calculated['curr_qty'];
         }
 
-        $related_resources = $this->related_actual_resources();
+        $related_resources = $this->related_actual_resources()->where('period_id', $period_id);
+        if ($this->unit_id == 15) {
+            $sum = $related_resources->sum('cost');
+            $qty = 0;
+            if ($this->completion_cost) {
+                $qty = $sum / $this->completion_cost;
+            }
+            return $this->calculated['curr_qty'] = $qty;
+        }
         if (!$this->is_sum) {
             $related_resources = $related_resources->where('breakdown_resource_id', $this->breakdown_resource_id);
         }
 
 //        return $this->calculated['curr_qty'] = ActualResources::where('breakdown_resource_id', $this->breakdown_resource_id)->where('period_id', $period_id)->sum('qty') ?: 0;
-        return $this->calculated['curr_qty'] = $related_resources->where('period_id', $period_id)->sum('qty') ?: 0;
+        return $this->calculated['curr_qty'] = $related_resources->sum('qty') ?: 0;
     }
 
     public function getCurrCostAttribute()
@@ -702,14 +710,22 @@ AND period_id = (SELECT max(period_id) FROM cost_shadows p WHERE p.breakdown_res
             return $this->calculated['prev_qty'];
         }
 
-        $related_resources = $this->related_actual_resources();   
-        if (!$this->is_sum) {
+        $related_resources = $this->related_actual_resources()->filter(function($resource) {
+            return $resource->period_id < $this->getCalculationPeriod()->id;
+        });
+
+        if ($this->unit_id == 15) {
+            $previous_cost = $related_resources->sum('cost');
+            $qty = 0;
+            if ($this->completion_cost) {
+                $qty = $previous_cost / $this->completion_cost;
+            }
+            return $this->calculated['prev_qty'] = $qty;
+        } elseif (!$this->is_sum) {
             $related_resources = $related_resources->where('breakdown_resource_id', $this->breakdown_resource_id);
         }
 
-        return $this->calculated['prev_qty'] = $related_resources->filter(function($resource) {
-                    return $resource->period_id < $this->getCalculationPeriod()->id;
-                })->sum('qty');
+        return $this->calculated['prev_qty'] = $related_resources->sum('qty');
     }
 
     public function getPrevCostAttribute()
