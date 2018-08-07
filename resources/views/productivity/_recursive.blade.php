@@ -8,21 +8,21 @@
         </span>
     </div>
     <article id="children-{{$category['id']}}" class="tree--child collapse">
-        @if (count($category['children']))
+        @if (count($category->subtree))
             <ul class="list-unstyled">
-                @foreach($category['children'] as $child)
+                @foreach($category->subtree as $child)
                     @include('productivity._recursive', ['category' => $child])
                 @endforeach
             </ul>
         @endif
 
-        @if(count($category['productivities']))
+        {{--@if(count($category['productivities']))
             @include('productivity._list', ['productivities' => $category['productivities']])
         @else
             <div class="alert alert-info">
                 <i class="fa fa-exclamation-circle"></i> <strong>No productivity found</strong>
             </div>
-        @endif
+        @endif--}}
     </article>
 </li>
 

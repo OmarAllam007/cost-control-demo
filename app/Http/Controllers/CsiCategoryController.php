@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CsiCategory;
 use App\Http\Requests\WipeRequest;
+use App\Support\ProductivityCategoriesTree;
 use Illuminate\Http\Request;
 
 class CsiCategoryController extends Controller
@@ -14,7 +15,7 @@ class CsiCategoryController extends Controller
     public function index()
     {
 
-        $categories = CsiCategory::tree()->orderBy('name')->paginate();
+        $categories = (new ProductivityCategoriesTree)->get();
 
         return view('csi-category.index', compact('categories'));
     }
@@ -67,7 +68,7 @@ class CsiCategoryController extends Controller
 
     function wipe(WipeRequest $request)
     {
-        \DB::table('csi_categories')->delete();
+        \DB::table('csi_categories')->truncate();
         flash('All categories have been deleted', 'info');
         return \Redirect::route('csi-category.index');
     }
