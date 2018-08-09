@@ -43,7 +43,7 @@ class BreakdownShadowObserver
             }
         }
 
-        if ($resource->rollup_resource_id) {
+        if ($resource->rollup_resource_id || $resource->sum_resource_id) {
             $this->updateRollup($resource);
         }
     }
@@ -54,12 +54,19 @@ class BreakdownShadowObserver
         $rollup_resource = BreakDownResourceShadow::find($resource->rollup_resource_id);
         $budget_cost = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->sum('budget_cost');
         $unit_price = 0;
-        if ($rollup_resource->qty) {
-            $unit_price = $budget_cost / $rollup_resource->qty;
+
+        if ($rollup_resource->budget_unit) {
+            $unit_price = $budget_cost / $rollup_resource->budget_unit;
         }
+
         $important = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->where('important', 1)->exists();
 
-        BreakDownResourceShadow::where('id', $resource->rollup_resource_id)->update(compact('budget_cost', 'unit_price', 'important'));
+        if ($resource->rollup_resource_id) {
+            BreakDownResourceShadow::where('id', $resource->rollup_resource_id)->update(compact('budget_cost', 'unit_price', 'important'));
+        } elseif ($resource->sum_resource_id) {
+            $budget_unit = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->sum('budget_unit')
+            BreakDownResourceShadow::where('id', $resource->sum_resource_id)->update(compact('budget_cost', 'unit_price', 'important', 'budget_unit'));
+        }
     }
 
 
