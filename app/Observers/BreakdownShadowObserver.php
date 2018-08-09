@@ -64,7 +64,7 @@ class BreakdownShadowObserver
         if ($resource->rollup_resource_id) {
             BreakDownResourceShadow::where('id', $resource->rollup_resource_id)->update(compact('budget_cost', 'unit_price', 'important'));
         } elseif ($resource->sum_resource_id) {
-            $budget_unit = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->sum('budget_unit')
+            $budget_unit = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->sum('budget_unit');
             BreakDownResourceShadow::where('id', $resource->sum_resource_id)->update(compact('budget_cost', 'unit_price', 'important', 'budget_unit'));
         }
     }
