@@ -17,6 +17,7 @@
 @endsection
 
 @section('body')
+    <section class="header-table">
     <table class="table table-condensed table-bordered" id="report-head">
         <thead>
         <tr class="bg-primary">
@@ -38,6 +39,7 @@
         </tr>
         </thead>
     </table>
+    </section>
 
     <section class="vertical-scroll">
         <table class="table table-condensed table-bordered" id="report-body">
@@ -48,6 +50,7 @@
             </tbody>
         </table>
     </section>
+
 @endsection
 
 @section('javascript')
@@ -103,6 +106,10 @@
 
         .table {
             margin-bottom: 0;
+        }
+
+        .header-table {
+            margin-right: 17px;
         }
 
         #report-body tbody tr:hover > td {
