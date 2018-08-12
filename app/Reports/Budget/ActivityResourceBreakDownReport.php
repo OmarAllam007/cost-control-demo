@@ -92,6 +92,7 @@ class ActivityResourceBreakDownReport
     {
         return collect(\DB::table('break_down_resource_shadows')->where('project_id', $this->project->id)
             ->where('wbs_id', $wbs_id)
+            ->budgetOnly()
             ->get(['id', 'activity', 'cost_account', 'boq_id', 'budget_cost', 'unit_price', 'budget_unit', 'resource_name', 'resource_type', 'measure_unit']))
             ->groupBy('activity')->map(function ($group) {
                 return $group->groupBy('cost_account')->map(function (Collection $resources) {
