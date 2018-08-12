@@ -4,7 +4,7 @@
     @include('reports.all._budget_dry_discipline')
 @endif
 
-@section('title', 'Qty &amp; Cost By Discipline &mdash; ' . $project->name)
+@section('title', 'Qty & Cost By Discipline — ' . $project->name)
 
 @section('header')
     <div class="display-flex">

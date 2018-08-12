@@ -65,7 +65,7 @@ class CharterReport
 
         $this->project->direct_cost = $this->total - $this->project->general_requirements - $this->project->management_reserve;
 
-        $this->project->profit = $this->project->project_contract_signed_value + $this->project->change_order_amount - $this->total;
+        $this->project->profit = $this->project->project_contract_signed_value + floatval($this->project->change_order_amount) - $this->total;
 
         return [
             'project' => $this->project, 'resource_types' => $this->resource_types,
