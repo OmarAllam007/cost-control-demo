@@ -50,6 +50,10 @@ class BreakdownShadowObserver
 
     private function updateRollup(BreakdownResourceShadow $resource)
     {
+        if (!$resource->wasChanged(['budget_cost'])) {
+            return true;
+        }
+
         //todo: needs further discussion on how to update Qty
         $rollup_resource = BreakDownResourceShadow::find($resource->rollup_resource_id);
         $budget_cost = BreakDownResourceShadow::where('rollup_resource_id', $resource->rollup_resource_id)->sum('budget_cost');
