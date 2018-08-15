@@ -1,10 +1,10 @@
 @extends('layouts.' . (request()->has('print') ? 'print' : 'app'))
 
-@section('title', 'Std Activity')
+@section('title', 'Std Activity Cost')
 
 @section('header')
     <div class="display-flex">
-        <h4 class="flex">Std Activity &mdash; {{$project->name}}</h4>
+        <h4 class="flex">Std Activity Cost &mdash; {{$project->name}}</h4>
 
         @if (!request()->has('print'))
             <div>

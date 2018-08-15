@@ -46,7 +46,7 @@ class BudgetCostByResourceTypeReport
     function excel()
     {
 
-        \Excel::create(slug($this->project->name) . '-budget_cost_by_discipline', function (LaravelExcelWriter $excel){
+        \Excel::create(slug($this->project->name) . '-budget_cost_by_resource_type', function (LaravelExcelWriter $excel){
             $excel->sheet('Budget Cost by Resource Type', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
             });

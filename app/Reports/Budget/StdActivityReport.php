@@ -102,7 +102,7 @@ class StdActivityReport
 
     function excel()
     {
-        \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
+        \Excel::create(slug($this->project->name) . '_std_activity_cost.xlsx', function(LaravelExcelWriter $writer) {
 
             $writer->sheet('Std Activity', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);

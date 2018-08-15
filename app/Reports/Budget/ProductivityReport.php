@@ -82,7 +82,7 @@ class ProductivityReport
 
     function excel()
     {
-        \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function (LaravelExcelWriter $writer) {
+        \Excel::create(slug($this->project->name) . '_productivity.xlsx', function (LaravelExcelWriter $writer) {
 
             $writer->sheet('Productivity', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
