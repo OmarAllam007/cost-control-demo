@@ -21,7 +21,8 @@ class WbsObserver
                 $maxCode = $level->parent->children()->max('sap_code');
                 $partial = 1;
                 if ($maxCode) {
-                    $partial = collect(explode('.', $maxCode))->last() + 1;
+                    $last = intval(collect(explode('.', $maxCode))->last());
+                    $partial = $last + 1;
                 }
 
                 $level->sap_code = $level->parent->sap_code . '.' . sprintf('%02d', $partial);

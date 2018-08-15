@@ -118,6 +118,7 @@ class CostController extends Controller
 
         return CostResource::where('project_id', $project->id)
             ->where('period_id', $period->id)
+            ->where('resource_id', '!=', 0)
             ->get()->map(function (CostResource $resource) {
                 return $resource->jsonFormat();
             });
