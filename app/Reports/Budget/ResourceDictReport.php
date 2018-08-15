@@ -102,7 +102,7 @@ class ResourceDictReport
 
     function excel()
     {
-        \Excel::create(slug($this->project->name) . '_std_activity.xlsx', function(LaravelExcelWriter $writer) {
+        \Excel::create(slug($this->project->name) . '_resource_dictionary.xlsx', function(LaravelExcelWriter $writer) {
             $writer->sheet('Resource Dictionary', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
             });
