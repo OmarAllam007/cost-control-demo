@@ -3,16 +3,16 @@
 <div class="col-sm-2">
     <div class="form-group-sm">
         <label for="ResourceType">Productivity Category</label>
-        <p>
-            <a href="#CSICategoryModal" data-toggle="modal" class="tree-open">
+        <div class="btn-group btn-group-block">
+            <a href="#CSICategoryModal" data-toggle="modal" class="tree-open btn btn-default">
                 @if ($type = Session::get('filters.productivity.csi_category_id'))
                     {{App\CsiCategory::find($type)->name}}
                 @else
                     Select Category
                 @endif
             </a>
-            <a class="remove-tree-input" data-target="#CSICategoryModal" data-label="Select Category"><span class="fa fa-times"></span></a>
-        </p>
+            <a class="remove-tree-input btn btn-warning" data-target="#CSICategoryModal" data-label="Select Category"><span class="fa fa-times"></span></a>
+        </div>
     </div>
 </div>
 <div class="col-sm-1">
