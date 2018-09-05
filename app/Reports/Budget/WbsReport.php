@@ -73,8 +73,9 @@ class WbsReport
 
     function excel()
     {
+        $suffix = $this->includeCost? 'budget_cost_by_building' : 'wbs-dictionary';
 
-        \Excel::create(slug($this->project->name) . '_wbs-tree', function(LaravelExcelWriter $writer) {
+        \Excel::create(slug($this->project->name) . '_' . $suffix, function(LaravelExcelWriter $writer) {
             $writer->sheet('WBS', function (LaravelExcelWorksheet $sheet) {
                 $this->sheet($sheet);
             });
