@@ -18,6 +18,38 @@ use function compact;
 
 class BreakdownShadowObserver
 {
+    function creating($resource)
+    {
+        // Check if there is activity rollup for this resource
+        $rollupResource = BreakDownResourceShadow::where('project_id', $resource->project_id)
+            ->where('code', $resource->code)->where('is_rollup', 1)->whereRaw('code = resource_code')->first();
+
+        // if no activity rollup check for cost account rollup
+        if (!$rollupResource) {
+            $rollupResource = BreakDownResourceShadow::where('project_id', $resource->project_id)
+                ->where('cost_account', $resource->cost_account)->where('is_rollup', 1)->whereRaw('code = cost_account')->first();
+        }
+
+        // Other rollup types can/should be done manually as we cannot decide if it should be included here.
+
+        // Update the required fields accordingly if we found the resource
+        if ($rollupResource) {
+            $resource->rolled_up_at = now()->format('Y-m-d H:i:s');
+            $resource->rollup_resource_id = $rollupResource->id;
+            $resource->show_in_cost = 0;
+        }
+    }
+
+    function created($resource)
+    {
+        // We update breakdown resource here as in creating it shall create an infinite loop
+        if ($resource->rollup_resource_id) {
+            $rollupResource = BreakDownResourceShadow::find($resource->rollup_resource_id);
+            $resource->breakdown_resource->update(['rollup_resource_id' => $rollupResource->breakdown_resource_id, 'rolled_up_at' => $resource->rolled_up_at]);
+            $this->updateRollup($resource);
+        }
+    }
+
     function updating(BreakDownResourceShadow $resource)
     {
         $resource->update_cost = $resource->project->open_period() &&
