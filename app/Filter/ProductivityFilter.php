@@ -4,7 +4,7 @@ namespace App\Filter;
 use App\CsiCategory;
 
 class ProductivityFilter extends AbstractFilter {
-    protected $fields = ['csi_category_id','code'=>'like','description' => 'like','source'];
+    protected $fields = ['csi_category_id', 'csi_code'=>'like', 'description' => 'like', 'source'];
 
     function csi_category_id($id)
     {
