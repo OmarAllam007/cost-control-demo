@@ -66,7 +66,8 @@ class Productivity extends Model
     function scopeFilter(Builder $query, $term = '')
     {
         $query->take(20)
-            ->orderBy('code');
+            ->orderBy('code')
+            ->whereNull('project_id');
 
         if (trim($term)) {
             $query->where('csi_code', 'like', "%{$term}%");
