@@ -46,6 +46,7 @@ class BoqPriceListReport
         $this->wbs_levels = $this->project->wbs_levels->groupBy('parent_id');
 
         $raw_cost_accounts = BreakDownResourceShadow::where('project_id', $this->project->id)
+            ->budgetOnly()
             ->selectRaw('wbs_id, boq_id, survey_id, cost_account, resource_type, budget_qty, sum(boq_equivilant_rate) as budget_cost')
             ->groupBy(['wbs_id', 'boq_id', 'survey_id', 'cost_account', 'resource_type', 'budget_qty'])->get();
 
