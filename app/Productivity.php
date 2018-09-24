@@ -69,7 +69,7 @@ class Productivity extends Model
             ->orderBy('code');
 
         if (trim($term)) {
-            $query->where('code', 'like', "%{$term}%");
+            $query->where('csi_code', 'like', "%{$term}%");
         }
     }
 
