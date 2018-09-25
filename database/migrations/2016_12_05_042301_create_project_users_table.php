@@ -24,6 +24,7 @@ class CreateProjectUsersTable extends Migration
             $table->boolean('productivity');
             $table->boolean('reports');
             $table->boolean('cost_control');
+            $table->boolean('cost_reports');
             $table->boolean('actual_resources');
             $table->boolean('boq');
             $table->boolean('qty_survey');
