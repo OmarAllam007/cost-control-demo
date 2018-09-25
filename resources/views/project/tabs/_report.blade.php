@@ -1,3 +1,4 @@
+@can('reports', $project)
 <section id="ReportsArea" class="project-tab row">
     @if (empty($skipButtons))
     <div class="col-sm-12">
@@ -50,3 +51,4 @@
         <a href="{{route('project.comparison', $project)}}" target="_blank" class="btn btn-success btn-block">COMPARISON REPORT</a>
     </div>
 </section>
+@endcan

@@ -37,10 +37,14 @@ class HomeController extends Controller
         });
 
         $project_ids = Project::when(!auth()->user()->is_admin, function ($q) {
-            $projects = ProjectUser::where('user_id', auth()->id())->where('reports', 1)->pluck('project_id');
+            $projects = ProjectUser::where('user_id', auth()->id())->where(function($q) {
+                $q->where('reports', 1)->orWhere('cost_reports', 1);
+            })->pluck('project_id');
+
             $q->whereIn('id', $projects)
                 ->orWhere('owner_id', auth()->id())
                 ->where('cost_owner_id', auth()->id());
+
             return $q;
         })->pluck('id');
 

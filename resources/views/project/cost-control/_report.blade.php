@@ -1,3 +1,4 @@
+@can('cost_reports', $project)
 <section id="CostControlReports" class="project-tab">
 
     @if (empty($skipButtons))
@@ -107,4 +108,4 @@
         </div>
     </div>
 </section>
-
+@endcan

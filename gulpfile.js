@@ -2,8 +2,8 @@ const elixir = require('laravel-elixir');
 require('laravel-elixir-vue');
 
 elixir(function (mix) {
-    mix.sass('app.scss');
-    mix.sass('print.scss');
+    // mix.sass('app.scss');
+    // mix.sass('print.scss');
     // mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.webpack('cost-info-charts.js');
@@ -24,7 +24,7 @@ elixir(function (mix) {
     //     .copy('node_modules/c3/c3.min.css', 'public/css/c3.min.css')
     //
     //
-    //     .webpack('project-permissions.js');
+    mix.webpack('project-permissions.js');
     // mix.webpack('breakdown-resource/index.js', 'public/js/breakdown-resource.js');
     // mix.webpack('project/components/Boq.js', 'public/js/public/js/breakdown.js');
     // mix.scripts('tree-select.js');

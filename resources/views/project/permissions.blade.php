@@ -50,7 +50,7 @@
                             <div class="form-group">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" :checked="user.reports" v-model="user.reports" value="1"> Display reports
+                                        <input type="checkbox" :checked="user.reports" v-model="user.reports" value="1"> Budget reports
                                     </label>
                                 </div>
                             </div>
@@ -118,6 +118,14 @@
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" :checked="user.cost_control" v-model="user.cost_control" value="1"> Display cost control
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" :checked="user.cost_reports" v-model="user.cost_reports"> Cost Reports
                                     </label>
                                 </div>
                             </div>
