@@ -23,12 +23,12 @@ const UserForm = {
             }
         },
 
-        'user.reports': function (reports) {
+        /*'user.reports': function (reports) {
             if (reports) {
                 this.user.budget = true;
                 this.user.cost_control = true;
             }
-        },
+        },*/
 
         'user.wbs': function (wbs) {
             if (wbs) {
