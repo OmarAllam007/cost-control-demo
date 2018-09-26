@@ -165,7 +165,7 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_users')
             ->withPivot([
                 'budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey',
-                'activity_mapping', 'resource_mapping', 'periods', 'remaining_unit_price', 'remaining_unit_qty', 'manual_edit', 'delete_resources'
+                'activity_mapping', 'resource_mapping', 'periods', 'remaining_unit_price', 'remaining_unit_qty', 'manual_edit', 'delete_resources', 'cost_reports'
             ])
             ->withTimestamps();
     }
@@ -174,7 +174,7 @@ class Project extends Model
     {
         $pivotFields = [
             'budget', 'cost_control', 'reports', 'wbs', 'breakdown', 'breakdown_templates', 'resources', 'productivity', 'actual_resources', 'boq', 'qty_survey',
-            'activity_mapping', 'resource_mapping', 'periods', 'remaining_unit_price', 'remaining_unit_qty', 'manual_edit', 'delete_resources',
+            'activity_mapping', 'resource_mapping', 'periods', 'remaining_unit_price', 'remaining_unit_qty', 'manual_edit', 'delete_resources', 'cost_reports'
         ];
 
         return $this->users->map(function (User $user) use ($pivotFields) {
