@@ -218,6 +218,7 @@
                 <input type="hidden" name="users[@{{$index}}][budget]" :value="user.budget? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][cost_control]" :value="user.cost_control? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][reports]" :value="user.reports? 1: 0">
+                <input type="hidden" name="users[@{{$index}}][cost_reports]" :value="user.cost_reports ? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][wbs]" :value="user.wbs? 1: 0">
                 <input type="hidden" name="users[@{{$index}}][breakdown]" :value="user.breakdown? 1 : 0">
                 <input type="hidden" name="users[@{{$index}}][breakdown_templates]" :value="user.breakdown_templates? 1: 0">
