@@ -66,6 +66,11 @@ class ProjectPolicy
         return $this->canCost($user, $project, __FUNCTION__);
     }
 
+    function cost_reports(User $user, Project $project)
+    {
+        return $this->canCost($user, $project, __FUNCTION__);
+    }
+
     function cost_owner(User $user, Project $project)
     {
         return $user->id == $project->cost_owner_id;
