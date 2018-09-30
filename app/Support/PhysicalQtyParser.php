@@ -69,7 +69,7 @@ class PhysicalQtyParser
             $row = $group->get('rows')->first();
             $resource = $group->get('resource');
 
-            if ($resource->is_rollup) {
+            if ($resource->is_rollup || ($resource->important && $resource->rollupResource->isActivityRollup())) {
                 return true;
             }
 
