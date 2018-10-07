@@ -52,6 +52,10 @@ table.table > thead > tr > th {
 }
 
 ul.tree {
+
+  max-height: 400px;
+  overflow-y: auto;
+
   .tree--child {
     margin-left: 15px;
 

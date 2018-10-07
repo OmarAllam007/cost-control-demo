@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(request()->exists('iframe')? 'layouts.iframe' : 'layouts.app')
 
 @section('header')
     <div class="display-flex">
@@ -7,8 +7,8 @@
 @endsection
 
 @section('body')
-    <div class="row">
-        <form action="{{ route('project.change-request.store', $project)  }}" method="post" class="col-sm-12 col-md-9">
+    <div class="row" id="ChangeRequestForm">
+        <form action="{{ route('project.change-request.store', $project)  }}{{request()->exists('iframe')? '?iframe' : ''}}" method="post" class="col-sm-12 col-md-9">
             @csrf
 
             <section class="row">
@@ -59,7 +59,9 @@
                         {!! $errors->first('resource_id', '<div class="help-block">:message</div>') !!}
                     </article>
                 </div>
+            </section>
 
+            <section class="row">
                 <div class="col-sm-4">
                     <article class="form-group {{$errors->first('qty', 'has-error')}}">
                         <label for="qty">Qty</label>
@@ -92,5 +94,9 @@
             @include('std-activity-resource._resources_modal')
         </form>
     </div>
+@endsection
 
+@section('javascript')
+    <script src="{{asset('js/change-request.js')}}"></script>
+    <script src="{{asset('js/tree-select.js')}}"></script>
 @endsection

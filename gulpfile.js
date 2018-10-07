@@ -4,6 +4,7 @@ require('laravel-elixir-vue');
 elixir(function (mix) {
     mix.sass('app.scss');
     mix.sass('print.scss');
+    mix.webpack('change-request.js');
     // mix.webpack('project/cost-control.js', 'public/js/cost-control.js');
     // mix.webpack('project/index.js', 'public/js/project.js');
     // mix.webpack('cost-info-charts.js');
