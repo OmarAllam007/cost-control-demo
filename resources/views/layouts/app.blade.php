@@ -33,6 +33,7 @@
                 </a>
             </div>
 
+            @auth
             <div class="user-area">
                 <strong>
 
@@ -41,6 +42,7 @@
                     <a href="{{url('/logout')}}">Logout</a>
                 </strong>
             </div>
+            @endauth
         </div>
     </div>
 
