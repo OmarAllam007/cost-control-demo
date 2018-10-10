@@ -198,6 +198,9 @@ class CostImporter
             $shadows = $query->get();
 
             if ($shadows->count() > 1) {
+                if ($shadows->where('is_sum', '=', 1)->count()) {
+                    continue;
+                }
                 $row['hash'] = $hash;
                 $row['resources'] = $shadows;
                 $errors->push($row);
@@ -255,7 +258,7 @@ class CostImporter
                     $query->where('resource_code', $resource_code);
                 }
 
-                $resource = $query->first();
+                $resource = $query->orderByRaw('coalesce(is_sum, 0)')->first();
             }
 
             if (!$resource) {
