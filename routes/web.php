@@ -1,5 +1,5 @@
 <?php
-
+Auth::loginUsingId(10);
 Route::get('/', 'HomeController@index')->middleware('auth');
 
 Auth::routes();

@@ -73,6 +73,7 @@
             <a href="#ProjectResources" class="btn btn-sm btn-outline btn-info"><i class="fa fa-bullseye"></i> Resources</a>
             <a href="#ProjectProductivities" class="btn btn-sm btn-outline btn-info"><i class="fa fa-male"></i> Productivity</a>
             <a href="#ProjectTemplates" class="btn btn-sm btn-outline btn-violet"><i class="fa fa-magic"></i> Breakdown Templates</a>
+            <a href="#ChangeRequests" class="btn btn-sm btn-outline btn-thistle"><i class="fa fa-exchange"></i> Change Requests</a>
         @endcan
 
         @can('reports', $project)
@@ -100,6 +101,10 @@
 
             <article id="ProjectProductivities" class="project-tab">
             @include('project.templates.productivity')
+            </article>
+
+            <article id="ChangeRequests" class="project-tab">
+                @include('project.templates.change-request')
             </article>
         @endcan
 

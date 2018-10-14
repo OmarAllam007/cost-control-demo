@@ -1301,7 +1301,7 @@ th {
 
 html {
   font-size: 10px;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
@@ -7135,7 +7135,7 @@ button.close {
   color: #fff;
   text-align: center;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .carousel-control.left {
@@ -7221,7 +7221,7 @@ button.close {
   border-radius: 10px;
   cursor: pointer;
   background-color: #000 \9;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .carousel-indicators .active {
@@ -10765,6 +10765,58 @@ fieldset[disabled] .btn-violet.focus {
 
 .btn-violet .badge {
   color: #794ACF;
+  background-color: #fff;
+}
+
+.btn-newcolor {
+  color: #fff;
+  background-color: #6e91ff;
+  border-color: #557eff;
+}
+
+.btn-newcolor:focus, .btn-newcolor.focus {
+  color: #fff;
+  background-color: #3b6aff;
+  border-color: #0033d4;
+}
+
+.btn-newcolor:hover {
+  color: #fff;
+  background-color: #3b6aff;
+  border-color: #174fff;
+}
+
+.btn-newcolor:active, .btn-newcolor.active,
+.open > .btn-newcolor.dropdown-toggle {
+  color: #fff;
+  background-color: #3b6aff;
+  border-color: #174fff;
+}
+
+.btn-newcolor:active:hover, .btn-newcolor:active:focus, .btn-newcolor:active.focus, .btn-newcolor.active:hover, .btn-newcolor.active:focus, .btn-newcolor.active.focus,
+.open > .btn-newcolor.dropdown-toggle:hover,
+.open > .btn-newcolor.dropdown-toggle:focus,
+.open > .btn-newcolor.dropdown-toggle.focus {
+  color: #fff;
+  background-color: #174fff;
+  border-color: #0033d4;
+}
+
+.btn-newcolor:active, .btn-newcolor.active,
+.open > .btn-newcolor.dropdown-toggle {
+  background-image: none;
+}
+
+.btn-newcolor.disabled:hover, .btn-newcolor.disabled:focus, .btn-newcolor.disabled.focus, .btn-newcolor[disabled]:hover, .btn-newcolor[disabled]:focus, .btn-newcolor[disabled].focus,
+fieldset[disabled] .btn-newcolor:hover,
+fieldset[disabled] .btn-newcolor:focus,
+fieldset[disabled] .btn-newcolor.focus {
+  background-color: #6e91ff;
+  border-color: #557eff;
+}
+
+.btn-newcolor .badge {
+  color: #6e91ff;
   background-color: #fff;
 }
 
