@@ -1,9 +1,12 @@
 @extends(request()->exists('iframe')? 'layouts.iframe' : 'layouts.app')
+
+
 @section('header')
     <div class="display-flex">
         <h2 class="flex">{{$project->name}}</h2>
     </div>
 @endsection
+
 @section('body')
     <div class="row" id="ChangeRequestForm">
         <form action="{{ route('project.change-request.store', $project)  }}{{request()->exists('iframe')? '?iframe' : ''}}" method="post" class="col-sm-12 col-md-9">
