@@ -52,6 +52,10 @@ table.table > thead > tr > th {
 }
 
 ul.tree {
+
+  max-height: 400px;
+  overflow-y: auto;
+
   .tree--child {
     margin-left: 15px;
 
@@ -136,6 +140,9 @@ th.bg-grey-light, th.bg-grey-lighter {
   @include button-variant(#fff, $btn-violet-bg, darken($btn-violet-bg, 5%));
 }
 
+.btn-thistle{
+  @include button-variant(#fff, $btn-thistle, darken($btn-thistle, 5%));
+}
 .btn-outline {
   background: none;
 }
@@ -189,6 +196,14 @@ th.bg-grey-light, th.bg-grey-lighter {
 
 .btn-violet.btn-outline {
   color: $btn-violet-bg;
+
+  &:focus, &:hover, &.active {
+    color: #fff;
+  }
+}
+
+.btn-thistle.btn-outline {
+  color: $btn-thistle;
 
   &:focus, &:hover, &.active {
     color: #fff;

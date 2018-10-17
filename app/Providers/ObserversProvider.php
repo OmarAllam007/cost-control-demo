@@ -7,12 +7,14 @@ use App\BreakdownResource;
 use App\BreakDownResourceShadow;
 use App\BreakdownTemplate;
 use App\BreakdownVariable;
+use App\BudgetChangeRequest;
 use App\CostShadow;
 use App\Observers\BreakdownObserver;
 use App\Observers\BreakDownResourceObserver;
 use App\Observers\BreakdownShadowObserver;
 use App\Observers\BreakdownTemplateObserver;
 use App\Observers\BreakdownVariableObserver;
+use App\Observers\BudgetChangeRequestObserver;
 use App\Observers\CostShadowObserver;
 use App\Observers\GlobalReportObserver;
 use App\Observers\ProductivityObserver;
@@ -47,6 +49,8 @@ class ObserversProvider extends ServiceProvider
         BreakdownVariable::observe(BreakdownVariableObserver::class);
         WbsLevel::observe(WbsObserver::class);
         StdActivity::observe(StdActivityObserver::class);
+
+        BudgetChangeRequest::observe(BudgetChangeRequestObserver::class);
     }
 
     public function register()

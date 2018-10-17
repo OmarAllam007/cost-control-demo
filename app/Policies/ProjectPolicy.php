@@ -58,6 +58,7 @@ class ProjectPolicy
     {
         return $this->canBudget($user, $project, __FUNCTION__) || $this->canCost($user, $project, __FUNCTION__);
     }
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Cost Control Methods">

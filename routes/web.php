@@ -1,5 +1,5 @@
 <?php
-
+//Auth::loginUsingId(7);
 Route::get('/', 'HomeController@index')->middleware('auth');
 
 Auth::routes();
@@ -17,7 +17,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('coming-soon', 'HomeController@comingSoon')->name('home.coming-soon');
 
     Route::get('project/{project}/reports', 'ProjectReportsController@show')->name('project.reports');
-    
+
     Route::group(['prefix' => 'api'], function () {
         Route::get('breakdown-template', 'Api\BreakdownTemplateController@index');
         Route::get('breakdown-template/template/{project}', 'Api\BreakdownTemplateController@templates');
@@ -212,8 +212,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('project/{project}/dashboard', 'CostReportsController@dashboard');
     Route::post('project/{project}/charts', 'CostReportsController@chart');
 
-    Route::post('/concern/{project}','CostConcernsController@store')->name('concerns.store');
-    Route::get('project/{project}/concerns-report','CostReportsController@concernsReport')->name('project.concerns-report');
+    Route::post('/concern/{project}', 'CostConcernsController@store')->name('concerns.store');
+    Route::get('project/{project}/concerns-report', 'CostReportsController@concernsReport')->name('project.concerns-report');
 
     Route::get('/project/{project}/issue-files', 'CostIssueFilesController@index');
     Route::get('/project/{project}/issue-files/create', 'CostIssueFilesController@create');
@@ -517,5 +517,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('category', 'CategoryController');
 
     Route::get('/project/{project}/budget_for_sap', 'Sap\\ExportBudgetController@show')->name('project.export-sap-budget');
+
+    Route::get('/project/{project}/change-request', 'BudgetChangeRequestController@index')->name('project.change-request');
+    Route::get('/project/{project}/change-request/create', 'BudgetChangeRequestController@create')->name('project.change-request.create');
+    Route::get('/project/{project}/change-request/{changeRequest}', 'BudgetChangeRequestController@show')->name('project.change-request.show');
+    Route::patch('/project/{project}/change-request/{changeRequest}', 'BudgetChangeRequestController@update')->name('project.change-request.update');
+    Route::post('/project/{project}/change-request', 'BudgetChangeRequestController@store')->name('project.change-request.store');
+    Route::delete('change-request/delete/{request}', 'BudgetChangeRequestController@destory')->name('change-request.destory');
+    Route::post('/project/{project}/change-request/{changeRequest}/reassign', 'BudgetChangeRequestController@reassign')->name('project.change-request.reassgin');
+    Route::post('/project/{project}/change-request/{changeRequest}/close', 'BudgetChangeRequestController@close')->name('project.change-request.close');
+
 });
 

@@ -283,4 +283,9 @@ class Project extends Model
 
         return $this->has_rollup;
     }
+
+    function requests()
+    {
+        return $this->hasMany(BudgetChangeRequest::class, 'project_id');
+    }
 }

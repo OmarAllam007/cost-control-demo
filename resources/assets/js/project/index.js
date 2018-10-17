@@ -8,6 +8,7 @@ import Resources from './components/Resources';
 import BreakdownTemplates from '../breakdown-templates/BreakdownTemplate.vue';
 import Productivity from './components/Productivity';
 import Revisions from './components/Revision'
+import ChangeRequest from './components/ChangeRequest'
 
 Vue.filter('slug', function(value){
     return value.replace(/\W/g, '-').replace(/-{2,}/g, '-').toLowerCase();
@@ -70,6 +71,7 @@ window.app = new Vue({
         Resources,
         BreakdownTemplates,
         Productivity,
-        Revisions
+        Revisions,
+        ChangeRequest
     }
 });

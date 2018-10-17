@@ -10635,6 +10635,11 @@ table.table > thead > tr > th {
   vertical-align: middle;
 }
 
+ul.tree {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 ul.tree .tree--child {
   margin-left: 15px;
 }
@@ -10760,6 +10765,58 @@ fieldset[disabled] .btn-violet.focus {
 
 .btn-violet .badge {
   color: #794ACF;
+  background-color: #fff;
+}
+
+.btn-newcolor {
+  color: #fff;
+  background-color: #6e91ff;
+  border-color: #557eff;
+}
+
+.btn-newcolor:focus, .btn-newcolor.focus {
+  color: #fff;
+  background-color: #3b6aff;
+  border-color: #0033d4;
+}
+
+.btn-newcolor:hover {
+  color: #fff;
+  background-color: #3b6aff;
+  border-color: #174fff;
+}
+
+.btn-newcolor:active, .btn-newcolor.active,
+.open > .btn-newcolor.dropdown-toggle {
+  color: #fff;
+  background-color: #3b6aff;
+  border-color: #174fff;
+}
+
+.btn-newcolor:active:hover, .btn-newcolor:active:focus, .btn-newcolor:active.focus, .btn-newcolor.active:hover, .btn-newcolor.active:focus, .btn-newcolor.active.focus,
+.open > .btn-newcolor.dropdown-toggle:hover,
+.open > .btn-newcolor.dropdown-toggle:focus,
+.open > .btn-newcolor.dropdown-toggle.focus {
+  color: #fff;
+  background-color: #174fff;
+  border-color: #0033d4;
+}
+
+.btn-newcolor:active, .btn-newcolor.active,
+.open > .btn-newcolor.dropdown-toggle {
+  background-image: none;
+}
+
+.btn-newcolor.disabled:hover, .btn-newcolor.disabled:focus, .btn-newcolor.disabled.focus, .btn-newcolor[disabled]:hover, .btn-newcolor[disabled]:focus, .btn-newcolor[disabled].focus,
+fieldset[disabled] .btn-newcolor:hover,
+fieldset[disabled] .btn-newcolor:focus,
+fieldset[disabled] .btn-newcolor.focus {
+  background-color: #6e91ff;
+  border-color: #557eff;
+}
+
+.btn-newcolor .badge {
+  color: #6e91ff;
   background-color: #fff;
 }
 
