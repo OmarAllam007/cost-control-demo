@@ -2,7 +2,7 @@ const elixir = require('laravel-elixir');
 require('laravel-elixir-vue');
 
 elixir(function (mix) {
-    mix.sass('app.scss');
+    // mix.sass('app.scss');
 
     // mix.sass('print.scss');
     // mix.webpack('change-request.js');

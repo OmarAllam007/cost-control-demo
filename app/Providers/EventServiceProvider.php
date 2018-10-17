@@ -13,15 +13,22 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
-        ],
+//        'App\Events\ChangeRequestCreated' => [
+//            'App\Listeners\SendMailNotification',
+//        ],
+//        'App\Events\ChangeRequestReassigned' => [
+//            'App\Listeners\SendMailNotification',
+//        ],
+    ];
+
+    protected $subscribe = [
+        'App\Listeners\ChangeRequestSubscriber'
     ];
 
     /**
      * Register any other events for your application.
      *
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+     * @param  \Illuminate\Contracts\Events\Dispatcher $events
      * @return void
      */
     public function boot()

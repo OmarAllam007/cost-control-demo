@@ -35,6 +35,7 @@ class User extends Authenticatable
         return $query->orderBy('name')->pluck('name', 'id')->prepend('Select User', '');
     }
 
+
     function modules()
     {
         return $this->belongsToMany(Module::class, 'modules_users')->withPivot(['read', 'write', 'delete']);

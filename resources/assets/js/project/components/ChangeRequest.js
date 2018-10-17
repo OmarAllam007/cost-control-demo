@@ -9,21 +9,24 @@ export default {
 
     created() {
         this.loadRequests();
-        console.log('asdad')
     },
 
     methods: {
         loadRequests() {
-            $.ajax({url: `/project/${this.project.id}/change-request`, dataType: 'json'})
-                .success(response => {
-                    this.loading = false;
-                    this.requests = response.requests;
-                })
-                .error(response => {
-                    this.loading = false;
-                });
+            this.loading = true;
+            $.ajax({
+                url: `/project/${this.project.id}/change-request`, dataType: 'json'
+            }).success(response => {
+                this.loading = false;
+                this.requests = response;
+            }).error(response => {
+                this.loading = false;
+            });
         }
     },
-
-    events: {}
+    events: {
+        reload_change_request() {
+            this.loadRequests();
+        }
+    }
 }

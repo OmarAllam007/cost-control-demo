@@ -11,6 +11,7 @@ class BudgetChangeRequest extends Model
     protected $dates = ['created_at', 'updated_at', 'closed_at'];
 
     protected $casts = ['closed' => 'boolean', 'qty' => 'float', 'unit_price' => 'float'];
+    static $statuses = [0 => 'Select Status', 1 => 'Open', 2 => 'Closed'];
 
     function project()
     {
@@ -42,5 +43,10 @@ class BudgetChangeRequest extends Model
         return $this->belongsTo(User::class, 'closed_by');
     }
 
+
+    function assigned_to()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
 
 }

@@ -14,13 +14,14 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        \App\Project::class => \App\Policies\ProjectPolicy::class
+        \App\Project::class => \App\Policies\ProjectPolicy::class,
+        \App\BudgetChangeRequest::class => \App\Policies\ChangeRequestPolicy::class
     ];
 
     /**
      * Register any application authentication / authorization services.
      *
-     * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
+     * @param  \Illuminate\Contracts\Auth\Access\Gate $gate
      * @return void
      */
     public function boot()
@@ -41,16 +42,17 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('write', 'App\Policies\DataPolicy@write');
         Gate::define('delete', 'App\Policies\DataPolicy@delete');
 
-        Gate::define('dashboard', function($user) {
+        Gate::define('dashboard', function ($user) {
             return $user->id == 54;
         });
 
-        Gate::define('wipe', function($user) {
+        Gate::define('wipe', function ($user) {
             return in_array(\Auth::user()->email, [
                 'hazem.mohamed@alkifah.com',
                 'karim.elsharkawy@alkifah.com',
 //                'omar.garana@alkifah.com',
             ]);
         });
+
     }
 }

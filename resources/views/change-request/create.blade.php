@@ -64,7 +64,7 @@
             <section class="row">
                 <div class="col-sm-4">
                     <article class="form-group {{$errors->first('qty', 'has-error')}}">
-                        <label for="qty">Qty</label>
+                        <label for="qty">Proposed Qty</label>
                         <input name="qty" type="text" class="form-control" id="qty" value="{{old('qty')}}">
                         {!! $errors->first('qty', '<div class="help-block">:message</div>') !!}
                     </article>
@@ -72,7 +72,7 @@
 
                 <div class="col-sm-4">
                     <article class="form-group {{$errors->first('unit_price', 'has-error')}}">
-                        <label for="unit_price">Unit Price</label>
+                        <label for="unit_price">Proposed Unit Price</label>
                         <input name="unit_price" type="text" class="form-control" id="unit_price"
                                value="{{old('unit_price')}}">
                         {!! $errors->first('unit_price', '<div class="help-block">:message</div>') !!}
