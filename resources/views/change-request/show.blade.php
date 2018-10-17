@@ -79,7 +79,7 @@
     <br>
     @if(!$changeRequest->closed && can('close_request',$changeRequest))
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-12">
                 <form action="{{route('project.change-request.close',[$changeRequest->project,$changeRequest])}}"
                       method="post">
                     {{csrf_field()}} {{method_field('post')}}
